@@ -2,9 +2,9 @@
   "name": "asb_report",
   "version": "1.0.0",
   "description": "Antenne Solutions Business Report",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
