@@ -46,13 +46,12 @@ process.on('unhandledRejection', error => {
     console.log('unhandledRejection', error.message);
 });
 
-exports.index = async (req, res) => {
+exports.index =  (req, res) => {
 
 
 
-    try {
 
-        var formats = await ModelFormat.findAll({
+        var formats =  ModelFormat.findAll({
             attributes: ['format_id', 'format_name', 'format_group'],
             group: ['format_group'],
             where: {
@@ -65,13 +64,13 @@ exports.index = async (req, res) => {
             ],
         })
 
-        var sites = await ModelSite.findAll({
+        var sites =  ModelSite.findAll({
             attributes: ['site_id', 'site_name'],
             order: [
                 ['site_name', 'ASC']
             ],
         })
-        var countrys = await ModelCountry.findAll({
+        var countrys =  ModelCountry.findAll({
             attributes: ['country_id', 'country_name'],
             where: {
                 country_id: [61, 125, 184]
@@ -86,11 +85,7 @@ exports.index = async (req, res) => {
             countrys: countrys
         });
 
-    } catch (err) {
-        res.status(500).json({
-            'error': 'cannot fetch country'
-        });
-    }
+   
 
 };
 
