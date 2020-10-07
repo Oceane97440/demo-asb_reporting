@@ -2,9 +2,9 @@
   "name": "asb_report",
   "version": "1.0.0",
   "description": "Antenne Solutions Business Report",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
