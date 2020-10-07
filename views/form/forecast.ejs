@@ -1,0 +1,65 @@
+
+
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-sm-3">
+
+
+            <div id="card" style="margin-top: 20px; border-radius: 10px;" class="card border-danger ">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        Forecast
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form action="add" method="POST">
+                      
+                        <div class="form-group">
+                            <label for="date_d">Date de début </label>
+                            <input type="datetime-local" class="form-control" name="date_d" id="date_d" min="<%- new Date().toISOString() -%>" value="<%- new Date().toISOString() -%>" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="date_f">Date de fin </label>
+                            <input type="datetime-local" class="form-control" name="date_f" id="date_f"
+                                min="<%- new Date().toISOString() -%>" value="<%- new Date().toISOString() -%>" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="formats">Formats</label>
+                            <select class="form-control" name="formats" id="formats" multiple required>
+                                <% for(let i=0; i < formats.length; i++) {%>
+                                <option value="<%= formats[i].format_id %>"><%= formats[i].format_name %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sites">Site</label>
+                            <select class="form-control" name="sites" id="sites" multiple required>
+                                <% for(let i=0; i < sites.length; i++) {%>
+                                <option value="<%= sites[i].site_id %>"><%= sites[i].site_name %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="countrys">Pays</label>
+                            <select class="form-control" name="countrys" id="countrys" multiple required>
+                                <% for(let i=0; i < countrys.length; i++) {%>
+                                <option value="<%= countrys[i].country_id %>"
+                                    <%- (countrys[i].country_id == '61') ? 'selected="selected"' : '' -%>>
+                                    <%= countrys[i].country_name %>
+                                </option>
+                                <% } %>
+                            </select>
+                        </div>
+
+                </div>
+                <div class="col-sm-12 text-right">
+                    <div class="card-footer bg-transparent border-success justify-content-center d-flex">
+                        <button type="submit" name="submit" class="btn btn-success">Valider</button>
+                    </div>
+                </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+

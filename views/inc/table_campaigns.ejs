@@ -1,0 +1,28 @@
+<% if (campaigns && (campaigns.length > 0)) { %>
+<table class="table table-striped table-bordered">
+    <thead>
+        <th class="text-center">Status</th>
+        <th class="text-center"><span class="fa fa-key" title="N°"><em class="d-none">N°</em></span></th>
+        <th class="text-center">Nom</th>
+        <th class="text-center">Annonceur</th> 
+        <th class="text-center">Date</th>
+        <th class="text-center"><span class="fa fa-cogs" title="Actions"><em class="d-none">Actions</em></span></th>
+    </thead>
+    <tbody>
+        <% for(i = 0; i < campaigns.length; i++){ %>
+            <tr>
+                <td><%- campaigns[i].campaign_status_id -%></td>
+                <td><a href="/campaigns/<%- campaigns[i].campaign_id -%>" title="<%- campaigns[i].campaign_name -%>"><%- campaigns[i].campaign_id -%></a></td>
+                <td><a href="/campaigns/<%- campaigns[i].campaign_id -%>" title="<%- campaigns[i].campaign_name -%>"><%- campaigns[i].campaign_name -%></a></td>
+                <td>
+                    <a href="/advertisers/<%- campaigns[i].advertiser_id -%>" title="<%- (campaigns[i].advertisers.advertiser_name) ? campaigns[i].advertisers.advertiser_name : '-'  -%>"><%- (campaigns[i].advertisers.advertiser_name) ? campaigns[i].advertisers.advertiser_name : '-'  -%></a>
+                </td>
+                <td><%- campaigns[i].campaign_start_date -%></td>
+                <td>-</td>
+            </tr>    
+        <% } %>
+    </tbody>
+</table>
+<% } else { %>
+<div class="alert alert-danger">Aucune campagne.</div>
+<% } %>

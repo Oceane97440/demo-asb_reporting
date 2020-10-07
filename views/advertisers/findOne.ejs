@@ -1,0 +1,10 @@
+<%- include("../layouts/admin/head.ejs") -%>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<h2 class="h2 mb-0 text-gray-800"><%- info.advertiser_name -%></h2>
+</div>
+
+<br />
+<h3 class="text-gray-500">Campagnes <%- campaigns.length -%></h3>
+<%- include('../inc/table_campaigns.ejs', {campaigns:campaigns}) -%>
+
+<%- include("../layouts/admin/footer.ejs") -%>

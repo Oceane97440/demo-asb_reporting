@@ -1,0 +1,43 @@
+<%- include("../layouts/admin/head.ejs") -%>
+
+
+
+        <table border="1px">
+            <thead>
+                <tr>
+                    <th>TotalImpression</th>
+                    <th>OccupiedImpressions</th>
+                    <th>SiteID</th>
+                    <th>SiteName</th>
+                    <th>FormatID</th>
+                    <th>FormatName</th>
+
+                </tr>
+            </thead>   
+            <tbody>
+                <% for (let i=0; i < table.TotalImpressions.length; i++) { %>
+                    <% if (table.TotalImpressions[i] != '' ) { %>
+                <tr>
+                 
+
+                    <td><%=table.TotalImpressions[i]%></td>
+                    <td><%=table.OccupiedImpressions[i]%></td>
+                    <td><%=table.SiteID[i]%></td>
+                    <td><%=table.SiteName[i]%></td>
+                    <td><%=table.FormatID[i]%></td>
+                    <td><%=table.FormatName[i]%></td>
+
+                </tr>
+                    <% } %>
+
+                <% } %>
+
+            </tbody>
+           
+
+        </table>
+        <h6><strong>Volume total: <%=table.sommeImpressions%></strong></h6>
+        <h6><strong>Volume occupé:<%=table.sommeOccupied%></strong> </h6>
+        <h6><strong>Volume disponible:<%=table.volumeDispo%></strong></h6>
+
+    <%- include("../layouts/admin/footer.ejs") -%>

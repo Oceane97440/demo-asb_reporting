@@ -1,0 +1,52 @@
+<%- include("../layouts/admin/head.ejs") -%>
+
+	<div id="card-forecast" class="card">
+		<div class="card-header">
+			<h4 class="card-title">
+				Ajout d'une campagne
+			</h4>
+		</div>
+		<div class="card-body">
+            <form action="http://127.0.0.1:3000/api/manager/crud/add_campaign" id="manager" method="POST">
+                
+                <div class="form-group">
+					<label for="campaign_name">Nom de la campagne </label>
+					<input type="name" class="form-control" name="campaign_name" id="campaign_name" value="Campagne_Asb" required>
+				</div>
+
+				<div class="form-group">
+					<label for="date_start">Date de début </label>
+					<input type="datetime-local" class="form-control" name="date_start" id="date_start" value="" required>
+				</div>
+				
+				<div class="form-group">
+					<label for="date_end">Date de fin </label>
+					<input type="datetime-local" class="form-control" name="date_end" id="date_end" min="2020-08-20T23:59"
+						value="" required>
+				</div>
+			   
+				 <div class="form-group">
+					<label for="advertiserIds">Format</label>
+					<select class="form-control" name="advertiserIds" id="advertiserIds" required="required">
+                        <option value="">Sélectionner un format</option>
+                       
+						<% for(let i=0; i < advertiser.length; i++) {%>
+					 <option value="<%= advertiser[i].advertiser_id %>"
+							<%- (advertiser[i].advertiser_id == '409707') ? 'selected="selected"' : '' -%>>
+							<%= advertiser[i].advertiser_name %>
+						</option>
+						<% } %>
+					</select>
+				</div>
+				
+			
+		</div>
+		<div class="card-footer bg-transparent border-success justify-content-center d-flex">
+			<div class="col-sm-12 text-right">       
+				<input type="submit" name="submit" class="btn btn-block btn-primary" value="Valider" />
+			</div>
+		</div>
+    </form>
+</div>
+
+<%- include("../layouts/admin/footer.ejs") -%>

@@ -1,0 +1,69 @@
+<%- include("../layouts/admin/head.ejs") -%>
+
+<div id="card-forecast" class="card">
+	<div class="card-header">
+		<h4 class="card-title">
+			Inventaire SMART
+		</h4>
+	</div>
+	<div class="card-body">
+		<form action="http://127.0.0.1:3000/api/forecast/test/add" id="forecast" method="POST">
+			<div class="form-group">
+				<label for="date_start">Date de début </label>
+				<input type="datetime-local" class="form-control" name="date_start" id="date_start" value="" required>
+			</div>
+
+			<div class="form-group">
+				<label for="date_end">Date de fin </label>
+				<input type="datetime-local" class="form-control" name="date_end" id="date_end" min="2020-08-20T08:00"
+					value="" required>
+			</div>
+
+			<div class="form-group">
+				<label for="format">Format</label>
+				<select class="form-control" name="format" id="format" required="required">
+					<option value="">Sélectionner un format</option>
+					<% for(let i=0; i < formats.length; i++) {%>
+					<option value="<%= formats[i].format_group %>"><%= formats[i].format_group %></option>
+					<% } %>
+				</select>
+			</div>
+
+			<!-- <div class="form-group">
+				<label for="sites">Sites</label>
+				<select class="form-control" name="sites" id="sites" multiple required="required">
+					<% for(let i=0; i < sites.length; i++) {%>
+					<option value="<%= sites[i].site_id %>"><%= sites[i].site_name %></option>
+					<% } %>
+				</select>
+			</div> -->
+
+			<div class="form-group">
+				<label for="sites">Packs</label>
+				<select class="form-control" name="sites" id="sites" multiple required="required">
+					<% for(let i=0; i < sites.length; i++) {%>
+					<option value="<%= sites[i].site_group %>"><%= sites[i].site_group %></option>
+					<% } %>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="countries">Géolocalisation</label><br>
+				<% for(let i=0; i < countrys.length; i++) {%>
+				<label class="form-check-label"><%= countrys[i].country_name %></label>
+				<input class="form-check-input" type="checkbox" name="countries" id="countries" value="<%= countrys[i].country_id %>"
+					<%- (countrys[i].country_id == '61') ? 'checked="checked"' : '' -%>>
+				<% } %>
+			</div>
+
+
+	</div>
+	<div class="card-footer bg-transparent border-success justify-content-center d-flex">
+		<div class="col-sm-12 text-right">
+			<input type="submit" name="submit" class="btn btn-block btn-primary" value="Valider" />
+		</div>
+	</div>
+	</form>
+</div>
+
+<%- include("../layouts/admin/footer.ejs") -%>

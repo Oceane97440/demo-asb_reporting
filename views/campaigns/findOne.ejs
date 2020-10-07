@@ -1,0 +1,22 @@
+<%- include("../layouts/admin/head.ejs") -%>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<h2 class="h2 mb-0 text-gray-800"><%- info.campaign_name -%></h2>
+</div>
+
+<ul>
+<li><strong>Annonceur</strong> : <a href="/advertisers/<%- info.advertisers.advertiser_id -%>"><%- info.advertisers.advertiser_name -%></a></li>
+<li><strong>Période de diffusion </strong> :
+	<ul>
+		<li><em>Date de début</em> : <%- info.campaign_start_date -%> </li>
+		<li><em>Date de fin</em> : <%- info.campaign_end_date -%></li>
+	</ul>
+</li>
+</ul>
+
+<hr />
+
+
+
+
+
+<%- include("../layouts/admin/footer.ejs") -%>
