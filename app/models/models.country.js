@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
         continent_id: Sequelize.BIGINT,
         country_extended_name:Sequelize.STRING,
     }, {
-        tableName: 'asb_country',
+        tableName: 'heroku_e2bdbc337a87f5c.asb_country',
         underscored: true,
         timestamps: false
     });

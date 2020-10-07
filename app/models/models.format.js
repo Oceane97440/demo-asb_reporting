@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
         format_is_archived: Sequelize.BIGINT,
         format_resource_url: Sequelize.STRING        
     }, {
-        tableName: 'asb_formats',
+        tableName: 'heroku_e2bdbc337a87f5c.asb_formats',
         underscored: true,
         timestamps: false
     });

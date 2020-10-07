@@ -20,7 +20,7 @@ module.exports = (sequelize, Sequelize) => {
         site_business_model_type_id:Sequelize.INTEGER,
         site_application_id:Sequelize.STRING,
     }, {
-        tableName: 'asb_site',
+        tableName: 'heroku_e2bdbc337a87f5c.asb_site',
         underscored: true,
         timestamps: false
     });
