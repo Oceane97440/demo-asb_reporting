@@ -1,23 +1,22 @@
 const Sequelize = require('sequelize');
 
-module.exports = (sequelize, Sequelize) => {
-    const Format = sequelize.define('formats', {
-        format_id: {
-            type: Sequelize.BIGINT,
-            primaryKey: true
-        },        
-        format_name:Sequelize.STRING,
-		format_group:Sequelize.STRING,
-        format_width:Sequelize.INTEGER,
-        format_height:Sequelize.INTEGER,
-        format_type_id:Sequelize.INTEGER,
-        format_is_archived: Sequelize.BIGINT,
-        format_resource_url: Sequelize.STRING        
-    }, {
-        tableName: 'heroku_e2bdbc337a87f5c.asb_formats',
-        underscored: true,
-        timestamps: false
-    });
+const sequelize = require('../config/_config.database').sequelize;
 
-    return Format;
-};
+
+const Format = sequelize.define('formats', {
+
+    format_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
+    format_name: {type: Sequelize.STRING(45),allowNull:false},
+    format_group: {type: Sequelize.STRING(45),allowNull:false},
+    format_width:{type: Sequelize.INTEGER(),allowNull:false},
+    format_height:{type: Sequelize.INTEGER(),allowNull:false},
+    format_type_id:{type: Sequelize.INTEGER(),allowNull:false},
+    format_is_archived:{type: Sequelize.BIGINT(),allowNull:false},
+    format_resource_url:{type: Sequelize.STRING(),allowNull:false},
+
+
+},
+{tableName: 'asb_formats', underscored: true, timestamps: false}
+);
+
+module.exports = Format;

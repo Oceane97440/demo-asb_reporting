@@ -4,14 +4,16 @@ module.exports = app => {
 
     // Affiche la page api
     router.get("/", api.index);
-	router.post("/add",api.forecast);
+    router.post("/add", api.forecast);
+    router.get("/form_epilot", api.epilot)
+    router.post("/campagne_epilot", api.campaign_epilot);
 
     // router.get("/indexa", api.indexa);
     // router.get("/sites", api.sites);
     // router.get("/countries", api.countries);
     // router.get("/formats", api.formats);
 
-  
+
 
     app.use('/api/forecast', router);
-  };
+};

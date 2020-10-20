@@ -1,49 +1,40 @@
 const Sequelize = require('sequelize');
 
-module.exports = (sequelize, Sequelize) => {
-    const Site = sequelize.define('site', {
-        site_id: {
-            type: Sequelize.BIGINT,
-            primaryKey: true
-        },
-        site_is_child_directed: Sequelize.BIGINT,
-        country_id:Sequelize.INTEGER,
-        site_name:Sequelize.STRING,
-        site_group:Sequelize.STRING,
-        site_is_archived:Sequelize.INTEGER,
-        site_extrenal_id:Sequelize.INTEGER,
-        user_group_id:Sequelize.INTEGER,
-        site_url:Sequelize.STRING,
-        language_id:Sequelize.INTEGER,
-        site_updated_at:Sequelize.DATE,
-        site_business_model_type_id:Sequelize.INTEGER,
-        site_business_model_type_id:Sequelize.INTEGER,
-        site_application_id:Sequelize.STRING,
-    }, {
-        tableName: 'heroku_e2bdbc337a87f5c.asb_site',
-        underscored: true,
-        timestamps: false
-    });
+const sequelize = require('../config/_config.database').sequelize;
 
-    // Récupére le model country
-    const Country = require('./models.country.js');
-    const countryDb = Country(sequelize, Sequelize);
 
-    Site.belongsTo(countryDb, {
-        as: 'country',
-        foreignKey: 'country_id',
-        onDelete: 'cascade',
-        hooks: true
-    });
- 
-  
-    countryDb.hasMany(Site, {
-        foreignKey: 'country_id',
-        onDelete: 'cascade',
-        hooks: true
-    });
+const Site = sequelize.define('site', {
+
+    site_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
+    site_is_child_directed:{type: Sequelize.BIGINT(),allowNull:false},
+    country_id:{type: Sequelize.INTEGER(),allowNull:false},
+    site_name: {type: Sequelize.STRING(45),allowNull:false},
+    format_height:{type: Sequelize.INTEGER(),allowNull:false},
+    site_is_archived:{type: Sequelize.INTEGER(),allowNull:false},
+    site_extrenal_id:{type: Sequelize.INTEGER(),allowNull:false},
+    user_group_id:{type: Sequelize.INTEGER(),allowNull:false},
+    site_url:{type: Sequelize.STRING(255),allowNull:false},
+    language_id:{type: Sequelize.INTEGER(),allowNull:false},
+    site_updated_at:{type: Sequelize.DATE(),allowNull:false},
+    site_business_model_type_id:{type: Sequelize.INTEGER(),allowNull:false},
+    site_businessModelValue:{type: Sequelize.INTEGER(),allowNull:false},
+    site_application_id:{type: Sequelize.DATE(),allowNull:false},
+
+
+},
+{tableName: 'asb_site', underscored: true, timestamps: false}
+);
+
+const Country = require('./models.country');
+
+
+Site.belongsTo(Country,{foreignKey: 'country_id', onDelete: 'cascade', hooks: true });
+Country.hasMany(Site, {foreignKey: 'country_id', onDelete: 'cascade', hooks: true});
+
+module.exports = Site;
+
+
    
 
 
-    return Site;
-};
+
