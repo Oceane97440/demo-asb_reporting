@@ -28,6 +28,7 @@ const Site = sequelize.define('site', {
 const Country = require('./models.country');
 
 
+
 Site.belongsTo(Country,{foreignKey: 'country_id', onDelete: 'cascade', hooks: true });
 Country.hasMany(Site, {foreignKey: 'country_id', onDelete: 'cascade', hooks: true});
 

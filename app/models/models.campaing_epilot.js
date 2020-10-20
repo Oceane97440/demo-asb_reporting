@@ -5,6 +5,7 @@ const sequelize = require('../config/_config.database').sequelize;
 
 const Campaing_epilot = sequelize.define('campaign_epilot', {
 
+    
     campaign_epilot_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
     campaign_name: {type: Sequelize.STRING(45),allowNull:false},
     format_name: {type: Sequelize.STRING(45),allowNull:false},

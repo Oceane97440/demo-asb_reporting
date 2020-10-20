@@ -124,6 +124,7 @@ exports.dataFormatingForForecast = async (dataArrayFromReq) => {
 
   var volumeDispo = sommeImpressions - sommeOccupied;
 
+  
   var tableData = {
       TotalImpressions,
       OccupiedImpressions,

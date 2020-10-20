@@ -5,6 +5,7 @@ const sequelize = require('../config/_config.database').sequelize;
 
 const Country = sequelize.define('country', {
 
+    
     country_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
     country_iso3166: {type: Sequelize.STRING(45),allowNull:false},
     country_name: {type: Sequelize.STRING(45),allowNull:false},

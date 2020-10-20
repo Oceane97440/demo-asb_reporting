@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 
+
 const sequelize = require('../config/_config.database').sequelize;
 
 

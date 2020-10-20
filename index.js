@@ -12,6 +12,10 @@ const campaing_epilot = require('./app/models/models.campaing_epilot');
 const country=require('./app/models/models.country')
 const formats=require('./app/models/models.format')
 const sites=require('./app/models/models.site')
+const packs=require('./app/models/models.pack')
+const packs_sites=require('./app/models/models.pack_site')
+
+
 
 
 // Routes handler
@@ -20,6 +24,9 @@ const sites=require('./app/models/models.site')
  /* Mettre les relation ici */
 sites.belongsTo(country);
 country.hasMany(sites);
+
+sites.hasMany(packs)
+packs.belongsTo(sites)
 
 db.sequelize.sync();
 sequelize = db.sequelize;

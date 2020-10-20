@@ -20,6 +20,7 @@ timezone: '+04:00', //for writing to database
   }
 });
 
+
 const db = {};
 
 db.Sequelize = Sequelize;
