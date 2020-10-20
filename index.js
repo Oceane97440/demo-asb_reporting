@@ -6,6 +6,25 @@ const cors = require('cors');
 
 
 
+const db = require("./app/config/_config.database");
+
+const campaing_epilot = require('./app/models/models.campaing_epilot');
+const country=require('./app/models/models.country')
+const formats=require('./app/models/models.format')
+const sites=require('./app/models/models.site')
+
+
+// Routes handler
+
+
+ /* Mettre les relation ici */
+sites.belongsTo(country);
+country.hasMany(sites);
+
+db.sequelize.sync();
+sequelize = db.sequelize;
+Sequelize = db.Sequelize;
+
 
 
 // Déclare le nom de domaine et le port du site
@@ -32,7 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const index = require('./app/routes/routes.api_forecast');
 
-app.use('/', index);
+app.use('/api/forecast', index);
 
 
 

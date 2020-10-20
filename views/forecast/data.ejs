@@ -1,6 +1,9 @@
 <%- include("../layouts/admin/head.ejs") -%>
 
 
+<h1>Stat Forecast</h1>
+<h3>Date de  debut:  <%=table.date_start%></h3>
+<h3>Date de fin:  <%=table.date_end%></h3>
 
         <table border="1px">
             <thead>
@@ -39,5 +42,61 @@
         <h6><strong>Volume total: <%=table.sommeImpressions%></strong></h6>
         <h6><strong>Volume occupé:<%=table.sommeOccupied%></strong> </h6>
         <h6><strong>Volume disponible:<%=table.volumeDispo%></strong></h6>
+    
+        <br>
+        <hr>
+
+        <h1>Stat BI Confirmé (campagne Epilot)</h1>
+
+        <table border="1px">
+            <thead>
+                <tr>
+                    <th>Campagne</th>
+                    <th>Date de début campagne</th>
+                    <th>Date de fin campagne</th>
+                    <th>Durée de la campagen en nb de jour</th>
+                    <th>Date de début prévue</th>
+                    <th>Date de fin prévue</th>
+                    <th>Jour à Cheval</th>
+                    <th>Volume total prévu</th>
+
+                </tr>
+            </thead>   
+            <tbody>
+                <% for (let i=0; i < table.array_confirmer.length; i++) { %>
+                    <% if (table.array_confirmer[i] != '' ) { %>
+                <tr>
+                 
+
+                    <td><%=table.Campagnes_confirmer[i]%></td>
+                    <td><%=table.Campagne_start[i]%></td>
+                    <td><%=table.Campagne_end[i]%></td>
+
+
+             
+                    <td><%=table.Interval__confirmer[i]%></td>
+
+                    <td><%=table.Date_start_cheval_confirmer[i]%></td>
+                    <td><%=table.Date_end_cheval_confirmer[i]%></td>
+                    <td><%=table.Nbr_cheval__confirmer[i]%></td>
+                    <td><%=table.Volume_confirmer[i]%></td>
+
+
+
+                </tr>
+                <% } %>
+
+                <% } %>
+            </tbody>
+           
+
+        </table>
+        <h6>Total volume prévus confirmé:   <%=table.sommeConfirmer%></h6>
+        <h6><strong>Volume disponible confirmé reel:   <%=table.confirme_reel%></strong></h6>
+        <h6>Total volume prévus reservé:   <%=table.sommeReserver%></h6>
+        <h6><strong>Volume disponible reservé reel:  <%=table.reserver_reel%></strong></h6>
+
+
+
 
     <%- include("../layouts/admin/footer.ejs") -%>

@@ -1,6 +1,9 @@
-module.exports = app => {
-    const api = require("../controllers/controllers.api_forecast");
-    var router = require("express").Router();
+const router = require("express").Router();
+const Sequelize = require('sequelize');
+
+
+const api = require("../controllers/controllers.api_forecast");
+    
 
     // Affiche la page api
     router.get("/", api.index);
@@ -15,5 +18,7 @@ module.exports = app => {
 
 
 
-    app.use('/api/forecast', router);
-};
+
+
+    
+module.exports = router;

@@ -4,40 +4,48 @@ const dbApi = require("../config/config.api");
 const request = require('request');
 // Initialise le module
 const bodyParser = require('body-parser');
-//parse fichier csv
+
+//let csvToJson = require('convert-csv-to-json');
+
+
+const axios = require(`axios`);
 
 //const asyncly = require('async');
 
+const fileGetContents = require('file-get-contents');
 
 // Initiliase le module axios
-const axios = require(`axios`);
+//const axios = require(`axios`);
+
+
+const {Op} = require("sequelize");
+
+process.on('unhandledRejection', error => {
+    // Will print "unhandledRejection err is not defined"
+    console.log('unhandledRejection', error.message);
+});
+
+
+
+const {QueryTypes} = require('sequelize');
+
 const {
     check,
     query
 } = require('express-validator');
 
-// require csvtojson module
 
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-
-
 const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.format");
 const ModelCountry = require("../models/models.country")
-const ModelCampaign_epilot = require("../models/models.country")
+const ModelCampaign_epilot = require("../models/models.campaing_epilot")
 
-const {
-    Op
-} = require("sequelize");
 
-process.on('unhandledRejection', error => {
-    // Will print "unhandledRejection err is not defined"
-    console.log('unhandledRejection', error.message);
-});
 
 exports.index = async (req, res) => {
 
@@ -268,6 +276,18 @@ exports.forecast = async (req, res, next) => {
 
                 const volumeDispo = sommeImpressions - sommeOccupied;
 
+               /* var table = {
+                    TotalImpressions,
+                    OccupiedImpressions,
+                    SiteID,
+                    SiteName,
+                    FormatID,
+                    FormatName,
+                    sommeImpressions,
+                    sommeOccupied,
+                    volumeDispo
+                }
+*/
 
 
                 //Requête sql campagne epilot
@@ -281,7 +301,7 @@ exports.forecast = async (req, res, next) => {
              //   const volumes_prevue1 = requete[i].volume_prevue
 
                 // Récupére les résultats de la requete
-                //   console.log(requete)
+                   console.log(requete)
 
 
 
@@ -303,12 +323,15 @@ exports.forecast = async (req, res, next) => {
 
                     // Calculer l'intervalle de date sur la période
                     const campaign_start_date = requete[i].campaign_start_date
+                    console.log(campaign_start_date)
 
                     const campaign_end_date = requete[i].campaign_end_date
 
                     const volumes_prevue = requete[i].volume_prevue
 
+                    // const campaign_date_start = campaign_start_date+ 'T00:00:00.000Z'
 
+                    // const campaign_date_end = campaign_end_date+ 'T23:59:00.000Z'
                     const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
                     const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
@@ -330,11 +353,11 @@ exports.forecast = async (req, res, next) => {
                         if (date_start_forecast < campaign_date_start) {
 
                             //alors la date début à cheval = date de début campagne 
-                            date_start_cheval = campaign_date_start
+                          var  date_start_cheval = campaign_date_start
 
                         } else {
 
-                            date_start_cheval = date_start_forecast
+                           var date_start_cheval = date_start_forecast
 
                         }
 
@@ -342,11 +365,11 @@ exports.forecast = async (req, res, next) => {
                         if (date_end_forecast > campaign_date_end) {
 
                             //alors le date de fin a cheval = date de fin campagne 
-                            date_end_cheval = campaign_date_end
+                           var date_end_cheval = campaign_date_end
 
                         } else {
 
-                            date_end_cheval = date_end_forecast
+                           var date_end_cheval = date_end_forecast
 
                         }
                     }
@@ -478,6 +501,7 @@ console.log(array_confirmer)
 
                 }
 
+
                 return res.render('forecast/data.ejs', {
                     table: table
                 });
@@ -524,6 +548,37 @@ exports.epilot = async (req, res, next) => {
 }
 
 
+exports.epilot = async (req, res, next) => {
+    try {
+
+        var formats = await ModelFormat.findAll({
+            attributes: ['format_id', 'format_name', 'format_group'],
+            group: ['format_group'],
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
+
+
+        res.render('forecast/form_epilot.ejs', {
+            formats: formats,
+
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            'error': 'cannot fetch country'
+        });
+    }
+
+}
+
+
 
 exports.campaign_epilot = async (req, res, next) => {
 
@@ -535,17 +590,26 @@ exports.campaign_epilot = async (req, res, next) => {
     const campaign_end_date = req.body.campaign_end_date
     const volume_prevue = req.body.volume_prevue
 
+   
+
     console.log(req.body)
+    console.log(campaign_debut)
+    console.log(campaign_fin)
+
+
 
     try {
 
+
+        const campaign_debut = campaign_start_date + 'T00:00:00.000Z'
+        const campaign_fin = campaign_end_date + 'T23:59:00.000Z'
 
         var test = await ModelCampaign_epilot.create({
             campaign_name: campaign_name,
             format_name: format_name,
             etat: etat,
-            campaign_start_date: campaign_start_date,
-            campaign_end_date: campaign_end_date,
+            campaign_start_date: campaign_debut,
+            campaign_end_date: campaign_fin,
             volume_prevue: volume_prevue
 
         }).then(res.send("Add entité"))
