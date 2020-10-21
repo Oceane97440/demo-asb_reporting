@@ -6,7 +6,7 @@ const cors = require('cors');
 
 
 
-const db = require("./app/config/_config.database");
+const db = require("./app/config/config.database");
 
 const campaing_epilot = require('./app/models/models.campaing_epilot');
 const country=require('./app/models/models.country')
@@ -15,18 +15,15 @@ const sites=require('./app/models/models.site')
 const packs=require('./app/models/models.pack')
 const packs_sites=require('./app/models/models.pack_site')
 
-
-
-
-// Routes handler
-
-
  /* Mettre les relation ici */
 sites.belongsTo(country);
 country.hasMany(sites);
 
-sites.hasMany(packs)
-packs.belongsTo(sites)
+
+packs.hasOne(packs_sites, { foreignKey: 'pack_id', onDelete: 'cascade', hooks: true });
+sites.hasMany(packs_sites, { foreignKey: 'site_id', onDelete: 'cascade', hooks: true }); 
+packs_sites.belongsTo(packs);
+packs_sites.belongsTo(sites);
 
 db.sequelize.sync();
 sequelize = db.sequelize;

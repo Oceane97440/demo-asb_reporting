@@ -323,7 +323,6 @@ exports.forecast = async (req, res, next) => {
 
                     // Calculer l'intervalle de date sur la période
                     const campaign_start_date = requete[i].campaign_start_date
-                    console.log(campaign_start_date)
 
                     const campaign_end_date = requete[i].campaign_end_date
 
@@ -440,30 +439,16 @@ console.log(array_confirmer)
                     }
                 }
 
-                //  console.log('nbr line tab reserver' + array_reserver.length)
-
-                // console.log('tab reserver' + array_reserver)
-
-
-
-                //total tab confirmé 
-                //console.log(sommeConfirmer)
+        
 
                 // Calcule du volume dispo confirmer 
                 const confirme_reel = volumeDispo - sommeConfirmer;
-                // console.log('total confirmer' + confirme_reel)
 
-                //total tab reserver
-
-                //total tab reserver 
-                // console.log(sommeReserver)
 
                 // Calcule du volume dispo reserer  
                 const reserver_reel = volumeDispo - sommeReserver;
-                // console.log('total reserver' + reserver_reel)
 
 
-                //  console.log('volume dispo forecats' + volumeDispo)
 
 
 
