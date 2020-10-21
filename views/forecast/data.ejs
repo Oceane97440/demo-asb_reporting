@@ -56,9 +56,8 @@
                     <th>Date de début campagne</th>
                     <th>Date de fin campagne</th>
                     <th>Durée de la campagen en nb de jour</th>
-                   
                     <th>Jour à Cheval</th>
-                    <th>Volume total prévu</th>
+             
 
                 </tr>
             </thead>   
@@ -73,7 +72,6 @@
                     <td><%=confirmer.Campagne_end[i]%></td>
                     <td><%=confirmer.Interval__confirmer[i]%></td>
                     <td><%=confirmer.Nbr_cheval__confirmer[i]%></td>
-                    <td><%=confirmer.Volume_confirmer[i]%></td>
 
 
 
@@ -87,6 +85,45 @@
         </table>
         <h6>Total volume prévus confirmé:   <%=confirmer.sommeConfirmer%></h6>
         <h6><strong>Volume disponible confirmé reel:   <%=confirmer.confirme_reel%></strong></h6>
+
+        <hr>
+        
+        <h1>Stat BI Reservé (campagne Epilot)</h1>
+
+        <table border="1px">
+            <thead>
+                <tr>
+                    <th>Campagne</th>
+                    <th>Date de début campagne</th>
+                    <th>Date de fin campagne</th>
+                    <th>Durée de la campagen en nb de jour</th>
+                    <th>Jour à Cheval</th>
+             
+
+                </tr>
+            </thead>   
+            <tbody>
+                <% for (let i=0; i < reserver.array_reserver.length; i++) { %>
+                    <% if (reserver.array_reserver[i] != '' ) { %>
+                <tr>
+                 
+
+                    <td><%=reserver.Campagnes_reserver[i]%></td>
+                    <td><%=reserver.Campagne_start_reserver[i]%></td>
+                    <td><%=reserver.Campagne_end_reserver[i]%></td>
+                    <td><%=reserver.Interval__reserver[i]%></td>
+                    <td><%=reserver.Nbr_cheval__reserver[i]%></td>
+
+
+
+                </tr>
+                <% } %>
+
+                <% } %>
+            </tbody>
+           
+
+        </table>
         <h6>Total volume prévus reservé:   <%=reserver.sommeReserver%></h6>
         <h6><strong>Volume disponible reservé reel:  <%=reserver.reserver_reel%></strong></h6>
 
