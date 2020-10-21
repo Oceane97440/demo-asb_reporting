@@ -49,7 +49,7 @@ const ModelFormat = require("../models/models.format");
 const ModelCountry = require("../models/models.country")
 const ModelCampaign_epilot = require("../models/models.campaing_epilot")
 const ModelPack= require("../models/models.pack")
-// const ModelPack_Site= require("../models/models.pack_site")
+const ModelPack_Site= require("../models/models.pack_site")
 
 
 
@@ -97,7 +97,7 @@ exports.index = async (req, res) => {
         })
         res.render('forecast/form.ejs', {
             formats: formats,
-          //  sites: sites,
+           // sites: sites,
             packs:packs,
             countrys: countrys
         });
@@ -119,12 +119,13 @@ exports.forecast = async (req, res, next) => {
     var date_start = req.body.date_start;
     var date_end = req.body.date_end;
     var format = req.body.format;
-    //var sites = req.body.sites;
+   // var sites = req.body.sites;
 
     var packs = req.body.packs;
     
     var countries = req.body.countries;
     const formatIdsArray = [];
+    const sites=[];
     const dataArrayFromReq = [];
 
     console.log(req.body)
@@ -135,7 +136,18 @@ exports.forecast = async (req, res, next) => {
        
 
         //recupération des site d'un pack
-
+        const sitesdb = await ModelPack_Site.findAll({
+            attributes: ['pack_id','site_id'],
+            where: {
+                pack_id: {
+                    [Op.eq]: packs
+                }
+            }
+        });
+        console.log(sitesdb)
+        for (let l = 0; l < sitesdb.length; l++) {
+            sites.push(sitesdb[l].site_id);
+        }
 
  // Si c'est un string on met en tableau pour respecter l'api
         if (typeof sites == 'string') {
