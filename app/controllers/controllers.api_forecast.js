@@ -18,7 +18,9 @@ const fileGetContents = require('file-get-contents');
 //const axios = require(`axios`);
 
 
-const {Op} = require("sequelize");
+const {
+    Op
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
@@ -27,7 +29,9 @@ process.on('unhandledRejection', error => {
 
 
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 
 const {
     check,
@@ -111,8 +115,8 @@ exports.forecast = async (req, res, next) => {
     console.log(req.body)
     try {
 
-         date_start = date_start + 'T00:00:00.000Z'
-         date_end = date_end + 'T23:59:00.000Z'
+        date_start = date_start + 'T00:00:00.000Z'
+        date_end = date_end + 'T23:59:00.000Z'
         // Si c'est un string on met en tableau pour respecter l'api
         if (typeof sites == 'string') {
             sites = [sites];
@@ -276,7 +280,7 @@ exports.forecast = async (req, res, next) => {
 
                 const volumeDispo = sommeImpressions - sommeOccupied;
 
-               /* var table = {
+                /* var table = {
                     TotalImpressions,
                     OccupiedImpressions,
                     SiteID,
@@ -298,10 +302,10 @@ exports.forecast = async (req, res, next) => {
                     }
                 );
 
-             //   const volumes_prevue1 = requete[i].volume_prevue
+                //   const volumes_prevue1 = requete[i].volume_prevue
 
                 // Récupére les résultats de la requete
-                   console.log(requete)
+                console.log(requete)
 
 
 
@@ -341,7 +345,7 @@ exports.forecast = async (req, res, next) => {
 
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
                     const date_start_forecast = date_start
-                    const date_end_forecast = date_end 
+                    const date_end_forecast = date_end
 
 
 
@@ -352,11 +356,11 @@ exports.forecast = async (req, res, next) => {
                         if (date_start_forecast < campaign_date_start) {
 
                             //alors la date début à cheval = date de début campagne 
-                          var  date_start_cheval = campaign_date_start
+                            var date_start_cheval = campaign_date_start
 
                         } else {
 
-                           var date_start_cheval = date_start_forecast
+                            var date_start_cheval = date_start_forecast
 
                         }
 
@@ -364,11 +368,11 @@ exports.forecast = async (req, res, next) => {
                         if (date_end_forecast > campaign_date_end) {
 
                             //alors le date de fin a cheval = date de fin campagne 
-                           var date_end_cheval = campaign_date_end
+                            var date_end_cheval = campaign_date_end
 
                         } else {
 
-                           var date_end_cheval = date_end_forecast
+                            var date_end_cheval = date_end_forecast
 
                         }
                     }
@@ -418,7 +422,7 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-console.log(array_confirmer)
+                console.log(array_confirmer)
 
 
                 var sommeConfirmer = 0
@@ -439,7 +443,7 @@ console.log(array_confirmer)
                     }
                 }
 
-        
+
 
                 // Calcule du volume dispo confirmer 
                 const confirme_reel = volumeDispo - sommeConfirmer;
@@ -465,6 +469,10 @@ console.log(array_confirmer)
                     sommeOccupied,
                     volumeDispo,
 
+
+                }
+
+                var confirmer = {
                     //CONFIRMER//
                     array_confirmer,
                     sommeConfirmer,
@@ -479,6 +487,9 @@ console.log(array_confirmer)
                     Volume_confirmer,
 
 
+
+                }
+                var reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
@@ -488,7 +499,9 @@ console.log(array_confirmer)
 
 
                 return res.render('forecast/data.ejs', {
-                    table: table
+                    table: table,
+                    confirmer:confirmer,
+                    reserver:reserver,
                 });
 
             }
@@ -576,7 +589,7 @@ exports.campaign_epilot = async (req, res, next) => {
     const campaign_end_date = req.body.campaign_end_date
     const volume_prevue = req.body.volume_prevue
 
-   
+
 
     console.log(req.body)
     console.log(campaign_debut)
