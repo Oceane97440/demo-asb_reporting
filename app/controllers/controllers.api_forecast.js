@@ -48,8 +48,8 @@ const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.format");
 const ModelCountry = require("../models/models.country")
 const ModelCampaign_epilot = require("../models/models.campaing_epilot")
-const ModelPack= require("../models/models.pack")
-const ModelPack_Site= require("../models/models.pack_site")
+const ModelPack = require("../models/models.pack")
+const ModelPack_Site = require("../models/models.pack_site")
 
 
 
@@ -78,7 +78,7 @@ exports.index = async (req, res) => {
         //     ],
         // })
 
-        var packs=await ModelPack.findAll({
+        var packs = await ModelPack.findAll({
             attributes: ['pack_id', 'pack_name'],
             order: [
                 ['pack_name', 'ASC']
@@ -97,8 +97,8 @@ exports.index = async (req, res) => {
         })
         res.render('forecast/form.ejs', {
             formats: formats,
-           // sites: sites,
-            packs:packs,
+            // sites: sites,
+            packs: packs,
             countrys: countrys
         });
 
@@ -119,13 +119,13 @@ exports.forecast = async (req, res, next) => {
     var date_start = req.body.date_start;
     var date_end = req.body.date_end;
     var format = req.body.format;
-   // var sites = req.body.sites;
+    // var sites = req.body.sites;
 
     var packs = req.body.packs;
-    
+
     var countries = req.body.countries;
     const formatIdsArray = [];
-    const sites=[];
+    const sites = [];
     const dataArrayFromReq = [];
 
     console.log(req.body)
@@ -133,11 +133,11 @@ exports.forecast = async (req, res, next) => {
 
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
-       
+
 
         //recupération des site d'un pack
         const sitesdb = await ModelPack_Site.findAll({
-            attributes: ['pack_id','site_id'],
+            attributes: ['pack_id', 'site_id'],
             where: {
                 pack_id: {
                     [Op.eq]: packs
@@ -149,7 +149,7 @@ exports.forecast = async (req, res, next) => {
             sites.push(sitesdb[l].site_id);
         }
 
- // Si c'est un string on met en tableau pour respecter l'api
+        // Si c'est un string on met en tableau pour respecter l'api
         if (typeof sites == 'string') {
             sites = [sites];
         }
@@ -279,20 +279,19 @@ exports.forecast = async (req, res, next) => {
                             //console.log(requete)
 
                             //Initialisation du tableau
-                            //Initialisation du tableau
-                var array_confirmer = [];
-                var Campagnes_confirmer = []
-                var Campagne_start = []
-                var Campagne_end = []
-                var Interval__confirmer = []
-                var Nbr_cheval__confirmer = []
+                            var array_confirmer = [];
+                            var Campagnes_confirmer = []
+                            var Campagne_start = []
+                            var Campagne_end = []
+                            var Interval__confirmer = []
+                            var Nbr_cheval__confirmer = []
 
-                var array_reserver = [];
-                var Campagnes_reserver = []
-                var Campagne_start_reserver = []
-                var Campagne_end_reserver = []
-                var Interval__reserver = []
-                var Nbr_cheval__reserver = []
+                            var array_reserver = [];
+                            var Campagnes_reserver = []
+                            var Campagne_start_reserver = []
+                            var Campagne_end_reserver = []
+                            var Interval__reserver = []
+                            var Nbr_cheval__reserver = []
 
 
                             for (let i = 0; i < requete.length; i++) {
@@ -374,33 +373,33 @@ exports.forecast = async (req, res, next) => {
                                     Campagne_end.push(campaign_end_date)
                                     Interval__confirmer.push(nb_jour_interval)
                                     Nbr_cheval__confirmer.push(nb_jour_cheval)
-            
-                              
-            
-            
-            
-            
+
+
+
+
+
+
                                 }
-                              
-            
+
+
                                 if (requete[i].etat == "2") {
-            
+
                                     array_reserver.push(volumes_prevu_diffuse);
                                     Campagnes_reserver.push(requete[i].campaign_name)
                                     Campagne_start_reserver.push(campaign_start_date)
                                     Campagne_end_reserver.push(campaign_end_date)
                                     Interval__reserver.push(nb_jour_interval)
                                     Nbr_cheval__reserver.push(nb_jour_cheval)
-            
-            
-            
-            
+
+
+
+
                                 }
 
 
                             }
 
-                           // console.log(array_confirmer)
+                            // console.log(array_confirmer)
 
 
                             var sommeConfirmer = 0
@@ -457,25 +456,25 @@ exports.forecast = async (req, res, next) => {
                                 Campagnes_confirmer,
                                 Campagne_start,
                                 Campagne_end,
-                                Interval__confirmer,               
+                                Interval__confirmer,
                                 Nbr_cheval__confirmer,
-            
-            
-            
+
+
+
                             }
-                           
-                             reserver = {
+
+                            reserver = {
                                 //RESERVER//
                                 array_reserver,
                                 sommeReserver,
                                 reserver_reel,
-                                Campagnes_reserver ,
-                                Campagne_start_reserver ,
-                                Campagne_end_reserver ,
-                                Interval__reserver ,
+                                Campagnes_reserver,
+                                Campagne_start_reserver,
+                                Campagne_end_reserver,
+                                Interval__reserver,
                                 Nbr_cheval__reserver,
                             }
-            
+
 
                             table = await dataFormatingForForecast(dataArrayFromReq);
 
@@ -593,7 +592,7 @@ exports.forecast = async (req, res, next) => {
                     }
                 );
 
-            
+
 
                 //Initialisation du tableau
                 var array_confirmer = [];
@@ -692,13 +691,13 @@ exports.forecast = async (req, res, next) => {
                         Interval__confirmer.push(nb_jour_interval)
                         Nbr_cheval__confirmer.push(nb_jour_cheval)
 
-                  
+
 
 
 
 
                     }
-                  
+
 
                     if (requete[i].etat == "2") {
 
@@ -775,22 +774,22 @@ exports.forecast = async (req, res, next) => {
                     Campagnes_confirmer,
                     Campagne_start,
                     Campagne_end,
-                    Interval__confirmer,               
+                    Interval__confirmer,
                     Nbr_cheval__confirmer,
 
 
 
                 }
-               
-                 reserver = {
+
+                reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
                     reserver_reel,
-                    Campagnes_reserver ,
-                    Campagne_start_reserver ,
-                    Campagne_end_reserver ,
-                    Interval__reserver ,
+                    Campagnes_reserver,
+                    Campagne_start_reserver,
+                    Campagne_end_reserver,
+                    Interval__reserver,
                     Nbr_cheval__reserver,
                 }
 
