@@ -25,12 +25,6 @@ const Site = sequelize.define('site', {
 {tableName: 'asb_site', underscored: true, timestamps: false}
 );
 
-const Country = require('./models.country');
-
-
-
-Site.belongsTo(Country,{foreignKey: 'country_id', onDelete: 'cascade', hooks: true });
-Country.hasMany(Site, {foreignKey: 'country_id', onDelete: 'cascade', hooks: true});
 
 module.exports = Site;
 
