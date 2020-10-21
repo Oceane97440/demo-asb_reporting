@@ -144,7 +144,7 @@ exports.forecast = async (req, res, next) => {
                 }
             }
         });
-        console.log(sitesdb)
+     //   console.log(sitesdb)
         for (let l = 0; l < sitesdb.length; l++) {
             sites.push(sitesdb[l].site_id);
         }
@@ -283,15 +283,15 @@ exports.forecast = async (req, res, next) => {
                             var Campagnes_confirmer = []
                             var Campagne_start = []
                             var Campagne_end = []
-                            var Interval__confirmer = []
-                            var Nbr_cheval__confirmer = []
+                            var Interval_confirmer = []
+                            var Nbr_cheval_confirmer = []
 
                             var array_reserver = [];
                             var Campagnes_reserver = []
                             var Campagne_start_reserver = []
                             var Campagne_end_reserver = []
-                            var Interval__reserver = []
-                            var Nbr_cheval__reserver = []
+                            var Interval_reserver = []
+                            var Nbr_cheval_reserver = []
 
 
                             for (let i = 0; i < requete.length; i++) {
@@ -371,8 +371,8 @@ exports.forecast = async (req, res, next) => {
                                     Campagnes_confirmer.push(requete[i].campaign_name)
                                     Campagne_start.push(campaign_start_date)
                                     Campagne_end.push(campaign_end_date)
-                                    Interval__confirmer.push(nb_jour_interval)
-                                    Nbr_cheval__confirmer.push(nb_jour_cheval)
+                                    Interval_confirmer.push(nb_jour_interval)
+                                    Nbr_cheval_confirmer.push(nb_jour_cheval)
 
 
 
@@ -388,8 +388,8 @@ exports.forecast = async (req, res, next) => {
                                     Campagnes_reserver.push(requete[i].campaign_name)
                                     Campagne_start_reserver.push(campaign_start_date)
                                     Campagne_end_reserver.push(campaign_end_date)
-                                    Interval__reserver.push(nb_jour_interval)
-                                    Nbr_cheval__reserver.push(nb_jour_cheval)
+                                    Interval_reserver.push(nb_jour_interval)
+                                    Nbr_cheval_reserver.push(nb_jour_cheval)
 
 
 
@@ -399,7 +399,9 @@ exports.forecast = async (req, res, next) => {
 
                             }
 
-                            // console.log(array_confirmer)
+                             console.log(array_confirmer)
+                             console.log(array_reserver)
+
 
 
                             var sommeConfirmer = 0
@@ -430,7 +432,8 @@ exports.forecast = async (req, res, next) => {
                             const reserver_reel = volumeDispo - sommeReserver;
 
 
-
+                            console.log(array_confirmer)
+                            console.log(array_reserver)
 
                             var tableData = {
                                 date_start,
@@ -456,8 +459,8 @@ exports.forecast = async (req, res, next) => {
                                 Campagnes_confirmer,
                                 Campagne_start,
                                 Campagne_end,
-                                Interval__confirmer,
-                                Nbr_cheval__confirmer,
+                                Interval_confirmer,
+                                Nbr_cheval_confirmer,
 
 
 
@@ -471,8 +474,8 @@ exports.forecast = async (req, res, next) => {
                                 Campagnes_reserver,
                                 Campagne_start_reserver,
                                 Campagne_end_reserver,
-                                Interval__reserver,
-                                Nbr_cheval__reserver,
+                                Interval_reserver,
+                                Nbr_cheval_reserver,
                             }
 
 
@@ -599,15 +602,15 @@ exports.forecast = async (req, res, next) => {
                 var Campagnes_confirmer = []
                 var Campagne_start = []
                 var Campagne_end = []
-                var Interval__confirmer = []
-                var Nbr_cheval__confirmer = []
+                var Interval_confirmer = []
+                var Nbr_cheval_confirmer = []
 
                 var array_reserver = [];
                 var Campagnes_reserver = []
                 var Campagne_start_reserver = []
                 var Campagne_end_reserver = []
-                var Interval__reserver = []
-                var Nbr_cheval__reserver = []
+                var Interval_reserver = []
+                var Nbr_cheval_reserver = []
 
 
                 for (let i = 0; i < requete.length; i++) {
@@ -688,8 +691,8 @@ exports.forecast = async (req, res, next) => {
                         Campagnes_confirmer.push(requete[i].campaign_name)
                         Campagne_start.push(campaign_start_date)
                         Campagne_end.push(campaign_end_date)
-                        Interval__confirmer.push(nb_jour_interval)
-                        Nbr_cheval__confirmer.push(nb_jour_cheval)
+                        Interval_confirmer.push(nb_jour_interval)
+                        Nbr_cheval_confirmer.push(nb_jour_cheval)
 
 
 
@@ -705,8 +708,8 @@ exports.forecast = async (req, res, next) => {
                         Campagnes_reserver.push(requete[i].campaign_name)
                         Campagne_start_reserver.push(campaign_start_date)
                         Campagne_end_reserver.push(campaign_end_date)
-                        Interval__reserver.push(nb_jour_interval)
-                        Nbr_cheval__reserver.push(nb_jour_cheval)
+                        Interval_reserver.push(nb_jour_interval)
+                        Nbr_cheval_reserver.push(nb_jour_cheval)
 
 
 
@@ -716,7 +719,9 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-                //console.log(array_confirmer)
+                console.log(array_confirmer)
+                console.log(array_reserver)
+
 
 
                 var sommeConfirmer = 0
@@ -774,8 +779,8 @@ exports.forecast = async (req, res, next) => {
                     Campagnes_confirmer,
                     Campagne_start,
                     Campagne_end,
-                    Interval__confirmer,
-                    Nbr_cheval__confirmer,
+                    Interval_confirmer,
+                    Nbr_cheval_confirmer,
 
 
 
@@ -789,8 +794,8 @@ exports.forecast = async (req, res, next) => {
                     Campagnes_reserver,
                     Campagne_start_reserver,
                     Campagne_end_reserver,
-                    Interval__reserver,
-                    Nbr_cheval__reserver,
+                    Interval_reserver,
+                    Nbr_cheval_reserver,
                 }
 
 
