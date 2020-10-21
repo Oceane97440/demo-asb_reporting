@@ -48,7 +48,7 @@ const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.format");
 const ModelCountry = require("../models/models.country")
 const ModelCampaign_epilot = require("../models/models.campaing_epilot")
-// const ModelPack= require("../models/models.pack")
+const ModelPack= require("../models/models.pack")
 // const ModelPack_Site= require("../models/models.pack_site")
 
 
@@ -71,12 +71,21 @@ exports.index = async (req, res) => {
                 ['format_group', 'ASC']
             ],
         })
-        var sites = await ModelSite.findAll({
-            attributes: ['site_id', 'site_name'],
+        // var sites = await ModelSite.findAll({
+        //     attributes: ['site_id', 'site_name'],
+        //     order: [
+        //         ['site_name', 'ASC']
+        //     ],
+        // })
+
+        var packs=await ModelPack.findAll({
+            attributes: ['pack_id', 'pack_name'],
             order: [
-                ['site_name', 'ASC']
+                ['pack_name', 'ASC']
             ],
         })
+
+
         var countrys = await ModelCountry.findAll({
             attributes: ['country_id', 'country_name'],
             where: {
@@ -88,7 +97,8 @@ exports.index = async (req, res) => {
         })
         res.render('forecast/form.ejs', {
             formats: formats,
-            sites: sites,
+          //  sites: sites,
+            packs:packs,
             countrys: countrys
         });
 
@@ -109,18 +119,25 @@ exports.forecast = async (req, res, next) => {
     var date_start = req.body.date_start;
     var date_end = req.body.date_end;
     var format = req.body.format;
-    var sites = req.body.sites;
+    //var sites = req.body.sites;
+
+    var packs = req.body.packs;
+    
     var countries = req.body.countries;
     const formatIdsArray = [];
     const dataArrayFromReq = [];
-    const datarequete = []
 
     console.log(req.body)
     try {
 
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
-        // Si c'est un string on met en tableau pour respecter l'api
+       
+
+        //recupération des site d'un pack
+
+
+ // Si c'est un string on met en tableau pour respecter l'api
         if (typeof sites == 'string') {
             sites = [sites];
         }
