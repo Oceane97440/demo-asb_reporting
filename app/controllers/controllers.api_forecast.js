@@ -209,6 +209,20 @@ exports.forecast = async (req, res, next) => {
                     "periodic": 1,
                     "periodInMinutes": 120
                 }
+                   //si RG-DESKTOP est seletionner add ciblage desktop
+                if (packs=="7"){
+                    requestForecast.filter[4] = {
+                        "platformID": ["1"]
+                    }
+                }
+
+                //si RG mob/tab est selectionner ciblage mob/tab 
+                if (packs=="2"){
+                
+                    requestForecast.filter[3] = {
+                        "platformID": ["3","2"]
+                    }
+                }
 
                 // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
                 let firstReq = await AxiosFunction.getForecastData('POST', '', requestForecast);
@@ -526,6 +540,20 @@ exports.forecast = async (req, res, next) => {
         if (format === "HABILLAGE") {
             requestForecast.filter[2] = {
                 "FormatID": ["79637", "44149"]
+            }
+        }
+           //si RG-DESKTOP est seletionner add ciblage desktop
+           if (packs=="7"){
+            requestForecast.filter[3] = {
+                "platformID": ["1"]
+            }
+        }
+
+           //si RG mob/tab est selectionner ciblage mob/tab 
+           if (packs=="2"){
+           
+            requestForecast.filter[3] = {
+                "platformID": ["3","2"]
             }
         }
 
