@@ -80,10 +80,9 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
  * @param {Array} dataArrayFromReq 
  * @returns les valeurs pour faire la table
  */
-/*
-exports.dataFormatingForForecast = async (dataArrayFromReq,req, res) => {
+
+exports.dataFormatingForForecast = async (dataArrayFromReq) => {
   console.log(dataArrayFromReq)
-  console.log(res)
   var TotalImpressions = []
   var OccupiedImpressions = []
   var SiteID = []
@@ -143,7 +142,7 @@ console.log(tableData)
   return tableData;
 }
 
-*/
+
 exports.getManageData = async (method, urlManage, data = null) => {
   console.log(data)
   var return_data;

@@ -144,7 +144,7 @@ exports.forecast = async (req, res, next) => {
                 }
             }
         });
-        console.log(sitesdb)
+     //   console.log(sitesdb)
         for (let l = 0; l < sitesdb.length; l++) {
             sites.push(sitesdb[l].site_id);
         }
@@ -172,64 +172,88 @@ exports.forecast = async (req, res, next) => {
                 formatIdsArray.push(formatIds[l].format_id);
             }
         }
-    // Si on a le format intertistiel : On va faire du cumul site par site avec l'ajout d'un capping
-    if (format === "INTERSTITIEL") {
-        for (let m = 0; m < sites.length; m++) {
 
-            // Construction de la requete vers l'api dans le format intertistiel
-            requestForecast = {
-                "startDate": date_start,
-                "endDate": date_end,
-                "timeZoneId": "Arabian Standard Time",
-                "filter": [{
-                        "CountryID": [countries]
-                    },
-                    {
-                        "SiteID": [sites[m]]
-                    },
-                    {
-                        "FormatID": formatIdsArray // new Array(79633,44152) //formats
-                    }
-                ],
-                "fields": ["TotalImpressions", "OccupiedImpressions", "SiteID", "SiteName", "FormatID", "FormatName", "AvailableImpressions"]
-            };
-
-            requestForecast.filter[3] = {
-                "acceptCookie": ["True"]
-            }
-
-            requestForecast.capping = {
-                "global": 0,
-                "visit": 0,
-                "periodic": 1,
-                "periodInMinutes": 120
-            }
-
-            // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
-            let firstReq = await AxiosFunction.getForecastData('POST', '', requestForecast);
-
-            if (firstReq.headers.location) {
-                headerlocation = firstReq.headers.location;
-                let secondReq = await AxiosFunction.getForecastData('GET', headerlocation);
-
-                if (secondReq.data.progress == '100') {
-                    headerlocation = secondReq.headers.location;
-                    let csvLinkReq = await AxiosFunction.getForecastData('GET', headerlocation);
-                    dataArrayFromReq.push(csvLinkReq.data);
-                }
-            }
-        }
-
-        // Contient les données formatter pour l'affichage
-        table = await AxiosFunction.dataFormatingForForecast(dataArrayFromReq);
-
-
-        return res.render('forecast/data.ejs', {
-            table: table
-        });
-    }
         // Si on a le format intertistiel : On va faire du cumul site par site avec l'ajout d'un capping
-     
+        if (format === "INTERSTITIEL") {
+
+
+
+
+            for (let m = 0; m < sites.length; m++) {
+
+                // Construction de la requete vers l'api dans le format intertistiel
+                requestForecast = {
+                    "startDate": date_start,
+                    "endDate": date_end,
+                    "timeZoneId": "Arabian Standard Time",
+                    "filter": [{
+                            "CountryID": [countries]
+                        },
+                        {
+                            "SiteID": [sites[m]]
+                        },
+                        {
+                            "FormatID": formatIdsArray // new Array(79633,44152) //formats
+                        },
+                        {
+                            "acceptCookie": ["True"]
+                        }
+                    ],
+                    "fields": ["TotalImpressions", "OccupiedImpressions", "SiteID", "SiteName", "FormatID", "FormatName", "AvailableImpressions"],
+                   
+                    "capping": {
+                        "global": 0,
+                        "visit": 0,
+                        "periodic": 1,
+                        "periodInMinutes": 120
+                    },
+                };
+
+                // requestForecast.filter[3] = {
+                //     "acceptCookie": ["True"]
+                // }
+                // requestForecast.capping = {
+                //     "global": 0,
+                //     "visit": 0,
+                //     "periodic": 1,
+                //     "periodInMinutes": 120
+                // }
+               
+                //si RG desktop est selectionner ciblage desktop
+                if (packs=="7"){
+                    requestForecast.filter[4] = {
+                        "platformID": ["1"]
+                    }
+                }
+                //si RG mob/tab est selectionner ciblage mob/tab + format App interstitiel
+                if (packs=="2"){
+                    requestForecast.filter[2] = {
+                        "FormatID": ["79633"]
+                    }
+                    requestForecast.filter[4] = {
+                        "platformID": ["3","2"]
+                    }
+                }
+                console.log(requestForecast.filter[0])
+                console.log(requestForecast.filter[1])
+                console.log(requestForecast.filter[2])
+                console.log(requestForecast.filter[3])
+                console.log(requestForecast.capping)
+
+
+               
+                console.log(requestForecast)
+                // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
+                let firstReq = await AxiosFunction.getForecastData('POST', '', requestForecast);
+
+                if (firstReq.headers.location) {
+                    headerlocation = firstReq.headers.location;
+                    let secondReq = await AxiosFunction.getForecastData('GET', headerlocation);
+
+                    if (secondReq.data.progress == '100') {
+                        headerlocation = secondReq.headers.location;
+                        let csvLinkReq = await AxiosFunction.getForecastData('GET', headerlocation);
+                        dataArrayFromReq.push(csvLinkReq.data);
 /*
                         var dataFormatingForForecast = async (dataArrayFromReq) => {
 
@@ -501,16 +525,22 @@ exports.forecast = async (req, res, next) => {
                         }
 */
 
-                    
+                    }
 
+                    table = await AxiosFunction.dataFormatingForForecast(dataArrayFromReq);
 
-                
-            
+                    return res.render('forecast/data.ejs', {
+                        table: table,
+                       
+                    });
+
+                }
+            }
 
             // Contient les données formatter pour l'affichage
 
 
-        
+        }
         // initialise la requête pour les cas hors intertistiel + habillage
         requestForecast = {
             "startDate": date_start,
