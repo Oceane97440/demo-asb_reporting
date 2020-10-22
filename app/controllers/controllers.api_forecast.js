@@ -202,14 +202,18 @@ exports.forecast = async (req, res, next) => {
                 requestForecast.filter[3] = {
                     "acceptCookie": ["True"]
                 }
-
+                if (packs=="7"){
+                    requestForecast.filter[4] = {
+                        "platformID": ["1"]
+                    }
+                }
                 requestForecast.capping = {
                     "global": 0,
                     "visit": 0,
                     "periodic": 1,
                     "periodInMinutes": 120
                 }
-
+                console.log(requestForecast)
                 // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
                 let firstReq = await AxiosFunction.getForecastData('POST', '', requestForecast);
 
@@ -528,7 +532,13 @@ exports.forecast = async (req, res, next) => {
                 "FormatID": ["79637", "44149"]
             }
         }
-
+        //si RG-DESKTOP est seletionner add ciblage desktop
+        if (packs=="7"){
+            requestForecast.filter[3] = {
+                "platformID": ["1"]
+            }
+        }
+        console.log(requestForecast)
         // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
         let firstLink = await AxiosFunction.getForecastData('POST', '', requestForecast);
 
