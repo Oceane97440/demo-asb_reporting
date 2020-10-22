@@ -236,49 +236,69 @@ exports.forecast = async (req, res, next) => {
                         let csvLinkReq = await AxiosFunction.getForecastData('GET', headerlocation);
                         dataArrayFromReq.push(csvLinkReq.data);
 
-                        var dataFormatingForForecast = async (dataArrayFromReq) => {
-
-                            var TotalImpressions = []
-                            var OccupiedImpressions = []
-                            var SiteID = []
-                            var SiteName = []
-                            var FormatID = []
-                            var FormatName = []
-
-                            for (let i = 0; i < dataArrayFromReq.length; i++) {
-                                if (dataArrayFromReq[i]) {
-                                    var data = dataArrayFromReq[i];
-
-
-                                    //delete les ; et delete les blanc
-                                    line = data.split(';');
-                                    let dataTotalImpression = line[6].split('\r\n')[1];
-
-
-                                    // let dataAvailableImpression = line[12].split('\r\n')[0];
-
-                                    //push la donnéé splité dans un tab vide
-                                    TotalImpressions.push(dataTotalImpression);
-                                    OccupiedImpressions.push(line[7]);
-                                    SiteID.push(line[8]);
-                                    SiteName.push(line[9]);
-                                    FormatID.push(line[10]);
-                                    FormatName.push(line[11]);
-                                }
+                   
+                       async  function dataFormatingForForecast (dataArrayFromReq) {
+                        var TotalImpressions = []
+                        var OccupiedImpressions = []
+                        var SiteID = []
+                        var SiteName = []
+                        var FormatID = []
+                        var FormatName = []
+                      
+                        for (let i = 0; i < dataArrayFromReq.length; i++) {
+                            if(dataArrayFromReq[i]) {
+                                var data = dataArrayFromReq[i];
+                                
+                      
+                                //delete les ; et delete les blanc
+                                line = data.split(';');
+                                let dataTotalImpression     = line[6].split('\r\n')[1];
+                           
+                      
+                                // let dataAvailableImpression = line[12].split('\r\n')[0];
+                      
+                                //push la donnéé splité dans un tab vide
+                                TotalImpressions.push(dataTotalImpression);
+                                OccupiedImpressions.push(line[7]);
+                                SiteID.push(line[8]);
+                                SiteName.push(line[9]);
+                                FormatID.push(line[10]);
+                                FormatName.push(line[11]);
                             }
-
-
-                            var sommeImpressions = 0
-                            var sommeOccupied = 0
-
-                            for (let k = 0; k < TotalImpressions.length; k++) {
-                                if (TotalImpressions[k] != '') {
-                                    sommeImpressions += parseInt(TotalImpressions[k])
-                                    sommeOccupied += parseInt(OccupiedImpressions[k])
-                                }
+                        }
+                      
+                      
+                        var sommeImpressions = 0
+                        var sommeOccupied = 0
+                        
+                        for (let k = 0; k < TotalImpressions.length; k++) {
+                            if (TotalImpressions[k] != '') {
+                                sommeImpressions += parseInt(TotalImpressions[k])
+                                sommeOccupied += parseInt(OccupiedImpressions[k])
                             }
+                        }
+                      
+                        var volumeDispo = sommeImpressions - sommeOccupied;
+                      
+                        
+                        var tableData = {
+                            date_start,
+                            date_end,
+                            TotalImpressions,
+                            OccupiedImpressions,
+                            SiteID,
+                            SiteName,
+                            FormatID,
+                            FormatName,
+                            sommeImpressions,
+                            sommeOccupied,
+                            volumeDispo
+                        }
+                      console.log(tableData)
+                        return tableData;
+                      }
+                    
 
-                            var volumeDispo = sommeImpressions - sommeOccupied;
 
                             //Requête sql campagne epilot
                             const requete = await sequelize.query(
@@ -373,11 +393,7 @@ exports.forecast = async (req, res, next) => {
                                 //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
 
                                 const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
-                                // console.log('Total de volume prévu diffuser= ' + volumes_prevu_diffuse)
-
-
-                                // console.log('*******************')
-
+                        
 
                                 if (requete[i].etat == "1") {
 
@@ -389,13 +405,6 @@ exports.forecast = async (req, res, next) => {
                                     Nbr_cheval_confirmer.push(nb_jour_cheval)
 
 
-
-
-
-
-                                }
-
-
                                 if (requete[i].etat == "2") {
 
                                     array_reserver.push(volumes_prevu_diffuse);
@@ -404,9 +413,6 @@ exports.forecast = async (req, res, next) => {
                                     Campagne_end_reserver.push(campaign_end_date)
                                     Interval_reserver.push(nb_jour_interval)
                                     Nbr_cheval_reserver.push(nb_jour_cheval)
-
-
-
 
                                 }
 
@@ -436,36 +442,23 @@ exports.forecast = async (req, res, next) => {
                                 }
                             }
 
+                            table = await dataFormatingForForecast(dataArrayFromReq);
 
-
+                           const Volume_dispo_forecast=table.volumeDispo
                             // Calcule du volume dispo confirmer 
-                            const confirme_reel = volumeDispo - sommeConfirmer;
+                            const confirme_reel = Volume_dispo_forecast - sommeConfirmer;
                             //console.log(confirme_reel)
 
                             // Calcule du volume dispo reserer  
-                            const reserver_reel = volumeDispo - sommeReserver;
+                            const reserver_reel = Volume_dispo_forecast - sommeReserver;
 
 
                             console.log(array_confirmer)
                             console.log(array_reserver)
 
-                            var tableData = {
-                                date_start,
-                                date_end,
-                                TotalImpressions,
-                                OccupiedImpressions,
-                                SiteID,
-                                SiteName,
-                                FormatID,
-                                FormatName,
-                                sommeImpressions,
-                                sommeOccupied,
-                                volumeDispo,
+                         
 
-
-                            }
-
-                            var confirmer = {
+                             confirmer = {
                                 //CONFIRMER//
                                 array_confirmer,
                                 sommeConfirmer,
@@ -493,19 +486,15 @@ exports.forecast = async (req, res, next) => {
                             }
 
 
-                            table = await dataFormatingForForecast(dataArrayFromReq);
-
-                            return res.render('forecast/data.ejs', {
-                                table: table,
-                                confirmer: confirmer,
-                                reserver: reserver
-                            });
-                            // console.log(tableData)
-                            // return tableData
-
-                        }
+                       
+                     
 
 
+                        return res.render('forecast/data.ejs', {
+                            table: table,
+                           confirmer: confirmer,
+                           reserver: reserver
+                        });
                     }
 
 
@@ -517,6 +506,8 @@ exports.forecast = async (req, res, next) => {
 
 
         }
+    }
+
         // initialise la requête pour les cas hors intertistiel + habillage
         requestForecast = {
             "startDate": date_start,
@@ -722,11 +713,6 @@ exports.forecast = async (req, res, next) => {
                         Interval_confirmer.push(nb_jour_interval)
                         Nbr_cheval_confirmer.push(nb_jour_cheval)
 
-
-
-
-
-
                     }
 
 
@@ -738,8 +724,6 @@ exports.forecast = async (req, res, next) => {
                         Campagne_end_reserver.push(campaign_end_date)
                         Interval_reserver.push(nb_jour_interval)
                         Nbr_cheval_reserver.push(nb_jour_cheval)
-
-
 
 
                     }
@@ -835,7 +819,6 @@ exports.forecast = async (req, res, next) => {
 
             }
         }
-
 
     } catch (error) {
         console.log(error)
