@@ -80,10 +80,9 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
  * @param {Array} dataArrayFromReq 
  * @returns les valeurs pour faire la table
  */
-/*
-exports.dataFormatingForForecast = async (dataArrayFromReq,req, res) => {
-  console.log(dataArrayFromReq)
-  console.log(res)
+
+exports.dataFormatingForForecast = async (dataArrayFromReq) => {
+
   var TotalImpressions = []
   var OccupiedImpressions = []
   var SiteID = []
@@ -94,14 +93,10 @@ exports.dataFormatingForForecast = async (dataArrayFromReq,req, res) => {
   for (let i = 0; i < dataArrayFromReq.length; i++) {
       if(dataArrayFromReq[i]) {
           var data = dataArrayFromReq[i];
-          
-
+        
           //delete les ; et delete les blanc
           line = data.split(';');
-            console.log(line)
           let dataTotalImpression     = line[6].split('\r\n')[1];
-     
-
           // let dataAvailableImpression = line[12].split('\r\n')[0];
 
           //push la donnéé splité dans un tab vide
@@ -139,13 +134,11 @@ exports.dataFormatingForForecast = async (dataArrayFromReq,req, res) => {
       sommeOccupied,
       volumeDispo
   }
-console.log(tableData)
   return tableData;
 }
 
-*/
 exports.getManageData = async (method, urlManage, data = null) => {
-  console.log(data)
+
   var return_data;
     if (method == 'POST') {
 
