@@ -128,7 +128,7 @@ exports.forecast = async (req, res, next) => {
     const sites = [];
     const dataArrayFromReq = [];
 
-    console.log(req.body)
+    //console.log(req.body)
     try {
 
         date_start = date_start + 'T00:00:00.000Z'
@@ -148,6 +148,7 @@ exports.forecast = async (req, res, next) => {
         for (let l = 0; l < sitesdb.length; l++) {
             sites.push(sitesdb[l].site_id);
         }
+
 
         // Si c'est un string on met en tableau pour respecter l'api
         if (typeof sites == 'string') {
@@ -175,13 +176,7 @@ exports.forecast = async (req, res, next) => {
 
         // Si on a le format intertistiel : On va faire du cumul site par site avec l'ajout d'un capping
         if (format === "INTERSTITIEL") {
-
-
-
-
-            for (let m = 0; m < sites.length; m++) {
-
-                // Construction de la requete vers l'api dans le format intertistiel
+            for (let xyz = 0; xyz < sites.length; xyz++) {
                 requestForecast = {
                     "startDate": date_start,
                     "endDate": date_end,
@@ -190,7 +185,7 @@ exports.forecast = async (req, res, next) => {
                             "CountryID": [countries]
                         },
                         {
-                            "SiteID": [sites[m]]
+                            "SiteID": [sites[xyz]]
                         },
                         {
                             "FormatID": formatIdsArray // new Array(79633,44152) //formats
@@ -209,7 +204,8 @@ exports.forecast = async (req, res, next) => {
                     "periodic": 1,
                     "periodInMinutes": 120
                 }
-                   //si RG-DESKTOP est seletionner add ciblage desktop
+
+                //si RG-DESKTOP est seletionner add ciblage desktop
                 if (packs=="7"){
                     requestForecast.filter[4] = {
                         "platformID": ["1"]
@@ -218,7 +214,6 @@ exports.forecast = async (req, res, next) => {
 
                 //si RG mob/tab est selectionner ciblage mob/tab 
                 if (packs=="2"){
-                
                     requestForecast.filter[3] = {
                         "platformID": ["3","2"]
                     }
@@ -235,277 +230,160 @@ exports.forecast = async (req, res, next) => {
                         headerlocation = secondReq.headers.location;
                         let csvLinkReq = await AxiosFunction.getForecastData('GET', headerlocation);
                         dataArrayFromReq.push(csvLinkReq.data);
-
-                   
-                       async  function dataFormatingForForecast (dataArrayFromReq) {
-                        var TotalImpressions = []
-                        var OccupiedImpressions = []
-                        var SiteID = []
-                        var SiteName = []
-                        var FormatID = []
-                        var FormatName = []
-                      
-                        for (let i = 0; i < dataArrayFromReq.length; i++) {
-                            if(dataArrayFromReq[i]) {
-                                var data = dataArrayFromReq[i];
-                                
-                      
-                                //delete les ; et delete les blanc
-                                line = data.split(';');
-                                let dataTotalImpression     = line[6].split('\r\n')[1];
-                           
-                      
-                                // let dataAvailableImpression = line[12].split('\r\n')[0];
-                      
-                                //push la donnéé splité dans un tab vide
-                                TotalImpressions.push(dataTotalImpression);
-                                OccupiedImpressions.push(line[7]);
-                                SiteID.push(line[8]);
-                                SiteName.push(line[9]);
-                                FormatID.push(line[10]);
-                                FormatName.push(line[11]);
-                            }
-                        }
-                      
-                      
-                        var sommeImpressions = 0
-                        var sommeOccupied = 0
-                        
-                        for (let k = 0; k < TotalImpressions.length; k++) {
-                            if (TotalImpressions[k] != '') {
-                                sommeImpressions += parseInt(TotalImpressions[k])
-                                sommeOccupied += parseInt(OccupiedImpressions[k])
-                            }
-                        }
-                      
-                        var volumeDispo = sommeImpressions - sommeOccupied;
-                      
-                        
-                        var tableData = {
-                            date_start,
-                            date_end,
-                            TotalImpressions,
-                            OccupiedImpressions,
-                            SiteID,
-                            SiteName,
-                            FormatID,
-                            FormatName,
-                            sommeImpressions,
-                            sommeOccupied,
-                            volumeDispo
-                        }
-                      console.log(tableData)
-                        return tableData;
-                      }
-                    
-
-
-                            //Requête sql campagne epilot
-                            const requete = await sequelize.query(
-                                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
-                                    replacements: [date_start, date_end, date_start, date_end, format],
-                                    type: QueryTypes.SELECT
-                                }
-                            );
-
-
-                            // Récupére les résultats de la requete
-                            //console.log(requete)
-
-                            //Initialisation du tableau
-                            var array_confirmer = [];
-                            var Campagnes_confirmer = []
-                            var Campagne_start = []
-                            var Campagne_end = []
-                            var Interval_confirmer = []
-                            var Nbr_cheval_confirmer = []
-
-                            var array_reserver = [];
-                            var Campagnes_reserver = []
-                            var Campagne_start_reserver = []
-                            var Campagne_end_reserver = []
-                            var Interval_reserver = []
-                            var Nbr_cheval_reserver = []
-
-
-                            for (let i = 0; i < requete.length; i++) {
-
-
-                                // Calculer l'intervalle de date sur la période
-                                const campaign_start_date = requete[i].campaign_start_date
-
-                                const campaign_end_date = requete[i].campaign_end_date
-
-                                const volumes_prevue = requete[i].volume_prevue
-
-                                // const campaign_date_start = campaign_start_date+ 'T00:00:00.000Z'
-
-                                // const campaign_date_end = campaign_end_date+ 'T23:59:00.000Z'
-                                const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
-
-                                const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
-
-                                date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
-
-                                const nb_jour_interval = (date_interval / 86400000)
-
-                                // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                                const date_start_forecast = date_start
-                                const date_end_forecast = date_end
-
-
-
-
-                                if ((campaign_date_end > date_start_forecast)) {
-
-                                    //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
-                                    if (date_start_forecast < campaign_date_start) {
-
-                                        //alors la date début à cheval = date de début campagne 
-                                        var date_start_cheval = campaign_date_start
-
-                                    } else {
-
-                                        var date_start_cheval = date_start_forecast
-
-                                    }
-
-                                    // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
-                                    if (date_end_forecast > campaign_date_end) {
-
-                                        //alors le date de fin a cheval = date de fin campagne 
-                                        var date_end_cheval = campaign_date_end
-
-                                    } else {
-
-                                        var date_end_cheval = date_end_forecast
-
-                                    }
-                                }
-
-                                //calcul du nombre de jour à cheval
-
-                                const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
-                                //arrondie pour un nombre entier
-                                const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
-
-
-                                //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
-
-                                const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
-                        
-
-                                if (requete[i].etat == "1") {
-
-                                    array_confirmer.push(volumes_prevu_diffuse);
-                                    Campagnes_confirmer.push(requete[i].campaign_name)
-                                    Campagne_start.push(campaign_start_date)
-                                    Campagne_end.push(campaign_end_date)
-                                    Interval_confirmer.push(nb_jour_interval)
-                                    Nbr_cheval_confirmer.push(nb_jour_cheval)
-
-
-                                if (requete[i].etat == "2") {
-
-                                    array_reserver.push(volumes_prevu_diffuse);
-                                    Campagnes_reserver.push(requete[i].campaign_name)
-                                    Campagne_start_reserver.push(campaign_start_date)
-                                    Campagne_end_reserver.push(campaign_end_date)
-                                    Interval_reserver.push(nb_jour_interval)
-                                    Nbr_cheval_reserver.push(nb_jour_cheval)
-
-                                }
-
-
-                            }
-
-                             console.log(array_confirmer)
-                             console.log(array_reserver)
-
-
-
-                            var sommeConfirmer = 0
-                            var sommeReserver = 0
-
-                            for (let i = 0; i < array_confirmer.length; i++) {
-                                if (array_confirmer[i] != '') {
-                                    sommeConfirmer += parseInt(array_confirmer[i])
-
-
-                                }
-                            }
-
-                            for (let i = 0; i < array_reserver.length; i++) {
-                                if (array_reserver[i] != '') {
-
-                                    sommeReserver += parseInt(array_reserver[i])
-                                }
-                            }
-
-                            table = await dataFormatingForForecast(dataArrayFromReq);
-
-                           const Volume_dispo_forecast=table.volumeDispo
-                            // Calcule du volume dispo confirmer 
-                            const confirme_reel = Volume_dispo_forecast - sommeConfirmer;
-                            //console.log(confirme_reel)
-
-                            // Calcule du volume dispo reserer  
-                            const reserver_reel = Volume_dispo_forecast - sommeReserver;
-
-
-                            console.log(array_confirmer)
-                            console.log(array_reserver)
-
-                         
-
-                             confirmer = {
-                                //CONFIRMER//
-                                array_confirmer,
-                                sommeConfirmer,
-                                confirme_reel,
-                                Campagnes_confirmer,
-                                Campagne_start,
-                                Campagne_end,
-                                Interval_confirmer,
-                                Nbr_cheval_confirmer,
-
-
-
-                            }
-
-                            reserver = {
-                                //RESERVER//
-                                array_reserver,
-                                sommeReserver,
-                                reserver_reel,
-                                Campagnes_reserver,
-                                Campagne_start_reserver,
-                                Campagne_end_reserver,
-                                Interval_reserver,
-                                Nbr_cheval_reserver,
-                            }
-
-
-                       
-                     
-
-
-                        return res.render('forecast/data.ejs', {
-                            table: table,
-                           confirmer: confirmer,
-                           reserver: reserver
-                        });
+                        table = await AxiosFunction.dataFormatingForForecast(dataArrayFromReq);
                     }
-
-
-
                 }
             }
 
-            // Contient les données formatter pour l'affichage
+            //Requête sql campagne epilot
+            const requete = await sequelize.query(
+                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
+                    replacements: [date_start, date_end, date_start, date_end, format],
+                    type: QueryTypes.SELECT
+                }
+            );
 
+             //Initialisation du tableau
+             var array_confirmer = []
+             var Campagnes_confirmer = []
+             var Campagne_start = []
+             var Campagne_end = []
+             var Interval_confirmer = []
+             var Nbr_cheval_confirmer = []
 
-        }
+             var array_reserver = [];
+             var Campagnes_reserver = []
+             var Campagne_start_reserver = []
+             var Campagne_end_reserver = []
+             var Interval_reserver = []
+             var Nbr_cheval_reserver = []
+
+            for (let i = 0; i < requete.length; i++) {
+                // Calculer l'intervalle de date sur la période
+                const campaign_start_date = requete[i].campaign_start_date
+
+                const campaign_end_date = requete[i].campaign_end_date
+
+                const volumes_prevue = requete[i].volume_prevue
+
+                // const campaign_date_start = campaign_start_date+ 'T00:00:00.000Z'
+
+                // const campaign_date_end = campaign_end_date+ 'T23:59:00.000Z'
+                const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
+
+                const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
+
+                date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
+
+                const nb_jour_interval = (date_interval / 86400000)
+
+                // Calculer le nombre de jour à cheval en fonction des dates du forecast
+                const date_start_forecast = date_start
+                const date_end_forecast = date_end
+                
+                if ((campaign_date_end > date_start_forecast)) {
+
+                    //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
+                    if (date_start_forecast < campaign_date_start) {
+                        //alors la date début à cheval = date de début campagne 
+                        var date_start_cheval = campaign_date_start
+
+                    } else {
+                        var date_start_cheval = date_start_forecast
+                    }
+
+                    // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
+                    if (date_end_forecast > campaign_date_end) {
+                        //alors le date de fin a cheval = date de fin campagne 
+                        var date_end_cheval = campaign_date_end
+
+                    } else {
+                        var date_end_cheval = date_end_forecast
+                    }
+                }
+
+                //calcul du nombre de jour à cheval
+                const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
+
+                //arrondie pour un nombre entier
+                const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
+
+                //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
+                const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
+        
+                //push dans des tab les données des etat confirmer et reserver
+                if (requete[i].etat == "1") {
+                    array_confirmer.push(volumes_prevu_diffuse);
+                    Campagnes_confirmer.push(requete[i].campaign_name)
+                    Campagne_start.push(campaign_start_date)
+                    Campagne_end.push(campaign_end_date)
+                    Interval_confirmer.push(nb_jour_interval)
+                    Nbr_cheval_confirmer.push(nb_jour_cheval)
+                }
+
+                if (requete[i].etat == "2") {
+                    array_reserver.push(volumes_prevu_diffuse);
+                    Campagnes_reserver.push(requete[i].campaign_name)
+                    Campagne_start_reserver.push(campaign_start_date)
+                    Campagne_end_reserver.push(campaign_end_date)
+                    Interval_reserver.push(nb_jour_interval)
+                    Nbr_cheval_reserver.push(nb_jour_cheval)
+                }
+
+                var sommeConfirmer = 0
+                var sommeReserver = 0
+
+                //total des confirmer
+                for (let i = 0; i < array_confirmer.length; i++) {
+                    if (array_confirmer[i] != '') {
+                        sommeConfirmer += parseInt(array_confirmer[i])
+                    }
+                }
+
+                //total des réserver
+                for (let i = 0; i < array_reserver.length; i++) {
+                    if (array_reserver[i] != '') {
+                        sommeReserver += parseInt(array_reserver[i])
+                    }
+                }
+
+                const Volume_dispo_forecast=table.volumeDispo
+                    // Calcule du volume dispo confirmer 
+                    const confirme_reel = Volume_dispo_forecast - sommeConfirmer;
+                
+                    // Calcule du volume dispo reserer  
+                    const reserver_reel = Volume_dispo_forecast - sommeReserver;
+
+                    confirmer = {
+                        //CONFIRMER//
+                        array_confirmer,
+                        sommeConfirmer,
+                        confirme_reel,
+                        Campagnes_confirmer,
+                        Campagne_start,
+                        Campagne_end,
+                        Interval_confirmer,
+                        Nbr_cheval_confirmer,
+                    }
+
+                    reserver = {
+                        //RESERVER//
+                        array_reserver,
+                        sommeReserver,
+                        reserver_reel,
+                        Campagnes_reserver,
+                        Campagne_start_reserver,
+                        Campagne_end_reserver,
+                        Interval_reserver,
+                        Nbr_cheval_reserver,
+                    }
+            }
+
+            return res.render('forecast/data.ejs', {
+                table: table,
+                confirmer: confirmer,
+                reserver: reserver
+            });
     }
 
         // initialise la requête pour les cas hors intertistiel + habillage
@@ -687,23 +565,13 @@ exports.forecast = async (req, res, next) => {
                         }
                     }
 
-                    //calcul du nombre de jour à cheval
 
                     const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
-                    //arrondie pour un nombre entier
+                 
                     const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
 
-
-                    //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
-
                     const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
-                    // console.log('Total de volume prévu diffuser= ' + volumes_prevu_diffuse)
-
-
-                    // console.log('*******************')
-
-
-
+            
                     if (requete[i].etat == "1") {
 
                         array_confirmer.push(volumes_prevu_diffuse);
@@ -714,7 +582,6 @@ exports.forecast = async (req, res, next) => {
                         Nbr_cheval_confirmer.push(nb_jour_cheval)
 
                     }
-
 
                     if (requete[i].etat == "2") {
 
@@ -731,10 +598,8 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-                console.log(array_confirmer)
-                console.log(array_reserver)
-
-
+               // console.log(array_confirmer)
+               // console.log(array_reserver)
 
                 var sommeConfirmer = 0
                 var sommeReserver = 0
@@ -742,7 +607,6 @@ exports.forecast = async (req, res, next) => {
                 for (let i = 0; i < array_confirmer.length; i++) {
                     if (array_confirmer[i] != '') {
                         sommeConfirmer += parseInt(array_confirmer[i])
-
 
                     }
                 }
@@ -756,15 +620,9 @@ exports.forecast = async (req, res, next) => {
 
 
 
-                // Calcule du volume dispo confirmer 
                 const confirme_reel = volumeDispo - sommeConfirmer;
-
-
-                // Calcule du volume dispo reserer  
+  
                 const reserver_reel = volumeDispo - sommeReserver;
-
-
-
 
 
                 var table = {
@@ -793,8 +651,6 @@ exports.forecast = async (req, res, next) => {
                     Campagne_end,
                     Interval_confirmer,
                     Nbr_cheval_confirmer,
-
-
 
                 }
 
@@ -828,38 +684,7 @@ exports.forecast = async (req, res, next) => {
 
 
 exports.epilot = async (req, res, next) => {
-    try {
 
-        var formats = await ModelFormat.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
-            group: ['format_group'],
-            where: {
-                format_group: {
-                    [Op.not]: null
-                }
-            },
-            order: [
-                ['format_group', 'ASC']
-            ],
-        })
-
-
-        res.render('forecast/form_epilot.ejs', {
-            formats: formats,
-
-        });
-
-    } catch (err) {
-        res.status(500).json({
-            'error': 'cannot fetch country'
-        });
-    }
-
-}
-
-
-
-exports.epilot = async (req, res, next) => {
     try {
 
         var formats = await ModelFormat.findAll({
@@ -900,8 +725,6 @@ exports.campaign_epilot = async (req, res, next) => {
     const campaign_start_date = req.body.campaign_start_date;
     const campaign_end_date = req.body.campaign_end_date
     const volume_prevue = req.body.volume_prevue
-
-
 
 
 

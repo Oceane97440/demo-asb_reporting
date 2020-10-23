@@ -5,7 +5,8 @@ const sequelize = new Sequelize(process.env.DB,process.env.USER,process.env.PASS
   host: process.env.HOST,
   dialect: "mysql",
   operatorsAliases:false,
-  
+  logging: false,
+
   dialectOptions: {
     useUTC: false, //for reading from database
     dateStrings: true,
