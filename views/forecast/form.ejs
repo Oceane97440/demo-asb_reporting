@@ -37,7 +37,7 @@
 			<div class="form-group">
 		
 			<label for="packs">Packs</label>
-				<select class="form-control" name="packs" id="packs" multiple required="required">
+				<select class="form-control" name="packs" id="packs"  required="required">
 					<% for(let i=0; i < packs.length; i++) {%>
 					<option value="<%= packs[i].pack_id %>"><%= packs[i].pack_name %></option>
 					<% } %>
