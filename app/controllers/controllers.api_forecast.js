@@ -317,7 +317,7 @@ exports.forecast = async (req, res, next) => {
 
                 if (requete[i].etat == "1") {
 
-                    if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
                    
                     }
                     else{
@@ -334,7 +334,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 if (requete[i].etat == "2") {
-                    if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
                    
                     }
                     else{
@@ -592,8 +592,8 @@ exports.forecast = async (req, res, next) => {
 
                     if (requete[i].etat == "1") {
 
-                        if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
-
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
+                            console.log(requete[i])
 
                         } else {
 
@@ -609,7 +609,8 @@ exports.forecast = async (req, res, next) => {
 
                     if (requete[i].etat == "2") {
 
-                        if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
+                           // console.log(requete[i])
 
                         } else {
 
@@ -626,13 +627,7 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-               // console.log('tableau confirmé', Campagne_start)
-                //console.log('tableau confirmé', Campagne_end)
-
-                //console.log('tableau réservé', Campagne_start_reserver)
-                //console.log('tableau réservé', Campagne_end_reserver)
-                //  console.log(array_confirmer)
-                //  console.log(array_reserver)
+        
 
                 var sommeConfirmer = 0
                 var sommeReserver = 0
@@ -765,7 +760,7 @@ exports.campaign_epilot = async (req, res, next) => {
 
 
         const campaign_debut = campaign_start_date + 'T00:00:00.000Z'
-        const campaign_fin = campaign_end_date + 'T23:59:00.000Z'
+        const campaign_fin = campaign_end_date + 'T00:00:00.000Z'
 
         var test = await ModelCampaign_epilot.create({
             campaign_name: campaign_name,
@@ -777,6 +772,7 @@ exports.campaign_epilot = async (req, res, next) => {
 
         }).then(res.send("Add entité"))
 
+        console.log(test)
     } catch (error) {
         console.log(error)
     }
