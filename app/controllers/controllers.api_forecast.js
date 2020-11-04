@@ -44,7 +44,7 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-const ModelSite = require("../models/models.site");
+//const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.format");
 const ModelCountry = require("../models/models.country")
 const ModelCampaign_epilot = require("../models/models.campaing_epilot")
@@ -144,7 +144,7 @@ exports.forecast = async (req, res, next) => {
                 }
             }
         });
-     //   console.log(sitesdb)
+        //   console.log(sitesdb)
         for (let l = 0; l < sitesdb.length; l++) {
             sites.push(sitesdb[l].site_id);
         }
@@ -206,14 +206,14 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 //si RG-DESKTOP est seletionner add ciblage desktop
-                if (packs=="7"){
+                if (packs == "7") {
                     requestForecast.filter[4] = {
                         "platformID": ["1"]
                     }
                 }
 
                 //si RG mob/tab est selectionner ciblage mob/tab 
-                if (packs=="2"){
+                if (packs == "2") {
                     requestForecast.filter[3] = {
                         "platformID": ["3","2"]
                     }
@@ -243,20 +243,20 @@ exports.forecast = async (req, res, next) => {
                 }
             );
 
-             //Initialisation du tableau
-             var array_confirmer = []
-             var Campagnes_confirmer = []
-             var Campagne_start = []
-             var Campagne_end = []
-             var Interval_confirmer = []
-             var Nbr_cheval_confirmer = []
+            //Initialisation du tableau
+            var array_confirmer = []
+            var Campagnes_confirmer = []
+            var Campagne_start = []
+            var Campagne_end = []
+            var Interval_confirmer = []
+            var Nbr_cheval_confirmer = []
 
-             var array_reserver = [];
-             var Campagnes_reserver = []
-             var Campagne_start_reserver = []
-             var Campagne_end_reserver = []
-             var Interval_reserver = []
-             var Nbr_cheval_reserver = []
+            var array_reserver = [];
+            var Campagnes_reserver = []
+            var Campagne_start_reserver = []
+            var Campagne_end_reserver = []
+            var Interval_reserver = []
+            var Nbr_cheval_reserver = []
 
             for (let i = 0; i < requete.length; i++) {
                 // Calculer l'intervalle de date sur la période
@@ -280,7 +280,7 @@ exports.forecast = async (req, res, next) => {
                 // Calculer le nombre de jour à cheval en fonction des dates du forecast
                 const date_start_forecast = date_start
                 const date_end_forecast = date_end
-                
+
                 if ((campaign_date_end > date_start_forecast)) {
 
                     //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
@@ -310,24 +310,42 @@ exports.forecast = async (req, res, next) => {
 
                 //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
                 const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
-        
+
                 //push dans des tab les données des etat confirmer et reserver
+
+                
+
                 if (requete[i].etat == "1") {
-                    array_confirmer.push(volumes_prevu_diffuse);
-                    Campagnes_confirmer.push(requete[i].campaign_name)
-                    Campagne_start.push(campaign_start_date)
-                    Campagne_end.push(campaign_end_date)
-                    Interval_confirmer.push(nb_jour_interval)
-                    Nbr_cheval_confirmer.push(nb_jour_cheval)
+
+                    if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                   
+                    }
+                    else{
+
+                        array_confirmer.push(volumes_prevu_diffuse);
+                        Campagnes_confirmer.push(requete[i].campaign_name)
+                        Campagne_start.push(campaign_start_date)
+                        Campagne_end.push(campaign_end_date)
+                        Interval_confirmer.push(nb_jour_interval)
+                        Nbr_cheval_confirmer.push(nb_jour_cheval)
+
+                    }
+                   
                 }
 
                 if (requete[i].etat == "2") {
-                    array_reserver.push(volumes_prevu_diffuse);
-                    Campagnes_reserver.push(requete[i].campaign_name)
-                    Campagne_start_reserver.push(campaign_start_date)
-                    Campagne_end_reserver.push(campaign_end_date)
-                    Interval_reserver.push(nb_jour_interval)
-                    Nbr_cheval_reserver.push(nb_jour_cheval)
+                    if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                   
+                    }
+                    else{
+                        array_reserver.push(volumes_prevu_diffuse);
+                        Campagnes_reserver.push(requete[i].campaign_name)
+                        Campagne_start_reserver.push(campaign_start_date)
+                        Campagne_end_reserver.push(campaign_end_date)
+                        Interval_reserver.push(nb_jour_interval)
+                        Nbr_cheval_reserver.push(nb_jour_cheval)
+                    }
+                
                 }
 
                 var sommeConfirmer = 0
@@ -347,36 +365,36 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
 
-                const Volume_dispo_forecast=table.volumeDispo
-                    // Calcule du volume dispo confirmer 
-                    const confirme_reel = Volume_dispo_forecast - sommeConfirmer;
-                
-                    // Calcule du volume dispo reserer  
-                    const reserver_reel = Volume_dispo_forecast - sommeReserver;
+                const Volume_dispo_forecast = table.volumeDispo
+                // Calcule du volume dispo confirmer 
+                const confirme_reel = Volume_dispo_forecast - sommeConfirmer;
 
-                    confirmer = {
-                        //CONFIRMER//
-                        array_confirmer,
-                        sommeConfirmer,
-                        confirme_reel,
-                        Campagnes_confirmer,
-                        Campagne_start,
-                        Campagne_end,
-                        Interval_confirmer,
-                        Nbr_cheval_confirmer,
-                    }
+                // Calcule du volume dispo reserer  
+                const reserver_reel = Volume_dispo_forecast - sommeReserver;
 
-                    reserver = {
-                        //RESERVER//
-                        array_reserver,
-                        sommeReserver,
-                        reserver_reel,
-                        Campagnes_reserver,
-                        Campagne_start_reserver,
-                        Campagne_end_reserver,
-                        Interval_reserver,
-                        Nbr_cheval_reserver,
-                    }
+                confirmer = {
+                    //CONFIRMER//
+                    array_confirmer,
+                    sommeConfirmer,
+                    confirme_reel,
+                    Campagnes_confirmer,
+                    Campagne_start,
+                    Campagne_end,
+                    Interval_confirmer,
+                    Nbr_cheval_confirmer,
+                }
+
+                reserver = {
+                    //RESERVER//
+                    array_reserver,
+                    sommeReserver,
+                    reserver_reel,
+                    Campagnes_reserver,
+                    Campagne_start_reserver,
+                    Campagne_end_reserver,
+                    Interval_reserver,
+                    Nbr_cheval_reserver,
+                }
             }
 
             return res.render('forecast/data.ejs', {
@@ -384,7 +402,7 @@ exports.forecast = async (req, res, next) => {
                 confirmer: confirmer,
                 reserver: reserver
             });
-    }
+        }
 
         // initialise la requête pour les cas hors intertistiel + habillage
         requestForecast = {
@@ -411,16 +429,16 @@ exports.forecast = async (req, res, next) => {
                 "FormatID": ["79637", "44149"]
             }
         }
-           //si RG-DESKTOP est seletionner add ciblage desktop
-           if (packs=="7"){
+        //si RG-DESKTOP est seletionner add ciblage desktop
+        if (packs == "7") {
             requestForecast.filter[3] = {
                 "platformID": ["1"]
             }
         }
 
-           //si RG mob/tab est selectionner ciblage mob/tab 
-           if (packs=="2"){
-           
+        //si RG mob/tab est selectionner ciblage mob/tab 
+        if (packs == "2") {
+
             requestForecast.filter[3] = {
                 "platformID": ["3","2"]
             }
@@ -520,9 +538,6 @@ exports.forecast = async (req, res, next) => {
 
                     const volumes_prevue = requete[i].volume_prevue
 
-                    // const campaign_date_start = campaign_start_date+ 'T00:00:00.000Z'
-
-                    // const campaign_date_end = campaign_end_date+ 'T23:59:00.000Z'
                     const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
                     const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
@@ -567,39 +582,57 @@ exports.forecast = async (req, res, next) => {
 
 
                     const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
-                 
+
                     const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
 
                     const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
-            
+
+                    //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
+                    //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
+
                     if (requete[i].etat == "1") {
 
-                        array_confirmer.push(volumes_prevu_diffuse);
-                        Campagnes_confirmer.push(requete[i].campaign_name)
-                        Campagne_start.push(campaign_start_date)
-                        Campagne_end.push(campaign_end_date)
-                        Interval_confirmer.push(nb_jour_interval)
-                        Nbr_cheval_confirmer.push(nb_jour_cheval)
+                        if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
 
+
+                        } else {
+
+                            array_confirmer.push(volumes_prevu_diffuse);
+                            Campagnes_confirmer.push(requete[i].campaign_name)
+                            Campagne_start.push(campaign_start_date)
+                            Campagne_end.push(campaign_date_end)
+                            Interval_confirmer.push(nb_jour_interval)
+                            Nbr_cheval_confirmer.push(nb_jour_cheval)
+
+                        }
                     }
 
                     if (requete[i].etat == "2") {
 
-                        array_reserver.push(volumes_prevu_diffuse);
-                        Campagnes_reserver.push(requete[i].campaign_name)
-                        Campagne_start_reserver.push(campaign_start_date)
-                        Campagne_end_reserver.push(campaign_end_date)
-                        Interval_reserver.push(nb_jour_interval)
-                        Nbr_cheval_reserver.push(nb_jour_cheval)
+                        if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
 
+                        } else {
+
+                            array_reserver.push(volumes_prevu_diffuse);
+                            Campagnes_reserver.push(requete[i].campaign_name)
+                            Campagne_start_reserver.push(campaign_start_date)
+                            Campagne_end_reserver.push(campaign_date_end)
+                            Interval_reserver.push(nb_jour_interval)
+                            Nbr_cheval_reserver.push(nb_jour_cheval)
+                        }
 
                     }
 
 
                 }
 
-               // console.log(array_confirmer)
-               // console.log(array_reserver)
+               // console.log('tableau confirmé', Campagne_start)
+                //console.log('tableau confirmé', Campagne_end)
+
+                //console.log('tableau réservé', Campagne_start_reserver)
+                //console.log('tableau réservé', Campagne_end_reserver)
+                //  console.log(array_confirmer)
+                //  console.log(array_reserver)
 
                 var sommeConfirmer = 0
                 var sommeReserver = 0
@@ -621,7 +654,7 @@ exports.forecast = async (req, res, next) => {
 
 
                 const confirme_reel = volumeDispo - sommeConfirmer;
-  
+
                 const reserver_reel = volumeDispo - sommeReserver;
 
 
