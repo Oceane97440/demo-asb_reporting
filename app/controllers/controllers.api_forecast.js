@@ -215,7 +215,7 @@ exports.forecast = async (req, res, next) => {
                 //si RG mob/tab est selectionner ciblage mob/tab 
                 if (packs == "2") {
                     requestForecast.filter[3] = {
-                        "platformID": ["3","2"]
+                        "platformID": ["3", "2"]
                     }
                 }
 
@@ -313,14 +313,13 @@ exports.forecast = async (req, res, next) => {
 
                 //push dans des tab les données des etat confirmer et reserver
 
-                
+
 
                 if (requete[i].etat == "1") {
 
-                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
-                   
-                    }
-                    else{
+                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+
+                    } else {
 
                         array_confirmer.push(volumes_prevu_diffuse);
                         Campagnes_confirmer.push(requete[i].campaign_name)
@@ -330,14 +329,13 @@ exports.forecast = async (req, res, next) => {
                         Nbr_cheval_confirmer.push(nb_jour_cheval)
 
                     }
-                   
+
                 }
 
                 if (requete[i].etat == "2") {
-                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
-                   
-                    }
-                    else{
+                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+
+                    } else {
                         array_reserver.push(volumes_prevu_diffuse);
                         Campagnes_reserver.push(requete[i].campaign_name)
                         Campagne_start_reserver.push(campaign_start_date)
@@ -345,7 +343,7 @@ exports.forecast = async (req, res, next) => {
                         Interval_reserver.push(nb_jour_interval)
                         Nbr_cheval_reserver.push(nb_jour_cheval)
                     }
-                
+
                 }
 
                 var sommeConfirmer = 0
@@ -440,7 +438,7 @@ exports.forecast = async (req, res, next) => {
         if (packs == "2") {
 
             requestForecast.filter[3] = {
-                "platformID": ["3","2"]
+                "platformID": ["3", "2"]
             }
         }
 
@@ -592,7 +590,7 @@ exports.forecast = async (req, res, next) => {
 
                     if (requete[i].etat == "1") {
 
-                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
                             console.log(requete[i])
                         } else {
@@ -609,8 +607,8 @@ exports.forecast = async (req, res, next) => {
 
                     if (requete[i].etat == "2") {
 
-                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
-                           // console.log(requete[i])
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+                            //console.log(requete[i])
 
                         } else {
 
@@ -627,13 +625,6 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-               // console.log('tableau confirmé', Campagne_start)
-                //console.log('tableau confirmé', Campagne_end)
-
-                //console.log('tableau réservé', Campagne_start_reserver)
-                //console.log('tableau réservé', Campagne_end_reserver)
-                //  console.log(array_confirmer)
-                //  console.log(array_reserver)
 
                 var sommeConfirmer = 0
                 var sommeReserver = 0
@@ -752,31 +743,50 @@ exports.epilot = async (req, res, next) => {
 
 exports.campaign_epilot = async (req, res, next) => {
 
+    var campaign_name = req.body.campaign_name
+    var format_name = req.body.format
+    var etat = req.body.etat
+    var campaign_start_date = req.body.campaign_start_date;
+    var campaign_end_date = req.body.campaign_end_date
+    var volume_prevue = req.body.volume_prevue
 
-    const campaign_name = req.body.campaign_name
-    const format_name = req.body.format
-    const etat = req.body.etat
-    const campaign_start_date = req.body.campaign_start_date;
-    const campaign_end_date = req.body.campaign_end_date
-    const volume_prevue = req.body.volume_prevue
 
 
+    const campaign_debut = campaign_start_date + 'T00:00:00.000Z'
+    const campaign_fin = campaign_end_date + 'T23:59:00.000Z'
 
     try {
 
+        var campagne_search = await ModelCampaign_epilot.findOne({
+            /**search si campagne exsite déjà dans le bdd*/
+            attributes: ['campaign_name', 'campaign_start_date', 'campaign_end_date'],
 
-        const campaign_debut = campaign_start_date + 'T00:00:00.000Z'
-        const campaign_fin = campaign_end_date + 'T23:59:00.000Z'
+            where: {
+                campaign_name: campaign_name
+            }
+        })
 
-        var test = await ModelCampaign_epilot.create({
-            campaign_name: campaign_name,
-            format_name: format_name,
-            etat: etat,
-            campaign_start_date: campaign_debut,
-            campaign_end_date: campaign_fin,
-            volume_prevue: volume_prevue
 
-        }).then(res.send("Add entité"))
+
+
+        if ((campaign_name = campagne_search)) {
+
+            res.send("la campagne exsite déjà dans le bdd")
+        } else {
+
+            ModelCampaign_epilot.create({
+                campaign_name: campaign_name,
+                format_name: format_name,
+                etat: etat,
+                campaign_start_date: campaign_debut,
+                campaign_end_date: campaign_fin,
+                volume_prevue: volume_prevue
+
+            })
+
+        }
+
+
 
     } catch (error) {
         console.log(error)
