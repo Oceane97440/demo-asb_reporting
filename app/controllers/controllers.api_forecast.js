@@ -317,7 +317,7 @@ exports.forecast = async (req, res, next) => {
 
                 if (requete[i].etat == "1") {
 
-                    if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
                    
                     }
                     else{
@@ -334,7 +334,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 if (requete[i].etat == "2") {
-                    if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
                    
                     }
                     else{
@@ -592,9 +592,9 @@ exports.forecast = async (req, res, next) => {
 
                     if (requete[i].etat == "1") {
 
-                        if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
 
-
+                            console.log(requete[i])
                         } else {
 
                             array_confirmer.push(volumes_prevu_diffuse);
@@ -609,7 +609,8 @@ exports.forecast = async (req, res, next) => {
 
                     if (requete[i].etat == "2") {
 
-                        if ((campaign_date_start <= date_start_forecast) && (campaign_date_end >= date_end_forecast)) {
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
+                           // console.log(requete[i])
 
                         } else {
 
