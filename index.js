@@ -6,7 +6,7 @@ const cors = require('cors');
 
 
 
-const db = require("./app/config/config.database.local");
+const db = require("./app/config/_config.database");
 
 const campaing_epilot = require('./app/models/models.campaing_epilot');
 const country=require('./app/models/models.country')

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 
-const sequelize = require('../config/config.database.local').sequelize;
+const sequelize = require('../config/_config.database').sequelize;
 
 
 const Format = sequelize.define('formats', {

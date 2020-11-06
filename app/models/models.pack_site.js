@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const sequelize = require('../config/config.database.local').sequelize;
+const sequelize = require('../config/_config.database').sequelize;
 
 
 const Pack_Site = sequelize.define('pack_site', {
