@@ -592,7 +592,7 @@ exports.forecast = async (req, res, next) => {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
-                            console.log(requete[i])
+                          //  console.log(requete[i])
                         } else {
 
                             array_confirmer.push(volumes_prevu_diffuse);
@@ -788,7 +788,7 @@ exports.campaign_epilot = async (req, res, next) => {
 
 
 
-        console.log(test)
+     //  console.log(test)
     } catch (error) {
         console.log(error)
     }
