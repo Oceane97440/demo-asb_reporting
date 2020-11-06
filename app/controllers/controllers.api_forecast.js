@@ -592,7 +592,7 @@ exports.forecast = async (req, res, next) => {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
-                          //  console.log(requete[i])
+                            //  console.log(requete[i])
                         } else {
 
                             array_confirmer.push(volumes_prevu_diffuse);
@@ -750,29 +750,66 @@ exports.campaign_epilot = async (req, res, next) => {
     var campaign_end_date = req.body.campaign_end_date
     var volume_prevue = req.body.volume_prevue
 
+    console.log(req.body)
 
 
-    const campaign_debut = campaign_start_date + 'T00:00:00.000Z'
-    const campaign_fin = campaign_end_date + 'T23:59:00.000Z'
+    var campaign_debut = campaign_start_date + 'T00:00:00.000Z'
+    var campaign_fin = campaign_end_date + 'T00:00:00.000Z'
 
     try {
 
-        var campagne_search = await ModelCampaign_epilot.findOne({
-            /**search si campagne exsite déjà dans le bdd*/
-            attributes: ['campaign_name', 'campaign_start_date', 'campaign_end_date'],
 
+        var campagne_search = await ModelCampaign_epilot.findOne({
+            attributes: ['campaign_name','format_name','campaign_start_date','campaign_end_date'],
             where: {
-                campaign_name: campaign_name
+                campaign_name: campaign_name,
+                format_name:format_name,
+                campaign_start_date:campaign_debut,
+                campaign_end_date:campaign_fin
             }
+
         })
 
+        if (!campagne_search) {
 
+            ModelCampaign_epilot.create({
+                campaign_name: campaign_name,
+                format_name: format_name,
+                etat: etat,
+                campaign_start_date: campaign_debut,
+                campaign_end_date: campaign_fin,
+                volume_prevue: volume_prevue
 
+                })
+                .then(campagne => {
+                    res.send("OK: le campagne est ajouté à la bdd")
+                })
 
-        if ((campaign_name = campagne_search)) {
-
-            res.send("la campagne exsite déjà dans le bdd")
         } else {
+            res.send("la données exsite, verifier que le nom de campagne, le formar, la date de debut et fin ne soit pas identique")
+        }
+
+
+
+
+
+
+        /*
+          var campagne_search = await ModelCampaign_epilot.findAll({
+            attributes: ['campaign_name'],
+           
+           
+        })
+
+        console.log(campagne_search)
+
+
+        if ((campaign_name===campagne_search)) {
+
+            res.send("le nom de la campagne exsite déjà dans le bdd")
+        }
+      
+        else {
 
             ModelCampaign_epilot.create({
                 campaign_name: campaign_name,
@@ -787,8 +824,13 @@ exports.campaign_epilot = async (req, res, next) => {
         }
 
 
+        
+        
+        
+        */
 
-     //  console.log(test)
+
+        //  console.log(test)
     } catch (error) {
         console.log(error)
     }
