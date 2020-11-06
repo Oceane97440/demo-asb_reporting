@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-const sequelize = require('../config/_config.database').sequelize;
+const sequelize = require('../config/config.database.local').sequelize;
 
 
 const Campaing_epilot = sequelize.define('campaign_epilot', {

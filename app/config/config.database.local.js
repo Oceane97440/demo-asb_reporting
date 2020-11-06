@@ -5,15 +5,13 @@ const sequelize = new Sequelize("demo_asb_reporting","root","", {
   host: "localhost",
   dialect: "mysql",
   operatorsAliases:false,
-  
+  logging: false,
   dialectOptions: {
     useUTC: false, //for reading from database
     dateStrings: true,
     typeCast: true
 },
-timezone: '+04:00', //for writing to database
-
-
+//timezone: '+04:00', //for writing to database
   pool: {
     max: 5,
     min: 0,
