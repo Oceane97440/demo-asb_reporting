@@ -372,6 +372,8 @@ exports.forecast = async (req, res, next) => {
 
                 confirmer = {
                     //CONFIRMER//
+                    date_start,
+                    date_end,
                     array_confirmer,
                     sommeConfirmer,
                     confirme_reel,
@@ -592,7 +594,7 @@ exports.forecast = async (req, res, next) => {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
-                            //  console.log(requete[i])
+                       //  console.log(requete[i])
                         } else {
 
                             array_confirmer.push(volumes_prevu_diffuse);
@@ -608,7 +610,7 @@ exports.forecast = async (req, res, next) => {
                     if (requete[i].etat == "2") {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
-                            //console.log(requete[i])
+                          //  console.log(requete[i])
 
                         } else {
 
@@ -651,8 +653,7 @@ exports.forecast = async (req, res, next) => {
 
 
                 var table = {
-                    date_start,
-                    date_end,
+                   
                     TotalImpressions,
                     OccupiedImpressions,
                     SiteID,
@@ -668,6 +669,8 @@ exports.forecast = async (req, res, next) => {
 
                 var confirmer = {
                     //CONFIRMER//
+                    date_start,
+                    date_end,
                     array_confirmer,
                     sommeConfirmer,
                     confirme_reel,
@@ -756,19 +759,29 @@ exports.campaign_epilot = async (req, res, next) => {
     var campaign_debut = campaign_start_date + 'T00:00:00.000Z'
     var campaign_fin = campaign_end_date + 'T00:00:00.000Z'
 
+
     try {
 
+        if(campaign_debut>=campaign_fin || campaign_fin <= campaign_debut )
 
-        var campagne_search = await ModelCampaign_epilot.findOne({
-            attributes: ['campaign_name','format_name','campaign_start_date','campaign_end_date'],
-            where: {
-                campaign_name: campaign_name,
-                format_name:format_name,
-                campaign_start_date:campaign_debut,
-                campaign_end_date:campaign_fin
-            }
+        {
+            return  res.send("La date debut et fin est invalide")
+        }
+        else{
 
-        })
+            var campagne_search = await ModelCampaign_epilot.findOne({
+                attributes: ['campaign_name','format_name','campaign_start_date','campaign_end_date'],
+                where: {
+                    campaign_name: campaign_name,
+                    format_name:format_name,
+                    campaign_start_date:campaign_debut,
+                    campaign_end_date:campaign_fin
+                }
+    
+            })
+
+        }
+  
 
         if (!campagne_search) {
 
@@ -782,55 +795,17 @@ exports.campaign_epilot = async (req, res, next) => {
 
                 })
                 .then(campagne => {
-                    res.send("OK: le campagne est ajouté à la bdd")
+                    return res.send("OK: le campagne est ajouté à la bdd")
                 })
 
         } else {
-            res.send("la données exsite, verifier que le nom de campagne, le formar, la date de debut et fin ne soit pas identique")
+            return res.send("la données exsite, verifier que le nom de campagne, le formar, la date de debut et fin ne soit pas identique")
         }
 
 
 
 
 
-
-        /*
-          var campagne_search = await ModelCampaign_epilot.findAll({
-            attributes: ['campaign_name'],
-           
-           
-        })
-
-        console.log(campagne_search)
-
-
-        if ((campaign_name===campagne_search)) {
-
-            res.send("le nom de la campagne exsite déjà dans le bdd")
-        }
-      
-        else {
-
-            ModelCampaign_epilot.create({
-                campaign_name: campaign_name,
-                format_name: format_name,
-                etat: etat,
-                campaign_start_date: campaign_debut,
-                campaign_end_date: campaign_fin,
-                volume_prevue: volume_prevue
-
-            })
-
-        }
-
-
-        
-        
-        
-        */
-
-
-        //  console.log(test)
     } catch (error) {
         console.log(error)
     }
