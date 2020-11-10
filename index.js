@@ -58,6 +58,9 @@ const index = require('./app/routes/routes.api_forecast');
 app.use('/api/forecast', index);
 
 
+const reporting = require('./app/routes/routes.api_report');
+
+app.use('/api/reporting', reporting);
 
 
 
