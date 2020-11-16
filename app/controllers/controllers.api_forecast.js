@@ -363,12 +363,17 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
 
-                const Volume_dispo_forecast = table.volumeDispo
+                var Volume_dispo_forecast = table.volumeDispo
                 // Calcule du volume dispo confirmer 
-                const confirme_reel = Volume_dispo_forecast - sommeConfirmer;
+                var confirme_reel = Volume_dispo_forecast - sommeConfirmer;
 
                 // Calcule du volume dispo reserer  
-                const reserver_reel = Volume_dispo_forecast - sommeReserver;
+                var reserver_reel = Volume_dispo_forecast - sommeReserver;
+
+                if (confirme_reel==Volume_dispo_forecast || reserver_reel==Volume_dispo_forecast ) {
+                    confirme_reel=0;
+                    reserver_reel=0;
+                }
 
                 confirmer = {
                     //CONFIRMER//
@@ -499,7 +504,7 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
 
-                const volumeDispo = sommeImpressions - sommeOccupied;
+                var volumeDispo = sommeImpressions - sommeOccupied;
 
 
                 //Requête sql campagne epilot
@@ -647,10 +652,14 @@ exports.forecast = async (req, res, next) => {
 
 
 
-                const confirme_reel = volumeDispo - sommeConfirmer;
+                var confirme_reel = volumeDispo - sommeConfirmer;
 
-                const reserver_reel = volumeDispo - sommeReserver;
+                var reserver_reel = volumeDispo - sommeReserver;
 
+                if (confirme_reel==volumeDispo || reserver_reel==volumeDispo ) {
+                    confirme_reel=0;
+                    reserver_reel=0;
+                }
 
                 var table = {
                    
