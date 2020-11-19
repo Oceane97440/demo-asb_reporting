@@ -279,7 +279,7 @@ form .btn-submit:hover { background-position: right center; }
 
 
   select option:disabled {color:#ddd}
-
+/*
   .fixed_headers {
     width: 1000px;
     table-layout: fixed;
@@ -331,4 +331,4 @@ form .btn-submit:hover { background-position: right center; }
   .old_ie_wrapper tbody {
     height: auto;
   }
-  
+  */
