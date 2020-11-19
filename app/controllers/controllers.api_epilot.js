@@ -81,10 +81,16 @@ exports.index = async (req, res) => {
       ],
     })
 
+    var reult_confirmer = Object.keys(confirmer).length; 
+
+    var reult_reserver = Object.keys(reserver).length; 
+
 
     res.render('forecast/liste_epilot.ejs', {
       confirmer: confirmer,
-      reserver:reserver
+      reserver:reserver,
+      reult_confirmer:reult_confirmer,
+      reult_reserver:reult_reserver
     });
 
 
