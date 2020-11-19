@@ -62,6 +62,10 @@ const reporting = require('./app/routes/routes.api_report');
 
 app.use('/api/reporting', reporting);
 
+const epilot = require('./app/routes/routes.api_epilot');
+
+app.use('/api/epilot', epilot);
+
 
 
 
@@ -72,9 +76,9 @@ app.set("port", process.env.PORT || 3000);
 
 
 
-app.listen(app.get("port"), () => {
+ app.listen(app.get("port"), () => {
   console.log(`server on port ${app.get("port")}`);
-});
-// app.listen(3000, function () {
-//   console.log(`Server running at http://${hostname}:${port}/`);
-// });
+ });
+//app.listen(3000, function () {
+//  console.log(`Server running at http://${hostname}:${port}/`);
+//});

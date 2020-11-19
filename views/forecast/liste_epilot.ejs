@@ -1,0 +1,104 @@
+<%- include("../layouts/admin/head.ejs") -%>
+
+
+
+<div class="card text-center">
+    <div class="card-header tab-card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+
+            <li class="nav-item">
+                <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
+                    aria-selected="true">Campagnes confirmés</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                    aria-selected="false">Campagnes réservés</a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+
+            <table class="fixed_headers">
+
+                <thead class="text-center">
+                    <tr>
+                      <th scope="col">campaign_name</th>
+                      <th scope="col">format_name</th>
+                      <th scope="col">start_date</th>
+                      <th scope="col">end_date</th>
+                      <th scope="col">volume_prevue</th>
+
+                    </tr>
+                  </thead>
+
+                <tbody>
+                    <% for(let i=0; i < confirmer.length; i++) {%>
+
+                        <tr>
+    
+    
+                        <td><%= confirmer[i].campaign_name %></td>
+                        <td><%= confirmer[i].format_name %></td>
+                        <td><%= confirmer[i].campaign_start_date %></td>
+                        <td><%= confirmer[i].campaign_end_date %></td>
+                        <td><%= confirmer[i].volume_prevue %></td>
+    
+                        </tr>
+
+					<% } %>
+    
+    
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+
+            <table class="fixed_headers">
+
+                <thead class="text-center">
+                    <tr>
+                      <th scope="col">campaign_name</th>
+                      <th scope="col">format_name</th>
+                      <th scope="col">start_date</th>
+                      <th scope="col">end_date</th>
+                      <th scope="col">volume_prevue</th>
+
+                    </tr>
+                  </thead>
+
+                <tbody>
+                    <% for(let i=0; i < reserver.length; i++) {%>
+
+                        <tr>
+    
+    
+                        <td><%= reserver[i].campaign_name %></td>
+                        <td><%= reserver[i].format_name %></td>
+                        <td><%= reserver[i].campaign_start_date %></td>
+                        <td><%= reserver[i].campaign_end_date %></td>
+                        <td><%= reserver[i].volume_prevue %></td>
+    
+                        </tr>
+
+					<% } %>
+    
+    
+                </tbody>
+            </table>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+<%- include("../layouts/admin/footer.ejs") -%>
