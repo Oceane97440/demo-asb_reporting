@@ -119,7 +119,6 @@ exports.forecast = async (req, res, next) => {
     var date_start = req.body.date_start;
     var date_end = req.body.date_end;
     var format = req.body.format;
-    console.log('Format', format)
     // var sites = req.body.sites;
 
     var packs = req.body.packs;
