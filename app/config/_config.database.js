@@ -8,7 +8,7 @@ const sequelize = new Sequelize(process.env.DB,process.env.USER,process.env.PASS
   logging: false,
 
   dialectOptions: {
-    useUTC: false, //for reading from database
+   // useUTC: false, //for reading from database
     dateStrings: true,
     typeCast: true
 },
