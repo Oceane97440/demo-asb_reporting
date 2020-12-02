@@ -2,19 +2,19 @@
 
 <% if (table.option == false) { %>
 
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <strong>Cocher la case <a href="/api/forecast">"Elargir la proposition"</a>!
-
-    </strong> Si le volume ne vous convient pas
-
-
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Cocher la case <a href="/api/forecast">"Elargir la proposition"</a>! 
+        
+        </strong> Si le volume ne vous convien pas
 
 
-<% } %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+
+    <% } %>
 
 <div id="card-forecast" class="card">
     <div class="card-header">
@@ -37,6 +37,7 @@
             <li><strong>Volume total: <%=table.sommeImpressions%></strong></li>
             <li>Volume occupé:<%=table.sommeOccupied%></li>
             <li><strong>Volume disponible:<%=table.volumeDispo%></strong></li>
+            <li><strong>Valeur de la case: <%=table.option%></strong></li>
 
         </ul>
 
@@ -49,7 +50,7 @@
 
             <thead class="text-left thead-dark">
                 <tr>
-
+                    
                     <th scope="col">Site ID</th>
                     <th scope="col">Sites</th>
                     <th scope="col">Formats ID</th>
@@ -86,33 +87,78 @@
 </div>
 
 <br>
-<% if (reserver.reserver_reel == 0 ) { %>
+<% if (confirmer.confirme_reel == 0 || reserver.reserver_reel == 0 ) { %>
 
-
+    
 <div class="card text-center">
     <div class="card-header tab-card-header">
         <ul class="nav nav-tabs card-header-tabs">
 
             <li class="nav-item">
                 <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
-                    aria-selected="true">Campagnes réservées</a>
+                    aria-selected="true">Campagnes confirmées</a>
             </li>
-          
+            <li class="nav-item">
+                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                    aria-selected="false">Campagnes réservées</a>
+            </li>
 
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
 
-
         <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Aucune données!</strong> Aucune campagne confirmée sur cette période.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th>Campagnes</th>
+                        <th>Date de début campagne</th>
+                        <th>Date de fin campagne</th>
+                        <th>Nbr de jour</th>
+                        <th>Jour à Cheval</th>
+                        <th>Volume des dispo</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody class="text-left">
+                    <tr>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
 
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Aucune données!</strong> Aucune campagne réservée sur cette période.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                  <span aria-hidden="true">&times;</span>
                 </button>
-            </div>
-
+              </div>
+        
             <table class="table">
 
                 <thead class="text-left thead-dark">
@@ -158,6 +204,10 @@
         <ul class="nav nav-tabs card-header-tabs">
 
             <li class="nav-item">
+                <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
+                    aria-selected="true">Campagnes confirmées</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
                     aria-selected="false">Campagnes réservées</a>
             </li>
@@ -165,6 +215,60 @@
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+            <br>
+            <ul>
+                <li>Total volume prévus confirmée: <%=confirmer.sommeConfirmer%></li>
+                <li><strong>Volume disponible confirmée réel: <%=confirmer.confirme_reel%></strong></li>
+            </ul>
+            <br>
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th>Campagnes</th>
+                        <th>Date de début campagne</th>
+                        <th>Date de fin campagne</th>
+                        <th>Nbr de jour</th>
+                        <th>Jour à Cheval</th>
+                        <th>Volume des dispo</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody class="text-left">
+
+
+
+
+                    <% for (let i=0; i < confirmer.array_confirmer.length; i++) { %>
+
+                    <% if (confirmer.array_confirmer[i] != '' ) { %>
+
+                    <tr>
+
+
+                        <td><%=confirmer.Campagnes_confirmer[i]%></td>
+                        <td><%=confirmer.Campagne_start[i]%></td>
+                        <td><%=confirmer.Campagne_end[i]%></td>
+                        <td><%=confirmer.Interval_confirmer[i]%></td>
+                        <td><%=confirmer.Nbr_cheval_confirmer[i]%></td>
+                        <td><%=confirmer.array_confirmer[i]%></td>
+
+                    </tr>
+
+                    <% } %>
+
+                    <% } %>
+
+
+                </tbody>
+            </table>
+
+        </div>
+
 
         <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
             <br>

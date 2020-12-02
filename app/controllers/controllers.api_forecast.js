@@ -43,6 +43,7 @@ const {
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 
+
 // Initialise les models
 //const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.format");
@@ -95,12 +96,14 @@ exports.index = async (req, res) => {
                 ['country_name', 'DESC']
             ],
         })
+       
         res.render('forecast/form.ejs', {
             formats: formats,
             // sites: sites,
             packs: packs,
             countrys: countrys
         });
+
 
     } catch (err) {
         res.status(500).json({
@@ -123,18 +126,32 @@ exports.forecast = async (req, res, next) => {
 
     var packs = req.body.packs;
 
+    option=req.body.case
+    //si la case n'est pas coché renvoie false sinon true
+    if(option==undefined){
+
+       var option=false
+
+    }else{
+
+       var option=true
+
+    }
+
+    console.log(option)
+
     var countries = req.body.countries;
     const formatIdsArray = [];
     const sites = [];
     const dataArrayFromReq = [];
-
+    console.log(req.body)
     //console.log(req.body)
     try {
 
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
 
-
+ 
         //recupération des site d'un pack
         const sitesdb = await ModelPack_Site.findAll({
             attributes: ['pack_id', 'site_id'],
@@ -379,6 +396,7 @@ exports.forecast = async (req, res, next) => {
                     //CONFIRMER//
                     date_start,
                     date_end,
+                    format,
                     array_confirmer,
                     sommeConfirmer,
                     confirme_reel,
@@ -672,6 +690,7 @@ exports.forecast = async (req, res, next) => {
                     sommeImpressions,
                     sommeOccupied,
                     volumeDispo,
+                    option
 
 
                 }
@@ -680,6 +699,7 @@ exports.forecast = async (req, res, next) => {
                     //CONFIRMER//
                     date_start,
                     date_end,
+                    format,
                     array_confirmer,
                     sommeConfirmer,
                     confirme_reel,

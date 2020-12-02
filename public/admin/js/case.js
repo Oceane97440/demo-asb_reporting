@@ -1,3 +1,7 @@
+
+
+
+
 document.getElementById("myDIV").style.display = "none";
 
 
@@ -6,7 +10,7 @@ function myFunction() {
     var x = document.getElementById("format").value;
 
     
-    console.log(x)
+    //console.log(x)
 
     if (x=="HABILLAGE"|| x=="MASTHEAD" || x=="GRAND ANGLE") {
         
@@ -21,5 +25,20 @@ function myFunction() {
 
 
     }
+
+    return x
     
 }
+
+function coche() {
+
+    var cocher = document.getElementById("myCheck").checked;
+
+   // document.getElementById("demo").innerHTML = x;
+
+   console.log(cocher)
+
+    document.getElementById("myCheck").value = cocher;
+
+
+  }
