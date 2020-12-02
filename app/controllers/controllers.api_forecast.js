@@ -127,6 +127,7 @@ exports.forecast = async (req, res, next) => {
     var packs = req.body.packs;
 
     option=req.body.case
+    
     //si la case n'est pas coché renvoie false sinon true
     if(option==undefined){
 
@@ -138,14 +139,12 @@ exports.forecast = async (req, res, next) => {
 
     }
 
-    console.log(option)
 
     var countries = req.body.countries;
     const formatIdsArray = [];
     const sites = [];
     const dataArrayFromReq = [];
-    console.log(req.body)
-    //console.log(req.body)
+
     try {
 
         date_start = date_start + 'T00:00:00.000Z'
@@ -161,7 +160,7 @@ exports.forecast = async (req, res, next) => {
                 }
             }
         });
-        //   console.log(sitesdb)
+
         for (let l = 0; l < sitesdb.length; l++) {
             sites.push(sitesdb[l].site_id);
         }
@@ -418,8 +417,8 @@ exports.forecast = async (req, res, next) => {
                     Interval_reserver,
                     Nbr_cheval_reserver,
                 }
-            }
 
+            }
             return res.render('forecast/data.ejs', {
                 table: table,
                 confirmer: confirmer,
@@ -445,11 +444,28 @@ exports.forecast = async (req, res, next) => {
             "fields": ["TotalImpressions", "OccupiedImpressions", "SiteID", "SiteName", "FormatID", "FormatName", "AvailableImpressions"]
         };
 
+        //si la case "élargir la propo" est coché les web et ap mban son add de la requête
+        if(option==true && format == "GRAND ANGLE")
+        {
+            requestForecast.filter[2] = {
+                "FormatID": [
 
+                    //Masthead
+                    "79409","84652","84653","84654","84655","84656","79421",
+                    "79637","79638","79642","79643","79644","79645","79646",
+                    //Grand angle
+                    "79956","79650","79651","79652","79653","79654","79655",
+                    "79425","84657","84658","84659","84660","84661","79431"
+                
+                
+                ]
+            }
+        }
         // si le format habillage est choisi on ajoute App_man_atf0
         if (format === "HABILLAGE") {
             requestForecast.filter[2] = {
                 "FormatID": ["79637", "44149"]
+
             }
         }
         //si RG-DESKTOP est seletionner add ciblage desktop
@@ -466,7 +482,7 @@ exports.forecast = async (req, res, next) => {
                 "platformID": ["3", "2"]
             }
         }
-
+        //console.log(requestForecast.filter[2])
         // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
         let firstLink = await AxiosFunction.getForecastData('POST', '', requestForecast);
 
@@ -523,7 +539,6 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
-
 
                 //Requête sql campagne epilot
                 const requete = await sequelize.query(
@@ -617,7 +632,6 @@ exports.forecast = async (req, res, next) => {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
-                       //  console.log(requete[i])
                         } else {
 
                             array_confirmer.push(volumes_prevu_diffuse);
@@ -633,7 +647,6 @@ exports.forecast = async (req, res, next) => {
                     if (requete[i].etat == "2") {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
-                          //  console.log(requete[i])
 
                         } else {
 
@@ -678,6 +691,10 @@ exports.forecast = async (req, res, next) => {
                     confirme_reel=0;
                     reserver_reel=0;
                 }
+
+                sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
+                sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
+                volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
 
                 var table = {
                    

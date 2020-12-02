@@ -121,7 +121,10 @@ exports.dataFormatingForForecast = async (dataArrayFromReq) => {
   }
 
   var volumeDispo = sommeImpressions - sommeOccupied;
-
+  
+  sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
+  sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
+  volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
   
   var tableData = {
       TotalImpressions,
