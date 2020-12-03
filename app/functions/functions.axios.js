@@ -140,14 +140,14 @@ exports.dataFormatingForForecast = async (dataArrayFromReq) => {
   return tableData;
 }
 
-exports.getManageData = async (method, urlManage, data = null) => {
+exports.getManageData = async (method) => {
+  var format_data;
 
-  var return_data;
-    if (method == 'POST') {
+    if (method == 'GET') {
 
-     return_data = await axios({
+     format_data = await axios({
         method: method,
-        url: 'https://manage.smartadserverapis.com/2044/advertisers',
+        url: 'https://manage.smartadserverapis.com/2044/formats',
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-type": "Application/json"
@@ -156,25 +156,17 @@ exports.getManageData = async (method, urlManage, data = null) => {
           username: dbApi.SMART_login,
           password: dbApi.SMART_password
         },
-        data: data
-      })  
+      
+      })
+      
+      // .then(function (res) {
+
+      //   console.log(JSON.stringify(res.data));
+
+      // })
+     
     }
-    // else if(method == 'GET'){
 
-    //     return_data =  await axios({
-    //         method: method,
-    //         url:urlManage,
-    //         headers: {
-    //           "Access-Control-Allow-Origin": "*",
-    //           "Content-type": "Application/json"
-    //         },
-    //         auth: {
-    //           username: dbApi.SMART_login,
-    //           password: dbApi.SMART_password
-    //         }
-    //       })
-
-
-    // }
-    return return_data
+    return format_data
 }
+

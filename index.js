@@ -66,7 +66,9 @@ const epilot = require('./app/routes/routes.api_epilot');
 
 app.use('/api/epilot', epilot);
 
+const manager = require('./app/routes/routes.api_manager');
 
+app.use('/api/manager', manager);
 
 
 
