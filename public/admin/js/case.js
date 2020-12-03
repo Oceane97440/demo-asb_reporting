@@ -15,7 +15,7 @@ function myFunction() {
     if (x=="HABILLAGE"|| x=="MASTHEAD" || x=="GRAND ANGLE") {
         
         document.getElementById("myDIV").style.display = "block";
-        alert("Coché la case pour élargir ou non la proposition")
+        alert("Cocher la case pour élargir ou non la proposition  " + x )
 
     }else{
 
