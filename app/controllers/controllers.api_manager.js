@@ -63,7 +63,42 @@ exports.formats_add = async (req, res) => {
     // Charge la fonction formatAll
     let data_formats = await AxiosFunction.getManageData('GET');
 
-    for (let i = 0; i < data_formats.data.length; i++) {
+    var array_format=data_formats.data
+   // console.log(array_format)
+      array_format.forEach(obj => {
+        // Créer le tableau de données
+        formatsData = {
+          format_id: `${obj.id}`,
+          format_name: `${obj.name}`,
+          format_width: `${obj.width}`,
+          format_height: `${obj.height}`,
+          format_type_id: `${obj.formatTypeId}`,
+          format_is_archived: `${obj.isArchived}`,
+          format_resource_url: `${obj.resourceUrl}`
+        };
+        console.log(formatsData)
+
+        ModelFormat.findOrCreate({
+          where: {
+            format_id: formatsData.format_id,
+            format_name: formatsData.format_name,
+            format_group: '',
+            format_width: formatsData.format_width,
+            format_height: formatsData.format_height,
+            format_type_id: formatsData.format_type_id,
+            format_is_archived: formatsData.format_is_archived,
+            format_resource_url: formatsData.format_resource_url,
+          },
+          defaults: formatsData
+          
+      }).then(formats => {
+          return res.send("OK: les formats ont été ajoutés à la bdd")
+        })
+
+      });
+
+
+    /*for (let i = 0; i < data_formats.data.length; i++) {
 
       var format_id = data_formats.data[i].id
       var format_name = data_formats.data[i].name
@@ -73,6 +108,9 @@ exports.formats_add = async (req, res) => {
       var format_is_archived = data_formats.data[i].isArchived
       var format_resource_url = data_formats.data[i].resourceUrl
 
+
+
+      
     }
 
 
@@ -94,7 +132,7 @@ exports.formats_add = async (req, res) => {
         return res.send("OK: les formats ont été ajoutés à la bdd")
       })
 
-
+*/
 
   } catch (error) {
     console.log(error);
