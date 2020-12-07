@@ -15,7 +15,7 @@ function myFunction() {
     if (x=="HABILLAGE"|| x=="MASTHEAD" || x=="GRAND ANGLE") {
         
         document.getElementById("myDIV").style.display = "block";
-        alert("Cocher la case pour élargir ou non la proposition  " + x )
+      //  alert("Cocher la case pour élargir ou non la proposition  " + x )
 
     }else{
 
@@ -36,7 +36,7 @@ function coche() {
 
    // document.getElementById("demo").innerHTML = x;
 
-   console.log(cocher)
+//   console.log(cocher)
 
     document.getElementById("myCheck").value = cocher;
 
