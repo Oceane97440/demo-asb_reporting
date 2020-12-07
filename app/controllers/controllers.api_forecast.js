@@ -392,9 +392,10 @@ exports.forecast = async (req, res, next) => {
                 console.log('réserver réel',reserver_reel)
 
 
-                if (confirme_reel == Volume_dispo_forecast || reserver_reel == Volume_dispo_forecast) {
+                if (confirme_reel == Volume_dispo_forecast || reserver_reel == Volume_dispo_forecast || sommeReserver == 0 ) {
                     confirme_reel = 0;
                     reserver_reel = 0;
+                    sommeReserver = 0
                 }
 
                 confirmer = {
