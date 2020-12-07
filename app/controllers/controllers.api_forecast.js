@@ -387,6 +387,11 @@ exports.forecast = async (req, res, next) => {
                 // Calcule du volume dispo reserer  
                 var reserver_reel = Volume_dispo_forecast - sommeReserver;
 
+                console.log('sommeReserver',sommeReserver)
+                console.log('forecast',Volume_dispo_forecast)
+                console.log('réserver réel',reserver_reel)
+
+
                 if (confirme_reel == Volume_dispo_forecast || reserver_reel == Volume_dispo_forecast) {
                     confirme_reel = 0;
                     reserver_reel = 0;
