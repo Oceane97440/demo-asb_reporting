@@ -96,7 +96,7 @@ exports.index = async (req, res) => {
                 ['country_name', 'DESC']
             ],
         })
-
+       
         res.render('forecast/form.ejs', {
             formats: formats,
             // sites: sites,
@@ -131,11 +131,11 @@ exports.forecast = async (req, res, next) => {
     //si la case n'est pas coché renvoie false sinon true
     if (option == undefined) {
 
-        var option = false
+       var option = false
 
     } else {
 
-        var option = true
+       var option = true
 
     }
 
@@ -150,7 +150,7 @@ exports.forecast = async (req, res, next) => {
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
 
-
+ 
         //recupération des site d'un pack
         const sitesdb = await ModelPack_Site.findAll({
             attributes: ['pack_id', 'site_id'],
@@ -258,6 +258,7 @@ exports.forecast = async (req, res, next) => {
                     type: QueryTypes.SELECT
                 }
             );
+         
 
             //Initialisation du tableau
             var array_confirmer = []
@@ -417,8 +418,12 @@ exports.forecast = async (req, res, next) => {
                     Interval_reserver,
                     Nbr_cheval_reserver,
                 }
+             
+
+
 
             }
+
             return res.render('forecast/data.ejs', {
                 table: table,
                 confirmer: confirmer,
@@ -445,70 +450,73 @@ exports.forecast = async (req, res, next) => {
         };
 
         //si la case "élargir la propo" est coché les web et ap mban son add de la requête
-        if (option == true && format == "GRAND ANGLE") {
+        if (option == true && format == "GRAND ANGLE")
+        {
             requestForecast.filter[2] = {
                 "FormatID": [
 
                     //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
+                    "79409","84652","84653","84654","84655","84656","79421",
+                    "79637","79638","79642","79643","79644","79645","79646",
                     //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431"
-
-
+                    "79956","79650","79651","79652","79653","79654","79655",
+                    "79425","84657","84658","84659","84660","84661","79431"
+                
+                
                 ]
             }
         }
 
         //si la case "élargir la propo" est coché les web et ap pave son add de la requête
 
-        if (option == true && format == "MASTHEAD") {
+        if(option==true && format == "MASTHEAD")
+        {
             requestForecast.filter[2] = {
                 "FormatID": [
 
                     //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
+                    "79409","84652","84653","84654","84655","84656","79421",
+                    "79637","79638","79642","79643","79644","79645","79646",
                     //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431"
-
-
+                    "79956","79650","79651","79652","79653","79654","79655",
+                    "79425","84657","84658","84659","84660","84661","79431"
+                
+                
                 ]
             }
         }
 
         //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
 
-        if (option == true && format == "HABILLAGE") {
+        if(option==true && format == "HABILLAGE")
+        {
             requestForecast.filter[2] = {
                 "FormatID": [
 
-                    //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
+                     //Masthead
+                    "79409","84652","84653","84654","84655","84656","79421",
+                    "79637","79638","79642","79643","79644","79645","79646",
                     //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431",
+                    "79956","79650","79651","79652","79653","79654","79655",
+                    "79425","84657","84658","84659","84660","84661","79431",
                     //Habilage
                     "44149"
-
-
+                
+                
                 ]
             }
-        } else {
+        }else{
 
-            // si le format habillage est choisi on ajoute App_man_atf0
-            if (format === "HABILLAGE") {
-                requestForecast.filter[2] = {
-                    "FormatID": ["79637", "44149"]
+              // si le format habillage est choisi on ajoute App_man_atf0
+        if (format === "HABILLAGE") {
+            requestForecast.filter[2] = {
+                "FormatID": ["79637", "44149"]
 
-                }
             }
-
         }
 
+        }
+      
         //si RG-DESKTOP est seletionner add ciblage desktop
         if (packs == "7") {
             requestForecast.filter[3] = {
@@ -523,7 +531,7 @@ exports.forecast = async (req, res, next) => {
                 "platformID": ["3", "2"]
             }
         }
-        console.log(requestForecast.filter[2])
+        //console.log(requestForecast.filter[2])
         // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
         let firstLink = await AxiosFunction.getForecastData('POST', '', requestForecast);
 
@@ -728,9 +736,9 @@ exports.forecast = async (req, res, next) => {
 
                 var reserver_reel = volumeDispo - sommeReserver;
 
-                if (confirme_reel == volumeDispo || reserver_reel == volumeDispo) {
-                    confirme_reel = 0;
-                    reserver_reel = 0;
+                if (confirme_reel==volumeDispo || reserver_reel==volumeDispo ) {
+                    confirme_reel=0;
+                    reserver_reel=0;
                 }
 
                 sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
@@ -738,7 +746,7 @@ exports.forecast = async (req, res, next) => {
                 volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
 
                 var table = {
-
+                   
                     TotalImpressions,
                     OccupiedImpressions,
                     SiteID,
@@ -840,7 +848,7 @@ exports.campaign_epilot = async (req, res, next) => {
     var campaign_end_date = req.body.campaign_end_date
     var volume_prevue = req.body.volume_prevue
 
-    console.log(req.body)
+    //console.log(req.body)
 
 
     var campaign_debut = campaign_start_date + 'T00:00:00.000Z'
@@ -849,37 +857,38 @@ exports.campaign_epilot = async (req, res, next) => {
 
     try {
 
-        if (campaign_debut >= campaign_fin || campaign_fin <= campaign_debut)
+        if(campaign_debut>campaign_fin || campaign_fin < campaign_debut )
 
         {
-            return res.send("La date debut et fin est invalide")
-        } else {
+            return  res.send("La date debut et fin est invalide")
+        }
+        else{
 
             var campagne_search = await ModelCampaign_epilot.findOne({
-                attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date'],
+                attributes: ['campaign_name','format_name','campaign_start_date','campaign_end_date'],
                 where: {
                     campaign_name: campaign_name,
-                    format_name: format_name,
-                    campaign_start_date: campaign_debut,
-                    campaign_end_date: campaign_fin
+                    format_name:format_name,
+                    campaign_start_date:campaign_debut,
+                    campaign_end_date:campaign_fin
                 }
-
+    
             })
 
         }
-
+  
 
         if (!campagne_search) {
 
             ModelCampaign_epilot.create({
-                    campaign_name: campaign_name,
-                    format_name: format_name,
-                    etat: etat,
-                    campaign_start_date: campaign_debut,
-                    campaign_end_date: campaign_fin,
-                    volume_prevue: volume_prevue
+                campaign_name: campaign_name,
+                format_name: format_name,
+                etat: etat,
+                campaign_start_date: campaign_debut,
+                campaign_end_date: campaign_fin,
+                volume_prevue: volume_prevue
 
-                })
+            })
                 .then(campagne => {
                     return res.send("OK: le campagne est ajouté à la bdd")
                 })
