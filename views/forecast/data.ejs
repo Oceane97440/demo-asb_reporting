@@ -86,7 +86,7 @@
 </div>
 
 <br>
-<% if (reserver.reserver_reel == 0 || reserver.sommeReserver == "NaN" ) { %>
+<% if (reserver.reserver_reel == 0 || reserver.sommeReserver == 0) { %>
 
 
 <div class="card text-center">
@@ -97,7 +97,12 @@
                 <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
                     aria-selected="true">Campagnes réservées</a>
             </li>
-          
+
+            <li class="nav-item">
+                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                    aria-selected="false">Liste des insertions</a>
+            </li>
+
 
         </ul>
     </div>
@@ -148,6 +153,51 @@
         </div>
 
 
+        <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+
+
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+
+                        <th scope="col">Campagnes</th>
+                        <th scope="col">Insertions ID</th>
+                        <th scope="col">Insertions</th>
+                        <th scope="col">Volume</th>
+                        <th scope="col">Volume livré</th>
+                        <th scope="col">Surréservation</th>
+
+
+
+
+                    </tr>
+                </thead>
+
+                <tbody class="text-left">
+                    <% for (let i=1; i < insertions.CampaignName.length; i++) { %>
+                    <% if (insertions.CampaignName[i] != '' ) { %>
+                    <tr>
+
+                        <td><%=insertions.CampaignName[i]%></td>
+                        <td><%=insertions.InsertionID[i]%></td>
+                        <td><%=insertions.InsertionName[i]%></td>
+                        <td><%=insertions.InsertionBookedVolume[i]%></td>
+                        <td><%=insertions.InsertionForecastedDeliveredVolume[i]%></td>
+                        <td><%=insertions.InsertionForecastedDeliveredPercentage[i]%>%</td>
+
+
+                    </tr>
+
+                    <% } %>
+
+                    <% } %>
+                </tbody>
+            </table>
+
+        </div>
+
+
     </div>
 </div>
 
@@ -161,6 +211,12 @@
                 <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
                     aria-selected="false">Campagnes réservées</a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                    aria-selected="false">Liste des insertions</a>
+            </li>
+
 
         </ul>
     </div>
@@ -210,6 +266,50 @@
 
                     <% } %>
 
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+
+
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+
+                        <th scope="col">Campagnes</th>
+                        <th scope="col">Insertions ID</th>
+                        <th scope="col">Insertions</th>
+                        <th scope="col">Volume</th>
+                        <th scope="col">Volume livré</th>
+                        <th scope="col">Surréservation</th>
+
+
+
+
+                    </tr>
+                </thead>
+
+                <tbody class="text-left">
+                    <% for (let i=1; i < insertions.CampaignName.length; i++) { %>
+                    <% if (insertions.CampaignName[i] != '' ) { %>
+                    <tr>
+
+                        <td><%=insertions.CampaignName[i]%></td>
+                        <td><%=insertions.InsertionID[i]%></td>
+                        <td><%=insertions.InsertionName[i]%></td>
+                        <td><%=insertions.InsertionBookedVolume[i]%></td>
+                        <td><%=insertions.InsertionForecastedDeliveredVolume[i]%></td>
+                        <td><%=insertions.InsertionForecastedDeliveredPercentage[i]%>%</td>
+
+
+                    </tr>
+
+                    <% } %>
+
+                    <% } %>
                 </tbody>
             </table>
 

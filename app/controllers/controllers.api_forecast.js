@@ -190,8 +190,109 @@ exports.forecast = async (req, res, next) => {
             }
         }
 
+        requestInsertions = {
+            "startDate": date_start,
+            "endDate": date_end,
+            "timeZoneId": "Arabian Standard Time",
+            "filter": [{
+                    "CountryID": [countries]
+                },
+                {
+                    "SiteID": sites
+                },
+                {
+                    "FormatID": formatIdsArray // new Array(79633,44152) //formats
+                }
+            ],
+            "fields": [
+
+
+                "CampaignName",
+                "InsertionID",
+                "InsertionName",
+                "InsertionBookedVolume",
+                "InsertionForecastedDeliveredVolume",
+                "InsertionForecastedDeliveredPercentage"
+
+
+            ]
+        };
+
+        let threeLink = await AxiosFunction.getForecastData('POST', '', requestInsertions);
+
+        if (threeLink.headers.location) {
+
+            headerlocation = threeLink.headers.location;
+
+            let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
+
+            if (insertionLink.data.progress == '100') {
+
+
+                headerlocation = insertionLink.headers.location;
+
+                let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
+
+                //liste des insertions
+                var CampaignName = []
+                var InsertionID = []
+                var InsertionName = []
+                var InsertionBookedVolume = []
+                var InsertionForecastedDeliveredVolume = []
+                var InsertionForecastedDeliveredPercentage = []
+
+                var data_forecast = csvLink.data
+
+                var data_split = data_forecast.split(/\r?\n/);
+
+                //compte le nbr ligne 
+                var number_line = data_split.length;
+
+                //boucle sur les ligne
+                for (i = 0; i < number_line; i++) {
+
+                    //delete les ; et delete les blanc
+                    line = data_split[i].split(';');
+
+                    //push la donnéé splité dans un tab vide
+
+                    //liste des insertions
+                    CampaignName.push(line[0]);
+                    InsertionID.push(line[1]);
+                    InsertionName.push(line[2]);
+                    InsertionBookedVolume.push(line[3]);
+                    InsertionForecastedDeliveredVolume.push(line[4]);
+                    InsertionForecastedDeliveredPercentage.push(line[5]);
+                }
+
+
+
+
+                insertions= {
+
+                    //liste des insertions
+                    CampaignName,
+                    InsertionID,
+                    InsertionName,
+                    InsertionBookedVolume,
+                    InsertionForecastedDeliveredVolume,
+                    InsertionForecastedDeliveredPercentage,
+
+                }
+            }
+
+
+
+
+
+
+
+        }
+
         // Si on a le format intertistiel : On va faire du cumul site par site avec l'ajout d'un capping
         if (format === "INTERSTITIEL") {
+
+
             for (let xyz = 0; xyz < sites.length; xyz++) {
                 requestForecast = {
                     "startDate": date_start,
@@ -387,9 +488,7 @@ exports.forecast = async (req, res, next) => {
                 // Calcule du volume dispo reserer  
                 var reserver_reel = Volume_dispo_forecast - sommeReserver;
 
-               // console.log('sommeReserver', sommeReserver)
-                //console.log('forecast', Volume_dispo_forecast)
-               // console.log('réserver réel', reserver_reel)
+        
 
 
                 if (confirme_reel == Volume_dispo_forecast || reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
@@ -432,6 +531,7 @@ exports.forecast = async (req, res, next) => {
 
             return res.render('forecast/data.ejs', {
                 table: table,
+                insertions: insertions,
                 confirmer: confirmer,
                 reserver: reserver
             });
@@ -460,13 +560,6 @@ exports.forecast = async (req, res, next) => {
                 "SiteName",
                 "FormatID",
                 "FormatName",
-
-                "CampaignName",
-                "InsertionID",
-                "InsertionName",
-                "InsertionBookedVolume",
-                "InsertionForecastedDeliveredVolume",
-                "InsertionForecastedDeliveredPercentage"
 
             ]
         };
@@ -793,14 +886,7 @@ exports.forecast = async (req, res, next) => {
                     volumeDispo,
                     option,
 
-                    CampaignName,
-                    InsertionID,
-                    InsertionName,
-                    InsertionBookedVolume,
-                    InsertionForecastedDeliveredVolume,
-                    InsertionForecastedDeliveredPercentage
-
-
+        
 
                 }
 
@@ -835,6 +921,7 @@ exports.forecast = async (req, res, next) => {
 
                 return res.render('forecast/data.ejs', {
                     table: table,
+                    insertions: insertions,
                     confirmer: confirmer,
                     reserver: reserver,
                 });
