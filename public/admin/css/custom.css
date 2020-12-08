@@ -279,6 +279,13 @@ form .btn-submit:hover { background-position: right center; }
 
 
   select option:disabled {color:#ddd}
+
+
+#DataTables_Table_2{
+  font-size: 13px;
+}
+
+
 /*
   .fixed_headers {
     width: 1000px;
