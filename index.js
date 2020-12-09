@@ -53,9 +53,15 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-const index = require('./app/routes/routes.api_forecast');
 
-app.use('/api/forecast', index);
+const index = require('./app/routes/routes.index');
+
+app.use('/', index);
+
+
+const forecast = require('./app/routes/routes.api_forecast');
+
+app.use('/api/forecast', forecast);
 
 
 const reporting = require('./app/routes/routes.api_report');

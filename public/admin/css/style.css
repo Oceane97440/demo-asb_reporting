@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+body {
+    background-color: #3611db;
+}
+
+.container {
+    margin-top: 20px;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+h1
+{
+	color:#fff;
+	margin:40px 0 60px 0;
+	font-weight:300;
+}
+
+.our-team-main
+{
+	width:100%;
+	height:auto;
+	text-align:center;
+	border-radius:10px;
+	overflow:hidden;
+	position:relative;
+	transition:0.5s;
+	margin-bottom:28px;
+}
+
+
+#card_menu {
+    background-color: #e3e8f1;
+    height: 12rem;
+    width: 20rem;
+    border-radius: 20px;
+    margin-top: 20px;
+
+
+}
+
+
+a {
+    color: #2c313c;
+    text-decoration: none;
+
+}
+
+
+
+#card_menu:hover {
+    color: #ffffff;
+
+    background-color:#1840da
+}
+
+.fa,
+.far,
+.fas {
+    font-weight: 900;
+    font-size: 60px;
+    padding-bottom: 10px;
+
+}
+
+/*our-team-main*/
+
