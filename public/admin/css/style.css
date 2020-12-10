@@ -1,17 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 body {
-    background-color: #3611db;
-}
+    background-color: #f1f3ff;}
 
 .container {
     margin-top: 20px;
     font-family: 'Montserrat', sans-serif;
 
 }
-
+#card-forecast {
+    background-color: #5662ec;
+    color: white;
+}
 h1
 {
-	color:#fff;
+	color: #2c313c;
 	margin:40px 0 60px 0;
 	font-weight:300;
 }
@@ -27,8 +30,28 @@ h1
 	transition:0.5s;
 	margin-bottom:28px;
 }
+#data-card
+{
+	width:100%;
+	height:auto;
+	border-radius:10px;
+	overflow:hidden;
+	position:relative;
+	transition:0.5s;
+	margin-bottom:28px;
+}
+#DataTables_Table_2{
+    font-size: 13px;
+    color: #2c313c;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
 
 
+  }
+  table{
+    font-family: 'Poppins', sans-serif;
+
+  }
 #card_menu {
     background-color: #e3e8f1;
     height: 12rem;
@@ -39,18 +62,37 @@ h1
 
 }
 
-
+input.btn.btn-block.btn-default.text-white {
+    background-color: #4cd7ef;
+}
+input.btn.btn-block.btn-default.text-white:hover {
+    box-shadow: 2px 2px 5px black;
+}
 a {
     color: #2c313c;
     text-decoration: none;
 
 }
 
+p{
+    font-family: 'Montserrat', sans-serif;
+    font-size: medium;
+}
+label{
+    font-family: 'Poppins', sans-serif;    
+    font-weight: bold;
 
+}
+select{
+    font-family: 'Poppins', sans-serif;
+}
+input{
+    font-family: 'Poppins', sans-serif;
+}
 
 #card_menu:hover {
     color: #ffffff;
-
+    box-shadow: 1px 1px 6px black;
     background-color:#1840da
 }
 
@@ -63,5 +105,13 @@ a {
 
 }
 
-/*our-team-main*/
+.form-check-label {
+    margin-bottom: 3px;
+    margin-right: 25px;
+}
 
+#card-info{
+    background-color: #5662ec;
+    height: 38rem;
+    color: white;
+}
