@@ -89,7 +89,15 @@ select{
 input{
     font-family: 'Poppins', sans-serif;
 }
+.form-group {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 
+.md-form{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 #card_menu:hover {
     color: #ffffff;
     box-shadow: 1px 1px 6px black;
@@ -111,7 +119,15 @@ input{
 }
 
 #card-info{
-    background-color: #5662ec;
+    background-color: #ffffff;
     height: 38rem;
-    color: white;
+    color: #385a64;
+    font-weight: bold;
+
+}
+
+img{
+    width: 150px;
+    height: 135px;
+
 }

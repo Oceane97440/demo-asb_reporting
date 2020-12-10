@@ -29,21 +29,30 @@
 							</h4>
 						</div>
 
-						<div class="card-body">
+						<div class="card-body text-left">
 
 
 							<form action="/api/forecast/add" id="forecast" method="POST">
-								<div class="form-group">
-									<label for="date_start">Date de début </label>
-									<input type="date" class="form-control" name="date_start" id="date_start" value=""
-										required>
+								<div class="row">
+
+										<div class="col-md-6">
+											<div class="md-form">
+												<label for=" date_start">Date de début </label>
+												<input type="date" class="form-control" name="date_start"
+													id="date_start" value="" required>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="md-form">
+												<label for="date_end">Date de fin </label>
+												<input type="date" class="form-control" name="date_end" id="date_end"
+													value="" required>
+											</div>
+										</div>
+
 								</div>
 
-								<div class="form-group">
-									<label for="date_end">Date de fin </label>
-									<input type="date" class="form-control" name="date_end" id="date_end" value=""
-										required>
-								</div>
 
 								<div class="form-group">
 									<label for="format">Format</label>
@@ -111,7 +120,8 @@
 						</div>
 						<div class="card-footer bg-transparent border-success justify-content-center d-flex">
 							<div class="col-sm-12 text-right">
-								<input type="submit" name="submit" class="btn btn-block btn-default text-white " value="Valider" />
+								<input type="submit" name="submit" class="btn btn-block btn-default text-white "
+									value="Valider" />
 							</div>
 						</div>
 						</form>
@@ -134,7 +144,7 @@
 
 						<div class="card-body">
 							<blockquote class="blockquote mb-0">
-								<i class="far fa-calendar-alt"></i>
+								<img src="/admin/photos/search.jpg"></img>
 								<p>Choisir une date prévisionnel
 								</p>
 							</blockquote>
@@ -142,8 +152,8 @@
 
 						<div class="card-body">
 							<blockquote class="blockquote mb-0">
-								<i class="fas fa-clipboard-check"></i>
-								<p>Calculer votre inventaire. Sélectionner  le pack et le format
+								<img src="/admin/photos/data.jpg"></img>
+								<p>Calculer votre inventaire. Sélectionner le pack et le format
 								</p>
 							</blockquote>
 						</div>
@@ -151,7 +161,8 @@
 
 						<div class="card-body">
 							<blockquote class="blockquote mb-0">
-								<i class="far fa-check-circle"></i>
+								<img src="/admin/photos/valider.jpg"></img>
+
 								<p> Valider le formulaire
 								</p>
 							</blockquote>
@@ -166,8 +177,5 @@
 		</div>
 
 	</div>
-
-
-
 
 	<%- include("../layouts/admin/footer.ejs") -%>

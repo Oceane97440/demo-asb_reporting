@@ -2,7 +2,7 @@
 
 <% if (table.option == false) { %>
 
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
+<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
     <strong>Cocher la case <a href="/api/forecast">"Elargir la proposition"</a>!
 
     </strong> Si le volume ne vous convient pas
@@ -16,10 +16,10 @@
 
 <% } %>
 
-<div id="card-forecast" class="card">
+<div id="card-forecast" class="card" style="margin-top: 30px;">
     <div class="card-header">
         <h1 class="card-title">
-            Stat Forecast
+            Données du Forecast
         </h1>
     </div>
 
@@ -128,8 +128,6 @@
                         <th>Nbr de jour</th>
                         <th>Jour à Cheval</th>
                         <th>Volume des dispo</th>
-
-
                     </tr>
                 </thead>
 
@@ -167,10 +165,6 @@
                         <th scope="col">Volume</th>
                         <th scope="col">Volume livré</th>
                         <th scope="col">Surréservation</th>
-
-
-
-
                     </tr>
                 </thead>
 
@@ -185,7 +179,6 @@
                         <td><%=insertions.InsertionBookedVolume[i]%></td>
                         <td><%=insertions.InsertionForecastedDeliveredVolume[i]%></td>
                         <td><%=insertions.InsertionForecastedDeliveredPercentage[i]%>%</td>
-
 
                     </tr>
 
@@ -257,9 +250,6 @@
                         <td><%=reserver.Interval_reserver[i]%></td>
                         <td><%=reserver.Nbr_cheval_reserver[i]%></td>
                         <td><%=reserver.array_reserver[i]%></td>
-
-
-
 
                     </tr>
                     <% } %>
