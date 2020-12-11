@@ -50,9 +50,9 @@
             <thead class="text-left thead-dark">
                 <tr>
 
-                    <th scope="col">Site ID</th>
+                    <!-- <th scope="d-none d-print-block">Site ID</th> -->
                     <th scope="col">Sites</th>
-                    <th scope="col">Formats ID</th>
+                    <!-- <th scope="d-none d-print-block">Formats ID</th> -->
                     <th scope="col">Formats</th>
                     <th scope="col">Total Impressions </th>
                     <th scope="col">Volumes occupés</th>
@@ -65,9 +65,9 @@
                 <tr>
 
 
-                    <td><%=table.SiteID[i]%></td>
+                    <!-- <td class="d-none d-print-block"><%=table.SiteID[i]%></td> -->
                     <td><%=table.SiteName[i]%></td>
-                    <td><%=table.FormatID[i]%></td>
+                    <!-- <td class="d-none d-print-block"><%=table.FormatID[i]%></td> -->
                     <td><%=table.FormatName[i]%></td>
                     <td><strong><%=table.TotalImpressions[i]%></strong></td>
                     <td><strong><%=table.OccupiedImpressions[i]%></strong></td>
@@ -160,7 +160,7 @@
                     <tr>
 
                         <th scope="col">Campagnes</th>
-                        <th scope="col">Insertions ID</th>
+                        <!-- <th scope="col">Insertions ID</th> -->
                         <th scope="col">Insertions</th>
                         <th scope="col">Volume</th>
                         <th scope="col">Volume livré</th>
@@ -174,7 +174,7 @@
                     <tr>
 
                         <td><%=insertions.CampaignName[i]%></td>
-                        <td><%=insertions.InsertionID[i]%></td>
+                        <!-- <td><%=insertions.InsertionID[i]%></td> -->
                         <td><%=insertions.InsertionName[i]%></td>
                         <td><%=insertions.InsertionBookedVolume[i]%></td>
                         <td><%=insertions.InsertionForecastedDeliveredVolume[i]%></td>
