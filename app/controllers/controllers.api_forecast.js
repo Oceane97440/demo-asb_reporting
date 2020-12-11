@@ -190,7 +190,7 @@ exports.forecast = async (req, res, next) => {
             }
         }
 
-        requestInsertions = {
+      await  requestInsertions = {
             "startDate": date_start,
             "endDate": date_end,
             "timeZoneId": "Arabian Standard Time",
