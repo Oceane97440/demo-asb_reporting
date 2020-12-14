@@ -72,12 +72,6 @@ exports.index = async (req, res) => {
                 ['format_group', 'ASC']
             ],
         })
-        // var sites = await ModelSite.findAll({
-        //     attributes: ['site_id', 'site_name'],
-        //     order: [
-        //         ['site_name', 'ASC']
-        //     ],
-        // })
 
         var packs = await ModelPack.findAll({
             attributes: ['pack_id', 'pack_name'],
@@ -122,9 +116,8 @@ exports.forecast = async (req, res, next) => {
     var date_start = req.body.date_start;
     var date_end = req.body.date_end;
     var format = req.body.format;
-    // var sites = req.body.sites;
-
     var packs = req.body.packs;
+    var countries = req.body.countries;
 
     option = req.body.case
 
@@ -140,7 +133,6 @@ exports.forecast = async (req, res, next) => {
     }
 
 
-    var countries = req.body.countries;
     const formatIdsArray = [];
     const sites = [];
     const dataArrayFromReq = [];
@@ -268,7 +260,7 @@ exports.forecast = async (req, res, next) => {
 
 
 
-                insertions= {
+               var insertions= {
 
                     //liste des insertions
                     CampaignName,
@@ -377,6 +369,7 @@ exports.forecast = async (req, res, next) => {
             var Nbr_cheval_reserver = []
 
             for (let i = 0; i < requete.length; i++) {
+
                 // Calculer l'intervalle de date sur la période
                 const campaign_start_date = requete[i].campaign_start_date
 
@@ -384,9 +377,6 @@ exports.forecast = async (req, res, next) => {
 
                 const volumes_prevue = requete[i].volume_prevue
 
-                // const campaign_date_start = campaign_start_date+ 'T00:00:00.000Z'
-
-                // const campaign_date_end = campaign_end_date+ 'T23:59:00.000Z'
                 const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
                 const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
@@ -402,7 +392,9 @@ exports.forecast = async (req, res, next) => {
                 if ((campaign_date_end > date_start_forecast)) {
 
                     //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
+
                     if (date_start_forecast < campaign_date_start) {
+                        
                         //alors la date début à cheval = date de début campagne 
                         var date_start_cheval = campaign_date_start
 
@@ -666,13 +658,7 @@ exports.forecast = async (req, res, next) => {
                 var FormatID = []
                 var FormatName = []
 
-                //liste des insertions
-                var CampaignName = []
-                var InsertionID = []
-                var InsertionName = []
-                var InsertionBookedVolume = []
-                var InsertionForecastedDeliveredVolume = []
-                var InsertionForecastedDeliveredPercentage = []
+            
 
                 var data_forecast = csvLink.data
 
@@ -695,13 +681,6 @@ exports.forecast = async (req, res, next) => {
                     FormatID.push(line[4]);
                     FormatName.push(line[5]);
 
-                    //liste des insertions
-                    CampaignName.push(line[6]);
-                    InsertionID.push(line[7]);
-                    InsertionName.push(line[8]);
-                    InsertionBookedVolume.push(line[9]);
-                    InsertionForecastedDeliveredVolume.push(line[10]);
-                    InsertionForecastedDeliveredPercentage.push(line[11]);
                 }
 
                 var sommeImpressions = 0
@@ -906,7 +885,7 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-                reserver = {
+               var reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
