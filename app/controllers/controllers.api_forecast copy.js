@@ -72,6 +72,12 @@ exports.index = async (req, res) => {
                 ['format_group', 'ASC']
             ],
         })
+        // var sites = await ModelSite.findAll({
+        //     attributes: ['site_id', 'site_name'],
+        //     order: [
+        //         ['site_name', 'ASC']
+        //     ],
+        // })
 
         var packs = await ModelPack.findAll({
             attributes: ['pack_id', 'pack_name'],
@@ -116,8 +122,9 @@ exports.forecast = async (req, res, next) => {
     var date_start = req.body.date_start;
     var date_end = req.body.date_end;
     var format = req.body.format;
+    // var sites = req.body.sites;
+
     var packs = req.body.packs;
-    var countries = req.body.countries;
 
     option = req.body.case
 
@@ -133,6 +140,7 @@ exports.forecast = async (req, res, next) => {
     }
 
 
+    var countries = req.body.countries;
     const formatIdsArray = [];
     const sites = [];
     const dataArrayFromReq = [];
@@ -182,7 +190,8 @@ exports.forecast = async (req, res, next) => {
             }
         }
 
-       var requestInsertions  = {
+        //requête filtre liste des insertions
+        requestInsertions = {
             "startDate": date_start,
             "endDate": date_end,
             "timeZoneId": "Arabian Standard Time",
@@ -260,7 +269,7 @@ exports.forecast = async (req, res, next) => {
 
 
 
-               var insertions= {
+                insertions= {
 
                     //liste des insertions
                     CampaignName,
@@ -269,9 +278,6 @@ exports.forecast = async (req, res, next) => {
                     InsertionBookedVolume,
                     InsertionForecastedDeliveredVolume,
                     InsertionForecastedDeliveredPercentage,
-                    date_start,
-                    date_end,
-                    format,
 
                 }
             }
@@ -355,11 +361,15 @@ exports.forecast = async (req, res, next) => {
                 }
             );
 
-           // console.log(requete)
-         
 
             //Initialisation du tableau
-      
+            var array_confirmer = []
+            var Campagnes_confirmer = []
+            var Campagne_start = []
+            var Campagne_end = []
+            var Interval_confirmer = []
+            var Nbr_cheval_confirmer = []
+
             var array_reserver = [];
             var Campagnes_reserver = []
             var Campagne_start_reserver = []
@@ -368,7 +378,6 @@ exports.forecast = async (req, res, next) => {
             var Nbr_cheval_reserver = []
 
             for (let i = 0; i < requete.length; i++) {
-
                 // Calculer l'intervalle de date sur la période
                 const campaign_start_date = requete[i].campaign_start_date
 
@@ -376,6 +385,9 @@ exports.forecast = async (req, res, next) => {
 
                 const volumes_prevue = requete[i].volume_prevue
 
+                // const campaign_date_start = campaign_start_date+ 'T00:00:00.000Z'
+
+                // const campaign_date_end = campaign_end_date+ 'T23:59:00.000Z'
                 const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
                 const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
@@ -391,9 +403,7 @@ exports.forecast = async (req, res, next) => {
                 if ((campaign_date_end > date_start_forecast)) {
 
                     //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
-
                     if (date_start_forecast < campaign_date_start) {
-
                         //alors la date début à cheval = date de début campagne 
                         var date_start_cheval = campaign_date_start
 
@@ -420,7 +430,26 @@ exports.forecast = async (req, res, next) => {
                 //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
                 const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
 
+                //push dans des tab les données des etat confirmer et reserver
 
+
+
+                if (requete[i].etat == "1") {
+
+                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+
+                    } else {
+
+                        array_confirmer.push(volumes_prevu_diffuse);
+                        Campagnes_confirmer.push(requete[i].campaign_name)
+                        Campagne_start.push(campaign_start_date)
+                        Campagne_end.push(campaign_end_date)
+                        Interval_confirmer.push(nb_jour_interval)
+                        Nbr_cheval_confirmer.push(nb_jour_cheval)
+
+                    }
+
+                }
 
                 if (requete[i].etat == "2") {
                     if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
@@ -436,9 +465,15 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
+                var sommeConfirmer = 0
                 var sommeReserver = 0
 
-        
+                //total des confirmer
+                for (let i = 0; i < array_confirmer.length; i++) {
+                    if (array_confirmer[i] != '') {
+                        sommeConfirmer += parseInt(array_confirmer[i])
+                    }
+                }
 
                 //total des réserver
                 for (let i = 0; i < array_reserver.length; i++) {
@@ -448,8 +483,8 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 var Volume_dispo_forecast = table.volumeDispo
-
-                
+                // Calcule du volume dispo confirmer 
+                var confirme_reel = Volume_dispo_forecast - sommeConfirmer;
 
                 // Calcule du volume dispo reserer  
                 var reserver_reel = Volume_dispo_forecast - sommeReserver;
@@ -457,12 +492,28 @@ exports.forecast = async (req, res, next) => {
         
 
 
-                if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
+                if (confirme_reel == Volume_dispo_forecast || reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
+                    confirme_reel = 0;
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
-                
-              var  reserver = {
+
+                confirmer = {
+                    //CONFIRMER//
+                    date_start,
+                    date_end,
+                    format,
+                    array_confirmer,
+                    sommeConfirmer,
+                    confirme_reel,
+                    Campagnes_confirmer,
+                    Campagne_start,
+                    Campagne_end,
+                    Interval_confirmer,
+                    Nbr_cheval_confirmer,
+                }
+
+                reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
@@ -473,7 +524,7 @@ exports.forecast = async (req, res, next) => {
                     Interval_reserver,
                     Nbr_cheval_reserver,
                 }
-            
+
 
 
 
@@ -482,6 +533,7 @@ exports.forecast = async (req, res, next) => {
             return res.render('forecast/data.ejs', {
                 table: table,
                 insertions: insertions,
+                confirmer: confirmer,
                 reserver: reserver
             });
         }
@@ -615,7 +667,13 @@ exports.forecast = async (req, res, next) => {
                 var FormatID = []
                 var FormatName = []
 
-            
+                //liste des insertions
+                var CampaignName = []
+                var InsertionID = []
+                var InsertionName = []
+                var InsertionBookedVolume = []
+                var InsertionForecastedDeliveredVolume = []
+                var InsertionForecastedDeliveredPercentage = []
 
                 var data_forecast = csvLink.data
 
@@ -638,6 +696,13 @@ exports.forecast = async (req, res, next) => {
                     FormatID.push(line[4]);
                     FormatName.push(line[5]);
 
+                    //liste des insertions
+                    CampaignName.push(line[6]);
+                    InsertionID.push(line[7]);
+                    InsertionName.push(line[8]);
+                    InsertionBookedVolume.push(line[9]);
+                    InsertionForecastedDeliveredVolume.push(line[10]);
+                    InsertionForecastedDeliveredPercentage.push(line[11]);
                 }
 
                 var sommeImpressions = 0
@@ -663,6 +728,12 @@ exports.forecast = async (req, res, next) => {
 
 
                 //Initialisation du tableau
+                var array_confirmer = [];
+                var Campagnes_confirmer = []
+                var Campagne_start = []
+                var Campagne_end = []
+                var Interval_confirmer = []
+                var Nbr_cheval_confirmer = []
 
                 var array_reserver = [];
                 var Campagnes_reserver = []
@@ -734,7 +805,21 @@ exports.forecast = async (req, res, next) => {
                     //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
                     //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
 
-                 
+                    if (requete[i].etat == "1") {
+
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+
+                        } else {
+
+                            array_confirmer.push(volumes_prevu_diffuse);
+                            Campagnes_confirmer.push(requete[i].campaign_name)
+                            Campagne_start.push(campaign_start_date)
+                            Campagne_end.push(campaign_date_end)
+                            Interval_confirmer.push(nb_jour_interval)
+                            Nbr_cheval_confirmer.push(nb_jour_cheval)
+
+                        }
+                    }
 
                     if (requete[i].etat == "2") {
 
@@ -756,9 +841,15 @@ exports.forecast = async (req, res, next) => {
                 }
 
 
+                var sommeConfirmer = 0
                 var sommeReserver = 0
 
-               
+                for (let i = 0; i < array_confirmer.length; i++) {
+                    if (array_confirmer[i] != '') {
+                        sommeConfirmer += parseInt(array_confirmer[i])
+
+                    }
+                }
 
                 for (let i = 0; i < array_reserver.length; i++) {
                     if (array_reserver[i] != '') {
@@ -769,11 +860,12 @@ exports.forecast = async (req, res, next) => {
 
 
 
+                var confirme_reel = volumeDispo - sommeConfirmer;
 
                 var reserver_reel = volumeDispo - sommeReserver;
 
-                if (reserver_reel == volumeDispo || sommeReserver == 0) {
-                   // confirme_reel = 0;
+                if (confirme_reel == volumeDispo || reserver_reel == volumeDispo || sommeReserver == 0) {
+                    confirme_reel = 0;
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
@@ -799,8 +891,23 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
+                var confirmer = {
+                    //CONFIRMER//
+                    date_start,
+                    date_end,
+                    format,
+                    array_confirmer,
+                    sommeConfirmer,
+                    confirme_reel,
+                    Campagnes_confirmer,
+                    Campagne_start,
+                    Campagne_end,
+                    Interval_confirmer,
+                    Nbr_cheval_confirmer,
 
-               var reserver = {
+                }
+
+                reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
@@ -816,6 +923,7 @@ exports.forecast = async (req, res, next) => {
                 return res.render('forecast/data.ejs', {
                     table: table,
                     insertions: insertions,
+                    confirmer: confirmer,
                     reserver: reserver,
                 });
 
