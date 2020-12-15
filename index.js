@@ -76,6 +76,9 @@ const manager = require('./app/routes/routes.api_manager');
 
 app.use('/api/manager', manager);
 
+const user = require('./app/routes/routes.api_user');
+
+app.use('/api/utilisateur', user);
 
 
 /**Le serveur ecoute sur le port 3000  */

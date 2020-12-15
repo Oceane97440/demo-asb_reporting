@@ -132,3 +132,10 @@ img{
     height: 135px;
 
 }
+strong{
+    font-size: x-large;
+}
+#icon{
+    padding-right: 10px;
+    font-size: x-large;
+}
