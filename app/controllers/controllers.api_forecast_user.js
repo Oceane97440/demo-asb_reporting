@@ -51,7 +51,9 @@ const ModelCountry = require("../models/models.country")
 const ModelCampaign_epilot = require("../models/models.campaing_epilot")
 const ModelPack = require("../models/models.pack")
 const ModelPack_Site = require("../models/models.pack_site")
-
+const ModelRole = require("../models/models.role")
+const ModelUser = require("../models/models.user")
+const ModelUser_Role = require("../models/models.user_role")
 
 
 exports.index = async (req, res) => {
@@ -106,6 +108,121 @@ exports.index = async (req, res) => {
     }
 
 };
+
+exports.signup = async (req, res) => {
+
+
+    try {
+        var roles = await ModelRole.findAll({
+            attributes: ['role_id', 'label'],
+            order: [
+                ['role_id', 'ASC']
+            ],
+        })
+
+
+
+
+        res.render('users/signup.ejs', {
+            roles: roles
+        });
+
+
+    } catch (err) {
+        res.status(500).json({
+            'error': 'cannot fetch country'
+        });
+    }
+
+}
+exports.signup_add = async (req, res) => {
+
+    const email = req.body.email;
+    const password = req.body.mdp;
+    const role = req.body.role;
+    try {
+
+
+
+
+        const user = await ModelUser.create({
+            email,
+            password,
+
+        })
+        console.log(user.id)
+
+
+        const user_role = ModelUser_Role.create({
+            role_id: role,
+            user_id: user.id
+        })
+        console.log(user_role)
+
+        res.status(201).json({
+            user,
+        })
+
+
+    } catch (error) {
+        res.status(400).json({
+            result: "error"
+        })
+    }
+
+
+}
+
+exports.login = async (req, res) => {
+
+
+    res.render('users/login.ejs');
+
+
+}
+
+exports.login_add = async (req, res) => {
+   
+    const email = req.body.email;
+    const password = req.body.mdp;
+
+    if (!email || !password) {
+
+        return res.redirect('/api/utilisateur/login')
+
+    } else {
+        try {
+   
+            let user = await ModelUser.findOne({
+                
+                where:{
+                    
+                    email: email,
+                    password:password
+                }
+                
+            })
+            console.log(user)
+            if (user.email !== email && user.password !== password) {
+
+                res.redirect('/api/utilisateur/login')
+            } else {
+                req.session.user = user // use session for user connected
+                console.log(req.session)
+
+                res.redirect('/api/utilisateur')
+            }
+        } catch (error) {
+
+            res.redirect('/login', )
+        }
+    }
+}
+
+exports.logout = async (req, res) => {
+    req.session = null
+    res.redirect('/api/utilisateur/login')
+}
 
 
 exports.forecast_user = async (req, res, next) => {

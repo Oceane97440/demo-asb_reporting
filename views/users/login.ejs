@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<link href="/admin/css/style.css" rel="stylesheet" />
+	<script src="https://kit.fontawesome.com/4d66efb478.js"></script>
+
+	<title>Inscription</title>
+</head>
+
+<body>
+
+
+	<div class="container" >
+		<div class="row" style="margin-top: 20px;">
+
+
+			<!--section 1-->
+
+			<div class="col-lg-6  p-0">
+				<div class="card bg-dark text-dark">
+					<img src="/admin/photos/login.jpg" class="card-img" alt="..." id="img_signup">
+				
+				</div>
+			</div>
+
+			<!--section 2-->
+			<div class="col-lg-6 p-0">
+				<div class="our-team-main">
+
+
+
+					<div id="card-login" class="card">
+						<div class="card-header">
+							<h4 class="card-title">
+								Connexion
+							</h4>
+						</div>
+
+						<div class="card-body text-left">
+
+
+							<form action="/api/utilisateur/login/add" method="POST">
+
+
+
+								<div class="col">
+									<div class="md-form">
+										<label for="email"><i class="fas fa-at" id="icon"></i>Email</label>
+										<input type="email" class="form-control" name="email" id="email" value=""
+											placeholder="email@gmail.com" required>
+									</div>
+								</div>
+
+
+
+								<div class="col">
+									<div class="md-form">
+										<label for="mdp"><i class="fas fa-key" id="icon"></i>Mot de passe </label>
+
+
+										<input type="password" class="form-control" name="mdp" id="mdp" value=""
+											placeholder="6 caratère + 1 caratère spéciaux" required>
+
+									</div>
+								</div>
+
+
+
+
+
+
+						</div>
+						<div class="card-footer bg-transparent  justify-content-center d-flex">
+							<div class="col-sm-12 text-right">
+								<input type="submit" name="submit" class="btn btn-block btn-default text-white "
+									style="    background-color: #ff4f5a" value="Valider" />
+							</div>
+						</div>
+
+						<div class="col text-center">
+							<small><a class=" text-white"href="/api/utilisateur/signup">Inscription</a></small>
+
+						</div>
+						</form>
+					</div>
+
+
+
+
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
