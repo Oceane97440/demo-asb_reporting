@@ -182,7 +182,7 @@ exports.forecast = async (req, res, next) => {
             }
         }
 
-       var requestInsertions  = {
+        var requestInsertions = {
             "startDate": date_start,
             "endDate": date_end,
             "timeZoneId": "Arabian Standard Time",
@@ -260,7 +260,7 @@ exports.forecast = async (req, res, next) => {
 
 
 
-               var insertions= {
+                var insertions = {
 
                     //liste des insertions
                     CampaignName,
@@ -355,11 +355,17 @@ exports.forecast = async (req, res, next) => {
                 }
             );
 
-           // console.log(requete)
-         
+           // console.log(typeof requete)
+            
+
+               /* if (typeof requete[i] === 'object') {
+                    console.log("aucun requête")
+                    // reserver_reel = 0;
+                    // sommeReserver = 0
+                }*/
 
             //Initialisation du tableau
-      
+
             var array_reserver = [];
             var Campagnes_reserver = []
             var Campagne_start_reserver = []
@@ -367,6 +373,7 @@ exports.forecast = async (req, res, next) => {
             var Interval_reserver = []
             var Nbr_cheval_reserver = []
 
+          
             for (let i = 0; i < requete.length; i++) {
 
                 // Calculer l'intervalle de date sur la période
@@ -435,10 +442,12 @@ exports.forecast = async (req, res, next) => {
                     }
 
                 }
+              
 
                 var sommeReserver = 0
 
-        
+
+
 
                 //total des réserver
                 for (let i = 0; i < array_reserver.length; i++) {
@@ -448,21 +457,22 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 var Volume_dispo_forecast = table.volumeDispo
+ 
 
-                
+
 
                 // Calcule du volume dispo reserer  
                 var reserver_reel = Volume_dispo_forecast - sommeReserver;
+           
 
-        
+
 
 
                 if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
-                
-              var  reserver = {
+                var reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
@@ -473,12 +483,12 @@ exports.forecast = async (req, res, next) => {
                     Interval_reserver,
                     Nbr_cheval_reserver,
                 }
-            
+
 
 
 
             }
-
+            
             return res.render('forecast/data.ejs', {
                 table: table,
                 insertions: insertions,
@@ -615,7 +625,7 @@ exports.forecast = async (req, res, next) => {
                 var FormatID = []
                 var FormatName = []
 
-            
+
 
                 var data_forecast = csvLink.data
 
@@ -734,7 +744,7 @@ exports.forecast = async (req, res, next) => {
                     //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
                     //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
 
-                 
+
 
                     if (requete[i].etat == "2") {
 
@@ -758,7 +768,7 @@ exports.forecast = async (req, res, next) => {
 
                 var sommeReserver = 0
 
-               
+
 
                 for (let i = 0; i < array_reserver.length; i++) {
                     if (array_reserver[i] != '') {
@@ -773,7 +783,7 @@ exports.forecast = async (req, res, next) => {
                 var reserver_reel = volumeDispo - sommeReserver;
 
                 if (reserver_reel == volumeDispo || sommeReserver == 0) {
-                   // confirme_reel = 0;
+                    // confirme_reel = 0;
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
@@ -795,12 +805,12 @@ exports.forecast = async (req, res, next) => {
                     volumeDispo,
                     option,
 
-        
+
 
                 }
 
 
-               var reserver = {
+                var reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
