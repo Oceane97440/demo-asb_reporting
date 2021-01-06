@@ -207,7 +207,7 @@ exports.login_add = async (req, res) => {
                 res.redirect('/api/utilisateur/login')
             } else {
                 req.session.user = user // use session for user connected
-                console.log(req.session)
+               // console.log(req.session)
 
                 res.redirect('/api/utilisateur')
             }
@@ -476,19 +476,21 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
-                var insertions = {
-
-
-                    date_start,
-                    date_end,
-                    format,
-
-                }
+                
               
 
 
             }
 
+            
+            var insertions = {
+
+
+                date_start,
+                date_end,
+                format,
+
+            }
             return res.render('forecast/users/data_user.ejs', {
                 table: table,
                 insertions: insertions,
