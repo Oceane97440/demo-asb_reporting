@@ -150,18 +150,17 @@ exports.signup_add = async (req, res) => {
             password,
 
         })
-        console.log(user.id)
+        //console.log(user.id)
 
 
         const user_role = ModelUser_Role.create({
             role_id: role,
             user_id: user.id
         })
-        console.log(user_role)
+      //  console.log(user_role)
 
-        res.status(201).json({
-            user,
-        })
+        res.redirect('/api/utilisateur/login')
+
 
 
     } catch (error) {
@@ -202,7 +201,7 @@ exports.login_add = async (req, res) => {
                 }
                 
             })
-            console.log(user)
+           // console.log(user)
             if (user.email !== email && user.password !== password) {
 
                 res.redirect('/api/utilisateur/login')
@@ -485,6 +484,7 @@ exports.forecast_user = async (req, res, next) => {
                     format,
 
                 }
+              
 
 
             }
