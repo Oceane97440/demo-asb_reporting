@@ -157,7 +157,7 @@ exports.signup_add = async (req, res) => {
             role_id: role,
             user_id: user.id
         })
-      //  console.log(user_role)
+        //  console.log(user_role)
 
         res.redirect('/api/utilisateur/login')
 
@@ -181,7 +181,7 @@ exports.login = async (req, res) => {
 }
 
 exports.login_add = async (req, res) => {
-   
+
     const email = req.body.email;
     const password = req.body.mdp;
 
@@ -191,23 +191,23 @@ exports.login_add = async (req, res) => {
 
     } else {
         try {
-   
+
             let user = await ModelUser.findOne({
-                
-                where:{
-                    
+
+                where: {
+
                     email: email,
-                    password:password
+                    password: password
                 }
-                
+
             })
-           // console.log(user)
+            // console.log(user)
             if (user.email !== email && user.password !== password) {
 
                 res.redirect('/api/utilisateur/login')
             } else {
                 req.session.user = user // use session for user connected
-               // console.log(req.session)
+                // console.log(req.session)
 
                 res.redirect('/api/utilisateur')
             }
@@ -362,7 +362,7 @@ exports.forecast_user = async (req, res, next) => {
                 }
             }
 
-  /*          //Requête sql campagne epilot
+            //Requête sql campagne epilot
             const requete = await sequelize.query(
                 'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
                     replacements: [date_start, date_end, date_start, date_end, format],
@@ -370,7 +370,9 @@ exports.forecast_user = async (req, res, next) => {
                 }
             );
 
-            // console.log(requete)
+            console.log(requete)
+            console.log(typeof requete)
+
 
 
             //Initialisation du tableau
@@ -379,6 +381,8 @@ exports.forecast_user = async (req, res, next) => {
 
 
             for (let i = 0; i < requete.length; i++) {
+
+
 
                 // Calculer l'intervalle de date sur la période
                 const campaign_start_date = requete[i].campaign_start_date
@@ -436,6 +440,8 @@ exports.forecast_user = async (req, res, next) => {
                 if (requete[i].etat == "2") {
                     if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
+                        array_reserver.push(0);
+
                     } else {
                         array_reserver.push(volumes_prevu_diffuse);
 
@@ -444,8 +450,6 @@ exports.forecast_user = async (req, res, next) => {
                 }
 
                 var sommeReserver = 0
-
-
 
                 //total des réserver
                 for (let i = 0; i < array_reserver.length; i++) {
@@ -456,12 +460,8 @@ exports.forecast_user = async (req, res, next) => {
 
                 var Volume_dispo_forecast = table.volumeDispo
 
-
-
                 // Calcule du volume dispo reserer  
                 var reserver_reel = Volume_dispo_forecast - sommeReserver;
-
-
 
 
                 if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
@@ -476,13 +476,15 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
-                
-              
+                console.log(reserver)
+                console.log(reserver.sommeReserver)
+                console.log(reserver.reserver_reel)
+
+
 
 
             }
 
- */           
             var insertions = {
 
 
@@ -491,11 +493,30 @@ exports.forecast_user = async (req, res, next) => {
                 format,
 
             }
+
+            if (reserver_reel === undefined) {
+                console.log("aucun requête")
+                return res.render('forecast/users/data1_user.ejs', {
+                    table: table,
+                    insertions: insertions,
+                    // reserver: reserver
+                });
+
+            }
+
+
             return res.render('forecast/users/data_user.ejs', {
                 table: table,
                 insertions: insertions,
-               // reserver: reserver
+                reserver: reserver
             });
+
+
+
+
+
+
+
         }
 
         // initialise la requête pour les cas hors intertistiel + habillage
@@ -664,7 +685,7 @@ exports.forecast_user = async (req, res, next) => {
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
 
-   /*             //Requête sql campagne epilot
+                //Requête sql campagne epilot
                 const requete = await sequelize.query(
                     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format],
@@ -672,7 +693,7 @@ exports.forecast_user = async (req, res, next) => {
                     }
                 );
 
-
+                    console.log(requete)
 
                 //Initialisation du tableau
 
@@ -748,6 +769,9 @@ exports.forecast_user = async (req, res, next) => {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
+                            array_reserver.push(0);
+
+
                         } else {
 
                             array_reserver.push(volumes_prevu_diffuse);
@@ -780,33 +804,28 @@ exports.forecast_user = async (req, res, next) => {
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
-*/
+
                 sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
                 sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
                 volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
 
                 var table = {
 
-
                     sommeImpressions,
                     sommeOccupied,
                     volumeDispo,
                     option,
-
-
-
                 }
 
 
-              /*  var reserver = {
+                var reserver = {
                     //RESERVER//
                     sommeReserver,
                     reserver_reel,
 
                 }
-            */
-                var insertions = {
 
+                var insertions = {
 
                     date_start,
                     date_end,
@@ -814,11 +833,14 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
+            
+
                 return res.render('forecast/users/data_user.ejs', {
                     table: table,
                     insertions: insertions,
-                   // reserver: reserver,
+                    reserver: reserver
                 });
+
 
             }
         }

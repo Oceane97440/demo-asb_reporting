@@ -355,14 +355,8 @@ exports.forecast = async (req, res, next) => {
                 }
             );
 
-           // console.log(typeof requete)
-            
+            // console.log(typeof requete)
 
-               /* if (typeof requete[i] === 'object') {
-                    console.log("aucun requête")
-                    // reserver_reel = 0;
-                    // sommeReserver = 0
-                }*/
 
             //Initialisation du tableau
 
@@ -373,7 +367,7 @@ exports.forecast = async (req, res, next) => {
             var Interval_reserver = []
             var Nbr_cheval_reserver = []
 
-          
+
             for (let i = 0; i < requete.length; i++) {
 
                 // Calculer l'intervalle de date sur la période
@@ -432,6 +426,7 @@ exports.forecast = async (req, res, next) => {
                 if (requete[i].etat == "2") {
                     if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
 
+
                     } else {
                         array_reserver.push(volumes_prevu_diffuse);
                         Campagnes_reserver.push(requete[i].campaign_name)
@@ -442,7 +437,7 @@ exports.forecast = async (req, res, next) => {
                     }
 
                 }
-              
+
 
                 var sommeReserver = 0
 
@@ -457,13 +452,13 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 var Volume_dispo_forecast = table.volumeDispo
- 
+
 
 
 
                 // Calcule du volume dispo reserer  
                 var reserver_reel = Volume_dispo_forecast - sommeReserver;
-           
+
 
 
 
@@ -488,8 +483,20 @@ exports.forecast = async (req, res, next) => {
 
 
             }
-            
-            return res.render('forecast/data.ejs', {
+
+
+            if (reserver_reel === undefined) {
+                console.log("aucun requête")
+                return res.render('forecast/data.ejs', {
+                    table: table,
+                    insertions: insertions,
+                    // reserver: reserver
+                });
+
+            }
+
+
+            return res.render('forecast/data1.ejs', {
                 table: table,
                 insertions: insertions,
                 reserver: reserver
@@ -661,7 +668,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
-/*
+
                 //Requête sql campagne epilot
                 const requete = await sequelize.query(
                     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
@@ -787,7 +794,7 @@ exports.forecast = async (req, res, next) => {
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
-*/
+
                 sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
                 sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
                 volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
@@ -810,7 +817,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
 
-           /*     var reserver = {
+                var reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
@@ -821,13 +828,26 @@ exports.forecast = async (req, res, next) => {
                     Interval_reserver,
                     Nbr_cheval_reserver,
                 }
-*/
 
-                return res.render('forecast/data.ejs', {
+
+                if (reserver_reel === undefined) {
+                    console.log("aucun requête")
+                    return res.render('forecast/data.ejs', {
+                        table: table,
+                        insertions: insertions,
+                        // reserver: reserver
+                    });
+
+                }
+
+
+                return res.render('forecast/data1.ejs', {
                     table: table,
                     insertions: insertions,
-                  //  reserver: reserver,
+                    reserver: reserver
                 });
+
+
 
             }
         }
