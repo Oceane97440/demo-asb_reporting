@@ -661,7 +661,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
-
+/*
                 //Requête sql campagne epilot
                 const requete = await sequelize.query(
                     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
@@ -787,7 +787,7 @@ exports.forecast = async (req, res, next) => {
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
-
+*/
                 sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
                 sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
                 volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
@@ -810,7 +810,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
 
-                var reserver = {
+           /*     var reserver = {
                     //RESERVER//
                     array_reserver,
                     sommeReserver,
@@ -821,12 +821,12 @@ exports.forecast = async (req, res, next) => {
                     Interval_reserver,
                     Nbr_cheval_reserver,
                 }
-
+*/
 
                 return res.render('forecast/data.ejs', {
                     table: table,
                     insertions: insertions,
-                    reserver: reserver,
+                  //  reserver: reserver,
                 });
 
             }

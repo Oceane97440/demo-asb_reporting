@@ -362,7 +362,7 @@ exports.forecast_user = async (req, res, next) => {
                 }
             }
 
-            //Requête sql campagne epilot
+  /*          //Requête sql campagne epilot
             const requete = await sequelize.query(
                 'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
                     replacements: [date_start, date_end, date_start, date_end, format],
@@ -482,7 +482,7 @@ exports.forecast_user = async (req, res, next) => {
 
             }
 
-            
+ */           
             var insertions = {
 
 
@@ -494,7 +494,7 @@ exports.forecast_user = async (req, res, next) => {
             return res.render('forecast/users/data_user.ejs', {
                 table: table,
                 insertions: insertions,
-                reserver: reserver
+               // reserver: reserver
             });
         }
 
@@ -664,7 +664,7 @@ exports.forecast_user = async (req, res, next) => {
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
 
-                //Requête sql campagne epilot
+   /*             //Requête sql campagne epilot
                 const requete = await sequelize.query(
                     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format],
@@ -780,7 +780,7 @@ exports.forecast_user = async (req, res, next) => {
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
-
+*/
                 sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
                 sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
                 volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
@@ -798,13 +798,13 @@ exports.forecast_user = async (req, res, next) => {
                 }
 
 
-                var reserver = {
+              /*  var reserver = {
                     //RESERVER//
                     sommeReserver,
                     reserver_reel,
 
                 }
-
+            */
                 var insertions = {
 
 
@@ -817,7 +817,7 @@ exports.forecast_user = async (req, res, next) => {
                 return res.render('forecast/users/data_user.ejs', {
                     table: table,
                     insertions: insertions,
-                    reserver: reserver,
+                   // reserver: reserver,
                 });
 
             }
