@@ -5,36 +5,54 @@ const path = require('path');
 const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session')
-
+const csv = require('csv-parser')
+const fs = require('fs')
+var fileUpload = require('express-fileupload');
 
 
 const db = require("./app/config/_config.database");
 
 const campaing_epilot = require('./app/models/models.campaing_epilot');
-const country=require('./app/models/models.country')
-const formats=require('./app/models/models.format')
-const sites=require('./app/models/models.site')
-const packs=require('./app/models/models.pack')
-const packs_sites=require('./app/models/models.pack_site')
-const users =require('./app/models/models.user.js')
-const roles  =require('./app/models/models.role')
-const users_roles =require('./app/models/models.user_role')
+const country = require('./app/models/models.country')
+const formats = require('./app/models/models.format')
+const sites = require('./app/models/models.site')
+const packs = require('./app/models/models.pack')
+const packs_sites = require('./app/models/models.pack_site')
+const users = require('./app/models/models.user.js')
+const roles = require('./app/models/models.role')
+const users_roles = require('./app/models/models.user_role')
 
 
- /* Mettre les relation ici */
+/* Mettre les relation ici */
 sites.belongsTo(country);
 country.hasMany(sites);
 
 //un pack contien un site 
 //un site peut appartenir un à plusieur pack
-packs.hasOne(packs_sites, { foreignKey: 'pack_id', onDelete: 'cascade', hooks: true });
-sites.hasMany(packs_sites, { foreignKey: 'site_id', onDelete: 'cascade', hooks: true }); 
+packs.hasOne(packs_sites, {
+  foreignKey: 'pack_id',
+  onDelete: 'cascade',
+  hooks: true
+});
+sites.hasMany(packs_sites, {
+  foreignKey: 'site_id',
+  onDelete: 'cascade',
+  hooks: true
+});
 
 
 //un user possède un role
 //un role possède un à plusieur user
-users.hasOne(users_roles, { foreignKey: 'user_id', onDelete: 'cascade', hooks: true });
-roles.hasMany(users_roles, { foreignKey: 'role_id', onDelete: 'cascade', hooks: true }); 
+users.hasOne(users_roles, {
+  foreignKey: 'user_id',
+  onDelete: 'cascade',
+  hooks: true
+});
+roles.hasMany(users_roles, {
+  foreignKey: 'role_id',
+  onDelete: 'cascade',
+  hooks: true
+});
 
 db.sequelize.sync();
 sequelize = db.sequelize;
@@ -60,6 +78,8 @@ app.use(
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   })
 )
+/**L'image à une limite min=50px max=2000px */
+app.use(fileUpload());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
   extended: true
@@ -79,6 +99,12 @@ app.use('/*', function (req, res, next) {
   }
   next()
 })
+
+app.post('/uploads', function (req) {
+  console.log(req.files.file_csv.name); //requette.files.nom du file 
+
+
+});
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -118,9 +144,9 @@ app.set("port", process.env.PORT || 3000);
 
 
 
- app.listen(app.get("port"), () => {
+app.listen(app.get("port"), () => {
   console.log(`server on port ${app.get("port")}`);
- });
+});
 //app.listen(3000, function () {
 //  console.log(`Server running at http://${hostname}:${port}/`);
 //});

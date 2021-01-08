@@ -236,6 +236,7 @@ exports.forecast_user = async (req, res, next) => {
 
     option = req.body.case
 
+
     //si la case n'est pas coché renvoie false sinon true
     if (option == undefined) {
 

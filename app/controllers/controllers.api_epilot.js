@@ -5,8 +5,9 @@ const request = require('request');
 // Initialise le module
 const bodyParser = require('body-parser');
 
-//let csvToJson = require('convert-csv-to-json');
-
+const csv = require('csv-parser')
+const fs = require('fs')
+const results = [];
 
 const axios = require(`axios`);
 
@@ -81,16 +82,16 @@ exports.index = async (req, res) => {
       ],
     })
 
-    var reult_confirmer = Object.keys(confirmer).length; 
+    var reult_confirmer = Object.keys(confirmer).length;
 
-    var reult_reserver = Object.keys(reserver).length; 
+    var reult_reserver = Object.keys(reserver).length;
 
 
     res.render('forecast/liste_epilot.ejs', {
       confirmer: confirmer,
-      reserver:reserver,
-      reult_confirmer:reult_confirmer,
-      reult_reserver:reult_reserver
+      reserver: reserver,
+      reult_confirmer: reult_confirmer,
+      reult_reserver: reult_reserver
     });
 
 
@@ -100,6 +101,88 @@ exports.index = async (req, res) => {
   }
 
 
+
+
+
+}
+
+
+
+exports.csv_import = async (req, res) => {
+
+  const uploadedFile = req.files.file_csv;
+
+  try {
+
+    //console.log(req.files)
+
+
+
+    //verification de extention du fichier
+    if ((uploadedFile.mimetype === 'application/vnd.ms-excel')) {
+
+      //il faut que le dossier upload existe. 
+      //crée des dossier archive (ex:upload20210108)
+      await uploadedFile.mv('public/admin/uploads/' + uploadedFile.name, err => {
+        if (err)
+          return res.status(500).send(err)
+      });
+
+      //recupère le fichier upload et lecture des donnée
+
+      fs.createReadStream('public/admin/uploads/' + uploadedFile.name)
+        // fs.createReadStream('public/admin/uploads/template_csv.csv')
+
+
+
+        .pipe(csv({
+          separator: '\;'
+        }))
+        .on('data', (data) => results.push(data))
+        .on('end', () => {
+          console.log(results);
+
+          for (let i = 0; i < results.length; i++) {
+
+
+            //recupère mes donnée puis assigné à une variabme
+            var campaign_epilot_id = results[i].campaign_epilot_id;
+            var campaign_name = results[i].campaign_name;
+            var format_name = results[i].format_name;
+            var etat = results[i].etat;
+            var campaign_start_date = results[i].campaign_start_date;
+            var campaign_end_date = results[i].campaign_end_date;
+            var volume_prevue = results[i].volume_prevue;
+
+           // console.log(results[i])
+            var nbr_line = Object.keys(results[i]).length
+           // console.log(nbr_line)
+          }
+          // [
+          //   { NAME: 'Daffy Duck', AGE: '24' },
+          //   { NAME: 'Bugs Bunny', AGE: '22' }
+          // ]
+        });
+
+
+
+
+    } else {
+      return res.send({
+        error: {
+          message: "Extention du fichier invalide"
+        }
+      });
+    }
+
+
+
+
+
+
+  } catch (error) {
+    console.log(error);
+  }
 
 
 
