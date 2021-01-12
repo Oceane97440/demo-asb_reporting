@@ -118,8 +118,8 @@ exports.forecast = async (req, res, next) => {
     var format =  await req.body.format;
     var packs = await req.body.packs;
     var countries = await req.body.countries;
+    var option = await req.body.case
 
-    option = await req.body.case
     //si la case n'est pas coché renvoie false sinon true
     if (option == undefined) {
 
@@ -367,11 +367,11 @@ exports.forecast = async (req, res, next) => {
             for (let i = 0; i < requete.length; i++) {
 
                 // Calculer l'intervalle de date sur la période
-                const campaign_start_date =await requete[i].campaign_start_date
+                const campaign_start_date = requete[i].campaign_start_date
 
-                const campaign_end_date =await requete[i].campaign_end_date
+                const campaign_end_date = requete[i].campaign_end_date
 
-                const volumes_prevue =await requete[i].volume_prevue
+                const volumes_prevue = requete[i].volume_prevue
 
                 const campaign_date_start =await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
@@ -382,8 +382,8 @@ exports.forecast = async (req, res, next) => {
                 const nb_jour_interval = (date_interval / 86400000)
 
                 // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                const date_start_forecast =await date_start
-                const date_end_forecast =await date_end
+                const date_start_forecast = date_start
+                const date_end_forecast = date_end
 
                 if ((campaign_date_end > date_start_forecast)) {
 
@@ -638,10 +638,10 @@ exports.forecast = async (req, res, next) => {
 
                 var data_forecast = await csvLink.data
 
-                var data_split = await data_forecast.split(/\r?\n/);
+                var data_split =  data_forecast.split(/\r?\n/);
 
                 //compte le nbr ligne 
-                var number_line = await data_split.length;
+                var number_line =  data_split.length;
 
                 //boucle sur les ligne
                 for (i = 0; i < number_line; i++) {
@@ -695,11 +695,11 @@ exports.forecast = async (req, res, next) => {
 
 
                     // Calculer l'intervalle de date sur la période
-                    const campaign_start_date = await requete[i].campaign_start_date
+                    const campaign_start_date =  requete[i].campaign_start_date
 
-                    const campaign_end_date = await requete[i].campaign_end_date
+                    const campaign_end_date =  requete[i].campaign_end_date
 
-                    const volumes_prevue = await requete[i].volume_prevue
+                    const volumes_prevue =  requete[i].volume_prevue
 
                     const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
@@ -710,8 +710,8 @@ exports.forecast = async (req, res, next) => {
                     const nb_jour_interval = (date_interval / 86400000)
 
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                    const date_start_forecast = await date_start
-                    const date_end_forecast = await date_end
+                    const date_start_forecast =  date_start
+                    const date_end_forecast =  date_end
 
 
 
