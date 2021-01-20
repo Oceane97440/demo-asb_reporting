@@ -58,48 +58,56 @@ const ModelUser_Role = require("../models/models.user_role")
 
 exports.index = async (req, res) => {
 
-
+ 
 
     try {
 
-        var formats = await ModelFormat.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
-            group: ['format_group'],
-            where: {
-                format_group: {
-                    [Op.not]: null
-                }
-            },
-            order: [
-                ['format_group', 'ASC']
-            ],
-        })
+     
+     
+        if (req.session.user.role == 2 || req.session.user.role == 3) {
 
-        var packs = await ModelPack.findAll({
-            attributes: ['pack_id', 'pack_name'],
-            order: [
-                ['pack_name', 'ASC']
-            ],
-        })
-
-
-        var countrys = await ModelCountry.findAll({
-            attributes: ['country_id', 'country_name'],
-            where: {
-                country_id: [61, 125, 184]
-            },
-            order: [
-                ['country_name', 'DESC']
-            ],
-        })
-
-        res.render('forecast/users/form.ejs', {
-            formats: formats,
-            // sites: sites,
-            packs: packs,
-            countrys: countrys
-        });
-
+            var formats = await ModelFormat.findAll({
+                attributes: ['format_id', 'format_name', 'format_group'],
+                group: ['format_group'],
+                where: {
+                    format_group: {
+                        [Op.not]: null
+                    }
+                },
+                order: [
+                    ['format_group', 'ASC']
+                ],
+            })
+    
+            var packs = await ModelPack.findAll({
+                attributes: ['pack_id', 'pack_name'],
+                order: [
+                    ['pack_name', 'ASC']
+                ],
+            })
+    
+    
+            var countrys = await ModelCountry.findAll({
+                attributes: ['country_id', 'country_name'],
+                where: {
+                    country_id: [61, 125, 184]
+                },
+                order: [
+                    ['country_name', 'DESC']
+                ],
+            })
+    
+            res.render('forecast/users/form.ejs', {
+                formats: formats,
+                // sites: sites,
+                packs: packs,
+                countrys: countrys
+            });
+    
+        
+        }
+    
+       
 
     } catch (err) {
         res.status(500).json({
@@ -109,122 +117,9 @@ exports.index = async (req, res) => {
 
 };
 
-exports.signup = async (req, res) => {
-
-
-    try {
-        var roles = await ModelRole.findAll({
-            attributes: ['role_id', 'label'],
-            order: [
-                ['role_id', 'ASC']
-            ],
-        })
-
-
-
-
-        res.render('users/signup.ejs', {
-            roles: roles
-        });
-
-
-    } catch (err) {
-        res.status(500).json({
-            'error': 'cannot fetch country'
-        });
-    }
-
-}
-exports.signup_add = async (req, res) => {
-
-    const email = req.body.email;
-    const password = req.body.mdp;
-    const role = req.body.role;
-    try {
-
-
-
-
-        const user = await ModelUser.create({
-            email,
-            password,
-
-        })
-        //console.log(user.id)
-
-
-        const user_role = ModelUser_Role.create({
-            role_id: role,
-            user_id: user.id
-        })
-        //  console.log(user_role)
-
-        res.redirect('/api/utilisateur/login')
-
-
-
-    } catch (error) {
-        res.status(400).json({
-            result: "error"
-        })
-    }
-
-
-}
-
-exports.login = async (req, res) => {
-
-
-    res.render('users/login.ejs');
-
-
-}
-
-exports.login_add = async (req, res) => {
-
-    const email = req.body.email;
-    const password = req.body.mdp;
-
-    if (!email || !password) {
-
-        return res.redirect('/api/utilisateur/login')
-
-    } else {
-        try {
-
-            let user = await ModelUser.findOne({
-
-                where: {
-
-                    email: email,
-                    password: password
-                }
-
-            })
-            // console.log(user)
-            if (user.email !== email && user.password !== password) {
-
-                res.redirect('/api/utilisateur/login')
-            } else {
-                req.session.user = user // use session for user connected
-                // console.log(req.session)
-
-                res.redirect('/api/utilisateur')
-            }
-        } catch (error) {
-
-            res.redirect('/login', )
-        }
-    }
-}
-
-exports.logout = async (req, res) => {
-    req.session = null
-    res.redirect('/api/utilisateur/login')
-}
-
 
 exports.forecast_user = async (req, res, next) => {
+  
 
     // Définition des variables
     var headerlocation, table, requestForecast;
@@ -236,7 +131,7 @@ exports.forecast_user = async (req, res, next) => {
 
     option = req.body.case
 
-
+  
     //si la case n'est pas coché renvoie false sinon true
     if (option == undefined) {
 

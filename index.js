@@ -90,15 +90,36 @@ app.use(bodyParser.urlencoded({
  * @MidleWare
  * UTILISATEUR CONNECTÉ
  */
-app.use('/*', function (req, res, next) {
-  // console.log(req.session)
-  res.locals.currentUser = {}
-  if (req.session.user) {
-    res.locals.currentUser.login = req.session.user.login // login de l'utilisateur connecté (dans le menu) accessible pour toutes les vues
-    res.locals.currentUser.id = req.session.user.id
+
+
+app.get('/*', function(req, res, next) {
+  res.locals.user = {}
+  if (req.session.user){
+
+    res.locals.user.email = req.session.user.email;
+    res.locals.user.role = req.session.user.role;
+
+    //console.log(res.locals.user.email)
   }
-  next()
-})
+  next();
+});
+
+app.post('/*', function(req, res, next) {
+  res.locals.user = {}
+   // nom de l'utilisateur connecté (dans le menu) accessible pour toutes les vues
+
+  if (req.session.user){
+
+    res.locals.user.email = req.session.user.email;
+    res.locals.user.role = req.session.user.role;
+
+    //console.log(res.locals.user.email)
+  }
+
+  next();
+});
+
+
 
 app.post('/uploads', function (req) {
   console.log(req.files.file_csv.name); //requette.files.nom du file 
@@ -110,28 +131,35 @@ app.post('/uploads', function (req) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
+// signup login home page
 const index = require('./app/routes/routes.index');
 
 app.use('/', index);
 
-
+// action admin forecast
 const forecast = require('./app/routes/routes.api_forecast');
 
 app.use('/api/forecast', forecast);
 
+// action admin reporting
 
 const reporting = require('./app/routes/routes.api_report');
 
 app.use('/api/reporting', reporting);
 
+// action liste campagne epilot
+
 const epilot = require('./app/routes/routes.api_epilot');
 
 app.use('/api/epilot', epilot);
 
+// action admin recupération donnée api
+
 const manager = require('./app/routes/routes.api_manager');
 
 app.use('/api/manager', manager);
+
+// action user forecast
 
 const user = require('./app/routes/routes.api_user');
 

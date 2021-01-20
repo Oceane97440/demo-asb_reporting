@@ -1,32 +1,61 @@
 <nav class="navbar navbar-dark bg-dark">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-      <a class="navbar-brand" href="/"><i class="fas fa-arrow-left" style="font-size: medium;padding-right: 10px;"></i>Accueil</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent"
+    aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
+  <ul class="nav justify-content-end">
+
+
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="#"><i class="fas fa-arrow-left"
+          style="font-size: medium;padding-right: 10px;"></i>Accueil</a>
+    </li>
+    <% if(locals.user.email) { %>
+
+
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="/logout">Déconnexion</a>
+    </li>
+    <%}%>
+  
+    </ul>
   </nav>
 
   <div class="collapse" id="navbarToggleExternalContent">
       <div class="bg-dark p-4">
-          <ul class="navbar-nav text-white">
-             
-              <li class="nav-item text-white">
-                <a class="nav-link text-white" href="/api/forecast">Forecast</a>
-              </li>
-              <li class="nav-item text-white">
-                  <a class="nav-link text-white" href="/api/reportin">Reporting</a>
-                </li>
-                <li class="nav-item text-white">
-                  <a class="nav-link text-white" href="/api/epilot">Campagnes epilot</a>
-                </li>
-                <li class="nav-item text-white">
-                  <a class="nav-link text-white" href="#">Manager</a>
-                </li>
-                <li class="nav-item text-white">
-                  <a class="nav-link text-white" href="/api/utilisateur/logout">Deco</a>
-                </li>
+      <ul class="navbar-nav text-white">
+
+    <% if(locals.user.role === 2 || locals.user.role === 3) { %>
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="/api/utilisateur">Forecast</a>
+    </li>
+    <%}%>
+
+   <% if(locals.user.role === 1) { %>
+
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="#">Admin</a>
+    </li>
+
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="/api/forecast">Forecast</a>
+    </li>
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="#">Reporting</a>
+    </li>
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="/api/epilot">Campagnes epilot</a>
+    </li>
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="#">Manager</a>
+    </li>
+
+    <%}%>
              
             </ul>
+
+        
       </div>
     </div>
 </div>
