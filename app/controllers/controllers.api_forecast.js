@@ -115,7 +115,7 @@ exports.forecast = async (req, res, next) => {
     var headerlocation, table, requestForecast;
     var date_start = await req.body.date_start;
     var date_end = await req.body.date_end;
-    var format =  await req.body.format;
+    var format = await req.body.format;
     var packs = await req.body.packs;
     var countries = await req.body.countries;
     var option = await req.body.case
@@ -267,7 +267,7 @@ exports.forecast = async (req, res, next) => {
                     InsertionBookedVolume,
                     InsertionForecastedDeliveredVolume,
                     InsertionForecastedDeliveredPercentage,
-                 
+
 
                 }
             }
@@ -373,9 +373,9 @@ exports.forecast = async (req, res, next) => {
 
                 const volumes_prevue = requete[i].volume_prevue
 
-                const campaign_date_start =await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
+                const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
-                const campaign_date_end =await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
+                const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
 
                 date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
 
@@ -409,10 +409,10 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 //calcul du nombre de jour à cheval
-                const periode_a_cheval =  new Date(date_end_cheval) - new Date(date_start_cheval);
+                const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
 
                 //arrondie pour un nombre entier
-                const  nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
+                const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
 
                 //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
                 const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
@@ -440,8 +440,8 @@ exports.forecast = async (req, res, next) => {
 
             }
 
-            
-            var sommeReserver =  0
+
+            var sommeReserver = 0
 
 
 
@@ -453,17 +453,17 @@ exports.forecast = async (req, res, next) => {
                 }
             }
 
-            var Volume_dispo_forecast =  table.volumeDispo
+            var Volume_dispo_forecast = table.volumeDispo
 
 
 
 
             // Calcule du volume dispo reserer  
-            var reserver_reel =  Volume_dispo_forecast - sommeReserver;
+            var reserver_reel = Volume_dispo_forecast - sommeReserver;
 
             //console.log(Volume_dispo_forecast)
             //console.log(sommeReserver)
-           // console.log(reserver_reel)
+            // console.log(reserver_reel)
 
 
 
@@ -484,27 +484,27 @@ exports.forecast = async (req, res, next) => {
             }
 
 
-            const infos ={
+            const infos = {
                 date_start,
                 date_end,
                 format,
             }
 
-           /* if (reserver_reel === undefined) {
-                //console.log("aucun requête")
-                return res.render('forecast/data.ejs', {
-                    table: table,
-                    insertions: insertions,
-                    infos:infos, 
-                });
+            /* if (reserver_reel === undefined) {
+                 //console.log("aucun requête")
+                 return res.render('forecast/data.ejs', {
+                     table: table,
+                     insertions: insertions,
+                     infos:infos, 
+                 });
 
-            }*/
-           
+             }*/
+
 
             return res.render('forecast/data1.ejs', {
                 table: table,
                 insertions: insertions,
-                infos:infos, 
+                infos: infos,
                 reserver: reserver
             });
         }
@@ -642,10 +642,10 @@ exports.forecast = async (req, res, next) => {
 
                 var data_forecast = await csvLink.data
 
-                var data_split =  data_forecast.split(/\r?\n/);
+                var data_split = data_forecast.split(/\r?\n/);
 
                 //compte le nbr ligne 
-                var number_line =  data_split.length;
+                var number_line = data_split.length;
 
                 //boucle sur les ligne
                 for (i = 0; i < number_line; i++) {
@@ -683,6 +683,32 @@ exports.forecast = async (req, res, next) => {
                 //     }
                 // );
 
+             /*   switch (format) {
+                    case "HABILLAGE":
+                         //si c habillage -> web_habillage / app_mban_atf
+                         format = new Array()
+                        break;
+                    case "INTERSTITIEL":
+                       //si interstitiel -> web_interstitiel / app_interstitiel
+
+                        break;
+                    case "GRAND ANGLE":
+                       //si grand angle -> app_mpave_atf0 
+                        break;
+                    case "MASTHEAD":
+                         //si masthead -> web_mban / app_mban
+                        break;
+                    case "INSTREAM":
+                       //si instream -> linear 
+                        break;
+                    case 68:
+                        
+                        break;
+                    default:
+                       
+                        break;
+                }
+*/
                 const requete = await sequelize.query(
                     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  = ? ORDER BY asb_campaign_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format],
@@ -690,10 +716,9 @@ exports.forecast = async (req, res, next) => {
                     }
                 );
                 console.log(requete)
-                //si c habillage -> web_habillage / app_mban_atf
-                //si interstitiel -> web_interstitiel / app_interstitiel
-                //si grand angle -> app_mpave_atf0 
-                //si masthead -> web_mban / app_mban
+               
+               
+              
 
 
                 //Initialisation du tableau
@@ -710,11 +735,11 @@ exports.forecast = async (req, res, next) => {
 
 
                     // Calculer l'intervalle de date sur la période
-                    const campaign_start_date =  requete[i].campaign_start_date
+                    const campaign_start_date = requete[i].campaign_start_date
 
-                    const campaign_end_date =  requete[i].campaign_end_date
+                    const campaign_end_date = requete[i].campaign_end_date
 
-                    const volumes_prevue =  requete[i].volume_prevue
+                    const volumes_prevue = requete[i].volume_prevue
 
                     const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
@@ -725,8 +750,8 @@ exports.forecast = async (req, res, next) => {
                     const nb_jour_interval = (date_interval / 86400000)
 
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                    const date_start_forecast =  date_start
-                    const date_end_forecast =  date_end
+                    const date_start_forecast = date_start
+                    const date_end_forecast = date_end
 
 
 
@@ -833,7 +858,7 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-                
+
 
                 var reserver = {
                     //RESERVER//
@@ -847,28 +872,28 @@ exports.forecast = async (req, res, next) => {
                     Nbr_cheval_reserver,
                 }
 
-                const infos ={
+                const infos = {
                     date_start,
                     date_end,
                     format,
                 }
 
-               /* if (reserver_reel === undefined) {
-                    console.log("aucun requête")
-                    return res.render('forecast/data.ejs', {
-                        table: table,
-                        insertions: insertions,
-                        infos:infos, 
-                    });
+                /* if (reserver_reel === undefined) {
+                     console.log("aucun requête")
+                     return res.render('forecast/data.ejs', {
+                         table: table,
+                         insertions: insertions,
+                         infos:infos, 
+                     });
 
-                }*/
+                 }*/
 
 
                 return res.render('forecast/data1.ejs', {
                     table: table,
                     insertions: insertions,
                     reserver: reserver,
-                    infos:infos, 
+                    infos: infos,
 
                 });
 
@@ -881,6 +906,3 @@ exports.forecast = async (req, res, next) => {
         console.log(error)
     }
 }
-
-
-
