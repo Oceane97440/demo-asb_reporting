@@ -266,7 +266,7 @@ exports.forecast_user = async (req, res, next) => {
                 }
             );
 
-            //console.log(requete)
+           // console.log(requete)
            // console.log(typeof requete)
 
 
@@ -334,9 +334,8 @@ exports.forecast_user = async (req, res, next) => {
 
 
                 if (requete[i].etat == "2") {
-                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+                    if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
 
-                        array_reserver.push(0);
 
                     } else {
                         array_reserver.push(volumes_prevu_diffuse);
@@ -345,39 +344,34 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
-                var sommeReserver = 0
+              
 
-                //total des réserver
-                for (let i = 0; i < array_reserver.length; i++) {
-                    if (array_reserver[i] != '') {
-                        sommeReserver += parseInt(array_reserver[i])
-                    }
+            }
+
+            var sommeReserver = 0
+
+            //total des réserver
+            for (let i = 0; i < array_reserver.length; i++) {
+                if (array_reserver[i] != '') {
+                    sommeReserver += parseInt(array_reserver[i])
                 }
+            }
 
-                var Volume_dispo_forecast = table.volumeDispo
+            var Volume_dispo_forecast = table.volumeDispo
 
-                // Calcule du volume dispo reserer  
-                var reserver_reel = Volume_dispo_forecast - sommeReserver;
+            // Calcule du volume dispo reserer  
+            var reserver_reel = Volume_dispo_forecast - sommeReserver;
 
+            //console.log(reserver_reel)
+            if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
+                reserver_reel = 0;
+                sommeReserver = 0
+            }
 
-                if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
-                    reserver_reel = 0;
-                    sommeReserver = 0
-                }
-
-                var reserver = {
-                    //RESERVER//
-                    sommeReserver,
-                    reserver_reel,
-
-                }
-
-               // console.log(reserver)
-               // console.log(reserver.sommeReserver)
-               // console.log(reserver.reserver_reel)
-
-
-
+            var reserver = {
+                //RESERVER//
+                sommeReserver,
+                reserver_reel,
 
             }
 
@@ -390,7 +384,7 @@ exports.forecast_user = async (req, res, next) => {
 
             }
 
-            if (reserver_reel === undefined) {
+           /* if (reserver_reel === undefined) {
                // console.log("aucun requête")
                 return res.render('forecast/users/data1_user.ejs', {
                     table: table,
@@ -398,7 +392,7 @@ exports.forecast_user = async (req, res, next) => {
                     // reserver: reserver
                 });
 
-            }
+            }*/
 
 
             return res.render('forecast/users/data_user.ejs', {
@@ -589,7 +583,7 @@ exports.forecast_user = async (req, res, next) => {
                     }
                 );
 
-                  //  console.log(requete)
+                // console.log(requete)
 
                 //Initialisation du tableau
 
@@ -663,9 +657,8 @@ exports.forecast_user = async (req, res, next) => {
 
                     if (requete[i].etat == "2") {
 
-                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
 
-                            array_reserver.push(0);
 
 
                         } else {
@@ -729,14 +722,23 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
-            
-
-                return res.render('forecast/users/data_user.ejs', {
-                    table: table,
-                    insertions: insertions,
-                    reserver: reserver
-                });
-
+               /* if (reserver_reel === undefined) {
+                    // console.log("aucun requête")
+                     return res.render('forecast/users/data1_user.ejs', {
+                         table: table,
+                         insertions: insertions,
+                     });
+     
+                 }*/
+     
+     
+                 return res.render('forecast/users/data_user.ejs', {
+                     table: table,
+                     insertions: insertions,
+                     reserver: reserver
+                 });
+     
+     
 
             }
         }

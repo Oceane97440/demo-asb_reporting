@@ -420,7 +420,7 @@ exports.forecast = async (req, res, next) => {
 
 
                 if (requete[i].etat == "2") {
-                    if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+                    if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
 
 
                     } else {
@@ -435,50 +435,54 @@ exports.forecast = async (req, res, next) => {
                 }
 
 
-                var sommeReserver =  0
-
-
-
-
-                //total des réserver
-                for (let i = 0; i < array_reserver.length; i++) {
-                    if (array_reserver[i] != '') {
-                        sommeReserver += parseInt(array_reserver[i])
-                    }
-                }
-
-                var Volume_dispo_forecast = table.volumeDispo
-
-
-
-
-                // Calcule du volume dispo reserer  
-                var reserver_reel =  Volume_dispo_forecast - sommeReserver;
-
-
-
-
-
-                if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
-                    reserver_reel = 0;
-                    sommeReserver = 0
-                }
-                var reserver = {
-                    //RESERVER//
-                    array_reserver,
-                    sommeReserver,
-                    reserver_reel,
-                    Campagnes_reserver,
-                    Campagne_start_reserver,
-                    Campagne_end_reserver,
-                    Interval_reserver,
-                    Nbr_cheval_reserver,
-                }
-
 
 
 
             }
+
+            
+            var sommeReserver =  0
+
+
+
+
+            //total des réserver
+            for (let i = 0; i < array_reserver.length; i++) {
+                if (array_reserver[i] != '') {
+                    sommeReserver += parseInt(array_reserver[i])
+                }
+            }
+
+            var Volume_dispo_forecast =  table.volumeDispo
+
+
+
+
+            // Calcule du volume dispo reserer  
+            var reserver_reel =  Volume_dispo_forecast - sommeReserver;
+
+            //console.log(Volume_dispo_forecast)
+            //console.log(sommeReserver)
+           // console.log(reserver_reel)
+
+
+
+            if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
+                reserver_reel = 0;
+                sommeReserver = 0
+            }
+            var reserver = {
+                //RESERVER//
+                array_reserver,
+                sommeReserver,
+                reserver_reel,
+                Campagnes_reserver,
+                Campagne_start_reserver,
+                Campagne_end_reserver,
+                Interval_reserver,
+                Nbr_cheval_reserver,
+            }
+
 
             const infos ={
                 date_start,
@@ -486,15 +490,15 @@ exports.forecast = async (req, res, next) => {
                 format,
             }
 
-            if (reserver_reel === undefined) {
-                console.log("aucun requête")
+           /* if (reserver_reel === undefined) {
+                //console.log("aucun requête")
                 return res.render('forecast/data.ejs', {
                     table: table,
                     insertions: insertions,
                     infos:infos, 
                 });
 
-            }
+            }*/
            
 
             return res.render('forecast/data1.ejs', {
@@ -672,13 +676,24 @@ exports.forecast = async (req, res, next) => {
                 var volumeDispo = sommeImpressions - sommeOccupied;
 
                 //Requête sql campagne epilot
+                // const requete = await sequelize.query(
+                //     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  = ? ORDER BY asb_campaign_epilot.format_name ASC', {
+                //         replacements: [date_start, date_end, date_start, date_end, format],
+                //         type: QueryTypes.SELECT
+                //     }
+                // );
+
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
+                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  = ? ORDER BY asb_campaign_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format],
                         type: QueryTypes.SELECT
                     }
                 );
-
+                console.log(requete)
+                //si c habillage -> web_habillage / app_mban_atf
+                //si interstitiel -> web_interstitiel / app_interstitiel
+                //si grand angle -> app_mpave_atf0 
+                //si masthead -> web_mban / app_mban
 
 
                 //Initialisation du tableau
@@ -757,7 +772,7 @@ exports.forecast = async (req, res, next) => {
 
                     if (requete[i].etat == "2") {
 
-                        if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast) || (campaign_date_start > date_start_forecast) || (campaign_date_end < date_end_forecast)) {
+                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
 
                         } else {
 
@@ -838,7 +853,7 @@ exports.forecast = async (req, res, next) => {
                     format,
                 }
 
-                if (reserver_reel === undefined) {
+               /* if (reserver_reel === undefined) {
                     console.log("aucun requête")
                     return res.render('forecast/data.ejs', {
                         table: table,
@@ -846,7 +861,7 @@ exports.forecast = async (req, res, next) => {
                         infos:infos, 
                     });
 
-                }
+                }*/
 
 
                 return res.render('forecast/data1.ejs', {
