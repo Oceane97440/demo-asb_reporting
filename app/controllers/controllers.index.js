@@ -108,7 +108,7 @@ exports.signup_add = async (req, res) => {
       })
       //  console.log(user_role)
 
-      res.redirect('/login')
+      res.redirect('/')
 
 
 
@@ -136,7 +136,7 @@ exports.login_add = async (req, res) => {
 
   if (!email || !password) {
 
-      return res.redirect('/login')
+      return res.redirect('/')
 
   } else {
       try {
@@ -153,28 +153,28 @@ exports.login_add = async (req, res) => {
           // console.log(user)
           if (user.email !== email && user.password !== password) {
 
-              res.redirect('/login')
+              res.redirect('/')
           } else {
               req.session.user = user
                // use session for user connected
                //console.log(req.session.user.role)
                
               if (req.session.user.role === 1){
-                return res.redirect('/')
+                return res.redirect('/home_page')
 
               }
               return res.redirect('/api/utilisateur')
           }
       } catch (error) {
 
-          res.redirect('/login', )
+          res.redirect('/', )
       }
   }
 }
 
 exports.logout = async (req, res) => {
   req.session = null
-  res.redirect('/login')
+  res.redirect('/')
 }
 
 

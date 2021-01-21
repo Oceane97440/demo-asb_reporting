@@ -266,8 +266,8 @@ exports.forecast_user = async (req, res, next) => {
                 }
             );
 
-            console.log(requete)
-            console.log(typeof requete)
+            //console.log(requete)
+           // console.log(typeof requete)
 
 
 
@@ -372,9 +372,9 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
-                console.log(reserver)
-                console.log(reserver.sommeReserver)
-                console.log(reserver.reserver_reel)
+               // console.log(reserver)
+               // console.log(reserver.sommeReserver)
+               // console.log(reserver.reserver_reel)
 
 
 
@@ -391,7 +391,7 @@ exports.forecast_user = async (req, res, next) => {
             }
 
             if (reserver_reel === undefined) {
-                console.log("aucun requête")
+               // console.log("aucun requête")
                 return res.render('forecast/users/data1_user.ejs', {
                     table: table,
                     insertions: insertions,
@@ -589,7 +589,7 @@ exports.forecast_user = async (req, res, next) => {
                     }
                 );
 
-                    console.log(requete)
+                  //  console.log(requete)
 
                 //Initialisation du tableau
 
@@ -748,7 +748,40 @@ exports.forecast_user = async (req, res, next) => {
 
 
 
-/*
+
+exports.epilot = async (req, res, next) => {
+
+    try {
+
+        var formats = await ModelFormat.findAll({
+            attributes: ['format_id', 'format_name', 'format_group'],
+            group: ['format_group'],
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
+
+
+        res.render('forecast/form_epilot.ejs', {
+            formats: formats,
+
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            'error': 'cannot fetch country'
+        });
+    }
+
+}
+
+
+
 exports.campaign_epilot = async (req, res, next) => {
 
     var campaign_name = req.body.campaign_name
@@ -814,4 +847,4 @@ exports.campaign_epilot = async (req, res, next) => {
         console.log(error)
     }
 
-}*/
+}
