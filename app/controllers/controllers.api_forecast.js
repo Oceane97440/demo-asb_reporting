@@ -345,10 +345,10 @@ exports.forecast = async (req, res, next) => {
             switch (format) {
               
                 case "INTERSTITIEL":
-                   //si interstitiel -> web_interstitiel / app_interstitiel
-                   format = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL","INTERSTITIEL")
+                    //si interstitiel -> web_interstitiel / app_interstitiel
+                    format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
 
-                    break;
+                     break;
                 
                 default:
                    
@@ -358,8 +358,8 @@ exports.forecast = async (req, res, next) => {
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
-                    replacements: [date_start, date_end, date_start, date_end, format],
+                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaign_epilot.format_name ASC', {
+                    replacements: [date_start, date_end, date_start, date_end, format_filtre],
                     type: QueryTypes.SELECT
                 }
             );
@@ -666,9 +666,12 @@ exports.forecast = async (req, res, next) => {
                     //delete les ; et delete les blanc
                     line = await data_split[i].split(';');
 
+                    //test d'exclusion (ex; si habillage -> exclu les app_mban atf0)
+
                     //push la donnéé splité dans un tab vide
                     TotalImpressions.push(line[0]);
                     OccupiedImpressions.push(line[1]);
+                    //test exclusion (site : actu reunion )
                     SiteID.push(line[2]);
                     SiteName.push(line[3]);
                     FormatID.push(line[4]);
@@ -696,37 +699,33 @@ exports.forecast = async (req, res, next) => {
                 //     }
                 // );
 
-               switch (format) {
+                switch (format) {
                     case "HABILLAGE":
                          //si c habillage -> web_habillage / app_mban_atf
-                         format = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0","HABILLAGE")
+                         format_filtre = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0","HABILLAGE")
                         break;
-                    case "INTERSTITIEL":
-                       //si interstitiel -> web_interstitiel / app_interstitiel
-                       format = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL","INTERSTITIEL")
-
-                        break;
+                    
                     case "GRAND ANGLE":
                        //si grand angle ->web_mban  app_mpave_atf0 
-                       format = new Array("WEB_MPAVE_ATF0","APP_MPAVE_ATF0","GRAND ANGLE")
+                       format_filtre = new Array("WEB_MPAVE_ATF0","APP_MPAVE_ATF0","GRAND ANGLE")
                         break;
                     case "MASTHEAD":
                          //si masthead -> web_mban / app_mban
-                         format = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0","MASTHEAD")
+                         format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0","MASTHEAD")
                         break;
                     case "VIDEOS":
                        //si instream -> linear 
-                       format = new Array("VIDEOS", "Linear")
+                       format_filtre = new Array("VIDEOS", "Linear")
                         break;
                     case "LOGO":
-                        format = new Array("LOGO", "WEB_LOGO")
+                        format_filtre = new Array("LOGO", "WEB_LOGO")
                         break;
 
                     case "NATIVE":
-                        format = new Array("NATIVE", "WEB_NATIVE")
+                        format_filtre = new Array("NATIVE", "WEB_NATIVE","WEB_NATIVE_MBAN_ATF")
                         break;
                     case "SLIDE":
-                            format = new Array("NATIVE", "WEB_NATIVE")
+                        format_filtre = new Array("SLIDE", "APP_SLIDE")
                             break;
                     default:
                        
@@ -735,7 +734,7 @@ exports.forecast = async (req, res, next) => {
 
                 const requete = await sequelize.query(
                     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaign_epilot.format_name ASC', {
-                        replacements: [date_start, date_end, date_start, date_end, format],
+                        replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }
                 );

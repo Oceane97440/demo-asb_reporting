@@ -157,6 +157,8 @@ exports.csv_import = async (req, res) => {
             var volume_prevue = results[i].Volume_total_prevu;
             var annonceurs = results[i].Annonceur;
 
+            //test tableau exclusion / ajouter
+            //test si la campagne n'est pas dans la base
 
             //Test si les valeurs sont vide
             if (campaign_name === '' || format_name === '' || etat === '' ||
