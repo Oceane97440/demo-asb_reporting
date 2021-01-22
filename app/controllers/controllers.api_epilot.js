@@ -143,7 +143,7 @@ exports.csv_import = async (req, res) => {
 
         .on('data', (data) => results.push(data))
         .on('end', () => {
-          // console.log(results);
+        //  console.log(results);
 
           for (let i = 0; i < results.length; i++) {
 
@@ -166,10 +166,10 @@ exports.csv_import = async (req, res) => {
 
 
             }
-
-            if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
+/*
+             if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
             {return res.send("La date debut et fin est invalide")}
-
+*/
 
 
             //remplace les valeurs
@@ -200,7 +200,7 @@ exports.csv_import = async (req, res) => {
 
 
             //apres tout mes test passé add les données
-            ModelCampaign_epilot.create({
+             ModelCampaign_epilot.create({
               campaign_name: campaign_name,
               format_name: format_name,
               etat: etat,
@@ -210,7 +210,7 @@ exports.csv_import = async (req, res) => {
 
             })
 
-            res.redirect('/api/epilot')
+          // return res.render('forecast/liste_epilot.ejs')
 
 
 

@@ -342,6 +342,19 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
             }
+            switch (format) {
+              
+                case "INTERSTITIEL":
+                   //si interstitiel -> web_interstitiel / app_interstitiel
+                   format = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL","INTERSTITIEL")
+
+                    break;
+                
+                default:
+                   
+                break;
+            }
+
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
@@ -683,34 +696,45 @@ exports.forecast = async (req, res, next) => {
                 //     }
                 // );
 
-             /*   switch (format) {
+               switch (format) {
                     case "HABILLAGE":
                          //si c habillage -> web_habillage / app_mban_atf
-                         format = new Array()
+                         format = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0","HABILLAGE")
                         break;
                     case "INTERSTITIEL":
                        //si interstitiel -> web_interstitiel / app_interstitiel
+                       format = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL","INTERSTITIEL")
 
                         break;
                     case "GRAND ANGLE":
-                       //si grand angle -> app_mpave_atf0 
+                       //si grand angle ->web_mban  app_mpave_atf0 
+                       format = new Array("WEB_MPAVE_ATF0","APP_MPAVE_ATF0","GRAND ANGLE")
                         break;
                     case "MASTHEAD":
                          //si masthead -> web_mban / app_mban
+                         format = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0","MASTHEAD")
                         break;
-                    case "INSTREAM":
+                    case "VIDEOS":
                        //si instream -> linear 
+                       format = new Array("VIDEOS", "Linear")
                         break;
-                    case 68:
-                        
+                    case "LOGO":
+                        format = new Array("LOGO", "WEB_LOGO")
                         break;
+
+                    case "NATIVE":
+                        format = new Array("NATIVE", "WEB_NATIVE")
+                        break;
+                    case "SLIDE":
+                            format = new Array("NATIVE", "WEB_NATIVE")
+                            break;
                     default:
                        
                         break;
                 }
-*/
+
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  = ? ORDER BY asb_campaign_epilot.format_name ASC', {
+                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaign_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format],
                         type: QueryTypes.SELECT
                     }
