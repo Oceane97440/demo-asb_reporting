@@ -93,7 +93,6 @@ exports.index = async (req, res) => {
 
         res.render('forecast/form.ejs', {
             formats: formats,
-            // sites: sites,
             packs: packs,
             countrys: countrys
         });
@@ -196,9 +195,7 @@ exports.forecast = async (req, res, next) => {
             ],
             "fields": [
 
-
                 "CampaignName",
-                "InsertionID",
                 "InsertionName",
                 "InsertionBookedVolume",
                 "InsertionForecastedDeliveredVolume",
@@ -225,7 +222,6 @@ exports.forecast = async (req, res, next) => {
 
                 //liste des insertions
                 var CampaignName = []
-                var InsertionID = []
                 var InsertionName = []
                 var InsertionBookedVolume = []
                 var InsertionForecastedDeliveredVolume = []
@@ -234,7 +230,6 @@ exports.forecast = async (req, res, next) => {
                 var data_forecast = await csvLink.data
 
                 var data_split = await data_forecast.split(/\r?\n/);
-
                 //compte le nbr ligne 
                 var number_line = await data_split.length;
 
@@ -244,25 +239,24 @@ exports.forecast = async (req, res, next) => {
                     //delete les ; et delete les blanc
                     line = await data_split[i].split(';');
 
+
                     //push la donnéé splité dans un tab vide
 
                     //liste des insertions
                     CampaignName.push(line[0]);
-                    InsertionID.push(line[1]);
-                    InsertionName.push(line[2]);
-                    InsertionBookedVolume.push(line[3]);
-                    InsertionForecastedDeliveredVolume.push(line[4]);
-                    InsertionForecastedDeliveredPercentage.push(line[5]);
+                    InsertionName.push(line[1]);
+                    InsertionBookedVolume.push(line[2]);
+                    InsertionForecastedDeliveredVolume.push(line[3]);
+                    InsertionForecastedDeliveredPercentage.push(line[4]);
                 }
 
 
-
+               // console.log(CampaignName)
 
                 var insertions = {
 
                     //liste des insertions
                     CampaignName,
-                    InsertionID,
                     InsertionName,
                     InsertionBookedVolume,
                     InsertionForecastedDeliveredVolume,
@@ -270,6 +264,7 @@ exports.forecast = async (req, res, next) => {
 
 
                 }
+
             }
 
 
@@ -327,6 +322,14 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
 
+                if (format == "INTERSTITIEL") {
+                    requestForecast.filter[2] = {
+                        "FormatID": [
+                            "44152", "79633"
+
+                        ]
+                    }
+                }
                 // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
                 let firstReq = await AxiosFunction.getForecastData('POST', '', requestForecast);
 
@@ -343,16 +346,16 @@ exports.forecast = async (req, res, next) => {
                 }
             }
             switch (format) {
-              
+
                 case "INTERSTITIEL":
                     //si interstitiel -> web_interstitiel / app_interstitiel
                     format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
 
-                     break;
-                
+                    break;
+
                 default:
-                   
-                break;
+
+                    break;
             }
 
 
@@ -554,13 +557,9 @@ exports.forecast = async (req, res, next) => {
             requestForecast.filter[2] = {
                 "FormatID": [
 
-                    //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
-                    //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431"
-
+                    //App_mban / Web_mban et Web_mpave / App_mpave
+                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
 
                 ]
             }
@@ -572,12 +571,9 @@ exports.forecast = async (req, res, next) => {
             requestForecast.filter[2] = {
                 "FormatID": [
 
-                    //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
-                    //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431"
+                    //App_mban / Web_mban et Web_mpave / App_mpave
+                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
 
 
                 ]
@@ -590,12 +586,9 @@ exports.forecast = async (req, res, next) => {
             requestForecast.filter[2] = {
                 "FormatID": [
 
-                    //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
-                    //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431",
+                    //Masthead / Grand_angle
+                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655",
                     //Habilage
                     "44149"
 
@@ -613,7 +606,23 @@ exports.forecast = async (req, res, next) => {
             }
 
         }
+        if (packs == "2") {
 
+            if (format == "HABILLAGE" || format == "MASTHEAD" || format == "GRAND ANGLE") {
+
+                requestForecast.filter[2] = {
+                    "FormatID": [
+
+                        //Masthead / Grand_angle
+                        "79425", "79431", "79409", "79421", "79637"
+
+
+                    ]
+                }
+
+            }
+
+        }
         //si RG-DESKTOP est seletionner add ciblage desktop
         if (packs == "7") {
             requestForecast.filter[3] = {
@@ -701,34 +710,34 @@ exports.forecast = async (req, res, next) => {
 
                 switch (format) {
                     case "HABILLAGE":
-                         //si c habillage -> web_habillage / app_mban_atf
-                         format_filtre = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0","HABILLAGE")
+                        //si c habillage -> web_habillage / app_mban_atf
+                        format_filtre = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0", "HABILLAGE")
                         break;
-                    
+
                     case "GRAND ANGLE":
-                       //si grand angle ->web_mban  app_mpave_atf0 
-                       format_filtre = new Array("WEB_MPAVE_ATF0","APP_MPAVE_ATF0","GRAND ANGLE")
+                        //si grand angle ->web_mban  app_mpave_atf0 
+                        format_filtre = new Array("WEB_MPAVE_ATF0", "APP_MPAVE_ATF0", "GRAND ANGLE")
                         break;
                     case "MASTHEAD":
-                         //si masthead -> web_mban / app_mban
-                         format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0","MASTHEAD")
+                        //si masthead -> web_mban / app_mban
+                        format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0", "MASTHEAD")
                         break;
                     case "VIDEOS":
-                       //si instream -> linear 
-                       format_filtre = new Array("VIDEOS", "Linear")
+                        //si instream -> linear 
+                        format_filtre = new Array("VIDEOS", "Linear")
                         break;
                     case "LOGO":
                         format_filtre = new Array("LOGO", "WEB_LOGO")
                         break;
 
                     case "NATIVE":
-                        format_filtre = new Array("NATIVE", "WEB_NATIVE","WEB_NATIVE_MBAN_ATF")
+                        format_filtre = new Array("NATIVE", "WEB_NATIVE", "WEB_NATIVE_MBAN_ATF")
                         break;
                     case "SLIDE":
                         format_filtre = new Array("SLIDE", "APP_SLIDE")
-                            break;
+                        break;
                     default:
-                       
+
                         break;
                 }
 
@@ -738,10 +747,10 @@ exports.forecast = async (req, res, next) => {
                         type: QueryTypes.SELECT
                     }
                 );
-                console.log(requete)
-               
-               
-              
+                //  console.log(requete)
+
+
+
 
 
                 //Initialisation du tableau

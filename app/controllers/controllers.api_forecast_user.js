@@ -58,12 +58,12 @@ const ModelUser_Role = require("../models/models.user_role")
 
 exports.index = async (req, res) => {
 
- 
+
 
     try {
 
-     
-     
+
+
         if (req.session.user.role == 2 || req.session.user.role == 3) {
 
             var formats = await ModelFormat.findAll({
@@ -78,15 +78,15 @@ exports.index = async (req, res) => {
                     ['format_group', 'ASC']
                 ],
             })
-    
+
             var packs = await ModelPack.findAll({
                 attributes: ['pack_id', 'pack_name'],
                 order: [
                     ['pack_name', 'ASC']
                 ],
             })
-    
-    
+
+
             var countrys = await ModelCountry.findAll({
                 attributes: ['country_id', 'country_name'],
                 where: {
@@ -96,18 +96,17 @@ exports.index = async (req, res) => {
                     ['country_name', 'DESC']
                 ],
             })
-    
+
             res.render('forecast/users/form.ejs', {
                 formats: formats,
-                // sites: sites,
                 packs: packs,
                 countrys: countrys
             });
-    
-        
+
+
         }
-    
-       
+
+
 
     } catch (err) {
         res.status(500).json({
@@ -119,7 +118,7 @@ exports.index = async (req, res) => {
 
 
 exports.forecast_user = async (req, res, next) => {
-  
+
 
     // Définition des variables
     var headerlocation, table, requestForecast;
@@ -131,7 +130,7 @@ exports.forecast_user = async (req, res, next) => {
 
     option = req.body.case
 
-  
+
     //si la case n'est pas coché renvoie false sinon true
     if (option == undefined) {
 
@@ -228,6 +227,15 @@ exports.forecast_user = async (req, res, next) => {
                     "periodInMinutes": 120
                 }
 
+                if (format == "INTERSTITIEL") {
+                    requestForecast.filter[2] = {
+                        "FormatID": [
+                            "44152", "79633"
+
+                        ]
+                    }
+                }
+
                 //si RG-DESKTOP est seletionner add ciblage desktop
                 if (packs == "7") {
                     requestForecast.filter[4] = {
@@ -266,8 +274,8 @@ exports.forecast_user = async (req, res, next) => {
                 }
             );
 
-           // console.log(requete)
-           // console.log(typeof requete)
+            // console.log(requete)
+            // console.log(typeof requete)
 
 
 
@@ -344,7 +352,7 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
-              
+
 
             }
 
@@ -384,15 +392,15 @@ exports.forecast_user = async (req, res, next) => {
 
             }
 
-           /* if (reserver_reel === undefined) {
-               // console.log("aucun requête")
-                return res.render('forecast/users/data1_user.ejs', {
-                    table: table,
-                    insertions: insertions,
-                    // reserver: reserver
-                });
+            /* if (reserver_reel === undefined) {
+                // console.log("aucun requête")
+                 return res.render('forecast/users/data1_user.ejs', {
+                     table: table,
+                     insertions: insertions,
+                     // reserver: reserver
+                 });
 
-            }*/
+             }*/
 
 
             return res.render('forecast/users/data_user.ejs', {
@@ -436,71 +444,6 @@ exports.forecast_user = async (req, res, next) => {
             ]
         };
 
-        //si la case "élargir la propo" est coché les web et ap mban son add de la requête
-        if (option == true && format == "GRAND ANGLE") {
-            requestForecast.filter[2] = {
-                "FormatID": [
-
-                    //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
-                    //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431"
-
-
-                ]
-            }
-        }
-
-        //si la case "élargir la propo" est coché les web et ap pave son add de la requête
-
-        if (option == true && format == "MASTHEAD") {
-            requestForecast.filter[2] = {
-                "FormatID": [
-
-                    //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
-                    //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431"
-
-
-                ]
-            }
-        }
-
-        //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
-
-        if (option == true && format == "HABILLAGE") {
-            requestForecast.filter[2] = {
-                "FormatID": [
-
-                    //Masthead
-                    "79409", "84652", "84653", "84654", "84655", "84656", "79421",
-                    "79637", "79638", "79642", "79643", "79644", "79645", "79646",
-                    //Grand angle
-                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
-                    "79425", "84657", "84658", "84659", "84660", "84661", "79431",
-                    //Habilage
-                    "44149"
-
-
-                ]
-            }
-        } else {
-
-            // si le format habillage est choisi on ajoute App_man_atf0
-            if (format === "HABILLAGE") {
-                requestForecast.filter[2] = {
-                    "FormatID": ["79637", "44149"]
-
-                }
-            }
-
-        }
-
         //si RG-DESKTOP est seletionner add ciblage desktop
         if (packs == "7") {
             requestForecast.filter[3] = {
@@ -515,6 +458,68 @@ exports.forecast_user = async (req, res, next) => {
                 "platformID": ["3", "2"]
             }
         }
+
+        //AUTO ELARGISEMENT DES FORMATS
+        if (format == "GRAND ANGLE") {
+            requestForecast.filter[2] = {
+                "FormatID": [
+
+                    //App_mban / Web_mban et Web_mpave / App_mpave
+                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
+
+                ]
+            }
+        }
+
+
+        if (format == "MASTHEAD") {
+            requestForecast.filter[2] = {
+                "FormatID": [
+
+                    //App_mban / Web_mban et Web_mpave / App_mpave
+                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
+
+
+                ]
+            }
+        }
+
+        if (format == "HABILLAGE") {
+            requestForecast.filter[2] = {
+                "FormatID": [
+
+                    //Masthead / Grand_angle
+                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655",
+                    //Habilage
+                    "44149"
+
+
+                ]
+            }
+        }
+
+        //ELARGIR SI Pack=mobile et format Habillage ou format=Masthead ou format=gran
+        if (packs == "2") {
+
+            if (format == "HABILLAGE" || format == "MASTHEAD" || format == "GRAND ANGLE") {
+
+                requestForecast.filter[2] = {
+                    "FormatID": [
+
+                        //Masthead / Grand_angle
+                        "79425", "79431", "79409", "79421", "79637"
+
+
+                    ]
+                }
+
+            }
+
+        }
+
         //console.log(requestForecast.filter[2])
         // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
         let firstLink = await AxiosFunction.getForecastData('POST', '', requestForecast);
@@ -722,7 +727,7 @@ exports.forecast_user = async (req, res, next) => {
 
                 }
 
-               /* if (reserver_reel === undefined) {
+                /* if (reserver_reel === undefined) {
                     // console.log("aucun requête")
                      return res.render('forecast/users/data1_user.ejs', {
                          table: table,
@@ -730,15 +735,15 @@ exports.forecast_user = async (req, res, next) => {
                      });
      
                  }*/
-     
-     
-                 return res.render('forecast/users/data_user.ejs', {
-                     table: table,
-                     insertions: insertions,
-                     reserver: reserver
-                 });
-     
-     
+
+
+                return res.render('forecast/users/data_user.ejs', {
+                    table: table,
+                    insertions: insertions,
+                    reserver: reserver
+                });
+
+
 
             }
         }

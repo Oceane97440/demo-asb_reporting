@@ -1,29 +1,58 @@
 <%- include("../layouts/admin/head.ejs") -%>
 
-    <table>
+<div id="card-forecast" class="card" style="margin-top: 30px;">
+    <div class="card-header">
+        <h1 class="card-title">
+            Données du Reporting
+        </h1>
+    </div>
+
+    <div class="card-body">
+        <ul>
+            <li>Date de début: </li>
+            <li>Date de fin: </li>
 
 
-        <table border="1px">
-            <thead>
+        </ul>
+
+        <ul>
+            <li><strong>Total Impressions: </strong></li>
+            <li>Nombre Visiteur unique:</li>
+
+        </ul>
+
+        <hr>
+        <br>
+        <h3>Tableau récapitulatif des données du forecast</h3>
+        <br>
+
+        <table class="table">
+            <thead class="text-left thead-dark">
                 <tr>
-                    <th>CampaignName</th>
-                    <th>CampaignId</th>
-                    <th>FormatName</th>
-                    <th>Impressions</th>
-                    <th>Clicks</th>
-                    <th>ClickRate</th>
+
+                    <th scope="col">CampaignName</th>
+                    <th scope="col">InsertionName</th>
+                    <th scope="col">FormatName</th>
+                    <th scope="col">SiteName</th>
+                    <th scope="col">Impressions</th>
+                    <th scope="col">Clicks</th>
+                    <th scope="col">ClickRate</th>
+
+
 
                 </tr>
-            </thead>   
+            </thead>
+            
             <tbody>
-                <% for (let i=0; i < table.CampaignName.length; i++) { %>
+                <% for (let i=1; i < table.CampaignName.length; i++) { %>
                   
                 <tr>
                  
 
                     <td><%=table.CampaignName[i]%></td>
-                    <td><%=table.CampaignId[i]%></td>
+                    <td><%=table.InsertionName[i]%></td>
                     <td><%=table.FormatName[i]%></td>
+                    <td><%=table.SiteName[i]%></td>
                     <td><%=table.Impressions[i]%></td>
                     <td><%=table.Clicks[i]%></td>
                     <td><%=table.ClickRate[i]%></td>
@@ -36,6 +65,11 @@
           
 
         </table>
-    </table>
 
+    </div>
+
+</div>
+
+
+       
     <%- include("../layouts/admin/footer.ejs") -%>

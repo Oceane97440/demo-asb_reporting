@@ -175,11 +175,10 @@
                     <tr>
 
                         <th scope="col">Campagnes</th>
-                        <!-- <th scope="col">Insertions ID</th> -->
                         <th scope="col">Insertions</th>
-                        <th scope="col">Volume</th>
-                        <th scope="col">Volume livré</th>
-                        <th scope="col">Surréservation</th>
+                        <th scope="col">Volume réservé par insertion</th>
+                        <th scope="col">Volume livré prévu d'insertion</th>
+                        <th scope="col">Surréservation(%)</th>
                     </tr>
                 </thead>
 
@@ -189,7 +188,6 @@
                     <tr>
 
                         <td><%=insertions.CampaignName[i]%></td>
-                        <!-- <td><%=insertions.InsertionID[i]%></td> -->
                         <td><%=insertions.InsertionName[i]%></td>
                         <td><%=insertions.InsertionBookedVolume[i]%></td>
                         <td><%=insertions.InsertionForecastedDeliveredVolume[i]%></td>

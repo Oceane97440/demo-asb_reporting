@@ -19,23 +19,23 @@ const fileGetContents = require('file-get-contents');
 
 
 const {
-    Op
+  Op
 } = require("sequelize");
 
 process.on('unhandledRejection', error => {
-    // Will print "unhandledRejection err is not defined"
-    console.log('unhandledRejection', error.message);
+  // Will print "unhandledRejection err is not defined"
+  console.log('unhandledRejection', error.message);
 });
 
 
 
 const {
-    QueryTypes
+  QueryTypes
 } = require('sequelize');
 
 const {
-    check,
-    query
+  check,
+  query
 } = require('express-validator');
 
 
@@ -53,6 +53,206 @@ const ModelPack_Site = require("../models/models.pack_site")
 
 
 
+
+exports.index = async (req, res) => {
+
+  // var date_start = "2020-11-10T00:00:00"
+  //  var date_end = "2020-11-10T23:59:00"
+  var advertiserid = "4455418"
+ var campaignid = "1839404"
+
+  try {
+    //requête 1
+    requestReporting = {
+
+      "startDate": "2021-01-15T00:00:00",
+
+      "endDate": "CURRENT_DAY",
+
+      "fields": [{
+        "CampaignName": {}
+      },
+
+      {"InsertionName": {}
+      },
+
+      {"FormatName": {}
+      },
+
+      {"SiteName": {}
+      },
+      
+      {"Impressions": {}
+      },
+
+      {"ClickRate": {}
+      },
+
+      {"Clicks": {}
+      }
+
+      ],
+
+      "filter": [
+
+        {
+
+          "AdvertiserId": [
+
+            advertiserid
+
+          ],
+
+          "CampaignId": [
+
+            campaignid
+
+          ]
+
+        }
+
+      ]
+
+    }
+
+    
+
+    // First step
+    let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
+
+    if (firstLink.data.taskId) {
+      taskId = firstLink.data.taskId;
+
+
+      //excute le script interval de temps
+      let timerFile = setInterval(async () => {
+
+        let url = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
+
+
+        let secondLink = await AxiosFunction.getReportingData('GET', url, '');
+
+        if (secondLink.data.lastTaskInstance.jobProgress == '1.0') {
+
+          clearInterval(timerFile);
+          let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
+
+          console.log(dataFile);
+
+          //split 
+          var CampaignName = []
+          var InsertionName = []
+          var FormatName = []
+          var SiteName = []
+          var Impressions = []
+          var Clicks = []
+          var ClickRate = []
+
+          //var TotalImpressions = []
+
+
+          var data_reporting = dataFile.data
+
+          var data_split = data_reporting.split(/\r?\n/);
+
+          //compte le nbr ligne 
+          var number_line = data_split.length;
+
+          //boucle sur les ligne
+          for (i = 0; i < number_line; i++) {
+
+            //delete les ; et delete les blanc
+            line = data_split[i].split(';');
+
+            //push la donnéé splité dans un tab vide
+            CampaignName.push(line[0]);
+            InsertionName.push(line[1]);
+            FormatName.push(line[2])
+            SiteName.push(line[3])
+            Impressions.push(line[4]);
+            Clicks.push(line[5]);
+            ClickRate.push(line[6]);
+
+
+
+            //console.log(line);
+
+
+          }
+          var table = {
+            CampaignName,
+            InsertionName,
+            FormatName,
+            SiteName,
+            Impressions,
+            Clicks,
+            ClickRate,
+
+          }
+          console.log(table)
+
+          res.render('reporting/data.ejs', {
+            table: table
+
+          });
+
+
+        }
+
+
+      }, 60000);
+
+
+    }
+/*
+//Requête visitor unique
+requestVisitor_unique = {
+
+  "startDate": "2021-01-15T00:00:00",
+
+  "endDate": "CURRENT_DAY",
+
+  "fields": [{
+    "CampaignName": {}
+  },
+  
+  {"Impressions": {}
+  },
+
+  {"UniqueVisitors": {}
+  },
+
+  {"Clicks": {}
+  }
+
+  ],
+
+  "filter": [
+    {"AdvertiserId": [advertiserid],
+
+    "CampaignId": [campaignid]
+
+    }
+
+  ]
+
+}*/
+
+
+
+
+
+  } catch (error) {
+    console.log(error);
+  }
+
+
+
+
+
+}
+
+/*
 exports.index = async (req, res) => {
 
   var date_start = "2020-11-10T00:00:00"
@@ -196,6 +396,4 @@ exports.index = async (req, res) => {
 
 
 
-}
-
-
+}*/
