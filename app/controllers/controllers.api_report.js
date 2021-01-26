@@ -150,15 +150,12 @@ exports.index = async (req, res) => {
           var FormatName = []
           var SiteName = []
           var Impressions = []
-          var Clicks = []
           var ClickRate = []
+          var Clicks = []
 
 
           var data_reporting = dataFile.data
-
           var data_split = data_reporting.split(/\r?\n/);
-
-          //compte le nbr ligne 
           var number_line = data_split.length;
 
           //boucle sur les ligne
@@ -166,15 +163,14 @@ exports.index = async (req, res) => {
 
             //delete les ; et delete les blanc
             line = data_split[i].split(';');
-
             //push la donnéé splité dans un tab vide
             CampaignName.push(line[0]);
             InsertionName.push(line[1]);
             FormatName.push(line[2])
             SiteName.push(line[3])
             Impressions.push(line[4]);
-            Clicks.push(line[5]);
-            ClickRate.push(line[6]);
+            ClickRate.push(line[5]);
+            Clicks.push(line[6]);
 
           }
 
@@ -187,25 +183,22 @@ exports.index = async (req, res) => {
           for (let i = 0; i < Impressions.length; i++) {
             if (Impressions[i] !== valueToRemove) {
               Array_Impression.push(Impressions[i]);
-              Array_Clicks.push(Math.round((Clicks[i]) * 100) / 100)
+              Array_Clicks.push(Clicks[i]);
 
             }
           }
 
 
           var TotalImpressions = 0
+          var TotalCliks = 0
 
           for (let i = 0; i < Array_Impression.length; i++) {
             if (Array_Impression[i] != '') {
               TotalImpressions += parseInt(Array_Impression[i])
+              TotalCliks += parseInt(Array_Clicks[i])
+
             }
           }
-
-         
-          //function somme apres arrondi array devien un number
-          const reducer = (accumulator, currentValue) => accumulator + currentValue;
-          TotalCliks = Array_Clicks.reduce(reducer);
-
 
 
           var table = {
@@ -214,12 +207,13 @@ exports.index = async (req, res) => {
             FormatName,
             SiteName,
             Impressions,
-            Array_Clicks,
             ClickRate,
+            Array_Clicks,
+            
             TotalImpressions,
             TotalCliks
           }
-          // console.log(table)
+           console.log(table)
 
           res.render('reporting/data.ejs', {
             table: table
@@ -234,7 +228,7 @@ exports.index = async (req, res) => {
 
 
     }
-    /*
+  /*
     //Requête visitor unique
     requestVisitor_unique = {
 
@@ -267,8 +261,6 @@ exports.index = async (req, res) => {
       ]
 
     }*/
-
-
 
 
 
