@@ -8,22 +8,17 @@
     </div>
 
     <div class="card-body">
-        <ul>
-            <li>Date de début: </li>
-            <li>Date de fin: </li>
-
-
-        </ul>
+       
 
         <ul>
-            <li><strong>Total Impressions: </strong></li>
-            <li>Nombre Visiteur unique:</li>
+            <li><strong>Total Impressions:<%=table.TotalImpressions%></strong></li>
+            <li>Total Clics:<%=table.TotalCliks%></li>
 
         </ul>
 
         <hr>
         <br>
-        <h3>Tableau récapitulatif des données du forecast</h3>
+        <h3>Tableau récapitulatif des données du Reporting</h3>
         <br>
 
         <table class="table">
@@ -36,7 +31,7 @@
                     <th scope="col">SiteName</th>
                     <th scope="col">Impressions</th>
                     <th scope="col">Clicks</th>
-                    <th scope="col">ClickRate</th>
+                    <th scope="col">ClickRate(%)</th>
 
 
 
@@ -54,7 +49,7 @@
                     <td><%=table.FormatName[i]%></td>
                     <td><%=table.SiteName[i]%></td>
                     <td><%=table.Impressions[i]%></td>
-                    <td><%=table.Clicks[i]%></td>
+                    <td><%=table.Array_Clicks[i]%></td>
                     <td><%=table.ClickRate[i]%></td>
 
                 </tr>

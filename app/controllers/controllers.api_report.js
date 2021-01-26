@@ -59,7 +59,7 @@ exports.index = async (req, res) => {
   // var date_start = "2020-11-10T00:00:00"
   //  var date_end = "2020-11-10T23:59:00"
   var advertiserid = "4455418"
- var campaignid = "1839404"
+  var campaignid = "1839404"
 
   try {
     //requête 1
@@ -70,26 +70,32 @@ exports.index = async (req, res) => {
       "endDate": "CURRENT_DAY",
 
       "fields": [{
-        "CampaignName": {}
-      },
+          "CampaignName": {}
+        },
 
-      {"InsertionName": {}
-      },
+        {
+          "InsertionName": {}
+        },
 
-      {"FormatName": {}
-      },
+        {
+          "FormatName": {}
+        },
 
-      {"SiteName": {}
-      },
-      
-      {"Impressions": {}
-      },
+        {
+          "SiteName": {}
+        },
 
-      {"ClickRate": {}
-      },
+        {
+          "Impressions": {}
+        },
 
-      {"Clicks": {}
-      }
+        {
+          "ClickRate": {}
+        },
+
+        {
+          "Clicks": {}
+        }
 
       ],
 
@@ -115,7 +121,7 @@ exports.index = async (req, res) => {
 
     }
 
-    
+
 
     // First step
     let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
@@ -137,9 +143,8 @@ exports.index = async (req, res) => {
           clearInterval(timerFile);
           let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
-          console.log(dataFile);
+          //console.log(dataFile);
 
-          //split 
           var CampaignName = []
           var InsertionName = []
           var FormatName = []
@@ -147,8 +152,6 @@ exports.index = async (req, res) => {
           var Impressions = []
           var Clicks = []
           var ClickRate = []
-
-          //var TotalImpressions = []
 
 
           var data_reporting = dataFile.data
@@ -159,7 +162,7 @@ exports.index = async (req, res) => {
           var number_line = data_split.length;
 
           //boucle sur les ligne
-          for (i = 0; i < number_line; i++) {
+          for (i = 1; i < number_line; i++) {
 
             //delete les ; et delete les blanc
             line = data_split[i].split(';');
@@ -173,23 +176,50 @@ exports.index = async (req, res) => {
             Clicks.push(line[5]);
             ClickRate.push(line[6]);
 
-
-
-            //console.log(line);
-
-
           }
+
+          //filte les array exclure les valeur undefined qui empêche le calcule des somme
+          var valueToRemove = undefined;
+          var Array_Impression = [];
+          var Array_Clicks = [];
+
+          //push les valeur filtré
+          for (let i = 0; i < Impressions.length; i++) {
+            if (Impressions[i] !== valueToRemove) {
+              Array_Impression.push(Impressions[i]);
+              Array_Clicks.push(Math.round((Clicks[i]) * 100) / 100)
+
+            }
+          }
+
+
+          var TotalImpressions = 0
+
+          for (let i = 0; i < Array_Impression.length; i++) {
+            if (Array_Impression[i] != '') {
+              TotalImpressions += parseInt(Array_Impression[i])
+            }
+          }
+
+         
+          //function somme apres arrondi array devien un number
+          const reducer = (accumulator, currentValue) => accumulator + currentValue;
+          TotalCliks = Array_Clicks.reduce(reducer);
+
+
+
           var table = {
             CampaignName,
             InsertionName,
             FormatName,
             SiteName,
             Impressions,
-            Clicks,
+            Array_Clicks,
             ClickRate,
-
+            TotalImpressions,
+            TotalCliks
           }
-          console.log(table)
+          // console.log(table)
 
           res.render('reporting/data.ejs', {
             table: table
@@ -204,39 +234,39 @@ exports.index = async (req, res) => {
 
 
     }
-/*
-//Requête visitor unique
-requestVisitor_unique = {
+    /*
+    //Requête visitor unique
+    requestVisitor_unique = {
 
-  "startDate": "2021-01-15T00:00:00",
+      "startDate": "2021-01-15T00:00:00",
 
-  "endDate": "CURRENT_DAY",
+      "endDate": "CURRENT_DAY",
 
-  "fields": [{
-    "CampaignName": {}
-  },
-  
-  {"Impressions": {}
-  },
+      "fields": [{
+        "CampaignName": {}
+      },
+      
+      {"Impressions": {}
+      },
 
-  {"UniqueVisitors": {}
-  },
+      {"UniqueVisitors": {}
+      },
 
-  {"Clicks": {}
-  }
+      {"Clicks": {}
+      }
 
-  ],
+      ],
 
-  "filter": [
-    {"AdvertiserId": [advertiserid],
+      "filter": [
+        {"AdvertiserId": [advertiserid],
 
-    "CampaignId": [campaignid]
+        "CampaignId": [campaignid]
 
-    }
+        }
 
-  ]
+      ]
 
-}*/
+    }*/
 
 
 
