@@ -53,10 +53,13 @@ const ModelPack_Site = require("../models/models.pack_site")
 
 exports.test = async (req, res) => {
 
+
   var advertiserid = "4455418"
   var campaignid = "1839404"
 
   try {
+
+
 
     requestReporting = {
 
@@ -536,21 +539,62 @@ exports.index = async (req, res) => {
             }
           }
 
-          CTR_habillage = Math.round((sommeHabillageImpression / sommeHabillageClicks) / 100)
-          CTR_interstitiel = Math.round((sommeInterstitielImpression / sommeInterstitielClicks) / 100)
-          CTR_grand_angle = Math.round((sommeGrand_AngleImpression / sommeGrand_AngleClicks) / 100)
-          CTR_masthead = Math.round((sommeMastheadImpression / sommeMastheadClicks) / 100)
-          CTR_native = Math.round((sommeNativeImpression / sommeNativeClicks) / 100)
+          CTR_habillage = (sommeHabillageClicks / sommeHabillageImpression) * 100
+          CTR_habillage = CTR_habillage.toFixed(2);
+          sommeHabillageImpression = new Number(sommeHabillageImpression).toLocaleString("fi-FI")
 
 
+          CTR_interstitiel = (sommeInterstitielClicks / sommeInterstitielImpression) * 100
+          CTR_interstitiel = CTR_interstitiel.toFixed(2);
+          sommeInterstitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI")
 
-          var CTR = Math.round((TotalImpressions / TotalCliks) / 100)
-          var Impression_vu = (TotalImpressions / Total_VU) / 100
+
+          CTR_grand_angle = (sommeGrand_AngleClicks / sommeGrand_AngleImpression) * 100
+          CTR_grand_angle = CTR_grand_angle.toFixed(2);
+          sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI")
+
+
+          CTR_masthead = (sommeMastheadClicks / sommeMastheadImpression) * 100
+          CTR_masthead = CTR_masthead.toFixed(2);
+          sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI")
+
+
+          CTR_native = (sommeNativeClicks / sommeNativeImpression) * 100
+          CTR_native = CTR_native.toFixed(2);
+          sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI")
+
+
+          // var CTR = Math.round((TotalImpressions / TotalCliks) / 100)
+          var Taux_clics = (TotalCliks / TotalImpressions) * 100
+          console.log(TotalCliks)
+          console.log(TotalImpressions)
+
+          console.log(Taux_clics)
+          CTR = Taux_clics.toFixed(2);
+
+
+          var Impression_vu = (TotalImpressions / Total_VU)
           Repetition = Impression_vu.toFixed(2);
 
 
 
+          const timeElapsed = Date.now()
+          const today = new Date(timeElapsed);
+          var Date_rapport = today.toLocaleDateString()
+
+
+          TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI")
+          TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI")
+          Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
+
+
           var table = {
+
+
+            Date_rapport,
+
+
+
             CampaignName,
             InsertionName,
             FormatName,
@@ -591,7 +635,9 @@ exports.index = async (req, res) => {
             table: table,
           });
 
-
+          // res.render('reporting/data-reporting-template.ejs', {
+          //   table: table,
+          // });
 
 
 

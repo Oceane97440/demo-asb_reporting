@@ -3,7 +3,7 @@
 <div id="card-forecast" class="card" style="margin-top: 30px;">
     <div class="card-header">
         <h1 class="card-title">
-            Données du Reporting
+            Données du Reporting <%=table.Date_rapport%>
         </h1>
     </div>
 
@@ -14,7 +14,9 @@
             <li><strong>Total Impressions:<%=table.TotalImpressions%></strong></li>
             <li>Total Clics:<%=table.TotalCliks%></li>
             <li>Taux de clics:<%=table.CTR%>%</li>
-            <li>Taux de répétition:<%=table.Repetition%>%</li>
+            <li>Visiteur Unique:<%=table.Total_VU%></li>
+            <li>Répétition:<%=table.Repetition%></li>
+
 
 
         </ul>
@@ -30,8 +32,8 @@
 
                     <th scope="col">Format</th>
                     <th scope="col">Total impression</th>
-                    <th scope="col">Total Clics(%)</th>
-                    <th scope="col">CTR</th>
+                    <th scope="col">Total Clics</th>
+                    <th scope="col">CTR(%)</th>
                    
 
 
@@ -42,12 +44,10 @@
            
                   
                 <tr>
-                 
                     <td>HABILLAGE</td>
                     <td><%=table.sommeHabillageImpression%></td>
                     <td><%=table.sommeHabillageClicks%></td>
                     <td><%=table.CTR_habillage%>%</td>
-                   
                 </tr>
                 <tr>
                  

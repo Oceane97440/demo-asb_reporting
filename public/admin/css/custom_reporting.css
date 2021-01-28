@@ -1,0 +1,22 @@
+body {
+    background: #eee;
+    font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif
+}
+
+#reporting-board {
+    background: #fff
+}
+
+hr {
+    margin-top: 10px;
+    border-color: #ddd;
+}
+
+.list-group-flush {
+    width: 100%
+}
+
+.list-group-flush li strong {
+    width: 20%;
+    display: inline-block
+}

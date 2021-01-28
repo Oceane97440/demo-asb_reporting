@@ -1,0 +1,133 @@
+<%- include("../layouts/admin/head.ejs") -%>
+
+<div class="container p-2 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
+
+   
+    <div class="row p-3 m-5">
+        <div class="col-md-3"><img src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png" alt="" /></div>
+        <div class="col-md-9"><h2 class="position-absolute top-50 start-50">Rapport <%=table.Date_rapport%></h2></div>
+    </div>
+
+    <div class="row p-3 m-5">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Nom du rapport</strong> : </li>
+            <li class="list-group-item"><strong>Date de génération</strong> :<%=table.Date_rapport%> </li>
+            <li class="list-group-item"><strong>Annonceur</strong> : </li>
+            <li class="list-group-item"><strong>Nom de la campagne</strong> : </li>
+            <li class="list-group-item"><strong>Insertions</strong> : Toutes les insertions</li>
+            <li class="list-group-item"><strong>Période diffusion</strong> : </li>
+
+        </ul>
+    </div>
+
+    <hr />
+
+    <div class="row p-3 m-5">
+        <h3 class="title"><i class="fas fa-chart-line"></i> Par campagne / global / site</h3>
+        
+        
+        <table class="table" id="table_campaigns">
+            <thead class="text-left thead-dark">
+                <tr>
+                    <th scope="col">Format</th>                   
+                    <th scope="col">Impressions</th>
+                    <th scope="col">Clics</th>
+                    <th scope="col">Taux de clics</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                
+                <tr>
+                 
+                    <td>HABILLAGE</td>
+                    <td><%=table.sommeHabillageImpression%></td>
+                    <td><%=table.sommeHabillageClicks%></td>
+                    <td><%=table.CTR_habillage%>%</td>
+                   
+                </tr>
+                <tr>
+                 
+                    <td>INTERSTITIEL</td>
+                    <td><%=table.sommeInterstitielImpression%></td>
+                    <td><%=table.sommeInterstitielClicks%></td>
+                    <td><%=table.CTR_interstitiel%>%</td>
+                   
+                </tr>
+                <tr>
+                 
+                    <td>MASTHEAD</td>
+                    <td><%=table.sommeMastheadImpression%></td>
+                    <td><%=table.sommeMastheadClicks%></td>
+                    <td><%=table.CTR_masthead%>%</td>
+                   
+                </tr>
+                <tr>
+                 
+                    <td>GRAND ANGLE</td>
+                    <td><%=table.sommeGrand_AngleImpression%></td>
+                    <td><%=table.sommeGrand_AngleClicks%></td>
+                    <td><%=table.CTR_grand_angle%>%</td>
+                   
+                </tr>
+                <tr>
+                 
+                    <td>NATIVE</td>
+                    <td><%=table.sommeNativeImpression%></td>
+                    <td><%=table.sommeNativeClicks%></td>
+                    <td><%=table.CTR_native%>%</td>
+                   
+                </tr>
+
+            </tbody>         
+
+        </table>
+
+
+    </div>
+
+    <hr />
+
+
+    <div class="row p-3 m-5" id="table_uu">
+        <h3 class="title"><i class="fas fa-chart-line"></i> Par campagne / VU / Répétition</h3>
+                
+        <table class="table">
+            <thead class="text-left thead-dark">
+                <tr>
+                    <th scope="col">Impressions</th>
+                    <th scope="col">Clics</th>
+                    <th scope="col">Taux de clics</th>
+                    <th scope="col">Visiteurs uniques</th>
+                    <th scope="col">Répétitions</th>
+                </tr>
+            </thead>            
+            <tbody>
+                <tr>                 
+                    <td><%=table.TotalImpressions%></td>
+                    <td><%=table.TotalCliks%></td>
+                    <td><%=table.CTR%>%</td>
+                    <td><%=table.Total_VU%></td>
+                    <td><%=table.Repetition%>%</td>
+                </tr>
+            </tbody> 
+        </table>
+
+    </div>
+
+
+    <hr />
+    <div class="row p-3 m-5" id="message">
+        <div class="container alert alert-info" role="alert">
+        <h4> <i class="fas fa-eye"></i> Commentaires </h4>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<%- include("../layouts/admin/footer.ejs") -%>
