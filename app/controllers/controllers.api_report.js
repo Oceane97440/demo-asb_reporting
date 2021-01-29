@@ -456,10 +456,15 @@ exports.index = async (req, res) => {
             var nativeVU = new Array()
             var nativeCTR = new Array()
 
+            var grand_angleSitenameImpressions = new Array()
+            var grand_angleSitenameClicks = new Array()
+            var grand_angleSitenameSitename = new Array()
+            var grand_angleSitenameFormatName = new Array()
+            var grand_angleSitenameVU = new Array()
+            var grand_angleSitenameCTR = new Array()
+  
 
             Array_InsertionName.filter(function (word, index) {
-
-
 
               if (word.match(/INTERSTITIEL/gi)) {
                 interstitiel.push(index);
@@ -478,6 +483,42 @@ exports.index = async (req, res) => {
               }
 
             });
+
+           var sm_linfo = new Array()
+           var sm_linfo_android = new Array()
+           var sm_linfo_ios = new Array()
+           var sm_antenne = new Array()
+           var sm_orange = new Array()
+
+
+
+            Array_SiteName.filter(function (word, index) {
+
+              if (word.match(/SM_LINFO.re/gi)) {
+                sm_linfo.push(index);
+              }
+              if (word.match(/SM_LINFO-ANDROID/gi)) {
+                sm_linfo_android.push(index);
+              }
+              if (word.match(/SM_LINFO-IOS/gi)) {
+                sm_linfo_ios.push(index);
+              }
+              if (word.match(/SM_ANTENNEREUNION/gi)) {
+                sm_antenne.push(index);
+              }
+              if (word.match(/SM_ORANGE_REUNION/gi)) {
+                sm_orange.push(index);
+              }
+
+            });
+
+            console.log(sm_linfo)
+            console.log(sm_linfo_android)
+            console.log(sm_linfo_ios)
+            console.log(sm_antenne)
+            console.log(sm_orange)
+
+        
 
 
             function interstitielArrayElements(element, index, array) {
@@ -534,6 +575,9 @@ exports.index = async (req, res) => {
               grand_angleClicks.push(eval(Array_Clicks[element]));
 
               grand_angleSitename.push(Array_SiteName[element]);
+
+
+              //faire un agration de site ( grand_angle_LINFO.push(sm_linfo[element]);)
               grand_angleFormatName.push(Array_FormatName[element]);
 
               grand_angleVU.push(Array_UniqueVisitors[element]);
@@ -543,7 +587,7 @@ exports.index = async (req, res) => {
 
 
             }
-
+           
 
             function nativeArrayElements(element, index, array) {
               nativeImpressions.push(eval(Array_Impression[element]));
@@ -565,7 +609,10 @@ exports.index = async (req, res) => {
             grand_angle.forEach(grand_angleArrayElements);
             native.forEach(nativeArrayElements);
 
-
+            console.log('-----------------------------------------')
+            console.log(grand_angleSitename)
+            console.log(grand_angleImpressions)
+            console.log('-----------------------------------------')
             // Function qui permet de calculer les éléments du tableau
             const reducer = (accumulator, currentValue) => accumulator + currentValue;
             var sommeHabillageImpression = habillageImpressions.reduce(reducer, 0);
@@ -598,6 +645,32 @@ exports.index = async (req, res) => {
 
             }
           }
+
+        
+
+
+          function grand_angleSitenameArrayElements(element, index, array) {
+            grand_angleSitenameImpressions.push(eval(Array_Impression[element]));
+            grand_angleSitenameClicks.push(eval(Array_Clicks[element]));
+
+            grand_angleSitenameSitename.push(Array_SiteName[element]);
+            grand_angleSitenameFormatName.push(Array_FormatName[element]);
+
+            grand_angleSitenameVU.push(Array_UniqueVisitors[element]);
+            let n = Math.round(Array_ClickRate[element] * 100) / 100
+            grand_angleSitenameCTR.push(n);
+
+          }
+
+          grand_angleSitename.forEach(grand_angleSitenameArrayElements);
+console.log(grand_angleSitename)
+
+console.log(grand_angleSitenameSitename)
+
+console.log(grand_angleSitenameImpressions)
+
+
+
 
           CTR_habillage = (sommeHabillageClicks / sommeHabillageImpression) * 100
           CTR_habillage = CTR_habillage.toFixed(2);
@@ -692,6 +765,15 @@ exports.index = async (req, res) => {
 
 
           var habillageRepetition = []
+       
+          const reducer = (accumulator, currentValue) => accumulator + currentValue;
+          var sommehabillageImpressions = habillageImpressions.reduce(reducer, 0);
+          var sommehabillageClics = habillageClicks.reduce(reducer, 0);
+       
+         var habillageCTR_clics = (sommehabillageClics / sommehabillageImpressions) * 100
+          habillageCTR_clics = habillageCTR_clics.toFixed(2);
+
+          //console.log(habillageCTR_clics)
 
           for (let i = 0; i < habillageImpressions.length; i++) {
             if (habillageImpressions[i] != '') {
@@ -699,6 +781,10 @@ exports.index = async (req, res) => {
               habillageRepetition.push(total_repetition.toFixed(2))
             }
           }
+
+          //console.log(habillageImpressions)
+         // console.log( habillageClicks)
+
 
           var data_habillage = {
 
@@ -708,7 +794,10 @@ exports.index = async (req, res) => {
             habillageSitename,
             habillageVU,
             habillageCTR,
-            habillageRepetition
+            habillageRepetition,
+            sommehabillageImpressions,
+            sommehabillageClics,
+            habillageCTR_clics
           }
 
 
@@ -796,7 +885,6 @@ exports.index = async (req, res) => {
             nativeRepetition
           }
 
-         console.log(sommeInterstitielImpression)
          
 
           res.render('reporting/data-reporting-template.ejs', {
