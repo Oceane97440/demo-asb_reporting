@@ -483,7 +483,7 @@ exports.index = async (req, res) => {
               }
 
             });
-
+/*
            var sm_linfo = new Array()
            var sm_linfo_android = new Array()
            var sm_linfo_ios = new Array()
@@ -518,7 +518,7 @@ exports.index = async (req, res) => {
             console.log(sm_antenne)
             console.log(sm_orange)
 
-        
+        */
 
 
             function interstitielArrayElements(element, index, array) {
@@ -609,10 +609,7 @@ exports.index = async (req, res) => {
             grand_angle.forEach(grand_angleArrayElements);
             native.forEach(nativeArrayElements);
 
-            console.log('-----------------------------------------')
-            console.log(grand_angleSitename)
-            console.log(grand_angleImpressions)
-            console.log('-----------------------------------------')
+ 
             // Function qui permet de calculer les éléments du tableau
             const reducer = (accumulator, currentValue) => accumulator + currentValue;
             var sommeHabillageImpression = habillageImpressions.reduce(reducer, 0);
@@ -649,7 +646,7 @@ exports.index = async (req, res) => {
         
 
 
-          function grand_angleSitenameArrayElements(element, index, array) {
+   /*       function grand_angleSitenameArrayElements(element, index, array) {
             grand_angleSitenameImpressions.push(eval(Array_Impression[element]));
             grand_angleSitenameClicks.push(eval(Array_Clicks[element]));
 
@@ -667,7 +664,7 @@ console.log(grand_angleSitename)
 
 console.log(grand_angleSitenameSitename)
 
-console.log(grand_angleSitenameImpressions)
+console.log(grand_angleSitenameImpressions)*/
 
 
 
