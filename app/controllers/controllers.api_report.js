@@ -611,7 +611,6 @@ exports.index = async (req, res) => {
             grand_angle.forEach(grand_angleArrayElements);
             native.forEach(nativeArrayElements);
 
-
             // Function qui permet de calculer les éléments du tableau
             const reducer = (accumulator, currentValue) => accumulator + currentValue;
             var sommeHabillageImpression = habillageImpressions.reduce(reducer, 0);
