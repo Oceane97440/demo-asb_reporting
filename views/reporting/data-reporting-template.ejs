@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet" />
-    <title>Bilan de la campagne : CONERSOL - 64699</title>
+    <title>Bilan de la campagne </title>
 
     <style>
         body {
@@ -44,18 +44,15 @@
                     src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png"
                     alt="" /></div>
             <div class="col-md-9">
-                <h2 class="position-absolute top-50 start-50">Création d'un rapport</h2>
+                <h2 class="position-absolute top-50 start-50">Rapport de la campagne <%=table.Campagne_name%></h2>
             </div>
         </div>
 
         <div class="row p-3 m-5">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Nom du rapport</strong> :Bilan campagne <%=table.Date_rapport%> </li>
                 <li class="list-group-item"><strong>Date de génération</strong> : <%=table.Date_rapport%> </li>
-                <li class="list-group-item"><strong>Annonceur</strong> : <%=table.Advertiser_name%></li>
                 <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=table.Campagne_name%></li>
-                <li class="list-group-item"><strong>Insertions</strong> : Toutes les insertions</li>
-                <li class="list-group-item"><strong>Période diffusion</strong> : </li>
+                <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=table.StartDate%> au <%=table.EndDate%></li>
 
             </ul>
         </div>
@@ -63,7 +60,7 @@
         <hr />
 
         <div class="row p-3 m-5">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Par campagne / global / site</h3>
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par Format / global </h3>
 
 
             <table class="table" id="table_campaigns">
@@ -135,6 +132,14 @@
                     <% } %>
 
 
+                    <tfoot>
+                        <tr>
+                          <td><strong>Total</strong></td>
+                          <td><%=table.TotalImpressions%></td>
+                          <td><%=table.TotalCliks%></td>
+                          <td><%=table.CTR%>%</td>
+                        </tr>
+                      </tfoot>
                 </tbody>
 
             </table>
@@ -145,7 +150,7 @@
         <hr />
         <% if(data_habillage.habillageImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Par HABILLAGE / VU / Site /Impressions / Clics /CTR</h3>
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par HABILLAGE / par sites</h3>
 
             <table class="table">
                 <thead class="text-left thead-dark">
@@ -154,8 +159,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                        <th scope="col">Visiteurs uniques</th>
-                        <th scope="col">Répétition</th>
+                     
 
                     </tr>
                 </thead>
@@ -168,8 +172,7 @@
                         <td><%=data_habillage.habillageImpressions[i]%></td>
                         <td><%=data_habillage.habillageClicks[i]%></td>
                         <td><%=data_habillage.habillageCTR[i]%>%</td>
-                        <td><%=data_habillage.habillageVU[i]%></td>
-                        <td><%=data_habillage.habillageRepetition[i]%></td>
+                     
 
                     </tr>
                     <% } %>
@@ -179,12 +182,11 @@
 
                     <tfoot>
                         <tr>
-                          <td>Total</td>
+                          <td><strong>Total</strong></td>
                           <td><%=data_habillage.sommehabillageImpressions%></td>
                           <td><%=data_habillage.sommehabillageClics%></td>
                           <td><%=data_habillage.habillageCTR_clics%></td>
-                          <td>-</td>
-                          <td>-</td>
+                        
                         </tr>
                       </tfoot>
                 </tbody>
@@ -197,7 +199,7 @@
 
         <% if(data_interstitiel.interstitielImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Par INTERSTITIEL / VU / Site /Impressions / Clics /CTR
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par INTERSTITIEL / par sites
             </h3>
 
             <table class="table">
@@ -207,9 +209,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                        <th scope="col">Visiteurs uniques</th>
-                        <th scope="col">Répétition</th>
-
+                   
                     </tr>
                 </thead>
                 <tbody>
@@ -222,14 +222,24 @@
                         <td><%=data_interstitiel.interstitielImpressions[i]%></td>
                         <td><%=data_interstitiel.interstitielClicks[i]%></td>
                         <td><%=data_interstitiel.interstitielCTR[i]%>%</td>
-                        <td><%=data_interstitiel.interstitielVU[i]%></td>
-                        <td><%=data_interstitiel.interstitielRepetition[i]%></td>
+                    
 
                     </tr>
+                 
 
                     <% } %>
 
                     <% } %>
+                    <tfoot>
+                        <tr>
+                          <td><strong>Total</strong></td>
+                          <td><%=data_interstitiel.sommeinterstitielImpressions%></td>
+                          <td><%=data_interstitiel.sommeinterstitielClics%></td>
+                          <td><%=data_interstitiel.interstitielCTR_clics%></td>
+                          
+                          
+                        </tr>
+                      </tfoot>
                 </tbody>
             </table>
 
@@ -243,7 +253,7 @@
         <hr />
         <% if(data_masthead.mastheadImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Par MASTHEAD / VU / Site /Impressions / Clics /CTR</h3>
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par MASTHEAD / par sites</h3>
 
             <table class="table">
                 <thead class="text-left thead-dark">
@@ -252,8 +262,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                        <th scope="col">Visiteurs uniques</th>
-                        <th scope="col">Répétition</th>
+                     
 
                     </tr>
                 </thead>
@@ -267,14 +276,23 @@
                         <td><%=data_masthead.mastheadImpressions[i]%></td>
                         <td><%=data_masthead.mastheadClicks[i]%></td>
                         <td><%=data_masthead.mastheadCTR[i]%>%</td>
-                        <td><%=data_masthead.mastheadVU[i]%></td>
-                        <td><%=data_masthead.mastheadRepetition[i]%></td>
+                 
 
                     </tr>
-
+                   
                     <% } %>
 
                     <% } %>
+                    <tfoot>
+                        <tr>
+                          <td><strong>Total</strong></td>
+                          <td><%=data_masthead.sommemastheadImpressions%></td>
+                          <td><%=data_masthead.sommemastheadClics%></td>
+                          <td><%=data_masthead.mastheadCTR_clics%></td>
+                          
+                          
+                        </tr>
+                      </tfoot>
                 </tbody>
             </table>
 
@@ -284,7 +302,7 @@
         <hr />
         <% if(data_grand_angle.grand_angleImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Par GRAND ANGLE / VU / Site /Impressions / Clics /CTR
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par GRAND ANGLE / par sites
             </h3>
 
             <table class="table">
@@ -294,8 +312,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                        <th scope="col">Visiteurs uniques</th>
-                        <th scope="col">Répétition</th>
+                      
 
                     </tr>
                 </thead>
@@ -309,14 +326,23 @@
                         <td><%=data_grand_angle.grand_angleImpressions[i]%></td>
                         <td><%=data_grand_angle.grand_angleClicks[i]%></td>
                         <td><%=data_grand_angle.grand_angleCTR[i]%>%</td>
-                        <td><%=data_grand_angle.grand_angleVU[i]%></td>
-                        <td><%=data_grand_angle.grand_angleRepetition[i]%></td>
+                       
 
                     </tr>
-
+                   
                     <% } %>
 
                     <% } %>
+                    <tfoot>
+                        <tr>
+                          <td><strong>Total</strong></td>
+                          <td><%=data_grand_angle.sommegrand_angleImpressions%></td>
+                          <td><%=data_grand_angle.sommegrand_angleClics%></td>
+                          <td><%=data_grand_angle.grand_angleCTR_clics%></td>
+                          
+                          
+                        </tr>
+                      </tfoot>
                 </tbody>
             </table>
 
@@ -329,7 +355,7 @@
 
         <% if(data_native.nativeImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Par NATIVE / VU / Site /Impressions / Clics /CTR</h3>
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par NATIVE / par sites</h3>
 
             <table class="table">
                 <thead class="text-left thead-dark">
@@ -338,8 +364,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                        <th scope="col">Visiteurs uniques</th>
-                        <th scope="col">Répétition</th>
+                       
 
                     </tr>
                 </thead>
@@ -353,14 +378,23 @@
                         <td><%=data_native.nativeImpressions[i]%></td>
                         <td><%=data_native.nativeClicks[i]%></td>
                         <td><%=data_native.nativeCTR[i]%>%</td>
-                        <td><%=data_native.nativeVU[i]%></td>
-                        <td><%=data_native.nativeRepetition[i]%></td>
+                    
 
                     </tr>
-
+                   
                     <% } %>
 
                     <% } %>
+                    <tfoot>
+                        <tr>
+                          <td><strong>Total</strong></td>
+                          <td><%=data_native.sommenativeImpressions%></td>
+                          <td><%=data_native.sommenativeClics%></td>
+                          <td><%=data_native.nativeCTR_clics%></td>
+                          
+                          
+                        </tr>
+                      </tfoot>
                 </tbody>
             </table>
 
@@ -375,7 +409,7 @@
 
         <hr />
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Par campagne / VU / Répétition</h3>
+            <h3 class="title"><i class="fas fa-chart-line"></i> Bilen global de la campagne</h3>
 
             <table class="table">
                 <thead class="text-left thead-dark">
@@ -383,8 +417,10 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                        <th scope="col">Visiteurs uniques</th>
-                        <th scope="col">Répétitions</th>
+                        <th scope="col">Visiteur Unique</th>
+                        <th scope="col">Répétition</th>
+
+                        
                     </tr>
                 </thead>
                 <tbody>
