@@ -52,7 +52,8 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong>Date de génération</strong> : <%=table.Date_rapport%> </li>
                 <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=table.Campagne_name%></li>
-                <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=table.StartDate%> au <%=table.EndDate%></li>
+                <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=table.StartDate%> au
+                    <%=table.EndDate%></li>
 
             </ul>
         </div>
@@ -132,22 +133,120 @@
                     <% } %>
 
 
-                    <tfoot>
-                        <tr>
-                          <td><strong>Total</strong></td>
-                          <td><%=table.TotalImpressions%></td>
-                          <td><%=table.TotalCliks%></td>
-                          <td><%=table.CTR%>%</td>
-                        </tr>
-                      </tfoot>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><%=table.TotalImpressions%></td>
+                        <td><%=table.TotalCliks%></td>
+                        <td><%=table.CTR%>%</td>
+                    </tr>
+                </tfoot>
                 </tbody>
 
             </table>
 
 
         </div>
+        <div class="row p-3 m-5">
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par Site / HABILLAGE </h3>
 
-        <hr />
+
+            <table class="table" id="table_campaigns">
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th scope="col">Sites</th>
+                        <th scope="col">Impressions</th>
+                        <th scope="col">Clics</th>
+                        <th scope="col">Taux de clics</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <%if(data_site.sommeHabillage_Impression_info  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_LINFO.re</td>
+                        <td><%=data_site.sommeHabillage_Impression_info%></td>
+                        <td><%=data_site.sommeHabillageClicks_info%></td>
+                        <td><%=data_site.CTR_habillage_linfo%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_infoIos  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_LINFO-IOS</td>
+                        <td><%=data_site.sommeHabillage_Impression_infoIos%></td>
+                        <td><%=data_site.sommeHabillageClicks_infoIos%></td>
+                        <td><%=data_site.CTR_habillage_linfoios%>%</td>
+
+                    </tr>
+                    <%}%> 
+                        <%if(data_site.sommeHabillage_Impression_infoAndroid  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_LINFO-ANDROID</td>
+                        <td><%=data_site.sommeHabillage_Impression_infoAndroid%></td>
+                        <td><%=data_site.sommeHabillageClicks_infoAndroid%></td>
+                        <td><%=data_site.CTR_habillage_linfoandroid%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_antenne  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_ANTENNEREUNION</td>
+                        <td><%=data_site.sommeHabillage_Impression_antenne%></td>
+                        <td><%=data_site.sommeHabillageClicks_antenne%></td>
+                        <td><%=data_site.CTR_habillage_antenne%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_orange  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_ORANGE</td>
+                        <td><%=data_site.sommeHabillage_Impression_orange%></td>
+                        <td><%=data_site.sommeHabillageClicks_orange%></td>
+                        <td><%=data_site.CTR_habillage_orange%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_dtj  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_DOMTOMJOB</td>
+                        <td><%=data_site.sommeHabillage_Impression_dtj%></td>
+                        <td><%=data_site.sommeHabillageClicks_dtj%></td>
+                        <td><%=data_site.CTR_habillage_dtj%>%</td>
+
+                    </tr>
+                    <%}%> 
+                  
+                    <tfoot>
+                    <tr>
+                    <td><strong>Total</strong></td>
+                    <td><%=data_habillage.sommehabillageImpressions%></td>
+                    <td><%=data_habillage.sommehabillageClics%></td>
+                    <td><%=data_habillage.habillageCTR_clics%></td>
+
+                    </tr>
+                    </tfoot>
+                </tbody>
+
+            </table>
+
+
+        </div>
+     
+     <hr/>       
         <% if(data_habillage.habillageImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
             <h3 class="title"><i class="fas fa-chart-line"></i> Par HABILLAGE / par sites</h3>
@@ -159,7 +258,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                     
+
 
                     </tr>
                 </thead>
@@ -172,7 +271,7 @@
                         <td><%=data_habillage.habillageImpressions[i]%></td>
                         <td><%=data_habillage.habillageClicks[i]%></td>
                         <td><%=data_habillage.habillageCTR[i]%>%</td>
-                     
+
 
                     </tr>
                     <% } %>
@@ -180,15 +279,15 @@
 
                     <% } %>
 
-                    <tfoot>
-                        <tr>
-                          <td><strong>Total</strong></td>
-                          <td><%=data_habillage.sommehabillageImpressions%></td>
-                          <td><%=data_habillage.sommehabillageClics%></td>
-                          <td><%=data_habillage.habillageCTR_clics%></td>
-                        
-                        </tr>
-                      </tfoot>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><%=data_habillage.sommehabillageImpressions%></td>
+                        <td><%=data_habillage.sommehabillageClics%></td>
+                        <td><%=data_habillage.habillageCTR_clics%></td>
+
+                    </tr>
+                </tfoot>
                 </tbody>
             </table>
 
@@ -209,7 +308,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                   
+
                     </tr>
                 </thead>
                 <tbody>
@@ -222,24 +321,24 @@
                         <td><%=data_interstitiel.interstitielImpressions[i]%></td>
                         <td><%=data_interstitiel.interstitielClicks[i]%></td>
                         <td><%=data_interstitiel.interstitielCTR[i]%>%</td>
-                    
+
 
                     </tr>
-                 
+
 
                     <% } %>
 
                     <% } %>
-                    <tfoot>
-                        <tr>
-                          <td><strong>Total</strong></td>
-                          <td><%=data_interstitiel.sommeinterstitielImpressions%></td>
-                          <td><%=data_interstitiel.sommeinterstitielClics%></td>
-                          <td><%=data_interstitiel.interstitielCTR_clics%></td>
-                          
-                          
-                        </tr>
-                      </tfoot>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><%=data_interstitiel.sommeinterstitielImpressions%></td>
+                        <td><%=data_interstitiel.sommeinterstitielClics%></td>
+                        <td><%=data_interstitiel.interstitielCTR_clics%></td>
+
+
+                    </tr>
+                </tfoot>
                 </tbody>
             </table>
 
@@ -262,7 +361,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                     
+
 
                     </tr>
                 </thead>
@@ -276,23 +375,23 @@
                         <td><%=data_masthead.mastheadImpressions[i]%></td>
                         <td><%=data_masthead.mastheadClicks[i]%></td>
                         <td><%=data_masthead.mastheadCTR[i]%>%</td>
-                 
+
 
                     </tr>
-                   
+
                     <% } %>
 
                     <% } %>
-                    <tfoot>
-                        <tr>
-                          <td><strong>Total</strong></td>
-                          <td><%=data_masthead.sommemastheadImpressions%></td>
-                          <td><%=data_masthead.sommemastheadClics%></td>
-                          <td><%=data_masthead.mastheadCTR_clics%></td>
-                          
-                          
-                        </tr>
-                      </tfoot>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><%=data_masthead.sommemastheadImpressions%></td>
+                        <td><%=data_masthead.sommemastheadClics%></td>
+                        <td><%=data_masthead.mastheadCTR_clics%></td>
+
+
+                    </tr>
+                </tfoot>
                 </tbody>
             </table>
 
@@ -312,7 +411,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                      
+
 
                     </tr>
                 </thead>
@@ -326,23 +425,23 @@
                         <td><%=data_grand_angle.grand_angleImpressions[i]%></td>
                         <td><%=data_grand_angle.grand_angleClicks[i]%></td>
                         <td><%=data_grand_angle.grand_angleCTR[i]%>%</td>
-                       
+
 
                     </tr>
-                   
+
                     <% } %>
 
                     <% } %>
-                    <tfoot>
-                        <tr>
-                          <td><strong>Total</strong></td>
-                          <td><%=data_grand_angle.sommegrand_angleImpressions%></td>
-                          <td><%=data_grand_angle.sommegrand_angleClics%></td>
-                          <td><%=data_grand_angle.grand_angleCTR_clics%></td>
-                          
-                          
-                        </tr>
-                      </tfoot>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><%=data_grand_angle.sommegrand_angleImpressions%></td>
+                        <td><%=data_grand_angle.sommegrand_angleClics%></td>
+                        <td><%=data_grand_angle.grand_angleCTR_clics%></td>
+
+
+                    </tr>
+                </tfoot>
                 </tbody>
             </table>
 
@@ -364,7 +463,7 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
-                       
+
 
                     </tr>
                 </thead>
@@ -378,23 +477,23 @@
                         <td><%=data_native.nativeImpressions[i]%></td>
                         <td><%=data_native.nativeClicks[i]%></td>
                         <td><%=data_native.nativeCTR[i]%>%</td>
-                    
+
 
                     </tr>
-                   
+
                     <% } %>
 
                     <% } %>
-                    <tfoot>
-                        <tr>
-                          <td><strong>Total</strong></td>
-                          <td><%=data_native.sommenativeImpressions%></td>
-                          <td><%=data_native.sommenativeClics%></td>
-                          <td><%=data_native.nativeCTR_clics%></td>
-                          
-                          
-                        </tr>
-                      </tfoot>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><%=data_native.sommenativeImpressions%></td>
+                        <td><%=data_native.sommenativeClics%></td>
+                        <td><%=data_native.nativeCTR_clics%></td>
+
+
+                    </tr>
+                </tfoot>
                 </tbody>
             </table>
 
@@ -420,7 +519,7 @@
                         <th scope="col">Visiteur Unique</th>
                         <th scope="col">Répétition</th>
 
-                        
+
                     </tr>
                 </thead>
                 <tbody>
