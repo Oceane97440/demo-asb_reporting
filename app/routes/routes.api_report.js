@@ -11,7 +11,7 @@ router.get("/:advertiserid/:campaignid", api.index);
 router.get("/cache", api.testcache);
 
 
-router.get("/test/:advertiserid/:campaignid", api.test);
+//router.get("/test/:advertiserid/:campaignid", api.test);
 
 //router.post("/add", api.reporting);
 

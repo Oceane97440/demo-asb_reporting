@@ -162,7 +162,7 @@ exports.testcache = async (req, res) => {
 
 }
 
-exports.test = async (req, res) => {
+/*exports.test = async (req, res) => {
 
 
 
@@ -282,7 +282,7 @@ exports.test = async (req, res) => {
 
 
 }
-
+*/
 exports.index = async (req, res) => {
   //http://127.0.0.1:3000/api/reporting/4455418/1839404 
   //http://127.0.0.1:3000/api/reporting/443863/1850009
@@ -417,8 +417,8 @@ exports.index = async (req, res) => {
 
         let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
         let requête2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
-        //console.log('TaskId : ' + taskId)
-        //console.log('TaskId2 : ' + taskId2)
+        console.log('TaskId : ' + taskId)
+        console.log('TaskId2 : ' + taskId2)
 
         let fourLink = await AxiosFunction.getReportingData('GET', requête2, '');
 
@@ -433,8 +433,9 @@ exports.index = async (req, res) => {
           let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
           //console.log(dataFile)
-          //traitement des resultat requête 2
 
+
+          //traitement des resultat requête 2
           const UniqueVisitors = []
 
           var data_uniqueVisitors = dataFile2.data
@@ -451,7 +452,7 @@ exports.index = async (req, res) => {
 
           var Total_VU = UniqueVisitors[0]
 
-          //rtraitement des resultat requête 1
+          //traitement des resultat requête 1
           const CampaignStartDate = []
           const CampaignEndtDate = []
           const CampaignName = []
@@ -468,7 +469,7 @@ exports.index = async (req, res) => {
           var number_line = data_split.length;
 
           for (i = 1; i < number_line; i++) {
-
+            //split push les données dans chaque colone
             line = data_split[i].split(';');
             CampaignStartDate.push(line[0]);
             CampaignEndtDate.push(line[1]);
@@ -485,17 +486,19 @@ exports.index = async (req, res) => {
           }
 
 
-          //Convertie les Timestamp campagne startdate et enddate
+          //Convertie les Timestamp campagne startdate et enddate / date du jour
           function getDateTimeFromTimestamp(unixTimeStamp) {
             let date = new Date(unixTimeStamp);
             return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
           }
           var t1 = parseInt(CampaignStartDate[0])
           var t2 = parseInt(CampaignEndtDate[0])
+          const timeElapsed = Date.now()
+          const Date_rapport = getDateTimeFromTimestamp(timeElapsed);
           const StartDate = getDateTimeFromTimestamp(t1);
           const EndDate = getDateTimeFromTimestamp(t2);
 
-
+       
 
           //filte les array exclure les valeur undefined qui empêche le calcule des somme
 
@@ -525,7 +528,7 @@ exports.index = async (req, res) => {
             }
           }
 
-
+          //test si le tableau est un array + si il comporte 1 éléments dans l'array
           if ((InsertionName.length > 1) && (Array.isArray(InsertionName) === true)) {
 
             var habillage = new Array()
@@ -576,7 +579,7 @@ exports.index = async (req, res) => {
             var videoComplete = new Array()
 
 
-
+            //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
             Array_InsertionName.filter(function (word, index) {
 
               if (word.match(/INTERSTITIEL/gi)) {
@@ -958,11 +961,6 @@ exports.index = async (req, res) => {
           Repetition = Impression_vu.toFixed(2);
 
 
-
-          //Date du jour de la génération du rapport
-          const timeElapsed = Date.now()
-          const today = new Date(timeElapsed);
-          var Date_rapport = today.toLocaleDateString()
 
 
           //SEPARATEUR DE MILLIER
