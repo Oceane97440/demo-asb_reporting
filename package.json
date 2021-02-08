@@ -37,6 +37,8 @@
     "file-get-contents": "^1.0.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
+    "node-cache": "^5.1.2",
+    "node-localstorage": "^2.1.6",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
     "request": "^2.88.2",
