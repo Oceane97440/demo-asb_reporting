@@ -163,6 +163,10 @@ exports.login_add = async (req, res) => {
                 return res.redirect('/home_page')
 
               }
+              if (req.session.user.role === 4){
+                return res.redirect('/api/reporting/dasbord_report')
+
+              }
               return res.redirect('/api/utilisateur')
           }
       } catch (error) {

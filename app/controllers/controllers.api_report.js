@@ -47,118 +47,42 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-exports.testcache = async (req, res) => {
+exports.json_report = async (req, res) => {
 
+  //requête qui recupère tout la liste des rapport
+  var tasksId = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/`, '')
+  var data = tasksId.data
+  var liste_obj = new Array()
+  var number_line = data.length
+  //convertie obj en json
+  JSON.stringify(data);
+ 
+  for (i = 0; i < number_line; i++) {
 
-  const myCache = new NodeCache({
-    stdTTL: 100,
-    checkperiod: 120
-  });
+    var obj = {};
+    
+    obj.taskId=[data[i].taskId]
+    obj.status = [data[i].status]
+   var date_format = new Date([data[i].creationDateUTC]).toLocaleString();
+   obj.creationDateUTC=date_format
 
-  requestVisitor_unique = {
-
-    "startDate": "2021-01-26T00:00:00",
-
-    "endDate": "CURRENT_DAY",
-
-    "fields": [
-
-      {
-        "UniqueVisitors": {}
-      }
-
-    ],
-
-    "filter": [{
-        "AdvertiserId": [4455418],
-
-        "CampaignId": [1839404]
-
-      }
-
-    ]
+    liste_obj.push(obj)
 
   }
 
 
+  res.json(liste_obj)
 
-  //let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
-  let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
+}
+exports.dasbord_report = async (req, res) => {
 
-
-  const taskId = threeLink.data.taskId
-
-
-  res.send(taskId)
-
-
-  successTaskID = myCache.set("taskID", taskId, 10);
-
-  value = myCache.get("taskID");
-
-  console.log(value)
-
-  for (let i = 0; i < localStorage.length; i++) {
-
-    var name = 'taskid' + [i++]
+  if (req.session.user.role == 4) {
 
 
 
-
+    res.render("reporting/dasbord_report.ejs")
 
   }
-
-  console.log(lastaskid)
-
-
-
-
-  /*let objJson = {
-    taskID: taskId,
-
-  }
-  let objLinea = JSON.stringify(objJson);
-  localStorage.setItem("task", objLinea);
-
-  let objLinea2 = localStorage.getItem("task");
-  let objJson2 = JSON.parse(objLinea2);
-  console.log(objJson2.taskID)*/
-
-
-  console.log(localStorage)
-
-
-  /*
-    // const taskId =  threeLink.data.taskId
-    const taskId = '1BB1D849-828C-4265-9959-8E2C7AED8F5B'
-
-
-    successTaskID = myCache.set("taskID", taskId, 10);
-
-    value = myCache.get("taskID");
-
-    console.log(value)
-
-    if (value == undefined) {
-
-      console.log("Pas de cache")
-      //  gérer miss!
-
-
-    }
-
-    exists = myCache.has('taskID');
-
-    console.log(exists);
-
-
-
-    //value = myCache.del("taskID");
-
-
-  */
-
-
 
 }
 
@@ -486,6 +410,7 @@ exports.index = async (req, res) => {
           }
 
 
+
           //Convertie les Timestamp campagne startdate et enddate / date du jour
           function getDateTimeFromTimestamp(unixTimeStamp) {
             let date = new Date(unixTimeStamp);
@@ -495,10 +420,11 @@ exports.index = async (req, res) => {
           var t2 = parseInt(CampaignEndtDate[0])
           const timeElapsed = Date.now()
           const Date_rapport = getDateTimeFromTimestamp(timeElapsed);
+
           const StartDate = getDateTimeFromTimestamp(t1);
           const EndDate = getDateTimeFromTimestamp(t2);
 
-       
+
 
           //filte les array exclure les valeur undefined qui empêche le calcule des somme
 
@@ -536,7 +462,7 @@ exports.index = async (req, res) => {
             var grand_angle = new Array()
             var masthead = new Array()
             var native = new Array()
-            var vidéo = new Array()
+            var video = new Array()
 
 
             var interstitielImpressions = new Array()
@@ -598,10 +524,10 @@ exports.index = async (req, res) => {
                 native.push(index);
               }
               if (word.match(/PREROLL/gi)) {
-                vidéo.push(index);
+                video.push(index);
               }
               if (word.match(/MIDROLL/gi)) {
-                vidéo.push(index);
+                video.push(index);
               }
 
             });

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet" />
+    <title>Dasbord</title>
+
+    <style>
+        body {
+            background: #eee;
+            font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif
+        }
+
+        #reporting-board {
+            background: #fff
+        }
+
+        hr {
+            margin-top: 10px;
+            border-color: #ddd;
+        }
+
+        .list-group-flush {
+            width: 100%
+        }
+
+        .list-group-flush li strong {
+            width: 20%;
+            display: inline-block
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container p-2 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
+
+
+
+        <div class="row p-3 m-5">
+            <h3 class="title"><i class="fas fa-chart-line"></i> Listing des rapport </h3>
+    
+    
+    
+
+            <table class="table" >
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th scope="col">Date créaction</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">TaskId</th>
+                        <th scope="col">Télécharger</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody id="data-container">
+
+                    <tr>
+    
+                        <td></td>
+                    </tr>
+
+                </tbody>
+    
+    
+            </table>
+    
+    
+    
+            <div id="pagination-container"></div>
+
+        </div>
+    
+
+    </div>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />
+
+
+
+
+    <script>
+        //function ajax pagination
+        var dataContainer = $('#data-container');
+        $('#pagination-container').pagination({
+            dataSource: "http://127.0.0.1:3000/api/reporting/json_report",
+            locator:"taskId",
+            totalNumber: 120,
+            pageSize: 20,
+            ajax: {
+                beforeSend: function () {
+                    dataContainer.html('Chargements de historique ...');
+                }
+            },
+            callback: function (data, pagination) {
+              
+                //console.log(data)
+
+                var dataHtml ='' ;
+                $.each(data, function (index, item) {
+                    // recup les données et crée un tableau
+                    dataHtml += '<tr><td>'+ item.creationDateUTC + '</td>' + '<td>'+ item.status +'</td>' +'<td>'+ item.taskId + '</td></tr>';
+
+                });
+
+                dataHtml +='' ;
+
+                $("#data-container").html(dataHtml);
+
+            }
+        })
+    </script>
+
+
+</body>
+
+</html>
