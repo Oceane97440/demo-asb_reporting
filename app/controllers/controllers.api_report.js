@@ -53,23 +53,26 @@ exports.json_report = async (req, res) => {
   var tasksId = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/`, '')
   var data = tasksId.data
   var liste_obj = new Array()
+
   var number_line = data.length
   //convertie obj en json
   JSON.stringify(data);
- 
+
   for (i = 0; i < number_line; i++) {
 
     var obj = {};
-    
-    obj.taskId=[data[i].taskId]
+
+    obj.id = i
+
+    obj.taskId = [data[i].taskId]
     obj.status = [data[i].status]
-   var date_format = new Date([data[i].creationDateUTC]).toLocaleString();
-   obj.creationDateUTC=date_format
+
+    var date_format = new Date([data[i].creationDateUTC]).toLocaleString();
+    obj.creationDateUTC = date_format
 
     liste_obj.push(obj)
 
   }
-
 
   res.json(liste_obj)
 
@@ -85,6 +88,45 @@ exports.dasbord_report = async (req, res) => {
   }
 
 }
+exports.view_report = async (req, res) => {
+
+  let taskId = req.params.taskId;
+
+  let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
+
+  res.send(dataFile.data)
+
+/*
+
+  var data_reporting = dataFile.data
+  var data_split = data_reporting.split(/\r?\n/);
+  var number_line = data_split.length;
+
+  for (i = 1; i < number_line; i++) {
+    //split push les données dans chaque colone
+    line = data_split[i].split(';');
+    CampaignStartDate.push(line[0]);
+    CampaignEndtDate.push(line[1]);
+    CampaignName.push(line[2]);
+    InsertionName.push(line[3]);
+    FormatName.push(line[4])
+    SiteName.push(line[5])
+    Impressions.push(line[6]);
+    ClickRate.push(line[7]);
+    Clicks.push(line[8]);
+    Complete.push(line[9]);
+
+
+  }
+
+  res.send(InsertionName)*/
+
+
+
+ 
+
+
+}
 
 /*exports.test = async (req, res) => {
 
@@ -94,7 +136,7 @@ exports.dasbord_report = async (req, res) => {
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
 
-  //url = http.get(`http://127.0.0.1:3000/api/reporting/test/?advertiserid=${advertiserid}&campaignid=${campaignid}`)
+ // url = http.get(`http://127.0.0.1:3000/api/reporting/test/?advertiserid=${advertiserid}&campaignid=${campaignid}`)
 
   //var advertiserid = "4455418"
   // var campaignid = "1839404"

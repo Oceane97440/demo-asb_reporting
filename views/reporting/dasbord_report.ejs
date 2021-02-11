@@ -54,7 +54,7 @@
                         <th scope="col">Date créaction</th>
                         <th scope="col">Status</th>
                         <th scope="col">TaskId</th>
-                        <th scope="col">Télécharger</th>
+                        <th scope="col">Rapports</th>
 
 
                     </tr>
@@ -118,15 +118,20 @@
                 //console.log(data)
 
                 var dataHtml ='' ;
+
                 $.each(data, function (index, item) {
                     // recup les données et crée un tableau
-                    dataHtml += '<tr><td>'+ item.creationDateUTC + '</td>' + '<td>'+ item.status +'</td>' +'<td>'+ item.taskId + '</td></tr>';
+                    dataHtml += '<tr><td>'+ item.creationDateUTC + '</td>' + '<td>'+ item.status +'</td>' +'<td>'+ item.taskId + '</td>'+ '<td><a href="/api/reporting/view_report/'+item.taskId+'" >Voir le rapport</a> </td></tr>';
+
 
                 });
 
                 dataHtml +='' ;
 
+
                 $("#data-container").html(dataHtml);
+
+
 
             }
         })
