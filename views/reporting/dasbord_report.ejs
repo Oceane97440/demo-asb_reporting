@@ -106,8 +106,8 @@
         $('#pagination-container').pagination({
             dataSource: "http://127.0.0.1:3000/api/reporting/json_report",
             locator:"taskId",
-            totalNumber: 120,
-            pageSize: 20,
+            totalNumber: 1000,
+            pageSize: 10,
             ajax: {
                 beforeSend: function () {
                     dataContainer.html('Chargements de historique ...');

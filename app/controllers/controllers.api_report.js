@@ -127,128 +127,15 @@ exports.view_report = async (req, res) => {
 
 
 }
+exports.generate = async (req, res) => {
 
-/*exports.test = async (req, res) => {
+  res.render("reporting/generate.ejs")
 
-
-
-
-  let advertiserid = req.params.advertiserid;
-  let campaignid = req.params.campaignid;
-
- // url = http.get(`http://127.0.0.1:3000/api/reporting/test/?advertiserid=${advertiserid}&campaignid=${campaignid}`)
-
-  //var advertiserid = "4455418"
-  // var campaignid = "1839404"
-
-  try {
-
-
-
-
-    //Requête visitor unique
-    requestVisitor_unique = {
-
-      "startDate": "2021-01-18T00:00:00",
-
-      "endDate": "CURRENT_DAY",
-
-      "fields": [
-
-        {
-          "UniqueVisitors": {}
-        }
-
-      ],
-
-      "filter": [{
-          "AdvertiserId": [advertiserid],
-
-          "CampaignId": [campaignid]
-
-        }
-
-      ]
-
-    }
-
-
-
-    //let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
-    let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
-
-    taskId2 = threeLink.data.taskId;
-
-    if (threeLink.data.taskId) {
-      //excute le script interval de temps
-      let timerFile = setInterval(async () => {
-
-        let requête2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
-
-        let fourLink = await AxiosFunction.getReportingData('GET', requête2, '');
-
-
-        if (fourLink.data.lastTaskInstance.jobProgress == '1.0') {
-
-          clearInterval(timerFile);
-          let dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-
-          //console.log(dataFile2);
-
-          const UniqueVisitors = []
-
-          var data_uniqueVisitors = dataFile2.data
-          var data_split2 = data_uniqueVisitors.split(/\r?\n/);
-          var number_line = data_split2.length;
-
-          //boucle sur les ligne
-          for (i = 1; i < number_line; i++) {
-
-            line = data_split2[i].split(';');
-            UniqueVisitors.push(line[0]);
-
-          }
-          //console.log(UniqueVisitors[0])
-          var Total_VU = UniqueVisitors[0]
-
-        }
-
-
-        var table = {
-          Total_VU
-        }
-
-        res.render("reporting/test.ejs", {
-          table: table
-        })
-      }, 30000);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // return res.render("reporting/generate_data.ejs")
-
-
-
-
-  } catch (error) {
-    console.log(error);
-  }
-
+  
+  
 
 }
-*/
+
 exports.index = async (req, res) => {
   //http://127.0.0.1:3000/api/reporting/4455418/1839404 
   //http://127.0.0.1:3000/api/reporting/443863/1850009
@@ -264,14 +151,13 @@ exports.index = async (req, res) => {
   // var campaignid = "1839404"
 
 
-
   try {
 
+   
 
+     var requestReporting = {
 
-    requestReporting = {
-
-      "startDate": "2021-01-15T00:00:00",
+      "startDate": date_start_campaign,
 
       "endDate": "CURRENT_DAY",
 
@@ -654,7 +540,7 @@ exports.index = async (req, res) => {
             masthead.forEach(mastheadArrayElements);
             grand_angle.forEach(grand_angleArrayElements);
             native.forEach(nativeArrayElements);
-            vidéo.forEach(VideoArrayElements)
+            video.forEach(VideoArrayElements)
 
 
 
