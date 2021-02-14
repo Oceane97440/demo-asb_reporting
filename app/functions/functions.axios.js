@@ -170,3 +170,30 @@ exports.getManageData = async (method) => {
     return format_data
 }
 
+exports.getManage_AdvertiserData = async (method, urlManage,data=null) => {
+
+    if (method == 'GET') {
+
+      var advertiser_data = await axios({
+        method: method,
+        url: urlManage,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        auth: {
+          username: dbApi.SMART_login,
+          password: dbApi.SMART_password
+        },
+        data:data
+      
+      }).then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+    }
+    console.log(advertiser_data)
+
+    return advertiser_data
+}
+
+

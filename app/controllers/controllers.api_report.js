@@ -11,7 +11,7 @@ const LocalStorage = require('node-localstorage').LocalStorage,
   localStorage = new LocalStorage('./scratch');
 
 
-//const axios = require(`axios`);
+const axios = require(`axios`);
 
 //const asyncly = require('async');
 
@@ -47,6 +47,83 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
+
+
+
+exports.index = async (req, res) => {
+
+  if (req.session.user.role == 1) {
+
+
+
+    res.render("reporting/dasbord_report.ejs")
+
+  }
+}
+
+exports.generate_link = async (req, res) => {
+
+  if (req.session.user.role == 1) {
+
+
+    //liste des advertiser :https://manage.smartadserverapis.com/2044/advertisers
+    //campagne liée à l'advertiser : https://manage.smartadserverapis.com/2044/advertisers/417740/campaigns
+
+    //   let data_advertiserid = await AxiosFunction.getManage_AdvertiserData('GET', `https://manage.smartadserverapis.com/2044/advertiser`,'');
+
+
+    var liste_obj = new Array()
+
+
+    var config = {
+      method: 'GET',
+      url: 'https://manage.smartadserverapis.com/2044/advertisers/',
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      auth: {
+        username: dbApi.SMART_login,
+        password: dbApi.SMART_password
+      },
+
+    };
+    await axios(config)
+      .then(function (response) {
+        console.log(response.headers['x-pagination-total-count'])
+        console.log(response.headers['link'])
+
+        var data =response.data
+        var number_line = data.length
+
+        JSON.stringify(data);
+
+
+        for (i = 0; i < number_line; i++) {
+
+          var obj = {};
+
+
+          obj.advertiserid = [data[i].id]
+          obj.advertiser_name = [data[i].name]
+
+          liste_obj.push(obj)
+
+        }
+
+        res.json(liste_obj)
+
+
+
+
+      })
+
+
+
+
+  }
+}
+
 exports.json_report = async (req, res) => {
 
   //requête qui recupère tout la liste des rapport
@@ -77,13 +154,13 @@ exports.json_report = async (req, res) => {
   res.json(liste_obj)
 
 }
-exports.dasbord_report = async (req, res) => {
+exports.liste_report = async (req, res) => {
 
-  if (req.session.user.role == 4) {
+  if ((req.session.user.role == 4) || (req.session.user.role == 1)) {
 
 
 
-    res.render("reporting/dasbord_report.ejs")
+    res.render("reporting/list_report.ejs")
 
   }
 
@@ -96,47 +173,17 @@ exports.view_report = async (req, res) => {
 
   res.send(dataFile.data)
 
-/*
-
-  var data_reporting = dataFile.data
-  var data_split = data_reporting.split(/\r?\n/);
-  var number_line = data_split.length;
-
-  for (i = 1; i < number_line; i++) {
-    //split push les données dans chaque colone
-    line = data_split[i].split(';');
-    CampaignStartDate.push(line[0]);
-    CampaignEndtDate.push(line[1]);
-    CampaignName.push(line[2]);
-    InsertionName.push(line[3]);
-    FormatName.push(line[4])
-    SiteName.push(line[5])
-    Impressions.push(line[6]);
-    ClickRate.push(line[7]);
-    Clicks.push(line[8]);
-    Complete.push(line[9]);
-
-
-  }
-
-  res.send(InsertionName)*/
-
-
-
- 
-
-
 }
 exports.generate = async (req, res) => {
 
   res.render("reporting/generate.ejs")
 
-  
-  
+
+
 
 }
 
-exports.index = async (req, res) => {
+exports.report = async (req, res) => {
   //http://127.0.0.1:3000/api/reporting/4455418/1839404 
   //http://127.0.0.1:3000/api/reporting/443863/1850009
 
@@ -144,8 +191,7 @@ exports.index = async (req, res) => {
   let campaignid = req.params.campaignid;
 
   // var date_start = "2021-01-15T00:00:00"
-  //      "startDate": "2021-02-02T00:00:00",
-
+  // "startDate": "2021-02-02T00:00:00",
   //  var date_end = "2020-11-10T23:59:00"
   // var advertiserid = "4455418"
   // var campaignid = "1839404"
@@ -153,9 +199,9 @@ exports.index = async (req, res) => {
 
   try {
 
-   
 
-     var requestReporting = {
+
+    var requestReporting = {
 
       "startDate": date_start_campaign,
 

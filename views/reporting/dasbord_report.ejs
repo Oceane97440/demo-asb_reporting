@@ -6,84 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet" />
-    <title>Dasbord</title>
-
-    <style>
-        body {
-            background: #eee;
-            font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif
-        }
-
-        #reporting-board {
-            background: #fff
-        }
-
-        hr {
-            margin-top: 10px;
-            border-color: #ddd;
-        }
-
-        .list-group-flush {
-            width: 100%
-        }
-
-        .list-group-flush li strong {
-            width: 20%;
-            display: inline-block
-        }
-    </style>
+    <link href="/admin/css/style.css" rel="stylesheet" />
+    <title>Accueil</title>
 </head>
 
 <body>
+    <%- include ("../layouts/admin/navbar.ejs") -%>
 
 
-    <div class="container p-2 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
+  <main>
+
+    <h1 class="text-center">Dasbord Reporting</h1>
 
 
+    <div class="container">
+        <div class="row">
 
-        <div class="row p-3 m-5">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Listing des rapport </h3>
+            <!--team-1-->
+            <div class="col-lg-4">
+                <div class="our-team-main">
+
+                    <a href="/api/reporting/liste_report">
+
+                        <div class="card text-center" id="card_menu">
+                            <div class="card-body">
+                                <i class="far fa-calendar-alt"></i>
+                                <h4 class="card-title">LISTE RAPPORT</h4>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+            <!--team-1-->
+
+            <!--team-2-->
+            <div class="col-lg-4">
+                <div class="our-team-main">
+
+                    <a href="/api/reporting/generate_link">
+                        <div class="card text-center" id="card_menu">
+                            <div class="card-body">
+                                <i class="fas fa-chart-pie"></i>
     
-    
-    
+                                <h4 class="card-title">GENERATION DU LIEN</h4>
+                                
+                            </div>
+                        </div>
+                    </a>
 
-            <table class="table" >
-                <thead class="text-left thead-dark">
-                    <tr>
-                        <th scope="col">Date créaction</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">TaskId</th>
-                        <th scope="col">Rapports</th>
+                </div>
+            </div>
+
+      
 
 
-                    </tr>
-                </thead>
 
-                <tbody id="data-container">
+          
 
-                    <tr>
-    
-                        <td></td>
-                    </tr>
-
-                </tbody>
-    
-    
-            </table>
-    
-    
-    
-            <div id="pagination-container"></div>
+         
 
         </div>
-    
-
     </div>
 
 
 
-    
 
 
 
@@ -93,51 +80,15 @@
 
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />
 
 
 
 
-    <script>
-        //function ajax pagination
-        var dataContainer = $('#data-container');
-        $('#pagination-container').pagination({
-            dataSource: "http://127.0.0.1:3000/api/reporting/json_report",
-            locator:"taskId",
-            totalNumber: 1000,
-            pageSize: 10,
-            ajax: {
-                beforeSend: function () {
-                    dataContainer.html('Chargements de historique ...');
-                }
-            },
-            callback: function (data, pagination) {
-              
-                //console.log(data)
-
-                var dataHtml ='' ;
-
-                $.each(data, function (index, item) {
-                    // recup les données et crée un tableau
-                    dataHtml += '<tr><td>'+ item.creationDateUTC + '</td>' + '<td>'+ item.status +'</td>' +'<td>'+ item.taskId + '</td>'+ '<td><a href="/api/reporting/view_report/'+item.taskId+'" >Voir le rapport</a> </td></tr>';
-
-
-                });
-
-                dataHtml +='' ;
-
-
-                $("#data-container").html(dataHtml);
 
 
 
-            }
-        })
-    </script>
 
-
+    <%- include ("../layouts/admin/footer.ejs") -%>
 </body>
 
 </html>
