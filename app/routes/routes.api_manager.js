@@ -12,6 +12,14 @@ router.get('/', function (req, res) {
 });
 
 router.get("/formats", api.formats_add);
+router.get("/advertisers", api.advertiser_add);
+router.get("/list_advertisers", api.advertiser_liste);
+router.get("/view_campagne/:id", api.view_campagne);
+
+
+router.get("/campaigns", api.campaign_add);
+
+
 
 
 

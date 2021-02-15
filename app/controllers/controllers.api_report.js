@@ -72,57 +72,8 @@ exports.generate_link = async (req, res) => {
     //   let data_advertiserid = await AxiosFunction.getManage_AdvertiserData('GET', `https://manage.smartadserverapis.com/2044/advertiser`,'');
 
 
-    var liste_obj = new Array()
-
-
-    var config = {
-      method: 'GET',
-      url: 'https://manage.smartadserverapis.com/2044/advertisers/',
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
-      auth: {
-        username: dbApi.SMART_login,
-        password: dbApi.SMART_password
-      },
-
-    };
-    await axios(config)
-      .then(function (response) {
-        console.log(response.headers['x-pagination-total-count'])
-        console.log(response.headers['link'])
-
-        var data =response.data
-        var number_line = data.length
-
-        JSON.stringify(data);
-
-
-        for (i = 0; i < number_line; i++) {
-
-          var obj = {};
-
-
-          obj.advertiserid = [data[i].id]
-          obj.advertiser_name = [data[i].name]
-
-          liste_obj.push(obj)
-
-        }
-
-        res.json(liste_obj)
-
-
-
-
-      })
-
-
-
-
   }
-}
+}  
 
 exports.json_report = async (req, res) => {
 
@@ -172,7 +123,7 @@ exports.view_report = async (req, res) => {
   let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
   res.send(dataFile.data)
-
+ 
 }
 exports.generate = async (req, res) => {
 
@@ -190,20 +141,12 @@ exports.report = async (req, res) => {
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
 
-  // var date_start = "2021-01-15T00:00:00"
-  // "startDate": "2021-02-02T00:00:00",
-  //  var date_end = "2020-11-10T23:59:00"
-  // var advertiserid = "4455418"
-  // var campaignid = "1839404"
-
 
   try {
 
-
-
     var requestReporting = {
 
-      "startDate": "2021-01-15T00:00:00",
+      "startDate": "2021-01-18T00:00:00",
 
       "endDate": "CURRENT_DAY",
 

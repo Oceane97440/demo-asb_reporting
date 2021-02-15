@@ -8,8 +8,12 @@
   <title>Page attente</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-</head>
-
+<style>
+  .modal-open {
+    overflow: scroll!important;
+}
+</style>
+  </head>
 <body>
 
 
@@ -50,16 +54,22 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
   <script>
-    $('.btn').on('shown.bs.modal', function () {
-      $('#myInput').trigger('focus')
-    })
+    //affiche la modal lors du clic du bouton
+     $('.btn').on('shown.bs.modal', function () {
+       $('#myInput').trigger('focus')
+     })
+    
+
+    //lors du clic du bouton affectue la requête : GET :/api/reporting/:advertiserid/:campaignid
     $('.btn').click(function() {
 
       $("#exampleModal").modal("show");
 
       $.ajax({
+
         method: "GET",
         url: "/api/reporting/4455418/1839404",
+      
         success:function(data){
           $("#exampleModal").hide(1000);
           $('body').html(data)

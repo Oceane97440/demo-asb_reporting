@@ -1,0 +1,56 @@
+<%- include("../layouts/admin/head.ejs") -%>
+
+
+
+<div id="card-forecast" class="card" style="margin-top: 30px;">
+    <div class="card-header">
+        <h1 class="card-title">
+            Données du Forecast
+        </h1>
+    </div>
+
+    <div class="card-body">
+
+
+        <br>
+        <h3>Liste des annonceurs</h3>
+        <hr>
+
+        <table class="table_sort">
+
+            <thead class="text-left thead-dark">
+                <tr>
+
+                    <th scope="col">ID clients</th>
+                    <th scope="col">Noms annonceurs</th>
+                    <th scope="col">Campagnes </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% for (let i=0; i < advertisers.length; i++) { %>
+                <tr>
+
+
+                    <td><%=advertisers[i].advertiser_id%></td>
+                    <td><%=advertisers[i].advertiser_name%></td>
+                    <td><strong><a class="btn btn-sm btn-warning"
+                                href="/api/manager/view_campagne/<%= advertisers[i].advertiser_id %>"></a>Voir les campagnes</strong></td>
+                </tr>
+
+                <% } %>
+
+            </tbody>
+        </table>
+
+
+
+
+    </div>
+</div>
+
+
+
+
+
+<%- include("../layouts/admin/footer.ejs") -%>
