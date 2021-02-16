@@ -14,7 +14,7 @@ const LocalStorage = require('node-localstorage').LocalStorage,
 
 const axios = require(`axios`);
 
-//const asyncly = require('async');
+const fs = require('fs')
 
 const fileGetContents = require('file-get-contents');
 
@@ -48,6 +48,8 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
+let file_json = require('/code/demo-asb_reporting/tasksID.json')
+
 
 
 
@@ -124,14 +126,14 @@ exports.generate = async (req, res) => {
 }
 
 exports.report = async (req, res) => {
- // display http://127.0.0.1:3000/api/reporting/4455418/1839404 
- //video http://127.0.0.1:3000/api/reporting/443863/1850009
-  
+  // display http://127.0.0.1:3000/api/reporting/4455418/1839404 
+  //video http://127.0.0.1:3000/api/reporting/443863/1850009
+
 
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
 
- /* var startDate = {}
+  /* var startDate = {}
   http.get(`http://127.0.0.1:3000/api/manager/campagne_json/${campaignid}`, function (result) {
 
     let data = '';
@@ -228,7 +230,7 @@ console.log(startDate)*/
 
 
     //Requête visitor unique
-   var requestVisitor_unique = {
+    var requestVisitor_unique = {
 
       "startDate": "2021-01-18T00:00:00",
 
@@ -257,22 +259,62 @@ console.log(startDate)*/
     let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
     let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
 
+
+
     if (firstLink.data.taskId || threeLink.data.taskId) {
+      var taskId = firstLink.data.taskId;
+      var taskId2 = threeLink.data.taskId;
 
-      taskId = firstLink.data.taskId;
-      taskId2 = threeLink.data.taskId;
+      console.log('TaskId : ' + taskId)
+      console.log('TaskId2 : ' + taskId2)
+      console.log('-------------------')
 
-      
+      var data_taskId = file_json[0].taskid1
+      console.log('TaskId save : ' + data_taskId)
+
+      var data_taskId2 = file_json[1].taskid2
+      console.log('TaskId2 save : ' + data_taskId2)
+
+    
+
+      if (data_taskId !== taskId || data_taskId2 !== taskId2 ) {
+        var date_creation = new Date().toLocaleString();
+
+
+        let data = [{
+            "taskid1": taskId,
+            "date_create": date_creation,
+
+          },
+          {
+            "taskid2": taskId2,
+            "date_create": date_creation
+          }
+        ]
+
+        let donnees = JSON.stringify(data)
+        console.log(donnees)
+        console.log(data)
+
+        fs.writeFile('tasksID.json', donnees, function (erreur) {
+          if (erreur) {
+            console.log(erreur)
+          }
+        })
+      }else{
+        var dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId2}/file`, '');
+       var dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId}/file`, '');
+     } 
 
       //excute le script interval de temps
+
+
+
+      let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
+      let requête2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
+
+
       let timerFile = setInterval(async () => {
-
-
-        let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
-        let requête2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
-        console.log('TaskId : ' + taskId)
-        console.log('TaskId2 : ' + taskId2)
-
         let fourLink = await AxiosFunction.getReportingData('GET', requête2, '');
 
         let secondLink = await AxiosFunction.getReportingData('GET', requête1, '');
@@ -282,10 +324,14 @@ console.log(startDate)*/
 
           clearInterval(timerFile);
 
-          let dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-          let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
-          //console.log(dataFile)
+             dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
+             dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
+
+        
+          
+
+        //console.log(dataFile)
 
 
           //traitement des resultat requête 2
