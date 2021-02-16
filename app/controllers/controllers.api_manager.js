@@ -179,7 +179,7 @@ exports.campaign_add = async (req, res) => {
       .then(function (res) {
 
         var data = res.data
-        // console.log(data)
+       // console.log(data)
         var number_line = data.length
 
         //  JSON.stringify(data);
@@ -191,8 +191,8 @@ exports.campaign_add = async (req, res) => {
           var campaign_id = data[i].id
           var campaign_name = data[i].name
           var advertiser_id = data[i].advertiserId
-          var startDate = data[i].startDate
-          var endDate = data[i].endDate
+          var start_date = data[i].startDate
+         var end_date = data[i].endDate
 
 
 
@@ -202,13 +202,13 @@ exports.campaign_add = async (req, res) => {
             campaign_id,
             campaign_name,
             advertiser_id,
-            startDate,
-            endDate
+            start_date,
+            end_date
 
 
 
           })
-
+          //console.log(startDate)
         }
 
       })

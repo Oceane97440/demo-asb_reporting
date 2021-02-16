@@ -48,7 +48,7 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-let file_json = require('/code/demo-asb_reporting/tasksID.json')
+//let file_json = require('./tasksID.json')
 
 
 
@@ -264,7 +264,7 @@ console.log(startDate)*/
     if (firstLink.data.taskId || threeLink.data.taskId) {
       var taskId = firstLink.data.taskId;
       var taskId2 = threeLink.data.taskId;
-
+/*
       console.log('TaskId : ' + taskId)
       console.log('TaskId2 : ' + taskId2)
       console.log('-------------------')
@@ -305,7 +305,7 @@ console.log(startDate)*/
         var dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId2}/file`, '');
        var dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId}/file`, '');
      } 
-
+*/
       //excute le script interval de temps
 
 
