@@ -5,11 +5,12 @@ const request = require('request');
 // Initialise le module
 const bodyParser = require('body-parser');
 const http = require('http');
+const https = require('https');
+
 const NodeCache = require("node-cache");
 //let csvToJson = require('convert-csv-to-json');
 const LocalStorage = require('node-localstorage').LocalStorage,
   localStorage = new LocalStorage('./scratch');
-
 
 const axios = require(`axios`);
 
@@ -61,20 +62,8 @@ exports.index = async (req, res) => {
   }
 }
 
-exports.generate_link = async (req, res) => {
 
-  if (req.session.user.role == 1) {
-
-
-    //liste des advertiser :https://manage.smartadserverapis.com/2044/advertisers
-    //campagne liée à l'advertiser : https://manage.smartadserverapis.com/2044/advertisers/417740/campaigns
-
-    //   let data_advertiserid = await AxiosFunction.getManage_AdvertiserData('GET', `https://manage.smartadserverapis.com/2044/advertiser`,'');
-
-
-  }
-}  
-
+/*
 exports.json_report = async (req, res) => {
 
   //requête qui recupère tout la liste des rapport
@@ -123,8 +112,8 @@ exports.view_report = async (req, res) => {
   let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
   res.send(dataFile.data)
- 
-}
+
+}*/
 exports.generate = async (req, res) => {
 
   res.render("reporting/generate.ejs")
@@ -135,12 +124,34 @@ exports.generate = async (req, res) => {
 }
 
 exports.report = async (req, res) => {
-  //http://127.0.0.1:3000/api/reporting/4455418/1839404 
-  //http://127.0.0.1:3000/api/reporting/443863/1850009
+ // display http://127.0.0.1:3000/api/reporting/4455418/1839404 
+ //video http://127.0.0.1:3000/api/reporting/443863/1850009
+  
 
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
 
+ /* var startDate = {}
+  http.get(`http://127.0.0.1:3000/api/manager/campagne_json/${campaignid}`, function (result) {
+
+    let data = '';
+
+    result.on('data', function (chunk) {
+      data += chunk;
+    })
+
+    result.on('end', () => {
+
+      var obj = {};
+
+      console.log(data.start_date)
+     
+  
+    
+    })
+
+  })
+console.log(startDate)*/
 
   try {
 
@@ -217,9 +228,9 @@ exports.report = async (req, res) => {
 
 
     //Requête visitor unique
-    requestVisitor_unique = {
+   var requestVisitor_unique = {
 
-      "startDate": "2021-01-15T00:00:00",
+      "startDate": "2021-01-18T00:00:00",
 
       "endDate": "CURRENT_DAY",
 
@@ -251,6 +262,7 @@ exports.report = async (req, res) => {
       taskId = firstLink.data.taskId;
       taskId2 = threeLink.data.taskId;
 
+      
 
       //excute le script interval de temps
       let timerFile = setInterval(async () => {

@@ -589,9 +589,10 @@
                         <th scope="col">Taux de clics</th>
                         <th scope="col">Visiteur Unique</th>
                         <th scope="col">Répétition</th>
+                        <% if(table.TotalComplete > 0 ) { %>
                         <th scope="col">Total Complete</th>
                         <th scope="col">VTR%</th>
-
+                        <% }%>
                     </tr>
                 </thead>
                 <tbody>
@@ -601,8 +602,10 @@
                         <td><%=table.CTR%>%</td>
                         <td><%=table.Total_VU%></td>
                         <td><%=table.Repetition%></td>
+                        <% if(table.TotalComplete > 0 ) { %>
                         <td><%=table.TotalComplete%></td>
                         <td><%=table.VTR%>%</td>
+                        <% }%>
 
                     </tr>
                 </tbody>

@@ -16,26 +16,32 @@
         <h3>Liste des annonceurs</h3>
         <hr>
 
-        <table class="table_sort">
+        <table class="table">
 
             <thead class="text-left thead-dark">
                 <tr>
 
-                    <th scope="col">ID clients</th>
-                    <th scope="col">Noms annonceurs</th>
+                    <th scope="col">ID Campagnes</th>
                     <th scope="col">Campagnes </th>
+                    <th scope="col">Annonceurs</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+
                 </tr>
             </thead>
 
             <tbody>
-                <% for (let i=0; i < advertisers.length; i++) { %>
+                <% for (let i=0; i < campaign.length; i++) { %>
                 <tr>
 
 
-                    <td><%=advertisers[i].advertiser_id%></td>
-                    <td><%=advertisers[i].advertiser_name%></td>
-                    <td><strong><a class="btn btn-sm btn-warning"
-                                href="/api/manager/view_campagne/<%= advertisers[i].advertiser_id %>"></a>Voir les campagnes</strong></td>
+                    <td><%=campaign[i].campaign_id%></td>
+                    <td><%=campaign[i].campaign_name%></td>
+                    <td><%=campaign[i].advertiser.advertiser_name%></td>
+                    <td><%=campaign[i].start_date%></td>
+                    <td><%=campaign[i].end_date%></td>
+
+                   
                 </tr>
 
                 <% } %>

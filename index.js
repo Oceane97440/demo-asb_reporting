@@ -21,6 +21,8 @@ const packs_sites = require('./app/models/models.pack_site')
 const users = require('./app/models/models.user.js')
 const roles = require('./app/models/models.role')
 const users_roles = require('./app/models/models.user_role')
+const campaigns = require('./app/models/models.campaigns')
+const advertisers = require('./app/models/models.advertiser')
 
 
 /* Mettre les relation ici */
@@ -53,6 +55,18 @@ roles.hasMany(users_roles, {
   onDelete: 'cascade',
   hooks: true
 });
+
+
+campaigns.belongsTo(advertisers, {
+  foreignKey: 'advertiser_id',
+  onDelete: 'cascade',
+  hooks: true
+}); // la campagne à un format.
+advertisers.hasMany(campaigns, {
+  foreignKey: 'advertiser_id',
+  onDelete: 'cascade',
+  hooks: true
+}); // Un format peut avoir plusieur campagne.
 
 db.sequelize.sync();
 sequelize = db.sequelize;
@@ -92,9 +106,9 @@ app.use(bodyParser.urlencoded({
  */
 
 
-app.get('/*', function(req, res, next) {
+app.get('/*', function (req, res, next) {
   res.locals.user = {}
-  if (req.session.user){
+  if (req.session.user) {
 
     res.locals.user.email = req.session.user.email;
     res.locals.user.role = req.session.user.role;
@@ -104,11 +118,11 @@ app.get('/*', function(req, res, next) {
   next();
 });
 
-app.post('/*', function(req, res, next) {
+app.post('/*', function (req, res, next) {
   res.locals.user = {}
-   // nom de l'utilisateur connecté (dans le menu) accessible pour toutes les vues
+  // nom de l'utilisateur connecté (dans le menu) accessible pour toutes les vues
 
-  if (req.session.user){
+  if (req.session.user) {
 
     res.locals.user.email = req.session.user.email;
     res.locals.user.role = req.session.user.role;

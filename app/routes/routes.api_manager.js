@@ -15,6 +15,8 @@ router.get("/formats", api.formats_add);
 router.get("/advertisers", api.advertiser_add);
 router.get("/list_advertisers", api.advertiser_liste);
 router.get("/view_campagne/:id", api.view_campagne);
+router.get("/campagne_json/:id", api.campagne_json)
+router.get("/generate_link/:idcampaign", api.generate_link)
 
 
 router.get("/campaigns", api.campaign_add);

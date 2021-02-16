@@ -6,6 +6,9 @@ const request = require('request');
 const bodyParser = require('body-parser');
 
 //let csvToJson = require('convert-csv-to-json');
+const https = require('https');
+const http = require('http');
+
 
 
 const axios = require(`axios`);
@@ -118,7 +121,7 @@ exports.advertiser_liste = async (req, res) => {
     ],
   })
 
-  console.log(advertisers)
+  // console.log(advertisers)
 
   res.render('manage/list_advertisers.ejs', {
     advertisers: advertisers
@@ -131,17 +134,24 @@ exports.view_campagne = async (req, res) => {
 
 
 
- var campagne = await ModelCampaigns.findAll({
-  attributes: ['campaign_id', 'campaign_name','advertiser_id','start_date','end_date'],
+  var campaign = await ModelCampaigns.findAll({
+    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
 
     where: {
       //id_users: userId,
       advertiser_id: req.params.id
 
-    }
+    },
+    include: [{
+      model: ModelAdvertiser
+    }],
+
   })
-  res.render('manage/list_advertisers.ejs', {
-    campagne: campagne
+  //console.log(campaign)
+
+
+  res.render('manage/view_campagnes.ejs', {
+    campaign: campaign
   });
 
 
@@ -188,7 +198,7 @@ exports.campaign_add = async (req, res) => {
 
 
 
-          const campaign = ModelCampaigns.create({
+          const campaigns = ModelCampaigns.create({
             campaign_id,
             campaign_name,
             advertiser_id,
@@ -210,6 +220,70 @@ exports.campaign_add = async (req, res) => {
   }
 }
 
+exports.generate_link = async (req, res) => {
+
+
+  
+    let idcampaign = req.params.idcampaign
+
+    http.get(`http://127.0.0.1:3000/api/manager/campagne_json/${idcampaign}`, function (result) {
+
+    //console.log(idcampaign)
+      let data = '';
+
+      result.on('data', function (chunk) {
+        data += chunk;
+      })
+
+      result.on('end', () => {
+        
+        let makes = JSON.parse(data)
+
+       /*res.render('cars', {
+          makes: makes
+        });*/
+  
+  
+        console.log(makes[2].start_date);
+      })
+
+
+    })
+
+    //liste des advertiser :https://manage.smartadserverapis.com/2044/advertisers
+    //campagne liée à l'advertiser : https://manage.smartadserverapis.com/2044/advertisers/417740/campaigns
+
+    //   let data_advertiserid = await AxiosFunction.getManage_AdvertiserData('GET', `https://manage.smartadserverapis.com/2044/advertiser`,'');
+
+
+  
+}  
+
+exports.campagne_json = async (req, res) => {
+  try {
+    ModelCampaigns.findOne({
+
+        where: {
+          //id_users: userId,
+          campaign_id: req.params.id
+
+        }
+      }
+
+
+    ).then(campagnes => {
+      //  console.log(annonceurs);
+
+      res.json(campagnes)
+
+    })
+  } catch (error) {
+    res.json({
+      adresse: "KO",
+      message: error
+    })
+  }
+}
 
 
 exports.formats_add = async (req, res) => {
