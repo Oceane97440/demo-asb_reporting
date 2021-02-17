@@ -40,6 +40,10 @@
                     <td><%=campaign[i].advertiser.advertiser_name%></td>
                     <td><%=campaign[i].start_date%></td>
                     <td><%=campaign[i].end_date%></td>
+                    <td>
+                        <a href="/api/reporting/generate/<%=advertiser_id%>/<%=campaign[i].campaign_id%>/<%=campaign[i].start_date%>">lien</a>
+                        </td>
+
 
                    
                 </tr>

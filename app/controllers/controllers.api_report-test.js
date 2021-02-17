@@ -229,6 +229,7 @@ exports.report = async (req, res) => {
     let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
     let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
 
+    //conseil utitlise la bdd car plus securiser et possibilité de géré plusieur requête
 
 
     if (firstLink.data.taskId || threeLink.data.taskId) {

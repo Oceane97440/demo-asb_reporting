@@ -106,7 +106,15 @@ exports.view_report = async (req, res) => {
 }*/
 exports.generate = async (req, res) => {
 
-  res.render("reporting/generate.ejs")
+  let advertiserid = req.params.advertiserid;
+  let campaignid = req.params.campaignid;
+  let startDate = req.params.startdate
+
+  res.render("reporting/generate.ejs",{
+    advertiserid:advertiserid,
+    campaignid:campaignid,
+    startDate:startDate
+  })
 
 
 
@@ -114,21 +122,19 @@ exports.generate = async (req, res) => {
 }
 
 exports.report = async (req, res) => {
-  // display http://127.0.0.1:3000/api/reporting/4455418/1839404 
-  //      "startDate": "2021-01-18T00:00:00",
-
-  //video http://127.0.0.1:3000/api/reporting/443863/1850009
-//      "startDate": "2021-02-02T00:00:00",
-
+ 
 
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
+  let startDate = req.params.startdate
+ // console.log(req.params)
+
 
   try {
 
     var requestReporting = {
 
-      "startDate": "2021-01-18T00:00:00",
+      "startDate": startDate,
 
       "endDate": "CURRENT_DAY",
 
@@ -197,11 +203,10 @@ exports.report = async (req, res) => {
     }
 
 
-
     //Requête visitor unique
     var requestVisitor_unique = {
 
-      "startDate": "2021-01-18T00:00:00",
+      "startDate": startDate,
 
       "endDate": "CURRENT_DAY",
 
@@ -228,12 +233,13 @@ exports.report = async (req, res) => {
     let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
     let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
 
-
+    
 
     if (firstLink.data.taskId || threeLink.data.taskId) {
       var taskId = firstLink.data.taskId;
       var taskId2 = threeLink.data.taskId;
       
+     
 
 
       let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
@@ -255,7 +261,7 @@ exports.report = async (req, res) => {
           dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
 
-          //console.log(dataFile)
+          
 
 
           //traitement des resultat requête 2

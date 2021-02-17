@@ -117,6 +117,12 @@ exports.advertiser_liste = async (req, res) => {
 }
 exports.view_campagne = async (req, res) => {
 
+  //récup les date en ligne !!!!!
+
+  //recup id client
+  var advertiser_id = req.params.id
+  //console.log(advertiser_id)
+
 
 
   var campaign = await ModelCampaigns.findAll({
@@ -136,7 +142,8 @@ exports.view_campagne = async (req, res) => {
 
 
   res.render('manage/view_campagnes.ejs', {
-    campaign: campaign
+    campaign: campaign,
+    advertiser_id : advertiser_id,
   });
 
 
