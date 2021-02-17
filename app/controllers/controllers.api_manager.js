@@ -1,29 +1,14 @@
-// Récupére les données de configuration de l`API
-const dbApi = require("../config/config.api");
-// Initialise le module request
-const request = require('request');
 // Initialise le module
-const bodyParser = require('body-parser');
-
-//let csvToJson = require('convert-csv-to-json');
 const https = require('https');
 const http = require('http');
-
-
-
+const dbApi = require("../config/config.api");
 const axios = require(`axios`);
 
-//const asyncly = require('async');
-
-const fileGetContents = require('file-get-contents');
-
-// Initiliase le module axios
-//const axios = require(`axios`);
+//const request = require('request');
+//const bodyParser = require('body-parser');
 
 
-const {
-  Op
-} = require("sequelize");
+const {Op} = require("sequelize");
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"

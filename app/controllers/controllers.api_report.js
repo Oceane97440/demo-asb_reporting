@@ -1,25 +1,14 @@
-// Récupére les données de configuration de l`API
-const dbApi = require("../config/config.api");
-// Initialise le module request
-const request = require('request');
 // Initialise le module
-const bodyParser = require('body-parser');
 const http = require('http');
 const https = require('https');
-
-const NodeCache = require("node-cache");
-//let csvToJson = require('convert-csv-to-json');
-const LocalStorage = require('node-localstorage').LocalStorage,
-  localStorage = new LocalStorage('./scratch');
-
-const axios = require(`axios`);
-
 const fs = require('fs')
 
-const fileGetContents = require('file-get-contents');
-
-// Initiliase le module axios
+//const NodeCache = require("node-cache");
+//const LocalStorage = require('node-localstorage').LocalStorage,
+//localStorage = new LocalStorage('./scratch');
 //const axios = require(`axios`);
+
+
 
 
 const {
@@ -48,7 +37,6 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-//let file_json = require('./tasksID.json')
 
 
 
@@ -127,7 +115,10 @@ exports.generate = async (req, res) => {
 
 exports.report = async (req, res) => {
   // display http://127.0.0.1:3000/api/reporting/4455418/1839404 
+  //      "startDate": "2021-01-18T00:00:00",
+
   //video http://127.0.0.1:3000/api/reporting/443863/1850009
+//      "startDate": "2021-02-02T00:00:00",
 
 
   let advertiserid = req.params.advertiserid;
@@ -264,48 +255,58 @@ console.log(startDate)*/
     if (firstLink.data.taskId || threeLink.data.taskId) {
       var taskId = firstLink.data.taskId;
       var taskId2 = threeLink.data.taskId;
-/*
-      console.log('TaskId : ' + taskId)
-      console.log('TaskId2 : ' + taskId2)
-      console.log('-------------------')
-
-      var data_taskId = file_json[0].taskid1
-      console.log('TaskId save : ' + data_taskId)
-
-      var data_taskId2 = file_json[1].taskid2
-      console.log('TaskId2 save : ' + data_taskId2)
-
-    
-
-      if (data_taskId !== taskId || data_taskId2 !== taskId2 ) {
-        var date_creation = new Date().toLocaleString();
+      /*
 
 
-        let data = [{
-            "taskid1": taskId,
-            "date_create": date_creation,
+      fs.readFile("tasksID.json", (err, file) => {
+        if (err) throw err;
+       let data = JSON.parse(file);
+        console.log(data);
+       // res.render("cars", { data: data.cars });
 
-          },
-          {
-            "taskid2": taskId2,
-            "date_create": date_creation
-          }
-        ]
+      });
 
-        let donnees = JSON.stringify(data)
-        console.log(donnees)
-        console.log(data)
+            console.log('TaskId : ' + taskId)
+            console.log('TaskId2 : ' + taskId2)
+            console.log('-------------------')
 
-        fs.writeFile('tasksID.json', donnees, function (erreur) {
-          if (erreur) {
-            console.log(erreur)
-          }
-        })
-      }else{
-        var dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId2}/file`, '');
-       var dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId}/file`, '');
-     } 
-*/
+            var data_taskId = file_json[0].taskid1
+            console.log('TaskId save : ' + data_taskId)
+
+            var data_taskId2 = file_json[1].taskid2
+            console.log('TaskId2 save : ' + data_taskId2)
+
+          
+
+            if (data_taskId !== taskId || data_taskId2 !== taskId2 ) {
+              var date_creation = new Date().toLocaleString();
+
+
+              let data = [{
+                  "taskid1": taskId,
+                  "date_create": date_creation,
+
+                },
+                {
+                  "taskid2": taskId2,
+                  "date_create": date_creation
+                }
+              ]
+
+              let donnees = JSON.stringify(data)
+              console.log(donnees)
+              console.log(data)
+
+              fs.writeFile('tasksID.json', donnees, function (erreur) {
+                if (erreur) {
+                  console.log(erreur)
+                }
+              })
+            }else{
+              var dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId2}/file`, '');
+             var dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId}/file`, '');
+           } 
+      */
       //excute le script interval de temps
 
 
@@ -325,13 +326,13 @@ console.log(startDate)*/
           clearInterval(timerFile);
 
 
-             dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-             dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
+          dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
+          dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
-        
-          
 
-        //console.log(dataFile)
+
+
+          //console.log(dataFile)
 
 
           //traitement des resultat requête 2

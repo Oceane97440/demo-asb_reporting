@@ -5,8 +5,6 @@ const path = require('path');
 const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session')
-const csv = require('csv-parser')
-const fs = require('fs')
 var fileUpload = require('express-fileupload');
 
 
@@ -80,6 +78,7 @@ Sequelize = db.Sequelize;
 
 // 
 /** view engine setup*/
+app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
