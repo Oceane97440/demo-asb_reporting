@@ -124,28 +124,6 @@ exports.report = async (req, res) => {
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
 
-  /* var startDate = {}
-  http.get(`http://127.0.0.1:3000/api/manager/campagne_json/${campaignid}`, function (result) {
-
-    let data = '';
-
-    result.on('data', function (chunk) {
-      data += chunk;
-    })
-
-    result.on('end', () => {
-
-      var obj = {};
-
-      console.log(data.start_date)
-     
-  
-    
-    })
-
-  })
-console.log(startDate)*/
-
   try {
 
     var requestReporting = {
@@ -255,60 +233,7 @@ console.log(startDate)*/
     if (firstLink.data.taskId || threeLink.data.taskId) {
       var taskId = firstLink.data.taskId;
       var taskId2 = threeLink.data.taskId;
-      /*
-
-
-      fs.readFile("tasksID.json", (err, file) => {
-        if (err) throw err;
-       let data = JSON.parse(file);
-        console.log(data);
-       // res.render("cars", { data: data.cars });
-
-      });
-
-            console.log('TaskId : ' + taskId)
-            console.log('TaskId2 : ' + taskId2)
-            console.log('-------------------')
-
-            var data_taskId = file_json[0].taskid1
-            console.log('TaskId save : ' + data_taskId)
-
-            var data_taskId2 = file_json[1].taskid2
-            console.log('TaskId2 save : ' + data_taskId2)
-
-          
-
-            if (data_taskId !== taskId || data_taskId2 !== taskId2 ) {
-              var date_creation = new Date().toLocaleString();
-
-
-              let data = [{
-                  "taskid1": taskId,
-                  "date_create": date_creation,
-
-                },
-                {
-                  "taskid2": taskId2,
-                  "date_create": date_creation
-                }
-              ]
-
-              let donnees = JSON.stringify(data)
-              console.log(donnees)
-              console.log(data)
-
-              fs.writeFile('tasksID.json', donnees, function (erreur) {
-                if (erreur) {
-                  console.log(erreur)
-                }
-              })
-            }else{
-              var dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId2}/file`, '');
-             var dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId}/file`, '');
-           } 
-      */
-      //excute le script interval de temps
-
+      
 
 
       let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
@@ -328,8 +253,6 @@ console.log(startDate)*/
 
           dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
           dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
-
-
 
 
           //console.log(dataFile)
@@ -399,7 +322,6 @@ console.log(startDate)*/
 
           const StartDate = getDateTimeFromTimestamp(t1);
           const EndDate = getDateTimeFromTimestamp(t2);
-
 
 
           //filte les array exclure les valeur undefined qui empêche le calcule des somme
