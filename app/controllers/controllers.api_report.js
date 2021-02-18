@@ -3,12 +3,6 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs')
 
-//const NodeCache = require("node-cache");
-//const LocalStorage = require('node-localstorage').LocalStorage,
-//localStorage = new LocalStorage('./scratch');
-//const axios = require(`axios`);
-
-
 
 
 const {
@@ -54,58 +48,11 @@ exports.index = async (req, res) => {
 }
 
 
-/*
-exports.json_report = async (req, res) => {
 
-  //requête qui recupère tout la liste des rapport
-  var tasksId = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/`, '')
-  var data = tasksId.data
-  var liste_obj = new Array()
-
-  var number_line = data.length
-  //convertie obj en json
-  JSON.stringify(data);
-
-  for (i = 0; i < number_line; i++) {
-
-    var obj = {};
-
-    obj.id = i
-
-    obj.taskId = [data[i].taskId]
-    obj.status = [data[i].status]
-
-    var date_format = new Date([data[i].creationDateUTC]).toLocaleString();
-    obj.creationDateUTC = date_format
-
-    liste_obj.push(obj)
-
-  }
-
-  res.json(liste_obj)
-
-}
-exports.liste_report = async (req, res) => {
-
-  if ((req.session.user.role == 4) || (req.session.user.role == 1)) {
-
-
-
-    res.render("reporting/list_report.ejs")
-
-  }
-
-}
-exports.view_report = async (req, res) => {
-
-  let taskId = req.params.taskId;
-
-  let dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
-
-  res.send(dataFile.data)
-
-}*/
 exports.generate = async (req, res) => {
+
+  //recupère en parametre get id annonceur / id campagne / date de debut
+  //api/reporting/generate/416446/1853590/2021-02-15T00:00:00
 
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
@@ -141,14 +88,16 @@ exports.generate = async (req, res) => {
 
 exports.report = async (req, res) => {
  
+  //fonctionnalité génération du rapport
 
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate
- // console.log(req.params)
 
 
   try {
+
+    //initialisation des requêtes
 
     var requestReporting = {
 
@@ -248,6 +197,7 @@ exports.report = async (req, res) => {
     }
 
 
+    // 1) Requête POST 
     let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
     let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
 
@@ -259,10 +209,10 @@ exports.report = async (req, res) => {
       
      
 
-
       let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
       let requête2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
 
+      //2) Requête GET boucle jusqu'a que le rapport génère 100% delais 1min
 
       let timerFile = setInterval(async () => {
         let fourLink = await AxiosFunction.getReportingData('GET', requête2, '');
@@ -274,13 +224,13 @@ exports.report = async (req, res) => {
 
           clearInterval(timerFile);
 
-
+          //3) Récupère la date de chaque requête
           dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
           dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
 
           
-
+          //4) Traitement des données pour affiché dans le vue
 
           //traitement des resultat requête 2
           const UniqueVisitors = []

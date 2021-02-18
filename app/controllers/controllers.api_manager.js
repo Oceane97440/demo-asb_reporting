@@ -8,7 +8,9 @@ const axios = require(`axios`);
 //const bodyParser = require('body-parser');
 
 
-const {Op} = require("sequelize");
+const {
+  Op
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
@@ -46,6 +48,8 @@ const ModelCampaigns = require("../models/models.campaigns")
 
 exports.advertiser_add = async (req, res) => {
 
+  //ajoute dans la bdd les annonceurs
+
   if (req.session.user.role == 1) {
 
 
@@ -66,18 +70,12 @@ exports.advertiser_add = async (req, res) => {
       .then(function (res) {
 
         var data = res.data
-        // console.log(data)
         var number_line = data.length
-
-        //  JSON.stringify(data);
-
 
         for (i = 0; i < number_line; i++) {
 
-
           var advertiser_id = data[i].id
           var advertiser_name = data[i].name
-
 
           const advertiser = ModelAdvertiser.create({
             advertiser_id,
@@ -89,15 +87,12 @@ exports.advertiser_add = async (req, res) => {
         }
 
       })
-
-
-
-
-
   }
 }
 
 exports.advertiser_liste = async (req, res) => {
+
+  //liste dans une vue tous les annonceurs
 
   var advertisers = await ModelAdvertiser.findAll({
     attributes: ['advertiser_id', 'advertiser_name'],
@@ -106,50 +101,15 @@ exports.advertiser_liste = async (req, res) => {
     ],
   })
 
-  // console.log(advertisers)
-
   res.render('manage/list_advertisers.ejs', {
     advertisers: advertisers
   });
 
-
-
 }
-exports.view_campagne = async (req, res) => {
 
-  //récup les date en ligne !!!!!
-
-  //recup id client
-  var advertiser_id = req.params.id
-  //console.log(advertiser_id)
-
-
-
-  var campaign = await ModelCampaigns.findAll({
-    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
-
-    where: {
-      //id_users: userId,
-      advertiser_id: req.params.id
-
-    },
-    include: [{
-      model: ModelAdvertiser
-    }],
-
-  })
-  //console.log(campaign)
-
-
-  res.render('manage/view_campagnes.ejs', {
-    campaign: campaign,
-    advertiser_id : advertiser_id,
-  });
-
-
-
-}
 exports.campaign_add = async (req, res) => {
+
+  //ajoute les campagnes dans la bdd
 
   if (req.session.user.role == 1) {
 
@@ -171,11 +131,7 @@ exports.campaign_add = async (req, res) => {
       .then(function (res) {
 
         var data = res.data
-       // console.log(data)
         var number_line = data.length
-
-        //  JSON.stringify(data);
-
 
         for (i = 0; i < number_line; i++) {
 
@@ -184,11 +140,7 @@ exports.campaign_add = async (req, res) => {
           var campaign_name = data[i].name
           var advertiser_id = data[i].advertiserId
           var start_date = data[i].startDate
-         var end_date = data[i].endDate
-
-
-
-
+          var end_date = data[i].endDate
 
           const campaigns = ModelCampaigns.create({
             campaign_id,
@@ -200,171 +152,60 @@ exports.campaign_add = async (req, res) => {
 
 
           })
-          //console.log(startDate)
         }
 
       })
 
-
-
-
-
   }
 }
 
-exports.generate_link = async (req, res) => {
+exports.view_campagne = async (req, res) => {
+
+  //affiche dans une vue les campagnes liée à annnonceur id
+
+  var advertiser_id = req.params.id
+
+  var campaign = await ModelCampaigns.findAll({
+    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
+
+    where: {
+      //id_users: userId,
+      advertiser_id: req.params.id
+
+    },
+    include: [{
+      model: ModelAdvertiser
+    }],
+
+  })
+
+  res.render('manage/view_campagnes.ejs', {
+    campaign: campaign,
+    advertiser_id: advertiser_id,
+  });
 
 
-  
-    let idcampaign = req.params.idcampaign
 
-    http.get(`http://127.0.0.1:3000/api/manager/campagne_json/${idcampaign}`, function (result) {
-
-    //console.log(idcampaign)
-      let data = '';
-
-      result.on('data', function (chunk) {
-        data += chunk;
-      })
-
-      result.on('end', () => {
-        
-        let makes = JSON.parse(data)
-
-       /*res.render('cars', {
-          makes: makes
-        });*/
-  
-  
-        console.log(makes[2].start_date);
-      })
+}
 
 
-    })
-
-    //liste des advertiser :https://manage.smartadserverapis.com/2044/advertisers
-    //campagne liée à l'advertiser : https://manage.smartadserverapis.com/2044/advertisers/417740/campaigns
-
-    //   let data_advertiserid = await AxiosFunction.getManage_AdvertiserData('GET', `https://manage.smartadserverapis.com/2044/advertiser`,'');
-
-
-  
-}  
 
 exports.campagne_json = async (req, res) => {
+  //renvoie du json les info campagnes
   try {
     ModelCampaigns.findOne({
 
         where: {
-          //id_users: userId,
           campaign_id: req.params.id
 
         }
       }
 
-
     ).then(campagnes => {
-      //  console.log(annonceurs);
-
       res.json(campagnes)
 
     })
   } catch (error) {
-    res.json({
-      adresse: "KO",
-      message: error
-    })
+
   }
-}
-
-
-exports.formats_add = async (req, res) => {
-
-
-  try {
-
-
-
-    // Charge la fonction formatAll
-    let data_formats = await AxiosFunction.getManageData('GET');
-
-    var array_format = data_formats.data
-    // console.log(array_format)
-    array_format.forEach(obj => {
-      // Créer le tableau de données
-      formatsData = {
-        format_id: `${obj.id}`,
-        format_name: `${obj.name}`,
-        format_width: `${obj.width}`,
-        format_height: `${obj.height}`,
-        format_type_id: `${obj.formatTypeId}`,
-        format_is_archived: `${obj.isArchived}`,
-        format_resource_url: `${obj.resourceUrl}`
-      };
-      console.log(formatsData)
-
-      ModelFormat.findOrCreate({
-        where: {
-          format_id: formatsData.format_id,
-          format_name: formatsData.format_name,
-          format_group: '',
-          format_width: formatsData.format_width,
-          format_height: formatsData.format_height,
-          format_type_id: formatsData.format_type_id,
-          format_is_archived: formatsData.format_is_archived,
-          format_resource_url: formatsData.format_resource_url,
-        },
-        defaults: formatsData
-
-      }).then(formats => {
-        return res.send("OK: les formats ont été ajoutés à la bdd")
-      })
-
-    });
-
-
-    /*for (let i = 0; i < data_formats.data.length; i++) {
-
-      var format_id = data_formats.data[i].id
-      var format_name = data_formats.data[i].name
-      var format_width = data_formats.data[i].width
-      var format_height = data_formats.data[i].height
-      var format_type_id = data_formats.data[i].formatTypeId
-      var format_is_archived = data_formats.data[i].isArchived
-      var format_resource_url = data_formats.data[i].resourceUrl
-
-
-
-      
-    }
-
-
-
-    await ModelFormat.create({
-
-        format_id: format_id,
-        format_name: format_name,
-        format_group: '',
-        format_width: format_width,
-        format_height: format_height,
-        format_type_id: format_type_id,
-        format_is_archived: format_is_archived,
-        format_resource_url: format_resource_url,
-
-      })
-      .then(campagne => {
-        console.log(campagne)
-        return res.send("OK: les formats ont été ajoutés à la bdd")
-      })
-
-*/
-
-  } catch (error) {
-    console.log(error);
-  }
-
-
-
-
-
 }
