@@ -108,10 +108,14 @@ exports.index = async (req, res) => {
 
 
 
-    } catch (err) {
-        res.status(500).json({
-            'error': 'cannot fetch country'
-        });
+    } catch (error) {
+        console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error_log.ejs", {
+            statusCoded: statusCoded,
+
+        })
     }
 
 };
@@ -748,8 +752,13 @@ exports.forecast_user = async (req, res, next) => {
             }
         }
 
-    } catch (error) {
-        console.log(error)
+    } catch (error) { console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error_log.ejs", {
+            statusCoded: statusCoded,
+
+        })
     }
 }
 
@@ -779,10 +788,14 @@ exports.epilot = async (req, res, next) => {
 
         });
 
-    } catch (err) {
-        res.status(500).json({
-            'error': 'cannot fetch country'
-        });
+    } catch (error) {
+        console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error_log.ejs",{
+          statusCoded:statusCoded,
+         
+        })
     }
 
 }
@@ -852,6 +865,12 @@ exports.campaign_epilot = async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error_log.ejs",{
+          statusCoded:statusCoded,
+         
+        })
     }
 
 }

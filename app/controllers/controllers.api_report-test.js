@@ -36,8 +36,10 @@ const {
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 
-// Initialise les models
 
+// Initialise les models
+const ModelAdvertiser = require("../models/models.advertiser")
+const ModelCampaigns = require("../models/models.campaigns")
 
 
 
@@ -106,13 +108,40 @@ exports.view_report = async (req, res) => {
 }*/
 exports.generate = async (req, res) => {
 
-  res.render("reporting/generate.ejs")
+  //recupère en parametre get id annonceur / id campagne / date de debut
+  //api/reporting/generate/416446/1853590/2021-02-15T00:00:00
+
+  let advertiserid = req.params.advertiserid;
+  let campaignid = req.params.campaignid;
+  let startDate = req.params.startdate
+
+
+
+  var campaign = await ModelCampaigns.findOne({
+    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
+
+    where: {
+      campaign_id :req.params.campaignid,
+      advertiser_id: req.params.advertiserid
+
+    },
+    include: [{
+      model: ModelAdvertiser
+    }],
+
+  })
+
+  res.render("reporting/generate.ejs",{
+    advertiserid:advertiserid,
+    campaignid:campaignid,
+    startDate:startDate,
+    campaign:campaign
+  })
 
 
 
 
 }
-
 exports.report = async (req, res) => {
   // display http://127.0.0.1:3000/api/reporting/4455418/1839404 
   //      "startDate": "2021-01-18T00:00:00",
@@ -120,16 +149,18 @@ exports.report = async (req, res) => {
   //video http://127.0.0.1:3000/api/reporting/443863/1850009
   //      "startDate": "2021-02-02T00:00:00",
 
-
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
+  let startDate = req.params.startdate
 
 
   try {
 
+    //initialisation des requêtes
+
     var requestReporting = {
 
-      "startDate": "2021-01-18T00:00:00",
+      "startDate": startDate,
 
       "endDate": "CURRENT_DAY",
 
@@ -198,11 +229,10 @@ exports.report = async (req, res) => {
     }
 
 
-
     //Requête visitor unique
     var requestVisitor_unique = {
 
-      "startDate": "2021-01-18T00:00:00",
+      "startDate": startDate,
 
       "endDate": "CURRENT_DAY",
 
@@ -226,10 +256,11 @@ exports.report = async (req, res) => {
     }
 
 
+
+
     let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
     let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
 
-    //conseil utitlise la bdd car plus securiser et possibilité de géré plusieur requête
 
 
     if (firstLink.data.taskId || threeLink.data.taskId) {
@@ -238,53 +269,9 @@ exports.report = async (req, res) => {
 
 
 
-      fs.readFile("tasksID.json", async(err, file) => {
-        if (err) throw err;
-        let data = JSON.parse(file);
-        console.log(data);
-
-        console.log('TaskId : ' + taskId)
-        console.log('TaskId2 : ' + taskId2)
-        console.log('-------------------')
-
-        var data_taskId = data[0].taskid1
-        console.log('TaskId save : ' + data_taskId)
-
-        var data_taskId2 = data[1].taskid2
-        console.log('TaskId2 save : ' + data_taskId2)
 
    
-   if (data_taskId !== taskId || data_taskId2 !== taskId2) {
-          var date_creation = new Date().toLocaleString();
-
-
-          let data = [{
-              "taskid1": taskId,
-              "date_create": date_creation,
-
-            },
-            {
-              "taskid2": taskId2,
-              "date_create": date_creation
-            }
-          ]
-
-          let donnees = JSON.stringify(data)
-          console.log(donnees)
-          console.log(data)
-
-            
-         /* obj = JSON.parse(data); //now it an object
-          obj.table.push({id: 2, square:3}); //add some data
-          json = JSON.stringify(obj); //convert it back to json
-          fs.writeFile('myjsonfile.json', json, 'utf8', callback); // write it back */
-
-        /*  fs.writeFile('tasksID.json', donnees, function (erreur) {
-            if (erreur) {
-              console.log(erreur)
-            }
-          })*/
-
+      
           let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
           let requête2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
 
@@ -302,9 +289,7 @@ exports.report = async (req, res) => {
               var dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
               var dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
     
-              console.log("REQUETE ALL")
-              console.log(dataFile)
-              console.log(dataFile2)
+              console.log(dataFile.data)
 
     
             }
@@ -321,19 +306,7 @@ exports.report = async (req, res) => {
 
 
 
-        }else{
-
-          var dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId2}/file`, '');
-          var dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${data_taskId}/file`, '');
-  
-          console.log("REQUETE SAVE TASK")
-          console.log(dataFile2)
-          console.log(dataFile)
-
-
-          
-
-        }
+        
 
      
 
@@ -341,7 +314,7 @@ exports.report = async (req, res) => {
 
 
 
-      });
+     
 
 
 
@@ -375,21 +348,66 @@ exports.report = async (req, res) => {
 
 
 
-  } catch (error) {
-    console.log(error);
+  } catch (error) { console.log(error)
+    var statusCoded = error.response.status;
+
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
   }
 
 
 
 
-  /* var interstitielRepetition = []
+   /*
+      fs.readFile("tasksID.json", async(err, file) => {
+        if (err) throw err;
+        let data = JSON.parse(file);
+        console.log(data);
 
-   for (let i = 0; i < interstitielImpressions.length; i++) {
-     if (interstitielImpressions[i] != '') {
-       var total_repetition = interstitielImpressions[i] / interstitielVU[i]
-       interstitielRepetition.push(total_repetition.toFixed(2))
-     }
-   }*/
+        console.log('TaskId : ' + taskId)
+        console.log('TaskId2 : ' + taskId2)
+        console.log('-------------------')
+
+        var data_taskId = data[0].taskid1
+        console.log('TaskId save : ' + data_taskId)
+
+        var data_taskId2 = data[1].taskid2
+        console.log('TaskId2 save : ' + data_taskId2)
+
+           var date_creation = new Date().toLocaleString();
+
+
+          let data = [{
+              "taskid1": taskId,
+              "date_create": date_creation,
+
+            },
+            {
+              "taskid2": taskId2,
+              "date_create": date_creation
+            }
+          ]
+
+          let donnees = JSON.stringify(data)
+          console.log(donnees)
+          console.log(data)
+
+            
+          obj = JSON.parse(data); //now it an object
+          obj.table.push({id: 2, square:3}); //add some data
+          json = JSON.stringify(obj); //convert it back to json
+          fs.writeFile('myjsonfile.json', json, 'utf8', callback); // write it back */
+
+        /*  fs.writeFile('tasksID.json', donnees, function (erreur) {
+            if (erreur) {
+              console.log(erreur)
+            }
+          }) 
+        
+        });*/
+
 
 
 }

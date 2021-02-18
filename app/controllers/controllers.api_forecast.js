@@ -98,10 +98,14 @@ exports.index = async (req, res) => {
         });
 
 
-    } catch (err) {
-        res.status(500).json({
-            'error': 'cannot fetch country'
-        });
+    } catch (error) { 
+        console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error_log.ejs", {
+            statusCoded: statusCoded,
+
+        })
     }
 
 };
@@ -251,7 +255,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
 
-               // console.log(CampaignName)
+                // console.log(CampaignName)
 
                 var insertions = {
 
@@ -934,7 +938,13 @@ exports.forecast = async (req, res, next) => {
             }
         }
 
-    } catch (error) {
+    } catch (error) { 
         console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error_log.ejs", {
+            statusCoded: statusCoded,
+
+        })
     }
 }

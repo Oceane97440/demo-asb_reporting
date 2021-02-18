@@ -50,119 +50,162 @@ exports.advertiser_add = async (req, res) => {
 
   //ajoute dans la bdd les annonceurs
 
-  if (req.session.user.role == 1) {
+  try {
+
+    if (req.session.user.role == 1) {
 
 
-    var config = {
-      method: 'GET',
-      url: 'https://manage.smartadserverapis.com/2044/advertisers/',
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
-      auth: {
-        username: dbApi.SMART_login,
-        password: dbApi.SMART_password
-      },
+      var config = {
+        method: 'GET',
+        url: 'https://manage.smartadserverapis.com/2044/advertisers/',
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        auth: {
+          username: dbApi.SMART_login,
+          password: dbApi.SMART_password
+        },
+  
+      };
+      await axios(config)
+        .then(function (res) {
+  
+          var data = res.data
+          var number_line = data.length
+  
+          for (i = 0; i < number_line; i++) {
+  
+            var advertiser_id = data[i].id
+            var advertiser_name = data[i].name
+  
+            const advertiser = ModelAdvertiser.create({
+              advertiser_id,
+              advertiser_name,
+  
+  
+            })
+  
+          }
+          res.redirect("/api/manager/list_advertisers")
+  
+        })
+    }
 
-    };
-    await axios(config)
-      .then(function (res) {
+    
+  }catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
 
-        var data = res.data
-        var number_line = data.length
-
-        for (i = 0; i < number_line; i++) {
-
-          var advertiser_id = data[i].id
-          var advertiser_name = data[i].name
-
-          const advertiser = ModelAdvertiser.create({
-            advertiser_id,
-            advertiser_name,
-
-
-          })
-
-        }
-
-      })
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
   }
+
+ 
 }
 
 exports.advertiser_liste = async (req, res) => {
 
   //liste dans une vue tous les annonceurs
+  try {
+    var advertisers = await ModelAdvertiser.findAll({
+      attributes: ['advertiser_id', 'advertiser_name'],
+      order: [
+        ['advertiser_name', 'ASC']
+      ],
+    })
+  
+    res.render('manage/list_advertisers.ejs', {
+      advertisers: advertisers
+    });
+  
+  } catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
 
-  var advertisers = await ModelAdvertiser.findAll({
-    attributes: ['advertiser_id', 'advertiser_name'],
-    order: [
-      ['advertiser_name', 'ASC']
-    ],
-  })
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
+  }
 
-  res.render('manage/list_advertisers.ejs', {
-    advertisers: advertisers
-  });
-
+ 
 }
 
 exports.campaign_add = async (req, res) => {
 
   //ajoute les campagnes dans la bdd
 
-  if (req.session.user.role == 1) {
+  try {
+    if (req.session.user.role == 1) {
 
 
-    var config = {
-      method: 'GET',
-      url: 'https://manage.smartadserverapis.com/2044/campaigns/',
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
-      auth: {
-        username: dbApi.SMART_login,
-        password: dbApi.SMART_password
-      },
+      var config = {
+        method: 'GET',
+        url: 'https://manage.smartadserverapis.com/2044/campaigns/',
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        auth: {
+          username: dbApi.SMART_login,
+          password: dbApi.SMART_password
+        },
+  
+      };
+      await axios(config)
+        .then(function (res) {
+  
+          var data = res.data
+          var number_line = data.length
+  
+          for (i = 0; i < number_line; i++) {
+  
+  
+            var campaign_id = data[i].id
+            var campaign_name = data[i].name
+            var advertiser_id = data[i].advertiserId
+            var start_date = data[i].startDate
+            var end_date = data[i].endDate
+  
+            const campaigns = ModelCampaigns.create({
+              campaign_id,
+              campaign_name,
+              advertiser_id,
+              start_date,
+              end_date
+  
+  
+  
+            })
+          }
+  
+          res.redirect("/api/manager/list_advertisers")
+  
+        })
+  
+    }
+  } catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
 
-    };
-    await axios(config)
-      .then(function (res) {
-
-        var data = res.data
-        var number_line = data.length
-
-        for (i = 0; i < number_line; i++) {
-
-
-          var campaign_id = data[i].id
-          var campaign_name = data[i].name
-          var advertiser_id = data[i].advertiserId
-          var start_date = data[i].startDate
-          var end_date = data[i].endDate
-
-          const campaigns = ModelCampaigns.create({
-            campaign_id,
-            campaign_name,
-            advertiser_id,
-            start_date,
-            end_date
-
-
-
-          })
-        }
-
-      })
-
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
   }
+
+ 
 }
 
 exports.view_campagne = async (req, res) => {
 
   //affiche dans une vue les campagnes liée à annnonceur id
 
+  try {
+    
   var advertiser_id = req.params.id
 
   var campaign = await ModelCampaigns.findAll({
@@ -183,6 +226,16 @@ exports.view_campagne = async (req, res) => {
     campaign: campaign,
     advertiser_id: advertiser_id,
   });
+
+  } catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
+
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
+  }
 
 
 
@@ -205,7 +258,13 @@ exports.campagne_json = async (req, res) => {
       res.json(campagnes)
 
     })
-  } catch (error) {
+  } catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
 
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
   }
 }

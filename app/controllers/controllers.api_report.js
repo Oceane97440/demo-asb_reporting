@@ -1008,8 +1008,18 @@ exports.report = async (req, res) => {
 
 
 
-  } catch (error) {
-    console.log(error);
+  } catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
+
+    res.render("error.ejs",{
+      statusCoded:statusCoded,
+      advertiserid:advertiserid,
+      campaignid:campaignid,
+      startDate:startDate,
+    })
+
+
   }
 
 

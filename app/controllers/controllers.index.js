@@ -112,10 +112,14 @@ exports.signup_add = async (req, res) => {
 
 
 
-  } catch (error) {
-      res.status(400).json({
-          result: "error"
-      })
+  } catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
+
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
   }
 
 
@@ -169,9 +173,10 @@ exports.login_add = async (req, res) => {
               }
               return res.redirect('/api/utilisateur')
           }
-      } catch (error) {
+      } catch (error) { 
+        console.log(error)
 
-          res.redirect('/', )
+          res.redirect('/')
       }
   }
 }
@@ -196,8 +201,14 @@ exports.index = async (req, res) => {
 
 
 
-  } catch (error) {
-    console.log(error);
+  } catch (error) { 
+    console.log(error)
+    var statusCoded = error.response.status;
+
+    res.render("error_log.ejs",{
+      statusCoded:statusCoded,
+     
+    })
   }
 
 
