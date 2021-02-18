@@ -8,18 +8,58 @@
   <title>Page attente</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-<style>
-  .modal-open {
-    overflow: scroll!important;
-}
-</style>
-  </head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .modal-open {
+      overflow: scroll !important;
+    }
+  </style>
+</head>
+
 <body>
 
 
-  <a type="button" href="#" class="btn btn-primary">
-    Clique ici -> Générer le rapport
-  </a>
+  <div class="container  d-flex justify-content-center" >
+		<div class="row" >
+
+      <!--section 1-->
+
+      <div class="card" style="margin-top: 30px;"> 
+        <h1 class="card-title text-center">Création d'un rapport</h1>
+        <div class="card-body">
+  
+          <ul>
+            <li>Annonceur: <%=campaign.advertiser.advertiser_name%> </li>
+            <li>Campagne: <%=campaign.campaign_name%> </li>
+            <li>Date début campagne:<strong> <%=campaign.start_date%> </strong></li>
+            <li>Date de fin campagne:<strong> <%=campaign.end_date%> </strong></li>
+    
+    
+    
+          </ul>
+    
+          <a type="button" href="#" class="btn btn-danger btn-lg btn-block"><i class="fas fa-link"></i>
+            Générer votre rapport
+          </a>
+        
+    
+        </div>
+        <img src="/admin/photos/data_fiscal.jpg" class="card-img" style="width: 445px;">
+
+      </div>
+  
+	
+      <div>
+     
+    </div>
+
+    </div>
+  </div>
+  
+  
+
 
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -34,10 +74,11 @@
         </div>
         <div class="modal-body">
           Veuillez patienter, le rapport est en cours de traitement
-          <div class="d-flex justify-content-center"> 
-            <img   src="http://pa1.narvii.com/7491/d8b2fb62d9bc8d6c042da4fd6ad5be92a8d97825r1-200-200_00.gif" alt="log" style="width:200px;height:200px;">
+          <div class="d-flex justify-content-center">
+            <img src="http://pa1.narvii.com/7491/d8b2fb62d9bc8d6c042da4fd6ad5be92a8d97825r1-200-200_00.gif" alt="log"
+              style="width:200px;height:200px;">
           </div>
-           
+
         </div>
       </div>
     </div>
@@ -55,13 +96,13 @@
   </script>
   <script>
     //affiche la modal lors du clic du bouton
-     $('.btn').on('shown.bs.modal', function () {
-       $('#myInput').trigger('focus')
-     })
-    
+    $('.btn').on('shown.bs.modal', function () {
+      $('#myInput').trigger('focus')
+    })
+
 
     //lors du clic du bouton affectue la requête : GET :/api/reporting/:advertiserid/:campaignid
-    $('.btn').click(function() {
+    $('.btn').click(function () {
 
       $("#exampleModal").modal("show");
 
@@ -69,8 +110,8 @@
 
         method: "GET",
         url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>`,
-      
-        success:function(data){
+
+        success: function (data) {
           $("#exampleModal").hide(1000);
           $('body').html(data)
           console.log(data)

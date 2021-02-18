@@ -5,7 +5,7 @@
 <div id="card-forecast" class="card" style="margin-top: 30px;">
     <div class="card-header">
         <h1 class="card-title">
-            Données du Forecast
+            Annonceurs 
         </h1>
     </div>
 
@@ -34,8 +34,8 @@
 
                     <td><%=advertisers[i].advertiser_id%></td>
                     <td><%=advertisers[i].advertiser_name%></td>
-                    <td><strong><a class="btn btn-sm btn-warning"
-                                href="/api/manager/view_campagne/<%= advertisers[i].advertiser_id %>"></a>Voir les campagnes</strong></td>
+                    <td><a class="btn btn-sm btn-warning"
+                                href="/api/manager/view_campagne/<%= advertisers[i].advertiser_id %>">Voir les campagnes</a></td>
                 </tr>
 
                 <% } %>

@@ -5,7 +5,7 @@
 <div id="card-forecast" class="card" style="margin-top: 30px;">
     <div class="card-header">
         <h1 class="card-title">
-            Données du Forecast
+            Campagnes par Annonceurs
         </h1>
     </div>
 
@@ -26,6 +26,8 @@
                     <th scope="col">Annonceurs</th>
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
+                    <th scope="col">Lien du rapport</th>
+
 
                 </tr>
             </thead>
@@ -41,7 +43,7 @@
                     <td><%=campaign[i].start_date%></td>
                     <td><%=campaign[i].end_date%></td>
                     <td>
-                        <a href="/api/reporting/generate/<%=advertiser_id%>/<%=campaign[i].campaign_id%>/<%=campaign[i].start_date%>">lien</a>
+                        <a class="btn btn-sm btn-warning" href="/api/reporting/generate/<%=advertiser_id%>/<%=campaign[i].campaign_id%>/<%=campaign[i].start_date%>">Permalink</a>
                         </td>
 
 
