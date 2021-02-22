@@ -13,7 +13,7 @@
     href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     .modal-open {
-      overflow: none !important;
+      overflow: auto !important;
     }
   </style>
 </head>
@@ -112,7 +112,7 @@
         url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>`,
 
         success: function (data) {
-          $("#exampleModal").hide(1000);
+          $("#exampleModal").hide();
           $('body').html(data)
           console.log(data)
         }
