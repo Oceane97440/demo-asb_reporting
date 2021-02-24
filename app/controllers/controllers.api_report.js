@@ -90,22 +90,27 @@ exports.report = async (req, res) => {
  
   //fonctionnalité génération du rapport
 
-  let advertiserid = req.params.advertiserid;
+  //let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
-  let startDate = req.params.startdate
+  let startDate = req.params.startdate;
 
 
   try {
 
+
+
     //initialisation des requêtes
+
 
     var requestReporting = {
 
       "startDate": startDate,
 
-      "endDate": "CURRENT_DAY",
+      "endDate":"CURRENT_DAY+1",
 
-      "fields": [{
+      "fields": [
+        
+        {
           "CampaignStartDate": {}
         },
         {
@@ -114,7 +119,6 @@ exports.report = async (req, res) => {
         {
           "CampaignName": {}
         },
-
         {
           "InsertionName": {}
         },
@@ -151,11 +155,11 @@ exports.report = async (req, res) => {
 
         {
 
-          "AdvertiserId": [
+          // "AdvertiserId": [
 
-            advertiserid
+          //   advertiserid
 
-          ],
+          // ],
 
           "CampaignId": [
 
@@ -175,10 +179,10 @@ exports.report = async (req, res) => {
 
       "startDate": startDate,
 
-      "endDate": "CURRENT_DAY",
+      "endDate":"CURRENT_DAY+1",
 
       "fields": [
-
+       
         {
           "UniqueVisitors": {}
         }
@@ -186,7 +190,7 @@ exports.report = async (req, res) => {
       ],
 
       "filter": [{
-          "AdvertiserId": [advertiserid],
+          // "AdvertiserId": [advertiserid],
 
           "CampaignId": [campaignid]
 
@@ -198,14 +202,24 @@ exports.report = async (req, res) => {
 
 
     // 1) Requête POST 
-    let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting)
-    let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique)
+    let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting);
+    let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
 
     
 
     if (firstLink.data.taskId || threeLink.data.taskId) {
       var taskId = firstLink.data.taskId;
       var taskId2 = threeLink.data.taskId;
+
+     /*console.log(taskId)
+      console.log(requestReporting)
+
+      console.log('---------------')
+
+      console.log(taskId2)
+      console.log(requestVisitor_unique)
+      console.log('---------------')*/
+
       
      
 
@@ -228,7 +242,7 @@ exports.report = async (req, res) => {
           dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
           dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
-
+       
           
           //4) Traitement des données pour affiché dans le vue
 
@@ -488,7 +502,7 @@ exports.report = async (req, res) => {
 
 
 
-            var sm_linfo = new Array()
+          /*  var sm_linfo = new Array()
             var sm_linfo_android = new Array()
             var sm_linfo_ios = new Array()
             var sm_antenne = new Array()
@@ -648,7 +662,7 @@ exports.report = async (req, res) => {
                 SM_DTJ_HABILLAGE_clic.push(habillage_dtj_clic[i]);
               }
             }
-
+*/
 
             // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par format)
             const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -662,7 +676,6 @@ exports.report = async (req, res) => {
             var sommeMastheadClicks = mastheadClicks.reduce(reducer, 0);
             var sommeNativeImpression = nativeImpressions.reduce(reducer, 0);
             var sommeNativeClicks = nativeClicks.reduce(reducer, 0);
-
             var sommeVideoImpression = videoImpressions.reduce(reducer, 0);
             var sommeVideoClicks = videoClicks.reduce(reducer, 0);
 
@@ -670,7 +683,7 @@ exports.report = async (req, res) => {
 
 
 
-
+/*
             // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par site et format)
             var sommeHabillage_Impression_info = SM_LINFO_HABILLAGE_impression.reduce(reducer, 0);
             var sommeHabillageClicks_info = SM_LINFO_HABILLAGE_clic.reduce(reducer, 0);
@@ -684,7 +697,7 @@ exports.report = async (req, res) => {
             var sommeHabillageClicks_orange = SM_ORANGE_HABILLAGE_clic.reduce(reducer, 0);
             var sommeHabillage_Impression_dtj = SM_DTJ_HABILLAGE_impression.reduce(reducer, 0);
             var sommeHabillageClicks_dtj = SM_DTJ_HABILLAGE_clic.reduce(reducer, 0);
-
+*/
 
           }
 
@@ -728,7 +741,7 @@ exports.report = async (req, res) => {
 
 
 
-          //Calcule de taux clic par site
+  /*        //Calcule de taux clic par site
           CTR_habillage_linfo = (sommeHabillageClicks_info / sommeHabillage_Impression_info) * 100
           CTR_habillage_linfo = CTR_habillage_linfo.toFixed(2);
 
@@ -746,7 +759,7 @@ exports.report = async (req, res) => {
 
           CTR_habillage_dtj = (sommeHabillageClicks_dtj / sommeHabillage_Impression_dtj) * 100
           CTR_habillage_dtj = CTR_habillage_dtj.toFixed(2);
-
+*/
 
           //Calcul des chiffre global %Taux clic Repetition %VTR
           Taux_VTR = (TotalComplete / TotalImpressions) * 100
@@ -772,12 +785,12 @@ exports.report = async (req, res) => {
           sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI")
           sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI")
           sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI")
-          sommeHabillage_Impression_info = new Number(sommeHabillage_Impression_info).toLocaleString("fi-FI")
+         /* sommeHabillage_Impression_info = new Number(sommeHabillage_Impression_info).toLocaleString("fi-FI")
           sommeHabillage_Impression_infoIos = new Number(sommeHabillage_Impression_infoIos).toLocaleString("fi-FI")
           sommeHabillage_Impression_infoAndroid = new Number(sommeHabillage_Impression_infoAndroid).toLocaleString("fi-FI")
           sommeHabillage_Impression_antenne = new Number(sommeHabillage_Impression_antenne).toLocaleString("fi-FI")
           sommeHabillage_Impression_orange = new Number(sommeHabillage_Impression_orange).toLocaleString("fi-FI")
-          sommeHabillage_Impression_dtj = new Number(sommeHabillage_Impression_dtj).toLocaleString("fi-FI")
+          sommeHabillage_Impression_dtj = new Number(sommeHabillage_Impression_dtj).toLocaleString("fi-FI")*/
 
           var Campagne_name = CampaignName[0]
 
@@ -909,8 +922,7 @@ exports.report = async (req, res) => {
             sommeinterstitielImpressions,
             sommeinterstitielClics,
             interstitielCTR_clics
-            //interstitielRepetition,
-            //interstitielVU,
+            
 
           }
 
@@ -955,7 +967,7 @@ exports.report = async (req, res) => {
 
           }
 
-          var data_site = {
+/*          var data_site = {
             sommeHabillage_Impression_info,
             sommeHabillageClicks_info,
             CTR_habillage_linfo,
@@ -976,11 +988,11 @@ exports.report = async (req, res) => {
             CTR_habillage_dtj,
 
 
-          }
-
+        }
+*/
           res.render('reporting/data-reporting-template.ejs', {
             table: table,
-            data_site: data_site,
+            //data_site: data_site,
             data_habillage: data_habillage,
             data_interstitiel: data_interstitiel,
             data_masthead: data_masthead,

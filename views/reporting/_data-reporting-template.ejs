@@ -160,6 +160,110 @@
         </div>
         <hr />
 
+         if(data_site.sommeHabillage_Impression_info > 0  ) { %>
+
+        <div class="row p-3 m-5">
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par Site / HABILLAGE </h3>
+
+
+            <table class="table" id="table_campaigns">
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th scope="col">Sites</th>
+                        <th scope="col">Impressions</th>
+                        <th scope="col">Clics</th>
+                        <th scope="col">Taux de clics</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <%if(data_site.sommeHabillage_Impression_info  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_LINFO.re</td>
+                        <td><%=data_site.sommeHabillage_Impression_info%></td>
+                        <td><%=data_site.sommeHabillageClicks_info%></td>
+                        <td><%=data_site.CTR_habillage_linfo%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_infoIos  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_LINFO-IOS</td>
+                        <td><%=data_site.sommeHabillage_Impression_infoIos%></td>
+                        <td><%=data_site.sommeHabillageClicks_infoIos%></td>
+                        <td><%=data_site.CTR_habillage_linfoios%>%</td>
+
+                    </tr>
+                    <%}%> 
+                        <%if(data_site.sommeHabillage_Impression_infoAndroid  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_LINFO-ANDROID</td>
+                        <td><%=data_site.sommeHabillage_Impression_infoAndroid%></td>
+                        <td><%=data_site.sommeHabillageClicks_infoAndroid%></td>
+                        <td><%=data_site.CTR_habillage_linfoandroid%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_antenne  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_ANTENNEREUNION</td>
+                        <td><%=data_site.sommeHabillage_Impression_antenne%></td>
+                        <td><%=data_site.sommeHabillageClicks_antenne%></td>
+                        <td><%=data_site.CTR_habillage_antenne%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_orange  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_ORANGE</td>
+                        <td><%=data_site.sommeHabillage_Impression_orange%></td>
+                        <td><%=data_site.sommeHabillageClicks_orange%></td>
+                        <td><%=data_site.CTR_habillage_orange%>%</td>
+
+                    </tr>
+                    <%}%> 
+                    <%if(data_site.sommeHabillage_Impression_dtj  !== '0' ) {%>
+
+                    <tr>
+
+                        <td>SM_DOMTOMJOB</td>
+                        <td><%=data_site.sommeHabillage_Impression_dtj%></td>
+                        <td><%=data_site.sommeHabillageClicks_dtj%></td>
+                        <td><%=data_site.CTR_habillage_dtj%>%</td>
+
+                    </tr>
+                    <%}%> 
+                  
+                    <tfoot>
+                    <tr>
+                    <td><strong>Total</strong></td>
+                    <td><%=data_habillage.sommehabillageImpressions%></td>
+                    <td><%=data_habillage.sommehabillageClics%></td>
+                    <td><%=data_habillage.habillageCTR_clics%></td>
+
+                    </tr>
+                    </tfoot>
+                </tbody>
+
+            </table>
+
+
+        </div>
+        <hr />
+        <% }
+
+
         <% if(data_habillage.habillageImpressions.length > 0  ) { %>
         <div class="row p-3 m-5" id="table_uu">
             <h3 class="title"><i class="fas fa-chart-line"></i> Par HABILLAGE / par sites</h3>

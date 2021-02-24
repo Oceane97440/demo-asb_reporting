@@ -15,50 +15,70 @@
     .modal-open {
       overflow: auto !important;
     }
+
+    body {
+      background: #eee;
+      font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif
+    }
+
+    hr {
+      margin-top: 10px;
+      border-color: #ddd;
+    }
+/* 
+    .list-group-flush {
+      width: 100%
+    } */
+
+    /* .list-group-flush li strong {
+      width: 20%;
+      display: inline-block
+    } */
   </style>
 </head>
 
 <body>
 
 
-  <div class="container  d-flex justify-content-center" >
-		<div class="row" >
+  <div class="container  d-flex justify-content-center">
+    <div class="row">
 
       <!--section 1-->
 
-      <div class="card" style="margin-top: 30px;"> 
-        <h1 class="card-title text-center">Création d'un rapport</h1>
+      <div class="card" style="margin-top: 30px;">
+        <h1 class="card-title text-center">Rapport campagne</h1>
         <div class="card-body">
-  
-          <ul>
-            <li>Annonceur: <%=campaign.advertiser.advertiser_name%> </li>
-            <li>Campagne: <%=campaign.campaign_name%> </li>
-            <li>Date début campagne:<strong> <%=campaign.start_date%> </strong></li>
-            <li>Date de fin campagne:<strong> <%=campaign.end_date%> </strong></li>
-    
-    
-    
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Nom de la annonceur</strong> : <%=campaign.advertiser.advertiser_name%> </li>
+            <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=campaign.campaign_name%></li>
+            <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=campaign.start_date%> au
+              <%=campaign.end_date%></li>
+
           </ul>
-    
-          <a type="button" href="#" class="btn btn-danger btn-lg btn-block"><i class="fas fa-link"></i>
-            Générer votre rapport
-          </a>
         
-    
+
+          <a type="button" href="#" class="btn btn-danger btn-lg btn-block"><i class="fas fa-link"></i>
+            Demander votre rapport
+          </a>
+
+
         </div>
-        <img src="/admin/photos/data_fiscal.jpg" class="card-img" style="width: 445px;">
+        <div class="d-flex justify-content-center">
+          <img src="/admin/photos/data_fiscal.jpg" class="card-img" style="width: 445px;">
+        </div>
+      
 
       </div>
-  
-	
+
+
       <div>
-     
-    </div>
+
+      </div>
 
     </div>
   </div>
-  
-  
+
+
 
 
   <!-- Modal -->
