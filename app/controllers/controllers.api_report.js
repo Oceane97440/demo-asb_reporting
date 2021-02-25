@@ -2,8 +2,8 @@
 const http = require('http');
 const https = require('https');
 const fs = require('fs')
-
-
+var LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./scratch');
 
 const {
   Op
@@ -33,6 +33,23 @@ const AxiosFunction = require('../functions/functions.axios');
 // Initialise les models
 const ModelAdvertiser = require("../models/models.advertiser")
 const ModelCampaigns = require("../models/models.campaigns")
+
+exports.test = async (req, res) => {
+
+
+
+
+  var taskId = "541A4D44-1053-4C1D-9416-8E76527074AC"
+
+
+  localStorage.setItem('taskid', taskId)
+  console.log(localStorage.getItem('taskid'))
+
+
+
+
+}
+
 
 
 
@@ -64,7 +81,7 @@ exports.generate = async (req, res) => {
     attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
 
     where: {
-      campaign_id :req.params.campaignid,
+      campaign_id: req.params.campaignid,
       advertiser_id: req.params.advertiserid
 
     },
@@ -74,11 +91,11 @@ exports.generate = async (req, res) => {
 
   })
 
-  res.render("reporting/generate.ejs",{
-    advertiserid:advertiserid,
-    campaignid:campaignid,
-    startDate:startDate,
-    campaign:campaign
+  res.render("reporting/generate.ejs", {
+    advertiserid: advertiserid,
+    campaignid: campaignid,
+    startDate: startDate,
+    campaign: campaign
   })
 
 
@@ -87,7 +104,7 @@ exports.generate = async (req, res) => {
 }
 
 exports.report = async (req, res) => {
- 
+
   //fonctionnalité génération du rapport
 
   //let advertiserid = req.params.advertiserid;
@@ -106,10 +123,10 @@ exports.report = async (req, res) => {
 
       "startDate": startDate,
 
-      "endDate":"CURRENT_DAY+1",
+      "endDate": "CURRENT_DAY+1",
 
       "fields": [
-        
+
         {
           "CampaignStartDate": {}
         },
@@ -179,10 +196,10 @@ exports.report = async (req, res) => {
 
       "startDate": startDate,
 
-      "endDate":"CURRENT_DAY+1",
+      "endDate": "CURRENT_DAY+1",
 
       "fields": [
-       
+
         {
           "UniqueVisitors": {}
         }
@@ -205,23 +222,23 @@ exports.report = async (req, res) => {
     let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting);
     let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
 
-    
+
 
     if (firstLink.data.taskId || threeLink.data.taskId) {
       var taskId = firstLink.data.taskId;
       var taskId2 = threeLink.data.taskId;
 
-     /*console.log(taskId)
-      console.log(requestReporting)
+      /*console.log(taskId)
+       console.log(requestReporting)
 
-      console.log('---------------')
+       console.log('---------------')
 
-      console.log(taskId2)
-      console.log(requestVisitor_unique)
-      console.log('---------------')*/
+       console.log(taskId2)
+       console.log(requestVisitor_unique)
+       console.log('---------------')*/
 
-      
-     
+
+
 
       let requête1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
       let requête2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
@@ -234,7 +251,9 @@ exports.report = async (req, res) => {
         let secondLink = await AxiosFunction.getReportingData('GET', requête1, '');
 
 
-        if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0')) {
+        if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
+          (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
+        ) {
 
           clearInterval(timerFile);
 
@@ -242,8 +261,8 @@ exports.report = async (req, res) => {
           dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
           dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
-       
-          
+
+
           //4) Traitement des données pour affiché dans le vue
 
           //traitement des resultat requête 2
@@ -502,7 +521,7 @@ exports.report = async (req, res) => {
 
 
 
-          /*  var sm_linfo = new Array()
+            /*  var sm_linfo = new Array()
             var sm_linfo_android = new Array()
             var sm_linfo_ios = new Array()
             var sm_antenne = new Array()
@@ -683,21 +702,21 @@ exports.report = async (req, res) => {
 
 
 
-/*
-            // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par site et format)
-            var sommeHabillage_Impression_info = SM_LINFO_HABILLAGE_impression.reduce(reducer, 0);
-            var sommeHabillageClicks_info = SM_LINFO_HABILLAGE_clic.reduce(reducer, 0);
-            var sommeHabillage_Impression_infoIos = SM_LINFO_IOS_HABILLAGE_impression.reduce(reducer, 0);
-            var sommeHabillageClicks_infoIos = SM_LINFO_IOS_HABILLAGE_clic.reduce(reducer, 0);
-            var sommeHabillage_Impression_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_impression.reduce(reducer, 0);
-            var sommeHabillageClicks_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_clic.reduce(reducer, 0);
-            var sommeHabillage_Impression_antenne = SM_ANTENNE_HABILLAGE_impression.reduce(reducer, 0);
-            var sommeHabillageClicks_antenne = SM_ANTENNE_HABILLAGE_clic.reduce(reducer, 0);
-            var sommeHabillage_Impression_orange = SM_ORANGE_HABILLAGE_impression.reduce(reducer, 0);
-            var sommeHabillageClicks_orange = SM_ORANGE_HABILLAGE_clic.reduce(reducer, 0);
-            var sommeHabillage_Impression_dtj = SM_DTJ_HABILLAGE_impression.reduce(reducer, 0);
-            var sommeHabillageClicks_dtj = SM_DTJ_HABILLAGE_clic.reduce(reducer, 0);
-*/
+            /*
+                        // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par site et format)
+                        var sommeHabillage_Impression_info = SM_LINFO_HABILLAGE_impression.reduce(reducer, 0);
+                        var sommeHabillageClicks_info = SM_LINFO_HABILLAGE_clic.reduce(reducer, 0);
+                        var sommeHabillage_Impression_infoIos = SM_LINFO_IOS_HABILLAGE_impression.reduce(reducer, 0);
+                        var sommeHabillageClicks_infoIos = SM_LINFO_IOS_HABILLAGE_clic.reduce(reducer, 0);
+                        var sommeHabillage_Impression_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_impression.reduce(reducer, 0);
+                        var sommeHabillageClicks_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_clic.reduce(reducer, 0);
+                        var sommeHabillage_Impression_antenne = SM_ANTENNE_HABILLAGE_impression.reduce(reducer, 0);
+                        var sommeHabillageClicks_antenne = SM_ANTENNE_HABILLAGE_clic.reduce(reducer, 0);
+                        var sommeHabillage_Impression_orange = SM_ORANGE_HABILLAGE_impression.reduce(reducer, 0);
+                        var sommeHabillageClicks_orange = SM_ORANGE_HABILLAGE_clic.reduce(reducer, 0);
+                        var sommeHabillage_Impression_dtj = SM_DTJ_HABILLAGE_impression.reduce(reducer, 0);
+                        var sommeHabillageClicks_dtj = SM_DTJ_HABILLAGE_clic.reduce(reducer, 0);
+            */
 
           }
 
@@ -741,7 +760,7 @@ exports.report = async (req, res) => {
 
 
 
-  /*        //Calcule de taux clic par site
+          /*        //Calcule de taux clic par site
           CTR_habillage_linfo = (sommeHabillageClicks_info / sommeHabillage_Impression_info) * 100
           CTR_habillage_linfo = CTR_habillage_linfo.toFixed(2);
 
@@ -785,12 +804,12 @@ exports.report = async (req, res) => {
           sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI")
           sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI")
           sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI")
-         /* sommeHabillage_Impression_info = new Number(sommeHabillage_Impression_info).toLocaleString("fi-FI")
-          sommeHabillage_Impression_infoIos = new Number(sommeHabillage_Impression_infoIos).toLocaleString("fi-FI")
-          sommeHabillage_Impression_infoAndroid = new Number(sommeHabillage_Impression_infoAndroid).toLocaleString("fi-FI")
-          sommeHabillage_Impression_antenne = new Number(sommeHabillage_Impression_antenne).toLocaleString("fi-FI")
-          sommeHabillage_Impression_orange = new Number(sommeHabillage_Impression_orange).toLocaleString("fi-FI")
-          sommeHabillage_Impression_dtj = new Number(sommeHabillage_Impression_dtj).toLocaleString("fi-FI")*/
+          /* sommeHabillage_Impression_info = new Number(sommeHabillage_Impression_info).toLocaleString("fi-FI")
+           sommeHabillage_Impression_infoIos = new Number(sommeHabillage_Impression_infoIos).toLocaleString("fi-FI")
+           sommeHabillage_Impression_infoAndroid = new Number(sommeHabillage_Impression_infoAndroid).toLocaleString("fi-FI")
+           sommeHabillage_Impression_antenne = new Number(sommeHabillage_Impression_antenne).toLocaleString("fi-FI")
+           sommeHabillage_Impression_orange = new Number(sommeHabillage_Impression_orange).toLocaleString("fi-FI")
+           sommeHabillage_Impression_dtj = new Number(sommeHabillage_Impression_dtj).toLocaleString("fi-FI")*/
 
           var Campagne_name = CampaignName[0]
 
@@ -922,7 +941,7 @@ exports.report = async (req, res) => {
             sommeinterstitielImpressions,
             sommeinterstitielClics,
             interstitielCTR_clics
-            
+
 
           }
 
@@ -967,32 +986,71 @@ exports.report = async (req, res) => {
 
           }
 
-/*          var data_site = {
-            sommeHabillage_Impression_info,
-            sommeHabillageClicks_info,
-            CTR_habillage_linfo,
-            sommeHabillage_Impression_infoIos,
-            sommeHabillageClicks_infoIos,
-            CTR_habillage_linfoios,
-            sommeHabillage_Impression_infoAndroid,
-            sommeHabillageClicks_infoAndroid,
-            CTR_habillage_linfoandroid,
-            sommeHabillage_Impression_antenne,
-            sommeHabillageClicks_antenne,
-            CTR_habillage_antenne,
-            sommeHabillage_Impression_orange,
-            sommeHabillageClicks_orange,
-            CTR_habillage_orange,
-            sommeHabillage_Impression_dtj,
-            sommeHabillageClicks_dtj,
-            CTR_habillage_dtj,
+          /*          var data_site = {
+                      sommeHabillage_Impression_info,
+                      sommeHabillageClicks_info,
+                      CTR_habillage_linfo,
+                      sommeHabillage_Impression_infoIos,
+                      sommeHabillageClicks_infoIos,
+                      CTR_habillage_linfoios,
+                      sommeHabillage_Impression_infoAndroid,
+                      sommeHabillageClicks_infoAndroid,
+                      CTR_habillage_linfoandroid,
+                      sommeHabillage_Impression_antenne,
+                      sommeHabillageClicks_antenne,
+                      CTR_habillage_antenne,
+                      sommeHabillage_Impression_orange,
+                      sommeHabillageClicks_orange,
+                      CTR_habillage_orange,
+                      sommeHabillage_Impression_dtj,
+                      sommeHabillageClicks_dtj,
+                      CTR_habillage_dtj,
 
 
-        }
-*/
+                  }
+          */
+
+
+
+          var testObject = {
+            'campaign_id': campaignid,
+            'table': table,
+            'data_habillage': data_habillage,
+            'data_interstitiel': data_interstitiel,
+            'data_masthead': data_masthead,
+            'data_grand_angle': data_grand_angle,
+            'data_native': data_native,
+            'data_video': data_video
+
+          };
+          console.log(testObject)
+
+          //var campagneId = "1856225"
+          const birthday = new Date();
+          const date = birthday.getDate();
+          var mouth = birthday.getMonth() + 1
+          const year = birthday.getFullYear();
+          var hours = birthday.getHours();
+          var minute = birthday.getMinutes();
+
+          console.log(date);
+          console.log(year);
+          console.log(mouth);
+          console.log(hours);
+          console.log(minute);
+
+          var date_libele = date + '' + mouth + '' + year + '' + hours + '' + minute
+          console.log(date_libele)
+
+          // Put the object into storage
+          localStorage.setItem('campagneId' + campaignid + '-' + date_libele, JSON.stringify(testObject));
+
+
+
+
+
           res.render('reporting/data-reporting-template.ejs', {
             table: table,
-            //data_site: data_site,
             data_habillage: data_habillage,
             data_interstitiel: data_interstitiel,
             data_masthead: data_masthead,
@@ -1020,15 +1078,15 @@ exports.report = async (req, res) => {
 
 
 
-  } catch (error) { 
+  } catch (error) {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-      advertiserid:advertiserid,
-      campaignid:campaignid,
-      startDate:startDate,
+    res.render("error.ejs", {
+      statusCoded: statusCoded,
+      advertiserid: advertiserid,
+      campaignid: campaignid,
+      startDate: startDate,
     })
 
 
@@ -1036,15 +1094,38 @@ exports.report = async (req, res) => {
 
 
 
+}
 
-  /* var interstitielRepetition = []
+exports.report_view = async (req, res) => {
 
-   for (let i = 0; i < interstitielImpressions.length; i++) {
-     if (interstitielImpressions[i] != '') {
-       var total_repetition = interstitielImpressions[i] / interstitielVU[i]
-       interstitielRepetition.push(total_repetition.toFixed(2))
-     }
-   }*/
+  // Retrieve the object from storage
+  var data_report = localStorage.getItem('testObject');
 
+  var data_report_view = JSON.parse(data_report);
+
+  var campaignid = data_report_view.campaignid
+  var table = data_report_view.table
+  var data_habillage = data_report_view.data_habillage
+  var data_interstitiel = data_report_view.data_interstitiel
+  var data_masthead = data_report_view.data_masthead
+  var data_grand_angle = data_report_view.data_grand_angle
+  var data_native = data_report_view.data_native
+  var data_video = data_report_view.data_video
+
+  console.log(campaignid)
+
+
+
+
+
+  res.render('reporting/data-reporting-template.ejs', {
+    table: table,
+    data_habillage: data_habillage,
+    data_interstitiel: data_interstitiel,
+    data_masthead: data_masthead,
+    data_grand_angle: data_grand_angle,
+    data_native: data_native,
+    data_video: data_video
+  })
 
 }
