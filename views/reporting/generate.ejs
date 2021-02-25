@@ -25,7 +25,8 @@
       margin-top: 10px;
       border-color: #ddd;
     }
-/* 
+
+    /* 
     .list-group-flush {
       width: 100%
     } */
@@ -49,13 +50,14 @@
         <h1 class="card-title text-center">Rapport campagne</h1>
         <div class="card-body">
           <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Nom de la annonceur</strong> : <%=campaign.advertiser.advertiser_name%> </li>
+            <li class="list-group-item"><strong>Nom de la annonceur</strong> : <%=campaign.advertiser.advertiser_name%>
+            </li>
             <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=campaign.campaign_name%></li>
             <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=campaign.start_date%> au
               <%=campaign.end_date%></li>
 
           </ul>
-        
+
 
           <a type="button" href="#" class="btn btn-danger btn-lg btn-block"><i class="fas fa-link"></i>
             Demander votre rapport
@@ -66,7 +68,7 @@
         <div class="d-flex justify-content-center">
           <img src="/admin/photos/data_fiscal.jpg" class="card-img" style="width: 445px;">
         </div>
-      
+
 
       </div>
 
@@ -115,17 +117,10 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
   </script>
   <script>
-    //affiche la modal lors du clic du bouton
-    $('.btn').on('shown.bs.modal', function () {
-      $('#myInput').trigger('focus')
-    })
+    $(document).ready(function () {
 
 
-    //lors du clic du bouton affectue la requête : GET :/api/reporting/:advertiserid/:campaignid
-    $('.btn').click(function () {
-
-      $("#exampleModal").modal("show");
-
+      //appel ajax ici
       $.ajax({
 
         method: "GET",
@@ -139,7 +134,33 @@
 
       })
 
+      //affiche la modal lors du clic du bouton
+      $('.btn').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+      })
+
+
+      //lors du clic du bouton affectue la requête : GET :/api/reporting/:advertiserid/:campaignid
+      $('.btn').click(function () {
+
+        $("#exampleModal").modal("show");
+
+        $.ajax({
+
+          method: "GET",
+          url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>`,
+
+          success: function (data) {
+            $("#exampleModal").hide();
+            $('body').html(data)
+            console.log(data)
+          }
+
+        })
+
+      })
     })
+ //attention version en ligne (en tête)
   </script>
 </body>
 
