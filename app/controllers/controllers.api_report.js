@@ -36,41 +36,95 @@ const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
 
+  /*
+    function function_date_now(TimeStampOne) {
+      let date = new Date(TimeStampOne);
+      return ('0' + date.getDate()).slice(-2) + '' + ('0' + (date.getMonth() + 1)).slice(-2) + '' + date.getFullYear() + '' + ('0' + date.getHours()).slice(-2) + '' + ('0' + date.getMinutes()).slice(-2);
+    }
+    const date_now = Date.now()
+    const date_create = function_date_now(date_now);
+    console.log(date_create)
 
-  function function_date_now(TimeStampOne) {
-    let date = new Date(TimeStampOne);
-    return ('0' + date.getDate()).slice(-2) + '' + ('0' + (date.getMonth() + 1)).slice(-2) + '' + date.getFullYear() + '' + ('0' + date.getHours()).slice(-2) + '' + ('0' + date.getMinutes()).slice(-2);
-  }
-  const date_now = Date.now()
-  const date_create = function_date_now(date_now);
-  console.log(date_create)
+    var today = new Date();
+    var tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 29);
+    tomorrow.toLocaleDateString();
+    console.log(tomorrow)
 
-  var today = new Date();
-  var tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 29);
-  tomorrow.toLocaleDateString();
-  console.log(tomorrow)
+    const date_expire = tomorrow.getDate();
+    const mouth_expire = tomorrow.getMonth() + 1
+    const year_expire = tomorrow.getFullYear();
+    const hours_expire = tomorrow.getHours();
+    const minute_expire = tomorrow.getMinutes();
+    console.log(date_expire)
 
-  const date_expire = tomorrow.getDate();
-  const mouth_expire = tomorrow.getMonth() + 1
-  const year_expire = tomorrow.getFullYear();
-  const hours_expire = tomorrow.getHours();
-  const minute_expire = tomorrow.getMinutes();
-  console.log(date_expire)
-
-  var cat = localStorage.getItem('myCat');
-  console.log(cat)
+    var cat = localStorage.getItem('myCat');
+    console.log(cat)*/
   /*var taskId = "541A4D44-1053-4C1D-9416-8E76527074AC"
 
 
   localStorage.setItem('taskid', taskId)
   console.log(localStorage.getItem('taskid'))*/
 
+  /*var ttl = 5000 //7200 2h
+  const now = new Date()
+  console.log(now.getTime())
+  console.log(now.getTime() + ttl)
+
+  // `item` is an object which contains the original value
+  // as well as the time when it's supposed to expire
+  const item = {
+    value: 'test',
+    expiry: now.getTime() + ttl,
+  }
+  localStorage.setItem('Test_local', JSON.stringify(item))
+
+  /* if (now.getTime() > item.expiry) {
+      // If the item is expired, delete the item from storage
+      // and return null
+      localStorage.removeItem('Test_local')
+      console.log("Local storage clear")
+    }*/
+
+  const now = new Date()
+  var timestamp_now = now.getTime()
+  var timestamp_expire = now.setHours(now.getHours() + 2);
+  console.log('timestamp create', timestamp_now)
+  console.log('timestamp last', timestamp_expire)
+
+  var date = new Date(timestamp_now * 1000);
+  console.log(date)
+  var date2 = new Date(timestamp_expire * 1000);
+  console.log(date2)
+
+  /*setTimeout(async () => {
+    console.log("conteur est lancé")
+
+
+   if (now.getTime() > item.expiry) {
+    // If the item is expired, delete the item from storage
+    localStorage.removeItem('Test_local')
+    console.log("Local storage clear")
+    }
+
+  }, 5000)*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 }
-
 
 
 
@@ -135,47 +189,73 @@ exports.report = async (req, res) => {
 
   try {
 
-    var ls_campaignid = "1856210"
-    var ls_date_create = "1614251052762"
+    
+
+    var data_localStorage = localStorage.getItem('campagneId' + '-' + campaignid);
 
 
-    //localStorage.setItem('campagneId' + campaignId + '-' + date_create, JSON.stringify(testObject));
-   
-
-    var data_localStorage = localStorage.getItem('campagneId'+ ls_campaignid + '-' + ls_date_create);
-
+    //si le localStorage exsite -> affiche la data du localstorage
     if (data_localStorage) {
 
       var data_report_view = JSON.parse(data_localStorage);
 
-      var dts_campaignid = data_report_view.ls_campaignid
-      var dts_table = data_report_view.table
-      var dts_data_habillage = data_report_view.data_habillage
-      var dts_data_interstitiel = data_report_view.data_interstitiel
-      var dts_data_masthead = data_report_view.data_masthead
-      var dts_data_grand_angle = data_report_view.data_grand_angle
-      var dts_data_native = data_report_view.data_native
-      var dts_data_video = data_report_view.data_video
+      var date_expire = data_report_view.date_expiry
 
-      console.log(dts_campaignid)
+      //si item < à 2h on affiche le local_storage
 
-      res.render('reporting/data-reporting-template.ejs', {
-        table: dts_table,
-        data_habillage: dts_data_habillage,
-        data_interstitiel:  dts_data_interstitiel,
-        data_masthead:  dts_data_masthead,
-        data_grand_angle:  dts_data_grand_angle,
-        data_native:  dts_data_native,
-        data_video:  dts_data_video,
-        iscache:true
-      });
+      //date aujourd'hui en timestamp
+      const now = new Date()
+      var timestamp_now = now.getTime()
+      console.log('Time_now:' + timestamp_now)
+
+      //date expiration du rapport en timestamp
+      console.log('Time_expire:' + date_expire)
+
+      //si la date expiration est < à la date du jour on garde la cache
+      if (timestamp_now > date_expire) {
+
+
+        console.log('cache');
+
+         //interval de temps <2h
+
+      
+
+
+      } else {
+         console.log('expiration relance api'); }
+
+         var dts_campaignid = data_report_view.ls_campaignid
+         var dts_table = data_report_view.table
+         var dts_data_habillage = data_report_view.data_habillage
+         var dts_data_interstitiel = data_report_view.data_interstitiel
+         var dts_data_masthead = data_report_view.data_masthead
+         var dts_data_grand_angle = data_report_view.data_grand_angle
+         var dts_data_native = data_report_view.data_native
+         var dts_data_video = data_report_view.data_video
+   
+         //console.log(dts_campaignid)
+   
+         res.render('reporting/data-reporting-template.ejs', {
+           table: dts_table,
+           data_habillage: dts_data_habillage,
+           data_interstitiel: dts_data_interstitiel,
+           data_masthead: dts_data_masthead,
+           data_grand_angle: dts_data_grand_angle,
+           data_native: dts_data_native,
+           data_video: dts_data_video,
+           iscache: true
+         });
+      
+   
+
+
+
+
+     
 
 
     }else{
-
-
-
-    
 
   
 
@@ -1074,10 +1154,15 @@ exports.report = async (req, res) => {
                   }
           */
 
-
+          // var ttl = 7200 //2h
+          const now = new Date()
+          var timestamp_now = now.getTime()
+          var timestamp_expire = now.setHours(now.getHours() + 2);
 
           var testObject = {
             'campaign_id': campaignid,
+            'date_now': timestamp_now,
+            'date_expiry': timestamp_expire,
             'table': table,
             'data_habillage': data_habillage,
             'data_interstitiel': data_interstitiel,
@@ -1087,38 +1172,9 @@ exports.report = async (req, res) => {
             'data_video': data_video
 
           };
-          console.log(testObject)
-
-          /*  function function_date_now(TimeStampOne) {
-            let date = new Date(TimeStampOne);
-            return ('0' + date.getDate()).slice(-2) + '' + ('0' + (date.getMonth() + 1)).slice(-2) + '' + date.getFullYear() + '' + ('0' + date.getHours()).slice(-2) + '' + ('0' + date.getMinutes()).slice(-2);
-        }
-          const date_now = Date.now()
-          const date_create = function_date_now(date_now);
-          console.log(date_create)
-        
-      
-         const date_last = new Date();
-          date_last.setDate(date_last.getDate() + 29);
-          console.log(date_last)
-
-          const date_expire = date_last.getDate();
-          const mouth_expire = date_last.getMonth() + 1
-          const year_expire = date_last.getFullYear();
-          const hours_expire = date_last.getHours();
-          const minute_expire = date_last.getMinutes();
-
-          const date_last_libele = date_expire + '' + mouth_expire + '' + year_expire + '' + hours_expire + '' + minute_expire
-          // Put the object into storage
-          localStorage.setItem('campagneId' + campaignid + '-' + date_create+ '-' + date_last_libele, JSON.stringify(testObject));
-*/
 
 
-          var campaignId = "1856210"
-          var date_create = "1614251052762"
-
-
-          localStorage.setItem('campagneId' + campaignId + '-' + date_create, JSON.stringify(testObject));
+          localStorage.setItem('campagneId' + '-' + campaignid, JSON.stringify(testObject));
 
 
           res.render('reporting/data-reporting-template.ejs', {
@@ -1147,9 +1203,9 @@ exports.report = async (req, res) => {
       }, 60000);
     }
 
-      
+  }
 
-  }//fermeture condition localstorage
+
 
   } catch (error) {
     console.log(error)
@@ -1185,7 +1241,7 @@ exports.report_view = async (req, res) => {
   var data_native = data_report_view.data_native
   var data_video = data_report_view.data_video
 
-  console.log(campaignid)
+  //console.log(campaignid)
 
 
 
