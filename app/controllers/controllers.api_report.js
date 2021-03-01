@@ -90,14 +90,14 @@ exports.test = async (req, res) => {
 
   });
 
-/*
+  /*
 
-  console.log(habillage)
-  console.log(interstitiel)
-  console.log(grand_angle)
-  console.log(masthead)
-  console.log(native)
-  console.log(video)*/
+    console.log(habillage)
+    console.log(interstitiel)
+    console.log(grand_angle)
+    console.log(masthead)
+    console.log(native)
+    console.log(video)*/
 
 
   var sm_linfo = new Array()
@@ -313,7 +313,9 @@ exports.report = async (req, res) => {
           {
             "FormatName": {}
           },
-
+          {
+            "SiteId": {}
+          },
           {
             "SiteName": {}
           },
@@ -458,6 +460,7 @@ exports.report = async (req, res) => {
             const CampaignName = []
             const InsertionName = []
             const FormatName = []
+            const SiteId = []
             const SiteName = []
             const Impressions = []
             const ClickRate = []
@@ -476,11 +479,12 @@ exports.report = async (req, res) => {
               CampaignName.push(line[2]);
               InsertionName.push(line[3]);
               FormatName.push(line[4])
-              SiteName.push(line[5])
-              Impressions.push(line[6]);
-              ClickRate.push(line[7]);
-              Clicks.push(line[8]);
-              Complete.push(line[9]);
+              SiteId.push(line[5])
+              SiteName.push(line[6])
+              Impressions.push(line[7]);
+              ClickRate.push(line[8]);
+              Clicks.push(line[9]);
+              Complete.push(line[10]);
 
 
             }
@@ -506,6 +510,7 @@ exports.report = async (req, res) => {
             const Array_Impression = [];
             const Array_Clicks = [];
             const Array_InsertionName = [];
+            const Array_SiteID = [];
             const Array_SiteName = [];
             const Array_FormatName = [];
             const Array_ClickRate = [];
@@ -520,6 +525,7 @@ exports.report = async (req, res) => {
                 Array_Impression.push(Impressions[i]);
                 Array_Clicks.push(Clicks[i]);
                 Array_InsertionName.push(InsertionName[i]);
+                Array_SiteID.push(SiteId[i]);
                 Array_SiteName.push(SiteName[i]);
                 Array_FormatName.push(FormatName[i]);
                 Array_ClickRate.push(ClickRate[i]);
@@ -583,25 +589,25 @@ exports.report = async (req, res) => {
               //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
               Array_InsertionName.filter(function (word, index) {
 
-                if (word.match(/INTERSTITIEL/gi)) {
+                if (word.match(/^\INTERSTITIEL{1}/igm)) {
                   interstitiel.push(index);
                 }
-                if (word.match(/HABILLAGE/gi)) {
+                if (word.match(/^\HABILLAGE{1}/igm)) {
                   habillage.push(index);
                 }
-                if (word.match(/MASTHEAD/gi)) {
+                if (word.match(/^\MASTHEAD{1}/igm)) {
                   masthead.push(index);
                 }
-                if (word.match(/GRAND ANGLE/gi)) {
+                if (word.match(/^\GRAND ANGLE{1}/igm)) {
                   grand_angle.push(index);
                 }
-                if (word.match(/NATIVE/gi)) {
+                if (word.match(/^\NATIVE{1}/igm)) {
                   native.push(index);
                 }
-                if (word.match(/PREROLL/gi)) {
+                if (word.match(/^\PREROLL{1}/gim)) {
                   video.push(index);
                 }
-                if (word.match(/MIDROLL/gi)) {
+                if (word.match(/^\MIDROLL{1}/gim)) {
                   video.push(index);
                 }
 
@@ -691,65 +697,124 @@ exports.report = async (req, res) => {
 
 
 
-             var sm_linfo = new Array()
-            var sm_linfo_android = new Array()
-            var sm_linfo_ios = new Array()
-            var sm_antenne = new Array()
-            var sm_dtj = new Array()
-            var sm_orange = new Array()
-
-
-
-
-         /*   var habillage_linfo_impression = new Array()
-            var habillage_linfo_clic = new Array()
-            var habillage_dtj_impression = new Array()
-            var habillage_dtj_clic = new Array()
-            var habillage_antenne_impression = new Array()
-            var habillage_antenne_clic = new Array()
-            var habillage_infoIos_impression = new Array()
-            var habillage_infoIos_clic = new Array()
-            var habillage_infoAndroid_impression = new Array()
-            var habillage_infoAndroid_clic = new Array()
-            var habillage_orange_impression = new Array()
-            var habillage_orange_clic = new Array()*/
+              var sm_linfo = new Array()
+              var sm_linfo_android = new Array()
+              var sm_linfo_ios = new Array()
+              var sm_antenne = new Array()
+              var sm_dtj = new Array()
+              var sm_orange = new Array()
+              var sm_tf1 = new Array()
+              var sm_m6 = new Array()
+              var sm_immo974 = new Array()
+              var sm_dailymotion = new Array()
+              var sm_actu_reunion_ios = new Array()
+              var sm_actu_reunion_android = new Array()
+              var sm_rodzafer_ios = new Array()
+              var sm_rodzafer_android = new Array()
+              var sm_rodzafer_lp = new Array()
+              var sm_rodali = new Array()
 
 
 
 
 
-            Array_SiteName.filter(function (word, index) {
 
 
-              if (word.match(/SM_LINFO.re/gi)) {
-                sm_linfo.push(index);
-              }
-              if (word.match(/SM_LINFO-ANDROID/gi)) {
-                sm_linfo_android.push(index);
-              }
-              if (word.match(/SM_LINFO-IOS/gi)) {
-                sm_linfo_ios.push(index);
-              }
-              if (word.match(/SM_DOMTOMJOB/gi)) {
-                sm_dtj.push(index);
-              }
-              if (word.match(/SM_ANTENNEREUNION/gi)) {
-                sm_antenne.push(index);
-              }
-              if (word.match(/SM_ORANGE_REUNION/gi)) {
-                sm_orange.push(index);
-              }
 
-            });
 
-           /* console.log(sm_linfo)
-            console.log(sm_linfo_android)
-            console.log(sm_linfo_ios)
-            console.log(sm_antenne)
-            console.log(sm_dtj)
-            console.log(sm_orange)*/
 
-   /*
+
+              /*   var habillage_linfo_impression = new Array()
+                 var habillage_linfo_clic = new Array()
+                 var habillage_dtj_impression = new Array()
+                 var habillage_dtj_clic = new Array()
+                 var habillage_antenne_impression = new Array()
+                 var habillage_antenne_clic = new Array()
+                 var habillage_infoIos_impression = new Array()
+                 var habillage_infoIos_clic = new Array()
+                 var habillage_infoAndroid_impression = new Array()
+                 var habillage_infoAndroid_clic = new Array()
+                 var habillage_orange_impression = new Array()
+                 var habillage_orange_clic = new Array()*/
+
+
+
+
+
+              Array_SiteName.filter(function (word, index) {
+
+
+                if (word.match(/322433/gi)) {
+                  sm_linfo.push(index);
+                }
+                if (word.match(/299249/gi)) {
+                  sm_linfo_android.push(index);
+                }
+                if (word.match(/299248/gi)) {
+                  sm_linfo_ios.push(index);
+                }
+                if (word.match(/323124/gi)) {
+                  sm_dtj.push(index);
+                }
+                if (word.match(/299263/gi)) {
+                  sm_antenne.push(index);
+                }
+                if (word.match(/299252/gi)) {
+                  sm_orange.push(index);
+                }
+                if (word.match(/299245/gi)) {
+                  sm_tf1.push(index);
+                }
+                if (word.match(/299244/gi)) {
+                  sm_m6.push(index);
+                }
+                if (word.match(/389207/gi)) {
+                  sm_immo974.push(index);
+                }
+                if (word.match(/337707/gi)) {
+                  sm_dailymotion.push(index);
+                }
+                if (word.match(/299253/gi)) {
+                  sm_actu_reunion_ios.push(index);
+                }
+                if (word.match(/299254/gi)) {
+                  sm_actu_reunion_android.push(index);
+                }
+                if (word.match(/336662/gi)) {
+                  sm_rodzafer_ios.push(index);
+                }
+                if (word.match(/336733/gi)) {
+                  sm_rodzafer_android.push(index);
+                }
+                if (word.match(/371544/gi)) {
+                  sm_rodzafer_lp.push(index);
+                }
+                if (word.match(/369138/gi)) {
+                  sm_rodali.push(index);
+                }
+
+
+
+              });
+
+              console.log(sm_linfo)
+              console.log(sm_linfo_android)
+              console.log(sm_linfo_ios)
+              console.log(sm_antenne)
+              console.log(sm_dtj)
+              console.log(sm_orange)
+              console.log(sm_tf1)
+              console.log(sm_m6)
+              console.log(sm_immo974)
+              console.log(sm_dailymotion)
+              console.log(sm_actu_reunion_ios)
+              console.log(sm_actu_reunion_android)
+              console.log(sm_rodzafer_ios)
+              console.log(sm_rodzafer_android)
+              console.log(sm_rodzafer_lp)
+              console.log(sm_rodali)
+
+              /*
             // Function foreach qui met dans un tableau les impressions correspondant au site
             async function habillage_Info_ArrayElements(element, index, array) {
               habillage_linfo_impression.push(habillageImpressions[element]);
