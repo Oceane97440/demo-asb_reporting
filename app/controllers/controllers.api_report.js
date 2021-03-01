@@ -36,56 +36,6 @@ const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
 
-  /*
-    function function_date_now(TimeStampOne) {
-      let date = new Date(TimeStampOne);
-      return ('0' + date.getDate()).slice(-2) + '' + ('0' + (date.getMonth() + 1)).slice(-2) + '' + date.getFullYear() + '' + ('0' + date.getHours()).slice(-2) + '' + ('0' + date.getMinutes()).slice(-2);
-    }
-    const date_now = Date.now()
-    const date_create = function_date_now(date_now);
-    console.log(date_create)
-
-    var today = new Date();
-    var tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 29);
-    tomorrow.toLocaleDateString();
-    console.log(tomorrow)
-
-    const date_expire = tomorrow.getDate();
-    const mouth_expire = tomorrow.getMonth() + 1
-    const year_expire = tomorrow.getFullYear();
-    const hours_expire = tomorrow.getHours();
-    const minute_expire = tomorrow.getMinutes();
-    console.log(date_expire)
-
-    var cat = localStorage.getItem('myCat');
-    console.log(cat)*/
-  /*var taskId = "541A4D44-1053-4C1D-9416-8E76527074AC"
-
-
-  localStorage.setItem('taskid', taskId)
-  console.log(localStorage.getItem('taskid'))*/
-
-  /*var ttl = 5000 //7200 2h
-  const now = new Date()
-  console.log(now.getTime())
-  console.log(now.getTime() + ttl)
-
-  // `item` is an object which contains the original value
-  // as well as the time when it's supposed to expire
-  const item = {
-    value: 'test',
-    expiry: now.getTime() + ttl,
-  }
-  localStorage.setItem('Test_local', JSON.stringify(item))
-
-  /* if (now.getTime() > item.expiry) {
-      // If the item is expired, delete the item from storage
-      // and return null
-      localStorage.removeItem('Test_local')
-      console.log("Local storage clear")
-    }*/
-
   const now = new Date()
   var timestamp_now = now.getTime()
   var timestamp_expire = now.setHours(now.getHours() + 2);
@@ -144,8 +94,6 @@ exports.index = async (req, res) => {
 exports.generate = async (req, res) => {
 
   //recupère en parametre get id annonceur / id campagne / date de debut
-  //api/reporting/generate/416446/1853590/2021-02-15T00:00:00
-
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate
@@ -197,34 +145,25 @@ exports.report = async (req, res) => {
     //si le localStorage exsite -> affiche la data du localstorage
     if (data_localStorage) {
 
+      //convertie la date JSON en objet
       var data_report_view = JSON.parse(data_localStorage);
 
       var date_expire = data_report_view.date_expiry
 
-      //si item < à 2h on affiche le local_storage
-
       //date aujourd'hui en timestamp
       const now = new Date()
       var timestamp_now = now.getTime()
-      console.log('Time_now:' + timestamp_now)
-
+     // console.log('Time_now:' + timestamp_now)
       //date expiration du rapport en timestamp
-      console.log('Time_expire:' + date_expire)
+      //console.log('Time_expire:' + date_expire)
 
       //si la date expiration est < à la date du jour on garde la cache
-      if (timestamp_now > date_expire) {
+      if (timestamp_now < date_expire) {
 
 
         console.log('cache');
 
          //interval de temps <2h
-
-      
-
-
-      } else {
-         console.log('expiration relance api'); }
-
          var dts_campaignid = data_report_view.ls_campaignid
          var dts_table = data_report_view.table
          var dts_data_habillage = data_report_view.data_habillage
@@ -234,7 +173,6 @@ exports.report = async (req, res) => {
          var dts_data_native = data_report_view.data_native
          var dts_data_video = data_report_view.data_video
    
-         //console.log(dts_campaignid)
    
          res.render('reporting/data-reporting-template.ejs', {
            table: dts_table,
@@ -246,6 +184,10 @@ exports.report = async (req, res) => {
            data_video: dts_data_video,
            iscache: true
          });
+      
+
+
+      }
       
    
 
