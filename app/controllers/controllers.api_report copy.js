@@ -38,128 +38,17 @@ const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
 
-  const Array_InsertionName = [
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'MIDROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - DAILYMOTION',
-    'PREROLL - TF1 / M6',
-    'PREROLL - TF1 / M6',
-    'MIDROLL - TF1 / M6',
-    'MIDROLL - TF1 / M6',
-    '**Smart Test** PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'MASTHEAD - Smart - Test - Display - Geo',
-  ]
+  var time = 3000;
+  y = time+ 3000
 
+  let timerFile = setInterval(async () => {
 
-  var habillage = new Array()
-  var interstitiel = new Array()
-  var grand_angle = new Array()
-  var masthead = new Array()
-  var native = new Array()
-  var video = new Array()
+    console.log(y)
 
+  },y)
 
-
-
-  //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
-  Array_InsertionName.filter(function (word, index) {
-
-    if (word.match(/INTERSTITIEL/gi)) {
-      interstitiel.push(index);
-    }
-    if (word.match(/HABILLAGE/gi)) {
-      habillage.push(index);
-    }
-    if (word.match(/MASTHEAD/gi)) {
-      masthead.push(index);
-    }
-    if (word.match(/GRAND ANGLE/gi)) {
-      grand_angle.push(index);
-    }
-    if (word.match(/NATIVE/gi)) {
-      native.push(index);
-    }
-    if (word.match(/PREROLL/gi)) {
-      video.push(index);
-    }
-    if (word.match(/MIDROLL/gi)) {
-      video.push(index);
-    }
-
-  });
-
-  /*
-
-    console.log(habillage)
-    console.log(interstitiel)
-    console.log(grand_angle)
-    console.log(masthead)
-    console.log(native)
-    console.log(video)*/
-
-
-  var sm_linfo = new Array()
-  var sm_linfo_android = new Array()
-  var sm_linfo_ios = new Array()
-  var sm_antenne = new Array()
-  var sm_dtj = new Array()
-  var sm_orange = new Array()
-
-  const Array_SiteName = [
-    'SiteName',
-    'SM_LINFO - IOS',
-    'SM_LINFO-ANDROID',
-    'SM_ANTENNEREUNION',
-    'SM_LINFO.re',
-    'SM_ANTENNEREUNION',
-    'SM_DAILYMOTION',
-    'SM_M6',
-    'SM_TF1',
-    'SM_M6',
-    'SM_TF1',
-    'SM_LINFO-ANDROID',
-    'SM_LINFO.re',
-
-
-  ]
-
-
-  Array_SiteName.filter(function (word, index) {
-
-
-    if (word.match(/SM_LINFO.re/gi)) {
-      sm_linfo.push(index);
-    }
-    if (word.match(/SM_LINFO-ANDROID/gi)) {
-      sm_linfo_android.push(index);
-    }
-    if (word.match(/SM_LINFO-IOS/gi)) {
-      sm_linfo_ios.push(index);
-    }
-    if (word.match(/SM_DOMTOMJOB/gi)) {
-      sm_dtj.push(index);
-    }
-    if (word.match(/SM_ANTENNEREUNION/gi)) {
-      sm_antenne.push(index);
-    }
-    if (word.match(/SM_ORANGE_REUNION/gi)) {
-      sm_orange.push(index);
-    }
-
-  })
-
-  console.log(sm_linfo)
-  console.log(sm_linfo_android)
-  console.log(sm_linfo_ios)
-  console.log(sm_antenne)
-  console.log(sm_dtj)
-  console.log(sm_orange)
-
-
+ 
+  
 }
 
 
@@ -179,7 +68,7 @@ exports.index = async (req, res) => {
 
 exports.generate = async (req, res) => {
 
-  //recupÃ¨re en parametre get id annonceur / id campagne / date de debut
+  //recupère en parametre get id annonceur / id campagne / date de debut
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate
@@ -214,7 +103,7 @@ exports.generate = async (req, res) => {
 
 exports.report = async (req, res) => {
 
-  //fonctionnalitÃ© gÃ©nÃ©ration du rapport
+  //fonctionnalité génération du rapport
 
   //let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
@@ -240,7 +129,7 @@ exports.report = async (req, res) => {
       const now = new Date()
       var timestamp_now = now.getTime()
 
-      //si la date expiration est < Ã  la date du jour on garde la cache
+      //si la date expiration est < à la date du jour on garde la cache
       if (timestamp_now < date_expire) {
 
 
@@ -270,16 +159,20 @@ exports.report = async (req, res) => {
 
 
 
-      }
+      }else {
 
+        //si le local storage est expiré ou n'existe pas supprime item précédant
+        localStorage.removeItem('campagneId' + '-' + campaignid);
+        console.log("supprime item")
+      }
 
     } else {
 
-      //si le local storage est expirÃ© ou n'existe pas supprime item prÃ©cÃ©dant
-      localStorage.removeItem('campagneId' + '-' + campaignid);
+      // //si le local storage est expiré ou n'existe pas supprime item précédant
+      // localStorage.removeItem('campagneId' + '-' + campaignid);
+      // console.log("supprime item")
 
-
-      //initialisation des requÃªtes
+      //initialisation des requêtes
       var requestReporting = {
 
         "startDate": startDate,
@@ -354,7 +247,7 @@ exports.report = async (req, res) => {
       }
 
 
-      //RequÃªte visitor unique
+      //Requête visitor unique
       var requestVisitor_unique = {
 
         "startDate": startDate,
@@ -381,7 +274,7 @@ exports.report = async (req, res) => {
       }
 
 
-      // 1) RequÃªte POST 
+      // 1) Requête POST 
       let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting);
       let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
 
@@ -391,100 +284,56 @@ exports.report = async (req, res) => {
         var taskId = firstLink.data.taskId;
         var taskId2 = threeLink.data.taskId;
 
+        /*  console.log(taskId)
+            console.log(requestReporting)
+
+            console.log('---------------')
+
+            console.log(taskId2)
+            console.log(requestVisitor_unique)
+            console.log('---------------')
+
+            */
 
 
         let requete1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
         let requete2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
 
-        //2) RequÃªte GET boucle jusqu'a que le rapport gÃ©nÃ¨re 100% delais 1min
-        var time = 5000
+        //2) Requête GET boucle jusqu'a que le rapport génère 100% delais 1min
+
         let timerFile = setInterval(async () => {
+          let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
 
-          // DATA STORAGE - TASK 1 et 2
-          var dataLSTaskGlobal = localStorage_tasks.getItem('campagneId' + '-' + campaignid + '-' + "task_global");
-          var dataLSTaskGlobalVU = localStorage_tasks.getItem('campagneId' + '-' + campaignid + '-' + "task_global_vu");
-
-          if (!dataLSTaskGlobal || !dataLSTaskGlobalVU) {
-
-            let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
-            let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
-
-            // Request task1
-            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-              //3) Récupère la date de chaque requÃªte
-              dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
-
-              var obj_dataFile = {
-               'datafile' : dataFile.data
-                
-  
-              };
-  
-  
-
-              localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
-            }
-
-            // Request task2
-            if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-              //3) Récupère la date de chaque requÃªte
-              dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-
-              var obj_dateFile2={
-                'datafile' : dataFile2.data
-              }
-
-              localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
-            }
-
-            /*
-                      if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
-                        (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
-                      ) {
-
-                        clearInterval(timerFile);
-
-                        //3) RÃ©cupÃ¨re la date de chaque requÃªte
-                        dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-                        dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
-
-                        console.log(dataFile)
+          let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
 
 
-                        localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(dataFile));
-                        localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(dataFile2));
-                      }
-            */
-
-
-
-
-          } else {
+          if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
+            (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
+          ) {
 
             clearInterval(timerFile);
 
-            var data_global = JSON.parse(dataLSTaskGlobal);
-            console.log('dataLSTaskGlobal    :' + dataLSTaskGlobal)
-            console.log(data_global)
+            //3) Récupère la date de chaque requête
+            dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
+            dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
+
+            console.log(dataFile)
+
+          
 
 
-            var data_vu = JSON.parse(dataLSTaskGlobalVU);
+            localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(dataFile2.data));
+            localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(dataFile.data));
 
+         
 
-            var data_split_global =  data_global.datefile
-            console.log('data_split_global    :' + data_split_global)
-
-
-            var data_split_vu =  data_vu.datefile
-
-             //4) Traitement des données pour affiché dans le vue
+            //4) Traitement des données pour affiché dans le vue
 
             //traitement des resultat requête 2
             const UniqueVisitors = []
 
-           // var data_uniqueVisitors = dataLSTaskGlobalVU
-            var data_split2 = data_split_vu.split(/\r?\n/);
-            console.log('requête_VU  ' + data_split2)
+            var data_uniqueVisitors = dataFile2.data
+            var data_split2 = data_uniqueVisitors.split(/\r?\n/);
             var number_line = data_split2.length;
 
             //boucle sur les ligne
@@ -496,8 +345,6 @@ exports.report = async (req, res) => {
             }
 
             var Total_VU = UniqueVisitors[0]
-            console.log('Split_VU   ' + Total_VU)
-
 
             //traitement des resultat requête 1
             const CampaignStartDate = []
@@ -512,10 +359,8 @@ exports.report = async (req, res) => {
             const Clicks = []
             const Complete = []
 
-           // var data_reporting = dataLSTaskGlobalVU
-            var data_split = data_split_global.split(/\r?\n/);
-            console.log('requête global  ' +  data_split)
-
+            var data_reporting = dataFile.data
+            var data_split = data_reporting.split(/\r?\n/);
             var number_line = data_split.length;
 
             for (i = 1; i < number_line; i++) {
@@ -536,18 +381,6 @@ exports.report = async (req, res) => {
 
             }
 
-            
-             console.log(CampaignStartDate )
-             console.log(CampaignEndtDate )
-             console.log(CampaignName )
-             console.log(InsertionName )
-             console.log(FormatName )
-             console.log(SiteId )
-             console.log(SiteName )
-             console.log(Impressions )
-             console.log(ClickRate )
-             console.log(Clicks )
-             console.log(Complete )
 
 
             //Convertie les Timestamp campagne startdate et enddate / date du jour
@@ -1389,15 +1222,11 @@ exports.report = async (req, res) => {
 
 
 
-
-
-
-
           }
 
 
 
-        }, time);
+        }, 60000);
       }
 
     }
