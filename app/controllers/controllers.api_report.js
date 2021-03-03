@@ -38,127 +38,19 @@ const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
 
-  const Array_InsertionName = [
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'MIDROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - DAILYMOTION',
-    'PREROLL - TF1 / M6',
-    'PREROLL - TF1 / M6',
-    'MIDROLL - TF1 / M6',
-    'MIDROLL - TF1 / M6',
-    '**Smart Test** PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'MASTHEAD - Smart - Test - Display - Geo',
-  ]
 
+  let counter = 1000;
 
-  var habillage = new Array()
-  var interstitiel = new Array()
-  var grand_angle = new Array()
-  var masthead = new Array()
-  var native = new Array()
-  var video = new Array()
-
-
-
-
-  //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
-  Array_InsertionName.filter(function (word, index) {
-
-    if (word.match(/INTERSTITIEL/gi)) {
-      interstitiel.push(index);
-    }
-    if (word.match(/HABILLAGE/gi)) {
-      habillage.push(index);
-    }
-    if (word.match(/MASTHEAD/gi)) {
-      masthead.push(index);
-    }
-    if (word.match(/GRAND ANGLE/gi)) {
-      grand_angle.push(index);
-    }
-    if (word.match(/NATIVE/gi)) {
-      native.push(index);
-    }
-    if (word.match(/PREROLL/gi)) {
-      video.push(index);
-    }
-    if (word.match(/MIDROLL/gi)) {
-      video.push(index);
-    }
-
-  });
-
-  /*
-
-    console.log(habillage)
-    console.log(interstitiel)
-    console.log(grand_angle)
-    console.log(masthead)
-    console.log(native)
-    console.log(video)*/
-
-
-  var sm_linfo = new Array()
-  var sm_linfo_android = new Array()
-  var sm_linfo_ios = new Array()
-  var sm_antenne = new Array()
-  var sm_dtj = new Array()
-  var sm_orange = new Array()
-
-  const Array_SiteName = [
-    'SiteName',
-    'SM_LINFO - IOS',
-    'SM_LINFO-ANDROID',
-    'SM_ANTENNEREUNION',
-    'SM_LINFO.re',
-    'SM_ANTENNEREUNION',
-    'SM_DAILYMOTION',
-    'SM_M6',
-    'SM_TF1',
-    'SM_M6',
-    'SM_TF1',
-    'SM_LINFO-ANDROID',
-    'SM_LINFO.re',
-
-
-  ]
-
-
-  Array_SiteName.filter(function (word, index) {
-
-
-    if (word.match(/SM_LINFO.re/gi)) {
-      sm_linfo.push(index);
-    }
-    if (word.match(/SM_LINFO-ANDROID/gi)) {
-      sm_linfo_android.push(index);
-    }
-    if (word.match(/SM_LINFO-IOS/gi)) {
-      sm_linfo_ios.push(index);
-    }
-    if (word.match(/SM_DOMTOMJOB/gi)) {
-      sm_dtj.push(index);
-    }
-    if (word.match(/SM_ANTENNEREUNION/gi)) {
-      sm_antenne.push(index);
-    }
-    if (word.match(/SM_ORANGE_REUNION/gi)) {
-      sm_orange.push(index);
-    }
-
-  })
-
-  console.log(sm_linfo)
-  console.log(sm_linfo_android)
-  console.log(sm_linfo_ios)
-  console.log(sm_antenne)
-  console.log(sm_dtj)
-  console.log(sm_orange)
-
+  let timer = setInterval(function() {
+      console.log('counter :   '+ counter) ;
+  
+      counter += 1000;
+  
+      if (counter >= 10000) {
+          clearInterval(timer);
+      }
+  }, 1000);
+  
 
 }
 
@@ -446,13 +338,13 @@ exports.report = async (req, res) => {
             //;
             const obj_default = JSON.parse(dataLSTaskGlobal);
             var data_split_global = obj_default.datafile
-          // console.log('data_split_global    :' + data_split_global)
+            // console.log('data_split_global    :' + data_split_global)
 
 
             const obj_vu = JSON.parse(dataLSTaskGlobalVU);
-           // console.log(obj_vu)
+            // console.log(obj_vu)
             var data_split_vu = obj_vu.datafile
-          //  console.log('data_split_vu    :'  + data_split_vu)
+            //  console.log('data_split_vu    :'  + data_split_vu)
 
 
 
@@ -473,7 +365,7 @@ exports.report = async (req, res) => {
             }
 
             var Total_VU = UniqueVisitors[0]
-           // console.log('Split_VU   ' + Total_VU)
+            // console.log('Split_VU   ' + Total_VU)
 
 
             //traitement des resultat requête 1
@@ -491,7 +383,7 @@ exports.report = async (req, res) => {
 
             // var data_reporting = dataLSTaskGlobalVU
             var data_split = data_split_global.split(/\r?\n/);
-           // console.log('requête global  ' + data_split)
+            // console.log('requête global  ' + data_split)
 
             var number_line = data_split.length;
 
