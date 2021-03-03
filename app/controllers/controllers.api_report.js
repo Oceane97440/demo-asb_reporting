@@ -406,56 +406,36 @@ exports.report = async (req, res) => {
 
           if (!dataLSTaskGlobal || !dataLSTaskGlobalVU) {
 
-            let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
             let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
+            let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
 
             // Request task1
-            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+            if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
               //3) Récupère la date de chaque requÃªte
               dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
 
               var obj_dataFile = {
-               'datafile' : dataFile.data
-                
-  
+                'datafile': dataFile.data
+
+
               };
-  
-  
+
+
 
               localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
             }
 
             // Request task2
-            if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
               //3) Récupère la date de chaque requÃªte
               dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
 
-              var obj_dateFile2={
-                'datafile' : dataFile2.data
+              var obj_dateFile2 = {
+                'datafile': dataFile2.data
               }
 
               localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
             }
-
-            /*
-                      if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
-                        (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
-                      ) {
-
-                        clearInterval(timerFile);
-
-                        //3) RÃ©cupÃ¨re la date de chaque requÃªte
-                        dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-                        dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
-
-                        console.log(dataFile)
-
-
-                        localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(dataFile));
-                        localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(dataFile2));
-                      }
-            */
-
 
 
 
@@ -463,28 +443,25 @@ exports.report = async (req, res) => {
 
             clearInterval(timerFile);
 
-            var data_global = JSON.parse(dataLSTaskGlobal);
-            console.log('dataLSTaskGlobal    :' + dataLSTaskGlobal)
-            console.log(data_global)
+            //;
+            const obj_default = JSON.parse(dataLSTaskGlobal);
+            var data_split_global = obj_default.datafile
+          // console.log('data_split_global    :' + data_split_global)
 
 
-            var data_vu = JSON.parse(dataLSTaskGlobalVU);
+            const obj_vu = JSON.parse(dataLSTaskGlobalVU);
+           // console.log(obj_vu)
+            var data_split_vu = obj_vu.datafile
+          //  console.log('data_split_vu    :'  + data_split_vu)
 
 
-            var data_split_global =  data_global.datefile
-            console.log('data_split_global    :' + data_split_global)
 
-
-            var data_split_vu =  data_vu.datefile
-
-             //4) Traitement des données pour affiché dans le vue
-
+            //4) Traitement des données pour affiché dans le vue
             //traitement des resultat requête 2
             const UniqueVisitors = []
 
-           // var data_uniqueVisitors = dataLSTaskGlobalVU
             var data_split2 = data_split_vu.split(/\r?\n/);
-            console.log('requête_VU  ' + data_split2)
+            //  console.log('requête_VU  ' + data_split2)
             var number_line = data_split2.length;
 
             //boucle sur les ligne
@@ -496,7 +473,7 @@ exports.report = async (req, res) => {
             }
 
             var Total_VU = UniqueVisitors[0]
-            console.log('Split_VU   ' + Total_VU)
+           // console.log('Split_VU   ' + Total_VU)
 
 
             //traitement des resultat requête 1
@@ -512,9 +489,9 @@ exports.report = async (req, res) => {
             const Clicks = []
             const Complete = []
 
-           // var data_reporting = dataLSTaskGlobalVU
+            // var data_reporting = dataLSTaskGlobalVU
             var data_split = data_split_global.split(/\r?\n/);
-            console.log('requête global  ' +  data_split)
+           // console.log('requête global  ' + data_split)
 
             var number_line = data_split.length;
 
@@ -536,18 +513,6 @@ exports.report = async (req, res) => {
 
             }
 
-            
-             console.log(CampaignStartDate )
-             console.log(CampaignEndtDate )
-             console.log(CampaignName )
-             console.log(InsertionName )
-             console.log(FormatName )
-             console.log(SiteId )
-             console.log(SiteName )
-             console.log(Impressions )
-             console.log(ClickRate )
-             console.log(Clicks )
-             console.log(Complete )
 
 
             //Convertie les Timestamp campagne startdate et enddate / date du jour
