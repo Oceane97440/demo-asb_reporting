@@ -129,7 +129,7 @@ exports.report = async (req, res) => {
 
       var date_expire = data_report_view.date_expiry
 
-      
+
 
       //date aujourd'hui en timestamp
       const now = new Date()
@@ -139,7 +139,7 @@ exports.report = async (req, res) => {
       if (timestamp_now < date_expire) {
 
 
-        console.log('cache');
+      //  console.log('cache');
 
         //interval de temps <2h
         var dts_campaignid = data_report_view.ls_campaignid
@@ -150,7 +150,7 @@ exports.report = async (req, res) => {
         var dts_data_grand_angle = data_report_view.data_grand_angle
         var dts_data_native = data_report_view.data_native
         var dts_data_video = data_report_view.data_video
-        var dts_date_expirer =  data_report_view.date_expirer
+        var dts_date_expirer = data_report_view.date_expirer
 
         res.render('reporting/data-reporting-template.ejs', {
           table: dts_table,
@@ -996,14 +996,18 @@ exports.report = async (req, res) => {
             const now = new Date()
             var timestamp_now = now.getTime()
             var timestamp_expire = now.setHours(now.getHours() + 2);
-            console.log(timestamp_expire)
-
-            const event = new Date(timestamp_expire);
-            var date_expirer = event.toString()
+            //console.log(timestamp_expire)
 
 
+            function getDateTimeTimestamp(refrechTimeStamp) {
+              let dates = new Date(refrechTimeStamp);
+              return ('0' + dates.getDate()).slice(-2) + '/' + ('0' + (dates.getMonth() + 1)).slice(-2) + '/' + dates.getFullYear() + ' ' + ('0' + dates.getHours()).slice(-2) + ':' + ('0' + dates.getMinutes()).slice(-2);
+            }
+            var t3 = parseInt(timestamp_expire)
 
-            console.log(date_expirer)
+            var date_expirer = getDateTimeTimestamp(t3);
+
+          //  console.log(date_expirer)
 
             var testObject = {
               'campaign_id': campaignid,
