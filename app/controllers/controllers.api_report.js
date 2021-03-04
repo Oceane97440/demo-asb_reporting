@@ -38,127 +38,20 @@ const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
 
-  const Array_InsertionName = [
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'MIDROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'PREROLL - DAILYMOTION',
-    'PREROLL - TF1 / M6',
-    'PREROLL - TF1 / M6',
-    'MIDROLL - TF1 / M6',
-    'MIDROLL - TF1 / M6',
-    '**Smart Test** PREROLL - APPLI LINFO / LINFO / ANTENNE REUNION',
-    'MASTHEAD - Smart - Test - Display - Geo',
-  ]
+  let time = 0;
 
+  let timer = setInterval(function() {
+  
+      time += 1;
+      console.log('count'+time);
 
-  var habillage = new Array()
-  var interstitiel = new Array()
-  var grand_angle = new Array()
-  var masthead = new Array()
-  var native = new Array()
-  var video = new Array()
-
-
-
-
-  //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
-  Array_InsertionName.filter(function (word, index) {
-
-    if (word.match(/INTERSTITIEL/gi)) {
-      interstitiel.push(index);
-    }
-    if (word.match(/HABILLAGE/gi)) {
-      habillage.push(index);
-    }
-    if (word.match(/MASTHEAD/gi)) {
-      masthead.push(index);
-    }
-    if (word.match(/GRAND ANGLE/gi)) {
-      grand_angle.push(index);
-    }
-    if (word.match(/NATIVE/gi)) {
-      native.push(index);
-    }
-    if (word.match(/PREROLL/gi)) {
-      video.push(index);
-    }
-    if (word.match(/MIDROLL/gi)) {
-      video.push(index);
-    }
-
-  });
-
-  /*
-
-    console.log(habillage)
-    console.log(interstitiel)
-    console.log(grand_angle)
-    console.log(masthead)
-    console.log(native)
-    console.log(video)*/
-
-
-  var sm_linfo = new Array()
-  var sm_linfo_android = new Array()
-  var sm_linfo_ios = new Array()
-  var sm_antenne = new Array()
-  var sm_dtj = new Array()
-  var sm_orange = new Array()
-
-  const Array_SiteName = [
-    'SiteName',
-    'SM_LINFO - IOS',
-    'SM_LINFO-ANDROID',
-    'SM_ANTENNEREUNION',
-    'SM_LINFO.re',
-    'SM_ANTENNEREUNION',
-    'SM_DAILYMOTION',
-    'SM_M6',
-    'SM_TF1',
-    'SM_M6',
-    'SM_TF1',
-    'SM_LINFO-ANDROID',
-    'SM_LINFO.re',
-
-
-  ]
-
-
-  Array_SiteName.filter(function (word, index) {
-
-
-    if (word.match(/SM_LINFO.re/gi)) {
-      sm_linfo.push(index);
-    }
-    if (word.match(/SM_LINFO-ANDROID/gi)) {
-      sm_linfo_android.push(index);
-    }
-    if (word.match(/SM_LINFO-IOS/gi)) {
-      sm_linfo_ios.push(index);
-    }
-    if (word.match(/SM_DOMTOMJOB/gi)) {
-      sm_dtj.push(index);
-    }
-    if (word.match(/SM_ANTENNEREUNION/gi)) {
-      sm_antenne.push(index);
-    }
-    if (word.match(/SM_ORANGE_REUNION/gi)) {
-      sm_orange.push(index);
-    }
-
-  })
-
-  console.log(sm_linfo)
-  console.log(sm_linfo_android)
-  console.log(sm_linfo_ios)
-  console.log(sm_antenne)
-  console.log(sm_dtj)
-  console.log(sm_orange)
-
+  
+      if (time >= 5) {
+        console.log('timeclear');
+          clearInterval(timer);
+      }
+  }, 1000);
+  
 
 }
 
@@ -397,8 +290,13 @@ exports.report = async (req, res) => {
         let requete2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
 
         //2) RequÃªte GET boucle jusqu'a que le rapport gÃ©nÃ¨re 100% delais 1min
-        var time = 5000
+        //on commence à 30sec
+        var time = 30000
         let timerFile = setInterval(async () => {
+
+          //on incremente + 30sec
+          time += 30000;
+          //console.log('count'+time);
 
           // DATA STORAGE - TASK 1 et 2
           var dataLSTaskGlobal = localStorage_tasks.getItem('campagneId' + '-' + campaignid + '-' + "task_global");
@@ -409,50 +307,49 @@ exports.report = async (req, res) => {
             let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
             let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
 
-            // Request task1
-            if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-              //3) Récupère la date de chaque requÃªte
-              dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
+            //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
+            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
+              (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
+            ) {
 
-              var obj_dataFile = {
-                'datafile': dataFile.data
+              clearInterval(timerFile);
 
+              // Request task1
+              if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                //3) Récupère la date de chaque requÃªte
+                dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
 
-              };
+                //save la data requête 1 dans le local storage
+                var obj_dataFile = {'datafile': dataFile.data};
 
-
-
-              localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
-            }
-
-            // Request task2
-            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-              //3) Récupère la date de chaque requÃªte
-              dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-
-              var obj_dateFile2 = {
-                'datafile': dataFile2.data
+                localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
               }
 
-              localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
+              // Request task2
+              if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                //3) Récupère la date de chaque requÃªte
+                dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
+               
+                //save la data requête 2 dans le local storage
+                var obj_dateFile2 = {'datafile': dataFile2.data}
+
+                localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
+              }
+
             }
-
-
 
           } else {
 
+            //on arrête la fonction setInterval si il y a les 2 taskID en cache
             clearInterval(timerFile);
 
-            //;
+          
             const obj_default = JSON.parse(dataLSTaskGlobal);
             var data_split_global = obj_default.datafile
-          // console.log('data_split_global    :' + data_split_global)
 
 
             const obj_vu = JSON.parse(dataLSTaskGlobalVU);
-           // console.log(obj_vu)
             var data_split_vu = obj_vu.datafile
-          //  console.log('data_split_vu    :'  + data_split_vu)
 
 
 
@@ -461,7 +358,6 @@ exports.report = async (req, res) => {
             const UniqueVisitors = []
 
             var data_split2 = data_split_vu.split(/\r?\n/);
-            //  console.log('requête_VU  ' + data_split2)
             var number_line = data_split2.length;
 
             //boucle sur les ligne
@@ -473,7 +369,6 @@ exports.report = async (req, res) => {
             }
 
             var Total_VU = UniqueVisitors[0]
-           // console.log('Split_VU   ' + Total_VU)
 
 
             //traitement des resultat requête 1
@@ -489,10 +384,7 @@ exports.report = async (req, res) => {
             const Clicks = []
             const Complete = []
 
-            // var data_reporting = dataLSTaskGlobalVU
             var data_split = data_split_global.split(/\r?\n/);
-           // console.log('requête global  ' + data_split)
-
             var number_line = data_split.length;
 
             for (i = 1; i < number_line; i++) {
@@ -722,13 +614,13 @@ exports.report = async (req, res) => {
               video.forEach(VideoArrayElements)
 
 
-              console.log(habillageImpressions)
+            /*  console.log(habillageImpressions)
               console.log(habillageClicks)
               console.log(habillageSiteId)
               console.log(habillageSitename)
               console.log(habillageFormatName)
               console.log(habillageCTR)
-              console.log("------------------------")
+              console.log("------------------------")*/
 
 
 
@@ -848,12 +740,12 @@ exports.report = async (req, res) => {
               sm_linfo.forEach(habillage_siteArrayElements);
 
 
-              console.log(sm_linfo)
+            /*  console.log(sm_linfo)
               console.log("-----------------------")
 
               console.log(habillage_linfo_impression)
               console.log(habillage_linfo_clic)
-              console.log(habillage_linfo_ctr)
+              console.log(habillage_linfo_ctr)*/
 
 
 
