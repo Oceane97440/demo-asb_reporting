@@ -40,18 +40,18 @@ exports.test = async (req, res) => {
 
   let time = 0;
 
-  let timer = setInterval(function() {
-  
-      time += 1;
-      console.log('count'+time);
+  let timer = setInterval(function () {
 
-  
-      if (time >= 5) {
-        console.log('timeclear');
-          clearInterval(timer);
-      }
+    time += 1;
+    console.log('count' + time);
+
+
+    if (time >= 5) {
+      console.log('timeclear');
+      clearInterval(timer);
+    }
   }, 1000);
-  
+
 
 }
 
@@ -129,6 +129,8 @@ exports.report = async (req, res) => {
 
       var date_expire = data_report_view.date_expiry
 
+      
+
       //date aujourd'hui en timestamp
       const now = new Date()
       var timestamp_now = now.getTime()
@@ -148,7 +150,7 @@ exports.report = async (req, res) => {
         var dts_data_grand_angle = data_report_view.data_grand_angle
         var dts_data_native = data_report_view.data_native
         var dts_data_video = data_report_view.data_video
-
+        var dts_date_expirer =  data_report_view.date_expirer
 
         res.render('reporting/data-reporting-template.ejs', {
           table: dts_table,
@@ -158,7 +160,7 @@ exports.report = async (req, res) => {
           data_grand_angle: dts_data_grand_angle,
           data_native: dts_data_native,
           data_video: dts_data_video,
-          iscache: true
+          data_expirer: dts_date_expirer
         });
 
 
@@ -296,7 +298,7 @@ exports.report = async (req, res) => {
 
           //on incremente + 10sec
           time += 10000;
-         // console.log('count'+time);
+          // console.log('count'+time);
 
           // DATA STORAGE - TASK 1 et 2
           var dataLSTaskGlobal = localStorage_tasks.getItem('campagneId' + '-' + campaignid + '-' + "task_global");
@@ -306,8 +308,8 @@ exports.report = async (req, res) => {
 
             let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
             let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
-           // console.log('secondLink  '+secondLink)
-           // console.log('fourLink  '+ fourLink)
+            // console.log('secondLink  '+secondLink)
+            // console.log('fourLink  '+ fourLink)
 
 
             //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
@@ -323,7 +325,9 @@ exports.report = async (req, res) => {
                 dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
 
                 //save la data requête 1 dans le local storage
-                var obj_dataFile = {'datafile': dataFile.data};
+                var obj_dataFile = {
+                  'datafile': dataFile.data
+                };
 
                 localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
               }
@@ -332,9 +336,11 @@ exports.report = async (req, res) => {
               if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
                 //3) Récupère la date de chaque requÃªte
                 dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-               
+
                 //save la data requête 2 dans le local storage
-                var obj_dateFile2 = {'datafile': dataFile2.data}
+                var obj_dateFile2 = {
+                  'datafile': dataFile2.data
+                }
 
                 localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
               }
@@ -346,7 +352,7 @@ exports.report = async (req, res) => {
             //on arrête la fonction setInterval si il y a les 2 taskID en cache
             clearInterval(timerFile);
 
-          
+
             const obj_default = JSON.parse(dataLSTaskGlobal);
             var data_split_global = obj_default.datafile
 
@@ -617,7 +623,7 @@ exports.report = async (req, res) => {
               video.forEach(VideoArrayElements)
 
 
-        
+
 
 
               var sm_linfo = new Array()
@@ -725,7 +731,7 @@ exports.report = async (req, res) => {
               sm_linfo.forEach(habillage_siteArrayElements);
 
 
-       
+
 
               // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par format)
               const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -809,7 +815,7 @@ exports.report = async (req, res) => {
             sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI")
             sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI")
             sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI")
-      
+
 
             var Campagne_name = CampaignName[0]
 
@@ -990,11 +996,20 @@ exports.report = async (req, res) => {
             const now = new Date()
             var timestamp_now = now.getTime()
             var timestamp_expire = now.setHours(now.getHours() + 2);
+            console.log(timestamp_expire)
+
+            const event = new Date(timestamp_expire);
+            var date_expirer = event.toString()
+
+
+
+            console.log(date_expirer)
 
             var testObject = {
               'campaign_id': campaignid,
               'date_now': timestamp_now,
               'date_expiry': timestamp_expire,
+              'date_expirer': date_expirer,
               'table': table,
               'data_habillage': data_habillage,
               'data_interstitiel': data_interstitiel,
@@ -1016,7 +1031,8 @@ exports.report = async (req, res) => {
               data_masthead: data_masthead,
               data_grand_angle: data_grand_angle,
               data_native: data_native,
-              data_video: data_video
+              data_video: data_video,
+              data_expirer: date_expirer
             });
 
 
