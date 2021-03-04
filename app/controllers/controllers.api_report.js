@@ -290,13 +290,13 @@ exports.report = async (req, res) => {
         let requete2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
 
         //2) RequÃªte GET boucle jusqu'a que le rapport gÃ©nÃ¨re 100% delais 1min
-        //on commence à 30sec
-        var time = 30000
+        //on commence à 10sec
+        var time = 10000
         let timerFile = setInterval(async () => {
 
-          //on incremente + 30sec
-          time += 30000;
-          //console.log('count'+time);
+          //on incremente + 10sec
+          time += 10000;
+         // console.log('count'+time);
 
           // DATA STORAGE - TASK 1 et 2
           var dataLSTaskGlobal = localStorage_tasks.getItem('campagneId' + '-' + campaignid + '-' + "task_global");
@@ -306,6 +306,9 @@ exports.report = async (req, res) => {
 
             let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
             let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
+           // console.log('secondLink  '+secondLink)
+           // console.log('fourLink  '+ fourLink)
+
 
             //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
             if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
@@ -614,14 +617,7 @@ exports.report = async (req, res) => {
               video.forEach(VideoArrayElements)
 
 
-            /*  console.log(habillageImpressions)
-              console.log(habillageClicks)
-              console.log(habillageSiteId)
-              console.log(habillageSitename)
-              console.log(habillageFormatName)
-              console.log(habillageCTR)
-              console.log("------------------------")*/
-
+        
 
 
               var sm_linfo = new Array()
@@ -653,17 +649,6 @@ exports.report = async (req, res) => {
               var habillage_linfo_impression = new Array()
               var habillage_linfo_clic = new Array()
               var habillage_linfo_ctr = new Array()
-
-              /*  var habillage_dtj_impression = new Array()
-                var habillage_dtj_clic = new Array()
-                var habillage_antenne_impression = new Array()
-                var habillage_antenne_clic = new Array()
-                var habillage_infoIos_impression = new Array()
-                var habillage_infoIos_clic = new Array()
-                var habillage_infoAndroid_impression = new Array()
-                var habillage_infoAndroid_clic = new Array()
-                var habillage_orange_impression = new Array()
-                var habillage_orange_clic = new Array()*/
 
 
 
@@ -740,142 +725,7 @@ exports.report = async (req, res) => {
               sm_linfo.forEach(habillage_siteArrayElements);
 
 
-            /*  console.log(sm_linfo)
-              console.log("-----------------------")
-
-              console.log(habillage_linfo_impression)
-              console.log(habillage_linfo_clic)
-              console.log(habillage_linfo_ctr)*/
-
-
-
-
-              /*  console.log(sm_linfo_android)
-              console.log(sm_linfo_ios)
-              console.log(sm_antenne)
-              console.log(sm_dtj)
-              console.log(sm_orange)
-              console.log(sm_tf1)
-              console.log(sm_m6)
-              console.log(sm_immo974)
-              console.log(sm_dailymotion)
-              console.log(sm_actu_reunion_ios)
-              console.log(sm_actu_reunion_android)
-              console.log(sm_rodzafer_ios)
-              console.log(sm_rodzafer_android)
-              console.log(sm_rodzafer_lp)
-              console.log(sm_rodali)*/
-
-              /*        
-            // Function foreach qui met dans un tableau les impressions correspondant au site
-            async function habillage_Info_ArrayElements(element, index, array) {
-              habillage_linfo_impression.push(habillageImpressions[element]);
-              habillage_linfo_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_DTJ_ArrayElements(element, index, array) {
-              habillage_dtj_impression.push(habillageImpressions[element]);
-              habillage_dtj_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_Antenne_ArrayElements(element, index, array) {
-
-              habillage_antenne_impression.push(habillageImpressions[element]);
-              habillage_antenne_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_LinfoIos_ArrayElements(element, index, array) {
-              habillage_infoIos_impression.push(habillageImpressions[element]);
-              habillage_infoIos_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_LinfoAndroid_ArrayElements(element, index, array) {
-
-              habillage_infoAndroid_impression.push(habillageImpressions[element]);
-              habillage_infoAndroid_clic.push(habillageClicks[element]);
-
-            }
-
-
-            async function habillage_Orange_ArrayElements(element, index, array) {
-              habillage_orange_impression.push(habillageImpressions[element]);
-              habillage_orange_clic.push(habillageClicks[element]);
-
-            }
-
-
-
-            sm_linfo.forEach(habillage_Info_ArrayElements);
-            sm_dtj.forEach(habillage_DTJ_ArrayElements);
-            sm_antenne.forEach(habillage_Antenne_ArrayElements);
-            sm_linfo_ios.forEach(habillage_LinfoIos_ArrayElements);
-            sm_linfo_android.forEach(habillage_LinfoAndroid_ArrayElements);
-            sm_orange.forEach(habillage_Orange_ArrayElements);
-/*
-            const SM_LINFO_HABILLAGE_impression = new Array()
-            const SM_LINFO_HABILLAGE_clic = new Array()
-            const SM_LINFO_IOS_HABILLAGE_impression = new Array()
-            const SM_LINFO_IOS_HABILLAGE_clic = new Array()
-            const SM_LINFO_ANDROID_HABILLAGE_impression = new Array()
-            const SM_LINFO_ANDROID_HABILLAGE_clic = new Array()
-            const SM_ANTENNE_HABILLAGE_impression = new Array()
-            const SM_ANTENNE_HABILLAGE_clic = new Array()
-            const SM_ORANGE_HABILLAGE_impression = new Array()
-            const SM_ORANGE_HABILLAGE_clic = new Array()
-            const SM_DTJ_HABILLAGE_impression = new Array()
-            const SM_DTJ_HABILLAGE_clic = new Array()
-
-
-
-            const valueToRemove = undefined;
-            //push les valeur filtré total  et clique
-            for (let i = 0; i < habillage_linfo_impression.length; i++) {
-              if (habillage_linfo_impression[i] !== valueToRemove) {
-
-                SM_LINFO_HABILLAGE_impression.push(habillage_linfo_impression[i]);
-                SM_LINFO_HABILLAGE_clic.push(habillage_linfo_clic[i]);
-              }
-
-            }
-            for (let i = 0; i < habillage_infoIos_impression.length; i++) {
-              if (habillage_infoIos_impression[i] !== valueToRemove) {
-
-                SM_LINFO_IOS_HABILLAGE_impression.push(habillage_infoIos_impression[i]);
-                SM_LINFO_IOS_HABILLAGE_clic.push(habillage_infoIos_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_infoAndroid_impression.length; i++) {
-              if (habillage_infoAndroid_impression[i] !== valueToRemove) {
-
-                SM_LINFO_ANDROID_HABILLAGE_impression.push(habillage_infoAndroid_impression[i]);
-                SM_LINFO_ANDROID_HABILLAGE_clic.push(habillage_infoAndroid_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_antenne_impression.length; i++) {
-
-              if (habillage_antenne_impression[i] !== valueToRemove) {
-                SM_ANTENNE_HABILLAGE_impression.push(habillage_antenne_impression[i]);
-                SM_ANTENNE_HABILLAGE_clic.push(habillage_antenne_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_orange_impression.length; i++) {
-              if (habillage_orange_impression[i] !== valueToRemove) {
-                SM_ORANGE_HABILLAGE_impression.push(habillage_orange_impression[i]);
-                SM_ORANGE_HABILLAGE_clic.push(habillage_orange_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_dtj_impression.length; i++) {
-              if (habillage_dtj_impression[i] !== valueToRemove) {
-
-                SM_DTJ_HABILLAGE_impression.push(habillage_dtj_impression[i]);
-                SM_DTJ_HABILLAGE_clic.push(habillage_dtj_clic[i]);
-              }
-            }
-*/
+       
 
               // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par format)
               const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -892,25 +742,6 @@ exports.report = async (req, res) => {
               var sommeVideoImpression = videoImpressions.reduce(reducer, 0);
               var sommeVideoClicks = videoClicks.reduce(reducer, 0);
 
-
-
-
-
-              /*
-                          // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par site et format)
-                          var sommeHabillage_Impression_info = SM_LINFO_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_info = SM_LINFO_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_infoIos = SM_LINFO_IOS_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_infoIos = SM_LINFO_IOS_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_antenne = SM_ANTENNE_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_antenne = SM_ANTENNE_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_orange = SM_ORANGE_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_orange = SM_ORANGE_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_dtj = SM_DTJ_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_dtj = SM_DTJ_HABILLAGE_clic.reduce(reducer, 0);
-              */
 
             }
 
@@ -954,26 +785,6 @@ exports.report = async (req, res) => {
 
 
 
-            /*        //Calcule de taux clic par site
-          CTR_habillage_linfo = (sommeHabillageClicks_info / sommeHabillage_Impression_info) * 100
-          CTR_habillage_linfo = CTR_habillage_linfo.toFixed(2);
-
-          CTR_habillage_linfoios = (sommeHabillageClicks_infoIos / sommeHabillage_Impression_infoIos) * 100
-          CTR_habillage_linfoios = CTR_habillage_linfoios.toFixed(2);
-
-          CTR_habillage_linfoandroid = (sommeHabillageClicks_infoAndroid / sommeHabillage_Impression_infoAndroid) * 100
-          CTR_habillage_linfoandroid = CTR_habillage_linfoandroid.toFixed(2);
-
-          CTR_habillage_antenne = (sommeHabillageClicks_antenne / sommeHabillage_Impression_antenne) * 100
-          CTR_habillage_antenne = CTR_habillage_antenne.toFixed(2);
-
-          CTR_habillage_orange = (sommeHabillageClicks_orange / sommeHabillage_Impression_orange) * 100
-          CTR_habillage_orange = CTR_habillage_orange.toFixed(2);
-
-          CTR_habillage_dtj = (sommeHabillageClicks_dtj / sommeHabillage_Impression_dtj) * 100
-          CTR_habillage_dtj = CTR_habillage_dtj.toFixed(2);
-*/
-
             //Calcul des chiffre global %Taux clic Repetition %VTR
             Taux_VTR = (TotalComplete / TotalImpressions) * 100
             VTR = Taux_VTR.toFixed(2);
@@ -998,12 +809,7 @@ exports.report = async (req, res) => {
             sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI")
             sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI")
             sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI")
-            /* sommeHabillage_Impression_info = new Number(sommeHabillage_Impression_info).toLocaleString("fi-FI")
-             sommeHabillage_Impression_infoIos = new Number(sommeHabillage_Impression_infoIos).toLocaleString("fi-FI")
-             sommeHabillage_Impression_infoAndroid = new Number(sommeHabillage_Impression_infoAndroid).toLocaleString("fi-FI")
-             sommeHabillage_Impression_antenne = new Number(sommeHabillage_Impression_antenne).toLocaleString("fi-FI")
-             sommeHabillage_Impression_orange = new Number(sommeHabillage_Impression_orange).toLocaleString("fi-FI")
-             sommeHabillage_Impression_dtj = new Number(sommeHabillage_Impression_dtj).toLocaleString("fi-FI")*/
+      
 
             var Campagne_name = CampaignName[0]
 
@@ -1180,30 +986,6 @@ exports.report = async (req, res) => {
 
             }
 
-            /*          var data_site = {
-                        sommeHabillage_Impression_info,
-                        sommeHabillageClicks_info,
-                        CTR_habillage_linfo,
-                        sommeHabillage_Impression_infoIos,
-                        sommeHabillageClicks_infoIos,
-                        CTR_habillage_linfoios,
-                        sommeHabillage_Impression_infoAndroid,
-                        sommeHabillageClicks_infoAndroid,
-                        CTR_habillage_linfoandroid,
-                        sommeHabillage_Impression_antenne,
-                        sommeHabillageClicks_antenne,
-                        CTR_habillage_antenne,
-                        sommeHabillage_Impression_orange,
-                        sommeHabillageClicks_orange,
-                        CTR_habillage_orange,
-                        sommeHabillage_Impression_dtj,
-                        sommeHabillageClicks_dtj,
-                        CTR_habillage_dtj,
-
-
-                    }
-            */
-
             // var ttl = 7200 //2h
             const now = new Date()
             var timestamp_now = now.getTime()
@@ -1279,36 +1061,36 @@ exports.report = async (req, res) => {
 
 }
 
-exports.report_view = async (req, res) => {
-
-  // Retrieve the object from storage
-  var data_report = localStorage.getItem('testObject');
-
-  var data_report_view = JSON.parse(data_report);
-
-  var campaignid = data_report_view.campaignid
-  var table = data_report_view.table
-  var data_habillage = data_report_view.data_habillage
-  var data_interstitiel = data_report_view.data_interstitiel
-  var data_masthead = data_report_view.data_masthead
-  var data_grand_angle = data_report_view.data_grand_angle
-  var data_native = data_report_view.data_native
-  var data_video = data_report_view.data_video
-
-  //console.log(campaignid)
+exports.automatisation = async (req, res) => {
 
 
 
+  let campaignid = req.params.campaignid;
 
 
-  res.render('reporting/data-reporting-template.ejs', {
-    table: table,
-    data_habillage: data_habillage,
-    data_interstitiel: data_interstitiel,
-    data_masthead: data_masthead,
-    data_grand_angle: data_grand_angle,
-    data_native: data_native,
-    data_video: data_video
-  })
+  try {
 
+
+
+    var data_localStorage = localStorage.getItem('campagneId' + '-' + campaignid);
+
+
+
+    res.json(data_localStorage)
+
+
+
+  } catch (error) {
+    console.log(error)
+    var statusCoded = error.response.status;
+
+    res.render("error.ejs", {
+      statusCoded: statusCoded,
+      advertiserid: advertiserid,
+      campaignid: campaignid,
+      startDate: startDate,
+    })
+
+
+  }
 }
