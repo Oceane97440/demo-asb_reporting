@@ -37,7 +37,11 @@ const ModelAdvertiser = require("../models/models.advertiser")
 const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
+ /* let advertiserid = req.params.advertiserid;
+  let campaignid = req.params.campaignid;
+  let startDate = req.params.startdate
 
+  res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)*/
   let time = 0;
 
   let timer = setInterval(function () {
@@ -109,7 +113,7 @@ exports.report = async (req, res) => {
 
   //fonctionnalitÃ© gÃ©nÃ©ration du rapport
 
-  //let advertiserid = req.params.advertiserid;
+  let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate;
 
@@ -139,7 +143,7 @@ exports.report = async (req, res) => {
       if (timestamp_now < date_expire) {
 
 
-      //  console.log('cache');
+        //  console.log('cache');
 
         //interval de temps <2h
         var dts_campaignid = data_report_view.ls_campaignid
@@ -165,13 +169,20 @@ exports.report = async (req, res) => {
 
 
 
+      } else {
+        //si le local storage est expire supprime item precedent et les taskid
+        localStorage.removeItem('campagneId' + '-' + campaignid);
+        localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global");
+        localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global_vu");
+
+        res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)
+
       }
 
 
     } else {
 
-      //si le local storage est expirÃ© ou n'existe pas supprime item prÃ©cÃ©dant
-      localStorage.removeItem('campagneId' + '-' + campaignid);
+
 
 
       //initialisation des requÃªtes
@@ -1007,7 +1018,7 @@ exports.report = async (req, res) => {
 
             var date_expirer = getDateTimeTimestamp(t3);
 
-          //  console.log(date_expirer)
+            //  console.log(date_expirer)
 
             var testObject = {
               'campaign_id': campaignid,
