@@ -39,9 +39,20 @@
 </head>
 
 <body>
-
+  <% if(date_now < timestamp_startdate) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
+      <strong>Attention : La campagne demandée n'existe pas pour le moment</strong> 
+  
+  
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <% } %>
 
   <div class="container  d-flex justify-content-center">
+   
+
     <div class="row">
 
       <!--section 1-->

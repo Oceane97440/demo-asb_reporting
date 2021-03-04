@@ -37,11 +37,11 @@ const ModelAdvertiser = require("../models/models.advertiser")
 const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
- /* let advertiserid = req.params.advertiserid;
-  let campaignid = req.params.campaignid;
-  let startDate = req.params.startdate
+  /* let advertiserid = req.params.advertiserid;
+   let campaignid = req.params.campaignid;
+   let startDate = req.params.startdate
 
-  res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)*/
+   res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)*/
   let time = 0;
 
   let timer = setInterval(function () {
@@ -81,7 +81,15 @@ exports.generate = async (req, res) => {
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate
 
+  const timestamp_startdate = Date.parse(startDate);
+  const date_now = Date.now()
+  //console.log(timestamp_startdate);
+ // console.log(date_now);
 
+
+  if (date_now < timestamp_startdate) {
+    console.log("message")
+  }
 
   var campaign = await ModelCampaigns.findOne({
     attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
@@ -101,7 +109,9 @@ exports.generate = async (req, res) => {
     advertiserid: advertiserid,
     campaignid: campaignid,
     startDate: startDate,
-    campaign: campaign
+    campaign: campaign,
+    timestamp_startdate: timestamp_startdate,
+    date_now: date_now
   })
 
 
@@ -1076,14 +1086,14 @@ exports.report = async (req, res) => {
 
   } catch (error) {
     console.log(error)
-    var statusCoded = error.response.status;
+   /* var statusCoded = error.response.status;
 
     res.render("error.ejs", {
       statusCoded: statusCoded,
       advertiserid: advertiserid,
       campaignid: campaignid,
       startDate: startDate,
-    })
+    })*/
 
 
   }
