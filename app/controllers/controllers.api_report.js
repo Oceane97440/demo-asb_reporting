@@ -518,6 +518,7 @@ exports.report = async (req, res) => {
 
               var videoImpressions = new Array()
               var videoClicks = new Array()
+              var videoSiteId = new Array()
               var videoSitename = new Array()
               var videoFormatName = new Array()
               var videoCTR = new Array()
@@ -556,6 +557,7 @@ exports.report = async (req, res) => {
 
                 videoImpressions.push(eval(Array_Impression[element]));
                 videoClicks.push(eval(Array_Clicks[element]));
+                videoSiteId.push(Array_SiteID[element]);
                 videoSitename.push(Array_SiteName[element]);
                 videoFormatName.push(Array_FormatName[element]);
                 videoComplete.push(eval(Array_Complete[element]));
@@ -635,7 +637,14 @@ exports.report = async (req, res) => {
               video.forEach(VideoArrayElements)
 
 
-
+             /* console.log(videoImpressions )
+              console.log(videoClicks )
+              console.log('----------')
+              console.log(videoSiteId)
+              console.log(videoSitename )
+              console.log('----------')
+              console.log(videoFormatName )*/
+        
 
 
               var sm_linfo = new Array()
@@ -654,12 +663,6 @@ exports.report = async (req, res) => {
               var sm_rodzafer_android = new Array()
               var sm_rodzafer_lp = new Array()
               var sm_rodali = new Array()
-
-
-
-
-
-
 
 
 
@@ -763,15 +766,22 @@ exports.report = async (req, res) => {
 
             }
 
+           
 
-            var TotalImpressions = 0
-            var TotalCliks = 0
+            var total_impression_format = sommeHabillageImpression + sommeGrand_AngleImpression + sommeInterstitielImpression +sommeMastheadImpression + sommeNativeImpression + sommeVideoImpression
+            var total_click_format = sommeHabillageClicks + sommeGrand_AngleClicks +sommeInterstitielClicks + sommeMastheadClicks + sommeNativeClicks + sommeVideoClicks
+            
+           
+
+
+            //var TotalImpressions = 0
+           // var TotalCliks = 0
             var TotalComplete = 0
             //somme impression clic complete
             for (let i = 0; i < Array_Impression.length; i++) {
               if (Array_Impression[i] != '') {
-                TotalImpressions += parseInt(Array_Impression[i])
-                TotalCliks += parseInt(Array_Clicks[i])
+              //  TotalImpressions += parseInt(Array_Impression[i])
+               // TotalCliks += parseInt(Array_Clicks[i])
                 TotalComplete += parseInt(Array_Complete[i])
 
 
@@ -804,21 +814,27 @@ exports.report = async (req, res) => {
 
 
             //Calcul des chiffre global %Taux clic Repetition %VTR
-            Taux_VTR = (TotalComplete / TotalImpressions) * 100
+            Taux_VTR = (TotalComplete / total_impression_format) * 100
             VTR = Taux_VTR.toFixed(2);
 
-            var Taux_clics = (TotalCliks / TotalImpressions) * 100
+            /*var Taux_clics = (TotalCliks / TotalImpressions) * 100
+            CTR = Taux_clics.toFixed(2);*/
+            var Taux_clics = (total_click_format / total_impression_format) * 100
             CTR = Taux_clics.toFixed(2);
+         
 
-            var Impression_vu = (TotalImpressions / Total_VU)
+            var Impression_vu = (total_impression_format / Total_VU)
             Repetition = Impression_vu.toFixed(2);
 
+       
 
 
 
             //SEPARATEUR DE MILLIER
-            TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI")
-            TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI")
+           // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI")
+           // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI")
+           total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI")
+           total_click_format = new Number(total_click_format).toLocaleString("fi-FI")
             Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
 
             sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI")
@@ -847,8 +863,11 @@ exports.report = async (req, res) => {
               ClickRate,
               Array_Clicks,
 
-              TotalImpressions,
-              TotalCliks,
+              total_impression_format,
+              total_click_format,
+
+              //TotalImpressions,
+              //TotalCliks,
               CTR,
               Total_VU,
               Repetition,
