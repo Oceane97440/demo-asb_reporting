@@ -37,9 +37,24 @@ const ModelAdvertiser = require("../models/models.advertiser")
 const ModelCampaigns = require("../models/models.campaigns")
 
 exports.test = async (req, res) => {
+  /* let advertiserid = req.params.advertiserid;
+   let campaignid = req.params.campaignid;
+   let startDate = req.params.startdate
+
+   res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)*/
+  let time = 0;
+
+  let timer = setInterval(function () {
+
+    time += 1;
+    console.log('count' + time);
 
 
-  let counter = 1000;
+    if (time >= 5) {
+      console.log('timeclear');
+      clearInterval(timer);
+    }
+  }, 1000);
 
   let timer = setInterval(function() {
       console.log('counter :   '+ counter) ;
@@ -76,7 +91,15 @@ exports.generate = async (req, res) => {
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate
 
+  const timestamp_startdate = Date.parse(startDate);
+  const date_now = Date.now()
+  //console.log(timestamp_startdate);
+ // console.log(date_now);
 
+
+  if (date_now < timestamp_startdate) {
+    console.log("message")
+  }
 
   var campaign = await ModelCampaigns.findOne({
     attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
@@ -96,7 +119,9 @@ exports.generate = async (req, res) => {
     advertiserid: advertiserid,
     campaignid: campaignid,
     startDate: startDate,
-    campaign: campaign
+    campaign: campaign,
+    timestamp_startdate: timestamp_startdate,
+    date_now: date_now
   })
 
 
@@ -108,7 +133,7 @@ exports.report = async (req, res) => {
 
   //fonctionnalitÃ© gÃ©nÃ©ration du rapport
 
-  //let advertiserid = req.params.advertiserid;
+  let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate;
 
@@ -128,6 +153,8 @@ exports.report = async (req, res) => {
 
       var date_expire = data_report_view.date_expiry
 
+
+
       //date aujourd'hui en timestamp
       const now = new Date()
       var timestamp_now = now.getTime()
@@ -136,7 +163,7 @@ exports.report = async (req, res) => {
       if (timestamp_now < date_expire) {
 
 
-        console.log('cache');
+        //  console.log('cache');
 
         //interval de temps <2h
         var dts_campaignid = data_report_view.ls_campaignid
@@ -147,7 +174,7 @@ exports.report = async (req, res) => {
         var dts_data_grand_angle = data_report_view.data_grand_angle
         var dts_data_native = data_report_view.data_native
         var dts_data_video = data_report_view.data_video
-
+        var dts_date_expirer = data_report_view.date_expirer
 
         res.render('reporting/data-reporting-template.ejs', {
           table: dts_table,
@@ -157,18 +184,25 @@ exports.report = async (req, res) => {
           data_grand_angle: dts_data_grand_angle,
           data_native: dts_data_native,
           data_video: dts_data_video,
-          iscache: true
+          data_expirer: dts_date_expirer
         });
 
 
+
+      } else {
+        //si le local storage est expire supprime item precedent et les taskid
+        localStorage.removeItem('campagneId' + '-' + campaignid);
+        localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global");
+        localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global_vu");
+
+        res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)
 
       }
 
 
     } else {
 
-      //si le local storage est expirÃ© ou n'existe pas supprime item prÃ©cÃ©dant
-      localStorage.removeItem('campagneId' + '-' + campaignid);
+
 
 
       //initialisation des requÃªtes
@@ -289,8 +323,13 @@ exports.report = async (req, res) => {
         let requete2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
 
         //2) RequÃªte GET boucle jusqu'a que le rapport gÃ©nÃ¨re 100% delais 1min
-        var time = 5000
+        //on commence à 10sec
+        var time = 10000
         let timerFile = setInterval(async () => {
+
+          //on incremente + 10sec
+          time += 10000;
+          // console.log('count'+time);
 
           // DATA STORAGE - TASK 1 et 2
           var dataLSTaskGlobal = localStorage_tasks.getItem('campagneId' + '-' + campaignid + '-' + "task_global");
@@ -300,62 +339,57 @@ exports.report = async (req, res) => {
 
             let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
             let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
-
-            // Request task1
-            if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-              //3) Récupère la date de chaque requÃªte
-              dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
-
-              var obj_dataFile = {
-                'datafile': dataFile.data
+            // console.log('secondLink  '+secondLink)
+            // console.log('fourLink  '+ fourLink)
 
 
-              };
+            //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
+            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
+              (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
+            ) {
 
+              clearInterval(timerFile);
 
+              // Request task1
+              if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                //3) Récupère la date de chaque requÃªte
+                dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
 
-              localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
-            }
+                //save la data requête 1 dans le local storage
+                var obj_dataFile = {
+                  'datafile': dataFile.data
+                };
 
-            // Request task2
-            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-              //3) Récupère la date de chaque requÃªte
-              dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
-
-              var obj_dateFile2 = {
-                'datafile': dataFile2.data
+                localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
               }
 
-              localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
+              // Request task2
+              if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                //3) Récupère la date de chaque requÃªte
+                dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
+
+                //save la data requête 2 dans le local storage
+                var obj_dateFile2 = {
+                  'datafile': dataFile2.data
+                }
+
+                localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
+              }
+
             }
-
-
 
           } else {
 
+            //on arrête la fonction setInterval si il y a les 2 taskID en cache
             clearInterval(timerFile);
 
-            //;
+
             const obj_default = JSON.parse(dataLSTaskGlobal);
             var data_split_global = obj_default.datafile
-            // console.log('data_split_global    :' + data_split_global)
-
-
-            const obj_vu = JSON.parse(dataLSTaskGlobalVU);
-            // console.log(obj_vu)
-            var data_split_vu = obj_vu.datafile
-            //  console.log('data_split_vu    :'  + data_split_vu)
-
-
-
-            //4) Traitement des données pour affiché dans le vue
-            //traitement des resultat requête 2
             const UniqueVisitors = []
 
             var data_split2 = data_split_vu.split(/\r?\n/);
-            //  console.log('requête_VU  ' + data_split2)
             var number_line = data_split2.length;
-
             //boucle sur les ligne
             for (i = 1; i < number_line; i++) {
 
@@ -365,7 +399,6 @@ exports.report = async (req, res) => {
             }
 
             var Total_VU = UniqueVisitors[0]
-            // console.log('Split_VU   ' + Total_VU)
 
 
             //traitement des resultat requête 1
@@ -381,10 +414,7 @@ exports.report = async (req, res) => {
             const Clicks = []
             const Complete = []
 
-            // var data_reporting = dataLSTaskGlobalVU
             var data_split = data_split_global.split(/\r?\n/);
-            // console.log('requête global  ' + data_split)
-
             var number_line = data_split.length;
 
             for (i = 1; i < number_line; i++) {
@@ -614,13 +644,6 @@ exports.report = async (req, res) => {
               video.forEach(VideoArrayElements)
 
 
-              console.log(habillageImpressions)
-              console.log(habillageClicks)
-              console.log(habillageSiteId)
-              console.log(habillageSitename)
-              console.log(habillageFormatName)
-              console.log(habillageCTR)
-              console.log("------------------------")
 
 
 
@@ -653,17 +676,6 @@ exports.report = async (req, res) => {
               var habillage_linfo_impression = new Array()
               var habillage_linfo_clic = new Array()
               var habillage_linfo_ctr = new Array()
-
-              /*  var habillage_dtj_impression = new Array()
-                var habillage_dtj_clic = new Array()
-                var habillage_antenne_impression = new Array()
-                var habillage_antenne_clic = new Array()
-                var habillage_infoIos_impression = new Array()
-                var habillage_infoIos_clic = new Array()
-                var habillage_infoAndroid_impression = new Array()
-                var habillage_infoAndroid_clic = new Array()
-                var habillage_orange_impression = new Array()
-                var habillage_orange_clic = new Array()*/
 
 
 
@@ -740,142 +752,7 @@ exports.report = async (req, res) => {
               sm_linfo.forEach(habillage_siteArrayElements);
 
 
-              console.log(sm_linfo)
-              console.log("-----------------------")
 
-              console.log(habillage_linfo_impression)
-              console.log(habillage_linfo_clic)
-              console.log(habillage_linfo_ctr)
-
-
-
-
-              /*  console.log(sm_linfo_android)
-              console.log(sm_linfo_ios)
-              console.log(sm_antenne)
-              console.log(sm_dtj)
-              console.log(sm_orange)
-              console.log(sm_tf1)
-              console.log(sm_m6)
-              console.log(sm_immo974)
-              console.log(sm_dailymotion)
-              console.log(sm_actu_reunion_ios)
-              console.log(sm_actu_reunion_android)
-              console.log(sm_rodzafer_ios)
-              console.log(sm_rodzafer_android)
-              console.log(sm_rodzafer_lp)
-              console.log(sm_rodali)*/
-
-              /*        
-            // Function foreach qui met dans un tableau les impressions correspondant au site
-            async function habillage_Info_ArrayElements(element, index, array) {
-              habillage_linfo_impression.push(habillageImpressions[element]);
-              habillage_linfo_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_DTJ_ArrayElements(element, index, array) {
-              habillage_dtj_impression.push(habillageImpressions[element]);
-              habillage_dtj_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_Antenne_ArrayElements(element, index, array) {
-
-              habillage_antenne_impression.push(habillageImpressions[element]);
-              habillage_antenne_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_LinfoIos_ArrayElements(element, index, array) {
-              habillage_infoIos_impression.push(habillageImpressions[element]);
-              habillage_infoIos_clic.push(habillageClicks[element]);
-
-            }
-
-            async function habillage_LinfoAndroid_ArrayElements(element, index, array) {
-
-              habillage_infoAndroid_impression.push(habillageImpressions[element]);
-              habillage_infoAndroid_clic.push(habillageClicks[element]);
-
-            }
-
-
-            async function habillage_Orange_ArrayElements(element, index, array) {
-              habillage_orange_impression.push(habillageImpressions[element]);
-              habillage_orange_clic.push(habillageClicks[element]);
-
-            }
-
-
-
-            sm_linfo.forEach(habillage_Info_ArrayElements);
-            sm_dtj.forEach(habillage_DTJ_ArrayElements);
-            sm_antenne.forEach(habillage_Antenne_ArrayElements);
-            sm_linfo_ios.forEach(habillage_LinfoIos_ArrayElements);
-            sm_linfo_android.forEach(habillage_LinfoAndroid_ArrayElements);
-            sm_orange.forEach(habillage_Orange_ArrayElements);
-/*
-            const SM_LINFO_HABILLAGE_impression = new Array()
-            const SM_LINFO_HABILLAGE_clic = new Array()
-            const SM_LINFO_IOS_HABILLAGE_impression = new Array()
-            const SM_LINFO_IOS_HABILLAGE_clic = new Array()
-            const SM_LINFO_ANDROID_HABILLAGE_impression = new Array()
-            const SM_LINFO_ANDROID_HABILLAGE_clic = new Array()
-            const SM_ANTENNE_HABILLAGE_impression = new Array()
-            const SM_ANTENNE_HABILLAGE_clic = new Array()
-            const SM_ORANGE_HABILLAGE_impression = new Array()
-            const SM_ORANGE_HABILLAGE_clic = new Array()
-            const SM_DTJ_HABILLAGE_impression = new Array()
-            const SM_DTJ_HABILLAGE_clic = new Array()
-
-
-
-            const valueToRemove = undefined;
-            //push les valeur filtré total  et clique
-            for (let i = 0; i < habillage_linfo_impression.length; i++) {
-              if (habillage_linfo_impression[i] !== valueToRemove) {
-
-                SM_LINFO_HABILLAGE_impression.push(habillage_linfo_impression[i]);
-                SM_LINFO_HABILLAGE_clic.push(habillage_linfo_clic[i]);
-              }
-
-            }
-            for (let i = 0; i < habillage_infoIos_impression.length; i++) {
-              if (habillage_infoIos_impression[i] !== valueToRemove) {
-
-                SM_LINFO_IOS_HABILLAGE_impression.push(habillage_infoIos_impression[i]);
-                SM_LINFO_IOS_HABILLAGE_clic.push(habillage_infoIos_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_infoAndroid_impression.length; i++) {
-              if (habillage_infoAndroid_impression[i] !== valueToRemove) {
-
-                SM_LINFO_ANDROID_HABILLAGE_impression.push(habillage_infoAndroid_impression[i]);
-                SM_LINFO_ANDROID_HABILLAGE_clic.push(habillage_infoAndroid_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_antenne_impression.length; i++) {
-
-              if (habillage_antenne_impression[i] !== valueToRemove) {
-                SM_ANTENNE_HABILLAGE_impression.push(habillage_antenne_impression[i]);
-                SM_ANTENNE_HABILLAGE_clic.push(habillage_antenne_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_orange_impression.length; i++) {
-              if (habillage_orange_impression[i] !== valueToRemove) {
-                SM_ORANGE_HABILLAGE_impression.push(habillage_orange_impression[i]);
-                SM_ORANGE_HABILLAGE_clic.push(habillage_orange_clic[i]);
-              }
-            }
-            for (let i = 0; i < habillage_dtj_impression.length; i++) {
-              if (habillage_dtj_impression[i] !== valueToRemove) {
-
-                SM_DTJ_HABILLAGE_impression.push(habillage_dtj_impression[i]);
-                SM_DTJ_HABILLAGE_clic.push(habillage_dtj_clic[i]);
-              }
-            }
-*/
 
               // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par format)
               const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -892,25 +769,6 @@ exports.report = async (req, res) => {
               var sommeVideoImpression = videoImpressions.reduce(reducer, 0);
               var sommeVideoClicks = videoClicks.reduce(reducer, 0);
 
-
-
-
-
-              /*
-                          // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par site et format)
-                          var sommeHabillage_Impression_info = SM_LINFO_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_info = SM_LINFO_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_infoIos = SM_LINFO_IOS_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_infoIos = SM_LINFO_IOS_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_infoAndroid = SM_LINFO_ANDROID_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_antenne = SM_ANTENNE_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_antenne = SM_ANTENNE_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_orange = SM_ORANGE_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_orange = SM_ORANGE_HABILLAGE_clic.reduce(reducer, 0);
-                          var sommeHabillage_Impression_dtj = SM_DTJ_HABILLAGE_impression.reduce(reducer, 0);
-                          var sommeHabillageClicks_dtj = SM_DTJ_HABILLAGE_clic.reduce(reducer, 0);
-              */
 
             }
 
@@ -954,26 +812,6 @@ exports.report = async (req, res) => {
 
 
 
-            /*        //Calcule de taux clic par site
-          CTR_habillage_linfo = (sommeHabillageClicks_info / sommeHabillage_Impression_info) * 100
-          CTR_habillage_linfo = CTR_habillage_linfo.toFixed(2);
-
-          CTR_habillage_linfoios = (sommeHabillageClicks_infoIos / sommeHabillage_Impression_infoIos) * 100
-          CTR_habillage_linfoios = CTR_habillage_linfoios.toFixed(2);
-
-          CTR_habillage_linfoandroid = (sommeHabillageClicks_infoAndroid / sommeHabillage_Impression_infoAndroid) * 100
-          CTR_habillage_linfoandroid = CTR_habillage_linfoandroid.toFixed(2);
-
-          CTR_habillage_antenne = (sommeHabillageClicks_antenne / sommeHabillage_Impression_antenne) * 100
-          CTR_habillage_antenne = CTR_habillage_antenne.toFixed(2);
-
-          CTR_habillage_orange = (sommeHabillageClicks_orange / sommeHabillage_Impression_orange) * 100
-          CTR_habillage_orange = CTR_habillage_orange.toFixed(2);
-
-          CTR_habillage_dtj = (sommeHabillageClicks_dtj / sommeHabillage_Impression_dtj) * 100
-          CTR_habillage_dtj = CTR_habillage_dtj.toFixed(2);
-*/
-
             //Calcul des chiffre global %Taux clic Repetition %VTR
             Taux_VTR = (TotalComplete / TotalImpressions) * 100
             VTR = Taux_VTR.toFixed(2);
@@ -998,12 +836,7 @@ exports.report = async (req, res) => {
             sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI")
             sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI")
             sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI")
-            /* sommeHabillage_Impression_info = new Number(sommeHabillage_Impression_info).toLocaleString("fi-FI")
-             sommeHabillage_Impression_infoIos = new Number(sommeHabillage_Impression_infoIos).toLocaleString("fi-FI")
-             sommeHabillage_Impression_infoAndroid = new Number(sommeHabillage_Impression_infoAndroid).toLocaleString("fi-FI")
-             sommeHabillage_Impression_antenne = new Number(sommeHabillage_Impression_antenne).toLocaleString("fi-FI")
-             sommeHabillage_Impression_orange = new Number(sommeHabillage_Impression_orange).toLocaleString("fi-FI")
-             sommeHabillage_Impression_dtj = new Number(sommeHabillage_Impression_dtj).toLocaleString("fi-FI")*/
+
 
             var Campagne_name = CampaignName[0]
 
@@ -1180,39 +1013,28 @@ exports.report = async (req, res) => {
 
             }
 
-            /*          var data_site = {
-                        sommeHabillage_Impression_info,
-                        sommeHabillageClicks_info,
-                        CTR_habillage_linfo,
-                        sommeHabillage_Impression_infoIos,
-                        sommeHabillageClicks_infoIos,
-                        CTR_habillage_linfoios,
-                        sommeHabillage_Impression_infoAndroid,
-                        sommeHabillageClicks_infoAndroid,
-                        CTR_habillage_linfoandroid,
-                        sommeHabillage_Impression_antenne,
-                        sommeHabillageClicks_antenne,
-                        CTR_habillage_antenne,
-                        sommeHabillage_Impression_orange,
-                        sommeHabillageClicks_orange,
-                        CTR_habillage_orange,
-                        sommeHabillage_Impression_dtj,
-                        sommeHabillageClicks_dtj,
-                        CTR_habillage_dtj,
-
-
-                    }
-            */
-
             // var ttl = 7200 //2h
             const now = new Date()
             var timestamp_now = now.getTime()
             var timestamp_expire = now.setHours(now.getHours() + 2);
+            //console.log(timestamp_expire)
+
+
+            function getDateTimeTimestamp(refrechTimeStamp) {
+              let dates = new Date(refrechTimeStamp);
+              return ('0' + dates.getDate()).slice(-2) + '/' + ('0' + (dates.getMonth() + 1)).slice(-2) + '/' + dates.getFullYear() + ' ' + ('0' + dates.getHours()).slice(-2) + ':' + ('0' + dates.getMinutes()).slice(-2);
+            }
+            var t3 = parseInt(timestamp_expire)
+
+            var date_expirer = getDateTimeTimestamp(t3);
+
+            //  console.log(date_expirer)
 
             var testObject = {
               'campaign_id': campaignid,
               'date_now': timestamp_now,
               'date_expiry': timestamp_expire,
+              'date_expirer': date_expirer,
               'table': table,
               'data_habillage': data_habillage,
               'data_interstitiel': data_interstitiel,
@@ -1234,7 +1056,8 @@ exports.report = async (req, res) => {
               data_masthead: data_masthead,
               data_grand_angle: data_grand_angle,
               data_native: data_native,
-              data_video: data_video
+              data_video: data_video,
+              data_expirer: date_expirer
             });
 
 
@@ -1263,6 +1086,43 @@ exports.report = async (req, res) => {
 
   } catch (error) {
     console.log(error)
+   /* var statusCoded = error.response.status;
+
+    res.render("error.ejs", {
+      statusCoded: statusCoded,
+      advertiserid: advertiserid,
+      campaignid: campaignid,
+      startDate: startDate,
+    })*/
+
+
+  }
+
+
+
+}
+
+exports.automatisation = async (req, res) => {
+
+
+
+  let campaignid = req.params.campaignid;
+
+
+  try {
+
+
+
+    var data_localStorage = localStorage.getItem('campagneId' + '-' + campaignid);
+
+
+
+    res.json(data_localStorage)
+
+
+
+  } catch (error) {
+    console.log(error)
     var statusCoded = error.response.status;
 
     res.render("error.ejs", {
@@ -1274,41 +1134,4 @@ exports.report = async (req, res) => {
 
 
   }
-
-
-
-}
-
-exports.report_view = async (req, res) => {
-
-  // Retrieve the object from storage
-  var data_report = localStorage.getItem('testObject');
-
-  var data_report_view = JSON.parse(data_report);
-
-  var campaignid = data_report_view.campaignid
-  var table = data_report_view.table
-  var data_habillage = data_report_view.data_habillage
-  var data_interstitiel = data_report_view.data_interstitiel
-  var data_masthead = data_report_view.data_masthead
-  var data_grand_angle = data_report_view.data_grand_angle
-  var data_native = data_report_view.data_native
-  var data_video = data_report_view.data_video
-
-  //console.log(campaignid)
-
-
-
-
-
-  res.render('reporting/data-reporting-template.ejs', {
-    table: table,
-    data_habillage: data_habillage,
-    data_interstitiel: data_interstitiel,
-    data_masthead: data_masthead,
-    data_grand_angle: data_grand_angle,
-    data_native: data_native,
-    data_video: data_video
-  })
-
 }
