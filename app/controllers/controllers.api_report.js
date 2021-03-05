@@ -42,19 +42,7 @@ exports.test = async (req, res) => {
    let startDate = req.params.startdate
 
    res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)*/
-  let time = 0;
-
-  let timer = setInterval(function () {
-
-    time += 1;
-    console.log('count' + time);
-
-
-    if (time >= 5) {
-      console.log('timeclear');
-      clearInterval(timer);
-    }
-  }, 1000);
+  
 
   let timer = setInterval(function() {
       console.log('counter :   '+ counter) ;
@@ -86,20 +74,16 @@ exports.index = async (req, res) => {
 
 exports.generate = async (req, res) => {
 
-  //recupÃ¨re en parametre get id annonceur / id campagne / date de debut
+  //recupère en parametre get id annonceur / id campagne / date de debut
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate
 
   const timestamp_startdate = Date.parse(startDate);
   const date_now = Date.now()
-  //console.log(timestamp_startdate);
- // console.log(date_now);
+ 
 
-
-  if (date_now < timestamp_startdate) {
-    console.log("message")
-  }
+ 
 
   var campaign = await ModelCampaigns.findOne({
     attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
@@ -383,9 +367,16 @@ exports.report = async (req, res) => {
             //on arrête la fonction setInterval si il y a les 2 taskID en cache
             clearInterval(timerFile);
 
-
+            //convertie le fichier localStorage task_global en objet
             const obj_default = JSON.parse(dataLSTaskGlobal);
             var data_split_global = obj_default.datafile
+
+            //convertie le fichier localStorage task_vu en objet
+            const obj_vu = JSON.parse(dataLSTaskGlobalVU);
+            var data_split_vu = obj_vu.datafile
+
+
+            //4) Traitement des données
             const UniqueVisitors = []
 
             var data_split2 = data_split_vu.split(/\r?\n/);
