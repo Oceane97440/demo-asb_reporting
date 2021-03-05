@@ -70,6 +70,72 @@
 
         <hr />
 
+        
+
+
+
+        <div class="row p-3 m-5" id="table_uu">
+            <h3 class="title"><i class="fas fa-chart-line"></i> Bilan global de la campagne </h3>
+
+            <table class="table">
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th scope="col">Impressions</th>
+                        <th scope="col">Clics</th>
+                        <th scope="col">Taux de clics</th>
+                        <th scope="col">Visiteur Unique</th>
+                        <th scope="col">Répétition</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%=table.total_impression_format%></td>
+                        <td><%=table.total_click_format%></td>
+                        <td><%=table.CTR%>%</td>
+                        <td><%=table.Total_VU%></td>
+                        <td><%=table.Repetition%></td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <% if(table.TotalComplete > 0 ) { %>
+        <div class="row p-3 m-5" id="table_uu">
+            <h3 class="title"><i class="fas fa-chart-line"></i> Bilan global de la campagne vidéo</h3>
+
+            <table class="table">
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th scope="col">Impressions vidéo</th>
+                        <th scope="col">Clics vidéo</th>
+                        <th scope="col">Taux de clics vidéo</th>
+
+                        <th scope="col">Total Complete</th>
+                        <th scope="col">VTR%</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%=table.sommeVideoImpression%></td>
+                        <td><%=table.sommeVideoClicks%></td>
+                        <td><%=table.CTR_video%>%</td>
+                        <% if(table.TotalComplete > 0 ) { %>
+                        <td><%=table.TotalComplete%></td>
+                        <td><%=table.VTR%>%</td>
+                        <% }%>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <% }%>
+
         <div class="row p-3 m-5">
             <h3 class="title"><i class="fas fa-chart-line"></i> Par Format / global </h3>
 
@@ -157,8 +223,8 @@
                 <tfoot>
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.TotalImpressions%></td>
-                        <td><%=table.TotalCliks%></td>
+                        <td><%=table.total_impression_format%></td>
+                        <td><%=table.total_click_format%></td>
                         <td><%=table.CTR%>%</td>
                     </tr>
                 </tfoot>
@@ -481,70 +547,6 @@
 
 
 
-
-
-
-        <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Bilan global de la campagne </h3>
-
-            <table class="table">
-                <thead class="text-left thead-dark">
-                    <tr>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
-                        <th scope="col">Visiteur Unique</th>
-                        <th scope="col">Répétition</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><%=table.TotalImpressions%></td>
-                        <td><%=table.TotalCliks%></td>
-                        <td><%=table.CTR%>%</td>
-                        <td><%=table.Total_VU%></td>
-                        <td><%=table.Repetition%></td>
-
-
-                    </tr>
-                </tbody>
-            </table>
-
-        </div>
-        <% if(table.TotalComplete > 0 ) { %>
-        <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> Bilan global de la campagne vidéo</h3>
-
-            <table class="table">
-                <thead class="text-left thead-dark">
-                    <tr>
-                        <th scope="col">Impressions vidéo</th>
-                        <th scope="col">Clics vidéo</th>
-                        <th scope="col">Taux de clics vidéo</th>
-
-                        <th scope="col">Total Complete</th>
-                        <th scope="col">VTR%</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><%=table.sommeVideoImpression%></td>
-                        <td><%=table.sommeVideoClicks%></td>
-                        <td><%=table.CTR_video%>%</td>
-                        <% if(table.TotalComplete > 0 ) { %>
-                        <td><%=table.TotalComplete%></td>
-                        <td><%=table.VTR%>%</td>
-                        <% }%>
-
-                    </tr>
-                </tbody>
-            </table>
-
-        </div>
-
-        <% }%>
 
 
 

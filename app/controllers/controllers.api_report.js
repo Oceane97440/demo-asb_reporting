@@ -42,18 +42,18 @@ exports.test = async (req, res) => {
    let startDate = req.params.startdate
 
    res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)*/
-  
 
-  let timer = setInterval(function() {
-      console.log('counter :   '+ counter) ;
-  
-      counter += 1000;
-  
-      if (counter >= 10000) {
-          clearInterval(timer);
-      }
+
+  let timer = setInterval(function () {
+    console.log('counter :   ' + counter);
+
+    counter += 1000;
+
+    if (counter >= 10000) {
+      clearInterval(timer);
+    }
   }, 1000);
-  
+
 
 }
 
@@ -81,9 +81,9 @@ exports.generate = async (req, res) => {
 
   const timestamp_startdate = Date.parse(startDate);
   const date_now = Date.now()
- 
 
- 
+
+
 
   var campaign = await ModelCampaigns.findOne({
     attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
@@ -263,6 +263,8 @@ exports.report = async (req, res) => {
 
       }
 
+      //test si la date de fin de la campagne est => date au jourd'hui = 31j ne pas effectuer la requête
+      //date_fin - date du jour = nbr jour
 
       //RequÃªte visitor unique
       var requestVisitor_unique = {
@@ -635,16 +637,36 @@ exports.report = async (req, res) => {
               grand_angle.forEach(grand_angleArrayElements);
               native.forEach(nativeArrayElements);
               video.forEach(VideoArrayElements)
-
-
-             /* console.log(videoImpressions )
-              console.log(videoClicks )
-              console.log('----------')
+/*
               console.log(videoSiteId)
-              console.log(videoSitename )
+              console.log(videoSitename)
               console.log('----------')
-              console.log(videoFormatName )*/
-        
+
+              var SiteId_filtre = new Array()
+
+              videoSiteId.forEach(function(elements){
+
+                //console.log(element)
+
+
+                const found = videoSiteId.find(element => element === elements);
+                console.log(found)
+
+
+               
+
+                if(){
+
+                  SiteId_filtre.push(element);
+
+                }
+
+              });
+             
+           
+              console.log(SiteId_filtre)
+
+*/
 
 
               var sm_linfo = new Array()
@@ -766,22 +788,22 @@ exports.report = async (req, res) => {
 
             }
 
-           
 
-            var total_impression_format = sommeHabillageImpression + sommeGrand_AngleImpression + sommeInterstitielImpression +sommeMastheadImpression + sommeNativeImpression + sommeVideoImpression
-            var total_click_format = sommeHabillageClicks + sommeGrand_AngleClicks +sommeInterstitielClicks + sommeMastheadClicks + sommeNativeClicks + sommeVideoClicks
-            
-           
+
+            var total_impression_format = sommeHabillageImpression + sommeGrand_AngleImpression + sommeInterstitielImpression + sommeMastheadImpression + sommeNativeImpression + sommeVideoImpression
+            var total_click_format = sommeHabillageClicks + sommeGrand_AngleClicks + sommeInterstitielClicks + sommeMastheadClicks + sommeNativeClicks + sommeVideoClicks
+
+
 
 
             //var TotalImpressions = 0
-           // var TotalCliks = 0
+            // var TotalCliks = 0
             var TotalComplete = 0
             //somme impression clic complete
             for (let i = 0; i < Array_Impression.length; i++) {
               if (Array_Impression[i] != '') {
-              //  TotalImpressions += parseInt(Array_Impression[i])
-               // TotalCliks += parseInt(Array_Clicks[i])
+                //  TotalImpressions += parseInt(Array_Impression[i])
+                // TotalCliks += parseInt(Array_Clicks[i])
                 TotalComplete += parseInt(Array_Complete[i])
 
 
@@ -821,20 +843,20 @@ exports.report = async (req, res) => {
             CTR = Taux_clics.toFixed(2);*/
             var Taux_clics = (total_click_format / total_impression_format) * 100
             CTR = Taux_clics.toFixed(2);
-         
+
 
             var Impression_vu = (total_impression_format / Total_VU)
             Repetition = Impression_vu.toFixed(2);
 
-       
+
 
 
 
             //SEPARATEUR DE MILLIER
-           // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI")
-           // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI")
-           total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI")
-           total_click_format = new Number(total_click_format).toLocaleString("fi-FI")
+            // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI")
+            // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI")
+            total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI")
+            total_click_format = new Number(total_click_format).toLocaleString("fi-FI")
             Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
 
             sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI")
@@ -1096,14 +1118,14 @@ exports.report = async (req, res) => {
 
   } catch (error) {
     console.log(error)
-   /* var statusCoded = error.response.status;
+    /* var statusCoded = error.response.status;
 
-    res.render("error.ejs", {
-      statusCoded: statusCoded,
-      advertiserid: advertiserid,
-      campaignid: campaignid,
-      startDate: startDate,
-    })*/
+     res.render("error.ejs", {
+       statusCoded: statusCoded,
+       advertiserid: advertiserid,
+       campaignid: campaignid,
+       startDate: startDate,
+     })*/
 
 
   }
