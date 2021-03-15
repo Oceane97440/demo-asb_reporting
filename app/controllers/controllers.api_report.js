@@ -171,7 +171,7 @@ exports.report = async (req, res) => {
         localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global");
         localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global_vu");
 
-        res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`);
+        res.redirect(`/reporting/generate/${advertiserid}/${campaignid}/${startDate}`);
 
       }
 
@@ -314,8 +314,8 @@ exports.report = async (req, res) => {
 
 
 
-        let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
-        let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`
+        let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+        let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
 
         //2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min
         //on commence à 10sec
@@ -688,7 +688,7 @@ exports.report = async (req, res) => {
 
 
 
-            /*   var sm_linfo = new Array();
+              /*var sm_linfo = new Array();
               var sm_linfo_android = new Array();
               var sm_linfo_ios = new Array();
               var sm_antenne = new Array();
@@ -770,7 +770,7 @@ exports.report = async (req, res) => {
 
 
 
-              });
+              });*/
 
 
 
@@ -784,7 +784,7 @@ exports.report = async (req, res) => {
 
               }
 
-              sm_linfo.forEach(habillage_siteArrayElements);*/
+              sm_linfo.forEach(habillage_siteArrayElements);
 
 
 
@@ -876,7 +876,7 @@ exports.report = async (req, res) => {
             // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI");
             total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI");
             total_click_format = new Number(total_click_format).toLocaleString("fi-FI");
-            Total_VU = new Number(Total_VU).toLocaleString("fi-FI");;
+            Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
 
             sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI");
             sommeHabillageImpression = new Number(sommeHabillageImpression).toLocaleString("fi-FI");
@@ -990,7 +990,7 @@ exports.report = async (req, res) => {
               sommevideoClics,
               videoCTR_clics
 
-            }
+            };
 
 
 
@@ -1006,7 +1006,7 @@ exports.report = async (req, res) => {
               habillageCTR_clics,
 
 
-            }
+            };
 
 
             var data_interstitiel = {
@@ -1021,7 +1021,7 @@ exports.report = async (req, res) => {
               interstitielCTR_clics
 
 
-            }
+            };
 
 
             var data_masthead = {
@@ -1035,7 +1035,7 @@ exports.report = async (req, res) => {
               sommemastheadClics,
               mastheadCTR_clics
 
-            }
+            };
 
 
             var data_grand_angle = {
@@ -1049,7 +1049,7 @@ exports.report = async (req, res) => {
               sommegrand_angleClics,
               grand_angleCTR_clics
 
-            }
+            };
 
             var data_native = {
 
@@ -1062,7 +1062,7 @@ exports.report = async (req, res) => {
               sommenativeClics,
               nativeCTR_clics
 
-            }
+            };
 
             // var ttl = 7200 //2h
             const now = new Date();

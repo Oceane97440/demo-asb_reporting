@@ -152,31 +152,31 @@ app.use('/', index);
 // action admin forecast
 const forecast = require('./app/routes/routes.api_forecast');
 
-app.use('/api/forecast', forecast);
+app.use('/forecast', forecast);
 
 // action admin reporting
 
 const reporting = require('./app/routes/routes.api_report');
 
-app.use('/api/reporting', reporting);
+app.use('/reporting', reporting);
 
 // action liste campagne epilot
 
 const epilot = require('./app/routes/routes.api_epilot');
 
-app.use('/api/epilot', epilot);
+app.use('/epilot', epilot);
 
 // action admin recupération donnée api
 
 const manager = require('./app/routes/routes.api_manager');
 
-app.use('/api/manager', manager);
+app.use('/manager', manager);
 
 // action user forecast
 
 const user = require('./app/routes/routes.api_user');
 
-app.use('/api/utilisateur', user);
+app.use('/utilisateur', user);
 
 
 /**Le serveur ecoute sur le port 3000  */

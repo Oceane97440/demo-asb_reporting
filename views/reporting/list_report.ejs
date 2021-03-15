@@ -104,7 +104,7 @@
         //function ajax pagination
         var dataContainer = $('#data-container');
         $('#pagination-container').pagination({
-            dataSource: "http://127.0.0.1:3000/api/reporting/json_report",
+            dataSource: "http://127.0.0.1:3000/reporting/json_report",
             locator:"taskId",
             totalNumber: 1000,
             pageSize: 10,
@@ -121,7 +121,7 @@
 
                 $.each(data, function (index, item) {
                     // recup les données et crée un tableau
-                    dataHtml += '<tr><td>'+ item.creationDateUTC + '</td>' + '<td>'+ item.status +'</td>' +'<td>'+ item.taskId + '</td>'+ '<td><a href="/api/reporting/view_report/'+item.taskId+'" >Voir le rapport</a> </td></tr>';
+                    dataHtml += '<tr><td>'+ item.creationDateUTC + '</td>' + '<td>'+ item.status +'</td>' +'<td>'+ item.taskId + '</td>'+ '<td><a href="/reporting/view_report/'+item.taskId+'" >Voir le rapport</a> </td></tr>';
 
 
                 });

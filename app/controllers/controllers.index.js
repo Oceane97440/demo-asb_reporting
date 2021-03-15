@@ -168,10 +168,10 @@ exports.login_add = async (req, res) => {
 
               }
               if (req.session.user.role === 4){
-                return res.redirect('/api/reporting/dasbord_report')
+                return res.redirect('/reporting/dasbord_report')
 
               }
-              return res.redirect('/api/utilisateur')
+              return res.redirect('/utilisateur')
           }
       } catch (error) { 
         console.log(error)

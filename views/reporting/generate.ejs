@@ -135,7 +135,7 @@
       $.ajax({
 
         method: "GET",
-        url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
+        url: `/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
 
         success: function (data) {
           $("#exampleModal").hide();
@@ -151,7 +151,7 @@
       })
 
 
-      //lors du clic du bouton affectue la requête : GET :/api/reporting/:advertiserid/:campaignid
+      //lors du clic du bouton affectue la requête : GET :/reporting/:advertiserid/:campaignid
       $('.btn').click(function () {
 
         $("#exampleModal").modal("show");
@@ -159,7 +159,7 @@
         $.ajax({
 
           method: "GET",
-          url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
+          url: `/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
 
           success: function (data) {
             $("#exampleModal").hide();

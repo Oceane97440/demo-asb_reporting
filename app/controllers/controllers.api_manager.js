@@ -89,7 +89,7 @@ exports.advertiser_add = async (req, res) => {
           }
   
         })
-        res.redirect("/api/manager/list_advertisers")
+        res.redirect("/manager/list_advertisers")
 
     }
 
@@ -185,7 +185,7 @@ exports.campaign_add = async (req, res) => {
   
   
         })
-        res.redirect("/api/manager/list_advertisers")
+        res.redirect("/manager/list_advertisers")
 
     }
   } catch (error) { 
