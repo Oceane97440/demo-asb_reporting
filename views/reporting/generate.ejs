@@ -135,7 +135,7 @@
       $.ajax({
 
         method: "GET",
-        url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>`,
+        url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
 
         success: function (data) {
           $("#exampleModal").hide();
@@ -159,7 +159,7 @@
         $.ajax({
 
           method: "GET",
-          url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>`,
+          url: `/api/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
 
           success: function (data) {
             $("#exampleModal").hide();

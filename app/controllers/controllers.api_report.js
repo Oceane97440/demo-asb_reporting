@@ -1,7 +1,4 @@
 // Initialise le module
-const http = require('http');
-const https = require('https');
-const fs = require('fs')
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('./report_storage');
 localStorage_tasks = new LocalStorage('./taskID');
@@ -33,15 +30,10 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-const ModelAdvertiser = require("../models/models.advertiser")
-const ModelCampaigns = require("../models/models.campaigns")
+const ModelAdvertiser = require("../models/models.advertiser");
+const ModelCampaigns = require("../models/models.campaigns");
 
 exports.test = async (req, res) => {
-  /* let advertiserid = req.params.advertiserid;
-   let campaignid = req.params.campaignid;
-   let startDate = req.params.startdate
-
-   res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)*/
 
 
   let timer = setInterval(function () {
@@ -64,8 +56,7 @@ exports.index = async (req, res) => {
   if (req.session.user.role == 1) {
 
 
-
-    res.render("reporting/dasbord_report.ejs")
+    res.render("reporting/dasbord_report.ejs");
 
   }
 }
@@ -77,10 +68,12 @@ exports.generate = async (req, res) => {
   //recupère en parametre get id annonceur / id campagne / date de debut
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
-  let startDate = req.params.startdate
+  let startDate = req.params.startdate;
+  let endDate = req.params.enddate;
+
 
   const timestamp_startdate = Date.parse(startDate);
-  const date_now = Date.now()
+  const date_now = Date.now();
 
 
 
@@ -97,12 +90,13 @@ exports.generate = async (req, res) => {
       model: ModelAdvertiser
     }],
 
-  })
+  });
 
   res.render("reporting/generate.ejs", {
     advertiserid: advertiserid,
     campaignid: campaignid,
     startDate: startDate,
+    endDate: endDate,
     campaign: campaign,
     timestamp_startdate: timestamp_startdate,
     date_now: date_now
@@ -115,19 +109,20 @@ exports.generate = async (req, res) => {
 
 exports.report = async (req, res) => {
 
-  //fonctionnalitÃ© gÃ©nÃ©ration du rapport
+  //fonctionnalité generation du rapport
 
   let advertiserid = req.params.advertiserid;
   let campaignid = req.params.campaignid;
   let startDate = req.params.startdate;
+  let EndtDate = req.params.enddate;
+
+  const timestamp_enddate = Date.parse(EndtDate);
 
 
   try {
 
 
-
     var data_localStorage = localStorage.getItem('campagneId' + '-' + campaignid);
-
 
     //si le localStorage exsite -> affiche la data du localstorage
     if (data_localStorage) {
@@ -135,30 +130,27 @@ exports.report = async (req, res) => {
       //convertie la date JSON en objet
       var data_report_view = JSON.parse(data_localStorage);
 
-      var date_expire = data_report_view.date_expiry
+      var date_expiry = data_report_view.date_expiry;
 
 
 
       //date aujourd'hui en timestamp
-      const now = new Date()
-      var timestamp_now = now.getTime()
+      const now = new Date();
+      var timestamp_now = now.getTime();
 
-      //si la date expiration est < Ã  la date du jour on garde la cache
-      if (timestamp_now < date_expire) {
+      //si la date expiration est < a  la date du jour on garde la cache
+      if (timestamp_now < date_expiry) {
 
-
-        //  console.log('cache');
 
         //interval de temps <2h
-        var dts_campaignid = data_report_view.ls_campaignid
-        var dts_table = data_report_view.table
-        var dts_data_habillage = data_report_view.data_habillage
-        var dts_data_interstitiel = data_report_view.data_interstitiel
-        var dts_data_masthead = data_report_view.data_masthead
-        var dts_data_grand_angle = data_report_view.data_grand_angle
-        var dts_data_native = data_report_view.data_native
-        var dts_data_video = data_report_view.data_video
-        var dts_date_expirer = data_report_view.date_expirer
+        var dts_table = data_report_view.table;
+        var dts_data_habillage = data_report_view.data_habillage;
+        var dts_data_interstitiel = data_report_view.data_interstitiel;
+        var dts_data_masthead = data_report_view.data_masthead;
+        var dts_data_grand_angle = data_report_view.data_grand_angle;
+        var dts_data_native = data_report_view.data_native;
+        var dts_data_video = data_report_view.data_video;
+        var dts_date_expiry = data_report_view.date_expiry;
 
         res.render('reporting/data-reporting-template.ejs', {
           table: dts_table,
@@ -168,7 +160,7 @@ exports.report = async (req, res) => {
           data_grand_angle: dts_data_grand_angle,
           data_native: dts_data_native,
           data_video: dts_data_video,
-          data_expirer: dts_date_expirer
+          data_expirer: dts_date_expiry
         });
 
 
@@ -179,22 +171,39 @@ exports.report = async (req, res) => {
         localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global");
         localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global_vu");
 
-        res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`)
+        res.redirect(`/api/reporting/generate/${advertiserid}/${campaignid}/${startDate}`);
 
       }
 
 
     } else {
 
+    
+
+      const now = new Date();
+      var timestamp_datenow = now.getTime();
+
+      //si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour
+      if(timestamp_enddate < timestamp_datenow)
+      {
+
+       var end_date = EndtDate;
 
 
+
+      }else{
+
+        var end_date =  "CURRENT_DAY+1";
+        
+
+      }
 
       //initialisation des requÃªtes
       var requestReporting = {
 
         "startDate": startDate,
 
-        "endDate": "CURRENT_DAY+1",
+        "endDate":end_date,
 
         "fields": [
 
@@ -271,7 +280,7 @@ exports.report = async (req, res) => {
 
         "startDate": startDate,
 
-        "endDate": "CURRENT_DAY+1",
+        "endDate": end_date,
 
         "fields": [
 
@@ -295,27 +304,26 @@ exports.report = async (req, res) => {
 
       // 1) RequÃªte POST 
       let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting);
-      let threeLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
+      let twoLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
 
 
 
-      if (firstLink.data.taskId || threeLink.data.taskId) {
+      if (firstLink.data.taskId || twoLink.data.taskId) {
         var taskId = firstLink.data.taskId;
-        var taskId2 = threeLink.data.taskId;
+        var taskId_uu = twoLink.data.taskId;
 
 
 
-        let requete1 = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
-        let requete2 = `https://reporting.smartadserverapis.com/2044/reports/${taskId2}`
+        let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`
+        let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`
 
-        //2) RequÃªte GET boucle jusqu'a que le rapport gÃ©nÃ¨re 100% delais 1min
+        //2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min
         //on commence à 10sec
-        var time = 10000
+        var time = 10000;
         let timerFile = setInterval(async () => {
 
           //on incremente + 10sec
           time += 10000;
-          // console.log('count'+time);
 
           // DATA STORAGE - TASK 1 et 2
           var dataLSTaskGlobal = localStorage_tasks.getItem('campagneId' + '-' + campaignid + '-' + "task_global");
@@ -323,23 +331,21 @@ exports.report = async (req, res) => {
 
           if (!dataLSTaskGlobal || !dataLSTaskGlobalVU) {
 
-            let secondLink = await AxiosFunction.getReportingData('GET', requete1, '');
-            let fourLink = await AxiosFunction.getReportingData('GET', requete2, '');
-            // console.log('secondLink  '+secondLink)
-            // console.log('fourLink  '+ fourLink)
-
+            let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+            let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
+    
 
             //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
-            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.jobProgress == '1.0') &&
-              (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
+            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.jobProgress == '1.0') &&
+              (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
             ) {
 
               clearInterval(timerFile);
 
               // Request task1
-              if ((secondLink.data.lastTaskInstance.jobProgress == '1.0') && (secondLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+              if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
                 //3) Récupère la date de chaque requÃªte
-                dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '')
+                dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
 
                 //save la data requête 1 dans le local storage
                 var obj_dataFile = {
@@ -352,12 +358,12 @@ exports.report = async (req, res) => {
               // Request task2
               if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
                 //3) Récupère la date de chaque requÃªte
-                dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId2}/file`, '');
+                dataFile2 = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}/file`, '');
 
                 //save la data requête 2 dans le local storage
                 var obj_dateFile2 = {
                   'datafile': dataFile2.data
-                }
+                };
 
                 localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
               }
@@ -371,48 +377,47 @@ exports.report = async (req, res) => {
 
             //convertie le fichier localStorage task_global en objet
             const obj_default = JSON.parse(dataLSTaskGlobal);
-            var data_split_global = obj_default.datafile
+            var data_split_global = obj_default.datafile;
 
             //convertie le fichier localStorage task_vu en objet
             const obj_vu = JSON.parse(dataLSTaskGlobalVU);
-            var data_split_vu = obj_vu.datafile
+            var data_split_vu = obj_vu.datafile;
 
 
             //4) Traitement des données
-            const UniqueVisitors = []
+            const UniqueVisitors = [];
 
-            var data_split2 = data_split_vu.split(/\r?\n/);
-            var number_line = data_split2.length;
+            var data_splinter_vu = data_split_vu.split(/\r?\n/);
+            var number_line = data_splinter_vu.length;
             //boucle sur les ligne
             for (i = 1; i < number_line; i++) {
 
-              line = data_split2[i].split(';');
+              line = data_splinter_vu[i].split(';');
               UniqueVisitors.push(line[0]);
 
             }
 
-            var Total_VU = UniqueVisitors[0]
-
+            var Total_VU = UniqueVisitors[0];
 
             //traitement des resultat requête 1
-            const CampaignStartDate = []
-            const CampaignEndtDate = []
-            const CampaignName = []
-            const InsertionName = []
-            const FormatName = []
-            const SiteId = []
-            const SiteName = []
-            const Impressions = []
-            const ClickRate = []
-            const Clicks = []
-            const Complete = []
+            const CampaignStartDate = [];
+            const CampaignEndtDate = [];
+            const CampaignName = [];
+            const InsertionName = [];
+            const FormatName = [];
+            const SiteId = [];
+            const SiteName = [];
+            const Impressions = [];
+            const ClickRate = [];
+            const Clicks = [];
+            const Complete = [];
 
-            var data_split = data_split_global.split(/\r?\n/);
-            var number_line = data_split.length;
+            var data_splinter_global = data_split_global.split(/\r?\n/);
+            var number_line = data_splinter_global.length;
 
             for (i = 1; i < number_line; i++) {
               //split push les données dans chaque colone
-              line = data_split[i].split(';');
+              line = data_splinter_global[i].split(';');
               CampaignStartDate.push(line[0]);
               CampaignEndtDate.push(line[1]);
               CampaignName.push(line[2]);
@@ -435,9 +440,9 @@ exports.report = async (req, res) => {
               let date = new Date(unixTimeStamp);
               return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
             }
-            var t1 = parseInt(CampaignStartDate[0])
-            var t2 = parseInt(CampaignEndtDate[0])
-            const timeElapsed = Date.now()
+            var t1 = parseInt(CampaignStartDate[0]);
+            var t2 = parseInt(CampaignEndtDate[0]);
+            const timeElapsed = Date.now();
             const Date_rapport = getDateTimeFromTimestamp(timeElapsed);
 
             const StartDate = getDateTimeFromTimestamp(t1);
@@ -477,54 +482,54 @@ exports.report = async (req, res) => {
             //test si le tableau est un array + si il comporte 1 éléments dans l'array
             if ((InsertionName.length > 1) && (Array.isArray(InsertionName) === true)) {
 
-              var habillage = new Array()
-              var interstitiel = new Array()
-              var grand_angle = new Array()
-              var masthead = new Array()
-              var native = new Array()
-              var video = new Array()
+              var habillage = new Array();
+              var interstitiel = new Array();
+              var grand_angle = new Array();
+              var masthead = new Array();
+              var native = new Array();
+              var video = new Array();
 
 
-              var interstitielImpressions = new Array()
-              var interstitielClicks = new Array()
-              var interstitielSitename = new Array()
-              var interstitielFormatName = new Array()
-              var interstitielCTR = new Array()
+              var interstitielImpressions = new Array();
+              var interstitielClicks = new Array();
+              var interstitielSitename = new Array();
+              var interstitielFormatName = new Array();
+              var interstitielCTR = new Array();
 
 
-              var habillageImpressions = new Array()
-              var habillageClicks = new Array()
-              var habillageSiteId = new Array()
-              var habillageSitename = new Array()
-              var habillageFormatName = new Array()
-              var habillageCTR = new Array()
+              var habillageImpressions = new Array();
+              var habillageClicks = new Array();
+              var habillageSiteId = new Array();
+              var habillageSitename = new Array();
+              var habillageFormatName = new Array();
+              var habillageCTR = new Array();
 
 
-              var mastheadImpressions = new Array()
-              var mastheadClicks = new Array()
-              var mastheadSitename = new Array()
-              var mastheadFormatName = new Array()
-              var mastheadCTR = new Array()
+              var mastheadImpressions = new Array();
+              var mastheadClicks = new Array();
+              var mastheadSitename = new Array();
+              var mastheadFormatName = new Array();
+              var mastheadCTR = new Array();
 
-              var grand_angleImpressions = new Array()
-              var grand_angleClicks = new Array()
-              var grand_angleSitename = new Array()
-              var grand_angleFormatName = new Array()
-              var grand_angleCTR = new Array()
+              var grand_angleImpressions = new Array();
+              var grand_angleClicks = new Array();
+              var grand_angleSitename = new Array();
+              var grand_angleFormatName = new Array();
+              var grand_angleCTR = new Array();
 
-              var nativeImpressions = new Array()
-              var nativeClicks = new Array()
-              var nativeSitename = new Array()
-              var nativeFormatName = new Array()
-              var nativeCTR = new Array()
+              var nativeImpressions = new Array();
+              var nativeClicks = new Array();
+              var nativeSitename = new Array();
+              var nativeFormatName = new Array();
+              var nativeCTR = new Array();
 
-              var videoImpressions = new Array()
-              var videoClicks = new Array()
-              var videoSiteId = new Array()
-              var videoSitename = new Array()
-              var videoFormatName = new Array()
-              var videoCTR = new Array()
-              var videoComplete = new Array()
+              var videoImpressions = new Array();
+              var videoClicks = new Array();
+              var videoSiteId = new Array();
+              var videoSitename = new Array();
+              var videoFormatName = new Array();
+              var videoCTR = new Array();
+              var videoComplete = new Array();
 
 
               //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
@@ -612,7 +617,7 @@ exports.report = async (req, res) => {
                 grand_angleClicks.push(eval(Array_Clicks[element]));
                 grand_angleSitename.push(Array_SiteName[element]);
                 grand_angleFormatName.push(Array_FormatName[element]);
-                let g = Math.round(Array_ClickRate[element] * 100) / 100
+                let g = Math.round(Array_ClickRate[element] * 100) / 100;
                 grand_angleCTR.push(g);
 
 
@@ -624,7 +629,7 @@ exports.report = async (req, res) => {
                 nativeClicks.push(eval(Array_Clicks[element]));
                 nativeSitename.push(Array_SiteName[element]);
                 nativeFormatName.push(Array_FormatName[element]);
-                let n = Math.round(Array_ClickRate[element] * 100) / 100
+                let n = Math.round(Array_ClickRate[element] * 100) / 100;
                 nativeCTR.push(n);
 
               }
@@ -636,68 +641,82 @@ exports.report = async (req, res) => {
               masthead.forEach(mastheadArrayElements);
               grand_angle.forEach(grand_angleArrayElements);
               native.forEach(nativeArrayElements);
-              video.forEach(VideoArrayElements)
-/*
-              console.log(videoSiteId)
-              console.log(videoSitename)
+              video.forEach(VideoArrayElements);
+
+              /*console.log(videoSiteId)
+              //  console.log(videoSitename)
               console.log('----------')
 
-              var SiteId_filtre = new Array()
+              var SiteId_filtre = new Array();
 
-              videoSiteId.forEach(function(elements){
+              const found = videoSiteId.filter(element => element == 299245);
 
-                //console.log(element)
-
-
-                const found = videoSiteId.find(element => element === elements);
-                console.log(found)
+              console.log(found);
 
 
-               
 
-                if(){
+              videoSiteId.forEach(function (elements) {
 
-                  SiteId_filtre.push(element);
 
-                }
 
-              });
              
-           
-              console.log(SiteId_filtre)
 
-*/
+                /*const found2 = array1.filter(element => element == 299263);
 
+                console.log(found2);
+                const found3 = array1.filter(element => element == 299248);
 
-              var sm_linfo = new Array()
-              var sm_linfo_android = new Array()
-              var sm_linfo_ios = new Array()
-              var sm_antenne = new Array()
-              var sm_dtj = new Array()
-              var sm_orange = new Array()
-              var sm_tf1 = new Array()
-              var sm_m6 = new Array()
-              var sm_immo974 = new Array()
-              var sm_dailymotion = new Array()
-              var sm_actu_reunion_ios = new Array()
-              var sm_actu_reunion_android = new Array()
-              var sm_rodzafer_ios = new Array()
-              var sm_rodzafer_android = new Array()
-              var sm_rodzafer_lp = new Array()
-              var sm_rodali = new Array()
-
-
-
-
-              var habillage_linfo_impression = new Array()
-              var habillage_linfo_clic = new Array()
-              var habillage_linfo_ctr = new Array()
+                console.log(found3);*/
 
 
 
 
 
-              Array_SiteID.filter(function (word, index) {
+
+
+              /*if(){
+
+                    SiteId_filtre.push(element);
+
+                  }
+
+              });*/
+
+
+              //console.log(SiteId_filtre)
+
+
+
+
+            /*   var sm_linfo = new Array();
+              var sm_linfo_android = new Array();
+              var sm_linfo_ios = new Array();
+              var sm_antenne = new Array();
+              var sm_dtj = new Array();
+              var sm_orange = new Array();
+              var sm_tf1 = new Array();
+              var sm_m6 = new Array();
+              var sm_immo974 = new Array();
+              var sm_dailymotion = new Array();
+              var sm_actu_reunion_ios = new Array();
+              var sm_actu_reunion_android = new Array();
+              var sm_rodzafer_ios = new Array();
+              var sm_rodzafer_android = new Array();
+              var sm_rodzafer_lp = new Array();
+              var sm_rodali = new Array();
+
+
+
+
+              var habillage_linfo_impression = new Array();
+              var habillage_linfo_clic = new Array();
+              var habillage_linfo_ctr = new Array();
+
+
+
+
+
+             Array_SiteID.filter(function (word, index) {
 
 
                 if (word.match(/322433/gi)) {
@@ -765,7 +784,7 @@ exports.report = async (req, res) => {
 
               }
 
-              sm_linfo.forEach(habillage_siteArrayElements);
+              sm_linfo.forEach(habillage_siteArrayElements);*/
 
 
 
@@ -790,62 +809,62 @@ exports.report = async (req, res) => {
 
 
 
-            var total_impression_format = sommeHabillageImpression + sommeGrand_AngleImpression + sommeInterstitielImpression + sommeMastheadImpression + sommeNativeImpression + sommeVideoImpression
-            var total_click_format = sommeHabillageClicks + sommeGrand_AngleClicks + sommeInterstitielClicks + sommeMastheadClicks + sommeNativeClicks + sommeVideoClicks
+            var total_impression_format = sommeHabillageImpression + sommeGrand_AngleImpression + sommeInterstitielImpression + sommeMastheadImpression + sommeNativeImpression + sommeVideoImpression;
+            var total_click_format = sommeHabillageClicks + sommeGrand_AngleClicks + sommeInterstitielClicks + sommeMastheadClicks + sommeNativeClicks + sommeVideoClicks;
 
 
 
 
             //var TotalImpressions = 0
             // var TotalCliks = 0
-            var TotalComplete = 0
+            var TotalComplete = 0;
             //somme impression clic complete
             for (let i = 0; i < Array_Impression.length; i++) {
               if (Array_Impression[i] != '') {
                 //  TotalImpressions += parseInt(Array_Impression[i])
                 // TotalCliks += parseInt(Array_Clicks[i])
-                TotalComplete += parseInt(Array_Complete[i])
+                TotalComplete += parseInt(Array_Complete[i]);
 
 
               }
             }
 
 
-            CTR_video = (sommeVideoClicks / sommeVideoImpression) * 100
+            CTR_video = (sommeVideoClicks / sommeVideoImpression) * 100;
             CTR_video = CTR_video.toFixed(2);
 
             //Calcule de taux de clic par format
-            CTR_habillage = (sommeHabillageClicks / sommeHabillageImpression) * 100
+            CTR_habillage = (sommeHabillageClicks / sommeHabillageImpression) * 100;
             CTR_habillage = CTR_habillage.toFixed(2);
 
-            CTR_interstitiel = (sommeInterstitielClicks / sommeInterstitielImpression) * 100
+            CTR_interstitiel = (sommeInterstitielClicks / sommeInterstitielImpression) * 100;
             CTR_interstitiel = CTR_interstitiel.toFixed(2);
 
 
-            CTR_grand_angle = (sommeGrand_AngleClicks / sommeGrand_AngleImpression) * 100
+            CTR_grand_angle = (sommeGrand_AngleClicks / sommeGrand_AngleImpression) * 100;
             CTR_grand_angle = CTR_grand_angle.toFixed(2);
 
 
-            CTR_masthead = (sommeMastheadClicks / sommeMastheadImpression) * 100
+            CTR_masthead = (sommeMastheadClicks / sommeMastheadImpression) * 100;
             CTR_masthead = CTR_masthead.toFixed(2);
 
 
-            CTR_native = (sommeNativeClicks / sommeNativeImpression) * 100
+            CTR_native = (sommeNativeClicks / sommeNativeImpression) * 100;
             CTR_native = CTR_native.toFixed(2);
 
 
 
             //Calcul des chiffre global %Taux clic Repetition %VTR
-            Taux_VTR = (TotalComplete / total_impression_format) * 100
+            Taux_VTR = (TotalComplete / total_impression_format) * 100;
             VTR = Taux_VTR.toFixed(2);
 
             /*var Taux_clics = (TotalCliks / TotalImpressions) * 100
             CTR = Taux_clics.toFixed(2);*/
-            var Taux_clics = (total_click_format / total_impression_format) * 100
+            var Taux_clics = (total_click_format / total_impression_format) * 100;
             CTR = Taux_clics.toFixed(2);
 
 
-            var Impression_vu = (total_impression_format / Total_VU)
+            var Impression_vu = (total_impression_format / Total_VU);
             Repetition = Impression_vu.toFixed(2);
 
 
@@ -853,18 +872,18 @@ exports.report = async (req, res) => {
 
 
             //SEPARATEUR DE MILLIER
-            // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI")
-            // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI")
-            total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI")
-            total_click_format = new Number(total_click_format).toLocaleString("fi-FI")
-            Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
+            // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI");
+            // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI");
+            total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI");
+            total_click_format = new Number(total_click_format).toLocaleString("fi-FI");
+            Total_VU = new Number(Total_VU).toLocaleString("fi-FI");;
 
-            sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI")
-            sommeHabillageImpression = new Number(sommeHabillageImpression).toLocaleString("fi-FI")
-            sommeInterstitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI")
-            sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI")
-            sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI")
-            sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI")
+            sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI");
+            sommeHabillageImpression = new Number(sommeHabillageImpression).toLocaleString("fi-FI");
+            sommeInterstitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI");
+            sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI");
+            sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI");
+            sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI");
 
 
             var Campagne_name = CampaignName[0]
@@ -924,37 +943,37 @@ exports.report = async (req, res) => {
             const reducer = (accumulator, currentValue) => accumulator + currentValue;
             var sommevideoImpressions = videoImpressions.reduce(reducer, 0);
             var sommevideoClics = videoClicks.reduce(reducer, 0);
-            var videoCTR_clics = (videoClicks / videoImpressions) * 100
+            var videoCTR_clics = (videoClicks / videoImpressions) * 100;
             videoCTR_clics = videoCTR_clics.toFixed(2);
 
             var sommehabillageImpressions = habillageImpressions.reduce(reducer, 0);
             var sommehabillageClics = habillageClicks.reduce(reducer, 0);
-            var habillageCTR_clics = (sommehabillageClics / sommehabillageImpressions) * 100
+            var habillageCTR_clics = (sommehabillageClics / sommehabillageImpressions) * 100;
             habillageCTR_clics = habillageCTR_clics.toFixed(2);
 
             // total impression / total clic / CTR par Interstitiel par site
             var sommeinterstitielImpressions = interstitielImpressions.reduce(reducer, 0);
             var sommeinterstitielClics = interstitielClicks.reduce(reducer, 0);
-            var interstitielCTR_clics = (sommeinterstitielClics / sommeinterstitielImpressions) * 100
+            var interstitielCTR_clics = (sommeinterstitielClics / sommeinterstitielImpressions) * 100;
             interstitielCTR_clics = interstitielCTR_clics.toFixed(2);
 
             // total impression / total clic / CTR par Masthead par site
             var sommemastheadImpressions = mastheadImpressions.reduce(reducer, 0);
             var sommemastheadClics = mastheadClicks.reduce(reducer, 0);
-            var mastheadCTR_clics = (sommemastheadClics / sommemastheadImpressions) * 100
+            var mastheadCTR_clics = (sommemastheadClics / sommemastheadImpressions) * 100;
             mastheadCTR_clics = mastheadCTR_clics.toFixed(2);
 
 
             // total impression / total clic / CTR par grand_angle par site
             var sommegrand_angleImpressions = grand_angleImpressions.reduce(reducer, 0);
             var sommegrand_angleClics = grand_angleClicks.reduce(reducer, 0);
-            var grand_angleCTR_clics = (sommegrand_angleClics / sommegrand_angleImpressions) * 100
+            var grand_angleCTR_clics = (sommegrand_angleClics / sommegrand_angleImpressions) * 100;
             grand_angleCTR_clics = grand_angleCTR_clics.toFixed(2);
 
             // total impression / total clic / CTR par native par site
             var sommenativeImpressions = nativeImpressions.reduce(reducer, 0);
             var sommenativeClics = nativeClicks.reduce(reducer, 0);
-            var nativeCTR_clics = (sommenativeClics / sommenativeImpressions) * 100
+            var nativeCTR_clics = (sommenativeClics / sommenativeImpressions) * 100;
             nativeCTR_clics = nativeCTR_clics.toFixed(2);
 
 
@@ -1046,8 +1065,8 @@ exports.report = async (req, res) => {
             }
 
             // var ttl = 7200 //2h
-            const now = new Date()
-            var timestamp_now = now.getTime()
+            const now = new Date();
+            var timestamp_now = now.getTime();
             var timestamp_expire = now.setHours(now.getHours() + 2);
             //console.log(timestamp_expire)
 
@@ -1056,11 +1075,9 @@ exports.report = async (req, res) => {
               let dates = new Date(refrechTimeStamp);
               return ('0' + dates.getDate()).slice(-2) + '/' + ('0' + (dates.getMonth() + 1)).slice(-2) + '/' + dates.getFullYear() + ' ' + ('0' + dates.getHours()).slice(-2) + ':' + ('0' + dates.getMinutes()).slice(-2);
             }
-            var t3 = parseInt(timestamp_expire)
+            var t3 = parseInt(timestamp_expire);
 
             var date_expirer = getDateTimeTimestamp(t3);
-
-            //  console.log(date_expirer)
 
             var testObject = {
               'campaign_id': campaignid,
@@ -1118,14 +1135,14 @@ exports.report = async (req, res) => {
 
   } catch (error) {
     console.log(error)
-    /* var statusCoded = error.response.status;
+    var statusCoded = error.response.status;
 
-     res.render("error.ejs", {
-       statusCoded: statusCoded,
-       advertiserid: advertiserid,
-       campaignid: campaignid,
-       startDate: startDate,
-     })*/
+    res.render("error.ejs", {
+      statusCoded: statusCoded,
+      advertiserid: advertiserid,
+      campaignid: campaignid,
+      startDate: startDate,
+    })
 
 
   }
@@ -1149,7 +1166,7 @@ exports.automatisation = async (req, res) => {
 
 
 
-    res.json(data_localStorage)
+    res.json(data_localStorage);
 
 
 
