@@ -178,23 +178,22 @@ exports.report = async (req, res) => {
 
     } else {
 
-    
+
 
       const now = new Date();
       var timestamp_datenow = now.getTime();
 
       //si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour
-      if(timestamp_enddate < timestamp_datenow)
-      {
+      if (timestamp_enddate < timestamp_datenow) {
 
-       var end_date = EndtDate;
-
+        var end_date = EndtDate;
 
 
-      }else{
 
-        var end_date =  "CURRENT_DAY+1";
-        
+      } else {
+
+        var end_date = "CURRENT_DAY+1";
+
 
       }
 
@@ -203,7 +202,7 @@ exports.report = async (req, res) => {
 
         "startDate": startDate,
 
-        "endDate":end_date,
+        "endDate": end_date,
 
         "fields": [
 
@@ -333,7 +332,7 @@ exports.report = async (req, res) => {
 
             let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
             let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
-    
+
 
             //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
             if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.jobProgress == '1.0') &&
@@ -643,52 +642,12 @@ exports.report = async (req, res) => {
               native.forEach(nativeArrayElements);
               video.forEach(VideoArrayElements);
 
-              /*console.log(videoSiteId)
-              //  console.log(videoSitename)
-              console.log('----------')
-
-              var SiteId_filtre = new Array();
-
-              const found = videoSiteId.filter(element => element == 299245);
-
-              console.log(found);
-
-
-
-              videoSiteId.forEach(function (elements) {
-
-
-
-             
-
-                /*const found2 = array1.filter(element => element == 299263);
-
-                console.log(found2);
-                const found3 = array1.filter(element => element == 299248);
-
-                console.log(found3);*/
 
 
 
 
 
-
-
-              /*if(){
-
-                    SiteId_filtre.push(element);
-
-                  }
-
-              });*/
-
-
-              //console.log(SiteId_filtre)
-
-
-
-
-              /*var sm_linfo = new Array();
+              var sm_linfo = new Array();
               var sm_linfo_android = new Array();
               var sm_linfo_ios = new Array();
               var sm_antenne = new Array();
@@ -707,16 +666,58 @@ exports.report = async (req, res) => {
 
 
 
+              var linfo_impression = new Array();
+              var linfo_clic = new Array();
 
-              var habillage_linfo_impression = new Array();
-              var habillage_linfo_clic = new Array();
-              var habillage_linfo_ctr = new Array();
+              var m6_impression = new Array();
+              var m6_clic = new Array();
+
+              var tf1_impression = new Array();
+              var tf1_clic = new Array();
+
+              var daily_impression = new Array();
+              var daily_clic = new Array();
+
+              var ar_impression = new Array();
+              var ar_clic = new Array();
+
+              var info_ios_impression = new Array();
+              var info_ios_clic = new Array();
+
+              var info_android_impression = new Array();
+              var info_android_clic = new Array();
+
+              var dtj_impression = new Array();
+              var dtj_clic = new Array();
+
+              var orange_impression = new Array();
+              var orange_clic = new Array();
 
 
+              var immo974_impression = new Array();
+              var immo974_clic = new Array();
+
+              var actu_ios_impression = new Array();
+              var actu_ios_clic = new Array();
+
+              var actu_android_impression = new Array();
+              var actu_android_clic = new Array();
 
 
+              var rz_impression = new Array();
+              var rz_clic = new Array();
 
-             Array_SiteID.filter(function (word, index) {
+              var rz_ios_impression = new Array();
+              var rz_ios_clic = new Array();
+
+
+              var rz_android_impression = new Array();
+              var rz_andoid_clic = new Array();
+
+              var rodali_impression = new Array();
+              var rodali_clic = new Array();
+
+              Array_SiteID.filter(function (word, index) {
 
 
                 if (word.match(/322433/gi)) {
@@ -770,21 +771,150 @@ exports.report = async (req, res) => {
 
 
 
-              });*/
+              });
 
 
 
-              async function habillage_siteArrayElements(element, index, array) {
+              async function info_siteArrayElements(element, index, array) {
 
                 // Rajouter les immpresions  et clics des formats
-                habillage_linfo_impression.push(eval(habillageImpressions[element]));
-                habillage_linfo_clic.push(eval(habillageClicks[element]));
-                habillageSitename.push(habillageSitename[element]);
-                habillage_linfo_ctr.push(habillageCTR[element]);
+                linfo_impression.push(eval(Array_Impression[element]));
+                linfo_clic.push(eval(Array_Clicks[element]));
+
+
+              }
+              async function info_ios_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                info_ios_impression.push(eval(Array_Impression[element]));
+                info_ios_clic.push(eval(Array_Clicks[element]));
+
+
+              }
+              async function info_android_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                info_android_impression.push(eval(Array_Impression[element]));
+                info_android_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function m6_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                m6_impression.push(eval(Array_Impression[element]));
+                m6_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function tf1_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                tf1_impression.push(eval(Array_Impression[element]));
+                tf1_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function daily_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                daily_impression.push(eval(Array_Impression[element]));
+                daily_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function ar_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                ar_impression.push(eval(Array_Impression[element]));
+                ar_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function dtj_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                dtj_impression.push(eval(Array_Impression[element]));
+                dtj_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function orange_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                orange_impression.push(eval(Array_Impression[element]));
+                orange_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function immo_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                immo974_impression.push(eval(Array_Impression[element]));
+                immo974_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function actu_ios_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                actu_ios_impression.push(eval(Array_Impression[element]));
+                actu_ios_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function actu_android_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                actu_android_impression.push(eval(Array_Impression[element]));
+                actu_android_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rz_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rz_impression.push(eval(Array_Impression[element]));
+                rz_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rz_ios_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rz_ios_impression.push(eval(Array_Impression[element]));
+                rz_ios_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rz_andoid_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rz_android_impression.push(eval(Array_Impression[element]));
+                rz_andoid_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rodali_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rodali_impression.push(eval(Array_Impression[element]));
+                rodali_clic.push(eval(Array_Clicks[element]));
 
               }
 
-              sm_linfo.forEach(habillage_siteArrayElements);
+              sm_linfo.forEach(info_siteArrayElements);
+              sm_linfo_ios.forEach(info_ios_siteArrayElements);
+              sm_linfo_android.forEach(info_android_siteArrayElements);
+              sm_m6.forEach(m6_siteArrayElements);
+              sm_tf1.forEach(tf1_siteArrayElements);
+              sm_dailymotion.forEach(daily_siteArrayElements);
+              sm_antenne.forEach(ar_siteArrayElements);
+              sm_dtj.forEach(dtj_siteArrayElements);
+              sm_orange.forEach(orange_siteArrayElements);
+              sm_immo974.forEach(immo_siteArrayElements);
+              sm_actu_reunion_ios.forEach(actu_ios_siteArrayElements);
+              sm_actu_reunion_android.forEach(actu_android_siteArrayElements);
+              sm_rodzafer_lp.forEach(rz_siteArrayElements);
+              sm_rodzafer_ios.forEach(rz_ios_siteArrayElements);
+              sm_rodzafer_android.forEach(rz_andoid_siteArrayElements);
+              sm_rodali.forEach(rodali_siteArrayElements);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -805,9 +935,63 @@ exports.report = async (req, res) => {
               var sommeVideoClicks = videoClicks.reduce(reducer, 0);
 
 
+
+
+
+
+              var sommeinfoImpression = linfo_impression .reduce(reducer, 0);
+              var sommeinfoClicks = linfo_clic.reduce(reducer, 0);
+             
+              var sommeinfo_iosImpression = info_ios_impression .reduce(reducer, 0);
+              var sommeinfo_iosClicks = info_ios_clic.reduce(reducer, 0);
+
+              var sommeinfo_androidImpression = info_android_impression .reduce(reducer, 0);
+              var sommeinfo_androidClicks = info_android_clic.reduce(reducer, 0);
+
+              var sommetf1Impression = tf1_impression.reduce(reducer, 0);
+              var sommetf1Clicks = tf1_clic.reduce(reducer, 0);
+
+              var sommem6Impression = m6_impression.reduce(reducer, 0);
+              var sommem6Clicks = m6_clic.reduce(reducer, 0);
+
+              var sommedailyImpression = daily_impression.reduce(reducer, 0);
+              var sommedailyClicks = daily_clic.reduce(reducer, 0);
+
+              var sommearImpression = ar_impression.reduce(reducer, 0);
+              var sommearClicks = ar_clic.reduce(reducer, 0);
+
+              var sommedtjImpression = dtj_impression.reduce(reducer, 0);
+              var sommedtjClicks = dtj_clic.reduce(reducer, 0);
+
+              var sommeorangeImpression = orange_impression.reduce(reducer, 0);
+              var sommeorangeClicks = orange_clic.reduce(reducer, 0);
+
+              var sommeimmo974Impression = immo974_impression.reduce(reducer, 0);
+              var sommeimmo974Clicks = immo974_clic.reduce(reducer, 0);
+
+              var sommeactu_iosImpression = actu_ios_impression.reduce(reducer, 0);
+              var sommeactu_iosClicks = actu_ios_clic.reduce(reducer, 0);
+
+              var sommeactu_androidImpression = actu_android_impression.reduce(reducer, 0);
+              var sommeactu_androidClicks = actu_android_clic.reduce(reducer, 0);
+
+              var sommerzImpression = rz_impression.reduce(reducer, 0);
+              var sommerzClicks = rz_clic.reduce(reducer, 0);
+
+
+              var sommerz_iosImpression = rz_ios_impression.reduce(reducer, 0);
+              var sommerz_iosClicks = rz_ios_clic.reduce(reducer, 0);
+
+              var sommerz_androidImpression = rz_android_impression.reduce(reducer, 0);
+              var sommerz_androidClicks = rz_andoid_clic.reduce(reducer, 0);
+
+              var sommerodaliImpression = rodali_impression.reduce(reducer, 0);
+              var sommerodaliClicks = rodali_clic.reduce(reducer, 0);
+
             }
 
 
+     
 
             var total_impression_format = sommeHabillageImpression + sommeGrand_AngleImpression + sommeInterstitielImpression + sommeMastheadImpression + sommeNativeImpression + sommeVideoImpression;
             var total_click_format = sommeHabillageClicks + sommeGrand_AngleClicks + sommeInterstitielClicks + sommeMastheadClicks + sommeNativeClicks + sommeVideoClicks;
@@ -848,10 +1032,63 @@ exports.report = async (req, res) => {
             CTR_masthead = (sommeMastheadClicks / sommeMastheadImpression) * 100;
             CTR_masthead = CTR_masthead.toFixed(2);
 
-
             CTR_native = (sommeNativeClicks / sommeNativeImpression) * 100;
             CTR_native = CTR_native.toFixed(2);
+///////////////////////////////////
 
+            CTR_m6 = (sommem6Clicks / sommem6Impression) * 100;
+            CTR_m6 = CTR_m6.toFixed(2);
+
+
+            CTR_info = (sommeinfoClicks / sommeinfoImpression) * 100;
+            CTR_info = CTR_info.toFixed(2);
+
+            CTR_info_ios = (sommeinfo_iosClicks / sommeinfo_iosImpression) * 100;
+            CTR_info_ios = CTR_info_ios.toFixed(2);
+
+            CTR_info_android = (sommeinfo_androidClicks / sommeinfo_androidImpression) * 100;
+            CTR_info_android = CTR_info_android.toFixed(2);
+
+            CTR_tf1 = (sommetf1Clicks / sommetf1Impression) * 100;
+            CTR_tf1 = CTR_tf1.toFixed(2);
+
+            CTR_daily = (sommedailyClicks / sommedailyImpression) * 100;
+            CTR_daily = CTR_daily.toFixed(2);
+
+            CTR_ar = (sommearClicks / sommearImpression) * 100;
+            CTR_ar = CTR_ar.toFixed(2);
+
+            CTR_dtj = (sommedtjClicks / sommedtjImpression) * 100;
+            CTR_dtj = CTR_dtj.toFixed(2);
+
+            CTR_orange = (sommeorangeClicks / sommeorangeImpression) * 100;
+            CTR_orange = CTR_orange.toFixed(2);
+
+            CTR_immo974 = (sommeimmo974Clicks / sommeimmo974Impression) * 100;
+            CTR_immo974 = CTR_immo974.toFixed(2);
+
+
+            CTR_actu_ios = (sommeactu_iosClicks / sommeactu_iosImpression) * 100;
+            CTR_actu_ios = CTR_actu_ios.toFixed(2);
+
+            CTR_actu_android = (sommeactu_androidClicks / sommeactu_androidImpression) * 100;
+            CTR_actu_android = CTR_actu_android.toFixed(2);
+
+
+            CTR_rz = (sommerzClicks / sommerzImpression) * 100;
+            CTR_rz = CTR_rz.toFixed(2);
+
+            CTR_rz_ios = (sommerz_iosClicks / sommerz_iosImpression) * 100;
+            CTR_rz_ios = CTR_rz_ios.toFixed(2);
+            
+            CTR_rz_android = (sommerz_androidClicks / sommerz_androidImpression) * 100;
+            CTR_rz_android = CTR_rz_android.toFixed(2);
+
+
+            CTR_rodali = (sommerodaliClicks / sommerodaliImpression) * 100;
+            CTR_rodali = CTR_rodali.toFixed(2);
+
+        
 
 
             //Calcul des chiffre global %Taux clic Repetition %VTR
@@ -934,7 +1171,60 @@ exports.report = async (req, res) => {
               CTR_grand_angle,
               CTR_masthead,
               CTR_native,
-              CTR_video
+              CTR_video,
+
+
+              sommem6Impression,
+              sommeinfoImpression,
+              sommeinfo_iosImpression,
+              sommeinfo_androidImpression,
+              sommetf1Impression,
+              sommedailyImpression,
+              sommearImpression,
+              sommedtjImpression,
+              sommeorangeImpression,
+              sommeimmo974Impression,
+              sommeactu_iosImpression,
+              sommeactu_androidImpression,
+              sommerzImpression,
+              sommerz_iosImpression,
+              sommerz_androidImpression,
+              sommerodaliImpression,
+              
+              sommem6Clicks,
+              sommeinfoClicks,
+              sommeinfo_iosClicks,
+              sommeinfo_androidClicks,
+              sommetf1Clicks,
+              sommedailyClicks,
+              sommearClicks,
+              sommedtjClicks,
+              sommeorangeClicks,
+              sommeimmo974Clicks,
+              sommeactu_iosClicks,
+              sommeactu_androidClicks,
+              sommerzClicks,
+              sommerz_iosClicks,
+              sommerz_androidClicks,
+              sommerodaliClicks,
+              
+              CTR_m6,
+              CTR_info,
+              CTR_info_ios,
+              CTR_info_android,
+              CTR_tf1,
+              CTR_daily,
+              CTR_ar,
+              CTR_dtj,
+              CTR_orange,
+              CTR_immo974,
+              CTR_actu_ios,
+              CTR_actu_android,
+              CTR_rz,
+              CTR_rz_ios,
+              CTR_rz_android,
+              CTR_rodali,
+              
 
             }
 
