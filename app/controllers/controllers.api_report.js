@@ -460,10 +460,11 @@ exports.report = async (req, res) => {
             const Array_Complete = [];
 
 
-            const valueToRemove = undefined;
-            //push les valeur filtré total  et clique
+            const Remove_undefined = undefined;
+
+            //exclure les valeur undefined des array
             for (let i = 0; i < Impressions.length; i++) {
-              if (Impressions[i] !== valueToRemove) {
+              if (Impressions[i] !== Remove_undefined ) {
 
                 Array_Impression.push(Impressions[i]);
                 Array_Clicks.push(Clicks[i]);
@@ -476,8 +477,10 @@ exports.report = async (req, res) => {
 
 
               }
+             
             }
 
+         
             //test si le tableau est un array + si il comporte 1 éléments dans l'array
             if ((InsertionName.length > 1) && (Array.isArray(InsertionName) === true)) {
 
@@ -602,7 +605,6 @@ exports.report = async (req, res) => {
 
               });
 
-              const somme_array = (accumulator, currentValue) => accumulator + currentValue;
 
               async function VideoArrayElements(element, index, array) {
 
@@ -752,23 +754,25 @@ exports.report = async (req, res) => {
 
 
               //calcule la somme total par format et site
-              var total_impressions_linfoHabillage = habillage_linfo_impression.reduce(somme_array);
-              var total_clicks_linfoHabillage = habillage_linfo_click.reduce(somme_array);
+              const somme_array = (accumulator, currentValue) => accumulator + currentValue;
 
-              var total_impressions_linfoGrandAngle = grandAngle_linfo_impression.reduce(somme_array);
-              var total_clicks_linfoGrandAngle = grandAngle_linfo_click.reduce(somme_array);
+              var total_impressions_linfoHabillage = habillage_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoHabillage = habillage_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfoVideo = video_linfo_impression.reduce(somme_array);
-              var total_clicks_linfoVideo = video_linfo_click.reduce(somme_array);
+              var total_impressions_linfoGrandAngle = grandAngle_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoGrandAngle = grandAngle_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfoInterstitiel = interstitiel_linfo_impression.reduce(somme_array);
-              var total_clicks_linfoInterstitiel = interstitiel_linfo_click.reduce(somme_array);
+              var total_impressions_linfoVideo = video_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoVideo = video_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfoMasthead = masthead_linfo_impression.reduce(somme_array);
-              var total_clicks_linfoMasthead = masthead_linfo_click.reduce(somme_array);
+              var total_impressions_linfoInterstitiel = interstitiel_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoInterstitiel = interstitiel_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfoNative = native_linfo_impression.reduce(somme_array);
-              var total_clicks_linfoNative = native_linfo_click.reduce(somme_array);
+              var total_impressions_linfoMasthead = masthead_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoMasthead = masthead_linfo_click.reduce(somme_array , 0);
+
+              var total_impressions_linfoNative = native_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoNative = native_linfo_click.reduce(somme_array , 0);
 
 
 
@@ -789,45 +793,12 @@ exports.report = async (req, res) => {
               native_linfo_ctr.push(n_linfo.toFixed(2));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
               let v_linfo = (total_clicks_linfoVideo / total_impressions_linfoVideo) * 100;
               video_linfo_ctr.push(v_linfo.toFixed(2));
 
 
 
-
-
-
-
-
-
-
-              console.log(habillage_linfo_impression);
-              console.log(habillage_linfo_click);
-              console.log(habillage_linfo_siteId);
-              console.log(habillage_linfo_siteName);
-              console.log(habillage_linfo_ctr);
-
-              console.log('------------');
-
-              console.log(grandAngle_linfo_impression);
-              console.log(grandAngle_linfo_click);
-              console.log(grandAngle_linfo_siteId);
-              console.log(grandAngle_linfo_siteName);
-              console.log(grandAngle_linfo_ctr);
-
+    
 
               var sm_linfo = new Array();
               var sm_linfo_android = new Array();
@@ -1449,7 +1420,7 @@ exports.report = async (req, res) => {
             var nativeCTR_clics = (sommenativeClics / sommenativeImpressions) * 100;
             nativeCTR_clics = nativeCTR_clics.toFixed(2);
 
-
+            video_linfo_siteName =  video_linfo_siteName[0] ;
 
             var data_video = {
 
@@ -1461,10 +1432,18 @@ exports.report = async (req, res) => {
               videoComplete,
               sommevideoImpressions,
               sommevideoClics,
-              videoCTR_clics
+              videoCTR_clics,
+
+              total_impressions_linfoVideo,
+              total_clicks_linfoVideo,
+              video_linfo_siteName,
+              video_linfo_ctr,
 
             };
 
+           
+            habillage_linfo_siteName = habillage_linfo_siteName[0] ;
+            
 
 
             var data_habillage = {
@@ -1478,9 +1457,13 @@ exports.report = async (req, res) => {
               sommehabillageClics,
               habillageCTR_clics,
 
-
+              total_impressions_linfoHabillage,
+              total_clicks_linfoHabillage,
+              habillage_linfo_siteName,
+              habillage_linfo_ctr,
             };
 
+            interstitiel_linfo_siteName = interstitiel_linfo_siteName[0] ;
 
             var data_interstitiel = {
 
@@ -1491,10 +1474,17 @@ exports.report = async (req, res) => {
               interstitielCTR,
               sommeinterstitielImpressions,
               sommeinterstitielClics,
-              interstitielCTR_clics
+              interstitielCTR_clics,
+
+              total_impressions_linfoInterstitiel,
+              total_clicks_linfoInterstitiel,
+              interstitiel_linfo_siteName,
+              interstitiel_linfo_ctr,
 
 
             };
+
+            masthead_linfo_siteName =  masthead_linfo_siteName[0] ;
 
 
             var data_masthead = {
@@ -1506,10 +1496,16 @@ exports.report = async (req, res) => {
               mastheadCTR,
               sommemastheadImpressions,
               sommemastheadClics,
-              mastheadCTR_clics
+              mastheadCTR_clics,
+
+              total_impressions_linfoMasthead,
+              total_clicks_linfoMasthead,
+              masthead_linfo_siteName,
+              masthead_linfo_ctr,
 
             };
 
+            grandAngle_linfo_siteName =  grandAngle_linfo_siteName[0] ;
 
             var data_grand_angle = {
 
@@ -1520,9 +1516,16 @@ exports.report = async (req, res) => {
               grand_angleCTR,
               sommegrand_angleImpressions,
               sommegrand_angleClics,
-              grand_angleCTR_clics
+              grand_angleCTR_clics,
+
+              total_impressions_linfoGrandAngle,
+              total_clicks_linfoGrandAngle,
+              grandAngle_linfo_siteName,
+              grandAngle_linfo_ctr,
 
             };
+
+            native_linfo_siteName =  native_linfo_siteName[0] ;
 
             var data_native = {
 
@@ -1533,7 +1536,12 @@ exports.report = async (req, res) => {
               nativeCTR,
               sommenativeImpressions,
               sommenativeClics,
-              nativeCTR_clics
+              nativeCTR_clics,
+
+              total_impressions_linfoNative,
+              total_clicks_linfoNative,
+              native_linfo_siteName,
+              native_linfo_ctr,
 
             };
 

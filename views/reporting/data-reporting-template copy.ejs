@@ -38,16 +38,17 @@
 <body>
     <div class="container p-2 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
 
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
-                <strong>Les statistiques de cette campagne sont mises à jour toutes les 2 heures. (Prochaine MAJ :<%=data_expirer%> )</strong> 
-            
-            
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            
-            
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
+            <strong>Les statistiques de cette campagne sont mises à jour toutes les 2 heures. (Prochaine MAJ
+                :<%=data_expirer%> )</strong>
+
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+
 
         <div class="row p-3 m-5">
             <div class="col-md-3"><img
@@ -70,7 +71,7 @@
 
         <hr />
 
-        
+
 
 
 
@@ -135,6 +136,227 @@
         </div>
 
         <% }%>
+
+        <div class="row p-3 m-5">
+            <h3 class="title"><i class="fas fa-chart-line"></i> Par site </h3>
+
+
+            <table class="table" id="table_campaigns">
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th scope="col">Sites</th>
+                        <th scope="col">Impressions</th>
+                        <th scope="col">Clics</th>
+                        <th scope="col">Taux de clics</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% if(table.sommeinfoImpression  !== 0 ) { %>
+
+                    <tr>
+
+                        <td>SM_LINFO.re</td>
+                        <td><%=table.sommeinfoImpression,%></td>
+                        <td><%=table.sommeinfoClicks%></td>
+                        <td><%=table.CTR_info%>%</td>
+
+                    </tr>
+                    <% } %>
+                    <% if(table.sommeinfo_iosImpression !== 0 ) { %>
+
+                    <tr>
+
+                        <td>SM_LINFO-IOS</td>
+                        <td><%=table.sommeinfo_iosImpression%></td>
+                        <td><%=table.sommeinfo_iosClicks%></td>
+                        <td><%=table.CTR_info_ios%>%</td>
+
+                    </tr>
+                    <% } %>
+                    <% if(table.sommeinfo_androidImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>SM_LINFO-ANDROID</td>
+                        <td><%=table.sommeinfo_androidImpression%></td>
+                        <td><%=table.sommeinfo_androidClicks%></td>
+                        <td><%=table.CTR_info_android%>%</td>
+
+                    </tr>
+                    <% } %>
+                    <% if(table.sommetf1Impression  !== 0 ) { %>
+
+                    <tr>
+
+                        <td>TF1</td>
+                        <td><%=table.sommetf1Impression%></td>
+                        <td><%=table.sommetf1Clicks%></td>
+                        <td><%=table.CTR_tf1%>%</td>
+
+                    </tr>
+                    <% } %>
+
+                    <% if(table.sommem6Impression  !== 0 ) { %>
+
+                    <tr>
+
+                        <td>M6</td>
+                        <td><%=table.sommem6Impression%></td>
+                        <td><%=table.sommem6Clicks%></td>
+                        <td><%=table.CTR_m6%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+                    <% if(table.sommerz_iosImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>RODZAFER-IOS</td>
+                        <td><%=table.sommerz_iosImpression%></td>
+                        <td><%=table.sommerz_iosClicks%></td>
+                        <td><%=table.CTR_rz_ios%>%</td>
+
+                    </tr>
+                    <% } %>
+                    <% if(table.sommearImpression  !== 0 ) { %>
+
+                    <tr>
+
+                        <td>SM_ANTENNE</td>
+                        <td><%=table.sommearImpression%></td>
+                        <td><%=table.sommearClicks%></td>
+                        <td><%=table.CTR_ar%>%</td>
+
+                    </tr>
+                    <% } %>
+
+                    <% if(table.sommerz_androidImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>RODZAFER-ANDROID</td>
+                        <td><%=table.sommerz_androidImpression%></td>
+                        <td><%=table.sommerz_androidClicks%></td>
+                        <td><%=table.CTR_rz_android%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+                    <% if(table.sommedtjImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>DTJ</td>
+                        <td><%=table.sommedtjImpression%></td>
+                        <td><%=table.sommedtjClicks%></td>
+                        <td><%=table.CTR_dtj%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+
+
+                    <% if(table.sommeorangeImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>ORANGE</td>
+                        <td><%=table.sommeorangeImpression%></td>
+                        <td><%=table.sommeorangeClicks%></td>
+                        <td><%=table.CTR_orange%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+
+                    <% if(table.sommeimmo974Impression  !== 0) { %>
+
+                    <tr>
+
+                        <td>IMMO974</td>
+                        <td><%=table.sommeimmo974Impression%></td>
+                        <td><%=table.sommeimmo974Clicks%></td>
+                        <td><%=table.CTR_immo974%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+                    <% if(table.sommeactu_iosImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>ACTU-IOS</td>
+                        <td><%=table.sommeactu_iosImpression%></td>
+                        <td><%=table.sommeactu_iosClicks%></td>
+                        <td><%=table.CTR_actu_ios%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+
+                    <% if(table.sommeactu_androidImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>ACTU-ANDROID</td>
+                        <td><%=table.sommeactu_androidImpression%></td>
+                        <td><%=table.sommeactu_androidClicks%></td>
+                        <td><%=table.CTR_actu_android%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+                    <% if(table.sommerzImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>RODZAFER-LP</td>
+                        <td><%=table.sommerzImpression%></td>
+                        <td><%=table.sommerzClicks%></td>
+                        <td><%=table.CTR_rz%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+                    <% if(table.sommedailyImpression  !== 0) { %>
+
+                    <tr>
+
+                        <td>DAILYMOTION</td>
+                        <td><%=table.sommedailyImpression%></td>
+                        <td><%=table.sommedailyClicks%></td>
+                        <td><%=table.CTR_daily%>%</td>
+
+                    </tr>
+                    <% } %>
+
+
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><%=table.total_impression_format%></td>
+                        <td><%=table.total_click_format%></td>
+                        <td><%=table.CTR%>%</td>
+                    </tr>
+                </tfoot>
+                </tbody>
+
+            </table>
+
+
+        </div>
+        <hr />
 
         <div class="row p-3 m-5">
             <h3 class="title"><i class="fas fa-chart-line"></i> Par Format / global </h3>
@@ -273,7 +495,7 @@
                         <td><strong>Total</strong></td>
                         <td><%=data_habillage.sommehabillageImpressions%></td>
                         <td><%=data_habillage.sommehabillageClics%></td>
-                        <td><%=data_habillage.habillageCTR_clics%></td>
+                        <td><%=data_habillage.habillageCTR_clics%>%</td>
 
                     </tr>
                 </tfoot>
@@ -324,7 +546,7 @@
                         <td><strong>Total</strong></td>
                         <td><%=data_interstitiel.sommeinterstitielImpressions%></td>
                         <td><%=data_interstitiel.sommeinterstitielClics%></td>
-                        <td><%=data_interstitiel.interstitielCTR_clics%></td>
+                        <td><%=data_interstitiel.interstitielCTR_clics%>%</td>
 
 
                     </tr>
@@ -428,7 +650,7 @@
                         <td><strong>Total</strong></td>
                         <td><%=data_masthead.sommemastheadImpressions%></td>
                         <td><%=data_masthead.sommemastheadClics%></td>
-                        <td><%=data_masthead.mastheadCTR_clics%></td>
+                        <td><%=data_masthead.mastheadCTR_clics%>%</td>
 
 
                     </tr>
@@ -479,7 +701,7 @@
                         <td><strong>Total</strong></td>
                         <td><%=data_grand_angle.sommegrand_angleImpressions%></td>
                         <td><%=data_grand_angle.sommegrand_angleClics%></td>
-                        <td><%=data_grand_angle.grand_angleCTR_clics%></td>
+                        <td><%=data_grand_angle.grand_angleCTR_clics%>%</td>
 
 
                     </tr>
@@ -532,7 +754,7 @@
                         <td><strong>Total</strong></td>
                         <td><%=data_native.sommenativeImpressions%></td>
                         <td><%=data_native.sommenativeClics%></td>
-                        <td><%=data_native.nativeCTR_clics%></td>
+                        <td><%=data_native.nativeCTR_clics%>%</td>
 
 
                     </tr>
