@@ -464,7 +464,7 @@ exports.report = async (req, res) => {
 
             //exclure les valeur undefined des array
             for (let i = 0; i < Impressions.length; i++) {
-              if (Impressions[i] !== Remove_undefined) {
+              if (Impressions[i] !== Remove_undefined ) {
 
                 Array_Impression.push(Impressions[i]);
                 Array_Clicks.push(Clicks[i]);
@@ -477,10 +477,10 @@ exports.report = async (req, res) => {
 
 
               }
-
+             
             }
 
-
+         
             //test si le tableau est un array + si il comporte 1 éléments dans l'array
             if ((InsertionName.length > 1) && (Array.isArray(InsertionName) === true)) {
 
@@ -700,8 +700,8 @@ exports.report = async (req, res) => {
 
 
                 }
-                //LINFO_android
-                if (Array_SiteID[element] === "299249") {
+                 //LINFO_android
+                if (Array_SiteID[element] ==="299249") {
 
                   video_linfo_android_impression.push(eval(Array_Impression[element]));
                   video_linfo_android_click.push(eval(Array_Clicks[element]));
@@ -712,7 +712,7 @@ exports.report = async (req, res) => {
                 }
                 //LINFO_ios
 
-                if (Array_SiteID[element] === "299248") {
+                if (Array_SiteID[element] ==="299248") {
 
                   video_linfo_ios_impression.push(eval(Array_Impression[element]));
                   video_linfo_ios_click.push(eval(Array_Clicks[element]));
@@ -721,7 +721,7 @@ exports.report = async (req, res) => {
 
 
                 }
-
+                
               }
 
               // Function foreach qui met dans un tableau les impressions correspondant au format
@@ -743,7 +743,7 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] === "299249") {
+                if (Array_SiteID[element] ==="299249") {
 
                   interstitiel_linfo_android_impression.push(eval(Array_Impression[element]));
                   interstitiel_linfo_android_click.push(eval(Array_Clicks[element]));
@@ -752,8 +752,8 @@ exports.report = async (req, res) => {
 
 
                 }
-
-                if (Array_SiteID[element] === "299248") {
+                
+                if (Array_SiteID[element] ==="299248") {
 
                   interstitiel_linfo_ios_impression.push(eval(Array_Impression[element]));
                   interstitiel_linfo_ios_click.push(eval(Array_Clicks[element]));
@@ -787,7 +787,7 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] === "299249") {
+                if (Array_SiteID[element] ==="299249") {
 
                   habillage_linfo_android_impression.push(eval(Array_Impression[element]));
                   habillage_linfo_android_click.push(eval(Array_Clicks[element]));
@@ -797,7 +797,7 @@ exports.report = async (req, res) => {
 
                 }
 
-                if (Array_SiteID[element] === "299248") {
+                if (Array_SiteID[element] ==="299248") {
 
                   habillage_linfo_ios_impression.push(eval(Array_Impression[element]));
                   habillage_linfo_ios_click.push(eval(Array_Clicks[element]));
@@ -828,7 +828,7 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] === "299249") {
+                if (Array_SiteID[element] ==="299249") {
 
                   masthead_linfo_android_impression.push(eval(Array_Impression[element]));
                   masthead_linfo_android_click.push(eval(Array_Clicks[element]));
@@ -838,7 +838,7 @@ exports.report = async (req, res) => {
 
                 }
 
-                if (Array_SiteID[element] === "299248") {
+                if (Array_SiteID[element] ==="299248") {
 
                   masthead_linfo_ios_impression.push(eval(Array_Impression[element]));
                   masthead_linfo_ios_click.push(eval(Array_Clicks[element]));
@@ -867,7 +867,7 @@ exports.report = async (req, res) => {
                   grandAngle_linfo_siteName.push(Array_SiteName[element]);
 
                 }
-                if (Array_SiteID[element] === "299249") {
+                if (Array_SiteID[element] ==="299249") {
 
                   grandAngle_linfo_android_impression.push(eval(Array_Impression[element]));
                   grandAngle_linfo_android_click.push(eval(Array_Clicks[element]));
@@ -877,7 +877,7 @@ exports.report = async (req, res) => {
 
                 }
 
-                if (Array_SiteID[element] === "299248") {
+                if (Array_SiteID[element] ==="299248") {
 
                   grandAngle_linfo_ios_impression.push(eval(Array_Impression[element]));
                   grandAngle_linfo_ios_click.push(eval(Array_Clicks[element]));
@@ -907,7 +907,7 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] === "299249") {
+                if (Array_SiteID[element] ==="299249") {
 
                   native_linfo_android_impression.push(eval(Array_Impression[element]));
                   native_linfo_android_click.push(eval(Array_Clicks[element]));
@@ -917,7 +917,7 @@ exports.report = async (req, res) => {
 
                 }
 
-                if (Array_SiteID[element] === "299248") {
+                if (Array_SiteID[element] ==="299248") {
 
                   native_linfo_ios_impression.push(eval(Array_Impression[element]));
                   native_linfo_ios_click.push(eval(Array_Clicks[element]));
@@ -943,60 +943,60 @@ exports.report = async (req, res) => {
               //calcule la somme total par format et site
               const somme_array = (accumulator, currentValue) => accumulator + currentValue;
 
-              var total_impressions_linfoHabillage = habillage_linfo_impression.reduce(somme_array, 0);
-              var total_clicks_linfoHabillage = habillage_linfo_click.reduce(somme_array, 0);
+              var total_impressions_linfoHabillage = habillage_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoHabillage = habillage_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_androidHabillage = habillage_linfo_android_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_androidHabillage = habillage_linfo_android_click.reduce(somme_array, 0);
+              var total_impressions_linfo_androidHabillage = habillage_linfo_android_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_androidHabillage = habillage_linfo_android_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_iosHabillage = habillage_linfo_ios_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_iosHabillage = habillage_linfo_ios_click.reduce(somme_array, 0);
+              var total_impressions_linfo_iosHabillage = habillage_linfo_ios_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_iosHabillage = habillage_linfo_ios_click.reduce(somme_array , 0);
               ///////////////////////////
 
-              var total_impressions_linfoGrandAngle = grandAngle_linfo_impression.reduce(somme_array, 0);
-              var total_clicks_linfoGrandAngle = grandAngle_linfo_click.reduce(somme_array, 0);
+              var total_impressions_linfoGrandAngle = grandAngle_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoGrandAngle = grandAngle_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_androidGrandAngle = grandAngle_linfo_android_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_androidGrandAngle = grandAngle_linfo_android_click.reduce(somme_array, 0);
+              var total_impressions_linfo_androidGrandAngle = grandAngle_linfo_android_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_androidGrandAngle = grandAngle_linfo_android_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_iosGrandAngle = grandAngle_linfo_ios_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_iosGrandAngle = grandAngle_linfo_ios_click.reduce(somme_array, 0);
+              var total_impressions_linfo_iosGrandAngle = grandAngle_linfo_ios_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_iosGrandAngle = grandAngle_linfo_ios_click.reduce(somme_array , 0);
               /////////////////////////
-              var total_impressions_linfoVideo = video_linfo_impression.reduce(somme_array, 0);
-              var total_clicks_linfoVideo = video_linfo_click.reduce(somme_array, 0);
+              var total_impressions_linfoVideo = video_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoVideo = video_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_androidVideo = video_linfo_android_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_androidVideo = video_linfo_android_click.reduce(somme_array, 0);
+              var total_impressions_linfo_androidVideo = video_linfo_android_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_androidVideo = video_linfo_android_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_iosVideo = video_linfo_ios_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_iosVideo = video_linfo_ios_click.reduce(somme_array, 0);
+              var total_impressions_linfo_iosVideo = video_linfo_ios_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_iosVideo = video_linfo_ios_click.reduce(somme_array , 0);
               /////////////////////
-              var total_impressions_linfoInterstitiel = interstitiel_linfo_impression.reduce(somme_array, 0);
-              var total_clicks_linfoInterstitiel = interstitiel_linfo_click.reduce(somme_array, 0);
+              var total_impressions_linfoInterstitiel = interstitiel_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoInterstitiel = interstitiel_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_androidInterstitiel = interstitiel_linfo_android_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_androidInterstitiel = interstitiel_linfo_android_click.reduce(somme_array, 0);
+              var total_impressions_linfo_androidInterstitiel = interstitiel_linfo_android_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_androidInterstitiel = interstitiel_linfo_android_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_iosInterstitiel = interstitiel_linfo_ios_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_iosInterstitiel = interstitiel_linfo_ios_click.reduce(somme_array, 0);
+              var total_impressions_linfo_iosInterstitiel = interstitiel_linfo_ios_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_iosInterstitiel = interstitiel_linfo_ios_click.reduce(somme_array , 0);
               /////////////////
-              var total_impressions_linfoMasthead = masthead_linfo_impression.reduce(somme_array, 0);
-              var total_clicks_linfoMasthead = masthead_linfo_click.reduce(somme_array, 0);
+              var total_impressions_linfoMasthead = masthead_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoMasthead = masthead_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_androidMasthead = masthead_linfo_android_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_androidMasthead = masthead_linfo_android_click.reduce(somme_array, 0);
+              var total_impressions_linfo_androidMasthead = masthead_linfo_android_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_androidMasthead = masthead_linfo_android_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_iosMasthead = masthead_linfo_ios_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_iosMasthead = masthead_linfo_ios_click.reduce(somme_array, 0);
-              //////////////////////
-              var total_impressions_linfoNative = native_linfo_impression.reduce(somme_array, 0);
-              var total_clicks_linfoNative = native_linfo_click.reduce(somme_array, 0);
+              var total_impressions_linfo_iosMasthead = masthead_linfo_ios_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_iosMasthead = masthead_linfo_ios_click.reduce(somme_array , 0);
+            //////////////////////
+              var total_impressions_linfoNative = native_linfo_impression.reduce(somme_array , 0);
+              var total_clicks_linfoNative = native_linfo_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_androidNative = native_linfo_android_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_androidNative = native_linfo_android_click.reduce(somme_array, 0);
+              var total_impressions_linfo_androidNative = native_linfo_android_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_androidNative = native_linfo_android_click.reduce(somme_array , 0);
 
-              var total_impressions_linfo_iosNative = native_linfo_ios_impression.reduce(somme_array, 0);
-              var total_clicks_linfo_iosNative = native_linfo_ios_click.reduce(somme_array, 0);
+              var total_impressions_linfo_iosNative = native_linfo_ios_impression.reduce(somme_array , 0);
+              var total_clicks_linfo_iosNative = native_linfo_ios_click.reduce(somme_array , 0);
 
               //calcule le ctr total par format et site
               let h_linfo = (total_clicks_linfoHabillage / total_impressions_linfoHabillage) * 100;
@@ -1007,7 +1007,7 @@ exports.report = async (req, res) => {
 
               let h_linfo_ios = (total_clicks_linfo_iosHabillage / total_impressions_linfo_iosHabillage) * 100;
               habillage_linfo_ios_ctr.push(h_linfo_ios.toFixed(2));
-              //////////////////
+            //////////////////
               let ga_linfo = (total_clicks_linfoGrandAngle / total_impressions_linfoGrandAngle) * 100;
               grandAngle_linfo_ctr.push(ga_linfo.toFixed(2));
 
@@ -1016,7 +1016,7 @@ exports.report = async (req, res) => {
 
               let ga_linfo_ios = (total_clicks_linfo_iosGrandAngle / total_impressions_linfo_iosGrandAngle) * 100;
               grandAngle_linfo_ios_ctr.push(ga_linfo_ios.toFixed(2));
-              //////////////////
+            //////////////////
 
               let i_linfo = (total_clicks_linfoInterstitiel / total_impressions_linfoInterstitiel) * 100;
               interstitiel_linfo_ctr.push(i_linfo.toFixed(2));
@@ -1026,7 +1026,7 @@ exports.report = async (req, res) => {
 
               let i_linfo_ios = (total_clicks_linfo_iosInterstitiel / total_impressions_linfo_iosInterstitiel) * 100;
               interstitiel_linfo_ios_ctr.push(i_linfo_ios.toFixed(2));
-              //////////////////
+            //////////////////
 
               let m_linfo = (total_clicks_linfoMasthead / total_impressions_linfoMasthead) * 100;
               masthead_linfo_ctr.push(m_linfo.toFixed(2));
@@ -1036,7 +1036,7 @@ exports.report = async (req, res) => {
 
               let m_linfo_ios = (total_clicks_linfo_iosMasthead / total_impressions_linfo_iosMasthead) * 100;
               masthead_linfo_ios_ctr.push(m_linfo_ios.toFixed(2));
-              //////////////////
+            //////////////////
 
               let n_linfo = (total_clicks_linfoNative / total_impressions_linfoNative) * 100;
               native_linfo_ctr.push(n_linfo.toFixed(2));
@@ -1046,7 +1046,7 @@ exports.report = async (req, res) => {
 
               let n_linfo_ios = (total_clicks_linfo_iosNative / total_impressions_linfo_iosNative) * 100;
               native_linfo_ios_ctr.push(n_linfo_ios.toFixed(2));
-              //////////////////
+            //////////////////
 
 
               let v_linfo = (total_clicks_linfoVideo / total_impressions_linfoVideo) * 100;
@@ -1058,7 +1058,279 @@ exports.report = async (req, res) => {
               let v_linfo_ios = (total_clicks_linfo_iosVideo / total_impressions_linfo_iosVideo) * 100;
               video_linfo_ios_ctr.push(v_linfo_ios.toFixed(2));
 
-          
+              var sm_linfo = new Array();
+              var sm_linfo_android = new Array();
+              var sm_linfo_ios = new Array();
+              var sm_antenne = new Array();
+              var sm_dtj = new Array();
+              var sm_orange = new Array();
+              var sm_tf1 = new Array();
+              var sm_m6 = new Array();
+              var sm_immo974 = new Array();
+              var sm_dailymotion = new Array();
+              var sm_actu_reunion_ios = new Array();
+              var sm_actu_reunion_android = new Array();
+              var sm_rodzafer_ios = new Array();
+              var sm_rodzafer_android = new Array();
+              var sm_rodzafer_lp = new Array();
+              var sm_rodali = new Array();
+
+
+
+              var linfo_impression = new Array();
+              var linfo_clic = new Array();
+
+              var m6_impression = new Array();
+              var m6_clic = new Array();
+
+              var tf1_impression = new Array();
+              var tf1_clic = new Array();
+
+              var daily_impression = new Array();
+              var daily_clic = new Array();
+
+              var ar_impression = new Array();
+              var ar_clic = new Array();
+
+              var info_ios_impression = new Array();
+              var info_ios_clic = new Array();
+
+              var info_android_impression = new Array();
+              var info_android_clic = new Array();
+
+              var dtj_impression = new Array();
+              var dtj_clic = new Array();
+
+              var orange_impression = new Array();
+              var orange_clic = new Array();
+
+
+              var immo974_impression = new Array();
+              var immo974_clic = new Array();
+
+              var actu_ios_impression = new Array();
+              var actu_ios_clic = new Array();
+
+              var actu_android_impression = new Array();
+              var actu_android_clic = new Array();
+
+
+              var rz_impression = new Array();
+              var rz_clic = new Array();
+
+              var rz_ios_impression = new Array();
+              var rz_ios_clic = new Array();
+
+
+              var rz_android_impression = new Array();
+              var rz_andoid_clic = new Array();
+
+              var rodali_impression = new Array();
+              var rodali_clic = new Array();
+
+              Array_SiteID.filter(function (word, index) {
+
+
+                if (word.match(/322433/gi)) {
+                  sm_linfo.push(index);
+                }
+                if (word.match(/299249/gi)) {
+                  sm_linfo_android.push(index);
+                }
+                if (word.match(/299248/gi)) {
+                  sm_linfo_ios.push(index);
+                }
+                if (word.match(/323124/gi)) {
+                  sm_dtj.push(index);
+                }
+                if (word.match(/299263/gi)) {
+                  sm_antenne.push(index);
+                }
+                if (word.match(/299252/gi)) {
+                  sm_orange.push(index);
+                }
+                if (word.match(/299245/gi)) {
+                  sm_tf1.push(index);
+                }
+                if (word.match(/299244/gi)) {
+                  sm_m6.push(index);
+                }
+                if (word.match(/389207/gi)) {
+                  sm_immo974.push(index);
+                }
+                if (word.match(/337707/gi)) {
+                  sm_dailymotion.push(index);
+                }
+                if (word.match(/299253/gi)) {
+                  sm_actu_reunion_ios.push(index);
+                }
+                if (word.match(/299254/gi)) {
+                  sm_actu_reunion_android.push(index);
+                }
+                if (word.match(/336662/gi)) {
+                  sm_rodzafer_ios.push(index);
+                }
+                if (word.match(/336733/gi)) {
+                  sm_rodzafer_android.push(index);
+                }
+                if (word.match(/371544/gi)) {
+                  sm_rodzafer_lp.push(index);
+                }
+                if (word.match(/369138/gi)) {
+                  sm_rodali.push(index);
+
+                }
+
+
+
+              });
+
+
+
+              async function info_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                linfo_impression.push(eval(Array_Impression[element]));
+                linfo_clic.push(eval(Array_Clicks[element]));
+
+
+              }
+              async function info_ios_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                info_ios_impression.push(eval(Array_Impression[element]));
+                info_ios_clic.push(eval(Array_Clicks[element]));
+
+
+              }
+              async function info_android_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                info_android_impression.push(eval(Array_Impression[element]));
+                info_android_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function m6_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                m6_impression.push(eval(Array_Impression[element]));
+                m6_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function tf1_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                tf1_impression.push(eval(Array_Impression[element]));
+                tf1_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function daily_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                daily_impression.push(eval(Array_Impression[element]));
+                daily_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function ar_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                ar_impression.push(eval(Array_Impression[element]));
+                ar_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function dtj_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                dtj_impression.push(eval(Array_Impression[element]));
+                dtj_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function orange_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                orange_impression.push(eval(Array_Impression[element]));
+                orange_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function immo_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                immo974_impression.push(eval(Array_Impression[element]));
+                immo974_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function actu_ios_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                actu_ios_impression.push(eval(Array_Impression[element]));
+                actu_ios_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function actu_android_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                actu_android_impression.push(eval(Array_Impression[element]));
+                actu_android_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rz_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rz_impression.push(eval(Array_Impression[element]));
+                rz_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rz_ios_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rz_ios_impression.push(eval(Array_Impression[element]));
+                rz_ios_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rz_andoid_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rz_android_impression.push(eval(Array_Impression[element]));
+                rz_andoid_clic.push(eval(Array_Clicks[element]));
+
+              }
+              async function rodali_siteArrayElements(element, index, array) {
+
+                // Rajouter les immpresions  et clics des formats
+                rodali_impression.push(eval(Array_Impression[element]));
+                rodali_clic.push(eval(Array_Clicks[element]));
+
+              }
+
+              sm_linfo.forEach(info_siteArrayElements);
+              sm_linfo_ios.forEach(info_ios_siteArrayElements);
+              sm_linfo_android.forEach(info_android_siteArrayElements);
+              sm_m6.forEach(m6_siteArrayElements);
+              sm_tf1.forEach(tf1_siteArrayElements);
+              sm_dailymotion.forEach(daily_siteArrayElements);
+              sm_antenne.forEach(ar_siteArrayElements);
+              sm_dtj.forEach(dtj_siteArrayElements);
+              sm_orange.forEach(orange_siteArrayElements);
+              sm_immo974.forEach(immo_siteArrayElements);
+              sm_actu_reunion_ios.forEach(actu_ios_siteArrayElements);
+              sm_actu_reunion_android.forEach(actu_android_siteArrayElements);
+              sm_rodzafer_lp.forEach(rz_siteArrayElements);
+              sm_rodzafer_ios.forEach(rz_ios_siteArrayElements);
+              sm_rodzafer_android.forEach(rz_andoid_siteArrayElements);
+              sm_rodali.forEach(rodali_siteArrayElements);
+
+
+
+
+
+
+
+
+
+
+
+
+
               // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par format)
               const reducer = (accumulator, currentValue) => accumulator + currentValue;
               var sommeHabillageImpression = habillageImpressions.reduce(reducer, 0);
@@ -1073,6 +1345,60 @@ exports.report = async (req, res) => {
               var sommeNativeClicks = nativeClicks.reduce(reducer, 0);
               var sommeVideoImpression = videoImpressions.reduce(reducer, 0);
               var sommeVideoClicks = videoClicks.reduce(reducer, 0);
+
+
+
+
+
+
+              var sommeinfoImpression = linfo_impression.reduce(reducer, 0);
+              var sommeinfoClicks = linfo_clic.reduce(reducer, 0);
+
+              var sommeinfo_iosImpression = info_ios_impression.reduce(reducer, 0);
+              var sommeinfo_iosClicks = info_ios_clic.reduce(reducer, 0);
+
+              var sommeinfo_androidImpression = info_android_impression.reduce(reducer, 0);
+              var sommeinfo_androidClicks = info_android_clic.reduce(reducer, 0);
+
+              var sommetf1Impression = tf1_impression.reduce(reducer, 0);
+              var sommetf1Clicks = tf1_clic.reduce(reducer, 0);
+
+              var sommem6Impression = m6_impression.reduce(reducer, 0);
+              var sommem6Clicks = m6_clic.reduce(reducer, 0);
+
+              var sommedailyImpression = daily_impression.reduce(reducer, 0);
+              var sommedailyClicks = daily_clic.reduce(reducer, 0);
+
+              var sommearImpression = ar_impression.reduce(reducer, 0);
+              var sommearClicks = ar_clic.reduce(reducer, 0);
+
+              var sommedtjImpression = dtj_impression.reduce(reducer, 0);
+              var sommedtjClicks = dtj_clic.reduce(reducer, 0);
+
+              var sommeorangeImpression = orange_impression.reduce(reducer, 0);
+              var sommeorangeClicks = orange_clic.reduce(reducer, 0);
+
+              var sommeimmo974Impression = immo974_impression.reduce(reducer, 0);
+              var sommeimmo974Clicks = immo974_clic.reduce(reducer, 0);
+
+              var sommeactu_iosImpression = actu_ios_impression.reduce(reducer, 0);
+              var sommeactu_iosClicks = actu_ios_clic.reduce(reducer, 0);
+
+              var sommeactu_androidImpression = actu_android_impression.reduce(reducer, 0);
+              var sommeactu_androidClicks = actu_android_clic.reduce(reducer, 0);
+
+              var sommerzImpression = rz_impression.reduce(reducer, 0);
+              var sommerzClicks = rz_clic.reduce(reducer, 0);
+
+
+              var sommerz_iosImpression = rz_ios_impression.reduce(reducer, 0);
+              var sommerz_iosClicks = rz_ios_clic.reduce(reducer, 0);
+
+              var sommerz_androidImpression = rz_android_impression.reduce(reducer, 0);
+              var sommerz_androidClicks = rz_andoid_clic.reduce(reducer, 0);
+
+              var sommerodaliImpression = rodali_impression.reduce(reducer, 0);
+              var sommerodaliClicks = rodali_clic.reduce(reducer, 0);
 
             }
 
@@ -1121,7 +1447,60 @@ exports.report = async (req, res) => {
             CTR_native = (sommeNativeClicks / sommeNativeImpression) * 100;
             CTR_native = CTR_native.toFixed(2);
             ///////////////////////////////////
-      
+
+            CTR_m6 = (sommem6Clicks / sommem6Impression) * 100;
+            CTR_m6 = CTR_m6.toFixed(2);
+
+
+            CTR_info = (sommeinfoClicks / sommeinfoImpression) * 100;
+            CTR_info = CTR_info.toFixed(2);
+
+            CTR_info_ios = (sommeinfo_iosClicks / sommeinfo_iosImpression) * 100;
+            CTR_info_ios = CTR_info_ios.toFixed(2);
+
+            CTR_info_android = (sommeinfo_androidClicks / sommeinfo_androidImpression) * 100;
+            CTR_info_android = CTR_info_android.toFixed(2);
+
+            CTR_tf1 = (sommetf1Clicks / sommetf1Impression) * 100;
+            CTR_tf1 = CTR_tf1.toFixed(2);
+
+            CTR_daily = (sommedailyClicks / sommedailyImpression) * 100;
+            CTR_daily = CTR_daily.toFixed(2);
+
+            CTR_ar = (sommearClicks / sommearImpression) * 100;
+            CTR_ar = CTR_ar.toFixed(2);
+
+            CTR_dtj = (sommedtjClicks / sommedtjImpression) * 100;
+            CTR_dtj = CTR_dtj.toFixed(2);
+
+            CTR_orange = (sommeorangeClicks / sommeorangeImpression) * 100;
+            CTR_orange = CTR_orange.toFixed(2);
+
+            CTR_immo974 = (sommeimmo974Clicks / sommeimmo974Impression) * 100;
+            CTR_immo974 = CTR_immo974.toFixed(2);
+
+
+            CTR_actu_ios = (sommeactu_iosClicks / sommeactu_iosImpression) * 100;
+            CTR_actu_ios = CTR_actu_ios.toFixed(2);
+
+            CTR_actu_android = (sommeactu_androidClicks / sommeactu_androidImpression) * 100;
+            CTR_actu_android = CTR_actu_android.toFixed(2);
+
+
+            CTR_rz = (sommerzClicks / sommerzImpression) * 100;
+            CTR_rz = CTR_rz.toFixed(2);
+
+            CTR_rz_ios = (sommerz_iosClicks / sommerz_iosImpression) * 100;
+            CTR_rz_ios = CTR_rz_ios.toFixed(2);
+
+            CTR_rz_android = (sommerz_androidClicks / sommerz_androidImpression) * 100;
+            CTR_rz_android = CTR_rz_android.toFixed(2);
+
+
+            CTR_rodali = (sommerodaliClicks / sommerodaliImpression) * 100;
+            CTR_rodali = CTR_rodali.toFixed(2);
+
+
 
 
             //Calcul des chiffre global %Taux clic Repetition %VTR
@@ -1207,7 +1586,57 @@ exports.report = async (req, res) => {
               CTR_video,
 
 
-             
+              sommem6Impression,
+              sommeinfoImpression,
+              sommeinfo_iosImpression,
+              sommeinfo_androidImpression,
+              sommetf1Impression,
+              sommedailyImpression,
+              sommearImpression,
+              sommedtjImpression,
+              sommeorangeImpression,
+              sommeimmo974Impression,
+              sommeactu_iosImpression,
+              sommeactu_androidImpression,
+              sommerzImpression,
+              sommerz_iosImpression,
+              sommerz_androidImpression,
+              sommerodaliImpression,
+
+              sommem6Clicks,
+              sommeinfoClicks,
+              sommeinfo_iosClicks,
+              sommeinfo_androidClicks,
+              sommetf1Clicks,
+              sommedailyClicks,
+              sommearClicks,
+              sommedtjClicks,
+              sommeorangeClicks,
+              sommeimmo974Clicks,
+              sommeactu_iosClicks,
+              sommeactu_androidClicks,
+              sommerzClicks,
+              sommerz_iosClicks,
+              sommerz_androidClicks,
+              sommerodaliClicks,
+
+              CTR_m6,
+              CTR_info,
+              CTR_info_ios,
+              CTR_info_android,
+              CTR_tf1,
+              CTR_daily,
+              CTR_ar,
+              CTR_dtj,
+              CTR_orange,
+              CTR_immo974,
+              CTR_actu_ios,
+              CTR_actu_android,
+              CTR_rz,
+              CTR_rz_ios,
+              CTR_rz_android,
+              CTR_rodali,
+
 
             }
 
@@ -1249,8 +1678,8 @@ exports.report = async (req, res) => {
             var nativeCTR_clics = (sommenativeClics / sommenativeImpressions) * 100;
             nativeCTR_clics = nativeCTR_clics.toFixed(2);
 
-            video_linfo_siteName = video_linfo_siteName[0];
-            video_linfo_android_siteName = video_linfo_android_siteName[0];
+            video_linfo_siteName =  video_linfo_siteName[0] ;
+            video_linfo_android_siteName =  video_linfo_android_siteName[0] ;
 
 
             var data_video = {
@@ -1283,10 +1712,10 @@ exports.report = async (req, res) => {
 
             };
 
-
-            habillage_linfo_siteName = habillage_linfo_siteName[0];
-            habillage_linfo_android_siteName = habillage_linfo_android_siteName[0];
-            habillage_linfo_ios_siteName = habillage_linfo_ios_siteName[0];
+           
+            habillage_linfo_siteName = habillage_linfo_siteName[0] ;
+            habillage_linfo_android_siteName = habillage_linfo_android_siteName[0] ;
+            habillage_linfo_ios_siteName = habillage_linfo_ios_siteName[0] ;
 
 
 
@@ -1318,9 +1747,9 @@ exports.report = async (req, res) => {
 
             };
 
-            interstitiel_linfo_siteName = interstitiel_linfo_siteName[0];
-            interstitiel_linfo_android_siteName = interstitiel_linfo_android_siteName[0];
-            interstitiel_linfo_ios_siteName = interstitiel_linfo_ios_siteName[0];
+            interstitiel_linfo_siteName = interstitiel_linfo_siteName[0] ;
+            interstitiel_linfo_android_siteName = interstitiel_linfo_android_siteName[0] ;
+            interstitiel_linfo_ios_siteName = interstitiel_linfo_ios_siteName[0] ;
 
 
             var data_interstitiel = {
@@ -1351,9 +1780,9 @@ exports.report = async (req, res) => {
 
             };
 
-            masthead_linfo_siteName = masthead_linfo_siteName[0];
-            masthead_linfo_android_siteName = masthead_linfo_android_siteName[0];
-            masthead_linfo_ios_siteName = masthead_linfo_ios_siteName[0];
+            masthead_linfo_siteName =  masthead_linfo_siteName[0] ;
+            masthead_linfo_android_siteName =  masthead_linfo_android_siteName[0] ;
+            masthead_linfo_ios_siteName =  masthead_linfo_ios_siteName[0] ;
 
 
 
@@ -1385,9 +1814,9 @@ exports.report = async (req, res) => {
 
             };
 
-            grandAngle_linfo_siteName = grandAngle_linfo_siteName[0];
-            grandAngle_linfo_android_siteName = grandAngle_linfo_android_siteName[0];
-            grandAngle_linfo_ios_siteName = grandAngle_linfo_ios_siteName[0];
+            grandAngle_linfo_siteName =  grandAngle_linfo_siteName[0] ;
+            grandAngle_linfo_android_siteName =  grandAngle_linfo_android_siteName[0] ;
+            grandAngle_linfo_ios_siteName =  grandAngle_linfo_ios_siteName[0] ;
 
 
             var data_grand_angle = {
@@ -1418,9 +1847,9 @@ exports.report = async (req, res) => {
 
             };
 
-            native_linfo_siteName = native_linfo_siteName[0];
-            native_linfo_android_siteName = native_linfo_android_siteName[0];
-            native_linfo_ios_siteName = native_linfo_ios_siteName[0];
+            native_linfo_siteName =  native_linfo_siteName[0] ;
+            native_linfo_android_siteName =  native_linfo_android_siteName[0] ;
+            native_linfo_ios_siteName =  native_linfo_ios_siteName[0] ;
 
 
             var data_native = {
