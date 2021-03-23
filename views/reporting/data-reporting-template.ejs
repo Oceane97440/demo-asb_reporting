@@ -283,6 +283,15 @@
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_habillage.habillage_dtj_siteName%></td>
+                        <td><%=data_habillage.total_impressions_dtjHabillage%></td>
+                        <td><%=data_habillage.total_clicks_dtjHabillage%></td>
+                        <td><%=data_habillage.habillage_dtj_ctr%>%</td>
+
+
+                    </tr>
 
                     <% for (let i=0; i < data_habillage.habillageImpressions.length; i++) { %>
                     <% if(data_habillage.habillageImpressions[i] != '' &&	data_habillage.habillageSitename[i] != "N/A" ) { %>
@@ -358,6 +367,15 @@
                         <td><%=data_interstitiel.total_impressions_linfo_iosInterstitiel%></td>
                         <td><%=data_interstitiel.total_clicks_linfo_iosInterstitiel%></td>
                         <td><%=data_interstitiel.interstitiel_linfo_ios_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_interstitiel.interstitiel_dtj_siteName%></td>
+                        <td><%=data_interstitiel.total_impressions_dtjInterstitiel%></td>
+                        <td><%=data_interstitiel.total_clicks_dtjInterstitiel%></td>
+                        <td><%=data_interstitiel.interstitiel_dtj_ctr%>%</td>
 
 
                     </tr>
@@ -441,7 +459,15 @@
 
 
                     </tr>
-                    
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_video.video_dtj_siteName%></td>
+                        <td><%=data_video.total_impressions_dtjVideo%></td>
+                        <td><%=data_video.total_clicks_dtjVideo%></td>
+                        <td><%=data_video.video_dtj_ctr%>%</td>
+
+
+                    </tr>
 
                     <% for (let i=0; i < data_video.videoImpressions.length; i++) { %>
                     <% if(data_video.videoImpressions[i] != '' && data_video.videoSitename[i] != "N/A" ) { %>
@@ -521,7 +547,19 @@
 
 
                     </tr>
+                    <% if (data_masthead.total_impressions_dtjMasthead.length > 0 ) { %>
 
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_masthead.masthead_dtj_siteName%></td>
+                        <td><%=data_masthead.total_impressions_dtjMasthead%></td>
+                        <td><%=data_masthead.total_clicks_dtjMasthead%></td>
+                        <td><%=data_masthead.masthead_dtj_ctr%>%</td>
+
+
+                    </tr>
+
+                    <% } %>
 
                     <% for (let i=0; i < data_masthead.mastheadImpressions.length; i++) { %>
                     <% if(data_masthead.mastheadImpressions[i] != '' &&	data_masthead.mastheadSitename[i] != "N/A"  ) { %>
@@ -601,18 +639,28 @@
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_grand_angle.grandAngle_dtj_siteName%></td>
+                        <td><%=data_grand_angle.total_impressions_dtjGrandAngle%></td>
+                        <td><%=data_grand_angle.total_clicks_dtjGrandAngle%></td>
+                        <td><%=data_grand_angle.grandAngle_dtj_ctr%>%</td>
+
+
+                    </tr>
+
 
                     <% for (let i=0; i < data_grand_angle.grand_angleImpressions.length; i++) { %>
                     <% if(data_grand_angle.grand_angleImpressions[i] != ''  && data_grand_angle.grand_angleSitename[i] != "N/A") { %>
                     <tr>
-                   
+
 
                         <td><%=data_grand_angle.grand_angleSitename[i]%></td>
                         <td><%=data_grand_angle.grand_angleImpressions[i]%></td>
                         <td><%=data_grand_angle.grand_angleClicks[i]%></td>
                         <td><%=data_grand_angle.grand_angleCTR[i]%>%</td>
 
-            
+
 
 
                     </tr>
@@ -685,6 +733,16 @@
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_native.native_dtj_siteName%></td>
+                        <td><%=data_native.total_impressions_dtjNative%></td>
+                        <td><%=data_native.total_clicks_dtjNative%></td>
+                        <td><%=data_native.native_dtj_ctr%>%</td>
+
+
+                    </tr>
+
 
                     <% for (let i=0; i < data_native.nativeImpressions.length; i++) { %>
                     <% if(data_native.nativeImpressions[i] != '' && data_native.nativeSitename[i] != "N/A") { %>

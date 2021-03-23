@@ -516,6 +516,12 @@ exports.report = async (req, res) => {
               var interstitiel_linfo_ios_siteName = new Array()
               var interstitiel_linfo_ios_ctr = new Array()
 
+              var interstitiel_dtj_impression = new Array()
+              var interstitiel_dtj_click = new Array()
+              var interstitiel_dtj_siteId = new Array()
+              var interstitiel_dtj_siteName = new Array()
+              var interstitiel_dtj_ctr = new Array()
+
               //////////////////FORMAT HABILLAGE//////////////////////
 
               var habillageImpressions = new Array();
@@ -543,6 +549,12 @@ exports.report = async (req, res) => {
               var habillage_linfo_ios_siteName = new Array()
               var habillage_linfo_ios_ctr = new Array()
 
+              var habillage_dtj_impression = new Array()
+              var habillage_dtj_click = new Array()
+              var habillage_dtj_siteId = new Array()
+              var habillage_dtj_siteName = new Array()
+              var habillage_dtj_ctr = new Array()
+
               //////////////////FORMAT MASTHEAD//////////////////////
 
               var mastheadImpressions = new Array();
@@ -569,6 +581,11 @@ exports.report = async (req, res) => {
               var masthead_linfo_ios_siteName = new Array()
               var masthead_linfo_ios_ctr = new Array()
 
+              var masthead_dtj_impression = new Array()
+              var masthead_dtj_click = new Array()
+              var masthead_dtj_siteId = new Array()
+              var masthead_dtj_siteName = new Array()
+              var masthead_dtj_ctr = new Array()
               //////////////////FORMAT GRAND-ANGLE//////////////////////
 
               var grand_angleImpressions = new Array();
@@ -594,6 +611,12 @@ exports.report = async (req, res) => {
               var grandAngle_linfo_ios_siteId = new Array()
               var grandAngle_linfo_ios_siteName = new Array()
               var grandAngle_linfo_ios_ctr = new Array()
+
+              var grandAngle_dtj_impression = new Array()
+              var grandAngle_dtj_click = new Array()
+              var grandAngle_dtj_siteId = new Array()
+              var grandAngle_dtj_siteName = new Array()
+              var grandAngle_dtj_ctr = new Array()
 
 
               //////////////////FORMAT NATIVE//////////////////////
@@ -621,6 +644,13 @@ exports.report = async (req, res) => {
               var native_linfo_ios_siteId = new Array()
               var native_linfo_ios_siteName = new Array()
               var native_linfo_ios_ctr = new Array()
+
+              
+              var native_dtj_impression = new Array()
+              var native_dtj_click = new Array()
+              var native_dtj_siteId = new Array()
+              var native_dtj_siteName = new Array()
+              var native_dtj_ctr = new Array()
 
               //////////////////FORMAT VIDEO//////////////////////
 
@@ -650,6 +680,13 @@ exports.report = async (req, res) => {
               var video_linfo_ios_siteId = new Array()
               var video_linfo_ios_siteName = new Array()
               var video_linfo_ios_ctr = new Array()
+
+              
+              var video_dtj_impression = new Array()
+              var video_dtj_click = new Array()
+              var video_dtj_siteId = new Array()
+              var video_dtj_siteName = new Array()
+              var video_dtj_ctr = new Array()
 
               //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
               Array_InsertionName.filter(function (word, index) {
@@ -721,6 +758,67 @@ exports.report = async (req, res) => {
 
 
                 }
+                
+             
+                if (Array_SiteID[element] ==="323124") {
+
+                  video_dtj_impression.push(eval(Array_Impression[element]));
+                  video_dtj_click.push(eval(Array_Clicks[element]));
+                  video_dtj_siteId.push(Array_SiteID[element]);
+                  video_dtj_siteName.push(Array_SiteName[element]);
+
+                }
+
+
+               /* if (Array_SiteID[element] ==="299263") {
+                  sm_antenne.push(index);
+
+                }
+                if (Array_SiteID[element] ==="299252") {
+                  sm_orange.push(index);
+
+                }
+                if (Array_SiteID[element] ==="299245") {
+                                    sm_tf1.push(index);
+
+                }
+                if (Array_SiteID[element] ==="299244") {
+                                    sm_m6.push(index);
+
+                }
+                if (Array_SiteID[element] ==="389207") {
+                                    sm_immo974.push(index);
+
+                }
+                if (Array_SiteID[element] ==="337707") {
+                                    sm_dailymotion.push(index);
+
+                }
+                if (Array_SiteID[element] ==="299253") {
+                                    sm_actu_reunion_ios.push(index);
+
+                }
+                if (Array_SiteID[element] ==="299254") {
+                                    sm_actu_reunion_android.push(index);
+
+                }
+                if (Array_SiteID[element] ==="336662") {
+                                    sm_rodzafer_ios.push(index);
+
+                }
+                if (Array_SiteID[element] ==="336733") {
+                                    sm_rodzafer_android.push(index);
+
+                }
+                if (Array_SiteID[element] ==="371544") {
+                                    sm_rodzafer_lp.push(index);
+
+                }
+                if (Array_SiteID[element] ==="369138") {
+                                    sm_rodali.push(index);
+
+
+                }*/
 
               }
 
@@ -760,6 +858,14 @@ exports.report = async (req, res) => {
                   interstitiel_linfo_ios_siteId.push(Array_SiteID[element]);
                   interstitiel_linfo_ios_siteName.push(Array_SiteName[element]);
 
+
+                }
+                if (Array_SiteID[element] ==="323124") {
+
+                  interstitiel_dtj_impression.push(eval(Array_Impression[element]));
+                  interstitiel_dtj_click.push(eval(Array_Clicks[element]));
+                  interstitiel_dtj_siteId.push(Array_SiteID[element]);
+                  interstitiel_dtj_siteName.push(Array_SiteName[element]);
 
                 }
               }
@@ -806,6 +912,14 @@ exports.report = async (req, res) => {
 
 
                 }
+                if (Array_SiteID[element] ==="323124") {
+
+                  habillage_dtj_impression.push(eval(Array_Impression[element]));
+                  habillage_dtj_click.push(eval(Array_Clicks[element]));
+                  habillage_dtj_siteId.push(Array_SiteID[element]);
+                  habillage_dtj_siteName.push(Array_SiteName[element]);
+
+                }
 
               }
 
@@ -847,6 +961,14 @@ exports.report = async (req, res) => {
 
 
                 }
+                if (Array_SiteID[element] ==="323124") {
+
+                   masthead_dtj_impression.push(eval(Array_Impression[element]));
+                   masthead_dtj_click.push(eval(Array_Clicks[element]));
+                   masthead_dtj_siteId.push(Array_SiteID[element]);
+                   masthead_dtj_siteName.push(Array_SiteName[element]);
+
+                }
               }
 
               async function grand_angleArrayElements(element, index, array) {
@@ -886,6 +1008,14 @@ exports.report = async (req, res) => {
 
 
                 }
+                if (Array_SiteID[element] ==="323124") {
+
+                  grandAngle_dtj_impression.push(eval(Array_Impression[element]));
+                  grandAngle_dtj_click.push(eval(Array_Clicks[element]));
+                  grandAngle_dtj_siteId.push(Array_SiteID[element]);
+                  grandAngle_dtj_siteName.push(Array_SiteName[element]);
+
+               }
               }
 
 
@@ -926,6 +1056,14 @@ exports.report = async (req, res) => {
 
 
                 }
+                if (Array_SiteID[element] ==="323124") {
+
+                  native_dtj_impression.push(eval(Array_Impression[element]));
+                  native_dtj_click.push(eval(Array_Clicks[element]));
+                  native_dtj_siteId.push(Array_SiteID[element]);
+                  native_dtj_siteName.push(Array_SiteName[element]);
+
+               }
               }
 
 
@@ -951,6 +1089,9 @@ exports.report = async (req, res) => {
 
               var total_impressions_linfo_iosHabillage = habillage_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosHabillage = habillage_linfo_ios_click.reduce(somme_array, 0);
+
+              var total_impressions_dtjHabillage = habillage_dtj_impression.reduce(somme_array, 0);
+              var total_clicks_dtjHabillage = habillage_dtj_click.reduce(somme_array, 0);
               ///////////////////////////
 
               var total_impressions_linfoGrandAngle = grandAngle_linfo_impression.reduce(somme_array, 0);
@@ -961,6 +1102,9 @@ exports.report = async (req, res) => {
 
               var total_impressions_linfo_iosGrandAngle = grandAngle_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosGrandAngle = grandAngle_linfo_ios_click.reduce(somme_array, 0);
+
+              var total_impressions_dtjGrandAngle = grandAngle_dtj_impression.reduce(somme_array, 0);
+              var total_clicks_dtjGrandAngle = grandAngle_dtj_click.reduce(somme_array, 0);
               /////////////////////////
               var total_impressions_linfoVideo = video_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoVideo = video_linfo_click.reduce(somme_array, 0);
@@ -970,6 +1114,9 @@ exports.report = async (req, res) => {
 
               var total_impressions_linfo_iosVideo = video_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosVideo = video_linfo_ios_click.reduce(somme_array, 0);
+
+              var total_impressions_dtjVideo = video_dtj_impression.reduce(somme_array, 0);
+              var total_clicks_dtjVideo = video_dtj_click.reduce(somme_array, 0);
               /////////////////////
               var total_impressions_linfoInterstitiel = interstitiel_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoInterstitiel = interstitiel_linfo_click.reduce(somme_array, 0);
@@ -979,6 +1126,10 @@ exports.report = async (req, res) => {
 
               var total_impressions_linfo_iosInterstitiel = interstitiel_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosInterstitiel = interstitiel_linfo_ios_click.reduce(somme_array, 0);
+
+              
+              var total_impressions_dtjInterstitiel = interstitiel_dtj_impression.reduce(somme_array, 0);
+              var total_clicks_dtjInterstitiel = interstitiel_dtj_click.reduce(somme_array, 0);
               /////////////////
               var total_impressions_linfoMasthead = masthead_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoMasthead = masthead_linfo_click.reduce(somme_array, 0);
@@ -988,6 +1139,9 @@ exports.report = async (req, res) => {
 
               var total_impressions_linfo_iosMasthead = masthead_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosMasthead = masthead_linfo_ios_click.reduce(somme_array, 0);
+
+              var total_impressions_dtjMasthead = masthead_dtj_impression.reduce(somme_array, 0);
+              var total_clicks_dtjMasthead = masthead_dtj_click.reduce(somme_array, 0);
               //////////////////////
               var total_impressions_linfoNative = native_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoNative = native_linfo_click.reduce(somme_array, 0);
@@ -998,6 +1152,15 @@ exports.report = async (req, res) => {
               var total_impressions_linfo_iosNative = native_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosNative = native_linfo_ios_click.reduce(somme_array, 0);
 
+              
+              var total_impressions_dtjNative = native_dtj_impression.reduce(somme_array, 0);
+              var total_clicks_dtjNative = native_dtj_click.reduce(somme_array, 0);
+
+
+
+
+
+
               //calcule le ctr total par format et site
               let h_linfo = (total_clicks_linfoHabillage / total_impressions_linfoHabillage) * 100;
               habillage_linfo_ctr.push(h_linfo.toFixed(2));
@@ -1007,6 +1170,9 @@ exports.report = async (req, res) => {
 
               let h_linfo_ios = (total_clicks_linfo_iosHabillage / total_impressions_linfo_iosHabillage) * 100;
               habillage_linfo_ios_ctr.push(h_linfo_ios.toFixed(2));
+
+              let h_dtj = (total_clicks_dtjHabillage / total_impressions_dtjHabillage) * 100;
+              habillage_dtj_ctr.push(h_dtj.toFixed(2));
               //////////////////
               let ga_linfo = (total_clicks_linfoGrandAngle / total_impressions_linfoGrandAngle) * 100;
               grandAngle_linfo_ctr.push(ga_linfo.toFixed(2));
@@ -1016,6 +1182,9 @@ exports.report = async (req, res) => {
 
               let ga_linfo_ios = (total_clicks_linfo_iosGrandAngle / total_impressions_linfo_iosGrandAngle) * 100;
               grandAngle_linfo_ios_ctr.push(ga_linfo_ios.toFixed(2));
+
+              let ga_dtj = (total_clicks_dtjGrandAngle / total_impressions_dtjGrandAngle) * 100;
+              grandAngle_dtj_ctr.push(ga_dtj.toFixed(2));
               //////////////////
 
               let i_linfo = (total_clicks_linfoInterstitiel / total_impressions_linfoInterstitiel) * 100;
@@ -1026,6 +1195,10 @@ exports.report = async (req, res) => {
 
               let i_linfo_ios = (total_clicks_linfo_iosInterstitiel / total_impressions_linfo_iosInterstitiel) * 100;
               interstitiel_linfo_ios_ctr.push(i_linfo_ios.toFixed(2));
+
+              
+              let i_dtj = (total_clicks_dtjInterstitiel / total_impressions_dtjInterstitiel) * 100;
+              interstitiel_dtj_ctr.push(i_dtj.toFixed(2));
               //////////////////
 
               let m_linfo = (total_clicks_linfoMasthead / total_impressions_linfoMasthead) * 100;
@@ -1036,6 +1209,9 @@ exports.report = async (req, res) => {
 
               let m_linfo_ios = (total_clicks_linfo_iosMasthead / total_impressions_linfo_iosMasthead) * 100;
               masthead_linfo_ios_ctr.push(m_linfo_ios.toFixed(2));
+
+              let m_dtj = (total_clicks_dtjMasthead / total_impressions_dtjMasthead) * 100;
+              masthead_dtj_ctr.push(m_dtj.toFixed(2));
               //////////////////
 
               let n_linfo = (total_clicks_linfoNative / total_impressions_linfoNative) * 100;
@@ -1046,6 +1222,9 @@ exports.report = async (req, res) => {
 
               let n_linfo_ios = (total_clicks_linfo_iosNative / total_impressions_linfo_iosNative) * 100;
               native_linfo_ios_ctr.push(n_linfo_ios.toFixed(2));
+
+              let n_dtj = (total_clicks_dtjNative / total_impressions_dtjNative) * 100;
+              native_dtj_ctr.push(n_dtj.toFixed(2));
               //////////////////
 
 
@@ -1057,6 +1236,19 @@ exports.report = async (req, res) => {
 
               let v_linfo_ios = (total_clicks_linfo_iosVideo / total_impressions_linfo_iosVideo) * 100;
               video_linfo_ios_ctr.push(v_linfo_ios.toFixed(2));
+
+              let v_dtj = (total_clicks_dtjVideo / total_impressions_dtjVideo) * 100;
+              video_dtj_ctr.push(v_dtj.toFixed(2));
+
+
+
+
+
+
+
+
+
+
 
           
               // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par format)
@@ -1251,6 +1443,9 @@ exports.report = async (req, res) => {
 
             video_linfo_siteName = video_linfo_siteName[0];
             video_linfo_android_siteName = video_linfo_android_siteName[0];
+            video_linfo_ios_siteName = video_linfo_ios_siteName[0];
+            video_dtj_siteName = video_dtj_siteName[0];
+
 
 
             var data_video = {
@@ -1280,13 +1475,17 @@ exports.report = async (req, res) => {
               video_linfo_ios_siteName,
               video_linfo_ios_ctr,
 
-
+              total_impressions_dtjVideo,
+              total_clicks_dtjVideo,
+              video_dtj_siteName,
+              video_dtj_ctr,
             };
 
 
             habillage_linfo_siteName = habillage_linfo_siteName[0];
             habillage_linfo_android_siteName = habillage_linfo_android_siteName[0];
             habillage_linfo_ios_siteName = habillage_linfo_ios_siteName[0];
+            habillage_dtj_siteName = habillage_dtj_siteName[0];
 
 
 
@@ -1316,11 +1515,17 @@ exports.report = async (req, res) => {
               habillage_linfo_ios_siteName,
               habillage_linfo_ios_ctr,
 
+              total_impressions_dtjHabillage,
+              total_clicks_dtjHabillage,
+              habillage_dtj_siteName,
+              habillage_dtj_ctr,
+
             };
 
             interstitiel_linfo_siteName = interstitiel_linfo_siteName[0];
             interstitiel_linfo_android_siteName = interstitiel_linfo_android_siteName[0];
             interstitiel_linfo_ios_siteName = interstitiel_linfo_ios_siteName[0];
+            interstitiel_dtj_siteName = interstitiel_dtj_siteName[0];
 
 
             var data_interstitiel = {
@@ -1349,11 +1554,18 @@ exports.report = async (req, res) => {
               interstitiel_linfo_ios_siteName,
               interstitiel_linfo_ios_ctr,
 
+              
+              total_impressions_dtjInterstitiel,
+              total_clicks_dtjInterstitiel,
+              interstitiel_dtj_siteName,
+              interstitiel_dtj_ctr,
+
             };
 
             masthead_linfo_siteName = masthead_linfo_siteName[0];
             masthead_linfo_android_siteName = masthead_linfo_android_siteName[0];
             masthead_linfo_ios_siteName = masthead_linfo_ios_siteName[0];
+            masthead_dtj_siteName = masthead_dtj_siteName[0];
 
 
 
@@ -1383,11 +1595,17 @@ exports.report = async (req, res) => {
               masthead_linfo_ios_siteName,
               masthead_linfo_ios_ctr,
 
+              total_impressions_dtjMasthead,
+              total_clicks_dtjMasthead,
+              masthead_dtj_siteName,
+              masthead_dtj_ctr,
+
             };
 
             grandAngle_linfo_siteName = grandAngle_linfo_siteName[0];
             grandAngle_linfo_android_siteName = grandAngle_linfo_android_siteName[0];
             grandAngle_linfo_ios_siteName = grandAngle_linfo_ios_siteName[0];
+            grandAngle_dtj_siteName = grandAngle_dtj_siteName[0];
 
 
             var data_grand_angle = {
@@ -1416,11 +1634,17 @@ exports.report = async (req, res) => {
               grandAngle_linfo_ios_siteName,
               grandAngle_linfo_ios_ctr,
 
+              total_impressions_dtjGrandAngle,
+              total_clicks_dtjGrandAngle,
+              grandAngle_dtj_siteName,
+              grandAngle_dtj_ctr,
+
             };
 
             native_linfo_siteName = native_linfo_siteName[0];
             native_linfo_android_siteName = native_linfo_android_siteName[0];
             native_linfo_ios_siteName = native_linfo_ios_siteName[0];
+            native_dtj_siteName = native_dtj_siteName[0];
 
 
             var data_native = {
@@ -1448,6 +1672,12 @@ exports.report = async (req, res) => {
               total_clicks_linfo_iosNative,
               native_linfo_ios_siteName,
               native_linfo_ios_ctr,
+
+              total_impressions_dtjNative,
+              total_clicks_dtjNative,
+              native_dtj_siteName,
+              native_dtj_ctr,
+
 
             };
 
