@@ -57,7 +57,7 @@ exports.advertiser_add = async (req, res) => {
 
       var config = {
         method: 'GET',
-        url: 'https://manage.smartadserverapis.com/2044/advertisers/',
+        url: 'https://manage.smartadserverapis.com/2044/advertisers/?offset=100&limit=100',
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
@@ -145,7 +145,7 @@ exports.campaign_add = async (req, res) => {
 
       var config = {
         method: 'GET',
-        url: 'https://manage.smartadserverapis.com/2044/campaigns/',
+        url: 'https://manage.smartadserverapis.com/2044/campaigns/?offset=100&limit=100',
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
