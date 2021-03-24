@@ -254,7 +254,7 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    <% if (data_habillage.total_impressions_linfoHabillage !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_linfo_siteName%></td>
@@ -264,6 +264,10 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_linfo_androidHabillage !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_linfo_android_siteName%></td>
@@ -273,6 +277,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_linfo_iosHabillage !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -283,6 +290,10 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_dtjHabillage !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_dtj_siteName%></td>
@@ -292,6 +303,10 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_antenneHabillage !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_antenne_siteName%></td>
@@ -301,6 +316,10 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_orangeHabillage !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_orange_siteName%></td>
@@ -310,6 +329,10 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_tf1Habillage !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_tf1_siteName%></td>
@@ -319,6 +342,11 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_m6Habillage !== 0 ) { %>
+
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_m6_siteName%></td>
@@ -328,6 +356,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_dailymotionHabillage !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -338,6 +369,10 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_habillage.total_impressions_actu_iosHabillage !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_habillage.habillage_actu_ios_siteName%></td>
@@ -347,6 +382,8 @@
 
 
                     </tr>
+                    <% }%>
+
 
                 <tfoot>
                     <tr>
@@ -382,7 +419,8 @@
                     </tr>
                 </thead>
                 <tbody>
-               
+
+                    <% if (data_interstitiel.total_impressions_linfoInterstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -393,8 +431,10 @@
 
 
                     </tr>
-                    
+                    <% }%>
 
+
+                    <% if (data_interstitiel.total_impressions_linfo_androidInterstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -406,6 +446,10 @@
 
                     </tr>
 
+                    <% }%>
+
+                    <% if (data_interstitiel.total_impressions_linfo_iosInterstitiel !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_interstitiel.interstitiel_linfo_ios_siteName%></td>
@@ -415,6 +459,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_interstitiel.total_impressions_dtjInterstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -425,6 +472,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_interstitiel.total_impressions_antenneInterstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -435,6 +485,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_interstitiel.total_impressions_orangeInterstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -445,6 +498,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_interstitiel.total_impressions_tf1Interstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -455,6 +511,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_interstitiel.total_impressions_m6Interstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -465,7 +524,9 @@
 
 
                     </tr>
+                    <% }%>
 
+                    <% if (data_interstitiel.total_impressions_dailymotionInterstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -476,6 +537,9 @@
 
 
                     </tr>
+                    <% }%>
+
+                    <% if (data_interstitiel.total_impressions_actu_iosInterstitiel !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -486,6 +550,11 @@
 
 
                     </tr>
+                    <% }%>               
+                   
+
+                    
+                  
 
                 <tfoot>
                     <tr>
@@ -514,6 +583,7 @@
 
             <table class="table">
                 <thead class="text-left thead-dark">
+
                     <tr>
                         <th scope="col">SiteName</th>
                         <th scope="col">Impressions</th>
@@ -521,9 +591,10 @@
                         <th scope="col">Taux de clics</th>
 
                     </tr>
+
                 </thead>
                 <tbody>
-
+                    <% if (data_video.total_impressions_linfo_androidVideo !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_linfo_siteName%></td>
@@ -533,9 +604,10 @@
 
 
                     </tr>
+                    <% }%>
 
-                 
 
+                    <% if (data_video.total_impressions_linfo_androidVideo !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_linfo_android_siteName%></td>
@@ -545,9 +617,10 @@
 
 
                     </tr>
+                    <% }%>
 
 
-
+                    <% if (data_video.total_impressions_linfo_iosVideo !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_linfo_ios_siteName%></td>
@@ -557,9 +630,10 @@
 
 
                     </tr>
+                    <% }%>
 
-                   
 
+                    <% if (data_video.total_impressions_dtjVideo !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_dtj_siteName%></td>
@@ -569,8 +643,9 @@
 
 
                     </tr>
-                 
+                    <% }%>
 
+                    <% if (data_video.total_impressions_antenneVideo !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_antenne_siteName%></td>
@@ -580,7 +655,9 @@
 
 
                     </tr>
-                
+                    <% }%>
+
+                    <% if (data_video.total_impressions_orangeVideo !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -591,7 +668,9 @@
 
 
                     </tr>
-                  
+                    <% }%>
+
+                    <% if (data_video.total_impressions_tf1Video !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -602,7 +681,10 @@
 
 
                     </tr>
-                  
+                    <% }%>
+
+                    <% if (data_video.total_impressions_m6Video !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_m6_siteName%></td>
@@ -612,7 +694,10 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_video.total_impressions_dailymotionVideo !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_dailymotion_siteName%></td>
@@ -622,7 +707,9 @@
 
 
                     </tr>
-                 
+                    <% }%>
+
+                    <% if (data_video.total_impressions_actu_iosVideo !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -633,7 +720,8 @@
 
 
                     </tr>
-                  
+                    <% }%>
+
 
                 <tfoot>
                     <tr>
@@ -670,7 +758,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                   
+                    <% if (data_masthead.total_impressions_linfoMasthead !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_linfo_siteName%></td>
@@ -680,8 +768,9 @@
 
 
                     </tr>
-                 
+                    <% }%>
 
+                    <% if (data_masthead.total_impressions_linfo_androidMasthead !== 0 ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_linfo_android_siteName%></td>
@@ -691,7 +780,10 @@
 
 
                     </tr>
-                    
+                    <% }%>
+
+                    <% if (data_masthead.total_impressions_linfo_iosMasthead !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_linfo_ios_siteName%></td>
@@ -701,8 +793,10 @@
 
 
                     </tr>
+                    <% }%>
 
-                    
+
+                    <% if (data_masthead.total_impressions_dtjMasthead !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -713,7 +807,9 @@
 
 
                     </tr>
+                    <% }%>
 
+                    <% if (data_masthead.total_impressions_antenneMasthead !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -725,7 +821,9 @@
 
 
                     </tr>
-                 
+                    <% }%>
+
+                    <% if (data_masthead.total_impressions_orangeMasthead !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -737,7 +835,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_masthead.total_impressions_tf1Masthead !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -749,7 +849,10 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_masthead.total_impressions_m6Masthead !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_m6_siteName%></td>
@@ -760,7 +863,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_masthead.total_impressions_dailymotionMasthead !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -772,7 +877,9 @@
 
 
                     </tr>
-                    
+                    <% }%>
+
+                    <% if (data_masthead.total_impressions_dailymotionMasthead !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -784,7 +891,8 @@
 
 
                     </tr>
-                  
+                    <% }%>
+
 
                 <tfoot>
                     <tr>
@@ -821,7 +929,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                   
+
+                    <% if (data_grand_angle.total_impressions_linfoGrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -832,7 +941,10 @@
 
 
                     </tr>
-                
+
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_linfo_androidGrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -843,7 +955,9 @@
 
 
                     </tr>
-                  
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_linfo_iosGrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -854,7 +968,10 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_dtjGrandAngle !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_dtj_siteName%></td>
@@ -864,7 +981,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_antenneGrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -875,7 +994,9 @@
 
 
                     </tr>
-                  
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_orangeGrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -886,7 +1007,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_tf1GrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -897,7 +1020,9 @@
 
 
                     </tr>
-                 
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_m6GrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -908,7 +1033,9 @@
 
 
                     </tr>
-                    
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_dailymotionGrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -919,7 +1046,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_grand_angle.total_impressions_actu_iosGrandAngle !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -930,6 +1059,8 @@
 
 
                     </tr>
+                    <% }%>
+
 
                 <tfoot>
                     <tr>
@@ -968,6 +1099,10 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    <% if (data_native.total_impressions_linfoNative !== 0 ) { %>
+
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_linfo_siteName%></td>
@@ -977,7 +1112,10 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_native.total_impressions_linfo_androidNative !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_linfo_android_siteName%></td>
@@ -987,7 +1125,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_native.total_impressions_linfo_iosNative !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -998,7 +1138,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_native.total_impressions_dtjNative !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -1009,7 +1151,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_native.total_impressions_antenneNative !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -1020,7 +1164,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_native.total_impressions_orangeNative !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -1031,7 +1177,9 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_native.total_impressions_tf1Native !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -1042,7 +1190,10 @@
 
 
                     </tr>
-                   
+                    <% }%>
+
+                    <% if (data_native.total_impressions_m6Native !== 0 ) { %>
+
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_m6_siteName%></td>
@@ -1052,7 +1203,9 @@
 
 
                     </tr>
-                    
+                    <% }%>
+
+                    <% if (data_native.total_impressions_dailymotionNative !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -1063,7 +1216,9 @@
 
 
                     </tr>
-                    
+                    <% }%>
+
+                    <% if (data_native.total_impressions_actu_iosNative !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -1074,7 +1229,8 @@
 
 
                     </tr>
-                    
+                    <% }%>
+
 
                 <tfoot>
                     <tr>
