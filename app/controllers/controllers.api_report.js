@@ -2614,6 +2614,7 @@ exports.report = async (req, res) => {
       advertiserid: advertiserid,
       campaignid: campaignid,
       startDate: startDate,
+      endDate:EndtDate,
     })
 
 
@@ -2651,6 +2652,8 @@ exports.automatisation = async (req, res) => {
       advertiserid: advertiserid,
       campaignid: campaignid,
       startDate: startDate,
+      startDate: startDate,
+
     })
 
 
