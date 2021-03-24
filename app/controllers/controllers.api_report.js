@@ -522,6 +522,36 @@ exports.report = async (req, res) => {
               var interstitiel_dtj_siteName = new Array()
               var interstitiel_dtj_ctr = new Array()
 
+              var interstitiel_antenne_impression = new Array()
+              var interstitiel_antenne_click = new Array()
+              var interstitiel_antenne_siteId = new Array()
+              var interstitiel_antenne_siteName = new Array()
+              var interstitiel_antenne_ctr = new Array()
+
+              var interstitiel_orange_impression = new Array()
+              var interstitiel_orange_click = new Array()
+              var interstitiel_orange_siteId = new Array()
+              var interstitiel_orange_siteName = new Array()
+              var interstitiel_orange_ctr = new Array()
+
+              var interstitiel_tf1_impression = new Array()
+              var interstitiel_tf1_click = new Array()
+              var interstitiel_tf1_siteId = new Array()
+              var interstitiel_tf1_siteName = new Array()
+              var interstitiel_tf1_ctr = new Array()
+
+              var interstitiel_m6_impression = new Array()
+              var interstitiel_m6_click = new Array()
+              var interstitiel_m6_siteId = new Array()
+              var interstitiel_m6_siteName = new Array()
+              var interstitiel_m6_ctr = new Array()
+
+              var interstitiel_dailymotion_impression = new Array()
+              var interstitiel_dailymotion_click = new Array()
+              var interstitiel_dailymotion_siteId = new Array()
+              var interstitiel_dailymotion_siteName = new Array()
+              var interstitiel_dailymotion_ctr = new Array()
+
               //////////////////FORMAT HABILLAGE//////////////////////
 
               var habillageImpressions = new Array();
@@ -555,6 +585,35 @@ exports.report = async (req, res) => {
               var habillage_dtj_siteName = new Array()
               var habillage_dtj_ctr = new Array()
 
+              var habillage_antenne_impression = new Array()
+              var habillage_antenne_click = new Array()
+              var habillage_antenne_siteId = new Array()
+              var habillage_antenne_siteName = new Array()
+              var habillage_antenne_ctr = new Array()
+
+              var habillage_orange_impression = new Array()
+              var habillage_orange_click = new Array()
+              var habillage_orange_siteId = new Array()
+              var habillage_orange_siteName = new Array()
+              var habillage_orange_ctr = new Array()
+
+              var habillage_tf1_impression = new Array()
+              var habillage_tf1_click = new Array()
+              var habillage_tf1_siteId = new Array()
+              var habillage_tf1_siteName = new Array()
+              var habillage_tf1_ctr = new Array()
+
+              var habillage_m6_impression = new Array()
+              var habillage_m6_click = new Array()
+              var habillage_m6_siteId = new Array()
+              var habillage_m6_siteName = new Array()
+              var habillage_m6_ctr = new Array()
+
+              var habillage_dailymotion_impression = new Array()
+              var habillage_dailymotion_click = new Array()
+              var habillage_dailymotion_siteId = new Array()
+              var habillage_dailymotion_siteName = new Array()
+              var habillage_dailymotion_ctr = new Array()
               //////////////////FORMAT MASTHEAD//////////////////////
 
               var mastheadImpressions = new Array();
@@ -586,6 +645,37 @@ exports.report = async (req, res) => {
               var masthead_dtj_siteId = new Array()
               var masthead_dtj_siteName = new Array()
               var masthead_dtj_ctr = new Array()
+
+              var masthead_antenne_impression = new Array()
+              var masthead_antenne_click = new Array()
+              var masthead_antenne_siteId = new Array()
+              var masthead_antenne_siteName = new Array()
+              var masthead_antenne_ctr = new Array()
+
+
+              var masthead_orange_impression = new Array()
+              var masthead_orange_click = new Array()
+              var masthead_orange_siteId = new Array()
+              var masthead_orange_siteName = new Array()
+              var masthead_orange_ctr = new Array()
+
+              var masthead_tf1_impression = new Array()
+              var masthead_tf1_click = new Array()
+              var masthead_tf1_siteId = new Array()
+              var masthead_tf1_siteName = new Array()
+              var masthead_tf1_ctr = new Array()
+
+              var masthead_m6_impression = new Array()
+              var masthead_m6_click = new Array()
+              var masthead_m6_siteId = new Array()
+              var masthead_m6_siteName = new Array()
+              var masthead_m6_ctr = new Array()
+
+              var masthead_dailymotion_impression = new Array()
+              var masthead_dailymotion_click = new Array()
+              var masthead_dailymotion_siteId = new Array()
+              var masthead_dailymotion_siteName = new Array()
+              var masthead_dailymotion_ctr = new Array()
               //////////////////FORMAT GRAND-ANGLE//////////////////////
 
               var grand_angleImpressions = new Array();
@@ -619,6 +709,36 @@ exports.report = async (req, res) => {
               var grandAngle_dtj_ctr = new Array()
 
 
+              var grandAngle_antenne_impression = new Array()
+              var grandAngle_antenne_click = new Array()
+              var grandAngle_antenne_siteId = new Array()
+              var grandAngle_antenne_siteName = new Array()
+              var grandAngle_antenne_ctr = new Array()
+
+              var grandAngle_orange_impression = new Array()
+              var grandAngle_orange_click = new Array()
+              var grandAngle_orange_siteId = new Array()
+              var grandAngle_orange_siteName = new Array()
+              var grandAngle_orange_ctr = new Array()
+
+              var grandAngle_tf1_impression = new Array()
+              var grandAngle_tf1_click = new Array()
+              var grandAngle_tf1_siteId = new Array()
+              var grandAngle_tf1_siteName = new Array()
+              var grandAngle_tf1_ctr = new Array()
+
+              var grandAngle_m6_impression = new Array()
+              var grandAngle_m6_click = new Array()
+              var grandAngle_m6_siteId = new Array()
+              var grandAngle_m6_siteName = new Array()
+              var grandAngle_m6_ctr = new Array()
+
+              var grandAngle_dailymotion_impression = new Array()
+              var grandAngle_dailymotion_click = new Array()
+              var grandAngle_dailymotion_siteId = new Array()
+              var grandAngle_dailymotion_siteName = new Array()
+              var grandAngle_dailymotion_ctr = new Array()
+
               //////////////////FORMAT NATIVE//////////////////////
 
               var nativeImpressions = new Array();
@@ -645,12 +765,43 @@ exports.report = async (req, res) => {
               var native_linfo_ios_siteName = new Array()
               var native_linfo_ios_ctr = new Array()
 
-              
+
               var native_dtj_impression = new Array()
               var native_dtj_click = new Array()
               var native_dtj_siteId = new Array()
               var native_dtj_siteName = new Array()
               var native_dtj_ctr = new Array()
+
+              var native_antenne_impression = new Array()
+              var native_antenne_click = new Array()
+              var native_antenne_siteId = new Array()
+              var native_antenne_siteName = new Array()
+              var native_antenne_ctr = new Array()
+
+
+              var native_orange_impression = new Array()
+              var native_orange_click = new Array()
+              var native_orange_siteId = new Array()
+              var native_orange_siteName = new Array()
+              var native_orange_ctr = new Array()
+
+              var native_tf1_impression = new Array()
+              var native_tf1_click = new Array()
+              var native_tf1_siteId = new Array()
+              var native_tf1_siteName = new Array()
+              var native_tf1_ctr = new Array()
+
+              var native_m6_impression = new Array()
+              var native_m6_click = new Array()
+              var native_m6_siteId = new Array()
+              var native_m6_siteName = new Array()
+              var native_m6_ctr = new Array()
+
+              var native_dailymotion_impression = new Array()
+              var native_dailymotion_click = new Array()
+              var native_dailymotion_siteId = new Array()
+              var native_dailymotion_siteName = new Array()
+              var native_dailymotion_ctr = new Array()
 
               //////////////////FORMAT VIDEO//////////////////////
 
@@ -681,12 +832,42 @@ exports.report = async (req, res) => {
               var video_linfo_ios_siteName = new Array()
               var video_linfo_ios_ctr = new Array()
 
-              
+
               var video_dtj_impression = new Array()
               var video_dtj_click = new Array()
               var video_dtj_siteId = new Array()
               var video_dtj_siteName = new Array()
               var video_dtj_ctr = new Array()
+
+              var video_antenne_impression = new Array()
+              var video_antenne_click = new Array()
+              var video_antenne_siteId = new Array()
+              var video_antenne_siteName = new Array()
+              var video_antenne_ctr = new Array()
+
+              var video_orange_impression = new Array()
+              var video_orange_click = new Array()
+              var video_orange_siteId = new Array()
+              var video_orange_siteName = new Array()
+              var video_orange_ctr = new Array()
+
+              var video_tf1_impression = new Array()
+              var video_tf1_click = new Array()
+              var video_tf1_siteId = new Array()
+              var video_tf1_siteName = new Array()
+              var video_tf1_ctr = new Array()
+
+              var video_m6_impression = new Array()
+              var video_m6_click = new Array()
+              var video_m6_siteId = new Array()
+              var video_m6_siteName = new Array()
+              var video_m6_ctr = new Array()
+
+              var video_dailymotion_impression = new Array()
+              var video_dailymotion_click = new Array()
+              var video_dailymotion_siteId = new Array()
+              var video_dailymotion_siteName = new Array()
+              var video_dailymotion_ctr = new Array()
 
               //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
               Array_InsertionName.filter(function (word, index) {
@@ -758,9 +939,9 @@ exports.report = async (req, res) => {
 
 
                 }
-                
-             
-                if (Array_SiteID[element] ==="323124") {
+
+
+                if (Array_SiteID[element] === "323124") {
 
                   video_dtj_impression.push(eval(Array_Impression[element]));
                   video_dtj_click.push(eval(Array_Clicks[element]));
@@ -770,30 +951,48 @@ exports.report = async (req, res) => {
                 }
 
 
-               /* if (Array_SiteID[element] ==="299263") {
-                  sm_antenne.push(index);
+                if (Array_SiteID[element] === "299263") {
+
+                  video_antenne_impression.push(eval(Array_Impression[element]));
+                  video_antenne_click.push(eval(Array_Clicks[element]));
+                  video_antenne_siteId.push(Array_SiteID[element]);
+                  video_antenne_siteName.push(Array_SiteName[element]);
 
                 }
-                if (Array_SiteID[element] ==="299252") {
-                  sm_orange.push(index);
+                if (Array_SiteID[element] === "299252") {
+                  video_orange_impression.push(eval(Array_Impression[element]));
+                  video_orange_click.push(eval(Array_Clicks[element]));
+                  video_orange_siteId.push(Array_SiteID[element]);
+                  video_orange_siteName.push(Array_SiteName[element]);
 
                 }
-                if (Array_SiteID[element] ==="299245") {
-                                    sm_tf1.push(index);
+                if (Array_SiteID[element] === "299245") {
+                  video_tf1_impression.push(eval(Array_Impression[element]));
+                  video_tf1_click.push(eval(Array_Clicks[element]));
+                  video_tf1_siteId.push(Array_SiteID[element]);
+                  video_tf1_siteName.push(Array_SiteName[element]);
+
 
                 }
-                if (Array_SiteID[element] ==="299244") {
-                                    sm_m6.push(index);
+                if (Array_SiteID[element] === "299244") {
+
+                  video_m6_impression.push(eval(Array_Impression[element]));
+                  video_m6_click.push(eval(Array_Clicks[element]));
+                  video_m6_siteId.push(Array_SiteID[element]);
+                  video_m6_siteName.push(Array_SiteName[element]);
 
                 }
-                if (Array_SiteID[element] ==="389207") {
+                if (Array_SiteID[element] === "337707") {
+                  video_dailymotion_impression.push(eval(Array_Impression[element]));
+                  video_dailymotion_click.push(eval(Array_Clicks[element]));
+                  video_dailymotion_siteId.push(Array_SiteID[element]);
+                  video_dailymotion_siteName.push(Array_SiteName[element]);
+                }
+                /*if (Array_SiteID[element] ==="389207") {
                                     sm_immo974.push(index);
 
                 }
-                if (Array_SiteID[element] ==="337707") {
-                                    sm_dailymotion.push(index);
-
-                }
+              
                 if (Array_SiteID[element] ==="299253") {
                                     sm_actu_reunion_ios.push(index);
 
@@ -860,13 +1059,47 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] ==="323124") {
+                if (Array_SiteID[element] === "323124") {
 
                   interstitiel_dtj_impression.push(eval(Array_Impression[element]));
                   interstitiel_dtj_click.push(eval(Array_Clicks[element]));
                   interstitiel_dtj_siteId.push(Array_SiteID[element]);
                   interstitiel_dtj_siteName.push(Array_SiteName[element]);
 
+                }
+                if (Array_SiteID[element] === "299263") {
+
+                  interstitiel_antenne_impression.push(eval(Array_Impression[element]));
+                  interstitiel_antenne_click.push(eval(Array_Clicks[element]));
+                  interstitiel_antenne_siteId.push(Array_SiteID[element]);
+                  interstitiel_antenne_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299252") {
+                  interstitiel_orange_impression.push(eval(Array_Impression[element]));
+                  interstitiel_orange_click.push(eval(Array_Clicks[element]));
+                  interstitiel_orange_siteId.push(Array_SiteID[element]);
+                  interstitiel_orange_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299245") {
+                  interstitiel_tf1_impression.push(eval(Array_Impression[element]));
+                  interstitiel_tf1_click.push(eval(Array_Clicks[element]));
+                  interstitiel_tf1_siteId.push(Array_SiteID[element]);
+                  interstitiel_tf1_siteName.push(Array_SiteName[element]);
+                }
+                if (Array_SiteID[element] === "299244") {
+                  interstitiel_m6_impression.push(eval(Array_Impression[element]));
+                  interstitiel_m6_click.push(eval(Array_Clicks[element]));
+                  interstitiel_m6_siteId.push(Array_SiteID[element]);
+                  interstitiel_m6_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "337707") {
+                  interstitiel_dailymotion_impression.push(eval(Array_Impression[element]));
+                  interstitiel_dailymotion_click.push(eval(Array_Clicks[element]));
+                  interstitiel_dailymotion_siteId.push(Array_SiteID[element]);
+                  interstitiel_dailymotion_siteName.push(Array_SiteName[element]);
                 }
               }
 
@@ -912,7 +1145,7 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] ==="323124") {
+                if (Array_SiteID[element] === "323124") {
 
                   habillage_dtj_impression.push(eval(Array_Impression[element]));
                   habillage_dtj_click.push(eval(Array_Clicks[element]));
@@ -920,7 +1153,40 @@ exports.report = async (req, res) => {
                   habillage_dtj_siteName.push(Array_SiteName[element]);
 
                 }
+                if (Array_SiteID[element] === "299263") {
+                  habillage_antenne_impression.push(eval(Array_Impression[element]));
+                  habillage_antenne_click.push(eval(Array_Clicks[element]));
+                  habillage_antenne_siteId.push(Array_SiteID[element]);
+                  habillage_antenne_siteName.push(Array_SiteName[element]);
+                }
+                if (Array_SiteID[element] === "299252") {
 
+                  habillage_orange_impression.push(eval(Array_Impression[element]));
+                  habillage_orange_click.push(eval(Array_Clicks[element]));
+                  habillage_orange_siteId.push(Array_SiteID[element]);
+                  habillage_orange_siteName.push(Array_SiteName[element]);
+                }
+                if (Array_SiteID[element] === "299245") {
+                  habillage_tf1_impression.push(eval(Array_Impression[element]));
+                  habillage_tf1_click.push(eval(Array_Clicks[element]));
+                  habillage_tf1_siteId.push(Array_SiteID[element]);
+                  habillage_tf1_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299244") {
+                  habillage_m6_impression.push(eval(Array_Impression[element]));
+                  habillage_m6_click.push(eval(Array_Clicks[element]));
+                  habillage_m6_siteId.push(Array_SiteID[element]);
+                  habillage_m6_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "337707") {
+                  habillage_dailymotion_impression.push(eval(Array_Impression[element]));
+                  habillage_dailymotion_click.push(eval(Array_Clicks[element]));
+                  habillage_dailymotion_siteId.push(Array_SiteID[element]);
+                  habillage_dailymotion_siteName.push(Array_SiteName[element]);
+
+                }
               }
 
 
@@ -961,14 +1227,49 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] ==="323124") {
+                if (Array_SiteID[element] === "323124") {
 
-                   masthead_dtj_impression.push(eval(Array_Impression[element]));
-                   masthead_dtj_click.push(eval(Array_Clicks[element]));
-                   masthead_dtj_siteId.push(Array_SiteID[element]);
-                   masthead_dtj_siteName.push(Array_SiteName[element]);
+                  masthead_dtj_impression.push(eval(Array_Impression[element]));
+                  masthead_dtj_click.push(eval(Array_Clicks[element]));
+                  masthead_dtj_siteId.push(Array_SiteID[element]);
+                  masthead_dtj_siteName.push(Array_SiteName[element]);
 
                 }
+                if (Array_SiteID[element] === "299263") {
+                  masthead_antenne_impression.push(eval(Array_Impression[element]));
+                  masthead_antenne_click.push(eval(Array_Clicks[element]));
+                  masthead_antenne_siteId.push(Array_SiteID[element]);
+                  masthead_antenne_siteName.push(Array_SiteName[element]);
+                }
+                if (Array_SiteID[element] === "299252") {
+                  masthead_orange_impression.push(eval(Array_Impression[element]));
+                  masthead_orange_click.push(eval(Array_Clicks[element]));
+                  masthead_orange_siteId.push(Array_SiteID[element]);
+                  masthead_orange_siteName.push(Array_SiteName[element]);
+                }
+
+                if (Array_SiteID[element] === "299245") {
+                  masthead_tf1_impression.push(eval(Array_Impression[element]));
+                  masthead_tf1_click.push(eval(Array_Clicks[element]));
+                  masthead_tf1_siteId.push(Array_SiteID[element]);
+                  masthead_tf1_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299244") {
+                  masthead_m6_impression.push(eval(Array_Impression[element]));
+                  masthead_m6_click.push(eval(Array_Clicks[element]));
+                  masthead_m6_siteId.push(Array_SiteID[element]);
+                  masthead_m6_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "337707") {
+                  masthead_dailymotion_impression.push(eval(Array_Impression[element]));
+                  masthead_dailymotion_click.push(eval(Array_Clicks[element]));
+                  masthead_dailymotion_siteId.push(Array_SiteID[element]);
+                  masthead_dailymotion_siteName.push(Array_SiteName[element]);
+                }
+
+
               }
 
               async function grand_angleArrayElements(element, index, array) {
@@ -1008,14 +1309,52 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] ==="323124") {
+                if (Array_SiteID[element] === "323124") {
 
                   grandAngle_dtj_impression.push(eval(Array_Impression[element]));
                   grandAngle_dtj_click.push(eval(Array_Clicks[element]));
                   grandAngle_dtj_siteId.push(Array_SiteID[element]);
                   grandAngle_dtj_siteName.push(Array_SiteName[element]);
 
-               }
+                }
+                if (Array_SiteID[element] === "299263") {
+
+                  grandAngle_antenne_impression.push(eval(Array_Impression[element]));
+                  grandAngle_antenne_click.push(eval(Array_Clicks[element]));
+                  grandAngle_antenne_siteId.push(Array_SiteID[element]);
+                  grandAngle_antenne_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299252") {
+                  grandAngle_orange_impression.push(eval(Array_Impression[element]));
+                  grandAngle_orange_click.push(eval(Array_Clicks[element]));
+                  grandAngle_orange_siteId.push(Array_SiteID[element]);
+                  grandAngle_orange_siteName.push(Array_SiteName[element]);
+
+                }
+
+                if (Array_SiteID[element] === "299245") {
+                  grandAngle_tf1_impression.push(eval(Array_Impression[element]));
+                  grandAngle_tf1_click.push(eval(Array_Clicks[element]));
+                  grandAngle_tf1_siteId.push(Array_SiteID[element]);
+                  grandAngle_tf1_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299244") {
+                  grandAngle_m6_impression.push(eval(Array_Impression[element]));
+                  grandAngle_m6_click.push(eval(Array_Clicks[element]));
+                  grandAngle_m6_siteId.push(Array_SiteID[element]);
+                  grandAngle_m6_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "337707") {
+                  grandAngle_dailymotion_impression.push(eval(Array_Impression[element]));
+                  grandAngle_dailymotion_click.push(eval(Array_Clicks[element]));
+                  grandAngle_dailymotion_siteId.push(Array_SiteID[element]);
+                  grandAngle_dailymotion_siteName.push(Array_SiteName[element]);
+                }
+
+
               }
 
 
@@ -1056,14 +1395,47 @@ exports.report = async (req, res) => {
 
 
                 }
-                if (Array_SiteID[element] ==="323124") {
+                if (Array_SiteID[element] === "323124") {
 
                   native_dtj_impression.push(eval(Array_Impression[element]));
                   native_dtj_click.push(eval(Array_Clicks[element]));
                   native_dtj_siteId.push(Array_SiteID[element]);
                   native_dtj_siteName.push(Array_SiteName[element]);
 
-               }
+                }
+                if (Array_SiteID[element] === "299263") {
+                  native_antenne_impression.push(eval(Array_Impression[element]));
+                  native_antenne_click.push(eval(Array_Clicks[element]));
+                  native_antenne_siteId.push(Array_SiteID[element]);
+                  native_antenne_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299252") {
+                  native_orange_impression.push(eval(Array_Impression[element]));
+                  native_orange_click.push(eval(Array_Clicks[element]));
+                  native_orange_siteId.push(Array_SiteID[element]);
+                  native_orange_siteName.push(Array_SiteName[element]);
+
+                }
+                if (Array_SiteID[element] === "299245") {
+                  native_tf1_impression.push(eval(Array_Impression[element]));
+                  native_tf1_click.push(eval(Array_Clicks[element]));
+                  native_tf1_siteId.push(Array_SiteID[element]);
+                  native_tf1_siteName.push(Array_SiteName[element]);
+                }
+                if (Array_SiteID[element] === "299244") {
+                  native_m6_impression.push(eval(Array_Impression[element]));
+                  native_m6_click.push(eval(Array_Clicks[element]));
+                  native_m6_siteId.push(Array_SiteID[element]);
+                  native_m6_siteName.push(Array_SiteName[element]);
+                }
+                if (Array_SiteID[element] === "337707") {
+                  native_dailymotion_impression.push(eval(Array_Impression[element]));
+                  native_dailymotion_click.push(eval(Array_Clicks[element]));
+                  native_dailymotion_siteId.push(Array_SiteID[element]);
+                  native_dailymotion_siteName.push(Array_SiteName[element]);
+                }
+
               }
 
 
@@ -1092,6 +1464,21 @@ exports.report = async (req, res) => {
 
               var total_impressions_dtjHabillage = habillage_dtj_impression.reduce(somme_array, 0);
               var total_clicks_dtjHabillage = habillage_dtj_click.reduce(somme_array, 0);
+
+              var total_impressions_antenneHabillage = habillage_antenne_impression.reduce(somme_array, 0);
+              var total_clicks_antenneHabillage = habillage_antenne_click.reduce(somme_array, 0);
+
+              var total_impressions_orangeHabillage = habillage_orange_impression.reduce(somme_array, 0);
+              var total_clicks_orangeHabillage = habillage_orange_click.reduce(somme_array, 0);
+
+              var total_impressions_tf1Habillage = habillage_tf1_impression.reduce(somme_array, 0);
+              var total_clicks_tf1Habillage = habillage_tf1_click.reduce(somme_array, 0);
+
+              var total_impressions_m6Habillage = habillage_m6_impression.reduce(somme_array, 0);
+              var total_clicks_m6Habillage = habillage_m6_click.reduce(somme_array, 0);
+
+              var total_impressions_dailymotionHabillage = habillage_dailymotion_impression.reduce(somme_array, 0);
+              var total_clicks_dailymotionHabillage = habillage_dailymotion_click.reduce(somme_array, 0);
               ///////////////////////////
 
               var total_impressions_linfoGrandAngle = grandAngle_linfo_impression.reduce(somme_array, 0);
@@ -1104,7 +1491,22 @@ exports.report = async (req, res) => {
               var total_clicks_linfo_iosGrandAngle = grandAngle_linfo_ios_click.reduce(somme_array, 0);
 
               var total_impressions_dtjGrandAngle = grandAngle_dtj_impression.reduce(somme_array, 0);
-              var total_clicks_dtjGrandAngle = grandAngle_dtj_click.reduce(somme_array, 0);
+              var total_clicks_dtjGrandAngle = grandAngle_dtj_click.reduce(somme_array, 0)
+
+              var total_impressions_antenneGrandAngle = grandAngle_antenne_impression.reduce(somme_array, 0);
+              var total_clicks_antenneGrandAngle = grandAngle_antenne_click.reduce(somme_array, 0);
+
+              var total_impressions_orangeGrandAngle = grandAngle_orange_impression.reduce(somme_array, 0);
+              var total_clicks_orangeGrandAngle = grandAngle_orange_click.reduce(somme_array, 0);
+
+              var total_impressions_tf1GrandAngle = grandAngle_tf1_impression.reduce(somme_array, 0);
+              var total_clicks_tf1GrandAngle = grandAngle_tf1_click.reduce(somme_array, 0);
+
+              var total_impressions_m6GrandAngle = grandAngle_m6_impression.reduce(somme_array, 0);
+              var total_clicks_m6GrandAngle = grandAngle_m6_click.reduce(somme_array, 0);
+
+              var total_impressions_dailymotionGrandAngle = grandAngle_dailymotion_impression.reduce(somme_array, 0);
+              var total_clicks_dailymotionGrandAngle = grandAngle_dailymotion_click.reduce(somme_array, 0);
               /////////////////////////
               var total_impressions_linfoVideo = video_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoVideo = video_linfo_click.reduce(somme_array, 0);
@@ -1117,6 +1519,21 @@ exports.report = async (req, res) => {
 
               var total_impressions_dtjVideo = video_dtj_impression.reduce(somme_array, 0);
               var total_clicks_dtjVideo = video_dtj_click.reduce(somme_array, 0);
+
+              var total_impressions_antenneVideo = video_antenne_impression.reduce(somme_array, 0);
+              var total_clicks_antenneVideo = video_antenne_click.reduce(somme_array, 0);
+
+              var total_impressions_orangeVideo = video_orange_impression.reduce(somme_array, 0);
+              var total_clicks_orangeVideo = video_orange_click.reduce(somme_array, 0);
+
+              var total_impressions_tf1Video = video_tf1_impression.reduce(somme_array, 0);
+              var total_clicks_tf1Video = video_tf1_click.reduce(somme_array, 0);
+
+              var total_impressions_m6Video = video_m6_impression.reduce(somme_array, 0);
+              var total_clicks_m6Video = video_m6_click.reduce(somme_array, 0);
+
+              var total_impressions_dailymotionVideo = video_dailymotion_impression.reduce(somme_array, 0);
+              var total_clicks_dailymotionVideo = video_dailymotion_click.reduce(somme_array, 0);
               /////////////////////
               var total_impressions_linfoInterstitiel = interstitiel_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoInterstitiel = interstitiel_linfo_click.reduce(somme_array, 0);
@@ -1127,9 +1544,24 @@ exports.report = async (req, res) => {
               var total_impressions_linfo_iosInterstitiel = interstitiel_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosInterstitiel = interstitiel_linfo_ios_click.reduce(somme_array, 0);
 
-              
+
               var total_impressions_dtjInterstitiel = interstitiel_dtj_impression.reduce(somme_array, 0);
               var total_clicks_dtjInterstitiel = interstitiel_dtj_click.reduce(somme_array, 0);
+
+              var total_impressions_antenneInterstitiel = interstitiel_antenne_impression.reduce(somme_array, 0);
+              var total_clicks_antenneInterstitiel = interstitiel_antenne_click.reduce(somme_array, 0);
+
+              var total_impressions_orangeInterstitiel = interstitiel_orange_impression.reduce(somme_array, 0);
+              var total_clicks_orangeInterstitiel = interstitiel_orange_click.reduce(somme_array, 0);
+
+              var total_impressions_tf1Interstitiel = interstitiel_tf1_impression.reduce(somme_array, 0);
+              var total_clicks_tf1Interstitiel = interstitiel_tf1_click.reduce(somme_array, 0);
+
+              var total_impressions_m6Interstitiel = interstitiel_m6_impression.reduce(somme_array, 0);
+              var total_clicks_m6Interstitiel = interstitiel_m6_click.reduce(somme_array, 0);
+
+              var total_impressions_dailymotionInterstitiel = interstitiel_dailymotion_impression.reduce(somme_array, 0);
+              var total_clicks_dailymotionInterstitiel = interstitiel_dailymotion_click.reduce(somme_array, 0);
               /////////////////
               var total_impressions_linfoMasthead = masthead_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoMasthead = masthead_linfo_click.reduce(somme_array, 0);
@@ -1142,6 +1574,21 @@ exports.report = async (req, res) => {
 
               var total_impressions_dtjMasthead = masthead_dtj_impression.reduce(somme_array, 0);
               var total_clicks_dtjMasthead = masthead_dtj_click.reduce(somme_array, 0);
+
+              var total_impressions_antenneMasthead = masthead_antenne_impression.reduce(somme_array, 0);
+              var total_clicks_antenneMasthead = masthead_antenne_click.reduce(somme_array, 0);
+
+              var total_impressions_orangeMasthead = masthead_orange_impression.reduce(somme_array, 0);
+              var total_clicks_orangeMasthead = masthead_orange_click.reduce(somme_array, 0);
+
+              var total_impressions_tf1Masthead = masthead_tf1_impression.reduce(somme_array, 0);
+              var total_clicks_tf1Masthead = masthead_tf1_click.reduce(somme_array, 0);
+
+              var total_impressions_m6Masthead = masthead_m6_impression.reduce(somme_array, 0);
+              var total_clicks_m6Masthead = masthead_m6_click.reduce(somme_array, 0);
+
+              var total_impressions_dailymotionMasthead = masthead_dailymotion_impression.reduce(somme_array, 0);
+              var total_clicks_dailymotionMasthead = masthead_dailymotion_click.reduce(somme_array, 0);
               //////////////////////
               var total_impressions_linfoNative = native_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoNative = native_linfo_click.reduce(somme_array, 0);
@@ -1152,14 +1599,25 @@ exports.report = async (req, res) => {
               var total_impressions_linfo_iosNative = native_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosNative = native_linfo_ios_click.reduce(somme_array, 0);
 
-              
+
               var total_impressions_dtjNative = native_dtj_impression.reduce(somme_array, 0);
               var total_clicks_dtjNative = native_dtj_click.reduce(somme_array, 0);
 
 
+              var total_impressions_antenneNative = native_antenne_impression.reduce(somme_array, 0);
+              var total_clicks_antenneNative = native_antenne_click.reduce(somme_array, 0);
 
+              var total_impressions_orangeNative = native_orange_impression.reduce(somme_array, 0);
+              var total_clicks_orangeNative = native_orange_click.reduce(somme_array, 0);
 
+              var total_impressions_tf1Native = native_tf1_impression.reduce(somme_array, 0);
+              var total_clicks_tf1Native = native_tf1_click.reduce(somme_array, 0);
 
+              var total_impressions_m6Native = native_m6_impression.reduce(somme_array, 0);
+              var total_clicks_m6Native = native_m6_click.reduce(somme_array, 0);
+
+              var total_impressions_dailymotionNative = native_dailymotion_impression.reduce(somme_array, 0);
+              var total_clicks_dailymotionNative = native_dailymotion_click.reduce(somme_array, 0);
 
               //calcule le ctr total par format et site
               let h_linfo = (total_clicks_linfoHabillage / total_impressions_linfoHabillage) * 100;
@@ -1173,6 +1631,22 @@ exports.report = async (req, res) => {
 
               let h_dtj = (total_clicks_dtjHabillage / total_impressions_dtjHabillage) * 100;
               habillage_dtj_ctr.push(h_dtj.toFixed(2));
+
+              let h_antenne = (total_clicks_antenneHabillage / total_impressions_antenneHabillage) * 100;
+              habillage_antenne_ctr.push(h_antenne.toFixed(2));
+
+
+              let h_orange = (total_clicks_orangeHabillage / total_impressions_orangeHabillage) * 100;
+              habillage_orange_ctr.push(h_orange.toFixed(2));
+
+              let h_tf1 = (total_clicks_tf1Habillage / total_impressions_tf1Habillage) * 100;
+              habillage_tf1_ctr.push(h_tf1.toFixed(2));
+
+              let h_m6 = (total_clicks_m6Habillage / total_impressions_m6Habillage) * 100;
+              habillage_m6_ctr.push(h_m6.toFixed(2));
+
+              let h_dailymotion = (total_clicks_dailymotionHabillage / total_impressions_dailymotionHabillage) * 100;
+              habillage_dailymotion_ctr.push(h_dailymotion.toFixed(2));
               //////////////////
               let ga_linfo = (total_clicks_linfoGrandAngle / total_impressions_linfoGrandAngle) * 100;
               grandAngle_linfo_ctr.push(ga_linfo.toFixed(2));
@@ -1185,6 +1659,21 @@ exports.report = async (req, res) => {
 
               let ga_dtj = (total_clicks_dtjGrandAngle / total_impressions_dtjGrandAngle) * 100;
               grandAngle_dtj_ctr.push(ga_dtj.toFixed(2));
+
+              let ga_antenne = (total_clicks_antenneGrandAngle / total_impressions_antenneGrandAngle) * 100;
+              grandAngle_antenne_ctr.push(ga_antenne.toFixed(2));
+
+              let ga_orange = (total_clicks_orangeGrandAngle / total_impressions_orangeGrandAngle) * 100;
+              grandAngle_orange_ctr.push(ga_orange.toFixed(2));
+
+              let ga_tf1 = (total_clicks_tf1GrandAngle / total_impressions_tf1GrandAngle) * 100;
+              grandAngle_tf1_ctr.push(ga_tf1.toFixed(2));
+
+              let ga_m6 = (total_clicks_m6GrandAngle / total_impressions_m6GrandAngle) * 100;
+              grandAngle_m6_ctr.push(ga_m6.toFixed(2));
+
+              let ga_dailymotion = (total_clicks_dailymotionGrandAngle / total_impressions_dailymotionGrandAngle) * 100;
+              grandAngle_dailymotion_ctr.push(ga_dailymotion.toFixed(2));
               //////////////////
 
               let i_linfo = (total_clicks_linfoInterstitiel / total_impressions_linfoInterstitiel) * 100;
@@ -1196,9 +1685,24 @@ exports.report = async (req, res) => {
               let i_linfo_ios = (total_clicks_linfo_iosInterstitiel / total_impressions_linfo_iosInterstitiel) * 100;
               interstitiel_linfo_ios_ctr.push(i_linfo_ios.toFixed(2));
 
-              
+
               let i_dtj = (total_clicks_dtjInterstitiel / total_impressions_dtjInterstitiel) * 100;
               interstitiel_dtj_ctr.push(i_dtj.toFixed(2));
+
+              let i_antenne = (total_clicks_antenneInterstitiel / total_impressions_antenneInterstitiel) * 100;
+              interstitiel_antenne_ctr.push(i_antenne.toFixed(2));
+
+              let i_orange = (total_clicks_orangeInterstitiel / total_impressions_orangeInterstitiel) * 100;
+              interstitiel_orange_ctr.push(i_orange.toFixed(2));
+
+              let i_tf1 = (total_clicks_tf1Interstitiel / total_impressions_tf1Interstitiel) * 100;
+              interstitiel_tf1_ctr.push(i_tf1.toFixed(2));
+
+              let i_m6 = (total_clicks_m6Interstitiel / total_impressions_m6Interstitiel) * 100;
+              interstitiel_m6_ctr.push(i_m6.toFixed(2));
+
+              let i_dailymotion = (total_clicks_dailymotionInterstitiel / total_impressions_dailymotionInterstitiel) * 100;
+              interstitiel_dailymotion_ctr.push(i_dailymotion.toFixed(2));
               //////////////////
 
               let m_linfo = (total_clicks_linfoMasthead / total_impressions_linfoMasthead) * 100;
@@ -1212,6 +1716,21 @@ exports.report = async (req, res) => {
 
               let m_dtj = (total_clicks_dtjMasthead / total_impressions_dtjMasthead) * 100;
               masthead_dtj_ctr.push(m_dtj.toFixed(2));
+
+              let m_antenne = (total_clicks_antenneMasthead / total_impressions_antenneMasthead) * 100;
+              masthead_antenne_ctr.push(m_antenne.toFixed(2));
+
+              let m_orange = (total_clicks_orangeMasthead / total_impressions_orangeMasthead) * 100;
+              masthead_orange_ctr.push(m_orange.toFixed(2));
+
+              let m_tf1 = (total_clicks_tf1Masthead / total_impressions_tf1Masthead) * 100;
+              masthead_tf1_ctr.push(m_tf1.toFixed(2));
+
+              let m_m6 = (total_clicks_m6Masthead / total_impressions_m6Masthead) * 100;
+              masthead_m6_ctr.push(m_m6.toFixed(2));
+
+              let m_dailymotion = (total_clicks_dailymotionMasthead / total_impressions_dailymotionMasthead) * 100;
+              masthead_dailymotion_ctr.push(m_dailymotion.toFixed(2));
               //////////////////
 
               let n_linfo = (total_clicks_linfoNative / total_impressions_linfoNative) * 100;
@@ -1225,6 +1744,21 @@ exports.report = async (req, res) => {
 
               let n_dtj = (total_clicks_dtjNative / total_impressions_dtjNative) * 100;
               native_dtj_ctr.push(n_dtj.toFixed(2));
+
+              let n_antenne = (total_clicks_antenneNative / total_impressions_antenneNative) * 100;
+              native_antenne_ctr.push(n_antenne.toFixed(2));
+
+              let n_orange = (total_clicks_orangeNative / total_impressions_orangeNative) * 100;
+              native_orange_ctr.push(n_orange.toFixed(2));
+
+              let n_tf1 = (total_clicks_tf1Native / total_impressions_tf1Native) * 100;
+              native_tf1_ctr.push(n_tf1.toFixed(2));
+
+              let n_m6 = (total_clicks_m6Native / total_impressions_m6Native) * 100;
+              native_m6_ctr.push(n_m6.toFixed(2));
+
+              let n_dailymotion = (total_clicks_dailymotionNative / total_impressions_dailymotionNative) * 100;
+              native_dailymotion_ctr.push(n_dailymotion.toFixed(2));
               //////////////////
 
 
@@ -1240,17 +1774,24 @@ exports.report = async (req, res) => {
               let v_dtj = (total_clicks_dtjVideo / total_impressions_dtjVideo) * 100;
               video_dtj_ctr.push(v_dtj.toFixed(2));
 
+              let v_antenne = (total_clicks_antenneVideo / total_impressions_antenneVideo) * 100;
+              video_antenne_ctr.push(v_antenne.toFixed(2));
+
+              let v_orange = (total_clicks_orangeVideo / total_impressions_orangeVideo) * 100;
+              video_orange_ctr.push(v_orange.toFixed(2));
+
+              let v_tf1 = (total_clicks_tf1Video / total_impressions_tf1Video) * 100;
+              video_tf1_ctr.push(v_tf1.toFixed(2));
+
+              let v_m6 = (total_clicks_m6Video / total_impressions_m6Video) * 100;
+              video_m6_ctr.push(v_m6.toFixed(2));
+
+              let v_dailymotion = (total_clicks_dailymotionVideo / total_impressions_dailymotionVideo) * 100;
+              video_dailymotion_ctr.push(v_dailymotion.toFixed(2));
 
 
 
 
-
-
-
-
-
-
-          
               // Function qui permet de calculer les éléments du tableau (calcul somme impression/clic par format)
               const reducer = (accumulator, currentValue) => accumulator + currentValue;
               var sommeHabillageImpression = habillageImpressions.reduce(reducer, 0);
@@ -1313,7 +1854,7 @@ exports.report = async (req, res) => {
             CTR_native = (sommeNativeClicks / sommeNativeImpression) * 100;
             CTR_native = CTR_native.toFixed(2);
             ///////////////////////////////////
-      
+
 
 
             //Calcul des chiffre global %Taux clic Repetition %VTR
@@ -1399,7 +1940,7 @@ exports.report = async (req, res) => {
               CTR_video,
 
 
-             
+
 
             }
 
@@ -1445,16 +1986,20 @@ exports.report = async (req, res) => {
             video_linfo_android_siteName = video_linfo_android_siteName[0];
             video_linfo_ios_siteName = video_linfo_ios_siteName[0];
             video_dtj_siteName = video_dtj_siteName[0];
-
+            video_antenne_siteName = video_antenne_siteName[0];
+            video_orange_siteName = video_orange_siteName[0];
+            video_tf1_siteName = video_tf1_siteName[0];
+            video_m6_siteName = video_m6_siteName[0];
+            video_dailymotion_siteName = video_dailymotion_siteName[0];
 
 
             var data_video = {
 
-              videoImpressions,
+              /*videoImpressions,
               videoClicks,
               videoSitename,
               videoFormatName,
-              videoCTR,
+              videoCTR,*/
               videoComplete,
               sommevideoImpressions,
               sommevideoClics,
@@ -1479,6 +2024,32 @@ exports.report = async (req, res) => {
               total_clicks_dtjVideo,
               video_dtj_siteName,
               video_dtj_ctr,
+
+              total_impressions_antenneVideo,
+              total_clicks_antenneVideo,
+              video_antenne_siteName,
+              video_antenne_ctr,
+
+              total_impressions_orangeVideo,
+              total_clicks_orangeVideo,
+              video_orange_siteName,
+              video_orange_ctr,
+
+              total_impressions_tf1Video,
+              total_clicks_tf1Video,
+              video_tf1_siteName,
+              video_tf1_ctr,
+
+
+              total_impressions_m6Video,
+              total_clicks_m6Video,
+              video_m6_siteName,
+              video_m6_ctr,
+
+              total_impressions_dailymotionVideo,
+              total_clicks_dailymotionVideo,
+              video_dailymotion_siteName,
+              video_dailymotion_ctr,
             };
 
 
@@ -1486,16 +2057,20 @@ exports.report = async (req, res) => {
             habillage_linfo_android_siteName = habillage_linfo_android_siteName[0];
             habillage_linfo_ios_siteName = habillage_linfo_ios_siteName[0];
             habillage_dtj_siteName = habillage_dtj_siteName[0];
-
+            habillage_antenne_siteName = habillage_antenne_siteName[0];
+            habillage_orange_siteName = habillage_orange_siteName[0];
+            habillage_tf1_siteName = habillage_tf1_siteName[0];
+            habillage_m6_siteName = habillage_m6_siteName[0];
+            habillage_dailymotion_siteName = habillage_dailymotion_siteName[0];
 
 
             var data_habillage = {
 
 
-              habillageSitename,
+              /*habillageSitename,
               habillageImpressions,
               habillageClicks,
-              habillageCTR,
+              habillageCTR,*/
               sommehabillageImpressions,
               sommehabillageClics,
               habillageCTR_clics,
@@ -1520,21 +2095,51 @@ exports.report = async (req, res) => {
               habillage_dtj_siteName,
               habillage_dtj_ctr,
 
+              total_impressions_antenneHabillage,
+              total_clicks_antenneHabillage,
+              habillage_antenne_siteName,
+              habillage_antenne_ctr,
+
+              total_impressions_orangeHabillage,
+              total_clicks_orangeHabillage,
+              habillage_orange_siteName,
+              habillage_orange_ctr,
+
+              total_impressions_tf1Habillage,
+              total_clicks_tf1Habillage,
+              habillage_tf1_siteName,
+              habillage_tf1_ctr,
+
+              total_impressions_m6Habillage,
+              total_clicks_m6Habillage,
+              habillage_m6_siteName,
+              habillage_m6_ctr,
+
+              total_impressions_dailymotionHabillage,
+              total_clicks_dailymotionHabillage,
+              habillage_dailymotion_siteName,
+              habillage_dailymotion_ctr,
+
             };
 
             interstitiel_linfo_siteName = interstitiel_linfo_siteName[0];
             interstitiel_linfo_android_siteName = interstitiel_linfo_android_siteName[0];
             interstitiel_linfo_ios_siteName = interstitiel_linfo_ios_siteName[0];
             interstitiel_dtj_siteName = interstitiel_dtj_siteName[0];
+            interstitiel_antenne_siteName = interstitiel_antenne_siteName[0];
+            interstitiel_orange_siteName = interstitiel_orange_siteName[0];
+            interstitiel_tf1_siteName = interstitiel_tf1_siteName[0];
+            interstitiel_m6_siteName = interstitiel_m6_siteName[0];
+            interstitiel_dailymotion_siteName = interstitiel_dailymotion_siteName[0];
 
 
             var data_interstitiel = {
 
-              interstitielImpressions,
+              /*interstitielImpressions,
               interstitielClicks,
               interstitielFormatName,
               interstitielSitename,
-              interstitielCTR,
+              interstitielCTR,*/
               sommeinterstitielImpressions,
               sommeinterstitielClics,
               interstitielCTR_clics,
@@ -1554,11 +2159,36 @@ exports.report = async (req, res) => {
               interstitiel_linfo_ios_siteName,
               interstitiel_linfo_ios_ctr,
 
-              
+
               total_impressions_dtjInterstitiel,
               total_clicks_dtjInterstitiel,
               interstitiel_dtj_siteName,
               interstitiel_dtj_ctr,
+
+              total_impressions_antenneInterstitiel,
+              total_clicks_antenneInterstitiel,
+              interstitiel_antenne_siteName,
+              interstitiel_antenne_ctr,
+
+              total_impressions_orangeInterstitiel,
+              total_clicks_orangeInterstitiel,
+              interstitiel_orange_siteName,
+              interstitiel_orange_ctr,
+
+              total_impressions_tf1Interstitiel,
+              total_clicks_tf1Interstitiel,
+              interstitiel_tf1_siteName,
+              interstitiel_tf1_ctr,
+
+              total_impressions_m6Interstitiel,
+              total_clicks_m6Interstitiel,
+              interstitiel_m6_siteName,
+              interstitiel_m6_ctr,
+
+              total_impressions_dailymotionInterstitiel,
+              total_clicks_dailymotionInterstitiel,
+              interstitiel_dailymotion_siteName,
+              interstitiel_dailymotion_ctr,
 
             };
 
@@ -1566,16 +2196,20 @@ exports.report = async (req, res) => {
             masthead_linfo_android_siteName = masthead_linfo_android_siteName[0];
             masthead_linfo_ios_siteName = masthead_linfo_ios_siteName[0];
             masthead_dtj_siteName = masthead_dtj_siteName[0];
-
+            masthead_antenne_siteName = masthead_antenne_siteName[0];
+            masthead_orange_siteName = masthead_orange_siteName[0];
+            masthead_tf1_siteName = masthead_tf1_siteName[0];
+            masthead_m6_siteName = masthead_m6_siteName[0];
+            masthead_dailymotion_siteName = masthead_dailymotion_siteName[0];
 
 
             var data_masthead = {
 
-              mastheadImpressions,
+              /*mastheadImpressions,
               mastheadClicks,
               mastheadFormatName,
               mastheadSitename,
-              mastheadCTR,
+              mastheadCTR,*/
               sommemastheadImpressions,
               sommemastheadClics,
               mastheadCTR_clics,
@@ -1600,21 +2234,51 @@ exports.report = async (req, res) => {
               masthead_dtj_siteName,
               masthead_dtj_ctr,
 
+              total_impressions_antenneMasthead,
+              total_clicks_antenneMasthead,
+              masthead_antenne_siteName,
+              masthead_antenne_ctr,
+
+              total_impressions_orangeMasthead,
+              total_clicks_orangeMasthead,
+              masthead_orange_siteName,
+              masthead_orange_ctr,
+
+
+              total_impressions_tf1Masthead,
+              total_clicks_tf1Masthead,
+              masthead_tf1_siteName,
+              masthead_tf1_ctr,
+
+              total_impressions_m6Masthead,
+              total_clicks_m6Masthead,
+              masthead_m6_siteName,
+              masthead_m6_ctr,
+
+              total_impressions_dailymotionMasthead,
+              total_clicks_dailymotionMasthead,
+              masthead_dailymotion_siteName,
+              masthead_dailymotion_ctr,
+
             };
 
             grandAngle_linfo_siteName = grandAngle_linfo_siteName[0];
             grandAngle_linfo_android_siteName = grandAngle_linfo_android_siteName[0];
             grandAngle_linfo_ios_siteName = grandAngle_linfo_ios_siteName[0];
             grandAngle_dtj_siteName = grandAngle_dtj_siteName[0];
-
+            grandAngle_antenne_siteName = grandAngle_antenne_siteName[0];
+            grandAngle_orange_siteName = grandAngle_orange_siteName[0];
+            grandAngle_tf1_siteName = grandAngle_tf1_siteName[0];
+            grandAngle_m6_siteName = grandAngle_m6_siteName[0];
+            grandAngle_dailymotion_siteName = grandAngle_dailymotion_siteName[0];
 
             var data_grand_angle = {
 
-              grand_angleImpressions,
+             /* grand_angleImpressions,
               grand_angleClicks,
               grand_angleFormatName,
               grand_angleSitename,
-              grand_angleCTR,
+              grand_angleCTR,*/
               sommegrand_angleImpressions,
               sommegrand_angleClics,
               grand_angleCTR_clics,
@@ -1639,21 +2303,50 @@ exports.report = async (req, res) => {
               grandAngle_dtj_siteName,
               grandAngle_dtj_ctr,
 
+              total_impressions_antenneGrandAngle,
+              total_clicks_antenneGrandAngle,
+              grandAngle_antenne_siteName,
+              grandAngle_antenne_ctr,
+
+              total_impressions_orangeGrandAngle,
+              total_clicks_orangeGrandAngle,
+              grandAngle_orange_siteName,
+              grandAngle_orange_ctr,
+
+              total_impressions_tf1GrandAngle,
+              total_clicks_tf1GrandAngle,
+              grandAngle_tf1_siteName,
+              grandAngle_tf1_ctr,
+
+              total_impressions_m6GrandAngle,
+              total_clicks_m6GrandAngle,
+              grandAngle_m6_siteName,
+              grandAngle_m6_ctr,
+
+              total_impressions_dailymotionGrandAngle,
+              total_clicks_dailymotionGrandAngle,
+              grandAngle_dailymotion_siteName,
+              grandAngle_dailymotion_ctr,
+
             };
 
             native_linfo_siteName = native_linfo_siteName[0];
             native_linfo_android_siteName = native_linfo_android_siteName[0];
             native_linfo_ios_siteName = native_linfo_ios_siteName[0];
             native_dtj_siteName = native_dtj_siteName[0];
-
+            native_antenne_siteName = native_antenne_siteName[0];
+            native_orange_siteName = native_orange_siteName[0];
+            native_tf1_siteName = native_tf1_siteName[0];
+            native_m6_siteName = native_m6_siteName[0];
+            native_dailymotion_siteName = native_dailymotion_siteName[0];
 
             var data_native = {
 
-              nativeImpressions,
+             /* nativeImpressions,
               nativeClicks,
               nativeFormatName,
               nativeSitename,
-              nativeCTR,
+              nativeCTR,*/
               sommenativeImpressions,
               sommenativeClics,
               nativeCTR_clics,
@@ -1678,6 +2371,30 @@ exports.report = async (req, res) => {
               native_dtj_siteName,
               native_dtj_ctr,
 
+              total_impressions_antenneNative,
+              total_clicks_antenneNative,
+              native_antenne_siteName,
+              native_antenne_ctr,
+
+              total_impressions_orangeNative,
+              total_clicks_orangeNative,
+              native_orange_siteName,
+              native_orange_ctr,
+
+              total_impressions_tf1Native,
+              total_clicks_tf1Native,
+              native_tf1_siteName,
+              native_tf1_ctr,
+
+              total_impressions_m6Native,
+              total_clicks_m6Native,
+              native_m6_siteName,
+              native_m6_ctr,
+
+              total_impressions_dailymotionNative,
+              total_clicks_dailymotionNative,
+              native_dailymotion_siteName,
+              native_dailymotion_ctr,
 
             };
 

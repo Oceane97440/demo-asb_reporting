@@ -292,21 +292,53 @@
 
 
                     </tr>
-
-                    <% for (let i=0; i < data_habillage.habillageImpressions.length; i++) { %>
-                    <% if(data_habillage.habillageImpressions[i] != '' &&	data_habillage.habillageSitename[i] != "N/A" ) { %>
                     <tr>
-                        <td><%=data_habillage.habillageSitename[i]%></td>
-                        <td><%=data_habillage.habillageImpressions[i]%></td>
-                        <td><%=data_habillage.habillageClicks[i]%></td>
-                        <td><%=data_habillage.habillageCTR[i]%>%</td>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_habillage.habillage_antenne_siteName%></td>
+                        <td><%=data_habillage.total_impressions_antenneHabillage%></td>
+                        <td><%=data_habillage.total_clicks_antenneHabillage%></td>
+                        <td><%=data_habillage.habillage_antenne_ctr%>%</td>
 
 
                     </tr>
-                    <% } %>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_habillage.habillage_orange_siteName%></td>
+                        <td><%=data_habillage.total_impressions_orangeHabillage%></td>
+                        <td><%=data_habillage.total_clicks_orangeHabillage%></td>
+                        <td><%=data_habillage.habillage_orange_ctr%>%</td>
 
 
-                    <% } %>
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_habillage.habillage_tf1_siteName%></td>
+                        <td><%=data_habillage.total_impressions_tf1Habillage%></td>
+                        <td><%=data_habillage.total_clicks_tf1Habillage%></td>
+                        <td><%=data_habillage.habillage_tf1_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_habillage.habillage_m6_siteName%></td>
+                        <td><%=data_habillage.total_impressions_m6Habillage%></td>
+                        <td><%=data_habillage.total_clicks_m6Habillage%></td>
+                        <td><%=data_habillage.habillage_m6_ctr%>%</td>
+
+
+                    </tr>
+
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_habillage.habillage_dailymotion_siteName%></td>
+                        <td><%=data_habillage.total_impressions_dailymotionHabillage%></td>
+                        <td><%=data_habillage.total_clicks_dailymotionHabillage%></td>
+                        <td><%=data_habillage.habillage_dailymotion_ctr%>%</td>
+
+
+                    </tr>
+                   
 
                 <tfoot>
                     <tr>
@@ -379,22 +411,52 @@
 
 
                     </tr>
-
-                    <% for (let i=0; i < data_interstitiel.interstitielImpressions.length; i++) { %>
-                    <% if(data_interstitiel.interstitielImpressions[i] != '' && data_interstitiel.interstitielSitename[i] != "N/A" ) { %>
                     <tr>
-                        <td><%=data_interstitiel.interstitielSitename[i]%></td>
-                        <td><%=data_interstitiel.interstitielImpressions[i]%></td>
-                        <td><%=data_interstitiel.interstitielClicks[i]%></td>
-                        <td><%=data_interstitiel.interstitielCTR[i]%>%</td>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_interstitiel.interstitiel_antenne_siteName%></td>
+                        <td><%=data_interstitiel.total_impressions_antenneInterstitiel%></td>
+                        <td><%=data_interstitiel.total_clicks_antenneInterstitiel%></td>
+                        <td><%=data_interstitiel.interstitiel_antenne_ctr%>%</td>
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_interstitiel.interstitiel_orange_siteName%></td>
+                        <td><%=data_interstitiel.total_impressions_orangeInterstitiel%></td>
+                        <td><%=data_interstitiel.total_clicks_orangeInterstitiel%></td>
+                        <td><%=data_interstitiel.interstitiel_orange_ctr%>%</td>
 
 
-                    <% } %>
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_interstitiel.interstitiel_tf1_siteName%></td>
+                        <td><%=data_interstitiel.total_impressions_tf1Interstitiel%></td>
+                        <td><%=data_interstitiel.total_clicks_tf1Interstitiel%></td>
+                        <td><%=data_interstitiel.interstitiel_tf1_ctr%>%</td>
 
-                    <% } %>
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_interstitiel.interstitiel_m6_siteName%></td>
+                        <td><%=data_interstitiel.total_impressions_m6Interstitiel%></td>
+                        <td><%=data_interstitiel.total_clicks_m6Interstitiel%></td>
+                        <td><%=data_interstitiel.interstitiel_m6_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_interstitiel.interstitiel_dailymotion_siteName%></td>
+                        <td><%=data_interstitiel.total_impressions_dailymotionInterstitiel%></td>
+                        <td><%=data_interstitiel.total_clicks_dailymotionInterstitiel%></td>
+                        <td><%=data_interstitiel.interstitiel_dailymotion_ctr%>%</td>
+
+
+                    </tr>
+                 
                 <tfoot>
                     <tr>
                         <td><strong>Total</strong></td>
@@ -468,22 +530,52 @@
 
 
                     </tr>
-
-                    <% for (let i=0; i < data_video.videoImpressions.length; i++) { %>
-                    <% if(data_video.videoImpressions[i] != '' && data_video.videoSitename[i] != "N/A" ) { %>
                     <tr>
-                        <td><%=data_video.videoSitename[i]%></td>
-                        <td><%=data_video.videoImpressions[i]%></td>
-                        <td><%=data_video.videoClicks[i]%></td>
-                        <td><%=data_video.videoCTR[i]%>%</td>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_video.video_antenne_siteName%></td>
+                        <td><%=data_video.total_impressions_antenneVideo%></td>
+                        <td><%=data_video.total_clicks_antenneVideo%></td>
+                        <td><%=data_video.video_antenne_ctr%>%</td>
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_video.video_orange_siteName%></td>
+                        <td><%=data_video.total_impressions_orangeVideo%></td>
+                        <td><%=data_video.total_clicks_orangeVideo%></td>
+                        <td><%=data_video.video_orange_ctr%>%</td>
 
 
-                    <% } %>
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_video.video_tf1_siteName%></td>
+                        <td><%=data_video.total_impressions_tf1Video%></td>
+                        <td><%=data_video.total_clicks_tf1Video%></td>
+                        <td><%=data_video.video_tf1_ctr%>%</td>
 
-                    <% } %>
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_video.video_m6_siteName%></td>
+                        <td><%=data_video.total_impressions_m6Video%></td>
+                        <td><%=data_video.total_clicks_m6Video%></td>
+                        <td><%=data_video.video_m6_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_video.video_dailymotion_siteName%></td>
+                        <td><%=data_video.total_impressions_dailymotionVideo%></td>
+                        <td><%=data_video.total_clicks_dailymotionVideo%></td>
+                        <td><%=data_video.video_dailymotion_ctr%>%</td>
+
+
+                    </tr>
+                
                 <tfoot>
                     <tr>
                         <td><strong>Total</strong></td>
@@ -547,6 +639,7 @@
 
 
                     </tr>
+
                     <% if (data_masthead.total_impressions_dtjMasthead.length > 0 ) { %>
 
                     <tr>
@@ -561,21 +654,57 @@
 
                     <% } %>
 
-                    <% for (let i=0; i < data_masthead.mastheadImpressions.length; i++) { %>
-                    <% if(data_masthead.mastheadImpressions[i] != '' &&	data_masthead.mastheadSitename[i] != "N/A"  ) { %>
                     <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_masthead.masthead_antenne_siteName%></td>
+                        <td><%=data_masthead.total_impressions_antenneMasthead%></td>
+                        <td><%=data_masthead.total_clicks_antenneMasthead%></td>
+                        <td><%=data_masthead.masthead_antenne_ctr%>%</td>
 
-                        <td><%=data_masthead.mastheadSitename[i]%></td>
-                        <td><%=data_masthead.mastheadImpressions[i]%></td>
-                        <td><%=data_masthead.mastheadClicks[i]%></td>
-                        <td><%=data_masthead.mastheadCTR[i]%>%</td>
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_masthead.masthead_orange_siteName%></td>
+                        <td><%=data_masthead.total_impressions_orangeMasthead%></td>
+                        <td><%=data_masthead.total_clicks_orangeMasthead%></td>
+                        <td><%=data_masthead.masthead_orange_ctr%>%</td>
 
-                    <% } %>
 
-                    <% } %>
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_masthead.masthead_tf1_siteName%></td>
+                        <td><%=data_masthead.total_impressions_tf1Masthead%></td>
+                        <td><%=data_masthead.total_clicks_tf1Masthead%></td>
+                        <td><%=data_masthead.masthead_tf1_ctr%>%</td>
+
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_masthead.masthead_m6_siteName%></td>
+                        <td><%=data_masthead.total_impressions_m6Masthead%></td>
+                        <td><%=data_masthead.total_clicks_m6Masthead%></td>
+                        <td><%=data_masthead.masthead_m6_ctr%>%</td>
+
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_masthead.masthead_dailymotion_siteName%></td>
+                        <td><%=data_masthead.total_impressions_dailymotionMasthead%></td>
+                        <td><%=data_masthead.total_clicks_dailymotionMasthead%></td>
+                        <td><%=data_masthead.masthead_dailymotion_ctr%>%</td>
+
+
+
+                    </tr>
+                
                 <tfoot>
                     <tr>
                         <td><strong>Total</strong></td>
@@ -648,26 +777,52 @@
 
 
                     </tr>
-
-
-                    <% for (let i=0; i < data_grand_angle.grand_angleImpressions.length; i++) { %>
-                    <% if(data_grand_angle.grand_angleImpressions[i] != ''  && data_grand_angle.grand_angleSitename[i] != "N/A") { %>
                     <tr>
-
-
-                        <td><%=data_grand_angle.grand_angleSitename[i]%></td>
-                        <td><%=data_grand_angle.grand_angleImpressions[i]%></td>
-                        <td><%=data_grand_angle.grand_angleClicks[i]%></td>
-                        <td><%=data_grand_angle.grand_angleCTR[i]%>%</td>
-
-
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_grand_angle.grandAngle_antenne_siteName%></td>
+                        <td><%=data_grand_angle.total_impressions_antenneGrandAngle%></td>
+                        <td><%=data_grand_angle.total_clicks_antenneGrandAngle%></td>
+                        <td><%=data_grand_angle.grandAngle_antenne_ctr%>%</td>
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_grand_angle.grandAngle_orange_siteName%></td>
+                        <td><%=data_grand_angle.total_impressions_orangeGrandAngle%></td>
+                        <td><%=data_grand_angle.total_clicks_orangeGrandAngle%></td>
+                        <td><%=data_grand_angle.grandAngle_orange_ctr%>%</td>
 
-                    <% } %>
 
-                    <% } %>
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_grand_angle.grandAngle_tf1_siteName%></td>
+                        <td><%=data_grand_angle.total_impressions_tf1GrandAngle%></td>
+                        <td><%=data_grand_angle.total_clicks_tf1GrandAngle%></td>
+                        <td><%=data_grand_angle.grandAngle_tf1_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_grand_angle.grandAngle_m6_siteName%></td>
+                        <td><%=data_grand_angle.total_impressions_m6GrandAngle%></td>
+                        <td><%=data_grand_angle.total_clicks_m6GrandAngle%></td>
+                        <td><%=data_grand_angle.grandAngle_m6_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_grand_angle.grandAngle_dailymotion_siteName%></td>
+                        <td><%=data_grand_angle.total_impressions_dailymotionGrandAngle%></td>
+                        <td><%=data_grand_angle.total_clicks_dailymotionGrandAngle%></td>
+                        <td><%=data_grand_angle.grandAngle_dailymotion_ctr%>%</td>
+
+
+                    </tr>
+              
                 <tfoot>
                     <tr>
                         <td><strong>Total</strong></td>
@@ -742,22 +897,52 @@
 
 
                     </tr>
-
-
-                    <% for (let i=0; i < data_native.nativeImpressions.length; i++) { %>
-                    <% if(data_native.nativeImpressions[i] != '' && data_native.nativeSitename[i] != "N/A") { %>
                     <tr>
-                        <td><%=data_native.nativeSitename[i]%></td>
-                        <td><%=data_native.nativeImpressions[i]%></td>
-                        <td><%=data_native.nativeClicks[i]%></td>
-                        <td><%=data_native.nativeCTR[i]%>%</td>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_native.native_antenne_siteName%></td>
+                        <td><%=data_native.total_impressions_antenneNative%></td>
+                        <td><%=data_native.total_clicks_antenneNative%></td>
+                        <td><%=data_native.native_antenne_ctr%>%</td>
 
 
                     </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_native.native_orange_siteName%></td>
+                        <td><%=data_native.total_impressions_orangeNative%></td>
+                        <td><%=data_native.total_clicks_orangeNative%></td>
+                        <td><%=data_native.native_orange_ctr%>%</td>
 
-                    <% } %>
 
-                    <% } %>
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_native.native_tf1_siteName%></td>
+                        <td><%=data_native.total_impressions_tf1Native%></td>
+                        <td><%=data_native.total_clicks_tf1Native%></td>
+                        <td><%=data_native.native_tf1_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_native.native_m6_siteName%></td>
+                        <td><%=data_native.total_impressions_m6Native%></td>
+                        <td><%=data_native.total_clicks_m6Native%></td>
+                        <td><%=data_native.native_m6_ctr%>%</td>
+
+
+                    </tr>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_native.native_dailymotion_siteName%></td>
+                        <td><%=data_native.total_impressions_dailymotionNative%></td>
+                        <td><%=data_native.total_clicks_dailymotionNative%></td>
+                        <td><%=data_native.native_dailymotion_ctr%>%</td>
+
+
+                    </tr>
+          
                 <tfoot>
                     <tr>
                         <td><strong>Total</strong></td>
