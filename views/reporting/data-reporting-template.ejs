@@ -384,6 +384,19 @@
                     </tr>
                     <% }%>
 
+                    <% if (data_habillage.total_impressions_actu_androidHabillage !== 0 ) { %>
+
+                        <tr>
+                            <!-- Agrega par format / site  -->
+                            <td><%=data_habillage.habillage_actu_android_siteName%></td>
+                            <td><%=data_habillage.total_impressions_actu_androidHabillage%></td>
+                            <td><%=data_habillage.total_clicks_actu_androidHabillage%></td>
+                            <td><%=data_habillage.habillage_actu_android_ctr%>%</td>
+    
+    
+                        </tr>
+                        <% }%>
+
 
                 <tfoot>
                     <tr>
@@ -552,7 +565,18 @@
                     </tr>
                     <% }%>               
                    
+                    <% if (data_interstitiel.total_impressions_actu_androidInterstitiel !== 0 ) { %>
 
+                        <tr>
+                            <!-- Agrega par format / site  -->
+                            <td><%=data_interstitiel.interstitiel_actu_android_siteName%></td>
+                            <td><%=data_interstitiel.total_impressions_actu_androidInterstitiel%></td>
+                            <td><%=data_interstitiel.total_clicks_actu_androidInterstitiel%></td>
+                            <td><%=data_interstitiel.interstitiel_actu_android_ctr%>%</td>
+    
+    
+                        </tr>
+                        <% }%>  
                     
                   
 
@@ -722,6 +746,20 @@
                     </tr>
                     <% }%>
 
+                    
+                    <% if (data_video.total_impressions_actu_androidVideo !== 0 ) { %>
+
+                        <tr>
+                            <!-- Agrega par format / site  -->
+                            <td><%=data_video.video_actu_android_siteName%></td>
+                            <td><%=data_video.total_impressions_actu_androidVideo%></td>
+                            <td><%=data_video.total_clicks_actu_androidVideo%></td>
+                            <td><%=data_video.video_actu_android_ctr%>%</td>
+    
+    
+                        </tr>
+                        <% }%>
+
 
                 <tfoot>
                     <tr>
@@ -879,7 +917,7 @@
                     </tr>
                     <% }%>
 
-                    <% if (data_masthead.total_impressions_dailymotionMasthead !== 0 ) { %>
+                    <% if (data_masthead.total_impressions_actu_iosMasthead !== 0 ) { %>
 
                     <tr>
                         <!-- Agrega par format / site  -->
@@ -892,6 +930,23 @@
 
                     </tr>
                     <% }%>
+
+                    <% if (data_masthead.total_impressions_actu_androidMasthead !== 0 ) { %>
+
+                        <tr>
+                            <!-- Agrega par format / site  -->
+                            <td><%=data_masthead.masthead_actu_android_siteName%></td>
+                            <td><%=data_masthead.total_impressions_actu_androidMasthead%></td>
+                            <td><%=data_masthead.total_clicks_actu_androidMasthead%></td>
+                            <td><%=data_masthead.masthead_actu_android_ctr%>%</td>
+    
+    
+    
+                        </tr>
+                        <% }%>
+    
+
+                    
 
 
                 <tfoot>
@@ -1060,6 +1115,19 @@
 
                     </tr>
                     <% }%>
+
+                    <% if (data_grand_angle.total_impressions_actu_androidGrandAngle !== 0 ) { %>
+
+                        <tr>
+                            <!-- Agrega par format / site  -->
+                            <td><%=data_grand_angle.grandAngle_actu_android_siteName%></td>
+                            <td><%=data_grand_angle.total_impressions_actu_androidGrandAngle%></td>
+                            <td><%=data_grand_angle.total_clicks_actu_androidGrandAngle%></td>
+                            <td><%=data_grand_angle.grandAngle_actu_android_ctr%>%</td>
+    
+    
+                        </tr>
+                        <% }%>
 
 
                 <tfoot>
@@ -1230,6 +1298,20 @@
 
                     </tr>
                     <% }%>
+
+                    
+                    <% if (data_native.total_impressions_actu_androidNative !== 0 ) { %>
+
+                        <tr>
+                            <!-- Agrega par format / site  -->
+                            <td><%=data_native.native_actu_android_siteName%></td>
+                            <td><%=data_native.total_impressions_actu_androidNative%></td>
+                            <td><%=data_native.total_clicks_actu_androidNative%></td>
+                            <td><%=data_native.native_actu_android_ctr%>%</td>
+    
+    
+                        </tr>
+                        <% }%>
 
 
                 <tfoot>
