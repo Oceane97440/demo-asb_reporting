@@ -116,6 +116,8 @@ exports.report = async (req, res) => {
   let startDate = req.params.startdate;
   let EndtDate = req.params.enddate;
 
+  //  console.log(EndtDate)
+
 
 
   try {
@@ -177,17 +179,29 @@ exports.report = async (req, res) => {
 
     } else {
 
-      const timestamp_enddate = Date.parse(EndtDate);
+      //const timestamp_enddate = Date.parse(EndtDate);
 
+      const endDate_day = new Date(EndtDate);
+      const endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
+
+
+      console.log(endDate_last);
 
       const now = new Date();
-      var timestamp_datenow = now.getTime();
+      const timestamp_datenow = now.getTime();
 
+      function getEndDate_last(unixTimeStamp) {
+        let date_last = new Date(unixTimeStamp);
+        return (date_last.getFullYear() + '-' + ('0' + (date_last.getMonth() + 1)).slice(-2) + '-' + ('0' + date_last.getDate()).slice(-2) + 'T' + ('0' + date_last.getHours()).slice(-2) + ':' + ('0' + date_last.getMinutes()).slice(-2) + ':' + '00')
+      }
+      var t3 = parseInt(endDate_last);
+
+      const EndDate = getEndDate_last(t3);
+      console.log(EndDate)
       //si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour
-      if (timestamp_enddate < timestamp_datenow) {
+      if (endDate_last < timestamp_datenow) {
 
-        var end_date = EndtDate;
-
+        var end_date = EndDate;
 
 
       } else {
@@ -440,7 +454,8 @@ exports.report = async (req, res) => {
             //Convertie les Timestamp campagne startdate et enddate / date du jour
             function getDateTimeFromTimestamp(unixTimeStamp) {
               let date = new Date(unixTimeStamp);
-              return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
+              return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
+
             }
             var t1 = parseInt(CampaignStartDate[0]);
             var t2 = parseInt(CampaignEndtDate[0]);
@@ -449,7 +464,7 @@ exports.report = async (req, res) => {
 
             const StartDate = getDateTimeFromTimestamp(t1);
             const EndDate = getDateTimeFromTimestamp(t2);
-
+            console.log(EndDate)
 
             //filte les array exclure les valeur undefined qui empêche le calcule des somme
 
@@ -938,7 +953,7 @@ exports.report = async (req, res) => {
               var video_actu_ios_siteName = new Array()
               var video_actu_ios_ctr = new Array()
 
-              
+
               var video_actu_android_impression = new Array()
               var video_actu_android_click = new Array()
               var video_actu_android_siteId = new Array()
@@ -2766,10 +2781,10 @@ exports.report = async (req, res) => {
 
   } catch (error) {
     console.log(error)
-    var statusCoded = error.response.status;
+    //var statusCoded = error.response.status;
 
     res.render("error.ejs", {
-      statusCoded: statusCoded,
+      statusCoded: error.response.status,
       advertiserid: advertiserid,
       campaignid: campaignid,
       startDate: startDate,

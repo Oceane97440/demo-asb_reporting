@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page attente</title>
+  <title><%=campaign.campaign_name%></title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
@@ -26,19 +26,19 @@
       border-color: #ddd;
     }
 
-    /* 
-    .list-group-flush {
-      width: 100%
-    } */
-
-    /* .list-group-flush li strong {
-      width: 20%;
-      display: inline-block
-    } */
+   
   </style>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-WCLMFB5');</script>
+  <!-- End Google Tag Manager -->
 </head>
 
 <body>
+
   <% if(date_now < timestamp_startdate) { %>
     <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
       <strong>Attention : La campagne demandée n'existe pas pour le moment</strong> 
@@ -173,6 +173,10 @@
     })
  //attention version en ligne (en tête)
   </script>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCLMFB5"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 </body>
 
 </html>
