@@ -271,6 +271,8 @@ exports.report = async (req, res) => {
 
       }
 
+      console.log(requestReporting)
+
       //test si la date de fin de la campagne est => date au jourd'hui = 31j ne pas effectuer la requête
       //date_fin - date du jour = nbr jour
 
@@ -299,6 +301,7 @@ exports.report = async (req, res) => {
         ]
 
       }
+      console.log(requestReporting)
 
 
       // 1) RequÃªte POST 
@@ -1907,8 +1910,8 @@ exports.report = async (req, res) => {
               let i_actu_ios = (total_clicks_actu_iosInterstitiel / total_impressions_actu_iosInterstitiel) * 100;
               interstitiel_actu_ios_ctr.push(i_actu_ios.toFixed(2));
 
-              let i_actu_ios = (total_clicks_actu_iosInterstitiel / total_impressions_actu_iosInterstitiel) * 100;
-              interstitiel_actu_ios_ctr.push(i_actu_ios.toFixed(2));
+              let i_actu_android = (total_clicks_actu_androidInterstitiel / total_impressions_actu_androidInterstitiel) * 100;
+              interstitiel_actu_android_ctr.push(i_actu_android.toFixed(2));
               //////////////////
 
               let m_linfo = (total_clicks_linfoMasthead / total_impressions_linfoMasthead) * 100;
