@@ -2173,60 +2173,67 @@ exports.report = async (req, res) => {
             Taux_VTR_linfo = (total_complete_linfoVideo / total_impressions_linfoVideo) * 100;
             VTR_linfo = Taux_VTR_linfo.toFixed(2);
            // console.log(VTR_linfo)
-    
+           console.log(total_complete_linfoVideo)
 
 
             Taux_VTR_linfo_android = (total_complete_linfo_androidVideo / total_impressions_linfo_androidVideo) * 100;
             VTR_linfo_android = Taux_VTR_linfo_android.toFixed(2);
            // console.log(VTR_linfo_android)
-          
+           console.log(total_complete_linfo_androidVideo)
 
 
             Taux_VTR_linfo_ios = (total_complete_linfo_iosVideo / total_impressions_linfo_iosVideo) * 100;
             VTR_linfo_ios = Taux_VTR_linfo_ios.toFixed(2);
-  
+            console.log(total_complete_linfo_iosVideo)
 
 
             Taux_VTR_dtj = (total_complete_dtjVideo / total_impressions_dtjVideo) * 100;
             VTR_dtj = Taux_VTR_dtj.toFixed(2);
-          
+            console.log(total_complete_dtjVideo)
 
 
 
 
             Taux_VTR_antenne = (total_complete_antenneVideo / total_impressions_antenneVideo) * 100;
             VTR_antenne = Taux_VTR_antenne.toFixed(2);
-           
+            console.log(total_complete_antenneVideo)
 
             
             Taux_VTR_orange = (total_complete_orangeVideo / total_impressions_orangeVideo) * 100;
             VTR_orange = Taux_VTR_orange.toFixed(2);
-           
+           // console.log(VTR_orange)
+           console.log(total_complete_orangeVideo)
 
 
             Taux_VTR_tf1 = (total_complete_tf1Video / total_impressions_tf1Video) * 100;
             VTR_tf1 = Taux_VTR_tf1.toFixed(2);
-          
+            //console.log(VTR_tf1)
+            console.log(total_complete_tf1Video)
 
 
             Taux_VTR_m6 = (total_complete_m6Video / total_impressions_m6Video) * 100;
             VTR_m6 = Taux_VTR_m6.toFixed(2);
-          
+           // console.log(VTR_m6)
+           console.log(total_complete_m6Video)
 
 
             Taux_VTR_dailymotion = (total_complete_dailymotionVideo / total_impressions_dailymotionVideo) * 100;
             VTR_dailymotion = Taux_VTR_dailymotion.toFixed(2);
-     
+            //console.log(VTR_dailymotion)
+            console.log(total_complete_dailymotionVideo)
 
 
             Taux_VTR_actu_ios = (total_complete_actu_iosVideo / total_impressions_actu_iosVideo) * 100;
             VTR_actu_ios = Taux_VTR_actu_ios.toFixed(2);
-          
+            //console.log(VTR_actu_ios)
+            console.log(total_complete_actu_iosVideo)
 
 
             Taux_VTR_actu_android = (total_complete_actu_androidVideo / total_impressions_actu_androidVideo) * 100;
             VTR_actu_android = Taux_VTR_actu_android.toFixed(2);
-        
+            //console.log(VTR_actu_android)
+            console.log(total_complete_actu_androidVideo)
+            console.log(VTR_actu_android)
 
         
             /*var Taux_clics = (TotalCliks / TotalImpressions) * 100
@@ -2244,41 +2251,18 @@ exports.report = async (req, res) => {
 
 
             //SEPARATEUR DE MILLIER
-            function numStr(a, b) {
-              a = '' + a;
-              b = b || ' ';
-              var c = '',
-                  d = 0;
-              while (a.match(/^0[0-9]/)) {
-                a = a.substr(1);
-              }
-              for (var i = a.length-1; i >= 0; i--) {
-                c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
-                d++;
-              }
-              return c;
-            }
             // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI");
             // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI");
-            total_impression_format =  numStr(total_impression_format);
-            total_click_format = numStr(total_click_format);
-            Total_VU =  numStr(Total_VU);
-            sommeVideoImpression = numStr(sommeVideoImpression);
-            sommeHabillageImpression= numStr(sommeHabillageImpression);
-            sommeHabillageImpression= numStr(sommeHabillageImpression);
-            sommeMastheadImpression= numStr(sommeMastheadImpression);
-            sommeNativeImpression= numStr(sommeNativeImpression);
-
-            /*total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI");
+            total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI");
             total_click_format = new Number(total_click_format).toLocaleString("fi-FI");
             Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
 
             sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI");
             sommeHabillageImpression = new Number(sommeHabillageImpression).toLocaleString("fi-FI");
-            sommeInterssommeHabillageImpressiontitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI");
-            sommeHabillageImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI");
+            sommeInterstitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI");
+            sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI");
             sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI");
-            sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI");*/
+            sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI");
 
 
             var Campagne_name = CampaignName[0]

@@ -55,10 +55,10 @@
 </head>
 
 <body>
-   <!-- Google Tag Manager (noscript) -->
-   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCLMFB5" height="0" width="0"
-    style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCLMFB5" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <% if(date_now < timestamp_startdate) { %>
   <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
@@ -161,8 +161,7 @@
         success: function (data) {
           $("#exampleModal").hide();
           $('body').html(data)
-          console.log(data)
-
+          //console.log(data)
           //compte le nombre de tr du tableau 
           $.fn.rowCount = function () {
             return $('tr', $(this).find('tbody')).length;
@@ -170,15 +169,19 @@
           var rowctr = $('#table_campaigns').rowCount();
 
           //si le tableau des formats global contien qu'une ligne on affiche pas
-          if(rowctr<= 1){
-            console.log('No of Rows:' + rowctr);
+          if (rowctr <= 1) {
+            //console.log('No of Rows:' + rowctr);
             $("#table_global_format").hide();
 
 
           }
+
         }
 
+
       })
+
+
 
       //affiche la modal lors du clic du bouton
       $('.btn').on('shown.bs.modal', function () {
@@ -211,7 +214,7 @@
     })
     //attention version en ligne (en tête)
   </script>
- 
+
 </body>
 
 </html>
