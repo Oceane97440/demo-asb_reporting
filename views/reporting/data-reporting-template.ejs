@@ -7,7 +7,28 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet" />
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WCLMFB5');
+    </script>
+    <!-- End Google Tag Manager -->    
     <title>Bilan de la campagne </title>
+
+    <link rel="icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-192x192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
 
     <style>
         body {
@@ -32,10 +53,21 @@
             width: 20%;
             display: inline-block
         }
+
+        img {
+            image-rendering: -webkit-optimize-contrast
+        }
     </style>
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCLMFB5" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+
+
     <div class="container p-2 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
 
         <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
@@ -51,9 +83,11 @@
 
 
         <div class="row p-3 m-5">
-            <div class="col-md-3"><img
-                    src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png"
-                    alt="" /></div>
+            <div class="col-md-3">
+                <a href="https://antennesb.fr/">
+                    <img src="/admin/photos/logo.png" alt="logo_antenne" /></a>
+
+            </div>
             <div class="col-md-9">
                 <h2 class="position-absolute top-50 start-50">Rapport de la campagne : <%=table.Campagne_name%></h2>
             </div>
@@ -138,7 +172,7 @@
         <% }%>
 
 
-        <div class="row p-3 m-5">
+        <div class="row p-3 m-5" id="table_global_format">
             <h3 class="title"><i class="fas fa-chart-line"></i> Par Format / global </h3>
 
 
@@ -386,16 +420,16 @@
 
                     <% if (data_habillage.total_impressions_actu_androidHabillage !== 0 ) { %>
 
-                        <tr>
-                            <!-- Agrega par format / site  -->
-                            <td><%=data_habillage.habillage_actu_android_siteName%></td>
-                            <td><%=data_habillage.total_impressions_actu_androidHabillage%></td>
-                            <td><%=data_habillage.total_clicks_actu_androidHabillage%></td>
-                            <td><%=data_habillage.habillage_actu_android_ctr%>%</td>
-    
-    
-                        </tr>
-                        <% }%>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_habillage.habillage_actu_android_siteName%></td>
+                        <td><%=data_habillage.total_impressions_actu_androidHabillage%></td>
+                        <td><%=data_habillage.total_clicks_actu_androidHabillage%></td>
+                        <td><%=data_habillage.habillage_actu_android_ctr%>%</td>
+
+
+                    </tr>
+                    <% }%>
 
 
                 <tfoot>
@@ -563,22 +597,22 @@
 
 
                     </tr>
-                    <% }%>               
-                   
+                    <% }%>
+
                     <% if (data_interstitiel.total_impressions_actu_androidInterstitiel !== 0 ) { %>
 
-                        <tr>
-                            <!-- Agrega par format / site  -->
-                            <td><%=data_interstitiel.interstitiel_actu_android_siteName%></td>
-                            <td><%=data_interstitiel.total_impressions_actu_androidInterstitiel%></td>
-                            <td><%=data_interstitiel.total_clicks_actu_androidInterstitiel%></td>
-                            <td><%=data_interstitiel.interstitiel_actu_android_ctr%>%</td>
-    
-    
-                        </tr>
-                        <% }%>  
-                    
-                  
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_interstitiel.interstitiel_actu_android_siteName%></td>
+                        <td><%=data_interstitiel.total_impressions_actu_androidInterstitiel%></td>
+                        <td><%=data_interstitiel.total_clicks_actu_androidInterstitiel%></td>
+                        <td><%=data_interstitiel.interstitiel_actu_android_ctr%>%</td>
+
+
+                    </tr>
+                    <% }%>
+
+
 
                 <tfoot>
                     <tr>
@@ -613,6 +647,8 @@
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
+                        <th scope="col">VTR</th>
+
 
                     </tr>
 
@@ -625,6 +661,8 @@
                         <td><%=data_video.total_impressions_linfoVideo%></td>
                         <td><%=data_video.total_clicks_linfoVideo%></td>
                         <td><%=data_video.video_linfo_ctr%>%</td>
+                        <td><%=data_video.VTR_linfo%>%</td>
+                               
 
 
                     </tr>
@@ -638,6 +676,7 @@
                         <td><%=data_video.total_impressions_linfo_androidVideo%></td>
                         <td><%=data_video.total_clicks_linfo_androidVideo%></td>
                         <td><%=data_video.video_linfo_android_ctr%>%</td>
+                        <td><%=data_video.VTR_linfo_android%>%</td>
 
 
                     </tr>
@@ -651,6 +690,8 @@
                         <td><%=data_video.total_impressions_linfo_iosVideo%></td>
                         <td><%=data_video.total_clicks_linfo_iosVideo%></td>
                         <td><%=data_video.video_linfo_ios_ctr%>%</td>
+                        <td><%=data_video.VTR_linfo_ios%>%</td>
+                     
 
 
                     </tr>
@@ -664,6 +705,8 @@
                         <td><%=data_video.total_impressions_dtjVideo%></td>
                         <td><%=data_video.total_clicks_dtjVideo%></td>
                         <td><%=data_video.video_dtj_ctr%>%</td>
+                        <td><%=data_video.VTR_dtj%>%</td>
+
 
 
                     </tr>
@@ -676,6 +719,8 @@
                         <td><%=data_video.total_impressions_antenneVideo%></td>
                         <td><%=data_video.total_clicks_antenneVideo%></td>
                         <td><%=data_video.video_antenne_ctr%>%</td>
+                        <td><%=data_video.VTR_antenne%>%</td>
+
 
 
                     </tr>
@@ -689,6 +734,7 @@
                         <td><%=data_video.total_impressions_orangeVideo%></td>
                         <td><%=data_video.total_clicks_orangeVideo%></td>
                         <td><%=data_video.video_orange_ctr%>%</td>
+                        <td><%=data_video.VTR_orange%>%</td>
 
 
                     </tr>
@@ -702,6 +748,8 @@
                         <td><%=data_video.total_impressions_tf1Video%></td>
                         <td><%=data_video.total_clicks_tf1Video%></td>
                         <td><%=data_video.video_tf1_ctr%>%</td>
+                        <td><%=data_video.VTR_tf1%>%</td>
+                             
 
 
                     </tr>
@@ -715,6 +763,7 @@
                         <td><%=data_video.total_impressions_m6Video%></td>
                         <td><%=data_video.total_clicks_m6Video%></td>
                         <td><%=data_video.video_m6_ctr%>%</td>
+                        <td><%=data_video.VTR_m6%>%</td>
 
 
                     </tr>
@@ -728,6 +777,7 @@
                         <td><%=data_video.total_impressions_dailymotionVideo%></td>
                         <td><%=data_video.total_clicks_dailymotionVideo%></td>
                         <td><%=data_video.video_dailymotion_ctr%>%</td>
+                        <td><%=data_video.VTR_dailymotion%>%</td>
 
 
                     </tr>
@@ -741,24 +791,26 @@
                         <td><%=data_video.total_impressions_actu_iosVideo%></td>
                         <td><%=data_video.total_clicks_actu_iosVideo%></td>
                         <td><%=data_video.video_actu_ios_ctr%>%</td>
+                        <td><%=data_video.VTR_actu_ios%>%</td>
 
 
                     </tr>
                     <% }%>
 
-                    
+
                     <% if (data_video.total_impressions_actu_androidVideo !== 0 ) { %>
 
-                        <tr>
-                            <!-- Agrega par format / site  -->
-                            <td><%=data_video.video_actu_android_siteName%></td>
-                            <td><%=data_video.total_impressions_actu_androidVideo%></td>
-                            <td><%=data_video.total_clicks_actu_androidVideo%></td>
-                            <td><%=data_video.video_actu_android_ctr%>%</td>
-    
-    
-                        </tr>
-                        <% }%>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_video.video_actu_android_siteName%></td>
+                        <td><%=data_video.total_impressions_actu_androidVideo%></td>
+                        <td><%=data_video.total_clicks_actu_androidVideo%></td>
+                        <td><%=data_video.video_actu_android_ctr%>%</td>
+                        <td><%=data_video.VTR_actu_android%>%</td>
+
+
+                    </tr>
+                    <% }%>
 
 
                 <tfoot>
@@ -767,6 +819,7 @@
                         <td><%=table.sommeVideoImpression%></td>
                         <td><%=table.sommeVideoClicks%></td>
                         <td><%=table.CTR_video%>%</td>
+                        <td><%=table.VTR%>%</td>
 
                     </tr>
                 </tfoot>
@@ -933,20 +986,20 @@
 
                     <% if (data_masthead.total_impressions_actu_androidMasthead !== 0 ) { %>
 
-                        <tr>
-                            <!-- Agrega par format / site  -->
-                            <td><%=data_masthead.masthead_actu_android_siteName%></td>
-                            <td><%=data_masthead.total_impressions_actu_androidMasthead%></td>
-                            <td><%=data_masthead.total_clicks_actu_androidMasthead%></td>
-                            <td><%=data_masthead.masthead_actu_android_ctr%>%</td>
-    
-    
-    
-                        </tr>
-                        <% }%>
-    
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_masthead.masthead_actu_android_siteName%></td>
+                        <td><%=data_masthead.total_impressions_actu_androidMasthead%></td>
+                        <td><%=data_masthead.total_clicks_actu_androidMasthead%></td>
+                        <td><%=data_masthead.masthead_actu_android_ctr%>%</td>
 
-                    
+
+
+                    </tr>
+                    <% }%>
+
+
+
 
 
                 <tfoot>
@@ -1118,16 +1171,16 @@
 
                     <% if (data_grand_angle.total_impressions_actu_androidGrandAngle !== 0 ) { %>
 
-                        <tr>
-                            <!-- Agrega par format / site  -->
-                            <td><%=data_grand_angle.grandAngle_actu_android_siteName%></td>
-                            <td><%=data_grand_angle.total_impressions_actu_androidGrandAngle%></td>
-                            <td><%=data_grand_angle.total_clicks_actu_androidGrandAngle%></td>
-                            <td><%=data_grand_angle.grandAngle_actu_android_ctr%>%</td>
-    
-    
-                        </tr>
-                        <% }%>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_grand_angle.grandAngle_actu_android_siteName%></td>
+                        <td><%=data_grand_angle.total_impressions_actu_androidGrandAngle%></td>
+                        <td><%=data_grand_angle.total_clicks_actu_androidGrandAngle%></td>
+                        <td><%=data_grand_angle.grandAngle_actu_android_ctr%>%</td>
+
+
+                    </tr>
+                    <% }%>
 
 
                 <tfoot>
@@ -1299,19 +1352,19 @@
                     </tr>
                     <% }%>
 
-                    
+
                     <% if (data_native.total_impressions_actu_androidNative !== 0 ) { %>
 
-                        <tr>
-                            <!-- Agrega par format / site  -->
-                            <td><%=data_native.native_actu_android_siteName%></td>
-                            <td><%=data_native.total_impressions_actu_androidNative%></td>
-                            <td><%=data_native.total_clicks_actu_androidNative%></td>
-                            <td><%=data_native.native_actu_android_ctr%>%</td>
-    
-    
-                        </tr>
-                        <% }%>
+                    <tr>
+                        <!-- Agrega par format / site  -->
+                        <td><%=data_native.native_actu_android_siteName%></td>
+                        <td><%=data_native.total_impressions_actu_androidNative%></td>
+                        <td><%=data_native.total_clicks_actu_androidNative%></td>
+                        <td><%=data_native.native_actu_android_ctr%>%</td>
+
+
+                    </tr>
+                    <% }%>
 
 
                 <tfoot>
@@ -1341,7 +1394,6 @@
 
 
     </div>
-
 
 
 

@@ -185,7 +185,6 @@ exports.report = async (req, res) => {
       const endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
 
 
-      console.log(endDate_last);
 
       const now = new Date();
       const timestamp_datenow = now.getTime();
@@ -197,7 +196,6 @@ exports.report = async (req, res) => {
       var t3 = parseInt(endDate_last);
 
       const EndDate = getEndDate_last(t3);
-      console.log(EndDate)
       //si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour
       if (endDate_last < timestamp_datenow) {
 
@@ -285,7 +283,6 @@ exports.report = async (req, res) => {
 
       }
 
-      console.log(requestReporting)
 
       //test si la date de fin de la campagne est => date au jourd'hui = 31j ne pas effectuer la requête
       //date_fin - date du jour = nbr jour
@@ -362,7 +359,6 @@ exports.report = async (req, res) => {
               if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
                 //3) Récupère la date de chaque requÃªte
                 dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
-
                 //save la data requête 1 dans le local storage
                 var obj_dataFile = {
                   'datafile': dataFile.data
@@ -464,7 +460,6 @@ exports.report = async (req, res) => {
 
             const StartDate = getDateTimeFromTimestamp(t1);
             const EndDate = getDateTimeFromTimestamp(t2);
-            console.log(EndDate)
 
             //filte les array exclure les valeur undefined qui empêche le calcule des somme
 
@@ -498,7 +493,7 @@ exports.report = async (req, res) => {
 
             }
 
-
+        
             //test si le tableau est un array + si il comporte 1 éléments dans l'array
             if ((InsertionName.length > 1) && (Array.isArray(InsertionName) === true)) {
 
@@ -813,152 +808,171 @@ exports.report = async (req, res) => {
               var nativeFormatName = new Array();
               var nativeCTR = new Array();
 
-              var native_linfo_impression = new Array()
-              var native_linfo_click = new Array()
-              var native_linfo_siteId = new Array()
-              var native_linfo_siteName = new Array()
-              var native_linfo_ctr = new Array()
+              var native_linfo_impression = new Array();
+              var native_linfo_click = new Array();
+              var native_linfo_siteId = new Array();
+              var native_linfo_siteName = new Array();
+              var native_linfo_ctr = new Array();
 
-              var native_linfo_android_impression = new Array()
-              var native_linfo_android_click = new Array()
-              var native_linfo_android_siteId = new Array()
-              var native_linfo_android_siteName = new Array()
-              var native_linfo_android_ctr = new Array()
+              var native_linfo_android_impression = new Array();
+              var native_linfo_android_click = new Array();
+              var native_linfo_android_siteId = new Array();
+              var native_linfo_android_siteName = new Array();
+              var native_linfo_android_ctr = new Array();
 
-              var native_linfo_ios_impression = new Array()
-              var native_linfo_ios_click = new Array()
-              var native_linfo_ios_siteId = new Array()
-              var native_linfo_ios_siteName = new Array()
-              var native_linfo_ios_ctr = new Array()
-
-
-              var native_dtj_impression = new Array()
-              var native_dtj_click = new Array()
-              var native_dtj_siteId = new Array()
-              var native_dtj_siteName = new Array()
-              var native_dtj_ctr = new Array()
-
-              var native_antenne_impression = new Array()
-              var native_antenne_click = new Array()
-              var native_antenne_siteId = new Array()
-              var native_antenne_siteName = new Array()
-              var native_antenne_ctr = new Array()
+              var native_linfo_ios_impression = new Array();
+              var native_linfo_ios_click = new Array();
+              var native_linfo_ios_siteId = new Array();
+              var native_linfo_ios_siteName = new Array();
+              var native_linfo_ios_ctr = new Array();
 
 
-              var native_orange_impression = new Array()
-              var native_orange_click = new Array()
-              var native_orange_siteId = new Array()
-              var native_orange_siteName = new Array()
-              var native_orange_ctr = new Array()
+              var native_dtj_impression = new Array();
+              var native_dtj_click = new Array();
+              var native_dtj_siteId = new Array();
+              var native_dtj_siteName = new Array();
+              var native_dtj_ctr = new Array();
 
-              var native_tf1_impression = new Array()
-              var native_tf1_click = new Array()
-              var native_tf1_siteId = new Array()
-              var native_tf1_siteName = new Array()
-              var native_tf1_ctr = new Array()
+              var native_antenne_impression = new Array();
+              var native_antenne_click = new Array();
+              var native_antenne_siteId = new Array();
+              var native_antenne_siteName = new Array();
+              var native_antenne_ctr = new Array();
 
-              var native_m6_impression = new Array()
-              var native_m6_click = new Array()
-              var native_m6_siteId = new Array()
-              var native_m6_siteName = new Array()
-              var native_m6_ctr = new Array()
 
-              var native_dailymotion_impression = new Array()
-              var native_dailymotion_click = new Array()
-              var native_dailymotion_siteId = new Array()
-              var native_dailymotion_siteName = new Array()
-              var native_dailymotion_ctr = new Array()
+              var native_orange_impression = new Array();
+              var native_orange_click = new Array();
+              var native_orange_siteId = new Array();
+              var native_orange_siteName = new Array();
+              var native_orange_ctr = new Array();
 
-              var native_actu_ios_impression = new Array()
-              var native_actu_ios_click = new Array()
-              var native_actu_ios_siteId = new Array()
-              var native_actu_ios_siteName = new Array()
-              var native_actu_ios_ctr = new Array()
+              var native_tf1_impression = new Array();
+              var native_tf1_click = new Array();
+              var native_tf1_siteId = new Array();
+              var native_tf1_siteName = new Array();
+              var native_tf1_ctr = new Array();
 
-              var native_actu_android_impression = new Array()
-              var native_actu_android_click = new Array()
-              var native_actu_android_siteId = new Array()
-              var native_actu_android_siteName = new Array()
-              var native_actu_android_ctr = new Array()
+              var native_m6_impression = new Array();
+              var native_m6_click = new Array();
+              var native_m6_siteId = new Array();
+              var native_m6_siteName = new Array();
+              var native_m6_ctr = new Array();
+
+              var native_dailymotion_impression = new Array();
+              var native_dailymotion_click = new Array();
+              var native_dailymotion_siteId = new Array();
+              var native_dailymotion_siteName = new Array();
+              var native_dailymotion_ctr = new Array();
+
+              var native_actu_ios_impression = new Array();
+              var native_actu_ios_click = new Array();
+              var native_actu_ios_siteId = new Array();
+              var native_actu_ios_siteName = new Array();
+              var native_actu_ios_ctr = new Array();
+
+              var native_actu_android_impression = new Array();
+              var native_actu_android_click = new Array();
+              var native_actu_android_siteId = new Array();
+              var native_actu_android_siteName = new Array();
+              var native_actu_android_ctr = new Array();
 
               //////////////////FORMAT VIDEO//////////////////////
 
-              var videoImpressions = new Array();
-              var videoClicks = new Array();
-              var videoSiteId = new Array();
-              var videoSitename = new Array();
-              var videoFormatName = new Array();
-              var videoCTR = new Array();
-              var videoComplete = new Array();
+              var videoImpressions = new Array();;
+              var videoClicks = new Array();;
+              var videoSiteId = new Array();;
+              var videoSitename = new Array();;
+              var videoFormatName = new Array();;
+              var videoCTR = new Array();;
+              var videoComplete = new Array();;
 
-              var video_linfo_impression = new Array()
-              var video_linfo_click = new Array()
-              var video_linfo_siteId = new Array()
-              var video_linfo_siteName = new Array()
-              var video_linfo_ctr = new Array()
+              var video_linfo_impression = new Array();
+              var video_linfo_click = new Array();
+              var video_linfo_siteId = new Array();
+              var video_linfo_siteName = new Array();
+              var video_linfo_ctr = new Array();
+              var video_linfo_Complete = new Array();
 
-
-              var video_linfo_android_impression = new Array()
-              var video_linfo_android_click = new Array()
-              var video_linfo_android_siteId = new Array()
-              var video_linfo_android_siteName = new Array()
-              var video_linfo_android_ctr = new Array()
-
-              var video_linfo_ios_impression = new Array()
-              var video_linfo_ios_click = new Array()
-              var video_linfo_ios_siteId = new Array()
-              var video_linfo_ios_siteName = new Array()
-              var video_linfo_ios_ctr = new Array()
+              var video_linfo_android_impression = new Array();
+              var video_linfo_android_click = new Array();
+              var video_linfo_android_siteId = new Array();
+              var video_linfo_android_siteName = new Array();
+              var video_linfo_android_ctr = new Array();
+              var video_linfo_android_Complete = new Array();
 
 
-              var video_dtj_impression = new Array()
-              var video_dtj_click = new Array()
-              var video_dtj_siteId = new Array()
-              var video_dtj_siteName = new Array()
-              var video_dtj_ctr = new Array()
-
-              var video_antenne_impression = new Array()
-              var video_antenne_click = new Array()
-              var video_antenne_siteId = new Array()
-              var video_antenne_siteName = new Array()
-              var video_antenne_ctr = new Array()
-
-              var video_orange_impression = new Array()
-              var video_orange_click = new Array()
-              var video_orange_siteId = new Array()
-              var video_orange_siteName = new Array()
-              var video_orange_ctr = new Array()
-
-              var video_tf1_impression = new Array()
-              var video_tf1_click = new Array()
-              var video_tf1_siteId = new Array()
-              var video_tf1_siteName = new Array()
-              var video_tf1_ctr = new Array()
-
-              var video_m6_impression = new Array()
-              var video_m6_click = new Array()
-              var video_m6_siteId = new Array()
-              var video_m6_siteName = new Array()
-              var video_m6_ctr = new Array()
-
-              var video_dailymotion_impression = new Array()
-              var video_dailymotion_click = new Array()
-              var video_dailymotion_siteId = new Array()
-              var video_dailymotion_siteName = new Array()
-              var video_dailymotion_ctr = new Array()
-
-              var video_actu_ios_impression = new Array()
-              var video_actu_ios_click = new Array()
-              var video_actu_ios_siteId = new Array()
-              var video_actu_ios_siteName = new Array()
-              var video_actu_ios_ctr = new Array()
+              var video_linfo_ios_impression = new Array();
+              var video_linfo_ios_click = new Array();
+              var video_linfo_ios_siteId = new Array();
+              var video_linfo_ios_siteName = new Array();
+              var video_linfo_ios_ctr = new Array();
+              var video_linfo_ios_Complete = new Array();
 
 
-              var video_actu_android_impression = new Array()
-              var video_actu_android_click = new Array()
-              var video_actu_android_siteId = new Array()
-              var video_actu_android_siteName = new Array()
-              var video_actu_android_ctr = new Array()
+
+              var video_dtj_impression = new Array();
+              var video_dtj_click = new Array();
+              var video_dtj_siteId = new Array();
+              var video_dtj_siteName = new Array();
+              var video_dtj_ctr = new Array();
+              var video_dtj_Complete = new Array();
+
+
+              var video_antenne_impression = new Array();
+              var video_antenne_click = new Array();
+              var video_antenne_siteId = new Array();
+              var video_antenne_siteName = new Array();
+              var video_antenne_ctr = new Array();
+              var video_antenne_Complete = new Array();
+
+
+              var video_orange_impression = new Array();
+              var video_orange_click = new Array();
+              var video_orange_siteId = new Array();
+              var video_orange_siteName = new Array();
+              var video_orange_ctr = new Array();
+              var video_orange_Complete = new Array();
+
+
+              var video_tf1_impression = new Array();
+              var video_tf1_click = new Array();
+              var video_tf1_siteId = new Array();
+              var video_tf1_siteName = new Array();
+              var video_tf1_ctr = new Array();
+              var video_tf1_Complete = new Array();
+
+
+              var video_m6_impression = new Array();
+              var video_m6_click = new Array();
+              var video_m6_siteId = new Array();
+              var video_m6_siteName = new Array();
+              var video_m6_ctr = new Array();
+              var video_m6_Complete = new Array();
+
+
+              var video_dailymotion_impression = new Array();
+              var video_dailymotion_click = new Array();
+              var video_dailymotion_siteId = new Array();
+              var video_dailymotion_siteName = new Array();
+              var video_dailymotion_ctr = new Array();
+              var video_dailymotion_Complete = new Array();
+
+
+              var video_actu_ios_impression = new Array();
+              var video_actu_ios_click = new Array();
+              var video_actu_ios_siteId = new Array();
+              var video_actu_ios_siteName = new Array();
+              var video_actu_ios_ctr = new Array();
+              var video_actu_ios_Complete = new Array();
+
+
+
+              var video_actu_android_impression = new Array();
+              var video_actu_android_click = new Array();
+              var video_actu_android_siteId = new Array();
+              var video_actu_android_siteName = new Array();
+              var video_actu_android_ctr = new Array();
+              var video_actu_android_Complete = new Array();
 
 
               //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
@@ -1007,6 +1021,8 @@ exports.report = async (req, res) => {
                   video_linfo_click.push(eval(Array_Clicks[element]));
                   video_linfo_siteId.push(Array_SiteID[element]);
                   video_linfo_siteName.push(Array_SiteName[element]);
+                  video_linfo_Complete.push(eval(Array_Complete[element]));
+
 
 
                 }
@@ -1017,6 +1033,7 @@ exports.report = async (req, res) => {
                   video_linfo_android_click.push(eval(Array_Clicks[element]));
                   video_linfo_android_siteId.push(Array_SiteID[element]);
                   video_linfo_android_siteName.push(Array_SiteName[element]);
+                  video_linfo_android_Complete.push(eval(Array_Complete[element]));
 
 
                 }
@@ -1028,6 +1045,8 @@ exports.report = async (req, res) => {
                   video_linfo_ios_click.push(eval(Array_Clicks[element]));
                   video_linfo_ios_siteId.push(Array_SiteID[element]);
                   video_linfo_ios_siteName.push(Array_SiteName[element]);
+                  video_linfo_ios_Complete.push(eval(Array_Complete[element]));
+
 
 
                 }
@@ -1039,6 +1058,8 @@ exports.report = async (req, res) => {
                   video_dtj_click.push(eval(Array_Clicks[element]));
                   video_dtj_siteId.push(Array_SiteID[element]);
                   video_dtj_siteName.push(Array_SiteName[element]);
+                  video_dtj_Complete.push(eval(Array_Complete[element]));
+
 
                 }
 
@@ -1049,6 +1070,8 @@ exports.report = async (req, res) => {
                   video_antenne_click.push(eval(Array_Clicks[element]));
                   video_antenne_siteId.push(Array_SiteID[element]);
                   video_antenne_siteName.push(Array_SiteName[element]);
+                  video_antenne_Complete.push(eval(Array_Complete[element]));
+
 
                 }
                 if (Array_SiteID[element] === "299252") {
@@ -1056,6 +1079,8 @@ exports.report = async (req, res) => {
                   video_orange_click.push(eval(Array_Clicks[element]));
                   video_orange_siteId.push(Array_SiteID[element]);
                   video_orange_siteName.push(Array_SiteName[element]);
+                  video_orange_Complete.push(eval(Array_Complete[element]));
+
 
                 }
                 if (Array_SiteID[element] === "299245") {
@@ -1063,6 +1088,8 @@ exports.report = async (req, res) => {
                   video_tf1_click.push(eval(Array_Clicks[element]));
                   video_tf1_siteId.push(Array_SiteID[element]);
                   video_tf1_siteName.push(Array_SiteName[element]);
+                  video_tf1_Complete.push(eval(Array_Complete[element]));
+
 
 
                 }
@@ -1072,6 +1099,8 @@ exports.report = async (req, res) => {
                   video_m6_click.push(eval(Array_Clicks[element]));
                   video_m6_siteId.push(Array_SiteID[element]);
                   video_m6_siteName.push(Array_SiteName[element]);
+                  video_m6_Complete.push(eval(Array_Complete[element]));
+
 
                 }
                 if (Array_SiteID[element] === "337707") {
@@ -1079,20 +1108,34 @@ exports.report = async (req, res) => {
                   video_dailymotion_click.push(eval(Array_Clicks[element]));
                   video_dailymotion_siteId.push(Array_SiteID[element]);
                   video_dailymotion_siteName.push(Array_SiteName[element]);
+                  video_dailymotion_Complete.push(eval(Array_Complete[element]));
+
                 }
                 if (Array_SiteID[element] === "299253") {
                   video_actu_ios_impression.push(eval(Array_Impression[element]));
                   video_actu_ios_click.push(eval(Array_Clicks[element]));
                   video_actu_ios_siteId.push(Array_SiteID[element]);
                   video_actu_ios_siteName.push(Array_SiteName[element]);
+                  video_actu_ios_Complete.push(eval(Array_Complete[element]));
+
                 }
                 if (Array_SiteID[element] === "299254") {
                   video_actu_android_impression.push(eval(Array_Impression[element]));
                   video_actu_android_click.push(eval(Array_Clicks[element]));
                   video_actu_android_siteId.push(Array_SiteID[element]);
                   video_actu_android_siteName.push(Array_SiteName[element]);
+                  video_actu_android_Complete.push(eval(Array_Complete[element]));
+
 
                 }
+             
+
+             
+
+
+
+
+
                 /*if (Array_SiteID[element] ==="389207") {
                                     sm_immo974.push(index);
 
@@ -1616,7 +1659,7 @@ exports.report = async (req, res) => {
               native.forEach(nativeArrayElements);
               video.forEach(VideoArrayElements);
 
-
+             
 
 
               //calcule la somme total par format et site
@@ -1691,36 +1734,59 @@ exports.report = async (req, res) => {
               /////////////////////////
               var total_impressions_linfoVideo = video_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoVideo = video_linfo_click.reduce(somme_array, 0);
+              var total_complete_linfoVideo = video_linfo_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_linfo_androidVideo = video_linfo_android_impression.reduce(somme_array, 0);
               var total_clicks_linfo_androidVideo = video_linfo_android_click.reduce(somme_array, 0);
+              var total_complete_linfo_androidVideo = video_linfo_android_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_linfo_iosVideo = video_linfo_ios_impression.reduce(somme_array, 0);
               var total_clicks_linfo_iosVideo = video_linfo_ios_click.reduce(somme_array, 0);
+              var total_complete_linfo_iosVideo = video_linfo_ios_Complete.reduce(somme_array, 0);
+
+
 
               var total_impressions_dtjVideo = video_dtj_impression.reduce(somme_array, 0);
               var total_clicks_dtjVideo = video_dtj_click.reduce(somme_array, 0);
+              var total_complete_dtjVideo = video_dtj_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_antenneVideo = video_antenne_impression.reduce(somme_array, 0);
               var total_clicks_antenneVideo = video_antenne_click.reduce(somme_array, 0);
+              var total_complete_antenneVideo = video_antenne_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_orangeVideo = video_orange_impression.reduce(somme_array, 0);
               var total_clicks_orangeVideo = video_orange_click.reduce(somme_array, 0);
+              var total_complete_orangeVideo = video_orange_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_tf1Video = video_tf1_impression.reduce(somme_array, 0);
               var total_clicks_tf1Video = video_tf1_click.reduce(somme_array, 0);
+              var total_complete_tf1Video = video_tf1_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_m6Video = video_m6_impression.reduce(somme_array, 0);
               var total_clicks_m6Video = video_m6_click.reduce(somme_array, 0);
+              var total_complete_m6Video = video_m6_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_dailymotionVideo = video_dailymotion_impression.reduce(somme_array, 0);
               var total_clicks_dailymotionVideo = video_dailymotion_click.reduce(somme_array, 0);
+              var total_complete_dailymotionVideo = video_dailymotion_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_actu_iosVideo = video_actu_ios_impression.reduce(somme_array, 0);
               var total_clicks_actu_iosVideo = video_actu_ios_click.reduce(somme_array, 0);
+              var total_complete_actu_iosVideo = video_actu_ios_Complete.reduce(somme_array, 0);
+
 
               var total_impressions_actu_androidVideo = video_actu_android_impression.reduce(somme_array, 0);
               var total_clicks_actu_androidVideo = video_actu_android_click.reduce(somme_array, 0);
+              var total_complete_actu_androidVideo = video_actu_android_Complete.reduce(somme_array, 0);
+
               /////////////////////
               var total_impressions_linfoInterstitiel = interstitiel_linfo_impression.reduce(somme_array, 0);
               var total_clicks_linfoInterstitiel = interstitiel_linfo_click.reduce(somme_array, 0);
@@ -2098,13 +2164,76 @@ exports.report = async (req, res) => {
 
 
             //Calcul des chiffre global %Taux clic Repetition %VTR
-            Taux_VTR = (TotalComplete / total_impression_format) * 100;
+            Taux_VTR = (TotalComplete / sommeVideoImpression) * 100;
             VTR = Taux_VTR.toFixed(2);
+         
 
+           
+            //Calcul du VTR par site pour le format VIDEO
+            Taux_VTR_linfo = (total_complete_linfoVideo / total_impressions_linfoVideo) * 100;
+            VTR_linfo = Taux_VTR_linfo.toFixed(2);
+           // console.log(VTR_linfo)
+    
+
+
+            Taux_VTR_linfo_android = (total_complete_linfo_androidVideo / total_impressions_linfo_androidVideo) * 100;
+            VTR_linfo_android = Taux_VTR_linfo_android.toFixed(2);
+           // console.log(VTR_linfo_android)
+          
+
+
+            Taux_VTR_linfo_ios = (total_complete_linfo_iosVideo / total_impressions_linfo_iosVideo) * 100;
+            VTR_linfo_ios = Taux_VTR_linfo_ios.toFixed(2);
+  
+
+
+            Taux_VTR_dtj = (total_complete_dtjVideo / total_impressions_dtjVideo) * 100;
+            VTR_dtj = Taux_VTR_dtj.toFixed(2);
+          
+
+
+
+
+            Taux_VTR_antenne = (total_complete_antenneVideo / total_impressions_antenneVideo) * 100;
+            VTR_antenne = Taux_VTR_antenne.toFixed(2);
+           
+
+            
+            Taux_VTR_orange = (total_complete_orangeVideo / total_impressions_orangeVideo) * 100;
+            VTR_orange = Taux_VTR_orange.toFixed(2);
+           
+
+
+            Taux_VTR_tf1 = (total_complete_tf1Video / total_impressions_tf1Video) * 100;
+            VTR_tf1 = Taux_VTR_tf1.toFixed(2);
+          
+
+
+            Taux_VTR_m6 = (total_complete_m6Video / total_impressions_m6Video) * 100;
+            VTR_m6 = Taux_VTR_m6.toFixed(2);
+          
+
+
+            Taux_VTR_dailymotion = (total_complete_dailymotionVideo / total_impressions_dailymotionVideo) * 100;
+            VTR_dailymotion = Taux_VTR_dailymotion.toFixed(2);
+     
+
+
+            Taux_VTR_actu_ios = (total_complete_actu_iosVideo / total_impressions_actu_iosVideo) * 100;
+            VTR_actu_ios = Taux_VTR_actu_ios.toFixed(2);
+          
+
+
+            Taux_VTR_actu_android = (total_complete_actu_androidVideo / total_impressions_actu_androidVideo) * 100;
+            VTR_actu_android = Taux_VTR_actu_android.toFixed(2);
+        
+
+        
             /*var Taux_clics = (TotalCliks / TotalImpressions) * 100
             CTR = Taux_clics.toFixed(2);*/
             var Taux_clics = (total_click_format / total_impression_format) * 100;
             CTR = Taux_clics.toFixed(2);
+
 
 
             var Impression_vu = (total_impression_format / Total_VU);
@@ -2115,18 +2244,41 @@ exports.report = async (req, res) => {
 
 
             //SEPARATEUR DE MILLIER
+            function numStr(a, b) {
+              a = '' + a;
+              b = b || ' ';
+              var c = '',
+                  d = 0;
+              while (a.match(/^0[0-9]/)) {
+                a = a.substr(1);
+              }
+              for (var i = a.length-1; i >= 0; i--) {
+                c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
+                d++;
+              }
+              return c;
+            }
             // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI");
             // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI");
-            total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI");
+            total_impression_format =  numStr(total_impression_format);
+            total_click_format = numStr(total_click_format);
+            Total_VU =  numStr(Total_VU);
+            sommeVideoImpression = numStr(sommeVideoImpression);
+            sommeHabillageImpression= numStr(sommeHabillageImpression);
+            sommeHabillageImpression= numStr(sommeHabillageImpression);
+            sommeMastheadImpression= numStr(sommeMastheadImpression);
+            sommeNativeImpression= numStr(sommeNativeImpression);
+
+            /*total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI");
             total_click_format = new Number(total_click_format).toLocaleString("fi-FI");
             Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
 
             sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI");
             sommeHabillageImpression = new Number(sommeHabillageImpression).toLocaleString("fi-FI");
-            sommeInterstitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI");
-            sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI");
+            sommeInterssommeHabillageImpressiontitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI");
+            sommeHabillageImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI");
             sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI");
-            sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI");
+            sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI");*/
 
 
             var Campagne_name = CampaignName[0]
@@ -2251,57 +2403,67 @@ exports.report = async (req, res) => {
               total_clicks_linfoVideo,
               video_linfo_siteName,
               video_linfo_ctr,
-
+              VTR_linfo,
+              
               total_impressions_linfo_androidVideo,
               total_clicks_linfo_androidVideo,
               video_linfo_android_siteName,
               video_linfo_android_ctr,
+              VTR_linfo_android,
 
               total_impressions_linfo_iosVideo,
               total_clicks_linfo_iosVideo,
               video_linfo_ios_siteName,
               video_linfo_ios_ctr,
+              VTR_linfo_ios,
 
               total_impressions_dtjVideo,
               total_clicks_dtjVideo,
               video_dtj_siteName,
               video_dtj_ctr,
+              VTR_dtj,
 
               total_impressions_antenneVideo,
               total_clicks_antenneVideo,
               video_antenne_siteName,
               video_antenne_ctr,
+              VTR_antenne,
 
               total_impressions_orangeVideo,
               total_clicks_orangeVideo,
               video_orange_siteName,
               video_orange_ctr,
+              VTR_orange,
 
               total_impressions_tf1Video,
               total_clicks_tf1Video,
               video_tf1_siteName,
               video_tf1_ctr,
-
+              VTR_tf1,
 
               total_impressions_m6Video,
               total_clicks_m6Video,
               video_m6_siteName,
               video_m6_ctr,
+              VTR_m6,
 
               total_impressions_dailymotionVideo,
               total_clicks_dailymotionVideo,
               video_dailymotion_siteName,
               video_dailymotion_ctr,
+              VTR_dailymotion,
 
               total_impressions_actu_iosVideo,
               total_clicks_actu_iosVideo,
               video_actu_ios_siteName,
               video_actu_ios_ctr,
+              VTR_actu_ios,
 
               total_impressions_actu_androidVideo,
               total_clicks_actu_androidVideo,
               video_actu_android_siteName,
               video_actu_android_ctr,
+              VTR_actu_android,
             };
 
 
