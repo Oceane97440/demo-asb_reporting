@@ -163,18 +163,7 @@
           $('body').html(data)
           //console.log(data)
           //compte le nombre de tr du tableau 
-          $.fn.rowCount = function () {
-            return $('tr', $(this).find('tbody')).length;
-          };
-          var rowctr = $('#table_campaigns').rowCount();
-
-          //si le tableau des formats global contien qu'une ligne on affiche pas
-          if (rowctr <= 1) {
-            //console.log('No of Rows:' + rowctr);
-            $("#table_global_format").hide();
-
-
-          }
+        
 
         }
 

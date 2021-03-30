@@ -23,12 +23,17 @@
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-WCLMFB5');
     </script>
-    <!-- End Google Tag Manager -->    
+    <!-- End Google Tag Manager -->
     <title>Bilan de la campagne </title>
 
-    <link rel="icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-192x192.png" sizes="192x192" />
-    <link rel="apple-touch-icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
+    <link rel="icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png"
+        sizes="32x32" />
+    <link rel="icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-192x192.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
 
     <style>
         body {
@@ -662,7 +667,7 @@
                         <td><%=data_video.total_clicks_linfoVideo%></td>
                         <td><%=data_video.video_linfo_ctr%>%</td>
                         <td><%=data_video.VTR_linfo%>%</td>
-                               
+
 
 
                     </tr>
@@ -691,7 +696,7 @@
                         <td><%=data_video.total_clicks_linfo_iosVideo%></td>
                         <td><%=data_video.video_linfo_ios_ctr%>%</td>
                         <td><%=data_video.VTR_linfo_ios%>%</td>
-                     
+
 
 
                     </tr>
@@ -749,7 +754,7 @@
                         <td><%=data_video.total_clicks_tf1Video%></td>
                         <td><%=data_video.video_tf1_ctr%>%</td>
                         <td><%=data_video.VTR_tf1%>%</td>
-                             
+
 
 
                     </tr>
@@ -1395,7 +1400,41 @@
 
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+    <script>
+        $(document).ready(function () {
 
+
+            //appel ajax ici
+
+
+            //compte le nombre de tr du tableau 
+            $.fn.rowCount = function () {
+                return $('tr', $(this).find('tbody')).length;
+            };
+            var rowctr = $('#table_campaigns').rowCount();
+
+            //si le tableau des formats global contien qu'une ligne on affiche pas
+            if (rowctr <= 1) {
+                //console.log('No of Rows:' + rowctr);
+                $("#table_global_format").hide();
+
+
+            }
+
+
+        })
+        //attention version en ligne (en tête)
+    </script>
 
 </body>
 
