@@ -178,6 +178,10 @@ const user = require('./app/routes/routes.api_user');
 
 app.use('/utilisateur', user);
 
+// Automatise la récupération de donnée
+const automate = require('./app/routes/routes.automate');
+app.use('/automate', automate);
+
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
