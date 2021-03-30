@@ -493,7 +493,7 @@ exports.report = async (req, res) => {
 
             }
 
-        
+
             //test si le tableau est un array + si il comporte 1 éléments dans l'array
             if ((InsertionName.length > 1) && (Array.isArray(InsertionName) === true)) {
 
@@ -1128,9 +1128,9 @@ exports.report = async (req, res) => {
 
 
                 }
-             
 
-             
+
+
 
 
 
@@ -1659,7 +1659,7 @@ exports.report = async (req, res) => {
               native.forEach(nativeArrayElements);
               video.forEach(VideoArrayElements);
 
-             
+
 
 
               //calcule la somme total par format et site
@@ -2166,75 +2166,75 @@ exports.report = async (req, res) => {
             //Calcul des chiffre global %Taux clic Repetition %VTR
             Taux_VTR = (TotalComplete / sommeVideoImpression) * 100;
             VTR = Taux_VTR.toFixed(2);
-         
 
-           
+
+
             //Calcul du VTR par site pour le format VIDEO
             Taux_VTR_linfo = (total_complete_linfoVideo / total_impressions_linfoVideo) * 100;
             VTR_linfo = Taux_VTR_linfo.toFixed(2);
-           // console.log(VTR_linfo)
-           
+            // console.log(VTR_linfo)
+
 
 
             Taux_VTR_linfo_android = (total_complete_linfo_androidVideo / total_impressions_linfo_androidVideo) * 100;
             VTR_linfo_android = Taux_VTR_linfo_android.toFixed(2);
-           // console.log(VTR_linfo_android)
-         
+            // console.log(VTR_linfo_android)
+
 
 
             Taux_VTR_linfo_ios = (total_complete_linfo_iosVideo / total_impressions_linfo_iosVideo) * 100;
             VTR_linfo_ios = Taux_VTR_linfo_ios.toFixed(2);
-           
+
 
 
             Taux_VTR_dtj = (total_complete_dtjVideo / total_impressions_dtjVideo) * 100;
             VTR_dtj = Taux_VTR_dtj.toFixed(2);
-           
+
 
 
 
 
             Taux_VTR_antenne = (total_complete_antenneVideo / total_impressions_antenneVideo) * 100;
             VTR_antenne = Taux_VTR_antenne.toFixed(2);
-           
 
-            
+
+
             Taux_VTR_orange = (total_complete_orangeVideo / total_impressions_orangeVideo) * 100;
             VTR_orange = Taux_VTR_orange.toFixed(2);
-           // console.log(VTR_orange)
-         
+            // console.log(VTR_orange)
+
 
 
             Taux_VTR_tf1 = (total_complete_tf1Video / total_impressions_tf1Video) * 100;
             VTR_tf1 = Taux_VTR_tf1.toFixed(2);
             //console.log(VTR_tf1)
-           
+
 
 
             Taux_VTR_m6 = (total_complete_m6Video / total_impressions_m6Video) * 100;
             VTR_m6 = Taux_VTR_m6.toFixed(2);
-           // console.log(VTR_m6)
-         
+            // console.log(VTR_m6)
+
 
 
             Taux_VTR_dailymotion = (total_complete_dailymotionVideo / total_impressions_dailymotionVideo) * 100;
             VTR_dailymotion = Taux_VTR_dailymotion.toFixed(2);
             //console.log(VTR_dailymotion)
-          
+
 
 
             Taux_VTR_actu_ios = (total_complete_actu_iosVideo / total_impressions_actu_iosVideo) * 100;
             VTR_actu_ios = Taux_VTR_actu_ios.toFixed(2);
             //console.log(VTR_actu_ios)
-       
+
 
 
             Taux_VTR_actu_android = (total_complete_actu_androidVideo / total_impressions_actu_androidVideo) * 100;
             VTR_actu_android = Taux_VTR_actu_android.toFixed(2);
             //console.log(VTR_actu_android)
-           
 
-        
+
+
             /*var Taux_clics = (TotalCliks / TotalImpressions) * 100
             CTR = Taux_clics.toFixed(2);*/
             var Taux_clics = (total_click_format / total_impression_format) * 100;
@@ -2247,21 +2247,226 @@ exports.report = async (req, res) => {
 
 
 
+            // total impression / total clic / CTR par Video par site
+            const reducer = (accumulator, currentValue) => accumulator + currentValue;
+            var sommevideoImpressions = videoImpressions.reduce(reducer, 0);
+            var sommevideoClics = videoClicks.reduce(reducer, 0);
+            var videoCTR_clics = (videoClicks / videoImpressions) * 100;
+            videoCTR_clics = videoCTR_clics.toFixed(2);
+
+            // total impression / total clic / CTR par Habillage par site
+
+            var sommehabillageImpressions = habillageImpressions.reduce(reducer, 0);
+            var sommehabillageClics = habillageClicks.reduce(reducer, 0);
+            var habillageCTR_clics = (sommehabillageClics / sommehabillageImpressions) * 100;
+            habillageCTR_clics = habillageCTR_clics.toFixed(2);
+
+            // total impression / total clic / CTR par Interstitiel par site
+            var sommeinterstitielImpressions = interstitielImpressions.reduce(reducer, 0);
+            var sommeinterstitielClics = interstitielClicks.reduce(reducer, 0);
+            var interstitielCTR_clics = (sommeinterstitielClics / sommeinterstitielImpressions) * 100;
+            interstitielCTR_clics = interstitielCTR_clics.toFixed(2);
+
+            // total impression / total clic / CTR par Masthead par site
+            var sommemastheadImpressions = mastheadImpressions.reduce(reducer, 0);
+            var sommemastheadClics = mastheadClicks.reduce(reducer, 0);
+            var mastheadCTR_clics = (sommemastheadClics / sommemastheadImpressions) * 100;
+            mastheadCTR_clics = mastheadCTR_clics.toFixed(2);
 
 
-            //SEPARATEUR DE MILLIER
-            // TotalImpressions = new Number(TotalImpressions).toLocaleString("fi-FI");
-            // TotalCliks = new Number(TotalCliks).toLocaleString("fi-FI");
-            total_impression_format = new Number(total_impression_format).toLocaleString("fi-FI");
-            total_click_format = new Number(total_click_format).toLocaleString("fi-FI");
-            Total_VU = new Number(Total_VU).toLocaleString("fi-FI");
+            // total impression / total clic / CTR par grand_angle par site
+            var sommegrand_angleImpressions = grand_angleImpressions.reduce(reducer, 0);
+            var sommegrand_angleClics = grand_angleClicks.reduce(reducer, 0);
+            var grand_angleCTR_clics = (sommegrand_angleClics / sommegrand_angleImpressions) * 100;
+            grand_angleCTR_clics = grand_angleCTR_clics.toFixed(2);
 
-            sommeVideoImpression = new Number(sommeVideoImpression).toLocaleString("fi-FI");
-            sommeHabillageImpression = new Number(sommeHabillageImpression).toLocaleString("fi-FI");
-            sommeInterstitielImpression = new Number(sommeInterstitielImpression).toLocaleString("fi-FI");
-            sommeGrand_AngleImpression = new Number(sommeGrand_AngleImpression).toLocaleString("fi-FI");
-            sommeMastheadImpression = new Number(sommeMastheadImpression).toLocaleString("fi-FI");
-            sommeNativeImpression = new Number(sommeNativeImpression).toLocaleString("fi-FI");
+            // total impression / total clic / CTR par native par site
+            var sommenativeImpressions = nativeImpressions.reduce(reducer, 0);
+            var sommenativeClics = nativeClicks.reduce(reducer, 0);
+            var nativeCTR_clics = (sommenativeClics / sommenativeImpressions) * 100;
+            nativeCTR_clics = nativeCTR_clics.toFixed(2);
+
+
+            //SEPARATEUR DE MILLIER universel 
+             function numStr(a, b) {
+              a = '' + a;
+              b = b || ' ';
+              var c = '',
+                  d = 0;
+              while (a.match(/^0[0-9]/)) {
+                a = a.substr(1);
+              }
+              for (var i = a.length-1; i >= 0; i--) {
+                c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
+                d++;
+              }
+              return c;
+            }
+            
+
+            total_impression_format = numStr(total_impression_format);
+            total_click_format = numStr(total_click_format);
+            Total_VU = numStr(Total_VU);
+
+            sommeVideoImpression = numStr(sommeVideoImpression);
+            sommeHabillageImpression = numStr(sommeHabillageImpression);
+            sommeInterstitielImpression = numStr(sommeInterstitielImpression);
+            sommeGrand_AngleImpression = numStr(sommeGrand_AngleImpression);
+            sommeMastheadImpression = numStr(sommeMastheadImpression);
+            sommeNativeImpression = numStr(sommeNativeImpression);
+
+            sommeVideoClicks = numStr(sommeVideoClicks);
+            sommeHabillageClicks = numStr(sommeHabillageClicks);
+            sommeInterstitielClicks = numStr(sommeInterstitielClicks);
+            sommeGrand_AngleClicks = numStr(sommeGrand_AngleClicks);
+            sommeMastheadClicks = numStr(sommeMastheadClicks);
+            sommeNativeClicks = numStr(sommeNativeClicks);
+            TotalComplete = numStr(TotalComplete);
+
+            //SEPARATEUR DE MILLIER par format site
+
+            total_impressions_linfoVideo =  numStr(total_impressions_linfoVideo);
+            total_clicks_linfoVideo =  numStr(total_clicks_linfoVideo);
+            total_impressions_linfo_androidVideo = numStr(total_impressions_linfo_androidVideo) ;
+            total_clicks_linfo_androidVideo = numStr(total_clicks_linfo_androidVideo);
+            total_impressions_linfo_iosVideo = numStr(total_impressions_linfo_iosVideo);
+            total_clicks_linfo_iosVideo = numStr(total_clicks_linfo_iosVideo);
+            total_impressions_dtjVideo = numStr(total_impressions_dtjVideo);
+            total_clicks_dtjVideo = numStr(total_clicks_dtjVideo);
+            total_impressions_antenneVideo = numStr(total_impressions_antenneVideo);
+            total_clicks_antenneVideo = numStr(total_clicks_antenneVideo);
+            total_impressions_orangeVideo = numStr(total_impressions_orangeVideo);
+            total_clicks_orangeVideo = numStr(total_clicks_orangeVideo);
+            total_impressions_tf1Video = numStr(total_impressions_tf1Video);
+            total_clicks_tf1Video = numStr(total_clicks_tf1Video);
+            total_impressions_m6Video = numStr(total_impressions_m6Video);
+            total_clicks_m6Video = numStr(total_clicks_m6Video);
+            total_impressions_dailymotionVideo =numStr(total_impressions_dailymotionVideo) ;
+            total_clicks_dailymotionVideo =numStr(total_clicks_dailymotionVideo) ;
+            total_impressions_actu_iosVideo = numStr(total_impressions_actu_iosVideo);
+            total_clicks_actu_iosVideo = numStr(total_clicks_actu_iosVideo);
+            total_impressions_actu_androidVideo = numStr(total_impressions_actu_androidVideo);
+            total_clicks_actu_androidVideo =numStr(total_clicks_actu_androidVideo) ;
+
+
+            total_impressions_linfoHabillage =  numStr(total_impressions_linfoHabillage);
+            total_clicks_linfoHabillage =  numStr(total_clicks_linfoHabillage);
+            total_impressions_linfo_androidHabillage = numStr(total_impressions_linfo_androidHabillage) ;
+            total_clicks_linfo_androidHabillage = numStr(total_clicks_linfo_androidHabillage);
+            total_impressions_linfo_iosHabillage = numStr(total_impressions_linfo_iosHabillage);
+            total_clicks_linfo_iosHabillage = numStr(total_clicks_linfo_iosHabillage);
+            total_impressions_dtjHabillage = numStr(total_impressions_dtjHabillage);
+            total_clicks_dtjHabillage = numStr(total_clicks_dtjHabillage);
+            total_impressions_antenneHabillage = numStr(total_impressions_antenneHabillage);
+            total_clicks_antenneHabillage = numStr(total_clicks_antenneHabillage);
+            total_impressions_orangeHabillage = numStr(total_impressions_orangeHabillage);
+            total_clicks_orangeHabillage = numStr(total_clicks_orangeHabillage);
+            total_impressions_tf1Habillage = numStr(total_impressions_tf1Habillage);
+            total_clicks_tf1Habillage = numStr(total_clicks_tf1Habillage);
+            total_impressions_m6Habillage = numStr(total_impressions_m6Habillage);
+            total_clicks_m6Habillage = numStr(total_clicks_m6Habillage);
+            total_impressions_dailymotionHabillage =numStr(total_impressions_dailymotionHabillage) ;
+            total_clicks_dailymotionHabillage =numStr(total_clicks_dailymotionHabillage) ;
+            total_impressions_actu_iosHabillage = numStr(total_impressions_actu_iosHabillage);
+            total_clicks_actu_iosHabillage = numStr(total_clicks_actu_iosHabillage);
+            total_impressions_actu_androidHabillage = numStr(total_impressions_actu_androidHabillage);
+            total_clicks_actu_androidHabillage =numStr(total_clicks_actu_androidHabillage) ;
+
+
+            total_impressions_linfoInterstitiel =  numStr(total_impressions_linfoInterstitiel);
+            total_clicks_linfoInterstitiel =  numStr(total_clicks_linfoInterstitiel);
+            total_impressions_linfo_androidInterstitiel = numStr(total_impressions_linfo_androidInterstitiel) ;
+            total_clicks_linfo_androidInterstitiel = numStr(total_clicks_linfo_androidInterstitiel);
+            total_impressions_linfo_iosInterstitiel = numStr(total_impressions_linfo_iosInterstitiel);
+            total_clicks_linfo_iosInterstitiel = numStr(total_clicks_linfo_iosInterstitiel);
+            total_impressions_dtjInterstitiel = numStr(total_impressions_dtjInterstitiel);
+            total_clicks_dtjInterstitiel = numStr(total_clicks_dtjInterstitiel);
+            total_impressions_antenneInterstitiel = numStr(total_impressions_antenneInterstitiel);
+            total_clicks_antenneInterstitiel = numStr(total_clicks_antenneInterstitiel);
+            total_impressions_orangeInterstitiel = numStr(total_impressions_orangeInterstitiel);
+            total_clicks_orangeInterstitiel = numStr(total_clicks_orangeInterstitiel);
+            total_impressions_tf1Interstitiel = numStr(total_impressions_tf1Interstitiel);
+            total_clicks_tf1Interstitiel = numStr(total_clicks_tf1Interstitiel);
+            total_impressions_m6Interstitiel = numStr(total_impressions_m6Interstitiel);
+            total_clicks_m6Interstitiel = numStr(total_clicks_m6Interstitiel);
+            total_impressions_dailymotionInterstitiel =numStr(total_impressions_dailymotionInterstitiel) ;
+            total_clicks_dailymotionInterstitiel =numStr(total_clicks_dailymotionInterstitiel) ;
+            total_impressions_actu_iosInterstitiel = numStr(total_impressions_actu_iosInterstitiel);
+            total_clicks_actu_iosInterstitiel = numStr(total_clicks_actu_iosInterstitiel);
+            total_impressions_actu_androidInterstitiel = numStr(total_impressions_actu_androidInterstitiel);
+            total_clicks_actu_androidInterstitiel =numStr(total_clicks_actu_androidInterstitiel) ;
+
+            total_impressions_linfoMasthead =  numStr(total_impressions_linfoMasthead);
+            total_clicks_linfoMasthead =  numStr(total_clicks_linfoMasthead);
+            total_impressions_linfo_androidMasthead = numStr(total_impressions_linfo_androidMasthead) ;
+            total_clicks_linfo_androidMasthead = numStr(total_clicks_linfo_androidMasthead);
+            total_impressions_linfo_iosMasthead = numStr(total_impressions_linfo_iosMasthead);
+            total_clicks_linfo_iosMasthead = numStr(total_clicks_linfo_iosMasthead);
+            total_impressions_dtjMasthead = numStr(total_impressions_dtjMasthead);
+            total_clicks_dtjMasthead = numStr(total_clicks_dtjMasthead);
+            total_impressions_antenneMasthead = numStr(total_impressions_antenneMasthead);
+            total_clicks_antenneMasthead = numStr(total_clicks_antenneMasthead);
+            total_impressions_orangeMasthead = numStr(total_impressions_orangeMasthead);
+            total_clicks_orangeMasthead = numStr(total_clicks_orangeMasthead);
+            total_impressions_tf1Masthead = numStr(total_impressions_tf1Masthead);
+            total_clicks_tf1Masthead = numStr(total_clicks_tf1Masthead);
+            total_impressions_m6Masthead = numStr(total_impressions_m6Masthead);
+            total_clicks_m6Masthead = numStr(total_clicks_m6Masthead);
+            total_impressions_dailymotionMasthead =numStr(total_impressions_dailymotionMasthead) ;
+            total_clicks_dailymotionMasthead =numStr(total_clicks_dailymotionMasthead) ;
+            total_impressions_actu_iosMasthead = numStr(total_impressions_actu_iosMasthead);
+            total_clicks_actu_iosMasthead = numStr(total_clicks_actu_iosMasthead);
+            total_impressions_actu_androidMasthead = numStr(total_impressions_actu_androidMasthead);
+            total_clicks_actu_androidMasthead =numStr(total_clicks_actu_androidMasthead) ;
+
+            total_impressions_linfoGrandAngle =  numStr(total_impressions_linfoGrandAngle);
+            total_clicks_linfoGrandAngle =  numStr(total_clicks_linfoGrandAngle);
+            total_impressions_linfo_androidGrandAngle = numStr(total_impressions_linfo_androidGrandAngle) ;
+            total_clicks_linfo_androidGrandAngle = numStr(total_clicks_linfo_androidGrandAngle);
+            total_impressions_linfo_iosGrandAngle = numStr(total_impressions_linfo_iosGrandAngle);
+            total_clicks_linfo_iosGrandAngle = numStr(total_clicks_linfo_iosGrandAngle);
+            total_impressions_dtjGrandAngle = numStr(total_impressions_dtjGrandAngle);
+            total_clicks_dtjGrandAngle = numStr(total_clicks_dtjGrandAngle);
+            total_impressions_antenneGrandAngle = numStr(total_impressions_antenneGrandAngle);
+            total_clicks_antenneGrandAngle = numStr(total_clicks_antenneGrandAngle);
+            total_impressions_orangeGrandAngle = numStr(total_impressions_orangeGrandAngle);
+            total_clicks_orangeGrandAngle = numStr(total_clicks_orangeGrandAngle);
+            total_impressions_tf1GrandAngle = numStr(total_impressions_tf1GrandAngle);
+            total_clicks_tf1GrandAngle = numStr(total_clicks_tf1GrandAngle);
+            total_impressions_m6GrandAngle = numStr(total_impressions_m6GrandAngle);
+            total_clicks_m6GrandAngle = numStr(total_clicks_m6GrandAngle);
+            total_impressions_dailymotionGrandAngle =numStr(total_impressions_dailymotionGrandAngle) ;
+            total_clicks_dailymotionGrandAngle =numStr(total_clicks_dailymotionGrandAngle) ;
+            total_impressions_actu_iosGrandAngle = numStr(total_impressions_actu_iosGrandAngle);
+            total_clicks_actu_iosGrandAngle = numStr(total_clicks_actu_iosGrandAngle);
+            total_impressions_actu_androidGrandAngle = numStr(total_impressions_actu_androidGrandAngle);
+            total_clicks_actu_androidGrandAngle =numStr(total_clicks_actu_androidGrandAngle) ;
+
+            total_impressions_linfoNative =  numStr(total_impressions_linfoNative);
+            total_clicks_linfoNative =  numStr(total_clicks_linfoNative);
+            total_impressions_linfo_androidNative = numStr(total_impressions_linfo_androidNative) ;
+            total_clicks_linfo_androidNative = numStr(total_clicks_linfo_androidNative);
+            total_impressions_linfo_iosNative = numStr(total_impressions_linfo_iosNative);
+            total_clicks_linfo_iosNative = numStr(total_clicks_linfo_iosNative);
+            total_impressions_dtjNative = numStr(total_impressions_dtjNative);
+            total_clicks_dtjNative = numStr(total_clicks_dtjNative);
+            total_impressions_antenneNative = numStr(total_impressions_antenneNative);
+            total_clicks_antenneNative = numStr(total_clicks_antenneNative);
+            total_impressions_orangeNative = numStr(total_impressions_orangeNative);
+            total_clicks_orangeNative = numStr(total_clicks_orangeNative);
+            total_impressions_tf1Native = numStr(total_impressions_tf1Native);
+            total_clicks_tf1Native = numStr(total_clicks_tf1Native);
+            total_impressions_m6Native = numStr(total_impressions_m6Native);
+            total_clicks_m6Native = numStr(total_clicks_m6Native);
+            total_impressions_dailymotionNative =numStr(total_impressions_dailymotionNative) ;
+            total_clicks_dailymotionNative =numStr(total_clicks_dailymotionNative) ;
+            total_impressions_actu_iosNative = numStr(total_impressions_actu_iosNative);
+            total_clicks_actu_iosNative = numStr(total_clicks_actu_iosNative);
+            total_impressions_actu_androidNative = numStr(total_impressions_actu_androidNative);
+            total_clicks_actu_androidNative =numStr(total_clicks_actu_androidNative) ;
+
+
+
 
 
             var Campagne_name = CampaignName[0]
@@ -2320,42 +2525,7 @@ exports.report = async (req, res) => {
             }
 
 
-            // total impression / total clic / CTR par Habillage par site
-            const reducer = (accumulator, currentValue) => accumulator + currentValue;
-            var sommevideoImpressions = videoImpressions.reduce(reducer, 0);
-            var sommevideoClics = videoClicks.reduce(reducer, 0);
-            var videoCTR_clics = (videoClicks / videoImpressions) * 100;
-            videoCTR_clics = videoCTR_clics.toFixed(2);
 
-            var sommehabillageImpressions = habillageImpressions.reduce(reducer, 0);
-            var sommehabillageClics = habillageClicks.reduce(reducer, 0);
-            var habillageCTR_clics = (sommehabillageClics / sommehabillageImpressions) * 100;
-            habillageCTR_clics = habillageCTR_clics.toFixed(2);
-
-            // total impression / total clic / CTR par Interstitiel par site
-            var sommeinterstitielImpressions = interstitielImpressions.reduce(reducer, 0);
-            var sommeinterstitielClics = interstitielClicks.reduce(reducer, 0);
-            var interstitielCTR_clics = (sommeinterstitielClics / sommeinterstitielImpressions) * 100;
-            interstitielCTR_clics = interstitielCTR_clics.toFixed(2);
-
-            // total impression / total clic / CTR par Masthead par site
-            var sommemastheadImpressions = mastheadImpressions.reduce(reducer, 0);
-            var sommemastheadClics = mastheadClicks.reduce(reducer, 0);
-            var mastheadCTR_clics = (sommemastheadClics / sommemastheadImpressions) * 100;
-            mastheadCTR_clics = mastheadCTR_clics.toFixed(2);
-
-
-            // total impression / total clic / CTR par grand_angle par site
-            var sommegrand_angleImpressions = grand_angleImpressions.reduce(reducer, 0);
-            var sommegrand_angleClics = grand_angleClicks.reduce(reducer, 0);
-            var grand_angleCTR_clics = (sommegrand_angleClics / sommegrand_angleImpressions) * 100;
-            grand_angleCTR_clics = grand_angleCTR_clics.toFixed(2);
-
-            // total impression / total clic / CTR par native par site
-            var sommenativeImpressions = nativeImpressions.reduce(reducer, 0);
-            var sommenativeClics = nativeClicks.reduce(reducer, 0);
-            var nativeCTR_clics = (sommenativeClics / sommenativeImpressions) * 100;
-            nativeCTR_clics = nativeCTR_clics.toFixed(2);
 
             video_linfo_siteName = video_linfo_siteName[0];
             video_linfo_android_siteName = video_linfo_android_siteName[0];
@@ -2373,10 +2543,6 @@ exports.report = async (req, res) => {
             var data_video = {
 
               videoImpressions,
-              /*videoClicks,
-              videoSitename,
-              videoFormatName,
-              videoCTR,*/
               videoComplete,
               sommevideoImpressions,
               sommevideoClics,
@@ -2387,7 +2553,7 @@ exports.report = async (req, res) => {
               video_linfo_siteName,
               video_linfo_ctr,
               VTR_linfo,
-              
+
               total_impressions_linfo_androidVideo,
               total_clicks_linfo_androidVideo,
               video_linfo_android_siteName,
@@ -2466,9 +2632,6 @@ exports.report = async (req, res) => {
             var data_habillage = {
 
               habillageImpressions,
-              /*habillageSitename,
-              habillageClicks,
-              habillageCTR,*/
               sommehabillageImpressions,
               sommehabillageClics,
               habillageCTR_clics,
