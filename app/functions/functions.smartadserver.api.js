@@ -9,6 +9,12 @@ exports.config = function (method, offset = 0, limit = 100) {
         case 'campaigns':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/';
             break;
+        case 'formats':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/formats';
+            break;
+        case 'insertions':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
+            break;
         default:
 
             break;
@@ -26,8 +32,8 @@ exports.config = function (method, offset = 0, limit = 100) {
             password: dbApi.SMART_password
         },
         params: {
-            limit : limit, 
-            offset : offset         
+            limit: limit,
+            offset: offset
         }
     };
 

@@ -8,7 +8,7 @@ const Format = sequelize.define('formats', {
 
     format_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
     format_name: {type: Sequelize.STRING(45),allowNull:false},
-    format_group: {type: Sequelize.STRING(45),allowNull:false},
+    group_format_id : {type: Sequelize.INTEGER,allowNull:true},
     format_width:{type: Sequelize.INTEGER(),allowNull:false},
     format_height:{type: Sequelize.INTEGER(),allowNull:false},
     format_type_id:{type: Sequelize.INTEGER(),allowNull:false},

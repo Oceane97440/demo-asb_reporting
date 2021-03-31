@@ -12,7 +12,6 @@ const db = require("./app/config/_config.database");
 
 const campaing_epilot = require('./app/models/models.campaing_epilot');
 const country = require('./app/models/models.country')
-const formats = require('./app/models/models.format')
 const sites = require('./app/models/models.site')
 const packs = require('./app/models/models.pack')
 const packs_sites = require('./app/models/models.pack_site')
@@ -21,6 +20,12 @@ const roles = require('./app/models/models.role')
 const users_roles = require('./app/models/models.user_role')
 const campaigns = require('./app/models/models.campaigns')
 const advertisers = require('./app/models/models.advertiser')
+const formats = require('./app/models/models.format')
+const groups_formats = require('./app/models/models.group_format')
+const groups_formats_types = require('./app/models/models.format_group_type')
+const insertions = require('./app/models/models.insertion')
+
+
 
 
 /* Mettre les relation ici */
@@ -50,6 +55,19 @@ users.hasOne(users_roles, {
 });
 roles.hasMany(users_roles, {
   foreignKey: 'role_id',
+  onDelete: 'cascade',
+  hooks: true
+});
+
+//un format possède un ou plusieur group
+//un group possède un à plusieur format
+formats.hasOne(groups_formats_types, {
+  foreignKey: 'format_id',
+  onDelete: 'cascade',
+  hooks: true
+});
+groups_formats.hasMany(groups_formats_types, {
+  foreignKey: 'group_format_id',
   onDelete: 'cascade',
   hooks: true
 });
