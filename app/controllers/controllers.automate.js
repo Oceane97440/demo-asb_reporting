@@ -22,6 +22,8 @@ const SmartFunction = require("../functions/functions.smartadserver.api");
 //const ModelFormat = require("../models/models.formats");
 const Modelformats = require("../models/models.format");
 const ModelCampaigns = require("../models/models.campaigns");
+const ModelAdvertisers = require("../models/models.advertiser");
+
 const ModelGroupsFormatsTypes = require("../models/models.format_group_type");
 const ModelGroupsFormats = require("../models/models.group_format");
 const ModelInsertions = require("../models/models.insertion");
@@ -51,7 +53,7 @@ async function updateOrCreate (model, where, newItem) {
 
 exports.advertisers = async (req, res) => {
     try {
-        var config = SmartFunction.config('formats');
+        var config = SmartFunction.config('advertisers');
         await axios(config).then(function (res) {
             var data = res.data;
             var number_line = data.length;
@@ -63,7 +65,7 @@ exports.advertisers = async (req, res) => {
            const addItem = async () => {
                 for (let page = 0; page < number_pages; page++) {
                     let offset = page*100;
-                    var config2 = SmartFunction.config('formats',offset);
+                    var config2 = SmartFunction.config('advertisers',offset);
                     await axios(config2).then(function (response) {
                         var dataValue = response.data;
                         var number_line_offset = data.length;
@@ -73,7 +75,7 @@ exports.advertisers = async (req, res) => {
                             var advertiser_name = dataValue[i].name;
 
                             console.log(dataValue);
-                            const advertiser = Modelformats.create({advertiser_id, advertiser_name});
+                            const advertiser = ModelAdvertisers.create({advertiser_id, advertiser_name});
                            
                            
                            
@@ -269,7 +271,6 @@ exports.insertions = async (req, res) => {
                             var delivery_regulated = dataValue[i].isDeliveryRegulated;
                             var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
                             var used_non_guaranteed_deal = dataValue[i].heigisUsedByNonGuaranteedDealht;
-                            var impression_type_id = dataValue[i].impressionTypeId;
                             var voice_share = dataValue[i].voiceShare;
                             var event_id	 = dataValue[i].eventId;
                             var insertion_name = dataValue[i].name;
@@ -328,7 +329,6 @@ exports.insertions = async (req, res) => {
                                     delivery_regulated ,
                                     used_guaranteed_deal ,
                                     used_non_guaranteed_deal ,
-                                    impression_type_id ,
                                     voice_share ,
                                     event_id	 ,
                                     insertion_name ,

@@ -23,10 +23,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.BIGINT(),
         allowNull: true
     },
-    impression_type_id: {
-        type: Sequelize.INTEGER(),
-        allowNull: true
-    },
+   
     voice_share: {
         type: Sequelize.FLOAT(),
         allowNull: true
@@ -71,6 +68,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.DATE(),
         allowNull: true
     },
+   
     campaign_id: {
         type: Sequelize.INTEGER(),
         allowNull: true
