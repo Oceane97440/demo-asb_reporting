@@ -266,7 +266,7 @@ exports.insertions = async (req, res) => {
 
                         for (i = 0; i < number_line_offset; i++) {
 
-                            console.log(dataValue)
+                         //   console.log(dataValue)
                             var insertion_id = dataValue[i].id;
                             var delivery_regulated = dataValue[i].isDeliveryRegulated;
                             var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
@@ -319,9 +319,60 @@ exports.insertions = async (req, res) => {
                             var sale_channel_id = dataValue[i].salesChannelId;
 
 
+                            const insertions = ModelInsertions.create({   
+                                insertion_id ,
+                                delivery_regulated ,
+                                used_guaranteed_deal ,
+                                used_non_guaranteed_deal ,
+                                voice_share ,
+                                event_id	 ,
+                                insertion_name ,
+                                insertion_description ,
+                                site_id ,
+                                pack_id ,
+                                insertion_status_id ,
+                                insertion_start_date ,
+                                insertion_end_date ,
+                                campaign_id ,
+                                insertion_type_id ,
+                                delivery_type_id ,
+                                timezone_id ,
+                                priority_id ,
+                                periodic_capping_id ,
+                                group_capping_id ,
+                                max_impression ,
+                                weight ,
+                                max_click ,
+                                max_impression_perday ,
+                                max_click_perday ,
+                                event_impression ,
+                                holistic_yield_enabled ,
+                                deliver_left_volume_after_end_date ,
+                                global_capping ,
+                                capping_per_visit ,
+                                capping_per_click ,
+                                auto_capping ,
+                                periodic_capping_impression ,
+                                periodic_capping_period ,
+                                obaIcon_enabled ,
+                                format_id ,
+                                external_id ,
+                                external_description ,
+                                insertion_updated_at ,
+                                insertion_created_at ,
+                                insertion_is_archived ,
+                                rate_type_id ,
+                                rate ,
+                                rate_net ,
+                                discount ,
+                                currency_id ,
+                                insertion_link_id ,
+                                insertion_exclusion_id ,
+                                customized_script ,
+                                sale_channel_id ,});
 
 
-                            updateOrCreate(ModelInsertions, 
+                            /*updateOrCreate(ModelInsertions, 
                                 {insertion_id: insertion_id}, 
                                 {
                                 
@@ -381,7 +432,7 @@ exports.insertions = async (req, res) => {
                                 .then(function(result) {
                                 result.item;  // the model
                                 result.created; // bool, if a new item was created.
-                            });
+                            });*/
 
 
 
