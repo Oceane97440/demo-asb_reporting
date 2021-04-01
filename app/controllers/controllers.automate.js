@@ -130,7 +130,7 @@ exports.agencies = async (req, res) => {
     }
 }
 
-/*exports.advertisers = async (req, res) => {
+exports.advertisers = async (req, res) => {
     try {
         var config = SmartFunction.config('advertisers');
         await axios(config).then(function (res) {
@@ -173,7 +173,7 @@ exports.agencies = async (req, res) => {
                             } else {
                               console.log('Else : '+advertiserDb instanceof Modelformats); // true
                               // Its primary key is 123
-                            }      
+                            } */     
                         }
 
                         // Sleep pendant 10s
@@ -192,7 +192,7 @@ exports.agencies = async (req, res) => {
         // console.log(error); var statusCoded = error.response.status;
         // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
-}*/
+}
 
 exports.campaigns = async (req, res) => {
     try {
@@ -259,7 +259,7 @@ exports.campaigns = async (req, res) => {
     }
 }
 
-/*
+
 exports.formats = async (req, res) => {
     try {
         var config = SmartFunction.config('formats');
@@ -419,7 +419,7 @@ exports.sites = async (req, res) => {
                         var number_line_offset = data.length;
 
                         for (i = 0; i < number_line_offset; i++) {
-                            //console.log(dataValue);
+                            console.log(dataValue);
 
                             var site_id= dataValue[i].id;
                             var site_is_child_directed= dataValue[i].isChildDirected;
@@ -764,4 +764,3 @@ exports.insertions = async (req, res) => {
         // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
 }
-*/

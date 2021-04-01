@@ -3,14 +3,14 @@ const Sequelize = require('sequelize');
 
 const automate = require("../controllers/controllers.automate");
 
-//router.get("/agencies", automate.agencies);
-//router.get("/advertisers", automate.advertisers);
+router.get("/agencies", automate.agencies);
+router.get("/advertisers", automate.advertisers);
 router.get("/campaigns", automate.campaigns);
-//router.get("/formats", automate.formats);
-//router.get("/sites", automate.sites);
-//router.get("/templates", automate.templates);
-//router.get("/platforms", automate.platforms);
-//router.get("/insertions", automate.insertions);
+router.get("/formats", automate.formats);
+router.get("/sites", automate.sites);
+router.get("/templates", automate.templates);
+router.get("/platforms", automate.platforms);
+router.get("/insertions", automate.insertions);
 
 
 
