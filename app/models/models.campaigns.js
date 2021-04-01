@@ -9,9 +9,11 @@ const Campaigns = sequelize.define('campaigns', {
     campaign_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
     campaign_name: {type: Sequelize.STRING(),allowNull:false},
     advertiser_id: {type: Sequelize.INTEGER,allowNull:false},
-    start_date: {type: Sequelize.STRING(),allowNull:false},
-    end_date: {type: Sequelize.STRING(),allowNull:false},
-
+    agency_id: {type: Sequelize.INTEGER,allowNull:true},
+    campaign_start_date: {type: Sequelize.STRING(),allowNull:false},
+    campaign_end_date: {type: Sequelize.STRING(),allowNull:false},
+    campaign_status_id: {type: Sequelize.INTEGER,allowNull:true},
+    campaign_archived: {type: Sequelize.TINYINT,allowNull:true},
 
 
 },

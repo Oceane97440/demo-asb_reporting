@@ -3,6 +3,9 @@ const dbApi = require("../config/config.api");
 exports.config = function (method, offset = 0, limit = 100) {
 
     switch (method) {
+        case 'agencies':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/agencies/';
+            break;
         case 'advertisers':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/';
             break;
@@ -11,6 +14,15 @@ exports.config = function (method, offset = 0, limit = 100) {
             break;
         case 'formats':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/formats';
+            break;
+        case 'sites':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/sites';
+            break;
+        case 'templates':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/templates';
+            break;
+        case 'platforms':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/platforms';
             break;
         case 'insertions':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';

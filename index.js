@@ -61,7 +61,7 @@ roles.hasMany(users_roles, {
 
 //un format possède un ou plusieur group
 //un group possède un à plusieur format
-formats.hasOne(groups_formats_types, {
+formats.hasMany(groups_formats_types, {
   foreignKey: 'format_id',
   onDelete: 'cascade',
   hooks: true

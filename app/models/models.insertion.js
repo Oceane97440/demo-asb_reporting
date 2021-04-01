@@ -44,12 +44,9 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.BIGINT(),
         allowNull: true
     },
-  /*  id: {
-        type: Sequelize.INTEGER(),
-        allowNull: true
-    },*/
+ 
     site_id: {
-        type: Sequelize.INTEGER(),
+        type: Sequelize.STRING(),
         allowNull: true
     },
     pack_id: {
@@ -157,7 +154,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.INTEGER(),
         allowNull: true
     },
-    obaIcon_enabled: {
+    oba_icon_enabled: {
         type: Sequelize.BIGINT(),
         allowNull: true
     },
@@ -177,11 +174,11 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.STRING(),
         allowNull: true
     },
-    insertion_created_at: {
-        type: Sequelize.DATE(),
+   insertion_created_at: {
+        type: Sequelize.STRING(),
         allowNull: true
     },
-    insertion_is_archived: {
+    insertion_archived: {
         type: Sequelize.DATE(),
         allowNull: true
     },
@@ -222,8 +219,15 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.INTEGER(),
         allowNull: true
     },
+    created_at: {
+        type: Sequelize.INTEGER(),
+        allowNull: true
+    },
 
-
+    updated_at: {
+        type: Sequelize.INTEGER(),
+        allowNull: true
+    },
 
 
 
