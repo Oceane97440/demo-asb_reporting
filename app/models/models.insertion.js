@@ -45,10 +45,10 @@ const Insertions = sequelize.define('insertions', {
         allowNull: true
     },
  
-    site_id: {
-        type: Sequelize.STRING(),
+   /* site_id: {
+        type: Sequelize.INTEGER(),
         allowNull: true
-    },
+    },*/
     pack_id: {
         type: Sequelize.INTEGER(),
         allowNull: true
@@ -219,15 +219,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.INTEGER(),
         allowNull: true
     },
-    created_at: {
-        type: Sequelize.INTEGER(),
-        allowNull: true
-    },
-
-    updated_at: {
-        type: Sequelize.INTEGER(),
-        allowNull: true
-    },
+   
 
 
 
@@ -247,7 +239,7 @@ const Insertions = sequelize.define('insertions', {
 }, {
     tableName: 'asb_insertions',
     underscored: true,
-    timestamps: true
+    timestamps: false
 });
 
 module.exports = Insertions;

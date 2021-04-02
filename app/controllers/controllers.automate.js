@@ -86,7 +86,7 @@ exports.agencies = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+                for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
                     var config2 = SmartFunction.config('agencies', offset);
                     await axios(config2).then(function (response) {
@@ -101,7 +101,7 @@ exports.agencies = async (req, res) => {
                             var agency_archived = dataValue[i].isArchived;
 
 
-                             const agencies =   ModelAgencies.create({
+                            const agencies = ModelAgencies.create({
                                 agency_id,
                                 agency_name,
                                 agency_archived,
@@ -109,7 +109,7 @@ exports.agencies = async (req, res) => {
 
 
 
-                        
+
                         }
 
                         // Sleep pendant 10s
@@ -142,7 +142,7 @@ exports.advertisers = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+                for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
                     var config2 = SmartFunction.config('advertisers', offset);
                     await axios(config2).then(function (response) {
@@ -155,7 +155,7 @@ exports.advertisers = async (req, res) => {
                             var advertiser_archived = dataValue[i].isArchived;
 
 
-                          //  console.log(dataValue);
+                            //  console.log(dataValue);
                             const advertiser = ModelAdvertisers.create({
                                 advertiser_id,
                                 advertiser_name,
@@ -173,7 +173,7 @@ exports.advertisers = async (req, res) => {
                             } else {
                               console.log('Else : '+advertiserDb instanceof Modelformats); // true
                               // Its primary key is 123
-                            } */     
+                            } */
                         }
 
                         // Sleep pendant 10s
@@ -206,7 +206,7 @@ exports.campaigns = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+                for (let page = 0; page <= number_pages; page++) {
                     let offset = 0; // page*100;
                     var config2 = SmartFunction.config('campaigns', offset);
 
@@ -237,7 +237,7 @@ exports.campaigns = async (req, res) => {
                                 campaign_status_id,
                                 campaign_archived
                             });
-                         
+
 
                         }
 
@@ -249,7 +249,7 @@ exports.campaigns = async (req, res) => {
 
             addItem();
 
-            //  return false;
+            return false;
         });
 
     } catch (error) {
@@ -272,7 +272,7 @@ exports.formats = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+                for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
                     var config2 = SmartFunction.config('formats', offset);
                     await axios(config2).then(function (response) {
@@ -333,7 +333,7 @@ exports.formats = async (req, res) => {
                                 case 43791:
                                     var format_group = 6
                                     break;
-                               
+
                                 default:
                                     var format_group = 0
 
@@ -398,7 +398,6 @@ exports.formats = async (req, res) => {
     }
 }
 
-
 exports.sites = async (req, res) => {
     try {
         var config = SmartFunction.config('sites');
@@ -411,7 +410,7 @@ exports.sites = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+                for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
                     var config2 = SmartFunction.config('sites', offset);
                     await axios(config2).then(function (response) {
@@ -419,42 +418,39 @@ exports.sites = async (req, res) => {
                         var number_line_offset = data.length;
 
                         for (i = 0; i < number_line_offset; i++) {
-                            console.log(dataValue);
 
-                            var site_id= dataValue[i].id;
-                            var site_is_child_directed= dataValue[i].isChildDirected;
-                            var site_name= dataValue[i].name;
-                            var site_archived= dataValue[i].isArchived;
-                            var user_group_id= dataValue[i].userGroupId;
-                            var site_url= dataValue[i].url;
-                            var language_id= dataValue[i].languageId;
-                            var site_business_model_type_id= dataValue[i].siteApplicationId;
-                            var site_business_model_value= dataValue[i].siteApplicationId;
-                            var site_application_id= dataValue[i].siteApplicationId;
-                            var site_updated_at= dataValue[i].updatedAt
+
+                            var site_id = dataValue[i].id;
+                            var site_is_child_directed = dataValue[i].isChildDirected;
+                            var site_name = dataValue[i].name;
+                            var site_archived = dataValue[i].isArchived;
+                            var user_group_id = dataValue[i].userGroupId;
+                            var site_url = dataValue[i].url;
+                            var language_id = dataValue[i].languageId;
+                            var site_business_model_type_id = dataValue[i].siteApplicationId;
+                            var site_business_model_value = dataValue[i].siteApplicationId;
+                            var site_application_id = dataValue[i].siteApplicationId;
+                            var site_updated_at = dataValue[i].updatedAt
 
 
                             const sites = ModelSites.create({
-                                 site_id,
-                                 site_is_child_directed,
-                                 site_name,
-                                 site_archived,
-                                 user_group_id,
-                                 site_url,
-                                 language_id,
-                                 site_business_model_type_id,
-                                 site_business_model_value,
-                                 site_application_id,
-                                 site_updated_at
+                                site_id,
+                                site_is_child_directed,
+                                site_name,
+                                site_archived,
+                                user_group_id,
+                                site_url,
+                                language_id,
+                                site_business_model_type_id,
+                                site_business_model_value,
+                                site_application_id,
+                                site_updated_at
                             });
 
 
-
-                           
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+
                     });
                 }
             }
@@ -472,6 +468,7 @@ exports.sites = async (req, res) => {
 }
 
 
+
 exports.templates = async (req, res) => {
     try {
         var config = SmartFunction.config('templates');
@@ -484,7 +481,7 @@ exports.templates = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+                for (let page = 0; page <= number_pages; page++) {
                     let offset = 0; // page*100;
                     var config2 = SmartFunction.config('templates', offset);
 
@@ -492,41 +489,66 @@ exports.templates = async (req, res) => {
                         var dataValue = response.data;
 
                         for (i = 0; i < number_line; i++) {
-                            var template_id = dataValue[i].id;
+
+                           var template_id = dataValue[i].id;
                             var template_name = dataValue[i].name;
-                            var template_description = data[i].advertiserId;
-                            var template_official = dataValue[i].agencyId;
-                            var template_archived = dataValue[i].startDate;
-                            var parameter_default_values = dataValue[i].endDate;
-                            var template_original_id = dataValue[i].campaignStatusId;
-                            var template_original = dataValue[i].isArchived;
-                            var documentation_url = dataValue[i].isArchived;
-                            var type  = dataValue[i].isArchived;
-                            var draft_script_id = dataValue[i].isArchived;
-                            var replaced_by = dataValue[i].isArchived;
-                            var editable = dataValue[i].isArchived;
-                            var published = dataValue[i].isArchived;
-                            var deprecated =  dataValue[i].isArchived;
+                            var template_description = data[i].description;
+                            var template_official = dataValue[i].isOfficial;
+                            var template_archived = dataValue[i].isArchived;
+                            var parameter_default_values = dataValue[i].parameterDefaultValues;
+                            var template_original_id = dataValue[i].originalId;
+                            var documentation_url = dataValue[i].documentationURL;
+                            var type = dataValue[i].type;
+                            var draft_script_id = dataValue[i].draftScriptId;
+                            var replaced_by = dataValue[i].replacedBy;
+                            var editable = dataValue[i].isEditable;
+                            var published = dataValue[i].isPublished;
+                            var deprecated = dataValue[i].isDeprecated;
+                            var hidden = dataValue[i].isHidden;
+                            var template_updated_at = dataValue[i].updatedAt;
+                            var major_version = dataValue[i].majorVersion;
+                            var minor_version = dataValue[i].minorVersion;
+                            var release_note = dataValue[i].isArchived;
+                            var recommendation = dataValue[i].releaseNote;
+                            var sale_channel_id = dataValue[i].salesChannelId;
+                            var fixed_image_url = dataValue[i].previewImageUrls.fixedImageUrl;
+                            var dynamic_image_url = dataValue[i].previewImageUrls.dynamicImageUrl;
+                            var gallery_url = dataValue[i].galleryUrl;
 
-                            // console.log({campaign_id, campaign_name, advertiser_id, start_date, end_date});
 
-                            //console.log(dataValue)
+                            // console.log(dataValue)
                             ModelTemplates.create({
-                                campaign_id,
-                                campaign_name,
-                                advertiser_id,
-                                agency_id,
-                                campaign_start_date,
-                                campaign_end_date,
-                                campaign_status_id,
-                                campaign_archived
+                                template_id,
+                                template_name,
+                                template_description,
+                                template_official,
+                                template_archived,
+                                parameter_default_values,
+                                template_original_id,
+                                documentation_url,
+                                type,
+                                draft_script_id,
+                                replaced_by,
+                                editable,
+                                published,
+                                deprecated,
+                                hidden,
+                                template_updated_at,
+                                major_version,
+                                minor_version,
+                                release_note,
+                                recommendation,
+                                sale_channel_id,
+                                fixed_image_url,
+                                dynamic_image_url,
+                                gallery_url,
                             });
-                         
+
 
                             // const tableDb = ModelCampaigns.findByPk(campaign_id);
                             // console.log(tableDb);
 
-                          
+
                         }
 
                         // Sleep pendant 10s
@@ -559,7 +581,10 @@ exports.platforms = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+
+                //<= car si le nombre de page est = 0 et que page = 0 la condiction ne fonctionne pas
+                for (let page = 0; page <= number_pages; page++) {
+                    //  page = 0
                     let offset = page * 100;
                     var config2 = SmartFunction.config('platforms', offset);
                     await axios(config2).then(function (response) {
@@ -575,12 +600,12 @@ exports.platforms = async (req, res) => {
                             ModelPlatforms.create({
                                 platform_id,
                                 platform_name,
-                             
+
                             });
 
 
 
-                       
+
                         }
 
                         // Sleep pendant 10s
@@ -621,7 +646,7 @@ exports.insertions = async (req, res) => {
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
-                for (let page = 0; page < number_pages; page++) {
+                for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
                     var config2 = SmartFunction.config('insertions', offset);
                     await axios(config2).then(function (response) {
@@ -630,7 +655,7 @@ exports.insertions = async (req, res) => {
 
                         for (i = 0; i < number_line_offset; i++) {
 
-                              // console.log(dataValue)
+                            // console.log(dataValue)
                             var insertion_id = dataValue[i].id;
                             var delivery_regulated = dataValue[i].isDeliveryRegulated;
                             var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
@@ -639,7 +664,8 @@ exports.insertions = async (req, res) => {
                             var event_id = dataValue[i].eventId;
                             var insertion_name = dataValue[i].name;
                             var insertion_description = dataValue[i].description;
-                            var site_id = dataValue[i].siteIds;
+                            //  var site_id = dataValue[i].siteIds;
+
                             var pack_id = dataValue[i].packIds;
                             var insertion_status_id = dataValue[i].insertionStatusId;
                             var insertion_start_date = dataValue[i].startDate;
@@ -682,8 +708,7 @@ exports.insertions = async (req, res) => {
                             var insertion_exclusion_id = dataValue[i].insertionExclusionIds;
                             var customized_script = dataValue[i].customizedScript;
                             var sale_channel_id = dataValue[i].salesChannelId;
-                            var created_at = 0
-                            var updated_at = 0
+
 
                             const insertions = ModelInsertions.create({
                                 insertion_id,
@@ -694,7 +719,7 @@ exports.insertions = async (req, res) => {
                                 event_id,
                                 insertion_name,
                                 insertion_description,
-                                site_id,
+                                // site_id,
                                 pack_id,
                                 insertion_status_id,
                                 insertion_start_date,
@@ -737,12 +762,11 @@ exports.insertions = async (req, res) => {
                                 insertion_exclusion_id,
                                 customized_script,
                                 sale_channel_id,
-                                created_at,
-                                updated_at
+
                             });
 
 
-                           
+
 
 
                         }

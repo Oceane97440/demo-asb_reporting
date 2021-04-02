@@ -3,27 +3,27 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/_config.database').sequelize;
 
 
-const Site = sequelize.define('site', {
+const Sites = sequelize.define('sites', {
 
     site_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
-    site_is_child_directed:{type: Sequelize.BIGINT(),allowNull:false},
+    site_is_child_directed:{type: Sequelize.BIGINT(),allowNull:true},
     site_name: {type: Sequelize.STRING(255),allowNull:false},
-    site_archived:{type: Sequelize.INTEGER(),allowNull:false},
-    user_group_id:{type: Sequelize.INTEGER(),allowNull:false},
-    site_url:{type: Sequelize.STRING(255),allowNull:false},
-    language_id:{type: Sequelize.INTEGER(),allowNull:false},
-    site_business_model_type_id:{type: Sequelize.INTEGER(),allowNull:false},
-    site_business_model_value:{type: Sequelize.INTEGER(),allowNull:false},
-    site_application_id:{type: Sequelize.STRING(255),allowNull:false},
-    site_updated_at:{type: Sequelize.DATE(),allowNull:false},
+    site_archived:{type: Sequelize.INTEGER(),allowNull:true},
+    user_group_id:{type: Sequelize.INTEGER(),allowNull:true},
+    site_url:{type: Sequelize.STRING(255),allowNull:true},
+    language_id:{type: Sequelize.INTEGER(),allowNull:true},
+    site_business_model_type_id:{type: Sequelize.INTEGER(),allowNull:true},
+    site_business_model_value:{type: Sequelize.INTEGER(),allowNull:true},
+    site_application_id:{type: Sequelize.STRING(255),allowNull:true},
+    site_updated_at:{type: Sequelize.STRING(255),allowNull:true},
 
 
 },
-{tableName: 'asb_site', underscored: true, timestamps: false}
+{tableName: 'asb_sites', underscored: true, timestamps: false}
 );
 
 
-module.exports = Site;
+module.exports = Sites;
 
 
    
