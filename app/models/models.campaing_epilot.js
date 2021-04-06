@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/_config.database').sequelize;
 
 
-const Campaing_epilot = sequelize.define('campaign_epilot', {
+const Campaing_epilot = sequelize.define('campaigns_epilots', {
 
     
     campaign_epilot_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
@@ -15,7 +15,7 @@ const Campaing_epilot = sequelize.define('campaign_epilot', {
     volume_prevue: {type: Sequelize.FLOAT,allowNull:false},
 
 },
-{tableName: 'asb_campaign_epilot', underscored: true, timestamps: false}
+{tableName: 'asb_campaigns_epilot', underscored: true, timestamps: false}
 );
 
 module.exports = Campaing_epilot;

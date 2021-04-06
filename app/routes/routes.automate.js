@@ -10,14 +10,16 @@ router.get("/formats", automate.formats);
 router.get("/sites", automate.sites);
 router.get("/templates", automate.templates);
 router.get("/platforms", automate.platforms);
+router.get("/deliverytypes", automate.deliverytypes);
+
 router.get("/insertions", automate.insertions);
+router.get("/countries", automate.countries);
 
 
 
 /*
 
 router.get("/cities", automate.cities);
-router.get("/countries", automate.countries);
 router.get("/continents", automate.continents);
 router.get("/packs", automate.packs);
 router.get("/pages", automate.pages);

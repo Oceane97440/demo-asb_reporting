@@ -24,6 +24,12 @@ exports.config = function (method, offset = 0, limit = 100) {
         case 'platforms':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/platforms';
             break;
+        case 'deliverytypes':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/deliverytypes';
+            break;
+        case 'countries':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/countries';
+            break;
         case 'insertions':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
             break;

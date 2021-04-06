@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/_config.database').sequelize;
 
 
-const Users = sequelize.define('utilisateurs', {
+const Users = sequelize.define('users', {
 
     id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
     email: {type: Sequelize.STRING(),allowNull:false},
@@ -13,7 +13,7 @@ const Users = sequelize.define('utilisateurs', {
 
 
 },
-{tableName: 'asb_utilisateurs', underscored: true, timestamps: false}
+{tableName: 'asb_users', underscored: true, timestamps: false}
 );
 
 module.exports = Users;

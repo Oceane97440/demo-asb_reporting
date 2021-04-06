@@ -33,6 +33,9 @@ const ModelAdvertisers = require("../models/models.advertiser");
 const ModelSites = require("../models/models.site");
 const ModelTemplates = require("../models/models.template");
 const ModelPlatforms = require("../models/models.platform");
+const ModelDeliverytypes = require("../models/models.deliverytype");
+const ModelCountries = require("../models/models.country");
+
 
 
 const ModelGroupsFormatsTypes = require("../models/models.format_group_type");
@@ -195,6 +198,86 @@ exports.advertisers = async (req, res) => {
 }
 
 exports.campaigns = async (req, res) => {
+    try {       
+        var config = SmartFunction.config('campaigns');
+        await axios(config).then(function (res) {
+            var data = res.data;
+            var number_line = data.length;
+            var number_total_count = res.headers['x-pagination-total-count'];
+            var number_pages = Math.round(number_total_count/100);
+            console.log(number_total_count);
+            console.log('Number Pages :'+number_pages);
+
+           const addItem = async () => {
+                for (let page = 0; page <= number_pages; page++) {
+                    //let offset = 0; // page*100;
+                    let offset =  page*100;
+
+                    var config2 = SmartFunction.config('campaigns',offset);
+
+                    await axios(config2).then(function (response) {
+                        var dataValue = response.data;
+
+                        for (i = 0; i < number_line; i++) {                           
+                          
+                            var campaign_id = dataValue[i].id;
+                            var campaign_name = dataValue[i].name;
+                            var advertiser_id = data[i].advertiserId;
+                            var agency_id = dataValue[i].agencyId;
+                            var campaign_start_date = dataValue[i].startDate;
+                            var campaign_end_date = dataValue[i].endDate;
+                            var campaign_status_id = dataValue[i].campaignStatusId;
+                            var campaign_archived = dataValue[i].isArchived;
+                            //console.log({campaign_id, campaign_name, advertiser_id, campaign_start_date, campaign_end_date});
+
+                            updateOrCreate(ModelCampaigns, {campaign_id: campaign_id}, {
+                                campaign_id, 
+                                campaign_name, 
+                                advertiser_id,
+                                agency_id,
+                                campaign_start_date, campaign_end_date,
+                                campaign_status_id,
+                                campaign_archived
+
+                            }).then(function(result) {
+                                result.item;  // the model
+                                result.created; // bool, if a new item was created.
+                            });
+
+                           // const tableDb = ModelCampaigns.findByPk(campaign_id);
+                           // console.log(tableDb);
+
+                            /*
+                            const tableDb = ModelCampaigns.findByPk(campaign_id);
+                            if (tableDb === null) {
+                              console.log('Not found!');
+                              const campaigns = ModelCampaigns.create({campaign_id, campaign_name, advertiser_id, start_date, end_date});
+                            } else {
+                              console.log('Else : '+tableDb instanceof ModelCampaigns); // true
+                              // Its primary key is 123
+                            }    
+                            */  
+                        }    
+
+                        // Sleep pendant 10s
+                       //  await new Promise(r => setTimeout(r, 10000));
+                    });
+                }
+           }
+
+           addItem();
+
+         //  return false;
+        });
+
+    } catch (error) {
+        console.error('Error : '+error);
+        // console.log(error); var statusCoded = error.response.status;
+        // res.render("error_log.ejs", {statusCoded: statusCoded});
+    }
+}
+
+/*exports.campaigns = async (req, res) => {
     try {
         var config = SmartFunction.config('campaigns');
         await axios(config).then(function (res) {
@@ -207,13 +290,15 @@ exports.campaigns = async (req, res) => {
 
             const addItem = async () => {
                 for (let page = 0; page <= number_pages; page++) {
-                    let offset = 0; // page*100;
+                    let offset = page * 100;
                     var config2 = SmartFunction.config('campaigns', offset);
-
                     await axios(config2).then(function (response) {
                         var dataValue = response.data;
+                        var number_line_offset = data.length;
 
-                        for (i = 0; i < number_line; i++) {
+                        for (i = 0; i < number_line_offset; i++) {
+
+
                             var campaign_id = dataValue[i].id;
                             var campaign_name = dataValue[i].name;
                             var advertiser_id = data[i].advertiserId;
@@ -227,7 +312,7 @@ exports.campaigns = async (req, res) => {
                             // console.log({campaign_id, campaign_name, advertiser_id, start_date, end_date});
 
                             //console.log(dataValue)
-                            ModelCampaigns.create({
+                           var campaigns= ModelCampaigns.create({
                                 campaign_id,
                                 campaign_name,
                                 advertiser_id,
@@ -241,8 +326,7 @@ exports.campaigns = async (req, res) => {
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+
                     });
                 }
             }
@@ -258,8 +342,7 @@ exports.campaigns = async (req, res) => {
         // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
 }
-
-
+*/
 exports.formats = async (req, res) => {
     try {
         var config = SmartFunction.config('formats');
@@ -626,9 +709,131 @@ exports.platforms = async (req, res) => {
     }
 }
 
+exports.deliverytypes = async (req, res) => {
+    try {
+        var config = SmartFunction.config('deliverytypes');
+        await axios(config).then(function (res) {
+            var data = res.data;
+            var number_line = data.length;
+            var number_total_count = res.headers['x-pagination-total-count'];
+            var number_pages = Math.round(number_total_count / 100);
+            console.log(number_total_count);
+            console.log('Number Pages :' + number_pages);
+
+            const addItem = async () => {
+
+                //<= car si le nombre de page est = 0 et que page = 0 la condiction ne fonctionne pas
+                for (let page = 0; page <= number_pages; page++) {
+                    //  page = 0
+                    let offset = page * 100;
+                    var config2 = SmartFunction.config('deliverytypes', offset);
+                    await axios(config2).then(function (response) {
+                        var dataValue = response.data;
+                        var number_line_offset = data.length;
+
+                        for (i = 0; i < number_line_offset; i++) {
+                            var deliverytype_id = dataValue[i].id;
+                            var deliverytype_name = dataValue[i].name;
+
+
+                          //  console.log(dataValue);
+                          ModelDeliverytypes.create({
+                            deliverytype_id,
+                            deliverytype_name,
+
+                            });
 
 
 
+
+                        }
+
+                        // Sleep pendant 10s
+                        //  await new Promise(r => setTimeout(r, 10000));
+                    });
+                }
+            }
+
+            addItem();
+
+            return false;
+        });
+
+    } catch (error) {
+        console.error('Error : ' + error);
+        // console.log(error); var statusCoded = error.response.status;
+        // res.render("error_log.ejs", {statusCoded: statusCoded});
+    }
+}
+
+
+exports.countries = async (req, res) => {
+    try {
+        var config = SmartFunction.config('countries');
+        await axios(config).then(function (res) {
+            var data = res.data;
+            var number_line = data.length;
+            var number_total_count = res.headers['x-pagination-total-count'];
+            var number_pages = Math.round(number_total_count / 100);
+            console.log(number_total_count);
+            console.log('Number Pages :' + number_pages);
+
+            const addItem = async () => {
+                for (let page = 0; page <= number_pages; page++) {
+                    let offset = page * 100;
+                    var config2 = SmartFunction.config('countries', offset);
+                    await axios(config2).then(function (response) {
+                        var dataValue = response.data;
+                        var number_line_offset = data.length;
+
+                        for (i = 0; i < number_line_offset; i++) {
+                            var country_id = dataValue[i].id;
+                            var country_name = dataValue[i].name;
+                            var country_archived = dataValue[i].isArchived;
+                            var country_iso3166= dataValue[i].countryIso3166;
+                            var continent_id= dataValue[i].continentId;
+                            var country_extended_name= dataValue[i].extendedName;
+                            //  console.log(dataValue);
+                            const countries = ModelCountries.create({
+                                country_id,
+                                country_name,
+                                country_archived,
+                                country_iso3166,
+                                continent_id,
+                                country_extended_name
+                            });
+
+
+
+                            /*
+                                                     
+                            const advertiserDb = Modelformats.findByPk(advertiser_id);
+                            if (advertiserDb === null) {
+                              console.log('Not found!');
+                              const advertiser = Modelformats.create({advertiser_id, advertiser_name});
+                            } else {
+                              console.log('Else : '+advertiserDb instanceof Modelformats); // true
+                              // Its primary key is 123
+                            } */
+                        }
+
+                        // Sleep pendant 10s
+                        //  await new Promise(r => setTimeout(r, 10000));
+                    });
+                }
+            }
+
+            addItem();
+
+            return false;
+        });
+
+    } catch (error) {
+        console.error('Error : ' + error);
+        // console.log(error); var statusCoded = error.response.status;
+        // res.render("error_log.ejs", {statusCoded: statusCoded});
+    }
+}
 
 
 

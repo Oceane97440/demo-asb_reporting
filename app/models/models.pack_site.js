@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/_config.database').sequelize;
 
 
-const Pack_Site = sequelize.define('pack_site', {
+const Pack_Site = sequelize.define('packs_sites', {
 
     pack_site_id: {type: Sequelize.INTEGER, autoIncrement:true, primaryKey:true },
     pack_id:{type: Sequelize.INTEGER(),allowNull:false},
@@ -13,7 +13,7 @@ const Pack_Site = sequelize.define('pack_site', {
 
 
 },
-{tableName: 'asb_pack_sites', underscored: true, timestamps: false}
+{tableName: 'asb_packs_sites', underscored: true, timestamps: false}
 );
 
 
