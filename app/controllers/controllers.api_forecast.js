@@ -7,61 +7,43 @@ const bodyParser = require('body-parser');
 
 //let csvToJson = require('convert-csv-to-json');
 
-
 const axios = require(`axios`);
 
 //const asyncly = require('async');
 
 const fileGetContents = require('file-get-contents');
 
-// Initiliase le module axios
-//const axios = require(`axios`);
+// Initiliase le module axios const axios = require(`axios`);
 
-
-const {
-    Op
-} = require("sequelize");
+const {Op} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
+const {QueryTypes} = require('sequelize');
 
-
-const {
-    QueryTypes
-} = require('sequelize');
-
-const {
-    check,
-    query
-} = require('express-validator');
-
-
+const {check, query} = require('express-validator');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 
-
-// Initialise les models
-//const ModelSite = require("../models/models.site");
-const ModelFormat = require("../models/models.format");
-const ModelCountry = require("../models/models.country")
-const ModelCampaign_epilot = require("../models/models.campaing_epilot")
-const ModelPack = require("../models/models.pack")
-const ModelPack_Site = require("../models/models.pack_site")
-
-
+// Initialise les models const ModelSite = require("../models/models.sites");
+const ModelFormats = require("../models/models.formats");
+const ModelCountries = require("../models/models.countries")
+const ModelCampaignsEpilot = require("../models/models.campaings_epilot")
+const ModelPacks = require("../models/models.packs")
+const ModelPacksSites = require("../models/models.packs_sites")
 
 exports.index = async (req, res) => {
 
-
-
     try {
 
-        var formats = await ModelFormat.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
+        var formats = await ModelFormats.findAll({
+            attributes: [
+                'format_id', 'format_name', 'format_group'
+            ],
             group: ['format_group'],
             where: {
                 format_group: {
@@ -70,52 +52,50 @@ exports.index = async (req, res) => {
             },
             order: [
                 ['format_group', 'ASC']
-            ],
+            ]
         })
 
-        var packs = await ModelPack.findAll({
-            attributes: ['pack_id', 'pack_name'],
+        var packs = await ModelPacks.findAll({
+            attributes: [
+                'pack_id', 'pack_name'
+            ],
             order: [
                 ['pack_name', 'ASC']
-            ],
+            ]
         })
 
-
-        var countrys = await ModelCountry.findAll({
-            attributes: ['country_id', 'country_name'],
+        var countrys = await ModelCountries.findAll({
+            attributes: [
+                'country_id', 'country_name'
+            ],
             where: {
                 country_id: [61, 125, 184]
             },
             order: [
                 ['country_name', 'DESC']
-            ],
+            ]
         })
 
         res.render('forecast/form.ejs', {
             formats: formats,
             packs: packs,
-            countrys: countrys
+            countries: countries
         });
 
-
-    } catch (error) { 
+    } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
-
-        res.render("error_log.ejs", {
-            statusCoded: statusCoded,
-
-        })
+        res.render("error_log.ejs", {statusCoded: statusCoded})
     }
 
 };
 
-
-
 exports.forecast = async (req, res, next) => {
 
     // Définition des variables
-    var headerlocation, table, requestForecast;
+    var headerlocation,
+        table,
+        requestForecast;
     var date_start = await req.body.date_start;
     var date_end = await req.body.date_end;
     var format = await req.body.format;
@@ -143,10 +123,11 @@ exports.forecast = async (req, res, next) => {
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
 
-
         //recupération des site d'un pack
         const sitesdb = await ModelPack_Site.findAll({
-            attributes: ['pack_id', 'site_id'],
+            attributes: [
+                'pack_id', 'site_id'
+            ],
             where: {
                 pack_id: {
                     [Op.eq]: packs
@@ -157,7 +138,6 @@ exports.forecast = async (req, res, next) => {
         for (let l = 0; l < sitesdb.length; l++) {
             sites.push(sitesdb[l].site_id);
         }
-
 
         // Si c'est un string on met en tableau pour respecter l'api
         if (typeof sites == 'string') {
@@ -187,29 +167,23 @@ exports.forecast = async (req, res, next) => {
             "startDate": date_start,
             "endDate": date_end,
             "timeZoneId": "Arabian Standard Time",
-            "filter": [{
+            "filter": [
+                {
                     "CountryID": [countries]
-                },
-                {
+                }, {
                     "SiteID": sites
-                },
-                {
-                    "FormatID": formatIdsArray // new Array(79633,44152) //formats
+                }, {
+                    "FormatID": formatIdsArray // new Array(79633,44152) formats
                 }
             ],
-            "fields": [
-
-                "CampaignName",
-                "InsertionName",
-                "InsertionBookedVolume",
-                "InsertionForecastedDeliveredVolume",
-                "InsertionForecastedDeliveredPercentage"
-
-
-            ]
+            "fields": ["CampaignName", "InsertionName", "InsertionBookedVolume", "InsertionForecastedDeliveredVolume", "InsertionForecastedDeliveredPercentage"]
         };
 
-        let threeLink = await AxiosFunction.getForecastData('POST', '', requestInsertions);
+        let threeLink = await AxiosFunction.getForecastData(
+            'POST',
+            '',
+            requestInsertions
+        );
 
         if (threeLink.headers.location) {
 
@@ -218,7 +192,6 @@ exports.forecast = async (req, res, next) => {
             let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
 
             if (insertionLink.data.progress == '100') {
-
 
                 headerlocation = insertionLink.headers.location;
 
@@ -234,7 +207,7 @@ exports.forecast = async (req, res, next) => {
                 var data_forecast = await csvLink.data
 
                 var data_split = await data_forecast.split(/\r?\n/);
-                //compte le nbr ligne 
+                //compte le nbr ligne
                 var number_line = await data_split.length;
 
                 //boucle sur les ligne
@@ -243,17 +216,13 @@ exports.forecast = async (req, res, next) => {
                     //delete les ; et delete les blanc
                     line = await data_split[i].split(';');
 
-
-                    //push la donnéé splité dans un tab vide
-
-                    //liste des insertions
+                    //push la donnéé splité dans un tab vide liste des insertions
                     CampaignName.push(line[0]);
                     InsertionName.push(line[1]);
                     InsertionBookedVolume.push(line[2]);
                     InsertionForecastedDeliveredVolume.push(line[3]);
                     InsertionForecastedDeliveredPercentage.push(line[4]);
                 }
-
 
                 // console.log(CampaignName)
 
@@ -264,41 +233,40 @@ exports.forecast = async (req, res, next) => {
                     InsertionName,
                     InsertionBookedVolume,
                     InsertionForecastedDeliveredVolume,
-                    InsertionForecastedDeliveredPercentage,
-
-
+                    InsertionForecastedDeliveredPercentage
                 }
 
             }
 
-
-
-
-
-
-
         }
 
-        // Si on a le format intertistiel : On va faire du cumul site par site avec l'ajout d'un capping
+        // Si on a le format intertistiel : On va faire du cumul site par site avec
+        // l'ajout d'un capping
         if (format === "INTERSTITIEL") {
-
 
             for (let xyz = 0; xyz < sites.length; xyz++) {
                 requestForecast = {
                     "startDate": date_start,
                     "endDate": date_end,
                     "timeZoneId": "Arabian Standard Time",
-                    "filter": [{
+                    "filter": [
+                        {
                             "CountryID": [countries]
-                        },
-                        {
+                        }, {
                             "SiteID": [sites[xyz]]
-                        },
-                        {
-                            "FormatID": formatIdsArray // new Array(79633,44152) //formats
+                        }, {
+                            "FormatID": formatIdsArray // new Array(79633,44152) formats
                         }
                     ],
-                    "fields": ["TotalImpressions", "OccupiedImpressions", "SiteID", "SiteName", "FormatID", "FormatName", "AvailableImpressions"]
+                    "fields": [
+                        "TotalImpressions",
+                        "OccupiedImpressions",
+                        "SiteID",
+                        "SiteName",
+                        "FormatID",
+                        "FormatName",
+                        "AvailableImpressions"
+                    ]
                 };
 
                 requestForecast.filter[3] = {
@@ -319,7 +287,7 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
 
-                //si RG mob/tab est selectionner ciblage mob/tab 
+                //si RG mob/tab est selectionner ciblage mob/tab
                 if (packs == "2") {
                     requestForecast.filter[3] = {
                         "platformID": ["3", "2"]
@@ -328,13 +296,11 @@ exports.forecast = async (req, res, next) => {
 
                 if (format == "INTERSTITIEL") {
                     requestForecast.filter[2] = {
-                        "FormatID": [
-                            "44152", "79633"
-
-                        ]
+                        "FormatID": ["44152", "79633"]
                     }
                 }
-                // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
+                // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un
+                // tableau
                 let firstReq = await AxiosFunction.getForecastData('POST', '', requestForecast);
 
                 if (firstReq.headers.location) {
@@ -353,7 +319,11 @@ exports.forecast = async (req, res, next) => {
 
                 case "INTERSTITIEL":
                     //si interstitiel -> web_interstitiel / app_interstitiel
-                    format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
+                    format_filtre = new Array(
+                        "WEB_INTERSTITIEL",
+                        "APP_INTERSTITIEL",
+                        "INTERSTITIEL"
+                    )
 
                     break;
 
@@ -362,19 +332,20 @@ exports.forecast = async (req, res, next) => {
                     break;
             }
 
-
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaign_epilot.format_name ASC', {
-                    replacements: [date_start, date_end, date_start, date_end, format_filtre],
+                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?)' +
+                        ' OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_ca' +
+                        'mpaign_epilot.format_name ASC',
+                {
+                    replacements: [
+                        date_start, date_end, date_start, date_end, format_filtre
+                    ],
                     type: QueryTypes.SELECT
                 }
             );
 
-            // console.log(typeof requete)
-
-
-            //Initialisation du tableau
+            // console.log(typeof requete) Initialisation du tableau
 
             var array_reserver = [];
             var Campagnes_reserver = []
@@ -382,7 +353,6 @@ exports.forecast = async (req, res, next) => {
             var Campagne_end_reserver = []
             var Interval_reserver = []
             var Nbr_cheval_reserver = []
-
 
             for (let i = 0; i < requete.length; i++) {
 
@@ -393,9 +363,11 @@ exports.forecast = async (req, res, next) => {
 
                 const volumes_prevue = requete[i].volume_prevue
 
-                const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
+                const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:0' +
+                        '0.000Z'
 
-                const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
+                const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.00' +
+                        '0Z'
 
                 date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
 
@@ -411,7 +383,7 @@ exports.forecast = async (req, res, next) => {
 
                     if (date_start_forecast < campaign_date_start) {
 
-                        //alors la date début à cheval = date de début campagne 
+                        //alors la date début à cheval = date de début campagne
                         var date_start_cheval = campaign_date_start
 
                     } else {
@@ -420,7 +392,7 @@ exports.forecast = async (req, res, next) => {
 
                     // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
                     if (date_end_forecast > campaign_date_end) {
-                        //alors le date de fin a cheval = date de fin campagne 
+                        //alors le date de fin a cheval = date de fin campagne
                         var date_end_cheval = campaign_date_end
 
                     } else {
@@ -429,21 +401,21 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 //calcul du nombre de jour à cheval
-                const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
+                const periode_a_cheval = new Date(date_end_cheval) - new Date(
+                    date_start_cheval
+                );
 
                 //arrondie pour un nombre entier
                 const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
 
-                //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
-                const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
-
-
+                // Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de
+                // diff de la campagne ) * nombre de jour a cheval = volume
+                const volumes_prevu_diffuse = Math.round(
+                    (volumes_prevue / nb_jour_interval) * nb_jour_cheval
+                )
 
                 if (requete[i].etat == "2") {
-                    if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
-
-
-                    } else {
+                    if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
                         array_reserver.push(volumes_prevu_diffuse);
                         Campagnes_reserver.push(requete[i].campaign_name)
                         Campagne_start_reserver.push(campaign_start_date)
@@ -454,17 +426,9 @@ exports.forecast = async (req, res, next) => {
 
                 }
 
-
-
-
-
             }
 
-
             var sommeReserver = 0
-
-
-
 
             //total des réserver
             for (let i = 0; i < array_reserver.length; i++) {
@@ -475,17 +439,11 @@ exports.forecast = async (req, res, next) => {
 
             var Volume_dispo_forecast = table.volumeDispo
 
-
-
-
-            // Calcule du volume dispo reserer  
+            // Calcule du volume dispo reserer
             var reserver_reel = Volume_dispo_forecast - sommeReserver;
 
-            //console.log(Volume_dispo_forecast)
-            //console.log(sommeReserver)
+            // console.log(Volume_dispo_forecast) console.log(sommeReserver)
             // console.log(reserver_reel)
-
-
 
             if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
                 reserver_reel = 0;
@@ -500,26 +458,27 @@ exports.forecast = async (req, res, next) => {
                 Campagne_start_reserver,
                 Campagne_end_reserver,
                 Interval_reserver,
-                Nbr_cheval_reserver,
+                Nbr_cheval_reserver
             }
-
 
             const infos = {
                 date_start,
                 date_end,
-                format,
+                format
             }
 
-            /* if (reserver_reel === undefined) {
-                 //console.log("aucun requête")
-                 return res.render('forecast/data.ejs', {
-                     table: table,
-                     insertions: insertions,
-                     infos:infos, 
-                 });
+            /*  if (reserver_reel === undefined) {
+//console.log("aucun requête")
+return res
+ * .render('forecast/data.ejs', {
+table: table,
+insertions: insertions,
+infos:in
+ * fos,
+});
 
-             }*/
-
+}
+ */
 
             return res.render('forecast/data1.ejs', {
                 table: table,
@@ -534,14 +493,13 @@ exports.forecast = async (req, res, next) => {
             "startDate": date_start,
             "endDate": date_end,
             "timeZoneId": "Arabian Standard Time",
-            "filter": [{
+            "filter": [
+                {
                     "CountryID": [countries]
-                },
-                {
+                }, {
                     "SiteID": sites
-                },
-                {
-                    "FormatID": formatIdsArray // new Array(79633,44152) //formats
+                }, {
+                    "FormatID": formatIdsArray // new Array(79633,44152) formats
                 }
             ],
             "fields": [
@@ -551,51 +509,93 @@ exports.forecast = async (req, res, next) => {
                 "SiteID",
                 "SiteName",
                 "FormatID",
-                "FormatName",
-
+                "FormatName"
             ]
         };
 
-        //si la case "élargir la propo" est coché les web et ap mban son add de la requête
+        // si la case "élargir la propo" est coché les web et ap mban son add de la
+        // requête
         if (option == true && format == "GRAND ANGLE") {
             requestForecast.filter[2] = {
                 "FormatID": [
 
                     //App_mban / Web_mban et Web_mpave / App_mpave
-                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
-                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
+                    "79638",
+                    "79642",
+                    "79643",
+                    "79644",
+                    "79645",
+                    "79646",
+                    "84657",
+                    "84658",
+                    "84656",
+                    "84659",
+                    "84660",
+                    "84661",
+                    "84652",
+                    "84653",
+                    "84654",
+                    "84655"
 
                 ]
             }
         }
 
-        //si la case "élargir la propo" est coché les web et ap pave son add de la requête
+        // si la case "élargir la propo" est coché les web et ap pave son add de la
+        // requête
 
         if (option == true && format == "MASTHEAD") {
             requestForecast.filter[2] = {
                 "FormatID": [
 
                     //App_mban / Web_mban et Web_mpave / App_mpave
-                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
-                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
-
+                    "79638",
+                    "79642",
+                    "79643",
+                    "79644",
+                    "79645",
+                    "79646",
+                    "84657",
+                    "84658",
+                    "84656",
+                    "84659",
+                    "84660",
+                    "84661",
+                    "84652",
+                    "84653",
+                    "84654",
+                    "84655"
 
                 ]
             }
         }
 
-        //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
+        // si la case "élargir la propo" est coché les web et ap mban et pave son add de
+        // la requête
 
         if (option == true && format == "HABILLAGE") {
             requestForecast.filter[2] = {
                 "FormatID": [
 
                     //Masthead / Grand_angle
-                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
-                    "84659", "84660", "84661", "84652", "84653", "84654", "84655",
+                    "79638",
+                    "79642",
+                    "79643",
+                    "79644",
+                    "79645",
+                    "79646",
+                    "84657",
+                    "84658",
+                    "84656",
+                    "84659",
+                    "84660",
+                    "84661",
+                    "84652",
+                    "84653",
+                    "84654",
+                    "84655",
                     //Habilage
                     "44149"
-
 
                 ]
             }
@@ -618,8 +618,11 @@ exports.forecast = async (req, res, next) => {
                     "FormatID": [
 
                         //Masthead / Grand_angle
-                        "79425", "79431", "79409", "79421", "79637"
-
+                        "79425",
+                        "79431",
+                        "79409",
+                        "79421",
+                        "79637"
 
                     ]
                 }
@@ -634,23 +637,25 @@ exports.forecast = async (req, res, next) => {
             }
         }
 
-        //si RG mob/tab est selectionner ciblage mob/tab 
+        //si RG mob/tab est selectionner ciblage mob/tab
         if (packs == "2") {
 
             requestForecast.filter[3] = {
                 "platformID": ["3", "2"]
             }
         }
-        //console.log(requestForecast.filter[2])
-        // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
-        let firstLink = await AxiosFunction.getForecastData('POST', '', requestForecast);
-
+        // console.log(requestForecast.filter[2]) On fait les 3 steps pour récupérer
+        // l'informations du csv puis on push dans un tableau
+        let firstLink = await AxiosFunction.getForecastData(
+            'POST',
+            '',
+            requestForecast
+        );
 
         if (firstLink.headers.location) {
             headerlocation = firstLink.headers.location;
 
             let secondLink = await AxiosFunction.getForecastData('GET', headerlocation);
-
 
             if (secondLink.data.progress == '100') {
                 headerlocation = secondLink.headers.location;
@@ -664,13 +669,11 @@ exports.forecast = async (req, res, next) => {
                 var FormatID = []
                 var FormatName = []
 
-
-
                 var data_forecast = await csvLink.data
 
                 var data_split = data_forecast.split(/\r?\n/);
 
-                //compte le nbr ligne 
+                //compte le nbr ligne
                 var number_line = data_split.length;
 
                 //boucle sur les ligne
@@ -679,9 +682,8 @@ exports.forecast = async (req, res, next) => {
                     //delete les ; et delete les blanc
                     line = await data_split[i].split(';');
 
-                    //test d'exclusion (ex; si habillage -> exclu les app_mban atf0)
-
-                    //push la donnéé splité dans un tab vide
+                    // test d'exclusion (ex; si habillage -> exclu les app_mban atf0) push la donnéé
+                    // splité dans un tab vide
                     TotalImpressions.push(line[0]);
                     OccupiedImpressions.push(line[1]);
                     //test exclusion (site : actu reunion )
@@ -704,13 +706,12 @@ exports.forecast = async (req, res, next) => {
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
 
-                //Requête sql campagne epilot
-                // const requete = await sequelize.query(
-                //     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  = ? ORDER BY asb_campaign_epilot.format_name ASC', {
-                //         replacements: [date_start, date_end, date_start, date_end, format],
-                //         type: QueryTypes.SELECT
-                //     }
-                // );
+                // Requête sql campagne epilot const requete = await sequelize.query(
+                // 'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND
+                // ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  = ? ORDER BY
+                // asb_campaign_epilot.format_name ASC', {         replacements: [date_start,
+                // date_end, date_start, date_end, format],         type: QueryTypes.SELECT
+                // } );
 
                 switch (format) {
                     case "HABILLAGE":
@@ -719,7 +720,7 @@ exports.forecast = async (req, res, next) => {
                         break;
 
                     case "GRAND ANGLE":
-                        //si grand angle ->web_mban  app_mpave_atf0 
+                        //si grand angle ->web_mban  app_mpave_atf0
                         format_filtre = new Array("WEB_MPAVE_ATF0", "APP_MPAVE_ATF0", "GRAND ANGLE")
                         break;
                     case "MASTHEAD":
@@ -727,7 +728,7 @@ exports.forecast = async (req, res, next) => {
                         format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0", "MASTHEAD")
                         break;
                     case "VIDEOS":
-                        //si instream -> linear 
+                        //si instream -> linear
                         format_filtre = new Array("VIDEOS", "Linear")
                         break;
                     case "LOGO":
@@ -746,18 +747,17 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaign_epilot.format_name ASC', {
-                        replacements: [date_start, date_end, date_start, date_end, format_filtre],
+                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?)' +
+                            ' OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_' +
+                            'campaign_epilot.format_name ASC',
+                    {
+                        replacements: [
+                            date_start, date_end, date_start, date_end, format_filtre
+                        ],
                         type: QueryTypes.SELECT
                     }
                 );
-                //  console.log(requete)
-
-
-
-
-
-                //Initialisation du tableau
+                //  console.log(requete) Initialisation du tableau
 
                 var array_reserver = [];
                 var Campagnes_reserver = []
@@ -766,9 +766,7 @@ exports.forecast = async (req, res, next) => {
                 var Interval_reserver = []
                 var Nbr_cheval_reserver = []
 
-
                 for (let i = 0; i < requete.length; i++) {
-
 
                     // Calculer l'intervalle de date sur la période
                     const campaign_start_date = requete[i].campaign_start_date
@@ -777,9 +775,11 @@ exports.forecast = async (req, res, next) => {
 
                     const volumes_prevue = requete[i].volume_prevue
 
-                    const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
+                    const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:0' +
+                            '0.000Z'
 
-                    const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
+                    const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.00' +
+                            '0Z'
 
                     date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
 
@@ -789,15 +789,12 @@ exports.forecast = async (req, res, next) => {
                     const date_start_forecast = date_start
                     const date_end_forecast = date_end
 
-
-
-
                     if ((campaign_date_end > date_start_forecast)) {
 
                         //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
                         if (date_start_forecast < campaign_date_start) {
 
-                            //alors la date début à cheval = date de début campagne 
+                            //alors la date début à cheval = date de début campagne
                             var date_start_cheval = campaign_date_start
 
                         } else {
@@ -809,7 +806,7 @@ exports.forecast = async (req, res, next) => {
                         // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
                         if (date_end_forecast > campaign_date_end) {
 
-                            //alors le date de fin a cheval = date de fin campagne 
+                            //alors le date de fin a cheval = date de fin campagne
                             var date_end_cheval = campaign_date_end
 
                         } else {
@@ -819,23 +816,23 @@ exports.forecast = async (req, res, next) => {
                         }
                     }
 
-
-                    const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
+                    const periode_a_cheval = new Date(date_end_cheval) - new Date(
+                        date_start_cheval
+                    );
 
                     const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
 
-                    const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
+                    const volumes_prevu_diffuse = Math.round(
+                        (volumes_prevue / nb_jour_interval) * nb_jour_cheval
+                    )
 
-                    //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
-                    //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
-
-
+                    // Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la
+                    // date de début du forecast Exclure des campagnes confirmées ou réservées qui
+                    // sont sup. ou égales à la date de fin du forecast
 
                     if (requete[i].etat == "2") {
 
-                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
-
-                        } else {
+                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
 
                             array_reserver.push(volumes_prevu_diffuse);
                             Campagnes_reserver.push(requete[i].campaign_name)
@@ -847,13 +844,9 @@ exports.forecast = async (req, res, next) => {
 
                     }
 
-
                 }
 
-
                 var sommeReserver = 0
-
-
 
                 for (let i = 0; i < array_reserver.length; i++) {
                     if (array_reserver[i] != '') {
@@ -861,9 +854,6 @@ exports.forecast = async (req, res, next) => {
                         sommeReserver += parseInt(array_reserver[i])
                     }
                 }
-
-
-
 
                 var reserver_reel = volumeDispo - sommeReserver;
 
@@ -888,13 +878,8 @@ exports.forecast = async (req, res, next) => {
                     sommeImpressions,
                     sommeOccupied,
                     volumeDispo,
-                    option,
-
-
-
+                    option
                 }
-
-
 
                 var reserver = {
                     //RESERVER//
@@ -905,46 +890,42 @@ exports.forecast = async (req, res, next) => {
                     Campagne_start_reserver,
                     Campagne_end_reserver,
                     Interval_reserver,
-                    Nbr_cheval_reserver,
+                    Nbr_cheval_reserver
                 }
 
                 const infos = {
                     date_start,
                     date_end,
-                    format,
+                    format
                 }
 
-                /* if (reserver_reel === undefined) {
-                     console.log("aucun requête")
-                     return res.render('forecast/data.ejs', {
-                         table: table,
-                         insertions: insertions,
-                         infos:infos, 
-                     });
+                /*  if (reserver_reel === undefined) {
+console.log("aucun requête")
+return res.r
+ * ender('forecast/data.ejs', {
+table: table,
+insertions: insertions,
+infos:info
+ * s,
+});
 
-                 }*/
-
+}
+ */
 
                 return res.render('forecast/data1.ejs', {
                     table: table,
                     insertions: insertions,
                     reserver: reserver,
-                    infos: infos,
-
+                    infos: infos
                 });
-
-
 
             }
         }
 
-    } catch (error) { 
+    } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
 
-        res.render("error_log.ejs", {
-            statusCoded: statusCoded,
-
-        })
+        res.render("error_log.ejs", {statusCoded: statusCoded})
     }
 }

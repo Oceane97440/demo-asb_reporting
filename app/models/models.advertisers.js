@@ -2,24 +2,24 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Agencies = sequelize.define('agencies', {
-    agency_id: {
+const Advertisers = sequelize.define('advertisers', {
+    advertiser_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    agency_name: {
+    advertiser_name: {
         type: Sequelize.STRING(),
         allowNull: false
     },
-    agency_archived: {
+    advertiser_archived: {
         type: Sequelize.TINYINT(),
         allowNull: true
     }
 }, {
-    tableName: 'asb_agencies',
+    tableName: 'asb_advertisers',
     underscored: true,
     timestamps: false
 });
 
-module.exports = Agencies;
+module.exports = Advertisers;

@@ -2,24 +2,24 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Agencies = sequelize.define('agencies', {
-    agency_id: {
+const UsersRoles = sequelize.define('users_roles', {
+    roles_users_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    agency_name: {
-        type: Sequelize.STRING(),
+    role_id: {
+        type: Sequelize.INTEGER(),
         allowNull: false
     },
-    agency_archived: {
-        type: Sequelize.TINYINT(),
-        allowNull: true
+    user_id: {
+        type: Sequelize.INTEGER(),
+        allowNull: false
     }
 }, {
-    tableName: 'asb_agencies',
+    tableName: 'asb_roles_users',
     underscored: true,
     timestamps: false
 });
 
-module.exports = Agencies;
+module.exports = UsersRoles;

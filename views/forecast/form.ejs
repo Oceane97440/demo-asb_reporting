@@ -102,11 +102,11 @@
 
 								<div class="form-group">
 									<label for="countries">Géolocalisation</label><br>
-									<% for(let i=0; i < countrys.length; i++) {%>
-									<label class="form-check-label"><%= countrys[i].country_name %></label>
+									<% for(let i=0; i < countries.length; i++) {%>
+									<label class="form-check-label"><%= countries[i].country_name %></label>
 									<input class="form-check-input" type="checkbox" name="countries" id="countries"
-										value="<%= countrys[i].country_id %>"
-										<%- (countrys[i].country_id == '61') ? 'checked="checked"' : '' -%>>
+										value="<%= countries[i].country_id %>"
+										<%- (countries[i].country_id == '61') ? 'checked="checked"' : '' -%>>
 									<% } %>
 								</div>
 

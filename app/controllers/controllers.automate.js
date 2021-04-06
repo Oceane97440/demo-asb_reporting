@@ -3,23 +3,16 @@ const https = require('https');
 const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
-const {
-    Op
-} = require("sequelize");
+const {Op} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {
-    QueryTypes
-} = require('sequelize');
+const {QueryTypes} = require('sequelize');
 
-const {
-    check,
-    query
-} = require('express-validator');
+const {check, query} = require('express-validator');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -27,26 +20,20 @@ const SmartFunction = require("../functions/functions.smartadserver.api");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
-const Modelformats = require("../models/models.format");
+const ModelFormats = require("../models/models.formats");
 const ModelCampaigns = require("../models/models.campaigns");
-const ModelAdvertisers = require("../models/models.advertiser");
-const ModelSites = require("../models/models.site");
-const ModelTemplates = require("../models/models.template");
-const ModelPlatforms = require("../models/models.platform");
-const ModelDeliverytypes = require("../models/models.deliverytype");
-const ModelCountries = require("../models/models.country");
+const ModelAdvertisers = require("../models/models.advertisers");
+const ModelSites = require("../models/models.sites");
+const ModelTemplates = require("../models/models.templates");
+const ModelPlatforms = require("../models/models.platforms");
+const ModelDeliverytypes = require("../models/models.deliverytypes");
+const ModelCountries = require("../models/models.countries");
 
+const ModelGroupsFormatsTypes = require("../models/models.formats_groups_types");
+const ModelGroupsFormats = require("../models/models.groups_formats");
+const ModelInsertions = require("../models/models.insertions");
 
-
-const ModelGroupsFormatsTypes = require("../models/models.format_group_type");
-const ModelGroupsFormats = require("../models/models.group_format");
-const ModelInsertions = require("../models/models.insertion");
-
-
-
-const {
-    resolve
-} = require('path');
+const {resolve} = require('path');
 
 /*
 function sleep(ms) {
@@ -56,25 +43,15 @@ function sleep(ms) {
 
 async function updateOrCreate(model, where, newItem) {
     // First try to find the record
-    const foundItem = await model.findOne({
-        where
-    });
+    const foundItem = await model.findOne({where});
     if (!foundItem) {
         // Item not found, create a new one
         const item = await model.create(newItem)
-        return {
-            item,
-            created: true
-        };
+        return {item, created: true};
     }
     // Found an item, update it
-    const item = await model.update(newItem, {
-        where
-    });
-    return {
-        item,
-        created: false
-    };
+    const item = await model.update(newItem, {where});
+    return {item, created: false};
 }
 
 exports.agencies = async (req, res) => {
@@ -103,20 +80,13 @@ exports.agencies = async (req, res) => {
                             var agency_name = dataValue[i].name;
                             var agency_archived = dataValue[i].isArchived;
 
-
-                            const agencies = ModelAgencies.create({
-                                agency_id,
-                                agency_name,
-                                agency_archived,
-                            });
-
-
-
+                            const agencies = ModelAgencies.create(
+                                {agency_id, agency_name, agency_archived}
+                            );
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -157,30 +127,24 @@ exports.advertisers = async (req, res) => {
                             var advertiser_name = dataValue[i].name;
                             var advertiser_archived = dataValue[i].isArchived;
 
-
                             //  console.log(dataValue);
-                            const advertiser = ModelAdvertisers.create({
-                                advertiser_id,
-                                advertiser_name,
-                                advertiser_archived,
-                            });
-
-
+                            const advertiser = ModelAdvertisers.create(
+                                {advertiser_id, advertiser_name, advertiser_archived}
+                            );
 
                             /*
-                                                     
-                            const advertiserDb = Modelformats.findByPk(advertiser_id);
+
+                            const advertiserDb = ModelFormats.findByPk(advertiser_id);
                             if (advertiserDb === null) {
                               console.log('Not found!');
-                              const advertiser = Modelformats.create({advertiser_id, advertiser_name});
+                              const advertiser = ModelFormats.create({advertiser_id, advertiser_name});
                             } else {
-                              console.log('Else : '+advertiserDb instanceof Modelformats); // true
+                              console.log('Else : '+advertiserDb instanceof ModelFormats); // true
                               // Its primary key is 123
                             } */
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -230,7 +194,7 @@ exports.campaigns = async (req, res) => {
 
                             console.log('advertiser_id:  ' + advertiser_id)
 
-                          /*  var findOneAdvertise = ModelAdvertisers.findOne({
+                            /*  var findOneAdvertise = ModelAdvertisers.findOne({
                                 attributes: ['advertiser_id'],
 
                                 where: {
@@ -238,7 +202,7 @@ exports.campaigns = async (req, res) => {
                                 }
                             })
 
-                        
+
                             if (!findOneAdvertise) {
                                 const advertiser_id = 1;
 
@@ -258,27 +222,24 @@ exports.campaigns = async (req, res) => {
 
                             } */
 
+                            updateOrCreate(ModelCampaigns, {
+                                campaign_id: campaign_id
+                            }, {
+                                campaign_id,
+                                campaign_name,
+                                advertiser_id,
+                                agency_id,
+                                campaign_start_date,
+                                campaign_end_date,
+                                campaign_status_id,
+                                campaign_archived
 
+                            }).then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+                            });
 
-                             updateOrCreate(ModelCampaigns, {
-                                     campaign_id: campaign_id
-                                 }, {
-                                     campaign_id,
-                                    campaign_name,
-                                     advertiser_id,
-                                     agency_id,
-                                     campaign_start_date,
-                                     campaign_end_date,
-                                     campaign_status_id,
-                                     campaign_archived
-
-                                 }).then(function (result) {
-                                     result.item; // the model
-                                     result.created; // bool, if a new item was created.
-                                 });
-
-                            // const tableDb = ModelCampaigns.findByPk(campaign_id);
-                            // console.log(tableDb);
+                            // const tableDb = ModelCampaigns.findByPk(campaign_id); console.log(tableDb);
 
                             /*
                             const tableDb = ModelCampaigns.findByPk(campaign_id);
@@ -288,12 +249,11 @@ exports.campaigns = async (req, res) => {
                             } else {
                               console.log('Else : '+tableDb instanceof ModelCampaigns); // true
                               // Its primary key is 123
-                            }    
+                            }
                             */
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -395,16 +355,13 @@ exports.formats = async (req, res) => {
                         var dataValue = response.data;
                         var number_line_offset = data.length;
 
-
-
-
                         for (i = 0; i < number_line_offset; i++) {
 
                             //console.log(dataValue)
                             var format_id = dataValue[i].id;
                             var format_name = dataValue[i].name;
 
-                            //solution provisoire 
+                            //solution provisoire
                             switch (dataValue[i].id) {
                                 case 44149 || 79637:
                                     //si c habillage -> web_habillage / app_mban_atf
@@ -412,37 +369,18 @@ exports.formats = async (req, res) => {
                                     break;
 
                                 case 44152 || 79633:
-                                    //si grand angle ->web_mban  app_mpave_atf0 
+                                    //si grand angle ->web_mban  app_mpave_atf0
                                     var format_group = 1
                                     break;
-                                case 79637 ||
-                                79638 ||
-                                79642 ||
-                                79643 ||
-                                79644 ||
-                                79645 ||
-                                84652 ||
-                                84653 ||
-                                84654 ||
-                                84655 ||
-                                84656 ||
-                                79421 ||
-                                79646:
+                                case 79637 || 79638 || 79642 || 79643 || 79644 || 79645 || 84652 || 84653 || 84654 || 84655 || 84656 || 79421 || 79646:
                                     //si masthead -> web_mban / app_mban
                                     var format_group = 4
                                     break;
-                                case 79425 ||
-                                84657 ||
-                                84658 ||
-                                84659 ||
-                                84660 ||
-                                84661 ||
-                                79431:
-                                    //si instream -> linear 
+                                case 79425 || 84657 || 84658 || 84659 || 84660 || 84661 || 79431:
+                                    //si instream -> linear
                                     var format_group = 5
                                     break;
-                                case 85016 ||
-                                96472:
+                                case 85016 || 96472:
                                     var format_group = 3
                                     break;
 
@@ -456,48 +394,35 @@ exports.formats = async (req, res) => {
                                     break;
                             }
 
-
-
-
-                            //console.log(Array_FormatsName)
-
-
-                            //voir les relation
-                            const groups_formats_types = ModelGroupsFormatsTypes.create({
-                                group_format_id: format_group,
-                                format_id: format_id
-                            })
+                            //console.log(Array_FormatsName) voir les relation
+                            const groups_formats_types = ModelGroupsFormatsTypes.create(
+                                {group_format_id: format_group, format_id: format_id}
+                            )
                             var format_width = data[i].width;
                             var format_height = dataValue[i].height;
                             var format_type_id = dataValue[i].formatTypeId;
                             var format_archived = dataValue[i].isArchived;
                             var format_resource_url = dataValue[i].resourceUrl;
 
-
-                            updateOrCreate(Modelformats, {
-                                    format_id: format_id
-                                }, {
-                                    format_id,
-                                    format_name,
-                                    format_width,
-                                    format_height,
-                                    format_type_id,
-                                    format_archived,
-                                    format_resource_url
-                                })
-
-                                .then(function (result) {
-                                    result.item; // the model
-                                    result.created; // bool, if a new item was created.
-                                });
+                            updateOrCreate(ModelFormats, {
+                                format_id: format_id
+                            }, {
+                                format_id,
+                                format_name,
+                                format_width,
+                                format_height,
+                                format_type_id,
+                                format_archived,
+                                format_resource_url
+                            }).then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+                            });
                             //  console.log(formats)
-
 
                         }
 
-
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -535,7 +460,6 @@ exports.sites = async (req, res) => {
 
                         for (i = 0; i < number_line_offset; i++) {
 
-
                             var site_id = dataValue[i].id;
                             var site_is_child_directed = dataValue[i].isChildDirected;
                             var site_name = dataValue[i].name;
@@ -547,7 +471,6 @@ exports.sites = async (req, res) => {
                             var site_business_model_value = dataValue[i].siteApplicationId;
                             var site_application_id = dataValue[i].siteApplicationId;
                             var site_updated_at = dataValue[i].updatedAt
-
 
                             const sites = ModelSites.create({
                                 site_id,
@@ -563,9 +486,7 @@ exports.sites = async (req, res) => {
                                 site_updated_at
                             });
 
-
                         }
-
 
                     });
                 }
@@ -582,8 +503,6 @@ exports.sites = async (req, res) => {
         // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
 }
-
-
 
 exports.templates = async (req, res) => {
     try {
@@ -631,7 +550,6 @@ exports.templates = async (req, res) => {
                             var dynamic_image_url = dataValue[i].previewImageUrls.dynamicImageUrl;
                             var gallery_url = dataValue[i].galleryUrl;
 
-
                             // console.log(dataValue)
                             ModelTemplates.create({
                                 template_id,
@@ -657,18 +575,14 @@ exports.templates = async (req, res) => {
                                 sale_channel_id,
                                 fixed_image_url,
                                 dynamic_image_url,
-                                gallery_url,
+                                gallery_url
                             });
 
-
-                            // const tableDb = ModelCampaigns.findByPk(campaign_id);
-                            // console.log(tableDb);
-
+                            // const tableDb = ModelCampaigns.findByPk(campaign_id); console.log(tableDb);
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -698,7 +612,8 @@ exports.platforms = async (req, res) => {
 
             const addItem = async () => {
 
-                //<= car si le nombre de page est = 0 et que page = 0 la condiction ne fonctionne pas
+                // <= car si le nombre de page est = 0 et que page = 0 la condiction ne
+                // fonctionne pas
                 for (let page = 0; page <= number_pages; page++) {
                     //  page = 0
                     let offset = page * 100;
@@ -711,21 +626,12 @@ exports.platforms = async (req, res) => {
                             var platform_id = dataValue[i].id;
                             var platform_name = dataValue[i].name;
 
-
                             console.log(dataValue);
-                            ModelPlatforms.create({
-                                platform_id,
-                                platform_name,
-
-                            });
-
-
-
+                            ModelPlatforms.create({platform_id, platform_name});
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -755,7 +661,8 @@ exports.deliverytypes = async (req, res) => {
 
             const addItem = async () => {
 
-                //<= car si le nombre de page est = 0 et que page = 0 la condiction ne fonctionne pas
+                // <= car si le nombre de page est = 0 et que page = 0 la condiction ne
+                // fonctionne pas
                 for (let page = 0; page <= number_pages; page++) {
                     //  page = 0
                     let offset = page * 100;
@@ -768,21 +675,12 @@ exports.deliverytypes = async (req, res) => {
                             var deliverytype_id = dataValue[i].id;
                             var deliverytype_name = dataValue[i].name;
 
-
                             //  console.log(dataValue);
-                            ModelDeliverytypes.create({
-                                deliverytype_id,
-                                deliverytype_name,
-
-                            });
-
-
-
+                            ModelDeliverytypes.create({deliverytype_id, deliverytype_name});
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -798,7 +696,6 @@ exports.deliverytypes = async (req, res) => {
         // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
 }
-
 
 exports.countries = async (req, res) => {
     try {
@@ -836,22 +733,19 @@ exports.countries = async (req, res) => {
                                 country_extended_name
                             });
 
-
-
                             /*
-                                                     
-                            const advertiserDb = Modelformats.findByPk(advertiser_id);
+
+                            const advertiserDb = ModelFormats.findByPk(advertiser_id);
                             if (advertiserDb === null) {
                               console.log('Not found!');
-                              const advertiser = Modelformats.create({advertiser_id, advertiser_name});
+                              const advertiser = ModelFormats.create({advertiser_id, advertiser_name});
                             } else {
-                              console.log('Else : '+advertiserDb instanceof Modelformats); // true
+                              console.log('Else : '+advertiserDb instanceof ModelFormats); // true
                               // Its primary key is 123
                             } */
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -867,10 +761,6 @@ exports.countries = async (req, res) => {
         // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
 }
-
-
-
-
 
 exports.insertions = async (req, res) => {
     try {
@@ -947,7 +837,6 @@ exports.insertions = async (req, res) => {
                             var customized_script = dataValue[i].customizedScript;
                             var sale_channel_id = dataValue[i].salesChannelId;
 
-
                             const insertions = ModelInsertions.create({
                                 insertion_id,
                                 delivery_regulated,
@@ -999,18 +888,12 @@ exports.insertions = async (req, res) => {
                                 insertion_link_id,
                                 insertion_exclusion_id,
                                 customized_script,
-                                sale_channel_id,
-
+                                sale_channel_id
                             });
-
-
-
-
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }

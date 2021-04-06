@@ -30,7 +30,7 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-const ModelAdvertiser = require("../models/models.advertiser");
+const ModelAdvertiser = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 
 exports.test = async (req, res) => {

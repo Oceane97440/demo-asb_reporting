@@ -1,11 +1,8 @@
 const Sequelize = require('sequelize');
 
-
 const sequelize = require('../config/_config.database').sequelize;
 
-
 const Insertions = sequelize.define('insertions', {
-
     insertion_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -23,7 +20,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.BIGINT(),
         allowNull: true
     },
-   
+
     voice_share: {
         type: Sequelize.FLOAT(),
         allowNull: true
@@ -44,8 +41,8 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.BIGINT(),
         allowNull: true
     },
- 
-   /* site_id: {
+
+    /* site_id: {
         type: Sequelize.INTEGER(),
         allowNull: true
     },*/
@@ -65,7 +62,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.DATE(),
         allowNull: true
     },
-   
+
     campaign_id: {
         type: Sequelize.INTEGER(),
         allowNull: true
@@ -174,7 +171,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.STRING(),
         allowNull: true
     },
-   insertion_created_at: {
+    insertion_created_at: {
         type: Sequelize.STRING(),
         allowNull: true
     },
@@ -210,7 +207,7 @@ const Insertions = sequelize.define('insertions', {
         type: Sequelize.INTEGER(),
         allowNull: true
     },
-    
+
     customized_script: {
         type: Sequelize.STRING(),
         allowNull: true
@@ -218,24 +215,7 @@ const Insertions = sequelize.define('insertions', {
     sale_channel_id: {
         type: Sequelize.INTEGER(),
         allowNull: true
-    },
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 }, {
     tableName: 'asb_insertions',
     underscored: true,
