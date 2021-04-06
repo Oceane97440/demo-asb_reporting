@@ -198,28 +198,27 @@ exports.advertisers = async (req, res) => {
 }
 
 exports.campaigns = async (req, res) => {
-    try {       
+    try {
         var config = SmartFunction.config('campaigns');
         await axios(config).then(function (res) {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count/100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
-            console.log('Number Pages :'+number_pages);
+            console.log('Number Pages :' + number_pages);
 
-           const addItem = async () => {
+            const addItem = async () => {
                 for (let page = 0; page <= number_pages; page++) {
-                    //let offset = 0; // page*100;
-                    let offset =  page*100;
+                    let offset = page * 100;
 
-                    var config2 = SmartFunction.config('campaigns',offset);
+                    var config2 = SmartFunction.config('campaigns', offset);
 
                     await axios(config2).then(function (response) {
                         var dataValue = response.data;
 
-                        for (i = 0; i < number_line; i++) {                           
-                          
+                        for (i = 0; i < number_line; i++) {
+
                             var campaign_id = dataValue[i].id;
                             var campaign_name = dataValue[i].name;
                             var advertiser_id = data[i].advertiserId;
@@ -228,24 +227,58 @@ exports.campaigns = async (req, res) => {
                             var campaign_end_date = dataValue[i].endDate;
                             var campaign_status_id = dataValue[i].campaignStatusId;
                             var campaign_archived = dataValue[i].isArchived;
-                            //console.log({campaign_id, campaign_name, advertiser_id, campaign_start_date, campaign_end_date});
 
-                            updateOrCreate(ModelCampaigns, {campaign_id: campaign_id}, {
-                                campaign_id, 
-                                campaign_name, 
-                                advertiser_id,
-                                agency_id,
-                                campaign_start_date, campaign_end_date,
-                                campaign_status_id,
-                                campaign_archived
+                            console.log('advertiser_id:  ' + advertiser_id)
 
-                            }).then(function(result) {
-                                result.item;  // the model
-                                result.created; // bool, if a new item was created.
-                            });
+                          /*  var findOneAdvertise = ModelAdvertisers.findOne({
+                                attributes: ['advertiser_id'],
 
-                           // const tableDb = ModelCampaigns.findByPk(campaign_id);
-                           // console.log(tableDb);
+                                where: {
+                                    advertiser_id: advertiser_id,
+                                }
+                            })
+
+                        
+                            if (!findOneAdvertise) {
+                                const advertiser_id = 1;
+
+                                const campaigns = ModelCampaigns.create({
+                                        campaign_id,
+                                        campaign_name,
+                                        advertiser_id,
+                                        agency_id,
+                                        campaign_start_date,
+                                        campaign_end_date,
+                                        campaign_status_id,
+                                        campaign_archived
+                                    })
+                                    .then(campagne => {
+                                        return res.send("OK: le campagne est ajouté à la bdd")
+                                    })
+
+                            } */
+
+
+
+                             updateOrCreate(ModelCampaigns, {
+                                     campaign_id: campaign_id
+                                 }, {
+                                     campaign_id,
+                                    campaign_name,
+                                     advertiser_id,
+                                     agency_id,
+                                     campaign_start_date,
+                                     campaign_end_date,
+                                     campaign_status_id,
+                                     campaign_archived
+
+                                 }).then(function (result) {
+                                     result.item; // the model
+                                     result.created; // bool, if a new item was created.
+                                 });
+
+                            // const tableDb = ModelCampaigns.findByPk(campaign_id);
+                            // console.log(tableDb);
 
                             /*
                             const tableDb = ModelCampaigns.findByPk(campaign_id);
@@ -256,22 +289,22 @@ exports.campaigns = async (req, res) => {
                               console.log('Else : '+tableDb instanceof ModelCampaigns); // true
                               // Its primary key is 123
                             }    
-                            */  
-                        }    
+                            */
+                        }
 
                         // Sleep pendant 10s
-                       //  await new Promise(r => setTimeout(r, 10000));
+                        //  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
-           }
+            }
 
-           addItem();
+            addItem();
 
-         //  return false;
+            //  return false;
         });
 
     } catch (error) {
-        console.error('Error : '+error);
+        console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
         // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
@@ -573,7 +606,7 @@ exports.templates = async (req, res) => {
 
                         for (i = 0; i < number_line; i++) {
 
-                           var template_id = dataValue[i].id;
+                            var template_id = dataValue[i].id;
                             var template_name = dataValue[i].name;
                             var template_description = data[i].description;
                             var template_official = dataValue[i].isOfficial;
@@ -736,10 +769,10 @@ exports.deliverytypes = async (req, res) => {
                             var deliverytype_name = dataValue[i].name;
 
 
-                          //  console.log(dataValue);
-                          ModelDeliverytypes.create({
-                            deliverytype_id,
-                            deliverytype_name,
+                            //  console.log(dataValue);
+                            ModelDeliverytypes.create({
+                                deliverytype_id,
+                                deliverytype_name,
 
                             });
 
@@ -790,9 +823,9 @@ exports.countries = async (req, res) => {
                             var country_id = dataValue[i].id;
                             var country_name = dataValue[i].name;
                             var country_archived = dataValue[i].isArchived;
-                            var country_iso3166= dataValue[i].countryIso3166;
-                            var continent_id= dataValue[i].continentId;
-                            var country_extended_name= dataValue[i].extendedName;
+                            var country_iso3166 = dataValue[i].countryIso3166;
+                            var continent_id = dataValue[i].continentId;
+                            var country_extended_name = dataValue[i].extendedName;
                             //  console.log(dataValue);
                             const countries = ModelCountries.create({
                                 country_id,
