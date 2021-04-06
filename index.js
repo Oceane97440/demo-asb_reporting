@@ -73,7 +73,7 @@ groups_formats.hasMany(groups_formats_types, {
 });
 
 
-campaigns.belongsTo(advertisers, {
+/*campaigns.belongsTo(advertisers, {
   foreignKey: 'advertiser_id',
   onDelete: 'cascade',
   hooks: true
@@ -82,7 +82,7 @@ advertisers.hasMany(campaigns, {
   foreignKey: 'advertiser_id',
   onDelete: 'cascade',
   hooks: true
-}); // Un format peut avoir plusieur campagne.
+});*/ // Un format peut avoir plusieur campagne.
 
 db.sequelize.sync();
 sequelize = db.sequelize;
