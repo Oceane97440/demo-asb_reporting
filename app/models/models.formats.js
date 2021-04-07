@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Format = sequelize.define('formats', {
+const Formats = sequelize.define('formats', {
     format_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -38,4 +38,4 @@ const Format = sequelize.define('formats', {
     timestamps: false
 });
 
-module.exports = Format;
+module.exports = Formats;

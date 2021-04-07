@@ -185,27 +185,10 @@ exports.campaigns = async (req, res) => {
                                 var number_line_offset = data.length;
                                 if (number_line_offset >= 0) {
                                     for (i = 0; i < number_line_offset; i++) {
-                                      
-                                      //  if (!Utilities.empty(dataValue[i].id)) {
                                             var campaign_id = dataValue[i].id;
-                                       /* } else {
-                                            var campaign_id = null;
-                                        }
-                                        if (!Utilities.empty(dataValue[i].name)) {*/
                                             var campaign_name = dataValue[i].name;
-                                     /*   } else {
-                                            var campaign_name = null;
-                                        }
-                                        if (!Utilities.empty(dataValue[i].advertiserId)) {*/
                                             var advertiser_id = dataValue[i].advertiserId;
-                                       /* } else {
-                                            var advertiser_id = null;
-                                        }
-                                        if (!Utilities.empty(dataValue[i].agencyId)) {*/
                                             var agency_id = dataValue[i].agencyId;
-                                      /*  } else {
-                                            var agency_id = null;
-                                        }*/
 
                                         var campaign_start_date = dataValue[i].startDate;
                                         var campaign_end_date = dataValue[i].endDate;

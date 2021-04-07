@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Country = sequelize.define('countries', {
+const Countries = sequelize.define('countries', {
     country_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -34,4 +34,4 @@ const Country = sequelize.define('countries', {
     timestamps: false
 });
 
-module.exports = Country;
+module.exports = Countries;

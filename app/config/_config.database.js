@@ -1,7 +1,7 @@
 //BDD LOCALHOST
 
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize("asb_report", "root", "", {
+const sequelize = new Sequelize("asb_report_saoul", "root", "", {
     host: "localhost",
     dialect: "mysql",
     operatorsAliases: false,
