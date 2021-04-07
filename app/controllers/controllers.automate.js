@@ -657,7 +657,18 @@ exports.countries = async (req, res) => {
 
 
 exports.insertions = async (req, res) => {
+    var insertion= await ModelInsertions.findAll({
+        attributes: [
+            'insertion_id'
+        ],
+       
+        limit: 10
+    })
+    console.log(insertion)
     try {
+
+       
+
         var config = SmartFunction.config('insertions');
         await axios(config).then(function (res) {
             if (!Utilities.empty(res.data)) {

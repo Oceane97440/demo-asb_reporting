@@ -1,6 +1,11 @@
 const dbApi = require("../config/config.api");
+const ModelInsertions = require("../models/models.insertions");
 
-exports.config = function (method, offset = 0, limit = 100) {
+
+exports.config = function (method, offset = 0, limit = 100, params) {
+
+   // params
+
 
     switch (method) {
         case 'agencies':
@@ -32,6 +37,10 @@ exports.config = function (method, offset = 0, limit = 100) {
             break;
         case 'insertions':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
+            break;
+        case 'insertiontemplates':
+          //  insertionId = '';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/'+params+'/insertiontemplates';
             break;
         default:
 
