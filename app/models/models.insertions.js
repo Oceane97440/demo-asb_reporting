@@ -176,7 +176,7 @@ const Insertions = sequelize.define('insertions', {
         allowNull: true
     },
     insertion_archived: {
-        type: Sequelize.DATE(),
+        type: Sequelize.TINYINT(),
         allowNull: true
     },
     rate_type_id: {

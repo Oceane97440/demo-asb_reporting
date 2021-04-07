@@ -14,11 +14,14 @@ const Campaigns = sequelize.define('campaigns', {
     },
     advertiser_id: {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: true,
+        defaultValue: 0
+
     },
     agency_id: {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: true,
+        defaultValue: 0
     },
     campaign_start_date: {
         type: Sequelize.STRING(255),

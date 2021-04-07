@@ -9,25 +9,14 @@ const Packs = sequelize.define('packs', {
         primaryKey: true
     },
     pack_name: {
-        type: Sequelize.STRING(45),
+        type: Sequelize.STRING(255),
         allowNull: false
     },
-    pack_isArchived: {
-        type: Sequelize.INTEGER(),
+    pack_is_archived: {
+        type: Sequelize.TINYINT(),
         allowNull: false
     },
-    site_updated_at: {
-        type: Sequelize.DATE(),
-        allowNull: false
-    },
-    pack_datecreate: {
-        type: Sequelize.DATE(),
-        allowNull: false
-    },
-    pack_dateupdate: {
-        type: Sequelize.DATE(),
-        allowNull: false
-    }
+   
 }, {
     tableName: 'asb_packs',
     underscored: true,

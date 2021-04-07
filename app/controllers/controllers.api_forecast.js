@@ -31,6 +31,7 @@ const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelFormats = require("../models/models.formats");
+const ModelFormatsGroupsTypes  = require("../models/models.formats_groups_types")
 const ModelCountries = require("../models/models.countries")
 const ModelCampaignsEpilot = require("../models/models.campaings_epilot")
 const ModelPacks = require("../models/models.packs")
@@ -64,7 +65,7 @@ exports.index = async (req, res) => {
             ]
         })
 
-        var countrys = await ModelCountries.findAll({
+        var countries = await ModelCountries.findAll({
             attributes: [
                 'country_id', 'country_name'
             ],
@@ -124,7 +125,7 @@ exports.forecast = async (req, res, next) => {
         date_end = date_end + 'T23:59:00.000Z'
 
         //recupération des site d'un pack
-        const sitesdb = await ModelPack_Site.findAll({
+        const sitesdb = await ModelPacksSites.findAll({
             attributes: [
                 'pack_id', 'site_id'
             ],
@@ -148,7 +149,7 @@ exports.forecast = async (req, res, next) => {
         if (format.length != 0 && sites.length != 0 && countries.length != 0) {
 
             // select groupe format + format id
-            const formatIds = await ModelFormat.findAll({
+            const formatIds = await ModelFormats.findAll({
                 attributes: ['format_id'],
                 where: {
                     format_group: {

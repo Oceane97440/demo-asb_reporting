@@ -79,7 +79,7 @@ exports.generate = async (req, res) => {
 
 
   var campaign = await ModelCampaigns.findOne({
-    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
+    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
 
     where: {
       campaign_id: req.params.campaignid,

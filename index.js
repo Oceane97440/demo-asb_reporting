@@ -19,19 +19,18 @@ const roles = require('./app/models/models.roles')
 const users_roles = require('./app/models/models.users_roles')
 const campaigns = require('./app/models/models.campaigns')
 const advertisers = require('./app/models/models.advertisers')
+const agencies = require('./app/models/models.agencies')
 const formats = require('./app/models/models.formats')
 const groups_formats = require('./app/models/models.groups_formats')
-const groups_formats_types = require(
-    './app/models/models.formats_groups_types'
-)
+const groups_formats_types = require('./app/models/models.formats_groups_types')
 const insertions = require('./app/models/models.insertions')
 
 /* Mettre les relation ici */
-sites.belongsTo(countries);
-countries.hasMany(sites);
+/*sites.belongsTo(countries);
+countries.hasMany(sites);*/
 
 //un pack contien un site un site peut appartenir un à plusieur pack
-packs.hasOne(packs_sites, {
+packs.hasMany(packs_sites, {
     foreignKey: 'pack_id',
     onDelete: 'cascade',
     hooks: true
@@ -66,7 +65,7 @@ groups_formats.hasMany(groups_formats_types, {
     hooks: true
 });
 
-/*campaigns.belongsTo(advertisers, {
+campaigns.belongsTo(advertisers, {
   foreignKey: 'advertiser_id',
   onDelete: 'cascade',
   hooks: true
@@ -75,7 +74,18 @@ advertisers.hasMany(campaigns, {
   foreignKey: 'advertiser_id',
   onDelete: 'cascade',
   hooks: true
-});*/
+});
+/*
+campaigns.belongsTo(agencies, {
+    foreignKey: 'agency_id',
+    onDelete: 'cascade',
+    hooks: true
+  }); // la campagne à un format.
+  agencies.hasMany(campaigns, {
+    foreignKey: 'agency_id',
+    onDelete: 'cascade',
+    hooks: true
+  });*/
 // Un format peut avoir plusieur campagne.
 
 db
