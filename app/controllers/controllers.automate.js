@@ -17,6 +17,7 @@ const {check, query} = require('express-validator');
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 const SmartFunction = require("../functions/functions.smartadserver.api");
+const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
@@ -29,18 +30,21 @@ const ModelPlatforms = require("../models/models.platforms");
 const ModelDeliverytypes = require("../models/models.deliverytypes");
 const ModelCountries = require("../models/models.countries");
 
-const ModelGroupsFormatsTypes = require("../models/models.formats_groups_types");
+const ModelGroupsFormatsTypes = require(
+    "../models/models.formats_groups_types"
+);
 const ModelGroupsFormats = require("../models/models.groups_formats");
 const ModelInsertions = require("../models/models.insertions");
 
 const {resolve} = require('path');
+const {cpuUsage} = require('process');
 
 /*
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 */
-
+/*
 async function updateOrCreate(model, where, newItem) {
     // First try to find the record
     const foundItem = await model.findOne({where});
@@ -53,7 +57,7 @@ async function updateOrCreate(model, where, newItem) {
     const item = await model.update(newItem, {where});
     return {item, created: false};
 }
-
+*/
 exports.agencies = async (req, res) => {
     try {
         var config = SmartFunction.config('agencies');
@@ -61,7 +65,7 @@ exports.agencies = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -98,8 +102,7 @@ exports.agencies = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -110,7 +113,7 @@ exports.advertisers = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -156,8 +159,7 @@ exports.advertisers = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -165,92 +167,72 @@ exports.campaigns = async (req, res) => {
     try {
         var config = SmartFunction.config('campaigns');
         await axios(config).then(function (res) {
+        if (!Utilities.empty(res.data)) {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
             var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
-
+           
             const addItem = async () => {
                 for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
-
                     var config2 = SmartFunction.config('campaigns', offset);
-
                     await axios(config2).then(function (response) {
-                        var dataValue = response.data;
+                        if (!Utilities.empty(response.data)) {
+                                var dataValue = response.data;
+                                var number_line_offset = data.length;
+                                if (number_line_offset >= 0) {
+                                    for (i = 0; i < number_line_offset; i++) {
+                                      
+                                      //  if (!Utilities.empty(dataValue[i].id)) {
+                                            var campaign_id = dataValue[i].id;
+                                       /* } else {
+                                            var campaign_id = null;
+                                        }
+                                        if (!Utilities.empty(dataValue[i].name)) {*/
+                                            var campaign_name = dataValue[i].name;
+                                     /*   } else {
+                                            var campaign_name = null;
+                                        }
+                                        if (!Utilities.empty(dataValue[i].advertiserId)) {*/
+                                            var advertiser_id = dataValue[i].advertiserId;
+                                       /* } else {
+                                            var advertiser_id = null;
+                                        }
+                                        if (!Utilities.empty(dataValue[i].agencyId)) {*/
+                                            var agency_id = dataValue[i].agencyId;
+                                      /*  } else {
+                                            var agency_id = null;
+                                        }*/
 
-                        for (i = 0; i < number_line; i++) {
+                                        var campaign_start_date = dataValue[i].startDate;
+                                        var campaign_end_date = dataValue[i].endDate;
+                                        var campaign_status_id = dataValue[i].campaignStatusId;
+                                        var campaign_archived = dataValue[i].isArchived;
 
-                            var campaign_id = dataValue[i].id;
-                            var campaign_name = dataValue[i].name;
-                            var advertiser_id = data[i].advertiserId;
-                            var agency_id = dataValue[i].agencyId;
-                            var campaign_start_date = dataValue[i].startDate;
-                            var campaign_end_date = dataValue[i].endDate;
-                            var campaign_status_id = dataValue[i].campaignStatusId;
-                            var campaign_archived = dataValue[i].isArchived;
+                                        Utilities.updateOrCreate(ModelCampaigns, {
+                                            campaign_id: campaign_id
+                                        }, {
+                                            campaign_id,
+                                            campaign_name,
+                                            advertiser_id,
+                                            agency_id,
+                                            campaign_start_date,
+                                            campaign_end_date,
+                                            campaign_status_id,
+                                            campaign_archived
+                                        }).then(function (result) {
+                                            result.item; // the model
+                                            result.created; // bool, if a new item was created.
+                                        });
 
-                            console.log('advertiser_id:  ' + advertiser_id)
 
-                            /*  var findOneAdvertise = ModelAdvertisers.findOne({
-                                attributes: ['advertiser_id'],
-
-                                where: {
-                                    advertiser_id: advertiser_id,
+                                    }
                                 }
-                            })
-
-
-                            if (!findOneAdvertise) {
-                                const advertiser_id = 1;
-
-                                const campaigns = ModelCampaigns.create({
-                                        campaign_id,
-                                        campaign_name,
-                                        advertiser_id,
-                                        agency_id,
-                                        campaign_start_date,
-                                        campaign_end_date,
-                                        campaign_status_id,
-                                        campaign_archived
-                                    })
-                                    .then(campagne => {
-                                        return res.send("OK: le campagne est ajouté à la bdd")
-                                    })
-
-                            } */
-
-                            updateOrCreate(ModelCampaigns, {
-                                campaign_id: campaign_id
-                            }, {
-                                campaign_id,
-                                campaign_name,
-                                advertiser_id,
-                                agency_id,
-                                campaign_start_date,
-                                campaign_end_date,
-                                campaign_status_id,
-                                campaign_archived
-
-                            }).then(function (result) {
-                                result.item; // the model
-                                result.created; // bool, if a new item was created.
-                            });
-
-                            // const tableDb = ModelCampaigns.findByPk(campaign_id); console.log(tableDb);
-
-                            /*
-                            const tableDb = ModelCampaigns.findByPk(campaign_id);
-                            if (tableDb === null) {
-                              console.log('Not found!');
-                              const campaigns = ModelCampaigns.create({campaign_id, campaign_name, advertiser_id, start_date, end_date});
-                            } else {
-                              console.log('Else : '+tableDb instanceof ModelCampaigns); // true
-                              // Its primary key is 123
-                            }
-                            */
+                        } else {
+                            console.error('Error : Aucune donnée disponible');       
                         }
 
                         // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
@@ -260,82 +242,16 @@ exports.campaigns = async (req, res) => {
 
             addItem();
 
-            //  return false;
-        });
 
+        } else {
+            console.error('Error : Aucune donnée disponible');      
+         }
+        });
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
     }
 }
 
-/*exports.campaigns = async (req, res) => {
-    try {
-        var config = SmartFunction.config('campaigns');
-        await axios(config).then(function (res) {
-            var data = res.data;
-            var number_line = data.length;
-            var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
-            console.log(number_total_count);
-            console.log('Number Pages :' + number_pages);
-
-            const addItem = async () => {
-                for (let page = 0; page <= number_pages; page++) {
-                    let offset = page * 100;
-                    var config2 = SmartFunction.config('campaigns', offset);
-                    await axios(config2).then(function (response) {
-                        var dataValue = response.data;
-                        var number_line_offset = data.length;
-
-                        for (i = 0; i < number_line_offset; i++) {
-
-
-                            var campaign_id = dataValue[i].id;
-                            var campaign_name = dataValue[i].name;
-                            var advertiser_id = data[i].advertiserId;
-                            var agency_id = dataValue[i].agencyId;
-                            var campaign_start_date = dataValue[i].startDate;
-                            var campaign_end_date = dataValue[i].endDate;
-                            var campaign_status_id = dataValue[i].campaignStatusId;
-                            var campaign_archived = dataValue[i].isArchived;
-
-
-                            // console.log({campaign_id, campaign_name, advertiser_id, start_date, end_date});
-
-                            //console.log(dataValue)
-                           var campaigns= ModelCampaigns.create({
-                                campaign_id,
-                                campaign_name,
-                                advertiser_id,
-                                agency_id,
-                                campaign_start_date,
-                                campaign_end_date,
-                                campaign_status_id,
-                                campaign_archived
-                            });
-
-
-                        }
-
-
-                    });
-                }
-            }
-
-            addItem();
-
-            return false;
-        });
-
-    } catch (error) {
-        console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
-    }
-}
-*/
 exports.formats = async (req, res) => {
     try {
         var config = SmartFunction.config('formats');
@@ -343,7 +259,7 @@ exports.formats = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -434,8 +350,7 @@ exports.formats = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -446,7 +361,7 @@ exports.sites = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -499,8 +414,7 @@ exports.sites = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -511,7 +425,7 @@ exports.templates = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -594,8 +508,7 @@ exports.templates = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -606,7 +519,7 @@ exports.platforms = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -643,8 +556,7 @@ exports.platforms = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -655,7 +567,7 @@ exports.deliverytypes = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -692,8 +604,7 @@ exports.deliverytypes = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -704,7 +615,7 @@ exports.countries = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -757,8 +668,7 @@ exports.countries = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -769,7 +679,7 @@ exports.insertions = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -905,7 +815,6 @@ exports.insertions = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+
     }
 }

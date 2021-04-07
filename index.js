@@ -9,7 +9,7 @@ var fileUpload = require('express-fileupload');
 
 const db = require("./app/config/_config.database");
 
-const campaing_epilot = require('./app/models/models.campaings_epilot');
+const campaings_epilot = require('./app/models/models.campaings_epilot');
 const countries = require('./app/models/models.countries')
 const sites = require('./app/models/models.sites')
 const packs = require('./app/models/models.packs')

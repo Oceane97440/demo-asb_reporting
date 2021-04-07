@@ -51,7 +51,8 @@ exports.config = function (method, offset = 0, limit = 100) {
         },
         params: {
             limit: limit,
-            offset: offset
+            offset: offset,
+           isArchived : "both"
         }
     };
 
