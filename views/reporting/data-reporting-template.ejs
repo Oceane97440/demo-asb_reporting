@@ -250,6 +250,17 @@
 
                     </tr>
                     <% } %>
+                    <% if(table.sommeSliderImpression  !== '0' ) { %>
+
+                        <tr>
+    
+                            <td>SLIDER</td>
+                            <td><%=table.sommeSliderImpression%></td>
+                            <td><%=table.sommeSliderClicks%></td>
+                            <td><%=table.CTR_slider%>%</td>
+    
+                        </tr>
+                    <% } %>
                     <% if(table.sommeVideoImpression  !== '0' ) { %>
 
                     <tr>
@@ -261,6 +272,7 @@
 
                     </tr>
                     <% } %>
+                 
 
 
                 <tfoot>
@@ -618,6 +630,8 @@
 
                     </tr>
                     <% }%>
+
+                   
 
 
 
@@ -1393,7 +1407,7 @@
 
         <% }%>
 
-
+    
 
 
 

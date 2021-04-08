@@ -1,0 +1,64 @@
+    <% if(data_slider.sliderImpressions.length > 0 ) { %>
+            <div class="row p-3 m-5" id="table_uu">
+                <h3 class="title"><i class="fas fa-chart-line"></i><strong> SLIDER / par site</strong>
+                </h3>
+    
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Sites</th>
+                            <th scope="col">Impressions</th>
+                            <th scope="col">Clics</th>
+                            <th scope="col">Taux de clics</th>
+    
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+               
+    
+                        <% if (data_slider.total_impressions_rz_iosSlider !== "0" ) { %>
+    
+                            <tr>
+                                <!-- Agrega par format / site  -->
+                                <td><%=data_slider.slider_rz_ios_siteName%></td>
+                                <td><%=data_slider.total_impressions_rz_iosSlider%></td>
+                                <td><%=data_slider.total_clicks_rz_iosSlider%></td>
+                                <td><%=data_slider.slider_rz_ios_ctr%>%</td>
+        
+        
+                            </tr>
+                            <% }%>
+        
+                            <% if (data_slider.total_impressions_rz_androidSlider !== "0" ) { %>
+        
+                            <tr>
+                                <!-- Agrega par format / site  -->
+                                <td><%=data_slider.slider_rz_android_siteName%></td>
+                                <td><%=data_slider.total_impressions_rz_androidSlider%></td>
+                                <td><%=data_slider.total_clicks_rz_androidSlider%></td>
+                                <td><%=data_slider.slider_rz_android_ctr%>%</td>
+        
+        
+                            </tr>
+                            <% }%>
+    
+    
+    
+                    <tfoot >
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><%=table.sommeSliderImpression%></td>
+                            <td><%=table.sommeSliderClicks%></td>
+                            <td><%=table.CTR_slider%>%</td>
+    
+    
+                        </tr>
+                    </tfoot>
+                    </tbody>
+                </table>
+    
+            </div>
+            <hr />
+    
+            <% }%>
