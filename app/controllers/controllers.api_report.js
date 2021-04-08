@@ -447,7 +447,7 @@ exports.report = async (req, res) => {
 
 
 
-            //Convertie les Timestamp campagne startdate et enddate / date du jour
+            //Convertie les Timestamp campagne startdate et enddate 
             function getDateTimeFromTimestamp(unixTimeStamp) {
               let date = new Date(unixTimeStamp);
               return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
@@ -455,11 +455,22 @@ exports.report = async (req, res) => {
             }
             var t1 = parseInt(CampaignStartDate[0]);
             var t2 = parseInt(CampaignEndtDate[0]);
-            const timeElapsed = Date.now();
-            const Date_rapport = getDateTimeFromTimestamp(timeElapsed);
-
+          
             const StartDate = getDateTimeFromTimestamp(t1);
             const EndDate = getDateTimeFromTimestamp(t2);
+
+
+             //Convertie les Timestamp campagne  date du jour
+             function getDateCreateFromTimestamp(unixTimeStamp2) {
+              let date = new Date(unixTimeStamp2);
+              return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear()+ ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
+
+            }
+          
+            const timeElapsed = Date.now();
+            const Date_rapport = getDateCreateFromTimestamp(timeElapsed);
+
+         
 
             //filte les array exclure les valeur undefined qui empêche le calcule des somme
 

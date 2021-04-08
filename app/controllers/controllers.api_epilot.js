@@ -1,5 +1,6 @@
 // Récupére les données de configuration de l`API
 const dbApi = require("../config/config.api");
+
 // Initialise le module request
 const request = require('request');
 // Initialise le module
@@ -27,14 +28,9 @@ const {QueryTypes} = require('sequelize');
 
 const {check, query} = require('express-validator');
 
-// Charge l'ensemble des functions de l'API const AxiosFunction =
-// require('../functions/functions.axios'); Initialise les models const
-// ModelSite = require("../models/models.sites"); const ModelFormat =
-// require("../models/models.formats"); const ModelCountry =
-// require("../models/models.countries")
+
 const ModelCampaignsEpilot = require("../models/models.campaings_epilot")
-// const ModelPack = require("../models/models.packs") const ModelPack_Site =
-// require("../models/models.packs_sites") regex test date
+
 const REGEX = /(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})/
 
 exports.index = async (req, res) => {
@@ -67,19 +63,19 @@ exports.index = async (req, res) => {
             ]
         })
 
-        var reult_confirmer = Object
+        var result_confirmer = Object
             .keys(confirmer)
             .length;
 
-        var reult_reserver = Object
+        var result_reserver = Object
             .keys(reserver)
             .length;
 
         res.render('forecast/liste_epilot.ejs', {
             confirmer: confirmer,
             reserver: reserver,
-            reult_confirmer: reult_confirmer,
-            reult_reserver: reult_reserver
+            result_confirmer: result_confirmer,
+            result_reserver: result_reserver
         });
 
     } catch (error) {

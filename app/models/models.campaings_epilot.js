@@ -34,7 +34,7 @@ const CampaingsEpilot = sequelize.define('campaigns_epilots', {
         allowNull: false
     }
 }, {
-    tableName: 'asb_campaigns_epilot',
+    tableName: 'asb_campaigns_epilots',
     underscored: true,
     timestamps: false
 });
