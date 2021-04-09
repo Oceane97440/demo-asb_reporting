@@ -27,20 +27,20 @@ const SmartFunction = require("../functions/functions.smartadserver.api");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
-const Modelformats = require("../models/models.format");
+const Modelformats = require("../models/models.formats");
 const ModelCampaigns = require("../models/models.campaigns");
-const ModelAdvertisers = require("../models/models.advertiser");
-const ModelSites = require("../models/models.site");
-const ModelTemplates = require("../models/models.template");
-const ModelPlatforms = require("../models/models.platform");
-const ModelDeliverytypes = require("../models/models.deliverytype");
-const ModelCountries = require("../models/models.country");
+const ModelAdvertisers = require("../models/models.advertisers");
+const ModelSites = require("../models/models.sites");
+const ModelTemplates = require("../models/models.templates");
+const ModelPlatforms = require("../models/models.platforms");
+const ModelDeliverytypes = require("../models/models.deliverytypes");
+const ModelCountries = require("../models/models.countries");
 
 
 
-const ModelGroupsFormatsTypes = require("../models/models.format_group_type");
-const ModelGroupsFormats = require("../models/models.group_format");
-const ModelInsertions = require("../models/models.insertion");
+const ModelGroupsFormatsTypes = require("../models/models.formats_groups_types");
+const ModelGroupsFormats = require("../models/models.groups_formats");
+const ModelInsertions = require("../models/models.insertions");
 
 
 

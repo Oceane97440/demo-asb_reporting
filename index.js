@@ -10,20 +10,20 @@ var fileUpload = require('express-fileupload');
 
 const db = require("./app/config/_config.database");
 
-const campaing_epilot = require('./app/models/models.campaing_epilot');
-const country = require('./app/models/models.country')
-const sites = require('./app/models/models.site')
-const packs = require('./app/models/models.pack')
-const packs_sites = require('./app/models/models.pack_site')
-const users = require('./app/models/models.user.js')
-const roles = require('./app/models/models.role')
-const users_roles = require('./app/models/models.user_role')
+const campaing_epilot = require('./app/models/models.campaings_epilot');
+const country = require('./app/models/models.countries')
+const sites = require('./app/models/models.sites')
+const packs = require('./app/models/models.packs')
+const packs_sites = require('./app/models/models.packs_sites')
+const users = require('./app/models/models.users.js')
+const roles = require('./app/models/models.roles')
+const users_roles = require('./app/models/models.users_roles')
 const campaigns = require('./app/models/models.campaigns')
-const advertisers = require('./app/models/models.advertiser')
-const formats = require('./app/models/models.format')
-const groups_formats = require('./app/models/models.group_format')
-const groups_formats_types = require('./app/models/models.format_group_type')
-const insertions = require('./app/models/models.insertion')
+const advertisers = require('./app/models/models.advertisers')
+const formats = require('./app/models/models.formats')
+const groups_formats = require('./app/models/models.groups_formats')
+const groups_formats_types = require('./app/models/models.formats_groups_types')
+const insertions = require('./app/models/models.insertions')
 
 
 
@@ -73,7 +73,7 @@ groups_formats.hasMany(groups_formats_types, {
 });
 
 
-/*campaigns.belongsTo(advertisers, {
+campaigns.belongsTo(advertisers, {
   foreignKey: 'advertiser_id',
   onDelete: 'cascade',
   hooks: true
@@ -82,7 +82,7 @@ advertisers.hasMany(campaigns, {
   foreignKey: 'advertiser_id',
   onDelete: 'cascade',
   hooks: true
-});*/ // Un format peut avoir plusieur campagne.
+});/// Un format peut avoir plusieur campagne.
 
 db.sequelize.sync();
 sequelize = db.sequelize;

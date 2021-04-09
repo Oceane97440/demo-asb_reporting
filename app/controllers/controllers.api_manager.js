@@ -35,18 +35,18 @@ const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
 //const ModelSite = require("../models/models.site");
-const ModelFormat = require("../models/models.format");
+const ModelFormat = require("../models/models.formats");
 //const ModelCountry = require("../models/models.country")
 //const ModelCampaign_epilot = require("../models/models.campaing_epilot")
 //const ModelPack = require("../models/models.pack")
 //const ModelPack_Site = require("../models/models.pack_site")
-const ModelAdvertiser = require("../models/models.advertiser")
+const ModelAdvertiser = require("../models/models.advertisers")
 const ModelCampaigns = require("../models/models.campaigns")
 
 
 
 
-exports.advertiser_add = async (req, res) => {
+/*exports.advertiser_add = async (req, res) => {
 
   //ajoute dans la bdd les annonceurs
 
@@ -105,7 +105,7 @@ exports.advertiser_add = async (req, res) => {
   }
 
  
-}
+}*/
 
 exports.advertiser_liste = async (req, res) => {
 
@@ -135,7 +135,7 @@ exports.advertiser_liste = async (req, res) => {
  
 }
 
-exports.campaign_add = async (req, res) => {
+/*exports.campaign_add = async (req, res) => {
 
   //ajoute les campagnes dans la bdd
 
@@ -200,7 +200,7 @@ exports.campaign_add = async (req, res) => {
 
  
 }
-
+*/
 exports.view_campagne = async (req, res) => {
 
   //affiche dans une vue les campagnes liée à annnonceur id
@@ -210,7 +210,7 @@ exports.view_campagne = async (req, res) => {
   var advertiser_id = req.params.id
 
   var campaign = await ModelCampaigns.findAll({
-    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
+    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
 
     where: {
       //id_users: userId,
