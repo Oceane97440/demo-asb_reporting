@@ -2,7 +2,7 @@
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('./report_storage');
 localStorage_tasks = new LocalStorage('./taskID');
-
+const Utilities = require("../functions/functions.utilities");
 
 const {
   Op
@@ -259,6 +259,9 @@ exports.report = async (req, res) => {
               "Id": "17",
               "OutputName": "Nbr_Complete"
             }
+          },
+          {
+            "NotViewableImpressions": {}
           }
 
         ],
@@ -314,29 +317,38 @@ exports.report = async (req, res) => {
         ]
 
       }
-    //  console.log(requestReporting)
+      console.log(requestReporting)
 
 
       // 1) RequÃªte POST 
       let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting);
       let twoLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
 
+     
 
+      //console.log(twoLink.data.taskId);|| (twoLink.data.taskId)
 
-      if (firstLink.data.taskId || twoLink.data.taskId) {
+      if ((firstLink.data.taskId) ) {
+        console.log('firstLink','ok');
         var taskId = firstLink.data.taskId;
-        var taskId_uu = twoLink.data.taskId;
-
-
-
         let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
-        let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
+     
+        
+        if(!Utilities.empty(twoLink) && (!Utilities.empty(twoLink.data.taskId))){
+          console.log('condition 1 taskId_uu')
+          var taskId_uu = twoLink.data.taskId;
+          let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
+        } else{
+          let requete_vu = null
+        }
+
+
 
         //2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min
         //on commence à 10sec
         var time = 10000;
         let timerFile = setInterval(async () => {
-
+          console.log('setInterval','ok');
           //on incremente + 10sec
           time += 10000;
 
@@ -347,13 +359,27 @@ exports.report = async (req, res) => {
           if (!dataLSTaskGlobal || !dataLSTaskGlobalVU) {
 
             let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+            //test si four link existe
+           if(!Utilities.empty(requete_vu)){
+            console.log('condition 2 requete_vu')
+
             let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
 
+           }else{
+            console.log('condition 2 requete_vu')
+
+              let fourLink = null
+           }
+
+
+            //condition (task_global job et task_global success )OU(task_vu job et task_vu success)
 
             //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
-            if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.jobProgress == '1.0') &&
-              (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
-            ) {
+            if ( ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.jobProgress == '1.0')) 
+            
+            ||
+
+            ((fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) ) {
 
               clearInterval(timerFile);
 
@@ -386,13 +412,16 @@ exports.report = async (req, res) => {
             }
 
           } else {
-
+            console.log('condition 2 requete_vu')
             //on arrête la fonction setInterval si il y a les 2 taskID en cache
             clearInterval(timerFile);
 
             //convertie le fichier localStorage task_global en objet
             const obj_default = JSON.parse(dataLSTaskGlobal);
             var data_split_global = obj_default.datafile;
+
+
+            //test si le local storage exsite avec des données
 
             //convertie le fichier localStorage task_vu en objet
             const obj_vu = JSON.parse(dataLSTaskGlobalVU);
@@ -1783,7 +1812,7 @@ exports.report = async (req, res) => {
               video.forEach(VideoArrayElements);
               slider.forEach(SliderArrayElements);
 
-            /*  console.log(slider_rz_ios_impression);
+           /* console.log('slider RZ_ios' , slider_rz_ios_impression);
               console.log(slider_rz_ios_click);
               console.log(slider_rz_ios_siteId);
               console.log(slider_rz_ios_siteName);
@@ -1794,11 +1823,24 @@ exports.report = async (req, res) => {
             //RZ-android
          
             console.log("-----------------------------------");
-              console.log(slider_rz_android_impression);
+              console.log('slider RZ_android' ,slider_rz_android_impression);
               console.log(slider_rz_android_click);
               console.log(slider_rz_android_siteId);
               console.log(slider_rz_android_siteName);
-              console.log(slider_rz_android_Complete);*/
+              console.log(slider_rz_android_Complete);
+
+              console.log("-----------------------------------");
+              console.log('interstitiel rz_ios' ,interstitiel_rz_ios_impression);
+              console.log(interstitiel_rz_ios_click);
+              console.log(interstitiel_rz_ios_siteId);
+              console.log(interstitiel_rz_ios_siteName);
+              console.log(interstitiel_rz_ios_ctr);
+              console.log("-----------------------------------");
+              console.log('interstitiel rz_android' ,interstitiel_rz_android_impression);
+              console.log(interstitiel_rz_android_click);
+              console.log(interstitiel_rz_android_siteId);
+              console.log(interstitiel_rz_android_siteName);
+              console.log(interstitiel_rz_android_ctr);*/
 
 
 
@@ -3336,16 +3378,16 @@ exports.report = async (req, res) => {
 
 
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     //var statusCoded = error.response.status;
 
-    res.render("error.ejs", {
+   /* res.render("error.ejs", {
       statusCoded: error.response.status,
       advertiserid: advertiserid,
       campaignid: campaignid,
       startDate: startDate,
       endDate: EndtDate,
-    })
+    })*/
 
 
   }
