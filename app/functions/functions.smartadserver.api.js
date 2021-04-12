@@ -2,10 +2,8 @@ const dbApi = require("../config/config.api");
 const ModelInsertions = require("../models/models.insertions");
 
 
-exports.config = function (method, offset = 0, limit = 100, params) {
-
-   // params
-
+exports.config = function (method, offset = 0, limit = 100, params = '')  {
+ 
 
     switch (method) {
         case 'agencies':
@@ -38,9 +36,24 @@ exports.config = function (method, offset = 0, limit = 100, params) {
         case 'insertions':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
             break;
-        case 'insertiontemplates':
-          //  insertionId = '';
-            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/'+params+'/insertiontemplates';
+        case 'insertionstemplates':
+
+        /*
+        // insertion_id = '0';
+          for (i = 0; i < length; i++) {
+
+            //console.log(length)
+            var insertion_id = params[i].insertion_id
+
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/'+insertion_id+'/insertiontemplates';
+
+           console.log(configApiUrl)
+
+          }*/
+
+          insertion_id= params.insertion_id;    
+          var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/'+insertion_id+'/insertiontemplates';
+         // console.log(configApiUrl); process.exit(1);
             break;
         default:
 
@@ -57,12 +70,14 @@ exports.config = function (method, offset = 0, limit = 100, params) {
         auth: {
             username: dbApi.SMART_login,
             password: dbApi.SMART_password
-        },
-        params: {
-            limit: limit,
-            offset: offset,
-           isArchived : "both"
         }
+
+        //condition config
+       /* params: {
+            limit: limit,
+            offset: offset
+          // isArchived : "both"
+        }*/
     };
 
     return config;

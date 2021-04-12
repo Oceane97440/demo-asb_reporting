@@ -42,6 +42,8 @@ const ModelGroupsFormatsTypes = require(
 );
 const ModelGroupsFormats = require("../models/models.groups_formats");
 const ModelInsertions = require("../models/models.insertions");
+const ModelInsertionsTemplates = require("../models/models.insertionstemplates");
+
 
 const {
     resolve
@@ -426,7 +428,7 @@ exports.templates = async (req, res) => {
                                         var fixed_image_url = dataValue[i].previewImageUrls.fixedImageUrl;
                                         var dynamic_image_url = dataValue[i].previewImageUrls.dynamicImageUrl;
                                         var gallery_url = dataValue[i].galleryUrl;
-            
+
                                         Utilities.updateOrCreate(ModelTemplates, {
                                             template_id: template_id
                                         }, {
@@ -458,12 +460,12 @@ exports.templates = async (req, res) => {
                                             result.item; // the model
                                             result.created; // bool, if a new item was created.
                                         });
-                                      
-            
+
+
                                         // const tableDb = ModelCampaigns.findByPk(campaign_id); console.log(tableDb);
-            
+
                                     }
-                               
+
                                 }
                             } else {
                                 console.error('Error : Aucune donnée disponible');
@@ -654,20 +656,172 @@ exports.countries = async (req, res) => {
     }
 }
 
+exports.insertionstemplates = async (req, res) => {
+    try {
+        var insertion = await ModelInsertions.findAll({
+            attributes: [
+                'insertion_id'
+            ]
+        })
+        number_line_insertion = insertion.length
 
+
+        if (number_line_insertion > 0) {
+
+            for (i = 0; i < number_line_insertion; i++) {
+                insertionObject = {
+                    "insertion_id": insertion[i].insertion_id
+                };
+                var config = SmartFunction.config('insertionstemplates', '', '', insertionObject);
+                await axios(config).then(function (res) {
+                    //console.log(res.data); //process.exit(1);
+
+                    if (!Utilities.empty(res.data)) {
+                        //  return res.json(resa.data);
+
+                        var dataValue = res.data;
+
+                        console.log(dataValue)
+
+                       var insertion_id = dataValue.insertionId;
+                         var parameter_value = dataValue.parameterValues;
+                         var template_id = dataValue.templateId;
+
+
+                        Utilities.updateOrCreate(ModelInsertionsTemplates, {
+                            insertion_id: insertion_id
+                        }, {
+                            insertion_id,
+                            parameter_value,
+                            template_id,
+
+                        }).then(function (result) {
+                            result.item; // the model
+                            result.created; // bool, if a new item was created.
+                        });
+
+                    }
+                });
+
+
+
+                // var obj = {};
+
+                //  obj.insertion_id = [insertion[i].insertion_id]
+                //  obj.insertion_id = insertion[i].insertion_id
+
+                //  liste_obj.push(obj.insertion_id)
+
+            }
+            process.exit(1);
+
+        }
+
+
+
+
+
+
+
+
+
+        /*
+                var config = SmartFunction.config('insertionstemplates');
+                console.log('fonction config 120')
+
+                await axios(config).then(function (res) {
+                    if (!Utilities.empty(res.data)) {
+                        var limit = 100;
+                        var data = res.data;
+                        var number_line = data.length;
+                        var params = liste_obj;
+                        var paramslength = liste_obj.length;
+                        var number_total_count = res.headers['x-pagination-total-count'];
+                        var number_pages = Math.round((number_total_count / 100) + 1);
+                        console.log(number_total_count);
+                        console.log('Number Pages :' + number_pages);
+
+                        const addItem = async () => {
+                            //     console.log('params', params); console.log('params.length', params.length);
+
+
+                            for (let page = 0; page <= number_pages; page++) {
+                                for (let prkey = 0; prkey <= paramslength; prkey++) {
+                                    insertionObject = {
+                                        "insertion_id": params[prkey]
+                                    };
+                                    console.log('insertionObject ', insertionObject)
+                                    // console.log('fonction length',number_listeObj)
+
+                                    process.exit(1);
+
+
+                                    let offset = page * 100;
+                                    var config2 = SmartFunction.config('insertionstemplates', offset, limit, insertionObject);
+                                    await axios(config2).then(function (response) {
+                                        if (!Utilities.empty(response.data)) {
+                                            var dataValue = response.data;
+                                            //  console.log(dataValue)
+                                            var number_line_offset = data.length;
+                                            if (number_line_offset >= 0) {
+                                                for (i = 0; i < number_line_offset; i++) {
+
+                                                    //    console.log(dataValue[i])
+
+                                                    //var insertion_id = dataValue[i].insertionId;
+                                                    // var parameter_value = dataValue[i].parameterValues;
+                                                    // var template_id = dataValue[i].templateId;
+
+
+                                                     Utilities.updateOrCreate(ModelInsertionsTemplates, {
+                                                        insertion_id: insertion_id
+                                                    }, {
+                                                        insertion_id,
+                                                        parameter_value,
+                                                        template_id,
+                                                       
+                                                    }).then(function (result) {
+                                                        result.item; // the model
+                                                        result.created; // bool, if a new item was created.
+                                                    });
+                                                       
+
+                                                }
+                                            }
+                                        } else {
+                                            console.error('Error : Aucune donnée disponible');
+                                        }
+
+                                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                                    });
+
+
+                                }
+                            } // end params
+                        }
+
+
+
+                        addItem();
+
+
+                    } else {
+                        console.error('Error : Aucune donnée disponible');
+                    }
+                });
+        */
+
+
+    } catch (error) {
+        console.error('Error : ' + error);
+    }
+}
 
 exports.insertions = async (req, res) => {
-    var insertion= await ModelInsertions.findAll({
-        attributes: [
-            'insertion_id'
-        ],
-       
-        limit: 10
-    })
-    console.log(insertion)
+
     try {
 
-       
+
 
         var config = SmartFunction.config('insertions');
         await axios(config).then(function (res) {
@@ -700,7 +854,7 @@ exports.insertions = async (req, res) => {
                                         var insertion_name = dataValue[i].name;
                                         var insertion_description = dataValue[i].description;
                                         //  var site_id = dataValue[i].siteIds;
-            
+
                                         var pack_id = dataValue[i].packIds;
                                         var insertion_status_id = dataValue[i].insertionStatusId;
                                         var insertion_start_date = dataValue[i].startDate;
@@ -743,7 +897,7 @@ exports.insertions = async (req, res) => {
                                         var insertion_exclusion_id = dataValue[i].insertionExclusionIds;
                                         var customized_script = dataValue[i].customizedScript;
                                         var sale_channel_id = dataValue[i].salesChannelId;
-            
+
                                         const insertions = ModelInsertions.create({
                                             insertion_id,
                                             delivery_regulated,
@@ -800,9 +954,9 @@ exports.insertions = async (req, res) => {
                                             result.item; // the model
                                             result.created; // bool, if a new item was created.
                                         });
-            
+
                                     }
-            
+
                                 }
                             } else {
                                 console.error('Error : Aucune donnée disponible');
