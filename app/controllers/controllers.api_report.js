@@ -30,7 +30,7 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-const ModelAdvertiser = require("../models/models.advertiser");
+const ModelAdvertiser = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 
 exports.test = async (req, res) => {
@@ -79,7 +79,7 @@ exports.generate = async (req, res) => {
 
 
   var campaign = await ModelCampaigns.findOne({
-    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'start_date', 'end_date'],
+    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
 
     where: {
       campaign_id: req.params.campaignid,

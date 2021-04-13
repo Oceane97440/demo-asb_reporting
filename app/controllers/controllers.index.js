@@ -50,9 +50,9 @@ const {
 //const ModelCampaign_epilot = require("../models/models.campaing_epilot")
 //const ModelPack = require("../models/models.pack")
 //const ModelPack_Site = require("../models/models.pack_site")
-const ModelRole = require("../models/models.role")
-const ModelUser = require("../models/models.user")
-const ModelUser_Role = require("../models/models.user_role")
+const ModelRole = require("../models/models.roles")
+const ModelUser = require("../models/models.users")
+const ModelUser_Role = require("../models/models.users_roles")
 
 exports.signup = async (req, res) => {
 

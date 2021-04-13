@@ -47,7 +47,7 @@ const {
 //const ModelSite = require("../models/models.site");
 //const ModelFormat = require("../models/models.format");
 //const ModelCountry = require("../models/models.country")
-const ModelCampaign_epilot = require("../models/models.campaing_epilot")
+const ModelCampaign_epilot = require("../models/models.campaings_epilot")
 //const ModelPack = require("../models/models.pack")
 //const ModelPack_Site = require("../models/models.pack_site")
 

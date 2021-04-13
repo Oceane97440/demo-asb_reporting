@@ -46,14 +46,14 @@ const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
 //const ModelSite = require("../models/models.site");
-const ModelFormat = require("../models/models.format");
-const ModelCountry = require("../models/models.country")
-const ModelCampaign_epilot = require("../models/models.campaing_epilot")
-const ModelPack = require("../models/models.pack")
-const ModelPack_Site = require("../models/models.pack_site")
-const ModelRole = require("../models/models.role")
-const ModelUser = require("../models/models.user")
-const ModelUser_Role = require("../models/models.user_role")
+const ModelFormat = require("../models/models.formats");
+const ModelCountry = require("../models/models.countries")
+const ModelCampaign_epilot = require("../models/models.campaings_epilot")
+const ModelPack = require("../models/models.packs")
+const ModelPack_Site = require("../models/models.packs_sites")
+const ModelRole = require("../models/models.roles")
+const ModelUser = require("../models/models.users")
+const ModelUser_Role = require("../models/models.users_roles")
 
 
 exports.index = async (req, res) => {
