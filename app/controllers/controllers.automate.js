@@ -3,6 +3,7 @@ const https = require('https');
 const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
+var crypto = require('crypto');
 const {
     Op
 } = require("sequelize");
@@ -204,6 +205,7 @@ exports.campaigns = async (req, res) => {
                                 var number_line_offset = data.length;
                                 if (number_line_offset >= 0) {
                                     for (i = 0; i < number_line_offset; i++) {
+
                                         var campaign_id = dataValue[i].id;
                                         var campaign_name = dataValue[i].name;
                                         var advertiser_id = dataValue[i].advertiserId;
@@ -213,11 +215,17 @@ exports.campaigns = async (req, res) => {
                                         var campaign_status_id = dataValue[i].campaignStatusId;
                                         var campaign_archived = dataValue[i].isArchived;
 
-                                        Utilities.updateOrCreate(ModelCampaigns, {
+                                        var campaign_crypt = crypto.createHash('md5').update(campaign_id.toString()).digest("hex");
+
+
+                                        console.log(campaign_crypt)
+
+                                       Utilities.updateOrCreate(ModelCampaigns, {
                                             campaign_id: campaign_id
                                         }, {
                                             campaign_id,
                                             campaign_name,
+                                            campaign_crypt,
                                             advertiser_id,
                                             agency_id,
                                             campaign_start_date,
