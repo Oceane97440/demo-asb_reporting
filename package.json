@@ -4,7 +4,8 @@
   "description": "Antenne Solutions Business Report",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "installme": "npm i --unsafe-perms"
   },
   "repository": {
     "type": "git",
