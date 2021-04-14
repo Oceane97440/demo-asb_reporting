@@ -60,45 +60,48 @@ exports.index = async (req, res) => {
 
     try {
 
-        var formats = await ModelFormat.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
-            group: ['format_group'],
-            where: {
-                format_group: {
-                    [Op.not]: null
-                }
-            },
-            order: [
-                ['format_group', 'ASC']
-            ],
-        })
-
-        var packs = await ModelPack.findAll({
-            attributes: ['pack_id', 'pack_name'],
-            order: [
-                ['pack_name', 'ASC']
-            ],
-        })
+        if (req.session.user.role == 1) {
 
 
-        var countrys = await ModelCountry.findAll({
-            attributes: ['country_id', 'country_name'],
-            where: {
-                country_id: [61, 125, 184]
-            },
-            order: [
-                ['country_name', 'DESC']
-            ],
-        })
+            var formats = await ModelFormat.findAll({
+                attributes: ['format_id', 'format_name', 'format_group'],
+                group: ['format_group'],
+                where: {
+                    format_group: {
+                        [Op.not]: null
+                    }
+                },
+                order: [
+                    ['format_group', 'ASC']
+                ],
+            })
 
-        res.render('forecast/form.ejs', {
-            formats: formats,
-            packs: packs,
-            countrys: countrys
-        });
+            var packs = await ModelPack.findAll({
+                attributes: ['pack_id', 'pack_name'],
+                order: [
+                    ['pack_name', 'ASC']
+                ],
+            })
 
 
-    } catch (error) { 
+            var countrys = await ModelCountry.findAll({
+                attributes: ['country_id', 'country_name'],
+                where: {
+                    country_id: [61, 125, 184]
+                },
+                order: [
+                    ['country_name', 'DESC']
+                ],
+            })
+
+            res.render('forecast/form.ejs', {
+                formats: formats,
+                packs: packs,
+                countrys: countrys
+            });
+        }
+
+    } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
 
@@ -938,7 +941,7 @@ exports.forecast = async (req, res, next) => {
             }
         }
 
-    } catch (error) { 
+    } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
 

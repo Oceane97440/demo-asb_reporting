@@ -59,6 +59,7 @@ exports.index = async (req, res) => {
 
 
   try {
+    if (req.session.user.role === 1||req.session.user.role === 2||req.session.user.role === 3) {
 
     var confirmer = await ModelCampaign_epilot.findAll({
       attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
@@ -94,7 +95,7 @@ exports.index = async (req, res) => {
       reult_reserver: reult_reserver
     });
 
-
+  }
 
   } catch (error) { 
     console.log(error)
