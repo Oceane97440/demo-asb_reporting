@@ -43,6 +43,8 @@ const ModelGroupsFormatsTypes = require(
 const ModelGroupsFormats = require("../models/models.groups_formats");
 const ModelInsertions = require("../models/models.insertions");
 const ModelInsertionsTemplates = require("../models/models.insertionstemplates");
+const ModelCreatives = require("../models/models.creatives");
+
 
 
 const {
@@ -656,166 +658,212 @@ exports.countries = async (req, res) => {
     }
 }
 
+
+
 exports.insertionstemplates = async (req, res) => {
+    // Délai d'attente
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
     try {
-        var insertion = await ModelInsertions.findAll({
-            attributes: [
-                'insertion_id'
-            ]
-        })
-        number_line_insertion = insertion.length
+        // Listes toutes les données de InsertionsTemplates
+        var insertionTemplatesDB = await ModelInsertionsTemplates.findAll(
+            {attributes: ['insertion_id']}
+        );
+        insertionTemplatesDBIds = new Array();
+        for (o = 0; o < insertionTemplatesDB.length; o++) {
+            insertionTemplatesDBIds[o] = insertionTemplatesDB[o].insertion_id;
+        }
+       
+        // Liste toutes les données de Insertions
+        var insertionDB = await ModelInsertions.findAll({
+            where: {
+                'insertion_id': {
+                    [Op.notIn]: insertionTemplatesDBIds
+                },
+                'insertion_archived' : '0',
+                'insertion_created_at': {
+                    [Op.between]: ['2021-01-01', '2021-04-30'],
+                }
+            },
+            attributes: ['insertion_id']
+        });
 
+        var number_total_count = insertionDB.length;
+        var number_pages = Math.round((number_total_count / 20) + 1);
+        console.log('number_total_count', number_total_count);
+        console.log('number_pages', number_pages);
+       // await delay(10000); process.exit(1);
 
-        if (number_line_insertion > 0) {
-
-            for (i = 0; i < number_line_insertion; i++) {
+        if (number_total_count > 0) {
+            j = 0;
+            for (i = 0; i < number_total_count; i++) {
+                console.log(insertionDB[i].insertion_id)
                 insertionObject = {
-                    "insertion_id": insertion[i].insertion_id
+                    "insertion_id": insertionDB[i].insertion_id
                 };
-                var config = SmartFunction.config('insertionstemplates', '', '', insertionObject);
+                console.log(j++);
+
+                var config = SmartFunction.config(
+                    'insertionstemplates',
+                    '',
+                    '',
+                    insertionObject
+                );
+
                 await axios(config).then(function (res) {
-                    //console.log(res.data); //process.exit(1);
+                    //console.log(res.data); process.exit(1);
 
                     if (!Utilities.empty(res.data)) {
                         //  return res.json(resa.data);
-
                         var dataValue = res.data;
+                        //      console.log(dataValue);
 
-                        console.log(dataValue)
+                        var insertion_id = dataValue.insertionId;
+                        var parameter_value = dataValue.parameterValues;
+                        var template_id = dataValue.templateId;
 
-                       var insertion_id = dataValue.insertionId;
-                         var parameter_value = dataValue.parameterValues;
-                         var template_id = dataValue.templateId;
-
-
-                        Utilities.updateOrCreate(ModelInsertionsTemplates, {
-                            insertion_id: insertion_id
-                        }, {
-                            insertion_id,
-                            parameter_value,
-                            template_id,
-
-                        }).then(function (result) {
-                            result.item; // the model
-                            result.created; // bool, if a new item was created.
-                        });
+                        Utilities
+                            .updateOrCreate(ModelInsertionsTemplates, {
+                                insertion_id: insertion_id
+                            }, {insertion_id, parameter_value, template_id})
+                            .then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+                            });
 
                     }
-                });
-
-
-
-                // var obj = {};
-
-                //  obj.insertion_id = [insertion[i].insertion_id]
-                //  obj.insertion_id = insertion[i].insertion_id
-
-                //  liste_obj.push(obj.insertion_id)
-
+                });               
             }
-            process.exit(1);
-
+        
         }
 
-
-
-
-
-
-
-
-
-        /*
-                var config = SmartFunction.config('insertionstemplates');
-                console.log('fonction config 120')
-
-                await axios(config).then(function (res) {
-                    if (!Utilities.empty(res.data)) {
-                        var limit = 100;
-                        var data = res.data;
-                        var number_line = data.length;
-                        var params = liste_obj;
-                        var paramslength = liste_obj.length;
-                        var number_total_count = res.headers['x-pagination-total-count'];
-                        var number_pages = Math.round((number_total_count / 100) + 1);
-                        console.log(number_total_count);
-                        console.log('Number Pages :' + number_pages);
-
-                        const addItem = async () => {
-                            //     console.log('params', params); console.log('params.length', params.length);
-
-
-                            for (let page = 0; page <= number_pages; page++) {
-                                for (let prkey = 0; prkey <= paramslength; prkey++) {
-                                    insertionObject = {
-                                        "insertion_id": params[prkey]
-                                    };
-                                    console.log('insertionObject ', insertionObject)
-                                    // console.log('fonction length',number_listeObj)
-
-                                    process.exit(1);
-
-
-                                    let offset = page * 100;
-                                    var config2 = SmartFunction.config('insertionstemplates', offset, limit, insertionObject);
-                                    await axios(config2).then(function (response) {
-                                        if (!Utilities.empty(response.data)) {
-                                            var dataValue = response.data;
-                                            //  console.log(dataValue)
-                                            var number_line_offset = data.length;
-                                            if (number_line_offset >= 0) {
-                                                for (i = 0; i < number_line_offset; i++) {
-
-                                                    //    console.log(dataValue[i])
-
-                                                    //var insertion_id = dataValue[i].insertionId;
-                                                    // var parameter_value = dataValue[i].parameterValues;
-                                                    // var template_id = dataValue[i].templateId;
-
-
-                                                     Utilities.updateOrCreate(ModelInsertionsTemplates, {
-                                                        insertion_id: insertion_id
-                                                    }, {
-                                                        insertion_id,
-                                                        parameter_value,
-                                                        template_id,
-                                                       
-                                                    }).then(function (result) {
-                                                        result.item; // the model
-                                                        result.created; // bool, if a new item was created.
-                                                    });
-                                                       
-
-                                                }
-                                            }
-                                        } else {
-                                            console.error('Error : Aucune donnée disponible');
-                                        }
-
-                                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
-                                    });
-
-
-                                }
-                            } // end params
-                        }
-
-
-
-                        addItem();
-
-
-                    } else {
-                        console.error('Error : Aucune donnée disponible');
-                    }
-                });
-        */
-
-
     } catch (error) {
-        console.error('Error : ' + error);
+        console.error('Error : ', error);
     }
 }
+
+exports.creatives = async (req, res) => {
+    // Délai d'attente
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    try {
+        // Listes toutes les données de InsertionsTemplates
+        var insertionCreativesDB = await ModelCreatives.findAll(
+            {attributes: ['insertion_id']}
+        );
+        insertionCreativesDBIds = new Array();
+        for (o = 0; o < insertionCreativesDB.length; o++) {
+            insertionCreativesDBIds[o] = insertionCreativesDB[o].insertion_id;
+        }
+       
+        // Liste toutes les données de Insertions
+        var insertionDB = await ModelInsertions.findAll({
+            where: {
+                'insertion_id': {
+                    [Op.notIn]: insertionCreativesDBIds
+                },
+                'insertion_archived' : '0',
+                'insertion_created_at': {
+                    [Op.between]: ['2021-01-01', '2021-04-30'],
+                }
+            },
+            attributes: ['insertion_id']
+        });
+
+        var number_total_count = insertionDB.length;
+        var number_pages = Math.round((number_total_count / 20) + 1);
+        console.log('number_total_count', number_total_count);
+        console.log('number_pages', number_pages);
+       // await delay(10000); process.exit(1);
+
+        if (number_total_count > 0) {
+            j = 0;
+            for (i = 0; i < number_total_count; i++) {
+                console.log('insertionDB  ',insertionDB[i].insertion_id)
+                insertionObject = {
+                    "insertion_id": insertionDB[i].insertion_id
+                };
+               // console.log(j++);
+
+                var config = SmartFunction.config(
+                    'creatives',
+                    '',
+                    '',
+                    insertionObject
+                );
+
+                await axios(config).then(function (res) {
+                    //console.log(res.data); process.exit(1);
+
+                    if (!Utilities.empty(res.data)) {
+                        //  return res.json(resa.data);
+                        var dataValue = res.data;
+
+                        var number_line_offset = dataValue.length;
+
+                        console.log('dataValue  ',dataValue)
+
+                        if (number_line_offset >= 0) {
+                            for (m = 0; m < number_line_offset; m++) {
+
+                                
+
+                        var creative_id =  dataValue[m].id;
+                        var creative_name =  dataValue[m].name;
+                        var file_name =  dataValue[m].fileName;
+                        var insertion_id = dataValue[m].insertionId;
+                        var creative_resource_url = dataValue[m].resourceUrl;
+                        var creative_url = dataValue[m].url;
+                        var creative_click_url = dataValue[m].clickUrl;
+                        var creative_width = dataValue[m].width;
+                        var creative_height = dataValue[m].height;
+                        var creative_mime_type = dataValue[m].mimeType;
+                        var creative_percentage_delivery = dataValue[m].percentageOfDelivery;
+                        var creatives_type_id = dataValue[m].creativeTypeId;
+                        var creatives_activated = dataValue[m].isActivated;
+                        var creatives_archived = dataValue[m].isArchived;
+
+
+
+
+                        Utilities
+                            .updateOrCreate(ModelCreatives, {
+                                creative_id: creative_id
+                            }, {creative_id, 
+                                creative_name, 
+                                file_name,
+                                insertion_id,
+                                creative_resource_url,
+                                creative_url,
+                                creative_click_url,
+                                creative_width,
+                                creative_height,
+                                creative_mime_type,
+                                creative_percentage_delivery,
+                                creatives_type_id,
+                                creatives_activated,
+                                creatives_archived
+                            })
+                            .then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+                            });
+
+                            }
+                        }
+                      
+
+                    }
+                });               
+            }
+        
+        }
+
+    } catch (error) {
+        console.error('Error : ', error);
+    }
+}
+
 
 exports.insertions = async (req, res) => {
 

@@ -24,6 +24,11 @@ const formats = require('./app/models/models.formats')
 const groups_formats = require('./app/models/models.groups_formats')
 const groups_formats_types = require('./app/models/models.formats_groups_types')
 const insertions = require('./app/models/models.insertions')
+const templates = require('./app/models/models.templates')
+const insertions_templates = require('./app/models/models.insertionstemplates')
+const creatives = require('./app/models/models.creatives')
+
+
 
 /* Mettre les relation ici */
 /*sites.belongsTo(countries);
@@ -66,27 +71,52 @@ groups_formats.hasMany(groups_formats_types, {
 });
 
 campaigns.belongsTo(advertisers, {
-  foreignKey: 'advertiser_id',
-  onDelete: 'cascade',
-  hooks: true
+    foreignKey: 'advertiser_id',
+    onDelete: 'cascade',
+    hooks: true
 }); // la campagne à un format.
 advertisers.hasMany(campaigns, {
-  foreignKey: 'advertiser_id',
-  onDelete: 'cascade',
-  hooks: true
+    foreignKey: 'advertiser_id',
+    onDelete: 'cascade',
+    hooks: true
 });
-/*
-campaigns.belongsTo(agencies, {
-    foreignKey: 'agency_id',
+
+
+insertions_templates.belongsTo(insertions, {
+    foreignKey: 'insertion_id',
     onDelete: 'cascade',
     hooks: true
-  }); // la campagne à un format.
-  agencies.hasMany(campaigns, {
-    foreignKey: 'agency_id',
+});
+insertions.hasMany(insertions_templates, {
+    foreignKey: 'insertion_id',
     onDelete: 'cascade',
     hooks: true
-  });*/
-// Un format peut avoir plusieur campagne.
+});
+insertions_templates.belongsTo(templates, {
+    foreignKey: 'template_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+templates.hasMany(insertions_templates, {
+    foreignKey: 'template_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+
+
+creatives.belongsTo(insertions, {
+    foreignKey: 'insertion_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+insertions.hasMany(creatives, {
+    foreignKey: 'insertion_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
 
 db
     .sequelize
@@ -113,7 +143,9 @@ app.use(cookieSession({
 /**L'image à une limite min=50px max=2000px */
 app.use(fileUpload());
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 /**
  * @MidleWare
@@ -176,6 +208,10 @@ app.use('/users', user);
 // Automatise la récupération de donnée
 const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
+
+// Crée des alerting 
+const alert = require('./app/routes/routes.alerts');
+app.use('/alerts', alert);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);

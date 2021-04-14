@@ -15,6 +15,8 @@ router.get("/deliverytypes", automate.deliverytypes);
 router.get("/insertions", automate.insertions);
 
 router.get("/insertionstemplates", automate.insertionstemplates);
+router.get("/creatives", automate.creatives);
+
 router.get("/countries", automate.countries);
 
 
