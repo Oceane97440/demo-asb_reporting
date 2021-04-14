@@ -176,7 +176,7 @@ app.use('/forecast', forecast);
 
 const reporting = require('./app/routes/routes.api_report');
 
-app.use('/reporting', reporting);
+app.use('/r/', reporting);
 
 // action liste campagne epilot
 

@@ -155,9 +155,9 @@
       //appel ajax ici
       $.ajax({
 
-        method: "GET",
-        url: `/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
 
+        method: "GET",
+        url: `/r/rapport/<%=campaigncrypt%>`,
         success: function (data) {
           $("#exampleModal").hide();
           $('body').html(data)

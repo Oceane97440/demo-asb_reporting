@@ -214,7 +214,7 @@ exports.view_campagne = async (req, res) => {
       var advertiser_id = req.params.id
 
       var campaign = await ModelCampaigns.findAll({
-        attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
+        attributes: ['campaign_id', 'campaign_name', 'campaign_crypt', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
 
         where: {
           //id_users: userId,

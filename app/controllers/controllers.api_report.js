@@ -64,43 +64,60 @@ exports.index = async (req, res) => {
 
 
 exports.generate = async (req, res) => {
-
-  //recupère en parametre get id annonceur / id campagne / date de debut
-  let advertiserid = req.params.advertiserid;
-  let campaignid = req.params.campaignid;
-  let startDate = req.params.startdate;
-  let endDate = req.params.enddate;
-
-
-  const timestamp_startdate = Date.parse(startDate);
-  const date_now = Date.now();
+  let campaigncrypt = req.params.campaigncrypt;
 
 
 
+  // // //recupère en parametre get id annonceur / id campagne / date de debut
+  // let advertiserid = req.params.advertiserid;
+  // let campaignid = req.params.campaignid;
+  // let startDate = req.params.startdate;
+  // let endDate = req.params.enddate;
 
-  var campaign = await ModelCampaigns.findOne({
-    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
+
+  await ModelCampaigns.findOne({
+    attributes: ['campaign_id', 'campaign_name', 'campaign_crypt', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
 
     where: {
-      campaign_id: req.params.campaignid,
-      advertiser_id: req.params.advertiserid
+      // campaign_id: req.params.campaignid,
+      // advertiser_id: req.params.advertiserid
+
+      campaign_crypt: campaigncrypt
 
     },
     include: [{
       model: ModelAdvertiser
     }],
 
+  }).then(async function (campaign)  {
+    if (!campaign) return res.status(404).render("error.ejs", {
+    
+    
+     statusCoded: 404,
+     campaigncrypt: campaigncrypt,
+    
+    });
+    // res.json(campaign);
+
+    const timestamp_startdate = Date.parse(campaign.campaign_start_date);
+    const date_now = Date.now();
+
+    res.render("reporting/generate.ejs", {
+      advertiserid: campaign.advertiser_id,
+      campaignid: campaign.campaign_id,
+      startDate: campaign.campaign_start_date,
+      endDate: campaign.campaign_end_date,
+      campaigncrypt: campaign.campaign_crypt,
+      //campaigncrypt:campaigncrypt,
+      campaign: campaign,
+      timestamp_startdate: timestamp_startdate,
+      date_now: date_now
+    })
+
   });
 
-  res.render("reporting/generate.ejs", {
-    advertiserid: advertiserid,
-    campaignid: campaignid,
-    startDate: startDate,
-    endDate: endDate,
-    campaign: campaign,
-    timestamp_startdate: timestamp_startdate,
-    date_now: date_now
-  })
+
+
 
 
 
@@ -109,18 +126,56 @@ exports.generate = async (req, res) => {
 
 exports.report = async (req, res) => {
 
-  //fonctionnalité generation du rapport
+  let campaigncrypt = req.params.campaigncrypt;
 
-  let advertiserid = req.params.advertiserid;
-  let campaignid = req.params.campaignid;
-  let startDate = req.params.startdate;
-  let EndtDate = req.params.enddate;
 
-  //  console.log(EndtDate)
+  console.log(campaigncrypt)
+
+ 
+
+
+  var campaign =  await ModelCampaigns.findOne({
+    attributes: ['campaign_id', 'campaign_name', 'campaign_crypt', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
+
+    where: {
+      // campaign_id: req.params.campaignid,
+      // advertiser_id: req.params.advertiserid
+
+      campaign_crypt: campaigncrypt
+
+    },
+    include: [{
+      model: ModelAdvertiser
+    }],
+
+  }).then(async function (campaign) {
+    if (!campaign) return res.status(403).render("error.ejs", {
+    
+    
+      statusCoded: 403,
+      campaigncrypt: campaigncrypt,
+     
+     });
+
+
+    //fonctionnalité generation du rapport
+
+    let advertiserid = campaign.advertiser_id;
+    let campaignid =campaign.campaign_id;
+    let startDate = campaign.campaign_start_date;
+    let EndtDate = campaign.campaign_end_date;
+
+
+
+
+
+ 
 
 
 
   try {
+
+   // process.exit(1)   
 
 
     var data_localStorage = localStorage.getItem('campagneId' + '-' + campaignid);
@@ -172,7 +227,7 @@ exports.report = async (req, res) => {
         localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global");
         localStorage_tasks.removeItem('campagneId' + '-' + campaignid + '-' + "task_global_vu");
 
-        res.redirect(`/reporting/generate/${advertiserid}/${campaignid}/${startDate}`);
+        res.redirect(`/r/${campaigncrypt}`);
 
       }
 
@@ -283,7 +338,7 @@ exports.report = async (req, res) => {
 
       }
 
-
+   
       //test si la date de fin de la campagne est => date au jourd'hui = 31j ne pas effectuer la requête
       //date_fin - date du jour = nbr jour
 
@@ -316,10 +371,11 @@ exports.report = async (req, res) => {
 
 
       // 1) RequÃªte POST 
-      let firstLink = await AxiosFunction.getReportingData('POST', '', requestReporting);
-      let twoLink = await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
+      let firstLink =  await AxiosFunction.getReportingData('POST', '', requestReporting);
+      let twoLink =  await AxiosFunction.getReportingData('POST', '', requestVisitor_unique);
 
 
+      console.log(firstLink)
 
       if (firstLink.data.taskId || twoLink.data.taskId) {
         var taskId = firstLink.data.taskId;
@@ -2288,21 +2344,21 @@ exports.report = async (req, res) => {
 
 
             //SEPARATEUR DE MILLIER universel 
-             function numStr(a, b) {
+            function numStr(a, b) {
               a = '' + a;
               b = b || ' ';
               var c = '',
-                  d = 0;
+                d = 0;
               while (a.match(/^0[0-9]/)) {
                 a = a.substr(1);
               }
-              for (var i = a.length-1; i >= 0; i--) {
+              for (var i = a.length - 1; i >= 0; i--) {
                 c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
                 d++;
               }
               return c;
             }
-            
+
 
             total_impression_format = numStr(total_impression_format);
             total_click_format = numStr(total_click_format);
@@ -2325,9 +2381,9 @@ exports.report = async (req, res) => {
 
             //SEPARATEUR DE MILLIER par format site
 
-            total_impressions_linfoVideo =  numStr(total_impressions_linfoVideo);
-            total_clicks_linfoVideo =  numStr(total_clicks_linfoVideo);
-            total_impressions_linfo_androidVideo = numStr(total_impressions_linfo_androidVideo) ;
+            total_impressions_linfoVideo = numStr(total_impressions_linfoVideo);
+            total_clicks_linfoVideo = numStr(total_clicks_linfoVideo);
+            total_impressions_linfo_androidVideo = numStr(total_impressions_linfo_androidVideo);
             total_clicks_linfo_androidVideo = numStr(total_clicks_linfo_androidVideo);
             total_impressions_linfo_iosVideo = numStr(total_impressions_linfo_iosVideo);
             total_clicks_linfo_iosVideo = numStr(total_clicks_linfo_iosVideo);
@@ -2341,17 +2397,17 @@ exports.report = async (req, res) => {
             total_clicks_tf1Video = numStr(total_clicks_tf1Video);
             total_impressions_m6Video = numStr(total_impressions_m6Video);
             total_clicks_m6Video = numStr(total_clicks_m6Video);
-            total_impressions_dailymotionVideo =numStr(total_impressions_dailymotionVideo) ;
-            total_clicks_dailymotionVideo =numStr(total_clicks_dailymotionVideo) ;
+            total_impressions_dailymotionVideo = numStr(total_impressions_dailymotionVideo);
+            total_clicks_dailymotionVideo = numStr(total_clicks_dailymotionVideo);
             total_impressions_actu_iosVideo = numStr(total_impressions_actu_iosVideo);
             total_clicks_actu_iosVideo = numStr(total_clicks_actu_iosVideo);
             total_impressions_actu_androidVideo = numStr(total_impressions_actu_androidVideo);
-            total_clicks_actu_androidVideo =numStr(total_clicks_actu_androidVideo) ;
+            total_clicks_actu_androidVideo = numStr(total_clicks_actu_androidVideo);
 
 
-            total_impressions_linfoHabillage =  numStr(total_impressions_linfoHabillage);
-            total_clicks_linfoHabillage =  numStr(total_clicks_linfoHabillage);
-            total_impressions_linfo_androidHabillage = numStr(total_impressions_linfo_androidHabillage) ;
+            total_impressions_linfoHabillage = numStr(total_impressions_linfoHabillage);
+            total_clicks_linfoHabillage = numStr(total_clicks_linfoHabillage);
+            total_impressions_linfo_androidHabillage = numStr(total_impressions_linfo_androidHabillage);
             total_clicks_linfo_androidHabillage = numStr(total_clicks_linfo_androidHabillage);
             total_impressions_linfo_iosHabillage = numStr(total_impressions_linfo_iosHabillage);
             total_clicks_linfo_iosHabillage = numStr(total_clicks_linfo_iosHabillage);
@@ -2365,17 +2421,17 @@ exports.report = async (req, res) => {
             total_clicks_tf1Habillage = numStr(total_clicks_tf1Habillage);
             total_impressions_m6Habillage = numStr(total_impressions_m6Habillage);
             total_clicks_m6Habillage = numStr(total_clicks_m6Habillage);
-            total_impressions_dailymotionHabillage =numStr(total_impressions_dailymotionHabillage) ;
-            total_clicks_dailymotionHabillage =numStr(total_clicks_dailymotionHabillage) ;
+            total_impressions_dailymotionHabillage = numStr(total_impressions_dailymotionHabillage);
+            total_clicks_dailymotionHabillage = numStr(total_clicks_dailymotionHabillage);
             total_impressions_actu_iosHabillage = numStr(total_impressions_actu_iosHabillage);
             total_clicks_actu_iosHabillage = numStr(total_clicks_actu_iosHabillage);
             total_impressions_actu_androidHabillage = numStr(total_impressions_actu_androidHabillage);
-            total_clicks_actu_androidHabillage =numStr(total_clicks_actu_androidHabillage) ;
+            total_clicks_actu_androidHabillage = numStr(total_clicks_actu_androidHabillage);
 
 
-            total_impressions_linfoInterstitiel =  numStr(total_impressions_linfoInterstitiel);
-            total_clicks_linfoInterstitiel =  numStr(total_clicks_linfoInterstitiel);
-            total_impressions_linfo_androidInterstitiel = numStr(total_impressions_linfo_androidInterstitiel) ;
+            total_impressions_linfoInterstitiel = numStr(total_impressions_linfoInterstitiel);
+            total_clicks_linfoInterstitiel = numStr(total_clicks_linfoInterstitiel);
+            total_impressions_linfo_androidInterstitiel = numStr(total_impressions_linfo_androidInterstitiel);
             total_clicks_linfo_androidInterstitiel = numStr(total_clicks_linfo_androidInterstitiel);
             total_impressions_linfo_iosInterstitiel = numStr(total_impressions_linfo_iosInterstitiel);
             total_clicks_linfo_iosInterstitiel = numStr(total_clicks_linfo_iosInterstitiel);
@@ -2389,16 +2445,16 @@ exports.report = async (req, res) => {
             total_clicks_tf1Interstitiel = numStr(total_clicks_tf1Interstitiel);
             total_impressions_m6Interstitiel = numStr(total_impressions_m6Interstitiel);
             total_clicks_m6Interstitiel = numStr(total_clicks_m6Interstitiel);
-            total_impressions_dailymotionInterstitiel =numStr(total_impressions_dailymotionInterstitiel) ;
-            total_clicks_dailymotionInterstitiel =numStr(total_clicks_dailymotionInterstitiel) ;
+            total_impressions_dailymotionInterstitiel = numStr(total_impressions_dailymotionInterstitiel);
+            total_clicks_dailymotionInterstitiel = numStr(total_clicks_dailymotionInterstitiel);
             total_impressions_actu_iosInterstitiel = numStr(total_impressions_actu_iosInterstitiel);
             total_clicks_actu_iosInterstitiel = numStr(total_clicks_actu_iosInterstitiel);
             total_impressions_actu_androidInterstitiel = numStr(total_impressions_actu_androidInterstitiel);
-            total_clicks_actu_androidInterstitiel =numStr(total_clicks_actu_androidInterstitiel) ;
+            total_clicks_actu_androidInterstitiel = numStr(total_clicks_actu_androidInterstitiel);
 
-            total_impressions_linfoMasthead =  numStr(total_impressions_linfoMasthead);
-            total_clicks_linfoMasthead =  numStr(total_clicks_linfoMasthead);
-            total_impressions_linfo_androidMasthead = numStr(total_impressions_linfo_androidMasthead) ;
+            total_impressions_linfoMasthead = numStr(total_impressions_linfoMasthead);
+            total_clicks_linfoMasthead = numStr(total_clicks_linfoMasthead);
+            total_impressions_linfo_androidMasthead = numStr(total_impressions_linfo_androidMasthead);
             total_clicks_linfo_androidMasthead = numStr(total_clicks_linfo_androidMasthead);
             total_impressions_linfo_iosMasthead = numStr(total_impressions_linfo_iosMasthead);
             total_clicks_linfo_iosMasthead = numStr(total_clicks_linfo_iosMasthead);
@@ -2412,16 +2468,16 @@ exports.report = async (req, res) => {
             total_clicks_tf1Masthead = numStr(total_clicks_tf1Masthead);
             total_impressions_m6Masthead = numStr(total_impressions_m6Masthead);
             total_clicks_m6Masthead = numStr(total_clicks_m6Masthead);
-            total_impressions_dailymotionMasthead =numStr(total_impressions_dailymotionMasthead) ;
-            total_clicks_dailymotionMasthead =numStr(total_clicks_dailymotionMasthead) ;
+            total_impressions_dailymotionMasthead = numStr(total_impressions_dailymotionMasthead);
+            total_clicks_dailymotionMasthead = numStr(total_clicks_dailymotionMasthead);
             total_impressions_actu_iosMasthead = numStr(total_impressions_actu_iosMasthead);
             total_clicks_actu_iosMasthead = numStr(total_clicks_actu_iosMasthead);
             total_impressions_actu_androidMasthead = numStr(total_impressions_actu_androidMasthead);
-            total_clicks_actu_androidMasthead =numStr(total_clicks_actu_androidMasthead) ;
+            total_clicks_actu_androidMasthead = numStr(total_clicks_actu_androidMasthead);
 
-            total_impressions_linfoGrandAngle =  numStr(total_impressions_linfoGrandAngle);
-            total_clicks_linfoGrandAngle =  numStr(total_clicks_linfoGrandAngle);
-            total_impressions_linfo_androidGrandAngle = numStr(total_impressions_linfo_androidGrandAngle) ;
+            total_impressions_linfoGrandAngle = numStr(total_impressions_linfoGrandAngle);
+            total_clicks_linfoGrandAngle = numStr(total_clicks_linfoGrandAngle);
+            total_impressions_linfo_androidGrandAngle = numStr(total_impressions_linfo_androidGrandAngle);
             total_clicks_linfo_androidGrandAngle = numStr(total_clicks_linfo_androidGrandAngle);
             total_impressions_linfo_iosGrandAngle = numStr(total_impressions_linfo_iosGrandAngle);
             total_clicks_linfo_iosGrandAngle = numStr(total_clicks_linfo_iosGrandAngle);
@@ -2435,16 +2491,16 @@ exports.report = async (req, res) => {
             total_clicks_tf1GrandAngle = numStr(total_clicks_tf1GrandAngle);
             total_impressions_m6GrandAngle = numStr(total_impressions_m6GrandAngle);
             total_clicks_m6GrandAngle = numStr(total_clicks_m6GrandAngle);
-            total_impressions_dailymotionGrandAngle =numStr(total_impressions_dailymotionGrandAngle) ;
-            total_clicks_dailymotionGrandAngle =numStr(total_clicks_dailymotionGrandAngle) ;
+            total_impressions_dailymotionGrandAngle = numStr(total_impressions_dailymotionGrandAngle);
+            total_clicks_dailymotionGrandAngle = numStr(total_clicks_dailymotionGrandAngle);
             total_impressions_actu_iosGrandAngle = numStr(total_impressions_actu_iosGrandAngle);
             total_clicks_actu_iosGrandAngle = numStr(total_clicks_actu_iosGrandAngle);
             total_impressions_actu_androidGrandAngle = numStr(total_impressions_actu_androidGrandAngle);
-            total_clicks_actu_androidGrandAngle =numStr(total_clicks_actu_androidGrandAngle) ;
+            total_clicks_actu_androidGrandAngle = numStr(total_clicks_actu_androidGrandAngle);
 
-            total_impressions_linfoNative =  numStr(total_impressions_linfoNative);
-            total_clicks_linfoNative =  numStr(total_clicks_linfoNative);
-            total_impressions_linfo_androidNative = numStr(total_impressions_linfo_androidNative) ;
+            total_impressions_linfoNative = numStr(total_impressions_linfoNative);
+            total_clicks_linfoNative = numStr(total_clicks_linfoNative);
+            total_impressions_linfo_androidNative = numStr(total_impressions_linfo_androidNative);
             total_clicks_linfo_androidNative = numStr(total_clicks_linfo_androidNative);
             total_impressions_linfo_iosNative = numStr(total_impressions_linfo_iosNative);
             total_clicks_linfo_iosNative = numStr(total_clicks_linfo_iosNative);
@@ -2458,12 +2514,12 @@ exports.report = async (req, res) => {
             total_clicks_tf1Native = numStr(total_clicks_tf1Native);
             total_impressions_m6Native = numStr(total_impressions_m6Native);
             total_clicks_m6Native = numStr(total_clicks_m6Native);
-            total_impressions_dailymotionNative =numStr(total_impressions_dailymotionNative) ;
-            total_clicks_dailymotionNative =numStr(total_clicks_dailymotionNative) ;
+            total_impressions_dailymotionNative = numStr(total_impressions_dailymotionNative);
+            total_clicks_dailymotionNative = numStr(total_clicks_dailymotionNative);
             total_impressions_actu_iosNative = numStr(total_impressions_actu_iosNative);
             total_clicks_actu_iosNative = numStr(total_clicks_actu_iosNative);
             total_impressions_actu_androidNative = numStr(total_impressions_actu_androidNative);
-            total_clicks_actu_androidNative =numStr(total_clicks_actu_androidNative) ;
+            total_clicks_actu_androidNative = numStr(total_clicks_actu_androidNative);
 
 
 
@@ -3085,23 +3141,20 @@ exports.report = async (req, res) => {
 
     }
 
-
+ 
 
   } catch (error) {
     console.log(error)
-    //var statusCoded = error.response.status;
+    var statusCoded = error.response.status;
 
     res.render("error.ejs", {
-      statusCoded: error.response.status,
-      advertiserid: advertiserid,
-      campaignid: campaignid,
-      startDate: startDate,
-      endDate: EndtDate,
+      statusCoded: statusCoded,
+      campaigncrypt: campaigncrypt,
     })
 
 
   }
-
+});
 
 
 }

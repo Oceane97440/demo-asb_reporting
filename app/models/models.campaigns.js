@@ -12,6 +12,10 @@ const Campaigns = sequelize.define('campaigns', {
         type: Sequelize.STRING(255),
         allowNull: true
     },
+    campaign_crypt: {
+        type: Sequelize.STRING(255),
+        allowNull: true
+    },
     advertiser_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
