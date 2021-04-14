@@ -141,7 +141,10 @@ exports.logout = async (req, res) => {
 
 exports.index = async (req, res) => {
     try {
-        res.render('home-page.ejs');
+        if (req.session.user.role === 1) {
+            res.render('home-page.ejs');
+        }
+      
     } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
