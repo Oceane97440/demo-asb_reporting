@@ -111,28 +111,31 @@ exports.advertiser_liste = async (req, res) => {
 
   //liste dans une vue tous les annonceurs
   try {
-    var advertisers = await ModelAdvertiser.findAll({
-      attributes: ['advertiser_id', 'advertiser_name'],
-      order: [
-        ['advertiser_name', 'ASC']
-      ],
-    })
-  
-    res.render('manage/list_advertisers.ejs', {
-      advertisers: advertisers
-    });
-  
-  } catch (error) { 
+    if (req.session.user.role === 1) {
+      var advertisers = await ModelAdvertiser.findAll({
+        attributes: ['advertiser_id', 'advertiser_name'],
+        order: [
+          ['advertiser_name', 'ASC']
+        ],
+      })
+
+      res.render('manage/list_advertisers.ejs', {
+        advertisers: advertisers
+      });
+    }
+
+
+  } catch (error) {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs",{
-      statusCoded:statusCoded,
-     
+    res.render("error_log.ejs", {
+      statusCoded: statusCoded,
+
     })
   }
 
- 
+
 }
 
 /*exports.campaign_add = async (req, res) => {
@@ -206,35 +209,40 @@ exports.view_campagne = async (req, res) => {
   //affiche dans une vue les campagnes liée à annnonceur id
 
   try {
-    
-  var advertiser_id = req.params.id
+    if (req.session.user.role === 1) {
 
-  var campaign = await ModelCampaigns.findAll({
-    attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
+      var advertiser_id = req.params.id
 
-    where: {
-      //id_users: userId,
-      advertiser_id: req.params.id
+      var campaign = await ModelCampaigns.findAll({
+        attributes: ['campaign_id', 'campaign_name', 'advertiser_id', 'campaign_start_date', 'campaign_end_date'],
 
-    },
-    include: [{
-      model: ModelAdvertiser
-    }],
+        where: {
+          //id_users: userId,
+          advertiser_id: req.params.id
 
-  })
+        },
+        include: [{
+          model: ModelAdvertiser
+        }],
 
-  res.render('manage/view_campagnes.ejs', {
-    campaign: campaign,
-    advertiser_id: advertiser_id,
-  });
+      })
 
-  } catch (error) { 
+      res.render('manage/view_campagnes.ejs', {
+        campaign: campaign,
+        advertiser_id: advertiser_id,
+      });
+
+
+    }
+
+
+  } catch (error) {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs",{
-      statusCoded:statusCoded,
-     
+    res.render("error_log.ejs", {
+      statusCoded: statusCoded,
+
     })
   }
 
@@ -259,13 +267,13 @@ exports.campagne_json = async (req, res) => {
       res.json(campagnes)
 
     })
-  } catch (error) { 
+  } catch (error) {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs",{
-      statusCoded:statusCoded,
-     
+    res.render("error_log.ejs", {
+      statusCoded: statusCoded,
+
     })
   }
 }

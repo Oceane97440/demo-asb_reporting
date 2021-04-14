@@ -194,9 +194,11 @@ exports.index = async (req, res) => {
   try {
 
 
- 
+    if (req.session.user.role === 1){
+      res.render('home-page.ejs');
+    }
 
-    res.render('home-page.ejs');
+   
 
 
 
