@@ -59,33 +59,58 @@ const {
 exports.creativeUrl = async (req, res) => {
 
     try {
-     
-        var creatives = await ModelCreatives.findAll({
-            attributes: [
-                'creative_id', 'insertion_id', 'creative_url','creative_mime_type'
-            ],
-            
-                [Op.or]: [
-                  {
-                    creative_url: {
-                        [Op.notRegexp]: 'https://cdn.antennepublicite.re'
-                    },
-                  },
-                  {
-                    creative_mime_type: {
-                        [Op.notRegexp]: 'mp4|gif|jpeg|png|html'
-                    }
-                  }
-                ]        
-         
-          
-        })
+    
+        //liste tout les creatives active des urls non https et qui n'ont pas les extentions valide
 
-        console.log(creatives.length)
+        await ModelCreatives.findAll({
+            attributes: [
+                'creative_id','creative_name', 'insertion_id', 'creative_url', 'creative_mime_type','creatives_activated','creatives_archived'
+            ],
+
+            where: {
+
+
+                [Op.or]: [{
+                        creative_url: {
+                            [Op.notRegexp]: 'https://cdn.antennepublicite.re'
+                        },
+
+                    },
+                    {
+                        creative_mime_type: {
+                            [Op.notRegexp]: 'mp4|gif|jpeg|png|html'
+                        }
+                    }
+
+
+                ],
+                creatives_activated : 0,
+                creatives_archived: 0
+            },    
+            
+            include: [{
+                model: ModelInsertions , 
+                insertion_archived: 0
+              }],
+          
+
+
+        }).then(async function (creatives)  {
+
+
+            console.log(creatives.length)
+        
+            res.render("manage/alerts.ejs", {
+              
+                creatives: creatives,
+               
+             
+              })
+        })   
+
 
 
     } catch (error) {
         console.error('Error : ', error);
     }
 }
-
