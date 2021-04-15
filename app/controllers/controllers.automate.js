@@ -129,7 +129,7 @@ exports.agencies = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -193,7 +193,7 @@ exports.advertisers = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -306,7 +306,7 @@ exports.campaigns = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -372,7 +372,7 @@ exports.campaigns = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 */
@@ -510,7 +510,7 @@ exports.formats = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -579,7 +579,7 @@ exports.sites = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -681,7 +681,7 @@ exports.templates = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -738,7 +738,7 @@ exports.platforms = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -795,7 +795,7 @@ exports.deliverytypes = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -864,7 +864,7 @@ exports.countries = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -1023,6 +1023,6 @@ exports.insertions = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
         // console.log(error); var statusCoded = error.response.status;
-        // res.render("error_log.ejs", {statusCoded: statusCoded});
+        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }

@@ -105,7 +105,7 @@ exports.index = async (req, res) => {
         console.log(error)
         var statusCoded = error.response.status;
 
-        res.render("error_log.ejs", {
+        res.render("error.ejs", {
             statusCoded: statusCoded,
 
         })
@@ -945,7 +945,7 @@ exports.forecast = async (req, res, next) => {
         console.log(error)
         var statusCoded = error.response.status;
 
-        res.render("error_log.ejs", {
+        res.render("error.ejs", {
             statusCoded: statusCoded,
 
         })

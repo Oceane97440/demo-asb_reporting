@@ -101,7 +101,7 @@ exports.index = async (req, res) => {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs",{
+    res.render("error.ejs",{
       statusCoded:statusCoded,
      
     })
@@ -250,7 +250,7 @@ exports.csv_import = async (req, res) => {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs",{
+    res.render("error.ejs",{
       statusCoded:statusCoded,
      
     })

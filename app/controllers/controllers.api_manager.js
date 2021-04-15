@@ -98,7 +98,7 @@ const ModelCampaigns = require("../models/models.campaigns")
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs",{
+    res.render("error.ejs",{
       statusCoded:statusCoded,
      
     })
@@ -129,7 +129,7 @@ exports.advertiser_liste = async (req, res) => {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs", {
+    res.render("error.ejs", {
       statusCoded: statusCoded,
 
     })
@@ -195,7 +195,7 @@ exports.advertiser_liste = async (req, res) => {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs",{
+    res.render("error.ejs",{
       statusCoded:statusCoded,
      
     })
@@ -240,7 +240,7 @@ exports.view_campagne = async (req, res) => {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs", {
+    res.render("error.ejs", {
       statusCoded: statusCoded,
 
     })
@@ -271,7 +271,7 @@ exports.campagne_json = async (req, res) => {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error_log.ejs", {
+    res.render("error.ejs", {
       statusCoded: statusCoded,
 
     })
