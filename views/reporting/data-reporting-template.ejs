@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet" />
@@ -24,7 +26,7 @@
         })(window, document, 'script', 'dataLayer', 'GTM-WCLMFB5');
     </script>
     <!-- End Google Tag Manager -->
-    <title>Bilan de la campagne </title>
+    <title>Bilans de campagnes - Antenne Solutions Business</title>
 
     <link rel="icon" type="image/png"
         href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png"
@@ -115,7 +117,7 @@
 
 
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i>  <strong>Bilan global de la campagne</strong>
+            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>Bilan global de la campagne</strong>
             </h3>
 
             <table class="table">
@@ -145,7 +147,7 @@
         </div>
         <% if(table.TotalComplete > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>Bilan global de la campagne vidéo</strong> 
+            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>Bilan global de la campagne vidéo</strong>
             </h3>
 
             <table class="table">
@@ -179,7 +181,7 @@
 
 
         <div class="row p-3 m-5" id="table_global_format">
-            <h3 class="title"><i class="fas fa-chart-line"></i>  <strong>Par Format</strong>
+            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>Par Format</strong>
             </h3>
 
 
@@ -479,7 +481,7 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_interstitiel.interstitiel_linfo_siteName%></td>
-                        <td ><%=data_interstitiel.total_impressions_linfoInterstitiel%></td>
+                        <td><%=data_interstitiel.total_impressions_linfoInterstitiel%></td>
                         <td><%=data_interstitiel.total_clicks_linfoInterstitiel%></td>
                         <td><%=data_interstitiel.interstitiel_linfo_ctr%>%</td>
 
@@ -621,7 +623,7 @@
 
 
 
-                <tfoot >
+                <tfoot>
                     <tr>
                         <td><strong>Total</strong></td>
                         <td><%=table.sommeInterstitielImpression%></td>
@@ -643,7 +645,7 @@
 
         <% if(data_video.videoImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i>  <strong>VIDEO / par site</strong>
+            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>VIDEO / par site</strong>
             </h3>
 
             <table class="table">
@@ -1029,7 +1031,7 @@
 
         <% if(data_grand_angle.grand_angleImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i>  <strong>GRAND ANGLE / par site</strong>
+            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>GRAND ANGLE / par site</strong>
             </h3>
 
             <table class="table">
@@ -1213,7 +1215,7 @@
 
         <% if(data_native.nativeImpressions.length > 0 ) { %>
         <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i>  <strong>NATIVE / par site</strong>
+            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>NATIVE / par site</strong>
             </h3>
 
             <table class="table">

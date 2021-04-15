@@ -54,6 +54,7 @@ const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
 const ModelUser_Role = require("../models/models.users_roles")
 
+
 exports.signup = async (req, res) => {
 
 
@@ -108,7 +109,7 @@ exports.signup_add = async (req, res) => {
       })
       //  console.log(user_role)
 
-      res.redirect('/')
+      res.redirect('/login')
 
 
 
@@ -140,7 +141,7 @@ exports.login_add = async (req, res) => {
 
   if (!email || !password) {
 
-      return res.redirect('/')
+      return res.redirect('/login')
 
   } else {
       try {
@@ -157,7 +158,7 @@ exports.login_add = async (req, res) => {
           // console.log(user)
           if (user.email !== email && user.password !== password) {
 
-              res.redirect('/')
+              res.redirect('/login')
           } else {
               req.session.user = user
                // use session for user connected
@@ -175,14 +176,14 @@ exports.login_add = async (req, res) => {
       } catch (error) { 
         console.log(error)
 
-          res.redirect('/')
+          res.redirect('/login')
       }
   }
 }
 
 exports.logout = async (req, res) => {
   req.session = null
-  res.redirect('/')
+  res.redirect('/login')
 }
 
 

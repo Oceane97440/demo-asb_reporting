@@ -6,7 +6,9 @@ const api = require("../controllers/controllers.index");
     
 
     // Affiche la page api
-    router.get("/",api.login)
+   
+    //router.get("/",api.index)
+    router.get("/login",api.login)
     router.post("/login/add",api.login_add)
     router.get("/home_page", api.index);
     router.get("/signup",api.signup)
