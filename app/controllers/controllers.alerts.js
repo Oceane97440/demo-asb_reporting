@@ -90,7 +90,17 @@ exports.creativeUrl = async (req, res) => {
             
             include: [{
                 model: ModelInsertions , 
-                insertion_archived: 0
+                attributes: ['insertion_id','insertion_archived','insertion_end_date'],
+
+                where: {
+                  
+                    insertion_archived : 0,
+                    insertion_end_date: {
+                        [Op.between]: ['2021-01-01', '2021-04-30'],
+                    }
+                },
+                
+               
               }],
           
 
