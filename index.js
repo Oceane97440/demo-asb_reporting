@@ -200,6 +200,10 @@ app.use('/utilisateur', user);
 const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
 
+// Crée des alerting 
+const alert = require('./app/routes/routes.alerts');
+app.use('/alerts', alert);
+
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);

@@ -3,6 +3,7 @@ const https = require('https');
 const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
+var crypto = require('crypto');
 const {
     Op
 } = require("sequelize");
@@ -24,10 +25,11 @@ const {
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 const SmartFunction = require("../functions/functions.smartadserver.api");
+const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
-const Modelformats = require("../models/models.formats");
+const ModelFormats = require("../models/models.formats");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelSites = require("../models/models.sites");
@@ -36,47 +38,42 @@ const ModelPlatforms = require("../models/models.platforms");
 const ModelDeliverytypes = require("../models/models.deliverytypes");
 const ModelCountries = require("../models/models.countries");
 
-
-
-const ModelGroupsFormatsTypes = require("../models/models.formats_groups_types");
+const ModelGroupsFormatsTypes = require(
+    "../models/models.formats_groups_types"
+);
 const ModelGroupsFormats = require("../models/models.groups_formats");
 const ModelInsertions = require("../models/models.insertions");
+const ModelInsertionsTemplates = require("../models/models.insertionstemplates");
+const ModelCreatives = require("../models/models.creatives");
 
 
 
 const {
     resolve
 } = require('path');
+const {
+    cpuUsage
+} = require('process');
 
 /*
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 */
-
+/*
 async function updateOrCreate(model, where, newItem) {
     // First try to find the record
-    const foundItem = await model.findOne({
-        where
-    });
+    const foundItem = await model.findOne({where});
     if (!foundItem) {
         // Item not found, create a new one
         const item = await model.create(newItem)
-        return {
-            item,
-            created: true
-        };
+        return {item, created: true};
     }
     // Found an item, update it
-    const item = await model.update(newItem, {
-        where
-    });
-    return {
-        item,
-        created: false
-    };
+    const item = await model.update(newItem, {where});
+    return {item, created: false};
 }
-
+*/
 exports.agencies = async (req, res) => {
     try {
         var config = SmartFunction.config('agencies');
@@ -84,7 +81,7 @@ exports.agencies = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -103,20 +100,15 @@ exports.agencies = async (req, res) => {
                             var agency_name = dataValue[i].name;
                             var agency_archived = dataValue[i].isArchived;
 
-
                             const agencies = ModelAgencies.create({
                                 agency_id,
                                 agency_name,
-                                agency_archived,
+                                agency_archived
                             });
-
-
-
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -128,8 +120,7 @@ exports.agencies = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -140,7 +131,7 @@ exports.advertisers = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -157,30 +148,26 @@ exports.advertisers = async (req, res) => {
                             var advertiser_name = dataValue[i].name;
                             var advertiser_archived = dataValue[i].isArchived;
 
-
                             //  console.log(dataValue);
                             const advertiser = ModelAdvertisers.create({
                                 advertiser_id,
                                 advertiser_name,
-                                advertiser_archived,
+                                advertiser_archived
                             });
 
-
-
                             /*
-                                                     
-                            const advertiserDb = Modelformats.findByPk(advertiser_id);
+
+                            const advertiserDb = ModelFormats.findByPk(advertiser_id);
                             if (advertiserDb === null) {
                               console.log('Not found!');
-                              const advertiser = Modelformats.create({advertiser_id, advertiser_name});
+                              const advertiser = ModelFormats.create({advertiser_id, advertiser_name});
                             } else {
-                              console.log('Else : '+advertiserDb instanceof Modelformats); // true
+                              console.log('Else : '+advertiserDb instanceof ModelFormats); // true
                               // Its primary key is 123
                             } */
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -192,14 +179,91 @@ exports.advertisers = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
+
     }
 }
 
 exports.campaigns = async (req, res) => {
     try {
         var config = SmartFunction.config('campaigns');
+        await axios(config).then(function (res) {
+            if (!Utilities.empty(res.data)) {
+                var data = res.data;
+                var number_line = data.length;
+                var number_total_count = res.headers['x-pagination-total-count'];
+                var number_pages = Math.round((number_total_count / 100) + 1);
+                console.log(number_total_count);
+                console.log('Number Pages :' + number_pages);
+
+                const addItem = async () => {
+                    for (let page = 0; page <= number_pages; page++) {
+                        let offset = page * 100;
+                        var config2 = SmartFunction.config('campaigns', offset);
+                        await axios(config2).then(function (response) {
+                            if (!Utilities.empty(response.data)) {
+                                var dataValue = response.data;
+                                var number_line_offset = data.length;
+                                if (number_line_offset >= 0) {
+                                    for (i = 0; i < number_line_offset; i++) {
+
+                                        var campaign_id = dataValue[i].id;
+                                        var campaign_name = dataValue[i].name;
+                                        var advertiser_id = dataValue[i].advertiserId;
+                                        var agency_id = dataValue[i].agencyId;
+                                        var campaign_start_date = dataValue[i].startDate;
+                                        var campaign_end_date = dataValue[i].endDate;
+                                        var campaign_status_id = dataValue[i].campaignStatusId;
+                                        var campaign_archived = dataValue[i].isArchived;
+
+                                        var campaign_crypt = crypto.createHash('md5').update(campaign_id.toString()).digest("hex");
+
+
+                                        console.log(campaign_crypt)
+
+                                       Utilities.updateOrCreate(ModelCampaigns, {
+                                            campaign_id: campaign_id
+                                        }, {
+                                            campaign_id,
+                                            campaign_name,
+                                            campaign_crypt,
+                                            advertiser_id,
+                                            agency_id,
+                                            campaign_start_date,
+                                            campaign_end_date,
+                                            campaign_status_id,
+                                            campaign_archived
+                                        }).then(function (result) {
+                                            result.item; // the model
+                                            result.created; // bool, if a new item was created.
+                                        });
+
+
+                                    }
+                                }
+                            } else {
+                                console.error('Error : Aucune donnée disponible');
+                            }
+
+                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        });
+                    }
+                }
+
+                addItem();
+
+
+            } else {
+                console.error('Error : Aucune donnée disponible');
+            }
+        });
+    } catch (error) {
+        console.error('Error : ' + error);
+    }
+}
+
+exports.formats = async (req, res) => {
+    try {
+        var config = SmartFunction.config('formats');
         await axios(config).then(function (res) {
             var data = res.data;
             var number_line = data.length;
@@ -211,293 +275,41 @@ exports.campaigns = async (req, res) => {
             const addItem = async () => {
                 for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
-
-                    var config2 = SmartFunction.config('campaigns', offset);
-
-                    await axios(config2).then(function (response) {
-                        var dataValue = response.data;
-
-                        for (i = 0; i < number_line; i++) {
-
-                            var campaign_id = dataValue[i].id;
-                            var campaign_name = dataValue[i].name;
-                            var advertiser_id = data[i].advertiserId;
-                            var agency_id = dataValue[i].agencyId;
-                            var campaign_start_date = dataValue[i].startDate;
-                            var campaign_end_date = dataValue[i].endDate;
-                            var campaign_status_id = dataValue[i].campaignStatusId;
-                            var campaign_archived = dataValue[i].isArchived;
-
-                            console.log('advertiser_id:  ' + advertiser_id)
-
-                          /*  var findOneAdvertise = ModelAdvertisers.findOne({
-                                attributes: ['advertiser_id'],
-
-                                where: {
-                                    advertiser_id: advertiser_id,
-                                }
-                            })
-
-                        
-                            if (!findOneAdvertise) {
-                                const advertiser_id = 1;
-
-                                const campaigns = ModelCampaigns.create({
-                                        campaign_id,
-                                        campaign_name,
-                                        advertiser_id,
-                                        agency_id,
-                                        campaign_start_date,
-                                        campaign_end_date,
-                                        campaign_status_id,
-                                        campaign_archived
-                                    })
-                                    .then(campagne => {
-                                        return res.send("OK: le campagne est ajouté à la bdd")
-                                    })
-
-                            } */
-
-
-
-                             updateOrCreate(ModelCampaigns, {
-                                     campaign_id: campaign_id
-                                 }, {
-                                     campaign_id,
-                                    campaign_name,
-                                     advertiser_id,
-                                     agency_id,
-                                     campaign_start_date,
-                                     campaign_end_date,
-                                     campaign_status_id,
-                                     campaign_archived
-
-                                 }).then(function (result) {
-                                     result.item; // the model
-                                     result.created; // bool, if a new item was created.
-                                 });
-
-                            // const tableDb = ModelCampaigns.findByPk(campaign_id);
-                            // console.log(tableDb);
-
-                            /*
-                            const tableDb = ModelCampaigns.findByPk(campaign_id);
-                            if (tableDb === null) {
-                              console.log('Not found!');
-                              const campaigns = ModelCampaigns.create({campaign_id, campaign_name, advertiser_id, start_date, end_date});
-                            } else {
-                              console.log('Else : '+tableDb instanceof ModelCampaigns); // true
-                              // Its primary key is 123
-                            }    
-                            */
-                        }
-
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
-                    });
-                }
-            }
-
-            addItem();
-
-            //  return false;
-        });
-
-    } catch (error) {
-        console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
-    }
-}
-
-/*exports.campaigns = async (req, res) => {
-    try {
-        var config = SmartFunction.config('campaigns');
-        await axios(config).then(function (res) {
-            var data = res.data;
-            var number_line = data.length;
-            var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
-            console.log(number_total_count);
-            console.log('Number Pages :' + number_pages);
-
-            const addItem = async () => {
-                for (let page = 0; page <= number_pages; page++) {
-                    let offset = page * 100;
-                    var config2 = SmartFunction.config('campaigns', offset);
-                    await axios(config2).then(function (response) {
-                        var dataValue = response.data;
-                        var number_line_offset = data.length;
-
-                        for (i = 0; i < number_line_offset; i++) {
-
-
-                            var campaign_id = dataValue[i].id;
-                            var campaign_name = dataValue[i].name;
-                            var advertiser_id = data[i].advertiserId;
-                            var agency_id = dataValue[i].agencyId;
-                            var campaign_start_date = dataValue[i].startDate;
-                            var campaign_end_date = dataValue[i].endDate;
-                            var campaign_status_id = dataValue[i].campaignStatusId;
-                            var campaign_archived = dataValue[i].isArchived;
-
-
-                            // console.log({campaign_id, campaign_name, advertiser_id, start_date, end_date});
-
-                            //console.log(dataValue)
-                           var campaigns= ModelCampaigns.create({
-                                campaign_id,
-                                campaign_name,
-                                advertiser_id,
-                                agency_id,
-                                campaign_start_date,
-                                campaign_end_date,
-                                campaign_status_id,
-                                campaign_archived
-                            });
-
-
-                        }
-
-
-                    });
-                }
-            }
-
-            addItem();
-
-            return false;
-        });
-
-    } catch (error) {
-        console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
-    }
-}
-*/
-exports.formats = async (req, res) => {
-    try {
-        var config = SmartFunction.config('formats');
-        await axios(config).then(function (res) {
-            var data = res.data;
-            var number_line = data.length;
-            var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
-            console.log(number_total_count);
-            console.log('Number Pages :' + number_pages);
-
-            const addItem = async () => {
-                for (let page = 0; page <= number_pages; page++) {
-                    let offset = page * 100;
                     var config2 = SmartFunction.config('formats', offset);
                     await axios(config2).then(function (response) {
                         var dataValue = response.data;
                         var number_line_offset = data.length;
-
-
-
 
                         for (i = 0; i < number_line_offset; i++) {
 
                             //console.log(dataValue)
                             var format_id = dataValue[i].id;
                             var format_name = dataValue[i].name;
-
-                            //solution provisoire 
-                            switch (dataValue[i].id) {
-                                case 44149 || 79637:
-                                    //si c habillage -> web_habillage / app_mban_atf
-                                    var format_group = 2
-                                    break;
-
-                                case 44152 || 79633:
-                                    //si grand angle ->web_mban  app_mpave_atf0 
-                                    var format_group = 1
-                                    break;
-                                case 79637 ||
-                                79638 ||
-                                79642 ||
-                                79643 ||
-                                79644 ||
-                                79645 ||
-                                84652 ||
-                                84653 ||
-                                84654 ||
-                                84655 ||
-                                84656 ||
-                                79421 ||
-                                79646:
-                                    //si masthead -> web_mban / app_mban
-                                    var format_group = 4
-                                    break;
-                                case 79425 ||
-                                84657 ||
-                                84658 ||
-                                84659 ||
-                                84660 ||
-                                84661 ||
-                                79431:
-                                    //si instream -> linear 
-                                    var format_group = 5
-                                    break;
-                                case 85016 ||
-                                96472:
-                                    var format_group = 3
-                                    break;
-
-                                case 43791:
-                                    var format_group = 6
-                                    break;
-
-                                default:
-                                    var format_group = 0
-
-                                    break;
-                            }
-
-
-
-
-                            //console.log(Array_FormatsName)
-
-
-                            //voir les relation
-                            const groups_formats_types = ModelGroupsFormatsTypes.create({
-                                group_format_id: format_group,
-                                format_id: format_id
-                            })
                             var format_width = data[i].width;
                             var format_height = dataValue[i].height;
                             var format_type_id = dataValue[i].formatTypeId;
                             var format_archived = dataValue[i].isArchived;
                             var format_resource_url = dataValue[i].resourceUrl;
 
-
-                            updateOrCreate(Modelformats, {
-                                    format_id: format_id
-                                }, {
-                                    format_id,
-                                    format_name,
-                                    format_width,
-                                    format_height,
-                                    format_type_id,
-                                    format_archived,
-                                    format_resource_url
-                                })
-
-                                .then(function (result) {
-                                    result.item; // the model
-                                    result.created; // bool, if a new item was created.
-                                });
+                            Utilities.updateOrCreate(ModelFormats, {
+                                format_id: format_id
+                            }, {
+                                format_id,
+                                format_name,
+                                format_width,
+                                format_height,
+                                format_type_id,
+                                format_archived,
+                                format_resource_url
+                            }).then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+                            });
                             //  console.log(formats)
-
 
                         }
 
-
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -509,10 +321,11 @@ exports.formats = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
+
     }
 }
+
+
 
 exports.sites = async (req, res) => {
     try {
@@ -521,7 +334,7 @@ exports.sites = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -535,7 +348,6 @@ exports.sites = async (req, res) => {
 
                         for (i = 0; i < number_line_offset; i++) {
 
-
                             var site_id = dataValue[i].id;
                             var site_is_child_directed = dataValue[i].isChildDirected;
                             var site_name = dataValue[i].name;
@@ -547,7 +359,6 @@ exports.sites = async (req, res) => {
                             var site_business_model_value = dataValue[i].siteApplicationId;
                             var site_application_id = dataValue[i].siteApplicationId;
                             var site_updated_at = dataValue[i].updatedAt
-
 
                             const sites = ModelSites.create({
                                 site_id,
@@ -563,9 +374,7 @@ exports.sites = async (req, res) => {
                                 site_updated_at
                             });
 
-
                         }
-
 
                     });
                 }
@@ -578,112 +387,118 @@ exports.sites = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
+
     }
 }
-
-
 
 exports.templates = async (req, res) => {
     try {
         var config = SmartFunction.config('templates');
         await axios(config).then(function (res) {
-            var data = res.data;
-            var number_line = data.length;
-            var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
-            console.log(number_total_count);
-            console.log('Number Pages :' + number_pages);
+            if (!Utilities.empty(res.data)) {
+                var data = res.data;
+                var number_line = data.length;
+                var number_total_count = res.headers['x-pagination-total-count'];
+                var number_pages = Math.round((number_total_count / 100) + 1);
+                console.log(number_total_count);
+                console.log('Number Pages :' + number_pages);
 
-            const addItem = async () => {
-                for (let page = 0; page <= number_pages; page++) {
-                    let offset = 0; // page*100;
-                    var config2 = SmartFunction.config('templates', offset);
+                const addItem = async () => {
+                    for (let page = 0; page <= number_pages; page++) {
+                        let offset = page * 100;
+                        var config2 = SmartFunction.config('templates', offset);
+                        await axios(config2).then(function (response) {
+                            if (!Utilities.empty(response.data)) {
+                                var dataValue = response.data;
+                                var number_line_offset = data.length;
+                                if (number_line_offset >= 0) {
+                                    for (i = 0; i < number_line_offset; i++) {
 
-                    await axios(config2).then(function (response) {
-                        var dataValue = response.data;
+                                        var template_id = dataValue[i].id;
+                                        var template_name = dataValue[i].name;
+                                        var template_description = data[i].description;
+                                        var template_official = dataValue[i].isOfficial;
+                                        var template_archived = dataValue[i].isArchived;
+                                        var parameter_default_values = dataValue[i].parameterDefaultValues;
+                                        var template_original_id = dataValue[i].originalId;
+                                        var documentation_url = dataValue[i].documentationURL;
+                                        var type = dataValue[i].type;
+                                        var draft_script_id = dataValue[i].draftScriptId;
+                                        var replaced_by = dataValue[i].replacedBy;
+                                        var editable = dataValue[i].isEditable;
+                                        var published = dataValue[i].isPublished;
+                                        var deprecated = dataValue[i].isDeprecated;
+                                        var hidden = dataValue[i].isHidden;
+                                        var template_updated_at = dataValue[i].updatedAt;
+                                        var major_version = dataValue[i].majorVersion;
+                                        var minor_version = dataValue[i].minorVersion;
+                                        var release_note = dataValue[i].isArchived;
+                                        var recommendation = dataValue[i].releaseNote;
+                                        var sale_channel_id = dataValue[i].salesChannelId;
+                                        var fixed_image_url = dataValue[i].previewImageUrls.fixedImageUrl;
+                                        var dynamic_image_url = dataValue[i].previewImageUrls.dynamicImageUrl;
+                                        var gallery_url = dataValue[i].galleryUrl;
 
-                        for (i = 0; i < number_line; i++) {
-
-                            var template_id = dataValue[i].id;
-                            var template_name = dataValue[i].name;
-                            var template_description = data[i].description;
-                            var template_official = dataValue[i].isOfficial;
-                            var template_archived = dataValue[i].isArchived;
-                            var parameter_default_values = dataValue[i].parameterDefaultValues;
-                            var template_original_id = dataValue[i].originalId;
-                            var documentation_url = dataValue[i].documentationURL;
-                            var type = dataValue[i].type;
-                            var draft_script_id = dataValue[i].draftScriptId;
-                            var replaced_by = dataValue[i].replacedBy;
-                            var editable = dataValue[i].isEditable;
-                            var published = dataValue[i].isPublished;
-                            var deprecated = dataValue[i].isDeprecated;
-                            var hidden = dataValue[i].isHidden;
-                            var template_updated_at = dataValue[i].updatedAt;
-                            var major_version = dataValue[i].majorVersion;
-                            var minor_version = dataValue[i].minorVersion;
-                            var release_note = dataValue[i].isArchived;
-                            var recommendation = dataValue[i].releaseNote;
-                            var sale_channel_id = dataValue[i].salesChannelId;
-                            var fixed_image_url = dataValue[i].previewImageUrls.fixedImageUrl;
-                            var dynamic_image_url = dataValue[i].previewImageUrls.dynamicImageUrl;
-                            var gallery_url = dataValue[i].galleryUrl;
-
-
-                            // console.log(dataValue)
-                            ModelTemplates.create({
-                                template_id,
-                                template_name,
-                                template_description,
-                                template_official,
-                                template_archived,
-                                parameter_default_values,
-                                template_original_id,
-                                documentation_url,
-                                type,
-                                draft_script_id,
-                                replaced_by,
-                                editable,
-                                published,
-                                deprecated,
-                                hidden,
-                                template_updated_at,
-                                major_version,
-                                minor_version,
-                                release_note,
-                                recommendation,
-                                sale_channel_id,
-                                fixed_image_url,
-                                dynamic_image_url,
-                                gallery_url,
-                            });
+                                        Utilities.updateOrCreate(ModelTemplates, {
+                                            template_id: template_id
+                                        }, {
+                                            template_id,
+                                            template_name,
+                                            template_description,
+                                            template_official,
+                                            template_archived,
+                                            parameter_default_values,
+                                            template_original_id,
+                                            documentation_url,
+                                            type,
+                                            draft_script_id,
+                                            replaced_by,
+                                            editable,
+                                            published,
+                                            deprecated,
+                                            hidden,
+                                            template_updated_at,
+                                            major_version,
+                                            minor_version,
+                                            release_note,
+                                            recommendation,
+                                            sale_channel_id,
+                                            fixed_image_url,
+                                            dynamic_image_url,
+                                            gallery_url
+                                        }).then(function (result) {
+                                            result.item; // the model
+                                            result.created; // bool, if a new item was created.
+                                        });
 
 
-                            // const tableDb = ModelCampaigns.findByPk(campaign_id);
-                            // console.log(tableDb);
+                                        // const tableDb = ModelCampaigns.findByPk(campaign_id); console.log(tableDb);
 
+                                    }
 
-                        }
+                                }
+                            } else {
+                                console.error('Error : Aucune donnée disponible');
+                            }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
-                    });
+                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        });
+                    }
                 }
+
+                addItem();
+
+
+            } else {
+                console.error('Error : Aucune donnée disponible');
             }
-
-            addItem();
-
-            //  return false;
         });
-
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }
+
+
 
 exports.platforms = async (req, res) => {
     try {
@@ -692,13 +507,14 @@ exports.platforms = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
 
-                //<= car si le nombre de page est = 0 et que page = 0 la condiction ne fonctionne pas
+                // <= car si le nombre de page est = 0 et que page = 0 la condiction ne
+                // fonctionne pas
                 for (let page = 0; page <= number_pages; page++) {
                     //  page = 0
                     let offset = page * 100;
@@ -711,21 +527,15 @@ exports.platforms = async (req, res) => {
                             var platform_id = dataValue[i].id;
                             var platform_name = dataValue[i].name;
 
-
                             console.log(dataValue);
                             ModelPlatforms.create({
                                 platform_id,
-                                platform_name,
-
+                                platform_name
                             });
-
-
-
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -737,8 +547,7 @@ exports.platforms = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
+
     }
 }
 
@@ -749,13 +558,14 @@ exports.deliverytypes = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
             const addItem = async () => {
 
-                //<= car si le nombre de page est = 0 et que page = 0 la condiction ne fonctionne pas
+                // <= car si le nombre de page est = 0 et que page = 0 la condiction ne
+                // fonctionne pas
                 for (let page = 0; page <= number_pages; page++) {
                     //  page = 0
                     let offset = page * 100;
@@ -768,21 +578,15 @@ exports.deliverytypes = async (req, res) => {
                             var deliverytype_id = dataValue[i].id;
                             var deliverytype_name = dataValue[i].name;
 
-
                             //  console.log(dataValue);
                             ModelDeliverytypes.create({
                                 deliverytype_id,
-                                deliverytype_name,
-
+                                deliverytype_name
                             });
-
-
-
 
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -794,11 +598,9 @@ exports.deliverytypes = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
+
     }
 }
-
 
 exports.countries = async (req, res) => {
     try {
@@ -807,7 +609,7 @@ exports.countries = async (req, res) => {
             var data = res.data;
             var number_line = data.length;
             var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
+            var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
 
@@ -836,22 +638,19 @@ exports.countries = async (req, res) => {
                                 country_extended_name
                             });
 
-
-
                             /*
-                                                     
-                            const advertiserDb = Modelformats.findByPk(advertiser_id);
+
+                            const advertiserDb = ModelFormats.findByPk(advertiser_id);
                             if (advertiserDb === null) {
                               console.log('Not found!');
-                              const advertiser = Modelformats.create({advertiser_id, advertiser_name});
+                              const advertiser = ModelFormats.create({advertiser_id, advertiser_name});
                             } else {
-                              console.log('Else : '+advertiserDb instanceof Modelformats); // true
+                              console.log('Else : '+advertiserDb instanceof ModelFormats); // true
                               // Its primary key is 123
                             } */
                         }
 
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
                     });
                 }
             }
@@ -863,166 +662,375 @@ exports.countries = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
+
     }
 }
 
 
 
+exports.insertionstemplates = async (req, res) => {
+    // Délai d'attente
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    try {
+        // Listes toutes les données de InsertionsTemplates
+        var insertionTemplatesDB = await ModelInsertionsTemplates.findAll(
+            {attributes: ['insertion_id']}
+        );
+        insertionTemplatesDBIds = new Array();
+        for (o = 0; o < insertionTemplatesDB.length; o++) {
+            insertionTemplatesDBIds[o] = insertionTemplatesDB[o].insertion_id;
+        }
+       
+        // Liste toutes les données de Insertions
+        var insertionDB = await ModelInsertions.findAll({
+            where: {
+                'insertion_id': {
+                    [Op.notIn]: insertionTemplatesDBIds
+                },
+                'insertion_archived' : '0',
+                'insertion_created_at': {
+                    [Op.between]: ['2021-01-01', '2021-04-30'],
+                }
+            },
+            attributes: ['insertion_id']
+        });
+
+        var number_total_count = insertionDB.length;
+        var number_pages = Math.round((number_total_count / 20) + 1);
+        console.log('number_total_count', number_total_count);
+        console.log('number_pages', number_pages);
+       // await delay(10000); process.exit(1);
+
+        if (number_total_count > 0) {
+            j = 0;
+            for (i = 0; i < number_total_count; i++) {
+                console.log(insertionDB[i].insertion_id)
+                insertionObject = {
+                    "insertion_id": insertionDB[i].insertion_id
+                };
+                console.log(j++);
+
+                var config = SmartFunction.config(
+                    'insertionstemplates',
+                    '',
+                    '',
+                    insertionObject
+                );
+
+                await axios(config).then(function (res) {
+                    //console.log(res.data); process.exit(1);
+
+                    if (!Utilities.empty(res.data)) {
+                        //  return res.json(resa.data);
+                        var dataValue = res.data;
+                        //      console.log(dataValue);
+
+                        var insertion_id = dataValue.insertionId;
+                        var parameter_value = dataValue.parameterValues;
+                        var template_id = dataValue.templateId;
+
+                        Utilities
+                            .updateOrCreate(ModelInsertionsTemplates, {
+                                insertion_id: insertion_id
+                            }, {insertion_id, parameter_value, template_id})
+                            .then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+                            });
+
+                    }
+                });               
+            }
+        
+        }
+
+    } catch (error) {
+        console.error('Error : ', error);
+    }
+}
+
+exports.creatives = async (req, res) => {
+    // Délai d'attente
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    try {
+        // Listes toutes les données de InsertionsTemplates
+        var insertionCreativesDB = await ModelCreatives.findAll(
+            {attributes: ['insertion_id']}
+        );
+        insertionCreativesDBIds = new Array();
+        for (o = 0; o < insertionCreativesDB.length; o++) {
+            insertionCreativesDBIds[o] = insertionCreativesDB[o].insertion_id;
+        }
+       
+        // Liste toutes les données de Insertions
+        var insertionDB = await ModelInsertions.findAll({
+            where: {
+                'insertion_id': {
+                    [Op.notIn]: insertionCreativesDBIds
+                },
+                'insertion_archived' : '0',
+                'insertion_created_at': {
+                    [Op.between]: ['2021-01-01', '2021-04-30'],
+                }
+            },
+            attributes: ['insertion_id']
+        });
+
+        var number_total_count = insertionDB.length;
+        var number_pages = Math.round((number_total_count / 20) + 1);
+        console.log('number_total_count', number_total_count);
+        console.log('number_pages', number_pages);
+       // await delay(10000); process.exit(1);
+
+        if (number_total_count > 0) {
+            j = 0;
+            for (i = 0; i < number_total_count; i++) {
+                console.log('insertionDB  ',insertionDB[i].insertion_id)
+                insertionObject = {
+                    "insertion_id": insertionDB[i].insertion_id
+                };
+               // console.log(j++);
+
+                var config = SmartFunction.config(
+                    'creatives',
+                    '',
+                    '',
+                    insertionObject
+                );
+
+                await axios(config).then(function (res) {
+                    //console.log(res.data); process.exit(1);
+
+                    if (!Utilities.empty(res.data)) {
+                        //  return res.json(resa.data);
+                        var dataValue = res.data;
+
+                        var number_line_offset = dataValue.length;
+
+                        console.log('dataValue  ',dataValue)
+
+                        if (number_line_offset >= 0) {
+                            for (m = 0; m < number_line_offset; m++) {
+
+                                
+
+                        var creative_id =  dataValue[m].id;
+                        var creative_name =  dataValue[m].name;
+                        var file_name =  dataValue[m].fileName;
+                        var insertion_id = dataValue[m].insertionId;
+                        var creative_resource_url = dataValue[m].resourceUrl;
+                        var creative_url = dataValue[m].url;
+                        var creative_click_url = dataValue[m].clickUrl;
+                        var creative_width = dataValue[m].width;
+                        var creative_height = dataValue[m].height;
+                        var creative_mime_type = dataValue[m].mimeType;
+                        var creative_percentage_delivery = dataValue[m].percentageOfDelivery;
+                        var creatives_type_id = dataValue[m].creativeTypeId;
+                        var creatives_activated = dataValue[m].isActivated;
+                        var creatives_archived = dataValue[m].isArchived;
+
+
+
+
+                        Utilities
+                            .updateOrCreate(ModelCreatives, {
+                                creative_id: creative_id
+                            }, {creative_id, 
+                                creative_name, 
+                                file_name,
+                                insertion_id,
+                                creative_resource_url,
+                                creative_url,
+                                creative_click_url,
+                                creative_width,
+                                creative_height,
+                                creative_mime_type,
+                                creative_percentage_delivery,
+                                creatives_type_id,
+                                creatives_activated,
+                                creatives_archived
+                            })
+                            .then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+                            });
+
+                            }
+                        }
+                      
+
+                    }
+                });               
+            }
+        
+        }
+
+    } catch (error) {
+        console.error('Error : ', error);
+    }
+}
 
 
 exports.insertions = async (req, res) => {
+
     try {
+
+
+
         var config = SmartFunction.config('insertions');
         await axios(config).then(function (res) {
-            var data = res.data;
-            var number_line = data.length;
-            var number_total_count = res.headers['x-pagination-total-count'];
-            var number_pages = Math.round(number_total_count / 100);
-            console.log(number_total_count);
-            console.log('Number Pages :' + number_pages);
+            if (!Utilities.empty(res.data)) {
+                var data = res.data;
+                var number_line = data.length;
+                var number_total_count = res.headers['x-pagination-total-count'];
+                var number_pages = Math.round((number_total_count / 100) + 1);
+                console.log(number_total_count);
+                console.log('Number Pages :' + number_pages);
 
-            const addItem = async () => {
-                for (let page = 0; page <= number_pages; page++) {
-                    let offset = page * 100;
-                    var config2 = SmartFunction.config('insertions', offset);
-                    await axios(config2).then(function (response) {
-                        var dataValue = response.data;
-                        var number_line_offset = data.length;
+                const addItem = async () => {
+                    for (let page = 0; page <= number_pages; page++) {
+                        let offset = page * 100;
+                        var config2 = SmartFunction.config('insertions', offset);
+                        await axios(config2).then(function (response) {
+                            if (!Utilities.empty(response.data)) {
+                                var dataValue = response.data;
+                                var number_line_offset = data.length;
+                                if (number_line_offset >= 0) {
+                                    for (i = 0; i < number_line_offset; i++) {
 
-                        for (i = 0; i < number_line_offset; i++) {
+                                        // console.log(dataValue)
+                                        var insertion_id = dataValue[i].id;
+                                        var delivery_regulated = dataValue[i].isDeliveryRegulated;
+                                        var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
+                                        var used_non_guaranteed_deal = dataValue[i].heigisUsedByNonGuaranteedDealht;
+                                        var voice_share = dataValue[i].voiceShare;
+                                        var event_id = dataValue[i].eventId;
+                                        var insertion_name = dataValue[i].name;
+                                        var insertion_description = dataValue[i].description;
+                                        //  var site_id = dataValue[i].siteIds;
 
-                            // console.log(dataValue)
-                            var insertion_id = dataValue[i].id;
-                            var delivery_regulated = dataValue[i].isDeliveryRegulated;
-                            var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
-                            var used_non_guaranteed_deal = dataValue[i].heigisUsedByNonGuaranteedDealht;
-                            var voice_share = dataValue[i].voiceShare;
-                            var event_id = dataValue[i].eventId;
-                            var insertion_name = dataValue[i].name;
-                            var insertion_description = dataValue[i].description;
-                            //  var site_id = dataValue[i].siteIds;
+                                        var pack_id = dataValue[i].packIds;
+                                        var insertion_status_id = dataValue[i].insertionStatusId;
+                                        var insertion_start_date = dataValue[i].startDate;
+                                        var insertion_end_date = dataValue[i].endDate;
+                                        var campaign_id = dataValue[i].campaignId;
+                                        var insertion_type_id = dataValue[i].insertionTypeId;
+                                        var delivery_type_id = dataValue[i].deliveryTypeId;
+                                        var timezone_id = dataValue[i].timezoneId;
+                                        var priority_id = dataValue[i].priorityId;
+                                        var periodic_capping_id = dataValue[i].periodicCappingId;
+                                        var group_capping_id = dataValue[i].groupCappingId;
+                                        var max_impression = dataValue[i].maxImpressions;
+                                        var weight = dataValue[i].weight;
+                                        var max_click = dataValue[i].maxClicks;
+                                        var max_impression_perday = dataValue[i].maxImpressionsPerDay;
+                                        var max_click_perday = dataValue[i].maxClicksPerDay;
+                                        var insertion_groupe_volume = dataValue[i].insertionGroupedVolumeId
+                                        var event_impression = dataValue[i].eventImpressions;
+                                        var holistic_yield_enabled = dataValue[i].isHolisticYieldEnabled;
+                                        var deliver_left_volume_after_end_date = dataValue[i].deliverLeftVolumeAfterEndDate;
+                                        var global_capping = dataValue[i].globalCapping;
+                                        var capping_per_visit = dataValue[i].cappingPerVisit;
+                                        var capping_per_click = dataValue[i].cappingPerClick;
+                                        var auto_capping = dataValue[i].autoCapping;
+                                        var periodic_capping_impression = dataValue[i].periodicCappingImpressions;
+                                        var periodic_capping_period = dataValue[i].periodicCappingPeriod;
+                                        var oba_icon_enabled = dataValue[i].isObaIconEnabled;
+                                        var format_id = dataValue[i].formatId;
+                                        var external_id = dataValue[i].externalId;
+                                        var external_description = dataValue[i].externalDescription;
+                                        var insertion_updated_at = dataValue[i].updatedAt;
+                                        var insertion_created_at = dataValue[i].createdAt;
+                                        var insertion_archived = dataValue[i].isArchived;
+                                        var rate_type_id = dataValue[i].rateTypeId;
+                                        var rate = dataValue[i].rate;
+                                        var rate_net = dataValue[i].rateNet;
+                                        var discount = dataValue[i].discount;
+                                        var currency_id = dataValue[i].currencyId;
+                                        var insertion_link_id = dataValue[i].insertionLinkId;
+                                        var insertion_exclusion_id = dataValue[i].insertionExclusionIds;
+                                        var customized_script = dataValue[i].customizedScript;
+                                        var sale_channel_id = dataValue[i].salesChannelId;
 
-                            var pack_id = dataValue[i].packIds;
-                            var insertion_status_id = dataValue[i].insertionStatusId;
-                            var insertion_start_date = dataValue[i].startDate;
-                            var insertion_end_date = dataValue[i].endDate;
-                            var campaign_id = dataValue[i].campaignId;
-                            var insertion_type_id = dataValue[i].insertionTypeId;
-                            var delivery_type_id = dataValue[i].deliveryTypeId;
-                            var timezone_id = dataValue[i].timezoneId;
-                            var priority_id = dataValue[i].priorityId;
-                            var periodic_capping_id = dataValue[i].periodicCappingId;
-                            var group_capping_id = dataValue[i].groupCappingId;
-                            var max_impression = dataValue[i].maxImpressions;
-                            var weight = dataValue[i].weight;
-                            var max_click = dataValue[i].maxClicks;
-                            var max_impression_perday = dataValue[i].maxImpressionsPerDay;
-                            var max_click_perday = dataValue[i].maxClicksPerDay;
-                            var insertion_groupe_volume = dataValue[i].insertionGroupedVolumeId
-                            var event_impression = dataValue[i].eventImpressions;
-                            var holistic_yield_enabled = dataValue[i].isHolisticYieldEnabled;
-                            var deliver_left_volume_after_end_date = dataValue[i].deliverLeftVolumeAfterEndDate;
-                            var global_capping = dataValue[i].globalCapping;
-                            var capping_per_visit = dataValue[i].cappingPerVisit;
-                            var capping_per_click = dataValue[i].cappingPerClick;
-                            var auto_capping = dataValue[i].autoCapping;
-                            var periodic_capping_impression = dataValue[i].periodicCappingImpressions;
-                            var periodic_capping_period = dataValue[i].periodicCappingPeriod;
-                            var oba_icon_enabled = dataValue[i].isObaIconEnabled;
-                            var format_id = dataValue[i].formatId;
-                            var external_id = dataValue[i].externalId;
-                            var external_description = dataValue[i].externalDescription;
-                            var insertion_updated_at = dataValue[i].updatedAt;
-                            var insertion_created_at = dataValue[i].createdAt;
-                            var insertion_archived = dataValue[i].isArchived;
-                            var rate_type_id = dataValue[i].rateTypeId;
-                            var rate = dataValue[i].rate;
-                            var rate_net = dataValue[i].rateNet;
-                            var discount = dataValue[i].discount;
-                            var currency_id = dataValue[i].currencyId;
-                            var insertion_link_id = dataValue[i].insertionLinkId;
-                            var insertion_exclusion_id = dataValue[i].insertionExclusionIds;
-                            var customized_script = dataValue[i].customizedScript;
-                            var sale_channel_id = dataValue[i].salesChannelId;
+                                        const insertions = ModelInsertions.create({
+                                            insertion_id,
+                                            delivery_regulated,
+                                            used_guaranteed_deal,
+                                            used_non_guaranteed_deal,
+                                            voice_share,
+                                            event_id,
+                                            insertion_name,
+                                            insertion_description,
+                                            // site_id,
+                                            pack_id,
+                                            insertion_status_id,
+                                            insertion_start_date,
+                                            insertion_end_date,
+                                            campaign_id,
+                                            insertion_type_id,
+                                            delivery_type_id,
+                                            timezone_id,
+                                            priority_id,
+                                            periodic_capping_id,
+                                            group_capping_id,
+                                            max_impression,
+                                            weight,
+                                            max_click,
+                                            max_impression_perday,
+                                            max_click_perday,
+                                            insertion_groupe_volume,
+                                            event_impression,
+                                            holistic_yield_enabled,
+                                            deliver_left_volume_after_end_date,
+                                            global_capping,
+                                            capping_per_visit,
+                                            capping_per_click,
+                                            auto_capping,
+                                            periodic_capping_impression,
+                                            periodic_capping_period,
+                                            oba_icon_enabled,
+                                            format_id,
+                                            external_id,
+                                            external_description,
+                                            insertion_updated_at,
+                                            insertion_created_at,
+                                            insertion_archived,
+                                            rate_type_id,
+                                            rate,
+                                            rate_net,
+                                            discount,
+                                            currency_id,
+                                            insertion_link_id,
+                                            insertion_exclusion_id,
+                                            customized_script,
+                                            sale_channel_id
+                                        }).then(function (result) {
+                                            result.item; // the model
+                                            result.created; // bool, if a new item was created.
+                                        });
 
+                                    }
 
-                            const insertions = ModelInsertions.create({
-                                insertion_id,
-                                delivery_regulated,
-                                used_guaranteed_deal,
-                                used_non_guaranteed_deal,
-                                voice_share,
-                                event_id,
-                                insertion_name,
-                                insertion_description,
-                                // site_id,
-                                pack_id,
-                                insertion_status_id,
-                                insertion_start_date,
-                                insertion_end_date,
-                                campaign_id,
-                                insertion_type_id,
-                                delivery_type_id,
-                                timezone_id,
-                                priority_id,
-                                periodic_capping_id,
-                                group_capping_id,
-                                max_impression,
-                                weight,
-                                max_click,
-                                max_impression_perday,
-                                max_click_perday,
-                                insertion_groupe_volume,
-                                event_impression,
-                                holistic_yield_enabled,
-                                deliver_left_volume_after_end_date,
-                                global_capping,
-                                capping_per_visit,
-                                capping_per_click,
-                                auto_capping,
-                                periodic_capping_impression,
-                                periodic_capping_period,
-                                oba_icon_enabled,
-                                format_id,
-                                external_id,
-                                external_description,
-                                insertion_updated_at,
-                                insertion_created_at,
-                                insertion_archived,
-                                rate_type_id,
-                                rate,
-                                rate_net,
-                                discount,
-                                currency_id,
-                                insertion_link_id,
-                                insertion_exclusion_id,
-                                customized_script,
-                                sale_channel_id,
+                                }
+                            } else {
+                                console.error('Error : Aucune donnée disponible');
+                            }
 
-                            });
-
-
-
-
-
-                        }
-
-                        // Sleep pendant 10s
-                        //  await new Promise(r => setTimeout(r, 10000));
-                    });
+                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        });
+                    }
                 }
+
+                addItem();
+
+
+            } else {
+                console.error('Error : Aucune donnée disponible');
             }
-
-            addItem();
-
-            return false;
         });
-
     } catch (error) {
         console.error('Error : ' + error);
-        // console.log(error); var statusCoded = error.response.status;
-        // res.render("error.ejs", {statusCoded: statusCoded});
     }
 }

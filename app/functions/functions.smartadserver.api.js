@@ -1,6 +1,9 @@
 const dbApi = require("../config/config.api");
+const ModelInsertions = require("../models/models.insertions");
 
-exports.config = function (method, offset = 0, limit = 100) {
+
+exports.config = function (method, offset = 0, limit = 100, params = '') {
+
 
     switch (method) {
         case 'agencies':
@@ -33,6 +36,20 @@ exports.config = function (method, offset = 0, limit = 100) {
         case 'insertions':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
             break;
+        case 'insertionstemplates':
+
+            insertion_id = params.insertion_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + insertion_id + '/insertiontemplates';
+            // console.log(configApiUrl); process.exit(1);
+            break;
+
+        case 'creatives':
+
+            insertion_id = params.insertion_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + insertion_id + '/creatives';
+
+            break;
+            
         default:
 
             break;
@@ -48,11 +65,14 @@ exports.config = function (method, offset = 0, limit = 100) {
         auth: {
             username: dbApi.SMART_login,
             password: dbApi.SMART_password
-        },
-        params: {
-            limit: limit,
-            offset: offset
         }
+
+        //condition config
+        /* params: {
+             limit: limit,
+             offset: offset
+           // isArchived : "both"
+         }*/
     };
 
     return config;
