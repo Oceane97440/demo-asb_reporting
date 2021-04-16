@@ -10,83 +10,121 @@ var fileUpload = require('express-fileupload');
 
 const db = require("./app/config/_config.database");
 
-const campaing_epilot = require('./app/models/models.campaings_epilot');
-const country = require('./app/models/models.countries')
+const campaings_epilot = require('./app/models/models.campaings_epilot');
+const countries = require('./app/models/models.countries')
 const sites = require('./app/models/models.sites')
 const packs = require('./app/models/models.packs')
 const packs_sites = require('./app/models/models.packs_sites')
-const users = require('./app/models/models.users.js')
+const users = require('./app/models/models.users')
 const roles = require('./app/models/models.roles')
 const users_roles = require('./app/models/models.users_roles')
 const campaigns = require('./app/models/models.campaigns')
 const advertisers = require('./app/models/models.advertisers')
+const agencies = require('./app/models/models.agencies')
 const formats = require('./app/models/models.formats')
 const groups_formats = require('./app/models/models.groups_formats')
 const groups_formats_types = require('./app/models/models.formats_groups_types')
 const insertions = require('./app/models/models.insertions')
-
+const templates = require('./app/models/models.templates')
+const insertions_templates = require('./app/models/models.insertionstemplates')
+const creatives = require('./app/models/models.creatives')
 
 
 
 /* Mettre les relation ici */
-sites.belongsTo(country);
-country.hasMany(sites);
+/*sites.belongsTo(countries);
+countries.hasMany(sites);*/
 
-//un pack contien un site 
-//un site peut appartenir un à plusieur pack
-packs.hasOne(packs_sites, {
-  foreignKey: 'pack_id',
-  onDelete: 'cascade',
-  hooks: true
+//un pack contien un site un site peut appartenir un à plusieur pack
+packs.hasMany(packs_sites, {
+    foreignKey: 'pack_id',
+    onDelete: 'cascade',
+    hooks: true
 });
 sites.hasMany(packs_sites, {
-  foreignKey: 'site_id',
-  onDelete: 'cascade',
-  hooks: true
+    foreignKey: 'site_id',
+    onDelete: 'cascade',
+    hooks: true
 });
 
-
-//un user possède un role
-//un role possède un à plusieur user
+//un user possède un role un role possède un à plusieur user
 users.hasOne(users_roles, {
-  foreignKey: 'user_id',
-  onDelete: 'cascade',
-  hooks: true
+    foreignKey: 'user_id',
+    onDelete: 'cascade',
+    hooks: true
 });
 roles.hasMany(users_roles, {
-  foreignKey: 'role_id',
-  onDelete: 'cascade',
-  hooks: true
+    foreignKey: 'role_id',
+    onDelete: 'cascade',
+    hooks: true
 });
 
-//un format possède un ou plusieur group
-//un group possède un à plusieur format
+//un format possède un ou plusieur group un group possède un à plusieur format
 formats.hasMany(groups_formats_types, {
-  foreignKey: 'format_id',
-  onDelete: 'cascade',
-  hooks: true
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
 });
 groups_formats.hasMany(groups_formats_types, {
-  foreignKey: 'group_format_id',
-  onDelete: 'cascade',
-  hooks: true
+    foreignKey: 'group_format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+campaigns.belongsTo(advertisers, {
+    foreignKey: 'advertiser_id',
+    onDelete: 'cascade',
+    hooks: true
+}); // la campagne à un format.
+advertisers.hasMany(campaigns, {
+    foreignKey: 'advertiser_id',
+    onDelete: 'cascade',
+    hooks: true
 });
 
 
-campaigns.belongsTo(advertisers, {
-  foreignKey: 'advertiser_id',
-  onDelete: 'cascade',
-  hooks: true
-}); // la campagne à un format.
-advertisers.hasMany(campaigns, {
-  foreignKey: 'advertiser_id',
-  onDelete: 'cascade',
-  hooks: true
-});/// Un format peut avoir plusieur campagne.
+insertions_templates.belongsTo(insertions, {
+    foreignKey: 'insertion_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+insertions.hasMany(insertions_templates, {
+    foreignKey: 'insertion_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+insertions_templates.belongsTo(templates, {
+    foreignKey: 'template_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+templates.hasMany(insertions_templates, {
+    foreignKey: 'template_id',
+    onDelete: 'cascade',
+    hooks: true
+});
 
-db.sequelize.sync();
+
+
+
+creatives.belongsTo(insertions, {
+    foreignKey: 'insertion_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+insertions.hasMany(creatives, {
+    foreignKey: 'insertion_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+db
+    .sequelize
+    .sync();
 sequelize = db.sequelize;
 Sequelize = db.Sequelize;
+
 
 
 
