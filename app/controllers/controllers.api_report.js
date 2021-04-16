@@ -240,7 +240,7 @@ exports.report = async (req, res) => {
 
         //recup la date de début de la campagne -3heure pour règler le prob du décalage horraire
         const startDate_yesterday = new Date(startDate);
-        const start_date_timezone = startDate_yesterday.setHours(-3);
+        const start_date_timezone = startDate_yesterday.setHours(-4);
 
         function getStartDate_timezone(unixTimeStamp) {
           let date = new Date(unixTimeStamp);

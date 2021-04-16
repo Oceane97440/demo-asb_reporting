@@ -9,10 +9,8 @@ const api = require("../controllers/controllers.api_report");
 router.get("/test", api.test);
 
 router.get("/", api.index);
-// router.get("/rapport/:advertiserid/:campaignid/:startdate/:enddate", api.report);
 router.get("/rapport/:campaigncrypt", api.report);
 router.get("/:campaigncrypt", api.generate);
-//  router.get("/generate/:advertiserid/:campaignid/:startdate/:enddate", api.generate);
 router.get("/automatisation/:campaignid/", api.automatisation);
 
 

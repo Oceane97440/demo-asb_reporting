@@ -191,7 +191,7 @@
         $.ajax({
 
           method: "GET",
-          url: `/reporting/rapport/<%=advertiserid%>/<%=campaignid%>/<%=startDate%>/<%=endDate%>`,
+          url: `/r/rapport/<%=campaigncrypt%>`,
 
           success: function (data) {
             $("#exampleModal").hide();
