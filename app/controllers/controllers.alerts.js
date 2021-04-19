@@ -59,12 +59,12 @@ const {
 exports.creativeUrl = async (req, res) => {
 
     try {
-    
-        //liste tout les creatives active des urls non https et qui n'ont pas les extentions valide
 
+        //liste tout les creatives active des urls non https et qui n'ont pas les extentions valide
+        const NOW = new Date();
         await ModelCreatives.findAll({
             attributes: [
-                'creative_id','creative_name', 'insertion_id', 'creative_url', 'creative_mime_type','creatives_activated','creatives_archived'
+                'creative_id', 'creative_name', 'insertion_id', 'creative_url', 'creative_mime_type', 'creatives_activated', 'creatives_archived'
             ],
 
             where: {
@@ -84,39 +84,80 @@ exports.creativeUrl = async (req, res) => {
 
 
                 ],
-                creatives_activated : 0,
-                creatives_archived: 0
-            },    
-            
-            include: [{
-                model: ModelInsertions , 
-                attributes: ['insertion_id','insertion_archived','insertion_end_date'],
+                creatives_activated: 1,
+                creatives_archived: 0,
 
-                where: {
-                  
-                    insertion_archived : 0,
-                    insertion_end_date: {
-                        [Op.between]: ['2021-01-01', '2021-04-30'],
-                    }
-                },
-                
-               
-              }],
+                /*'campaigns.campaign_archived': 0,
+                'campaigns.advertiser_id': {
+                    [Op.notIn]: [409707],
+                }*/
+
+
+
+
+
+
+
+            },
+
           
 
 
-        }).then(async function (creatives)  {
+
+            include: [{
+                    model: ModelInsertions,
+                    as: 'insertion',
+                    attributes: ['insertion_id', 'campaign_id', 'insertion_archived', 'insertion_end_date'],
+
+
+                   /* where: {
+
+                        insertion_archived: 0,
+                        insertion_end_date: {
+                            [Op.gte]: NOW,
+                        },
+                    },*/
+
+
+                    include: [{
+
+
+
+                        model: ModelCampaigns,
+                        as: 'campaigns',
+                        attributes: ['campaign_id', 'advertiser_id', 'campaign_archived'],
+                       /* where: {
+
+                           campaign_archived: 0,
+                            advertiser_id: {
+                                [Op.notIn]: [409707],
+                            }
+                        }*/
+
+
+
+
+
+                    }]
+                },
+
+            ],
+
+
+
+        }).then(async function (creatives) {
 
 
             console.log(creatives.length)
-        
+
             res.render("manage/alerts.ejs", {
-              
+
                 creatives: creatives,
-               
-             
-              })
-        })   
+
+
+            })
+        })
+
 
 
 
