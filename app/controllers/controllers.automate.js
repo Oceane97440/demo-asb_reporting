@@ -36,6 +36,8 @@ const ModelSites = require("../models/models.sites");
 const ModelTemplates = require("../models/models.templates");
 const ModelPlatforms = require("../models/models.platforms");
 const ModelDeliverytypes = require("../models/models.deliverytypes");
+const ModelInsertionsStatus = require("../models/models.insertionstatus");
+
 const ModelCountries = require("../models/models.countries");
 
 const ModelGroupsFormatsTypes = require(
@@ -602,6 +604,57 @@ exports.deliverytypes = async (req, res) => {
     }
 }
 
+exports.insertionstatus = async (req, res) => {
+    try {
+        var config = SmartFunction.config('insertionstatus');
+        await axios(config).then(function (res) {
+            var data = res.data;
+            var number_line = data.length;
+            var number_total_count = res.headers['x-pagination-total-count'];
+            var number_pages = Math.round((number_total_count / 100) + 1);
+            console.log(number_total_count);
+            console.log('Number Pages :' + number_pages);
+
+            const addItem = async () => {
+
+                // <= car si le nombre de page est = 0 et que page = 0 la condiction ne
+                // fonctionne pas
+                for (let page = 0; page <= number_pages; page++) {
+                    //  page = 0
+                    let offset = page * 100;
+                    var config2 = SmartFunction.config('insertionstatus', offset);
+                    await axios(config2).then(function (response) {
+                        var dataValue = response.data;
+                        var number_line_offset = data.length;
+
+                        for (i = 0; i < number_line_offset; i++) {
+                            var insertionstatus_id = dataValue[i].id;
+                            var insertionstatus_name = dataValue[i].name;
+
+                            //  console.log(dataValue);
+                            ModelInsertionsStatus.create({
+                                insertionstatus_id,
+                                insertionstatus_name
+                            });
+
+                        }
+
+                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                    });
+                }
+            }
+
+            addItem();
+
+            return false;
+        });
+
+    } catch (error) {
+        console.error('Error : ' + error);
+
+    }
+}
+
 exports.countries = async (req, res) => {
     try {
         var config = SmartFunction.config('countries');
@@ -954,8 +1007,11 @@ exports.insertions = async (req, res) => {
                                         var customized_script = dataValue[i].customizedScript;
                                         var sale_channel_id = dataValue[i].salesChannelId;
 
-                                        const insertions = ModelInsertions.create({
-                                            insertion_id,
+                                        Utilities
+                                        .updateOrCreate(ModelInsertions, {
+                                            insertion_id: insertion_id
+                                        }, {insertion_id, 
+                                           
                                             delivery_regulated,
                                             used_guaranteed_deal,
                                             used_non_guaranteed_deal,
@@ -963,7 +1019,6 @@ exports.insertions = async (req, res) => {
                                             event_id,
                                             insertion_name,
                                             insertion_description,
-                                            // site_id,
                                             pack_id,
                                             insertion_status_id,
                                             insertion_start_date,
@@ -1006,10 +1061,13 @@ exports.insertions = async (req, res) => {
                                             insertion_exclusion_id,
                                             customized_script,
                                             sale_channel_id
-                                        }).then(function (result) {
+                                        })
+                                        .then(function (result) {
                                             result.item; // the model
                                             result.created; // bool, if a new item was created.
                                         });
+
+                                      
 
                                     }
 

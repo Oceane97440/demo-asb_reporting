@@ -30,6 +30,9 @@ exports.config = function (method, offset = 0, limit = 100, params = '') {
         case 'deliverytypes':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/deliverytypes';
             break;
+        case 'insertionstatus':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/InsertionStatus';
+            break;
         case 'countries':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/countries';
             break;
@@ -49,7 +52,7 @@ exports.config = function (method, offset = 0, limit = 100, params = '') {
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + insertion_id + '/creatives';
 
             break;
-            
+
         default:
 
             break;
@@ -65,14 +68,14 @@ exports.config = function (method, offset = 0, limit = 100, params = '') {
         auth: {
             username: dbApi.SMART_login,
             password: dbApi.SMART_password
-        }
+        },
 
         //condition config
-        /* params: {
+         params: {
              limit: limit,
-             offset: offset
-           // isArchived : "both"
-         }*/
+             offset: offset,
+            isArchived : "both"
+         }
     };
 
     return config;

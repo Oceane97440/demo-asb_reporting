@@ -12,7 +12,10 @@ router.get("/sites", automate.sites);
 router.get("/templates", automate.templates);
 router.get("/platforms", automate.platforms);
 router.get("/deliverytypes", automate.deliverytypes);
+router.get("/insertionstatus", automate.insertionstatus);
+
 router.get("/insertions", automate.insertions);
+
 
 router.get("/insertionstemplates", automate.insertionstemplates);
 router.get("/creatives", automate.creatives);

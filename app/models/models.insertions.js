@@ -51,7 +51,7 @@ const Insertions = sequelize.define('insertions', {
         allowNull: true
     },
     insertion_status_id: {
-        type: Sequelize.BIGINT(),
+        type: Sequelize.INTEGER(),
         allowNull: true
     },
     insertion_start_date: {

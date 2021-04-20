@@ -28,6 +28,8 @@ const insertions = require('./app/models/models.insertions')
 const templates = require('./app/models/models.templates')
 const insertions_templates = require('./app/models/models.insertionstemplates')
 const creatives = require('./app/models/models.creatives')
+const insertionstatus = require('./app/models/models.insertionstatus')
+
 
 
 
@@ -89,6 +91,17 @@ campaigns.belongsTo(insertions, {
 }); // la campagne à un format.
 insertions.hasMany(campaigns, {
   foreignKey: 'campaign_id',
+  onDelete: 'cascade',
+  hooks: true
+});
+
+insertionstatus.belongsTo(insertions, {
+  foreignKey: 'insertion_status_id',
+  onDelete: 'cascade',
+  hooks: true
+}); // la campagne à un format.
+insertions.hasMany(insertionstatus, {
+  foreignKey: 'insertion_status_id',
   onDelete: 'cascade',
   hooks: true
 });
