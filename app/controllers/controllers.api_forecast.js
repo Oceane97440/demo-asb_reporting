@@ -316,14 +316,14 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 //si RG-DESKTOP est seletionner add ciblage desktop
-                if (packs == "7") {
+                if (packs == "2") {
                     requestForecast.filter[4] = {
                         "platformID": ["1"]
                     }
                 }
 
                 //si RG mob/tab est selectionner ciblage mob/tab 
-                if (packs == "2") {
+                if (packs == "4") {
                     requestForecast.filter[3] = {
                         "platformID": ["3", "2"]
                     }
@@ -368,7 +368,7 @@ exports.forecast = async (req, res, next) => {
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaign_epilot.format_name ASC', {
+                'SELECT * FROM asb_campaigns_epilots WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaigns_epilots.format_name ASC', {
                     replacements: [date_start, date_end, date_start, date_end, format_filtre],
                     type: QueryTypes.SELECT
                 }
@@ -613,7 +613,7 @@ exports.forecast = async (req, res, next) => {
             }
 
         }
-        if (packs == "2") {
+        if (packs == "4") {
 
             if (format == "HABILLAGE" || format == "MASTHEAD" || format == "GRAND ANGLE") {
 
@@ -631,14 +631,14 @@ exports.forecast = async (req, res, next) => {
 
         }
         //si RG-DESKTOP est seletionner add ciblage desktop
-        if (packs == "7") {
+        if (packs == "2") {
             requestForecast.filter[3] = {
                 "platformID": ["1"]
             }
         }
 
         //si RG mob/tab est selectionner ciblage mob/tab 
-        if (packs == "2") {
+        if (packs == "4") {
 
             requestForecast.filter[3] = {
                 "platformID": ["3", "2"]
@@ -749,7 +749,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaign_epilot.format_name ASC', {
+                    'SELECT * FROM asb_campaigns_epilots WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilots.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }
@@ -943,11 +943,6 @@ exports.forecast = async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        var statusCoded = error.response.status;
-
-        res.render("error.ejs", {
-            statusCoded: statusCoded,
-
-        })
+      
     }
 }

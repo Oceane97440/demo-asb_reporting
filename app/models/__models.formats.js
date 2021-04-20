@@ -2,17 +2,13 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Formats = sequelize.define('_asb_formats', {
+const Formats = sequelize.define('formats', {
     format_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
     format_name: {
-        type: Sequelize.STRING(45),
-        allowNull: false
-    },
-    format_group: {
         type: Sequelize.STRING(45),
         allowNull: false
     },
@@ -37,7 +33,7 @@ const Formats = sequelize.define('_asb_formats', {
         allowNull: true
     }
 }, {
-    tableName: '_asb_formats',
+    tableName: 'asb_formats',
     underscored: true,
     timestamps: false
 });

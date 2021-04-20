@@ -46,14 +46,12 @@ const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
 //const ModelSite = require("../models/models.site");
+//const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
 const ModelCampaign_epilot = require("../models/models.campaings_epilot")
 const ModelPack = require("../models/models.packs")
 const ModelPack_Site = require("../models/models.packs_sites")
-const ModelRole = require("../models/models.roles")
-const ModelUser = require("../models/models.users")
-const ModelUser_Role = require("../models/models.users_roles")
 
 
 exports.index = async (req, res) => {
@@ -126,13 +124,12 @@ exports.forecast_user = async (req, res, next) => {
 
     // Définition des variables
     var headerlocation, table, requestForecast;
-    var date_start = req.body.date_start;
-    var date_end = req.body.date_end;
-    var format = req.body.format;
-    var packs = req.body.packs;
-    var countries = req.body.countries;
-
-    option = req.body.case
+    var date_start = await req.body.date_start;
+    var date_end =await req.body.date_end;
+    var format = await req.body.format;
+    var packs =await req.body.packs;
+    var countries =await req.body.countries;
+    var option = await req.body.case
 
 
     //si la case n'est pas coché renvoie false sinon true
@@ -241,14 +238,14 @@ exports.forecast_user = async (req, res, next) => {
                 }
 
                 //si RG-DESKTOP est seletionner add ciblage desktop
-                if (packs == "7") {
+                if (packs == "2") {
                     requestForecast.filter[4] = {
                         "platformID": ["1"]
                     }
                 }
 
                 //si RG mob/tab est selectionner ciblage mob/tab 
-                if (packs == "2") {
+                if (packs == "4") {
                     requestForecast.filter[3] = {
                         "platformID": ["3", "2"]
                     }
@@ -270,10 +267,24 @@ exports.forecast_user = async (req, res, next) => {
                 }
             }
 
+            switch (format) {
+
+                case "INTERSTITIEL":
+                    //si interstitiel -> web_interstitiel / app_interstitiel
+                    format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
+
+                    break;
+
+                default:
+
+                    break;
+            }
+
+
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
-                    replacements: [date_start, date_end, date_start, date_end, format],
+                'SELECT * FROM asb_campaigns_epilots WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaigns_epilots.format_name ASC', {
+                    replacements: [date_start, date_end, date_start, date_end, format_filtre],
                     type: QueryTypes.SELECT
                 }
             );
@@ -449,14 +460,14 @@ exports.forecast_user = async (req, res, next) => {
         };
 
         //si RG-DESKTOP est seletionner add ciblage desktop
-        if (packs == "7") {
+        if (packs == "2") {
             requestForecast.filter[3] = {
                 "platformID": ["1"]
             }
         }
 
         //si RG mob/tab est selectionner ciblage mob/tab 
-        if (packs == "2") {
+        if (packs == "4") {
 
             requestForecast.filter[3] = {
                 "platformID": ["3", "2"]
@@ -506,7 +517,7 @@ exports.forecast_user = async (req, res, next) => {
         }
 
         //ELARGIR SI Pack=mobile et format Habillage ou format=Masthead ou format=gran
-        if (packs == "2") {
+        if (packs == "4") {
 
             if (format == "HABILLAGE" || format == "MASTHEAD" || format == "GRAND ANGLE") {
 
@@ -584,10 +595,42 @@ exports.forecast_user = async (req, res, next) => {
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
 
-                //Requête sql campagne epilot
+                switch (format) {
+                    case "HABILLAGE":
+                        //si c habillage -> web_habillage / app_mban_atf
+                        format_filtre = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0", "HABILLAGE")
+                        break;
+
+                    case "GRAND ANGLE":
+                        //si grand angle ->web_mban  app_mpave_atf0 
+                        format_filtre = new Array("WEB_MPAVE_ATF0", "APP_MPAVE_ATF0", "GRAND ANGLE")
+                        break;
+                    case "MASTHEAD":
+                        //si masthead -> web_mban / app_mban
+                        format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0", "MASTHEAD")
+                        break;
+                    case "VIDEOS":
+                        //si instream -> linear 
+                        format_filtre = new Array("VIDEOS", "Linear")
+                        break;
+                    case "LOGO":
+                        format_filtre = new Array("LOGO", "WEB_LOGO")
+                        break;
+
+                    case "NATIVE":
+                        format_filtre = new Array("NATIVE", "WEB_NATIVE", "WEB_NATIVE_MBAN_ATF")
+                        break;
+                    case "SLIDE":
+                        format_filtre = new Array("SLIDE", "APP_SLIDE")
+                        break;
+                    default:
+
+                        break;
+                }
+
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name = ? ORDER BY asb_campaign_epilot.format_name ASC', {
-                        replacements: [date_start, date_end, date_start, date_end, format],
+                    'SELECT * FROM asb_campaigns_epilots WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilots.format_name ASC', {
+                        replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }
                 );
