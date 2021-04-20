@@ -1,0 +1,59 @@
+<%- include("../layouts/admin/head.ejs") -%>
+
+
+
+<div id="card-forecast" class="card" style="margin-top: 30px;">
+    <div class="card-header">
+        <h1 class="card-title">
+            Insertions par Creatives
+        </h1>
+    </div>
+
+    <div class="card-body">
+
+
+        <br>
+        <h3>Liste des alerts</h3>
+        <hr>
+
+
+        
+        <% for(let i=0; i < insertions.length; i++) { %>
+
+            <div class="alert alert-warning alert-dismissible fade show " role="alert" style="border-radius: 49px; box-shadow: 1px 2px 3px rgb(116, 114, 114) ">
+    
+    
+              
+                <strong>Attentions:</strong> la Campagne est programmé mais pas en ligne !
+    
+                <a href='https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%=insertions[i].campaign_id%>'
+                    class="btn btn-xs btn-warning pull-right"target="_blank">
+                    Campagne </a>
+                <a href='https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%=insertions[i].insertion_id%>'
+                    class="btn btn-xs btn-warning pull-right"target="_blank">
+                    Insertion </a>
+    
+    
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+
+
+
+
+        <% } %>
+
+       
+
+
+    </div>
+</div>
+
+
+
+
+
+<%- include("../layouts/admin/footer.ejs") -%>

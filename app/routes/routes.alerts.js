@@ -6,7 +6,8 @@ const alert = require("../controllers/controllers.alerts");
     
 
     // Affiche la page api
-    router.get("/", alert.creativeUrl);
+    router.get("/creatives", alert.creativeUrl);
+    router.get("/insertions",alert.insertionsOffligne)
    
 
 

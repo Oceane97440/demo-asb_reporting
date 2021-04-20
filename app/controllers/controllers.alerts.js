@@ -63,7 +63,7 @@ exports.creativeUrl = async (req, res) => {
         //liste tout les creatives active des urls non https et qui n'ont pas les extentions valide
         const NOW = new Date();
         const url = 'https://cdn.antennepublicite.re'
-        const extention ='mp4|gif|jpeg|png|html'
+        const extention = 'mp4|gif|jpeg|png|html'
 
 
 
@@ -75,9 +75,9 @@ exports.creativeUrl = async (req, res) => {
         ).then(async function (creatives) {
 
 
-            console.log(creatives)
+            //console.log(creatives)
 
-            res.render("manage/alerts.ejs", {
+            res.render("manage/alerts_creatives.ejs", {
 
                 creatives: creatives,
 
@@ -88,89 +88,54 @@ exports.creativeUrl = async (req, res) => {
 
 
 
+    } catch (error) {
+        console.error('Error : ', error);
+    }
+}
+
+exports.insertionsOffligne = async (req, res) => {
+
+    try {
+
+        //liste tout les creatives active des urls non https et qui n'ont pas les extentions valide
+        const NOW = new Date();
+        
+
+        await ModelInsertions.findAll({
 
 
+            attributes: ['insertion_id', 'campaign_id', 'insertion_archived', 'insertion_start_date','insertion_status_id'],
 
-
-
-
-
-
-/*
-        await ModelCreatives.findAll({
-            attributes: [
-                'creative_id', 'creative_name', 'insertion_id', 'creative_url', 'creative_mime_type', 'creatives_activated', 'creatives_archived'
-            ],
 
             where: {
 
-
-                [Op.or]: [{
-                        creative_url: {
-                            [Op.notRegexp]: 'https://cdn.antennepublicite.re'
-                        },
-
-                    },
-                    {
-                        creative_mime_type: {
-                            [Op.notRegexp]: 'mp4|gif|jpeg|png|html'
-                        }
-                    }
-
-
-                ],
-                creatives_activated: 1,
-                creatives_archived: 0,
-
-               
-
+                insertion_archived: 0,
+                insertion_status_id:0,
+                insertion_start_date: {
+                    [Op.gt]: NOW,
+                },
             },
 
 
-            include: [{
-                    model: ModelInsertions,
-                    as: 'insertion',
-                    attributes: ['insertion_id', 'campaign_id', 'insertion_archived', 'insertion_end_date'],
-
-
-                   where: {
-
-                        insertion_archived: 0,
-                        insertion_end_date: {
-                            [Op.gte]: NOW,
-                        },
-                    },
-
-
-                    include: [{
-
-
-
-                        model: ModelCampaigns,
-                        as: 'campaigns',
-                        attributes: ['campaign_id', 'advertiser_id', 'campaign_archived'],
-                        where: {
-
-                           campaign_archived: 0,
-                            advertiser_id: {
-                                [Op.notIn]: [409707],
-                            }
-                        }
 
 
 
 
 
-                    }]
-                },
+        }).then(async function (insertions) {
 
-            ],
-
+           // console.log(insertions.length)
 
 
-        })
+            res.render("manage/alerts_insertions.ejs", {
 
-*/
+                insertions: insertions,
+
+
+            })
+        });
+
+
 
 
     } catch (error) {
