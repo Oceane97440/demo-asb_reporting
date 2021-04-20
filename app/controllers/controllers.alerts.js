@@ -62,6 +62,41 @@ exports.creativeUrl = async (req, res) => {
 
         //liste tout les creatives active des urls non https et qui n'ont pas les extentions valide
         const NOW = new Date();
+        const url = 'https://cdn.antennepublicite.re'
+        const extention ='mp4|gif|jpeg|png|html'
+
+
+
+        await sequelize.query(
+            'SELECT creatives.creative_id, creatives.creative_name, creatives.insertion_id, creatives.creative_url, creatives.creative_mime_type, creatives.creatives_activated, creatives.creatives_archived,campaigns.campaign_id ,campaigns.campaign_name ,campaigns.campaign_archived , advertisers.advertiser_name, campaigns.advertiser_id FROM asb_creatives AS creatives INNER JOIN asb_insertions AS insertion ON creatives.insertion_id = insertion.insertion_id AND insertion.insertion_archived = 0 AND insertion.insertion_end_date >= ? INNER JOIN asb_campaigns AS campaigns ON campaigns.campaign_id = insertion.campaign_id INNER JOIN asb_advertisers AS advertisers ON advertisers.advertiser_id = campaigns.advertiser_id  WHERE (creatives.creative_url NOT REGEXP ? OR creatives.creative_mime_type NOT REGEXP ?) AND creatives.creatives_activated = 1 AND creatives.creatives_archived = 0 AND campaigns.campaign_archived = 0 AND advertisers.advertiser_id  NOT IN (409707)', {
+                replacements: [NOW, url, extention],
+                type: QueryTypes.SELECT
+            }
+        ).then(async function (creatives) {
+
+
+            console.log(creatives)
+
+            res.render("manage/alerts.ejs", {
+
+                creatives: creatives,
+
+
+            })
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+/*
         await ModelCreatives.findAll({
             attributes: [
                 'creative_id', 'creative_name', 'insertion_id', 'creative_url', 'creative_mime_type', 'creatives_activated', 'creatives_archived'
@@ -87,21 +122,9 @@ exports.creativeUrl = async (req, res) => {
                 creatives_activated: 1,
                 creatives_archived: 0,
 
-                /*'campaigns.campaign_archived': 0,
-                'campaigns.advertiser_id': {
-                    [Op.notIn]: [409707],
-                }*/
-
-
-
-
-
-
+               
 
             },
-
-          
-
 
 
             include: [{
@@ -110,13 +133,13 @@ exports.creativeUrl = async (req, res) => {
                     attributes: ['insertion_id', 'campaign_id', 'insertion_archived', 'insertion_end_date'],
 
 
-                   /* where: {
+                   where: {
 
                         insertion_archived: 0,
                         insertion_end_date: {
                             [Op.gte]: NOW,
                         },
-                    },*/
+                    },
 
 
                     include: [{
@@ -126,13 +149,13 @@ exports.creativeUrl = async (req, res) => {
                         model: ModelCampaigns,
                         as: 'campaigns',
                         attributes: ['campaign_id', 'advertiser_id', 'campaign_archived'],
-                       /* where: {
+                        where: {
 
                            campaign_archived: 0,
                             advertiser_id: {
                                 [Op.notIn]: [409707],
                             }
-                        }*/
+                        }
 
 
 
@@ -145,20 +168,9 @@ exports.creativeUrl = async (req, res) => {
 
 
 
-        }).then(async function (creatives) {
-
-
-            console.log(creatives.length)
-
-            res.render("manage/alerts.ejs", {
-
-                creatives: creatives,
-
-
-            })
         })
 
-
+*/
 
 
     } catch (error) {
