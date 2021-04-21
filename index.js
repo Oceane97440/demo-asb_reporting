@@ -22,6 +22,8 @@ const campaigns = require('./app/models/models.campaigns')
 const advertisers = require('./app/models/models.advertisers')
 const agencies = require('./app/models/models.agencies')
 const formats = require('./app/models/models.formats')
+const formats_all = require('./app/models/__models.formats')
+
 const groups_formats = require('./app/models/models.groups_formats')
 const groups_formats_types = require('./app/models/models.formats_groups_types')
 const insertions = require('./app/models/models.insertions')
@@ -91,6 +93,17 @@ insertions.belongsTo(campaigns, {
 }); // la campagne à un format.
 campaigns.hasMany(insertions, {
   foreignKey: 'campaign_id',
+  onDelete: 'cascade',
+  hooks: true
+});
+
+insertions.belongsTo(formats_all, {
+  foreignKey: 'format_id',
+  onDelete: 'cascade',
+  hooks: true
+}); // la campagne à un format.
+formats_all.hasMany(insertions, {
+  foreignKey: 'format_id',
   onDelete: 'cascade',
   hooks: true
 });
