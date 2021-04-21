@@ -99,12 +99,13 @@ insertionstatus.belongsTo(insertions, {
   foreignKey: 'insertion_status_id',
   onDelete: 'cascade',
   hooks: true
-}); // la campagne à un format.
+}); 
 insertions.hasMany(insertionstatus, {
   foreignKey: 'insertion_status_id',
   onDelete: 'cascade',
   hooks: true
 });
+
 
 
 insertions_templates.belongsTo(insertions, {
