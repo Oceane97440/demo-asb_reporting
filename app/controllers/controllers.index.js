@@ -54,6 +54,14 @@ const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
 const ModelUser_Role = require("../models/models.users_roles")
 
+exports.home_page = async (req, res) => {
+
+  if (req.session.user.role === 1){
+
+    res.send("Home page")
+
+  }
+}
 
 exports.signup = async (req, res) => {
 
