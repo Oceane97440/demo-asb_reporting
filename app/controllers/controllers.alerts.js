@@ -104,7 +104,7 @@ exports.insertionsOffligne = async (req, res) => {
         await ModelInsertions.findAll({
 
 
-            attributes: ['insertion_id', 'campaign_id', 'insertion_archived', 'insertion_start_date','insertion_status_id'],
+            //attributes: ['insertion_id', 'campaign_id', 'insertion_archived', 'insertion_start_date','insertion_status_id'],
 
 
             where: {
@@ -116,7 +116,14 @@ exports.insertionsOffligne = async (req, res) => {
                 },
             },
 
+            include: [{
+                model: ModelCampaigns,
 
+                include: [{
+                    model: ModelAdvertisers,
+
+                }]
+              }],
 
 
 
@@ -124,7 +131,7 @@ exports.insertionsOffligne = async (req, res) => {
 
         }).then(async function (insertions) {
 
-           // console.log(insertions.length)
+            console.log(insertions)
 
 
             res.render("manage/alerts_insertions.ejs", {

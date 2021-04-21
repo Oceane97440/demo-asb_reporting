@@ -20,7 +20,7 @@
         
         <% for(let i=0; i < insertions.length; i++) { %>
 
-            <div class="alert alert-warning alert-dismissible fade show " role="alert" style="border-radius: 49px; box-shadow: 1px 2px 3px rgb(116, 114, 114) ">
+            <div class="alert alert-warning alert-dismissible fade show text-dark" role="alert" style="border-radius: 49px; box-shadow: 1px 2px 3px rgb(116, 114, 114) ">
     
     
               
@@ -31,9 +31,12 @@
                     Campagne </a>
                 <a href='https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%=insertions[i].insertion_id%>'
                     class="btn btn-xs btn-warning pull-right"target="_blank">
-                    Insertion </a>
+                    Insertion </a>      
+                    <p><strong>Annonceur : <%=insertions[i].campaign.advertiser.advertiser_name%></strong>  </p>
+                    <p><strong>Campagne : <%=insertions[i].campaign.campaign_name%></strong>  </p>
     
-    
+              
+
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -84,12 +84,12 @@ advertisers.hasMany(campaigns, {
     hooks: true
 });
 
-campaigns.belongsTo(insertions, {
+insertions.belongsTo(campaigns, {
   foreignKey: 'campaign_id',
   onDelete: 'cascade',
   hooks: true
 }); // la campagne à un format.
-insertions.hasMany(campaigns, {
+campaigns.hasMany(insertions, {
   foreignKey: 'campaign_id',
   onDelete: 'cascade',
   hooks: true
