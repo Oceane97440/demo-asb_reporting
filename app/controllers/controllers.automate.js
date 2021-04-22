@@ -151,10 +151,16 @@ exports.advertisers = async (req, res) => {
                             var advertiser_archived = dataValue[i].isArchived;
 
                             //  console.log(dataValue);
-                            const advertiser = ModelAdvertisers.create({
+                          
+                            Utilities.updateOrCreate(ModelAdvertisers, {
+                                advertiser_id: advertiser_id
+                            }, {
                                 advertiser_id,
                                 advertiser_name,
                                 advertiser_archived
+                            }).then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
                             });
 
                             /*
@@ -220,7 +226,7 @@ exports.campaigns = async (req, res) => {
                                         var campaign_crypt = crypto.createHash('md5').update(campaign_id.toString()).digest("hex");
 
 
-                                        console.log(campaign_crypt)
+                                       // console.log(campaign_crypt)
 
                                        Utilities.updateOrCreate(ModelCampaigns, {
                                             campaign_id: campaign_id

@@ -19,7 +19,7 @@ const Advertisers = sequelize.define('advertisers', {
 }, {
     tableName: 'asb_advertisers',
     underscored: true,
-    timestamps: false
+    timestamps: true
 });
 
 module.exports = Advertisers;

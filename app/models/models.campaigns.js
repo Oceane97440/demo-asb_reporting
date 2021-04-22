@@ -46,7 +46,7 @@ const Campaigns = sequelize.define('campaigns', {
 }, {
     tableName: 'asb_campaigns',
     underscored: true,
-    timestamps: false
+    timestamps: true
 });
 
 module.exports = Campaigns;

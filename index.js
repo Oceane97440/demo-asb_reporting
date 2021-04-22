@@ -26,6 +26,7 @@ const formats_all = require('./app/models/__models.formats')
 
 const groups_formats = require('./app/models/models.groups_formats')
 const groups_formats_types = require('./app/models/models.formats_groups_types')
+const formatstemplates = require("./app/models/models.formats_templates")
 const insertions = require('./app/models/models.insertions')
 const templates = require('./app/models/models.templates')
 const insertions_templates = require('./app/models/models.insertionstemplates')
@@ -73,6 +74,18 @@ groups_formats.hasMany(groups_formats_types, {
     foreignKey: 'group_format_id',
     onDelete: 'cascade',
     hooks: true
+});
+
+//un format possède un ou plusieur template un template possède un à plusieur format
+formats.hasMany(formatstemplates, {
+  foreignKey: 'format_id',
+  onDelete: 'cascade',
+  hooks: true
+});
+templates.hasMany(formatstemplates, {
+  foreignKey: 'template_id',
+  onDelete: 'cascade',
+  hooks: true
 });
 
 campaigns.belongsTo(advertisers, {
