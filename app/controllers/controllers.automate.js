@@ -998,12 +998,14 @@ exports.insertions = async (req, res) => {
                                         var periodic_capping_period = dataValue[i].periodicCappingPeriod;
                                         var oba_icon_enabled = dataValue[i].isObaIconEnabled;
                                         //test
-                                        if(dataValue[i].formatId = 0){
+                                        if(dataValue[i].formatId === 0){
 
-                                            format_id = 'NULL'
+                                          var  format_id = "NULL"
+
+                                        }else{
+                                            var format_id = dataValue[i].formatId;
 
                                         }
-                                        var format_id = dataValue[i].formatId;
                                         var external_id = dataValue[i].externalId;
                                         var external_description = dataValue[i].externalDescription;
                                         var insertion_updated_at = dataValue[i].updatedAt;

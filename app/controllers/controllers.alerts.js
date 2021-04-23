@@ -78,7 +78,6 @@ exports.alerts = async (req, res) => {
 
         const insertions = await ModelInsertions.findAll({
 
-
             where: {
 
                 insertion_archived: 0,
@@ -106,7 +105,7 @@ exports.alerts = async (req, res) => {
 
 
         //Template (erreur ou oubli) : Vérifier que le template corresponde au format sur lequel il est diffusé
-        
+
         const insertionsOnline = await sequelize.query(
             'SELECT asb_insertions.insertion_id, insertion_name, insertion_status_id,insertion_start_date,insertion_end_date,asb_insertions.format_id,asb_formats.format_id,format_name,asb_insertionstemplates.insertion_id,asb_insertionstemplates.template_id,asb_templates.template_name,asb_templates.template_official,asb_templates.template_archived,asb_templates.template_updated_at, asb_templates.template_description, asb_formats_templates.format_id,asb_formats_templates.template_id , asb_insertions.campaign_id , asb_campaigns.campaign_name   FROM `asb_insertions`,asb_insertionstemplates, asb_formats, asb_templates, asb_formats_templates , asb_campaigns  WHERE `insertion_archived` = "0" AND insertion_status_id = "1" AND insertion_end_date >= ?  AND asb_insertions.insertion_id = asb_insertionstemplates.insertion_id   AND asb_templates.template_id = asb_insertionstemplates.template_id  AND asb_insertions.format_id = asb_formats.format_id AND asb_formats_templates.format_id = asb_insertions.format_id AND asb_formats_templates.template_id=  asb_insertionstemplates.template_id AND asb_insertions.campaign_id=  asb_campaigns.campaign_id', {
                 replacements: [NOW],
@@ -137,8 +136,8 @@ exports.alerts = async (req, res) => {
 
                 where: {
 
-                    format_id:insertionsOnline[i].format_id,
-                    template_id:  insertionsOnline[i].template_id
+                    format_id: insertionsOnline[i].format_id,
+                    template_id: insertionsOnline[i].template_id
                 }
             });
 
@@ -147,9 +146,44 @@ exports.alerts = async (req, res) => {
 
                 obj_TemplateFormat.push(obj)
 
-            } 
+            }
 
         }
+
+
+
+
+        //Template "Advanced Banner" verif du champs maxWidth = 100%
+        const AdvancedBanner = await ModelInsertionsTemplates.findAll({
+
+            where: {
+                template_id: 89074,
+                parameter_value: {
+                    [Op.notRegexp]: 'maxWidth=100%'
+                },
+
+            },
+
+            include: [{
+                model: ModelInsertions,
+                where: {
+                    insertion_archived: 0,
+                    insertion_status_id: 1,
+                    insertion_start_date: {
+                        [Op.gt]: NOW
+                    },
+                }
+
+
+            }],
+
+
+
+
+
+        });
+
+        console.log(AdvancedBanner)
 
 
         res.render("manage/alerts.ejs", {
@@ -162,26 +196,26 @@ exports.alerts = async (req, res) => {
         })
 
 
-/*
-        obj["campagne_id"] = 1850219
-        obj["campagne_name"] = "ART TROPHEE ENTREPRISE 2021"
-        obj["insertion_id"] = 9978558
-        obj["insertion_name"] = "GRAND ANGLE - APPLI LINFO - POSITION 0"
-        obj["format_id"] = 79425
-        obj["format_name"] = "WEB_MPAVE_ATF0"
-        obj["template_id"] = 63078
-        obj["template_name"] = "MRAID Video Banner"
+        /*
+                obj["campagne_id"] = 1850219
+                obj["campagne_name"] = "ART TROPHEE ENTREPRISE 2021"
+                obj["insertion_id"] = 9978558
+                obj["insertion_name"] = "GRAND ANGLE - APPLI LINFO - POSITION 0"
+                obj["format_id"] = 79425
+                obj["format_name"] = "WEB_MPAVE_ATF0"
+                obj["template_id"] = 63078
+                obj["template_name"] = "MRAID Video Banner"
 
-       obj["campagne_id"] = 1850217
-        obj["campagne_name"] = "ZEOP PARR ZOT GAME - 65505"
-        obj["insertion_id"] = 9978558
-        obj["insertion_name"] = "RECTANGLE VIDEO"
-        obj["format_id"] = 79425
-        obj["format_name"] = "WEB_MPAVE_ATF0"
-        obj["template_id"] = 89076
-        obj["template_name"] = "Default Banner"
+               obj["campagne_id"] = 1850217
+                obj["campagne_name"] = "ZEOP PARR ZOT GAME - 65505"
+                obj["insertion_id"] = 9978558
+                obj["insertion_name"] = "RECTANGLE VIDEO"
+                obj["format_id"] = 79425
+                obj["format_name"] = "WEB_MPAVE_ATF0"
+                obj["template_id"] = 89076
+                obj["template_name"] = "Default Banner"
 
-*/
+        */
 
 
 
