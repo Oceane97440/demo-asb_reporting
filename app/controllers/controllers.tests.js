@@ -28,10 +28,10 @@ exports.index = async (req, res) => {
     try {
 
 
-
+       // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
             const formats = await ModelFormat.findAll({
-                attributes: ['format_id', 'format_name', 'format_group'],
-                group: ['format_group'],
+                attributes:['format_group'],
+                group: "format_group",
                 where: {
                     format_group: {
                         [Op.not]: null
@@ -41,8 +41,9 @@ exports.index = async (req, res) => {
                     ['format_group', 'ASC']
                 ],
             })
+         
 
-            const packs = await ModelPack.findAll({
+        const packs = await ModelPack.findAll({
                 attributes: ['pack_id', 'pack_name'],
                 order: [
                     ['pack_name', 'ASC']
@@ -60,7 +61,9 @@ exports.index = async (req, res) => {
                 ],
             })
 
-            res.render('forecast/form.ejs', {
+          
+
+           res.render('forecast/form.ejs', {
                 formats: formats,
                 packs: packs,
                 countrys: countrys

@@ -63,9 +63,9 @@ exports.index = async (req, res) => {
         if (req.session.user.role == 1) {
 
 
-            var formats = await ModelFormat.findAll({
-                attributes: ['format_id', 'format_name', 'format_group'],
-                group: ['format_group'],
+            const formats = await ModelFormat.findAll({
+                attributes:['format_group'],
+                group: "format_group",
                 where: {
                     format_group: {
                         [Op.not]: null
@@ -76,7 +76,7 @@ exports.index = async (req, res) => {
                 ],
             })
 
-            var packs = await ModelPack.findAll({
+            const packs = await ModelPack.findAll({
                 attributes: ['pack_id', 'pack_name'],
                 order: [
                     ['pack_name', 'ASC']
@@ -84,7 +84,7 @@ exports.index = async (req, res) => {
             })
 
 
-            var countrys = await ModelCountry.findAll({
+            const countrys = await ModelCountry.findAll({
                 attributes: ['country_id', 'country_name'],
                 where: {
                     country_id: [61, 125, 184]
