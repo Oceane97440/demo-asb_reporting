@@ -81,23 +81,26 @@
         <% } %>
 
 
+        <% for(let i=0; i < formatstemplates.length; i++) { %>
+
+
         <div class="alert alert-info alert-dismissible fade show text-dark" role="alert" style="border-radius: 49px; box-shadow: 1px 2px 3px rgb(116, 114, 114) ">
     
     
               
             <strong>Attentions:</strong> Le template choisi ne correspond pas au format !
 
-            <a href='https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%=formatstemplates.campagne_id%>'
+            <a href='https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%=formatstemplates[i].campagne_id%>'
                 class="btn btn-xs btn-warning pull-right"target="_blank">
                 Campagne </a>
-            <a href='https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%=formatstemplates.insertion_id%>'
+            <a href='https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%=formatstemplates[i].insertion_id%>'
                 class="btn btn-xs btn-warning pull-right"target="_blank">
                 Insertion </a>     
                 <hr> 
-                <p><strong>Campagne : <%=formatstemplates.campagne_name%></strong>  </p>
-                <p><strong>Insertion : <%=formatstemplates.insertion_name%></strong>  </p>
-                <p><strong>Format : <%=formatstemplates.format_name%></strong>  </p>
-                <p><strong>Template : <%=formatstemplates.template_name%></strong>  </p>
+                <p><strong>Campagne : <%=formatstemplates[i].campagne_name%></strong>  </p>
+                <p><strong>Insertion : <%=formatstemplates[i].insertion_name%></strong>  </p>
+                <p><strong>Format : <%=formatstemplates[i].format_name%></strong>  </p>
+                <p><strong>Template : <%=formatstemplates[i].template_name%></strong>  </p>
 
 
           
@@ -106,6 +109,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
+        <% } %>
+
     </div>
 </div>
 
