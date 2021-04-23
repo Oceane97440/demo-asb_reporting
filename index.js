@@ -294,6 +294,9 @@ app.use('/automate', automate);
 const alert = require('./app/routes/routes.alerts');
 app.use('/alerts', alert);
 
+const tests = require('./app/routes/routes.tests');
+app.use('/test', tests);
+
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
