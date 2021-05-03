@@ -42,6 +42,15 @@ const Campaigns = sequelize.define('campaigns', {
     campaign_archived: {
         type: Sequelize.TINYINT,
         allowNull: true
+    },
+    created_at: {
+        type: Sequelize.DATE(),
+        allowNull: true
+    }
+    ,
+    updated_at: {
+        type: Sequelize.DATE(),
+        allowNull: true
     }
 }, {
     tableName: 'asb_campaigns',

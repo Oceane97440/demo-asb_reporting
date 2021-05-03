@@ -15,6 +15,15 @@ const Advertisers = sequelize.define('advertisers', {
     advertiser_archived: {
         type: Sequelize.TINYINT(),
         allowNull: true
+    },
+    created_at: {
+        type: Sequelize.DATE(),
+        allowNull: true
+    }
+    ,
+    updated_at: {
+        type: Sequelize.DATE(),
+        allowNull: true
     }
 }, {
     tableName: 'asb_advertisers',
