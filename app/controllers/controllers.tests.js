@@ -116,7 +116,6 @@ exports.export_excel = async (req, res) => {
     var data_native = data_report_view.data_native;
     var data_video = data_report_view.data_video;
 
-    console.log(table)
 
     try {
 
@@ -555,55 +554,55 @@ exports.export_excel = async (req, res) => {
                 {
 
                     formats :'GRAND ANGLE',
-                    sites: data_grand_angle.grand_angle_linfo_siteName,
+                    sites: data_grand_angle.grandAngle_linfo_siteName,
                     impressions: data_grand_angle.total_impressions_linfoGrandAngle,
                     clics: data_grand_angle.total_clicks_linfoGrandAngle,
-                    ctr_clics: data_grand_angle.grand_angle_linfo_ctr,
+                    ctr_clics: data_grand_angle.grandAngle_linfo_ctr,
                      vtr: '-',
     
                 },
                 {
                     formats :'GRAND ANGLE',
-                    sites: data_grand_angle.grand_angle_linfo_android_siteName,
+                    sites: data_grand_angle.grandAngle_linfo_android_siteName,
                     impressions: data_grand_angle.total_impressions_linfo_androidGrandAngle,
                     clics: data_grand_angle.total_clicks_linfo_androidGrandAngle,
-                    ctr_clics: data_grand_angle.grand_angle_linfo_android_ctr,
+                    ctr_clics: data_grand_angle.grandAngle_linfo_android_ctr,
                      vtr: '-',
     
                 },
                 {
                     formats :'GRAND ANGLE',
-                    sites: data_grand_angle.grand_angle_linfo_ios_siteName,
+                    sites: data_grand_angle.grandAngle_linfo_ios_siteName,
                     impressions: data_grand_angle.total_impressions_linfo_iosGrandAngle,
                     clics: data_grand_angle.total_clicks_linfo_iosGrandAngle,
-                    ctr_clics: data_grand_angle.grand_angle_linfo_ios_ctr,
+                    ctr_clics: data_grand_angle.grandAngle_linfo_ios_ctr,
                      vtr: '-',
     
                 },
                 {
                     formats :'GRAND ANGLE',
-                    sites: data_grand_angle.grand_angle_dtj_siteName,
+                    sites: data_grand_angle.grandAngle_dtj_siteName,
                     impressions: data_grand_angle.total_impressions_dtjGrandAngle,
                     clics: data_grand_angle.total_clicks_dtjGrandAngle,
-                    ctr_clics: data_grand_angle.grand_angle_dtj_ctr,
+                    ctr_clics: data_grand_angle.grandAngle_dtj_ctr,
                      vtr: '-',
     
                 },
                 {
                     formats :'GRAND ANGLE',
-                    sites: data_grand_angle.grand_angle_antenne_siteName,
+                    sites: data_grand_angle.grandAngle_antenne_siteName,
                     impressions: data_grand_angle.total_impressions_antenneGrandAngle,
                     clics: data_grand_angle.total_clicks_antenneGrandAngle,
-                    ctr_clics: data_grand_angle.grand_angle_antenne_ctr,
+                    ctr_clics: data_grand_angle.grandAngle_antenne_ctr,
                      vtr: '-',
     
                 },
                 {
                     formats :'GRAND ANGLE',
-                    sites: data_grand_angle.grand_angle_orange_siteName,
+                    sites: data_grand_angle.grandAngle_orange_siteName,
                     impressions: data_grand_angle.total_impressions_orangeGrandAngle,
                     clics: data_grand_angle.total_clicks_orangeGrandAngle,
-                    ctr_clics: data_grand_angle.grand_angle_orange_ctr,
+                    ctr_clics: data_grand_angle.grandAngle_orange_ctr,
                      vtr: '-',
     
                 },
