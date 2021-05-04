@@ -121,7 +121,6 @@ exports.alerts = async (req, res) => {
             const obj = {};
 
             obj["campagne_id"] = insertionsOnline[i].campaign_id;
-            obj["campagne_id"] = insertionsOnline[i].campaign_id;
             obj["campagne_name"] = insertionsOnline[i].campaign_name;
             obj["insertion_id"] = insertionsOnline[i].insertion_id;
             obj["insertion_name"] = insertionsOnline[i].insertion_name;

@@ -84,26 +84,39 @@ exports.export_excel = async (req, res) => {
 
 
 
-    var data_localStorage = localStorage.getItem('campagneId' + '-' + '1839404');
+    // crée label avec le date du jour ex : 20210403
+    const date = new Date();
+    const JJ = ('0' + (date.getDate())).slice(-2);
+
+    const MM = ('0' + (date.getMonth())).slice(-2);
+    const AAAA = date.getFullYear();
+
+    const label_now = AAAA + MM + JJ;
+
+
+    //recherche dans le local storage id qui correspond à la campagne
+
+    var data_localStorage = localStorage.getItem('campagneId' + '-' + '1883260');
 
     var data_report_view = JSON.parse(data_localStorage);
 
     var dts_table = data_report_view.table;
 
 
-    const date = new Date();
-    const JJ = ('0' + (date.getDate())).slice(-2)
-
-    const MM = ('0' + (date.getMonth())).slice(-2)
-    const AAAA = date.getFullYear();
-
-    const label_now = AAAA + MM + JJ
-
     var campaign_name = dts_table.Campagne_name
     var date_now = dts_table.Date_rapport
     var StartDate = dts_table.StartDate
     var EndDate = dts_table.EndDate
 
+    var table = data_report_view.table;
+    var data_interstitiel = data_report_view.data_interstitiel;
+    var data_habillage = data_report_view.data_habillage;
+    var data_masthead = data_report_view.data_masthead;
+    var data_grand_angle = data_report_view.data_grand_angle;
+    var data_native = data_report_view.data_native;
+    var data_video = data_report_view.data_video;
+
+    console.log(table)
 
     try {
 
@@ -122,13 +135,32 @@ exports.export_excel = async (req, res) => {
                         rgb: 'FFFFFFFF'
                     },
                     sz: 14,
-                    bold: true,
-                    underline: true
-                },
-                alignment: {
-                    vertical: "center"
+                    bold: false,
+                    underline: false
                 }
-            },
+            }, cellTotal: {
+
+                font: {
+                    color: {
+                        rgb: 'FF000000'
+                    },
+                    bold: true,
+                    underline: false
+                }
+                
+              },
+
+
+
+              cellNone: {
+                font: {
+                    color: {
+                        rgb: 'FF000000'
+                    },
+                    
+                }
+              },
+           
 
         };
 
@@ -137,24 +169,44 @@ exports.export_excel = async (req, res) => {
         //Array of objects representing heading rows (very top)
         const heading = [
             [{
-                    value: 'Rapport :' + campaign_name,
+                    value: 'Rapport : ' + campaign_name,
                     style: styles.headerDark,
                     alignment: styles.alignment
                 }
 
             ],
-            // ['Date de génération : ' + date_now +' | ' + 'Période diffusion :' + StartDate + '-' + EndDate
-            // ] 
+          
             ['Date de génération : ' + date_now,
 
             ],
-            ['Période diffusion :' + StartDate + '-' + EndDate]
+            ['Période diffusion : Du ' + StartDate + ' au ' + EndDate]
         ];
 
+        const headingformats = [
+            [
+                {
+                    value: 'Par Format',
+                    style: styles.headerDark,
+                }
+
+            ]
+         
+        ];
+        const headingsites = [
+            [
+                {
+                    value: 'Par Sites',
+                    style: styles.headerDark,
+                }
+
+            ]
+         
+        ];
 
 
         //Here you specify the export structure
         const bilan_global = {
+        
 
             impressions: { // <- the key should match the actual data key
                 displayName: 'Impressions', // <- Here you specify the column header
@@ -181,15 +233,55 @@ exports.export_excel = async (req, res) => {
                 headerStyle: styles.headerDark,
                 width: 220 // <- width in pixels
             }
+        
+        
         }
 
-        const bilan_sites = {
+        
+        const bilan_formats = {
 
+            Formats: { // <- the key should match the actual data key
+                displayName: 'Format', // <- Here you specify the column header
+                headerStyle: styles.headerDark, // <- Header style
+                cellStyle: function(value, row) { // <- style renderer function
+                    // if the status is 1 then color in green else color in red
+                    // Notice how we use another cell value to style the current one
+
+                    return (value ==="TOTAL") ? styles.cellTotal : styles.cellNone // <- Inline cell style is possible 
+                  },
+                width: 220 // <- width in pixels
+            },
+            Impressions: {
+                displayName: 'Impressions',
+                headerStyle: styles.headerDark,
+                width: 120 // <- width in chars (when the number is passed as string)
+            },
+            Clics: {
+                displayName: 'Clics',
+                headerStyle: styles.headerDark,
+                width: 120 // <- width in chars (when the number is passed as string)
+            },
+            Ctr_clics: {
+                displayName: 'Taux de clics',
+                headerStyle: styles.headerDark,
+                width: 120 // <- width in pixels
+            },
+          
+        }
+
+
+        const bilan_sites = {
+            formats: { // <- the key should match the actual data key
+                displayName: 'Formats', // <- Here you specify the column header
+                headerStyle: styles.headerDark, // <- Header style
+                width: 220 // <- width in pixels
+            },
             sites: { // <- the key should match the actual data key
                 displayName: 'Sites', // <- Here you specify the column header
                 headerStyle: styles.headerDark, // <- Header style
                 width: 220 // <- width in pixels
             },
+         
             impressions: {
                 displayName: 'Impressions',
                 headerStyle: styles.headerDark,
@@ -205,55 +297,438 @@ exports.export_excel = async (req, res) => {
                 headerStyle: styles.headerDark,
                 width: 120 // <- width in pixels
             },
-            repetions: {
-                displayName: 'Répétition',
-                headerStyle: styles.headerDark,
-                width: 120 // <- width in pixels
-            },
-            /* vtr: {
+             vtr: {
                  displayName: 'VTR',
                  headerStyle: styles.headerDark,
                  width: 220 // <- width in pixels
-             }*/
+             }
 
         }
+
+
 
         // The data set should have the following shape (Array of Objects)
         // The order of the keys is irrelevant, it is also irrelevant if the
         // dataset contains more fields as the report is build based on the
         // specification provided above. But you should have all the fields
         // that are listed in the report specification
-        const dataset = [{
-                impressions: '19 535',
-                clics: '1 101',
-                ctr_clics: '5.64%',
-                vu: '9 341',
-                repetions: '2.09'
+        const dataset_global = [{
+                impressions: table.total_impression_format,
+                clics: table.total_click_format,
+                ctr_clics: table.CTR,
+                vu: table.Total_VU,
+                repetions: table.Repetition
 
             },
 
 
 
         ]
-        const dataset2 = [{
-                sites: 'SM_LINFO.re',
-                impressions: '1 503	',
-                clics: '111',
-                ctr_clics: '7.39%',
-                // vtr: '55.76%',
-                repetions: '0'
+        const dataset_format = [{
+            Formats: 'INTERSTITIEL',
+            Impressions: table.sommeInterstitielImpression,
+            Clics: table.sommeInterstitielClicks,
+            Ctr_clics: table.CTR_interstitiel,
+           
+
+        },
+        {
+            Formats: 'INTERSTITIEL',
+            Impressions: table.sommeInterstitielImpression,
+            Clics: table.sommeInterstitielClicks,
+            Ctr_clics: table.CTR_interstitiel,
+           
+
+        },
+        {
+            Formats: 'MASTHEAD',
+            Impressions: table.sommeMastheadImpression,
+            Clics: table.sommeMastheadClicks,
+            Ctr_clics: table.CTR_masthead,
+           
+
+        },
+        {
+            Formats: 'GRAND ANGLE',
+            Impressions: table.sommeGrand_AngleImpression,
+            Clics: table.sommeGrand_AngleClicks,
+            Ctr_clics: table.CTR_grand_angle
+           
+
+        },
+        {
+            Formats: 'NATIVE',
+            Impressions: table.sommeNativeImpression,
+            Clics: table.sommeNativeClicks,
+            Ctr_clics: table.CTR_native
+           
+
+        },
+        {
+            Formats: 'VIDEO',
+            Impressions: table.sommeVideoImpression,
+            Clics: table.sommeVideoClicks,
+            Ctr_clics: table.CTR_video,
+        },
+        {
+            Formats: 'TOTAL',
+            Impressions: table.total_impression_format,
+            Clics: table.total_click_format,
+            Ctr_clics: table.CTR,
+        },
+
+
+    ]
+
+        const dataset_site = [
+            
+            //INTERSTITIEL par sites
+            {
+
+                formats :'INTERSTITIEL',
+                sites: data_interstitiel.interstitiel_linfo_siteName,
+                impressions: data_interstitiel.total_impressions_linfoInterstitiel,
+                clics: data_interstitiel.total_clicks_linfoInterstitiel,
+                ctr_clics: data_interstitiel.interstitiel_linfo_ctr,
+                 vtr: '-',
 
             },
             {
-                sites: 'SM_LINFO.re',
-                impressions: '1 503	',
-                clics: '111',
-                ctr_clics: '7.39%',
-                // vtr: '55.76%',
-                repetions: '0'
+                formats :'INTERSTITIEL',
+                sites: data_interstitiel.interstitiel_linfo_android_siteName,
+                impressions: data_interstitiel.total_impressions_linfo_androidInterstitiel,
+                clics: data_interstitiel.total_clicks_linfo_androidInterstitiel,
+                ctr_clics: data_interstitiel.interstitiel_linfo_android_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'INTERSTITIEL',
+                sites: data_interstitiel.interstitiel_linfo_ios_siteName,
+                impressions: data_interstitiel.total_impressions_linfo_iosInterstitiel,
+                clics: data_interstitiel.total_clicks_linfo_iosInterstitiel,
+                ctr_clics: data_interstitiel.interstitiel_linfo_ios_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'INTERSTITIEL',
+                sites: data_interstitiel.interstitiel_dtj_siteName,
+                impressions: data_interstitiel.total_impressions_dtjInterstitiel,
+                clics: data_interstitiel.total_clicks_dtjInterstitiel,
+                ctr_clics: data_interstitiel.interstitiel_dtj_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'INTERSTITIEL',
+                sites: data_interstitiel.interstitiel_antenne_siteName,
+                impressions: data_interstitiel.total_impressions_antenneInterstitiel,
+                clics: data_interstitiel.total_clicks_antenneInterstitiel,
+                ctr_clics: data_interstitiel.interstitiel_antenne_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'INTERSTITIEL',
+                sites: data_interstitiel.interstitiel_orange_siteName,
+                impressions: data_interstitiel.total_impressions_orangeInterstitiel,
+                clics: data_interstitiel.total_clicks_orangeInterstitiel,
+                ctr_clics: data_interstitiel.interstitiel_orange_ctr,
+                 vtr: '-',
+
+            },
+             //HABILLAGE par sites
+             {
+
+                formats :'HABILLAGE',
+                sites: data_habillage.habillage_linfo_siteName,
+                impressions: data_habillage.total_impressions_linfoHabillage,
+                clics: data_habillage.total_clicks_linfoHabillage,
+                ctr_clics: data_habillage.habillage_linfo_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'HABILLAGE',
+                sites: data_habillage.habillage_linfo_android_siteName,
+                impressions: data_habillage.total_impressions_linfo_androidHabillage,
+                clics: data_habillage.total_clicks_linfo_androidHabillage,
+                ctr_clics: data_habillage.habillage_linfo_android_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'HABILLAGE',
+                sites: data_habillage.habillage_linfo_ios_siteName,
+                impressions: data_habillage.total_impressions_linfo_iosHabillage,
+                clics: data_habillage.total_clicks_linfo_iosHabillage,
+                ctr_clics: data_habillage.habillage_linfo_ios_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'HABILLAGE',
+                sites: data_habillage.habillage_dtj_siteName,
+                impressions: data_habillage.total_impressions_dtjHabillage,
+                clics: data_habillage.total_clicks_dtjHabillage,
+                ctr_clics: data_habillage.habillage_dtj_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'HABILLAGE',
+                sites: data_habillage.habillage_antenne_siteName,
+                impressions: data_habillage.total_impressions_antenneHabillage,
+                clics: data_habillage.total_clicks_antenneHabillage,
+                ctr_clics: data_habillage.habillage_antenne_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'HABILLAGE',
+                sites: data_habillage.habillage_orange_siteName,
+                impressions: data_habillage.total_impressions_orangeHabillage,
+                clics: data_habillage.total_clicks_orangeHabillage,
+                ctr_clics: data_habillage.habillage_orange_ctr,
+                 vtr: '-',
 
             },
 
+             //MASTHEAD par sites
+             {
+
+                formats :'MASTHEAD',
+                sites: data_masthead.masthead_linfo_siteName,
+                impressions: data_masthead.total_impressions_linfoMasthead,
+                clics: data_masthead.total_clicks_linfoMasthead,
+                ctr_clics: data_masthead.masthead_linfo_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'MASTHEAD',
+                sites: data_masthead.masthead_linfo_android_siteName,
+                impressions: data_masthead.total_impressions_linfo_androidMasthead,
+                clics: data_masthead.total_clicks_linfo_androidMasthead,
+                ctr_clics: data_masthead.masthead_linfo_android_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'MASTHEAD',
+                sites: data_masthead.masthead_linfo_ios_siteName,
+                impressions: data_masthead.total_impressions_linfo_iosMasthead,
+                clics: data_masthead.total_clicks_linfo_iosMasthead,
+                ctr_clics: data_masthead.masthead_linfo_ios_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'MASTHEAD',
+                sites: data_masthead.masthead_dtj_siteName,
+                impressions: data_masthead.total_impressions_dtjMasthead,
+                clics: data_masthead.total_clicks_dtjMasthead,
+                ctr_clics: data_masthead.masthead_dtj_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'MASTHEAD',
+                sites: data_masthead.masthead_antenne_siteName,
+                impressions: data_masthead.total_impressions_antenneMasthead,
+                clics: data_masthead.total_clicks_antenneMasthead,
+                ctr_clics: data_masthead.masthead_antenne_ctr,
+                 vtr: '-',
+
+            },
+            {
+                formats :'MASTHEAD',
+                sites: data_masthead.masthead_orange_siteName,
+                impressions: data_masthead.total_impressions_orangeMasthead,
+                clics: data_masthead.total_clicks_orangeMasthead,
+                ctr_clics: data_masthead.masthead_orange_ctr,
+                 vtr: '-',
+
+            },
+                //GRAND ANGLE par sites
+                {
+
+                    formats :'GRAND ANGLE',
+                    sites: data_grand_angle.grand_angle_linfo_siteName,
+                    impressions: data_grand_angle.total_impressions_linfoGrandAngle,
+                    clics: data_grand_angle.total_clicks_linfoGrandAngle,
+                    ctr_clics: data_grand_angle.grand_angle_linfo_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'GRAND ANGLE',
+                    sites: data_grand_angle.grand_angle_linfo_android_siteName,
+                    impressions: data_grand_angle.total_impressions_linfo_androidGrandAngle,
+                    clics: data_grand_angle.total_clicks_linfo_androidGrandAngle,
+                    ctr_clics: data_grand_angle.grand_angle_linfo_android_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'GRAND ANGLE',
+                    sites: data_grand_angle.grand_angle_linfo_ios_siteName,
+                    impressions: data_grand_angle.total_impressions_linfo_iosGrandAngle,
+                    clics: data_grand_angle.total_clicks_linfo_iosGrandAngle,
+                    ctr_clics: data_grand_angle.grand_angle_linfo_ios_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'GRAND ANGLE',
+                    sites: data_grand_angle.grand_angle_dtj_siteName,
+                    impressions: data_grand_angle.total_impressions_dtjGrandAngle,
+                    clics: data_grand_angle.total_clicks_dtjGrandAngle,
+                    ctr_clics: data_grand_angle.grand_angle_dtj_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'GRAND ANGLE',
+                    sites: data_grand_angle.grand_angle_antenne_siteName,
+                    impressions: data_grand_angle.total_impressions_antenneGrandAngle,
+                    clics: data_grand_angle.total_clicks_antenneGrandAngle,
+                    ctr_clics: data_grand_angle.grand_angle_antenne_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'GRAND ANGLE',
+                    sites: data_grand_angle.grand_angle_orange_siteName,
+                    impressions: data_grand_angle.total_impressions_orangeGrandAngle,
+                    clics: data_grand_angle.total_clicks_orangeGrandAngle,
+                    ctr_clics: data_grand_angle.grand_angle_orange_ctr,
+                     vtr: '-',
+    
+                },
+                 //VIDEO par sites
+                 {
+
+                    formats :'VIDEO',
+                    sites: data_video.video_linfo_siteName,
+                    impressions: data_video.total_impressions_linfoVideo,
+                    clics: data_video.total_clicks_linfoVideo,
+                    ctr_clics: data_video.video_linfo_ctr,
+                     vtr: data_video.VTR_linfo,
+    
+                },
+                {
+                    formats :'VIDEO',
+                    sites: data_video.video_linfo_android_siteName,
+                    impressions: data_video.total_impressions_linfo_androidVideo,
+                    clics: data_video.total_clicks_linfo_androidVideo,
+                    ctr_clics: data_video.video_linfo_android_ctr,
+                    vtr: data_video.VTR_linfo_android,
+    
+                },
+                {
+                    formats :'VIDEO',
+                    sites: data_video.video_linfo_ios_siteName,
+                    impressions: data_video.total_impressions_linfo_iosVideo,
+                    clics: data_video.total_clicks_linfo_iosVideo,
+                    ctr_clics: data_video.video_linfo_ios_ctr,
+                    vtr: data_video.VTR_linfo_ios,
+    
+                },
+                {
+                    formats :'VIDEO',
+                    sites: data_video.video_antenne_siteName,
+                    impressions: data_video.total_impressions_antenneVideo,
+                    clics: data_video.total_clicks_antenneVideo,
+                    ctr_clics: data_video.video_antenne_ctr,
+                    vtr: data_video.VTR_antenne,
+    
+                },
+                {
+                    formats :'VIDEO',
+                    sites: data_video.video_tf1_siteName,
+                    impressions: data_video.total_impressions_tf1Video,
+                    clics: data_video.total_clicks_tf1Video,
+                    ctr_clics: data_video.video_tf1_ctr,
+                    vtr: data_video.VTR_tf1,
+    
+                },
+                {
+                    formats :'VIDEO',
+                    sites: data_video.video_m6_siteName,
+                    impressions: data_video.total_impressions_m6Video,
+                    clics: data_video.total_clicks_m6Video,
+                    ctr_clics: data_video.video_m6_ctr,
+                    vtr: data_video.VTR_m6,
+    
+                },
+                {
+                    formats :'VIDEO',
+                    sites: data_video.video_dailymotion_siteName,
+                    impressions: data_video.total_impressions_dailymotionVideo,
+                    clics: data_video.total_clicks_dailymotionVideo,
+                    ctr_clics: data_video.video_dailymotion_ctr,
+                    vtr: data_video.VTR_dailymotion,
+    
+                },
+
+                  //NATIVE par sites
+                  {
+
+                    formats :'NATIVE',
+                    sites: data_native.native_linfo_siteName,
+                    impressions: data_native.total_impressions_linfoNative,
+                    clics: data_native.total_clicks_linfoNative,
+                    ctr_clics: data_native.native_linfo_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'NATIVE',
+                    sites: data_native.native_linfo_android_siteName,
+                    impressions: data_native.total_impressions_linfo_androidNative,
+                    clics: data_native.total_clicks_linfo_androidNative,
+                    ctr_clics: data_native.native_linfo_android_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'NATIVE',
+                    sites: data_native.native_linfo_ios_siteName,
+                    impressions: data_native.total_impressions_linfo_iosNative,
+                    clics: data_native.total_clicks_linfo_iosNative,
+                    ctr_clics: data_native.native_linfo_ios_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'NATIVE',
+                    sites: data_native.native_dtj_siteName,
+                    impressions: data_native.total_impressions_dtjNative,
+                    clics: data_native.total_clicks_dtjNative,
+                    ctr_clics: data_native.native_dtj_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'NATIVE',
+                    sites: data_native.native_antenne_siteName,
+                    impressions: data_native.total_impressions_antenneNative,
+                    clics: data_native.total_clicks_antenneNative,
+                    ctr_clics: data_native.native_antenne_ctr,
+                     vtr: '-',
+    
+                },
+                {
+                    formats :'NATIVE',
+                    sites: data_native.native_orange_siteName,
+                    impressions: data_native.total_impressions_orangeNative,
+                    clics: data_native.total_clicks_orangeNative,
+                    ctr_clics: data_native.native_orange_ctr,
+                     vtr: '-',
+    
+                },
 
         ]
 
@@ -280,24 +755,30 @@ exports.export_excel = async (req, res) => {
         const report = excel.buildExport(
             [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
                 {
-                    name: 'Bilan_global', // <- Specify sheet name (optional)
+                    name: 'Bilan', // <- Specify sheet name (optional)
                     heading: heading, // <- Raw heading array (optional)
                     merges: merges, // <- Merge cell ranges
                     specification: bilan_global, // <- Report specification
-                    data: dataset // <-- Report data
+                    data: dataset_global // <-- Report data
                 },
                 {
-                    name: 'Bilan_par_sites', // <- Specify sheet name (optional)
-                    // merges: merges2, // <- Merge cell ranges
+                    name: 'Formats',
+                   // heading : headingformats,
+                    specification: bilan_formats, 
+                    data: dataset_format
+                },
+                {
+                    name: 'Sites',
+                   // heading : headingsites, 
                     specification: bilan_sites, // <- Report specification
-                    data: dataset2 // <-- Report data
+                    data: dataset_site // <-- Report data
                 }
             ]
         );
 
         // You can then return this straight
         //rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
-        res.attachment('rapport_antennesb-'+ label_now +'-'+ campaign_name + '.xlsx'); // This is sails.js specific (in general you need to set headers)
+        res.attachment('rapport_antennesb-' + label_now + '-' + campaign_name + '.xlsx'); // This is sails.js specific (in general you need to set headers)
 
         return res.send(report);
 
@@ -507,6 +988,7 @@ exports.test_exportExcel = async (req, res) => {
                 },
                 {
                     name: 'Bilan_par_sites', // <- Specify sheet name (optional)
+                    heading : headingformats,
                     // merges: merges2, // <- Merge cell ranges
                     specification: bilan_sites, // <- Report specification
                     data: dataset2 // <-- Report data
