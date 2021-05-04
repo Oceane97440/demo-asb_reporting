@@ -11,6 +11,7 @@ router.get("/test", api.test);
 router.get("/", api.index);
 router.get("/rapport/:campaigncrypt", api.report);
 router.get("/:campaigncrypt", api.generate);
+router.get("/export/:campaigncrypt", api.export_excel);
 router.get("/automatisation/:campaignid/", api.automatisation);
 
 
