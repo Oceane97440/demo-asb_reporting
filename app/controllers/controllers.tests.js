@@ -96,7 +96,8 @@ exports.export_excel = async (req, res) => {
 
     //recherche dans le local storage id qui correspond à la campagne
 
-    var data_localStorage = localStorage.getItem('campagneId' + '-' + '1883260');
+     var data_localStorage = localStorage.getItem('campagneId' + '-' + '1883260');
+
 
     var data_report_view = JSON.parse(data_localStorage);
 
@@ -137,7 +138,8 @@ exports.export_excel = async (req, res) => {
                     bold: false,
                     underline: false
                 }
-            }, cellTotal: {
+            },
+            cellTotal: {
 
                 font: {
                     color: {
@@ -146,20 +148,20 @@ exports.export_excel = async (req, res) => {
                     bold: true,
                     underline: false
                 }
-                
-              },
+
+            },
 
 
 
-              cellNone: {
+            cellNone: {
                 font: {
                     color: {
                         rgb: 'FF000000'
                     },
-                    
+
                 }
-              },
-           
+            },
+
 
         };
 
@@ -174,41 +176,45 @@ exports.export_excel = async (req, res) => {
                 }
 
             ],
-          
+
             ['Date de génération : ' + date_now,
 
             ],
-            ['Période diffusion : Du ' + StartDate + ' au ' + EndDate]
+            ['Période diffusion : Du ' + StartDate + ' au ' + EndDate],
+            ['                ']
         ];
 
         const headingformats = [
-            [
-                {
+            [{
                     value: 'Par Format',
                     style: styles.headerDark,
                 }
 
             ]
-         
+
         ];
         const headingsites = [
-            [
-                {
+            [{
                     value: 'Par Sites',
                     style: styles.headerDark,
                 }
 
             ]
-         
+
         ];
 
 
         //Here you specify the export structure
         const bilan_global = {
-        
+
 
             impressions: { // <- the key should match the actual data key
                 displayName: 'Impressions', // <- Here you specify the column header
+                headerStyle: styles.headerDark, // <- Header style
+                width: 400 // <- width in pixels
+            },
+            formats: { // <- the key should match the actual data key
+                displayName: 'Formats', // <- Here you specify the column header
                 headerStyle: styles.headerDark, // <- Header style
                 width: 400 // <- width in pixels
             },
@@ -232,22 +238,22 @@ exports.export_excel = async (req, res) => {
                 headerStyle: styles.headerDark,
                 width: 220 // <- width in pixels
             }
-        
-        
+
+
         }
 
-        
+
         const bilan_formats = {
 
             Formats: { // <- the key should match the actual data key
                 displayName: 'Format', // <- Here you specify the column header
                 headerStyle: styles.headerDark, // <- Header style
-                cellStyle: function(value, row) { // <- style renderer function
+                cellStyle: function (value, row) { // <- style renderer function
                     // if the status is 1 then color in green else color in red
                     // Notice how we use another cell value to style the current one
 
-                    return (value ==="TOTAL") ? styles.cellTotal : styles.cellNone // <- Inline cell style is possible 
-                  },
+                    return (value === "TOTAL") ? styles.cellTotal : styles.cellNone // <- Inline cell style is possible 
+                },
                 width: 220 // <- width in pixels
             },
             Impressions: {
@@ -265,7 +271,7 @@ exports.export_excel = async (req, res) => {
                 headerStyle: styles.headerDark,
                 width: 120 // <- width in pixels
             },
-          
+
         }
 
 
@@ -280,7 +286,7 @@ exports.export_excel = async (req, res) => {
                 headerStyle: styles.headerDark, // <- Header style
                 width: 220 // <- width in pixels
             },
-         
+
             impressions: {
                 displayName: 'Impressions',
                 headerStyle: styles.headerDark,
@@ -296,11 +302,11 @@ exports.export_excel = async (req, res) => {
                 headerStyle: styles.headerDark,
                 width: 120 // <- width in pixels
             },
-             vtr: {
-                 displayName: 'VTR',
-                 headerStyle: styles.headerDark,
-                 width: 220 // <- width in pixels
-             }
+            vtr: {
+                displayName: 'VTR',
+                headerStyle: styles.headerDark,
+                width: 220 // <- width in pixels
+            }
 
         }
 
@@ -318,418 +324,583 @@ exports.export_excel = async (req, res) => {
                 vu: table.Total_VU,
                 repetions: table.Repetition
 
-            },
+            }
+    
 
 
 
         ]
-        const dataset_format = [{
-            Formats: 'INTERSTITIEL',
-            Impressions: table.sommeInterstitielImpression,
-            Clics: table.sommeInterstitielClicks,
-            Ctr_clics: table.CTR_interstitiel,
-           
+        const dataset_format = []
 
-        },
-        {
-            Formats: 'INTERSTITIEL',
-            Impressions: table.sommeInterstitielImpression,
-            Clics: table.sommeInterstitielClicks,
-            Ctr_clics: table.CTR_interstitiel,
-           
-
-        },
-        {
-            Formats: 'MASTHEAD',
-            Impressions: table.sommeMastheadImpression,
-            Clics: table.sommeMastheadClicks,
-            Ctr_clics: table.CTR_masthead,
-           
-
-        },
-        {
-            Formats: 'GRAND ANGLE',
-            Impressions: table.sommeGrand_AngleImpression,
-            Clics: table.sommeGrand_AngleClicks,
-            Ctr_clics: table.CTR_grand_angle
-           
-
-        },
-        {
-            Formats: 'NATIVE',
-            Impressions: table.sommeNativeImpression,
-            Clics: table.sommeNativeClicks,
-            Ctr_clics: table.CTR_native
-           
-
-        },
-        {
-            Formats: 'VIDEO',
-            Impressions: table.sommeVideoImpression,
-            Clics: table.sommeVideoClicks,
-            Ctr_clics: table.CTR_video,
-        },
-        {
-            Formats: 'TOTAL',
-            Impressions: table.total_impression_format,
-            Clics: table.total_click_format,
-            Ctr_clics: table.CTR,
-        },
+        if (table.sommeInterstitielImpression !== '0') {
+            dataset_format[0] = {
+                Formats: 'INTERSTITIEL',
+                Impressions: table.sommeInterstitielImpression,
+                Clics: table.sommeInterstitielClicks,
+                Ctr_clics: table.CTR_interstitiel,
 
 
-    ]
+            }
+        }
 
-        const dataset_site = [
-            
-            //INTERSTITIEL par sites
-            {
+        if (table.sommeHabillageImpression !== '0') {
+            dataset_format[1] = {
 
-                formats :'INTERSTITIEL',
-                sites: data_interstitiel.interstitiel_linfo_siteName,
-                impressions: data_interstitiel.total_impressions_linfoInterstitiel,
-                clics: data_interstitiel.total_clicks_linfoInterstitiel,
-                ctr_clics: data_interstitiel.interstitiel_linfo_ctr,
-                 vtr: '-',
+                Formats: 'HABILLAGE',
+                Impressions: table.sommeHabillageImpression,
+                Clics: table.sommeHabillageClicks,
+                Ctr_clics: table.CTR_habillage,
 
-            },
-            {
-                formats :'INTERSTITIEL',
-                sites: data_interstitiel.interstitiel_linfo_android_siteName,
-                impressions: data_interstitiel.total_impressions_linfo_androidInterstitiel,
-                clics: data_interstitiel.total_clicks_linfo_androidInterstitiel,
-                ctr_clics: data_interstitiel.interstitiel_linfo_android_ctr,
-                 vtr: '-',
 
-            },
-            {
-                formats :'INTERSTITIEL',
-                sites: data_interstitiel.interstitiel_linfo_ios_siteName,
-                impressions: data_interstitiel.total_impressions_linfo_iosInterstitiel,
-                clics: data_interstitiel.total_clicks_linfo_iosInterstitiel,
-                ctr_clics: data_interstitiel.interstitiel_linfo_ios_ctr,
-                 vtr: '-',
 
-            },
-            {
-                formats :'INTERSTITIEL',
-                sites: data_interstitiel.interstitiel_dtj_siteName,
-                impressions: data_interstitiel.total_impressions_dtjInterstitiel,
-                clics: data_interstitiel.total_clicks_dtjInterstitiel,
-                ctr_clics: data_interstitiel.interstitiel_dtj_ctr,
-                 vtr: '-',
 
-            },
-            {
-                formats :'INTERSTITIEL',
-                sites: data_interstitiel.interstitiel_antenne_siteName,
-                impressions: data_interstitiel.total_impressions_antenneInterstitiel,
-                clics: data_interstitiel.total_clicks_antenneInterstitiel,
-                ctr_clics: data_interstitiel.interstitiel_antenne_ctr,
-                 vtr: '-',
+            }
+        }
+        if (table.sommeMastheadImpression !== '0') {
+            dataset_format[2] = {
 
-            },
-            {
-                formats :'INTERSTITIEL',
-                sites: data_interstitiel.interstitiel_orange_siteName,
-                impressions: data_interstitiel.total_impressions_orangeInterstitiel,
-                clics: data_interstitiel.total_clicks_orangeInterstitiel,
-                ctr_clics: data_interstitiel.interstitiel_orange_ctr,
-                 vtr: '-',
+                Formats: 'MASTHEAD',
+                Impressions: table.sommeMastheadImpression,
+                Clics: table.sommeMastheadClicks,
+                Ctr_clics: table.CTR_masthead,
 
-            },
-             //HABILLAGE par sites
-             {
 
-                formats :'HABILLAGE',
-                sites: data_habillage.habillage_linfo_siteName,
-                impressions: data_habillage.total_impressions_linfoHabillage,
-                clics: data_habillage.total_clicks_linfoHabillage,
-                ctr_clics: data_habillage.habillage_linfo_ctr,
-                 vtr: '-',
 
-            },
-            {
-                formats :'HABILLAGE',
-                sites: data_habillage.habillage_linfo_android_siteName,
-                impressions: data_habillage.total_impressions_linfo_androidHabillage,
-                clics: data_habillage.total_clicks_linfo_androidHabillage,
-                ctr_clics: data_habillage.habillage_linfo_android_ctr,
-                 vtr: '-',
+            }
+        }
 
-            },
-            {
-                formats :'HABILLAGE',
-                sites: data_habillage.habillage_linfo_ios_siteName,
-                impressions: data_habillage.total_impressions_linfo_iosHabillage,
-                clics: data_habillage.total_clicks_linfo_iosHabillage,
-                ctr_clics: data_habillage.habillage_linfo_ios_ctr,
-                 vtr: '-',
+        if (table.sommeGrand_AngleImpression !== '0') {
+            dataset_format[3] = {
 
-            },
-            {
-                formats :'HABILLAGE',
-                sites: data_habillage.habillage_dtj_siteName,
-                impressions: data_habillage.total_impressions_dtjHabillage,
-                clics: data_habillage.total_clicks_dtjHabillage,
-                ctr_clics: data_habillage.habillage_dtj_ctr,
-                 vtr: '-',
+                Formats: 'GRAND ANGLE',
+                Impressions: table.sommeGrand_AngleImpression,
+                Clics: table.sommeGrand_AngleClicks,
+                Ctr_clics: table.CTR_grand_angle
 
-            },
-            {
-                formats :'HABILLAGE',
-                sites: data_habillage.habillage_antenne_siteName,
-                impressions: data_habillage.total_impressions_antenneHabillage,
-                clics: data_habillage.total_clicks_antenneHabillage,
-                ctr_clics: data_habillage.habillage_antenne_ctr,
-                 vtr: '-',
 
-            },
-            {
-                formats :'HABILLAGE',
-                sites: data_habillage.habillage_orange_siteName,
-                impressions: data_habillage.total_impressions_orangeHabillage,
-                clics: data_habillage.total_clicks_orangeHabillage,
-                ctr_clics: data_habillage.habillage_orange_ctr,
-                 vtr: '-',
 
-            },
 
-             //MASTHEAD par sites
-             {
+            }
+        }
 
-                formats :'MASTHEAD',
-                sites: data_masthead.masthead_linfo_siteName,
-                impressions: data_masthead.total_impressions_linfoMasthead,
-                clics: data_masthead.total_clicks_linfoMasthead,
-                ctr_clics: data_masthead.masthead_linfo_ctr,
-                 vtr: '-',
+        if (table.sommeNativeImpression !== '0') {
+            dataset_format[4] = {
+                Formats: 'NATIVE',
+                Impressions: table.sommeNativeImpression,
+                Clics: table.sommeNativeClicks,
+                Ctr_clics: table.CTR_native
 
-            },
-            {
-                formats :'MASTHEAD',
-                sites: data_masthead.masthead_linfo_android_siteName,
-                impressions: data_masthead.total_impressions_linfo_androidMasthead,
-                clics: data_masthead.total_clicks_linfo_androidMasthead,
-                ctr_clics: data_masthead.masthead_linfo_android_ctr,
-                 vtr: '-',
 
-            },
-            {
-                formats :'MASTHEAD',
-                sites: data_masthead.masthead_linfo_ios_siteName,
-                impressions: data_masthead.total_impressions_linfo_iosMasthead,
-                clics: data_masthead.total_clicks_linfo_iosMasthead,
-                ctr_clics: data_masthead.masthead_linfo_ios_ctr,
-                 vtr: '-',
+            }
+        }
+        if (table.sommeVideoImpression !== '0') {
+            dataset_format[5] = {
+                Formats: 'VIDEO',
+                Impressions: table.sommeVideoImpression,
+                Clics: table.sommeVideoClicks,
+                Ctr_clics: table.CTR_video,
 
-            },
-            {
-                formats :'MASTHEAD',
-                sites: data_masthead.masthead_dtj_siteName,
-                impressions: data_masthead.total_impressions_dtjMasthead,
-                clics: data_masthead.total_clicks_dtjMasthead,
-                ctr_clics: data_masthead.masthead_dtj_ctr,
-                 vtr: '-',
 
-            },
-            {
-                formats :'MASTHEAD',
-                sites: data_masthead.masthead_antenne_siteName,
-                impressions: data_masthead.total_impressions_antenneMasthead,
-                clics: data_masthead.total_clicks_antenneMasthead,
-                ctr_clics: data_masthead.masthead_antenne_ctr,
-                 vtr: '-',
+            }
+        }
+            dataset_format[6] = {
+                Formats: 'TOTAL',
+                Impressions: table.total_impression_format,
+                Clics: table.total_click_format,
+                Ctr_clics: table.CTR,
+            }
+        
 
-            },
-            {
-                formats :'MASTHEAD',
-                sites: data_masthead.masthead_orange_siteName,
-                impressions: data_masthead.total_impressions_orangeMasthead,
-                clics: data_masthead.total_clicks_orangeMasthead,
-                ctr_clics: data_masthead.masthead_orange_ctr,
-                 vtr: '-',
 
-            },
-                //GRAND ANGLE par sites
-                {
 
-                    formats :'GRAND ANGLE',
+
+        const dataset_site = []
+
+    
+        if(data_interstitiel.interstitielImpressions.length > 0 ) {
+
+            if (data_interstitiel.total_impressions_linfoInterstitiel !== "0" ) {
+        
+                dataset_site[0] =  {
+        
+                    formats: 'INTERSTITIEL',
+                    sites: data_interstitiel.interstitiel_linfo_siteName,
+                    impressions: data_interstitiel.total_impressions_linfoInterstitiel,
+                    clics: data_interstitiel.total_clicks_linfoInterstitiel,
+                    ctr_clics: data_interstitiel.interstitiel_linfo_ctr,
+                    vtr: '-',
+        
+                }
+             
+              
+            }
+            if (data_interstitiel.total_impressions_linfo_androidInterstitiel !== "0" ) {
+                dataset_site[1] =  {
+                    formats: 'INTERSTITIEL',
+                    sites: data_interstitiel.interstitiel_linfo_android_siteName,
+                    impressions: data_interstitiel.total_impressions_linfo_androidInterstitiel,
+                    clics: data_interstitiel.total_clicks_linfo_androidInterstitiel,
+                    ctr_clics: data_interstitiel.interstitiel_linfo_android_ctr,
+                    vtr: '-',
+        
+                }
+            }
+            if (data_interstitiel.total_impressions_linfo_iosInterstitiel !== "0" ) {
+                dataset_site[2] ={
+                    formats: 'INTERSTITIEL',
+                    sites: data_interstitiel.interstitiel_linfo_ios_siteName,
+                    impressions: data_interstitiel.total_impressions_linfo_iosInterstitiel,
+                    clics: data_interstitiel.total_clicks_linfo_iosInterstitiel,
+                    ctr_clics: data_interstitiel.interstitiel_linfo_ios_ctr,
+                    vtr: '-',
+        
+                }
+            }
+        
+            if (data_interstitiel.total_impressions_dtjInterstitiel !== "0" ) {
+        
+                
+                dataset_site[3] = {
+                    formats: 'INTERSTITIEL',
+                    sites: data_interstitiel.interstitiel_dtj_siteName,
+                    impressions: data_interstitiel.total_impressions_dtjInterstitiel,
+                    clics: data_interstitiel.total_clicks_dtjInterstitiel,
+                    ctr_clics: data_interstitiel.interstitiel_dtj_ctr,
+                    vtr: '-',
+        
+                }
+        
+            }
+            if (data_interstitiel.total_impressions_antenneInterstitiel !== "0" ) {
+        
+                
+                dataset_site[4] =    {
+                    formats: 'INTERSTITIEL',
+                    sites: data_interstitiel.interstitiel_antenne_siteName,
+                    impressions: data_interstitiel.total_impressions_antenneInterstitiel,
+                    clics: data_interstitiel.total_clicks_antenneInterstitiel,
+                    ctr_clics: data_interstitiel.interstitiel_antenne_ctr,
+                    vtr: '-',
+        
+                }
+        
+            }
+        
+        
+        
+         }
+
+         if(data_habillage.habillageImpressions.length > 0 ) {
+
+            if (data_habillage.total_impressions_linfoHabillage !== "0" ) {
+        
+                dataset_site[5] =  {
+        
+                    formats: 'HABILLAGE',
+                    sites: data_habillage.habillage_linfo_siteName,
+                    impressions: data_habillage.total_impressions_linfoHabillage,
+                    clics: data_habillage.total_clicks_linfoHabillage,
+                    ctr_clics: data_habillage.habillage_linfo_ctr,
+                    vtr: '-',
+        
+                }
+             
+              
+            }
+            if (data_habillage.total_impressions_linfo_androidHabillage !== "0" ) {
+                dataset_site[6] =  {
+                    formats: 'HABILLAGE',
+                    sites: data_habillage.habillage_linfo_android_siteName,
+                    impressions: data_habillage.total_impressions_linfo_androidHabillage,
+                    clics: data_habillage.total_clicks_linfo_androidHabillage,
+                    ctr_clics: data_habillage.habillage_linfo_android_ctr,
+                    vtr: '-',
+        
+                }
+            }
+            if (data_habillage.total_impressions_linfo_iosHabillage !== "0" ) {
+                dataset_site[7] ={
+                    formats: 'HABILLAGE',
+                    sites: data_habillage.habillage_linfo_ios_siteName,
+                    impressions: data_habillage.total_impressions_linfo_iosHabillage,
+                    clics: data_habillage.total_clicks_linfo_iosHabillage,
+                    ctr_clics: data_habillage.habillage_linfo_ios_ctr,
+                    vtr: '-',
+        
+                }
+            }
+        
+            if (data_habillage.total_impressions_dtjHabillage !== "0" ) {
+        
+                
+                dataset_site[8] = {
+                    formats: 'HABILLAGE',
+                    sites: data_habillage.habillage_dtj_siteName,
+                    impressions: data_habillage.total_impressions_dtjHabillage,
+                    clics: data_habillage.total_clicks_dtjHabillage,
+                    ctr_clics: data_habillage.habillage_dtj_ctr,
+                    vtr: '-',
+        
+                }
+        
+            }
+            if (data_habillage.total_impressions_antenneHabillage !== "0" ) {
+        
+                
+                dataset_site[9] =    {
+                    formats: 'HABILLAGE',
+                    sites: data_habillage.habillage_antenne_siteName,
+                    impressions: data_habillage.total_impressions_antenneHabillage,
+                    clics: data_habillage.total_clicks_antenneHabillage,
+                    ctr_clics: data_habillage.habillage_antenne_ctr,
+                    vtr: '-',
+        
+                }
+        
+            }
+        
+        
+        
+         }
+
+         if(data_masthead.mastheadImpressions.length > 0 ) {
+
+            if (data_masthead.total_impressions_linfoMasthead !== "0" ) {
+        
+                dataset_site[10] =  {
+        
+                    formats: 'MASTHEAD',
+                    sites: data_masthead.masthead_linfo_siteName,
+                    impressions: data_masthead.total_impressions_linfoMasthead,
+                    clics: data_masthead.total_clicks_linfoMasthead,
+                    ctr_clics: data_masthead.masthead_linfo_ctr,
+                    vtr: '-',
+        
+                }
+             
+              
+            }
+            if (data_masthead.total_impressions_linfo_androidMasthead !== "0" ) {
+                dataset_site[11] =  {
+                    formats: 'MASTHEAD',
+                    sites: data_masthead.masthead_linfo_android_siteName,
+                    impressions: data_masthead.total_impressions_linfo_androidMasthead,
+                    clics: data_masthead.total_clicks_linfo_androidMasthead,
+                    ctr_clics: data_masthead.masthead_linfo_android_ctr,
+                    vtr: '-',
+        
+                }
+            }
+            if (data_masthead.total_impressions_linfo_iosMasthead !== "0" ) {
+                dataset_site[12] ={
+                    formats: 'MASTHEAD',
+                    sites: data_masthead.masthead_linfo_ios_siteName,
+                    impressions: data_masthead.total_impressions_linfo_iosMasthead,
+                    clics: data_masthead.total_clicks_linfo_iosMasthead,
+                    ctr_clics: data_masthead.masthead_linfo_ios_ctr,
+                    vtr: '-',
+        
+                }
+            }
+        
+            if (data_masthead.total_impressions_dtjMasthead !== "0" ) {
+        
+                
+                dataset_site[13] = {
+                    formats: 'MASTHEAD',
+                    sites: data_masthead.masthead_dtj_siteName,
+                    impressions: data_masthead.total_impressions_dtjMasthead,
+                    clics: data_masthead.total_clicks_dtjMasthead,
+                    ctr_clics: data_masthead.masthead_dtj_ctr,
+                    vtr: '-',
+        
+                }
+        
+            }
+            if (data_masthead.total_impressions_antenneMasthead !== "0" ) {
+        
+                
+                dataset_site[14] =    {
+                    formats: 'MASTHEAD',
+                    sites: data_masthead.masthead_antenne_siteName,
+                    impressions: data_masthead.total_impressions_antenneMasthead,
+                    clics: data_masthead.total_clicks_antenneMasthead,
+                    ctr_clics: data_masthead.masthead_antenne_ctr,
+                    vtr: '-',
+        
+                }
+        
+            }
+        
+        
+        
+         }
+
+         if(data_grand_angle.grand_angleImpressions.length > 0 ) {
+
+            if (data_grand_angle.total_impressions_linfoGrandAngle !== "0" ) {
+        
+                dataset_site[15] =  {
+        
+                    formats: 'GRAND ANGLE',
                     sites: data_grand_angle.grandAngle_linfo_siteName,
                     impressions: data_grand_angle.total_impressions_linfoGrandAngle,
                     clics: data_grand_angle.total_clicks_linfoGrandAngle,
                     ctr_clics: data_grand_angle.grandAngle_linfo_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'GRAND ANGLE',
+                    vtr: '-',
+        
+                }
+             
+              
+            }
+            if (data_grand_angle.total_impressions_linfo_androidGrandAngle !== "0" ) {
+                dataset_site[12] =  {
+                    formats: 'GRAND ANGLE',
                     sites: data_grand_angle.grandAngle_linfo_android_siteName,
                     impressions: data_grand_angle.total_impressions_linfo_androidGrandAngle,
                     clics: data_grand_angle.total_clicks_linfo_androidGrandAngle,
                     ctr_clics: data_grand_angle.grandAngle_linfo_android_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'GRAND ANGLE',
+                    vtr: '-',
+        
+                }
+            }
+            if (data_grand_angle.total_impressions_linfo_iosGrandAngle !== "0" ) {
+                dataset_site[16] ={
+                    formats: 'GRAND ANGLE',
                     sites: data_grand_angle.grandAngle_linfo_ios_siteName,
                     impressions: data_grand_angle.total_impressions_linfo_iosGrandAngle,
                     clics: data_grand_angle.total_clicks_linfo_iosGrandAngle,
                     ctr_clics: data_grand_angle.grandAngle_linfo_ios_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'GRAND ANGLE',
+                    vtr: '-',
+        
+                }
+            }
+        
+            if (data_grand_angle.total_impressions_dtjGrandAngle !== "0" ) {
+        
+                
+                dataset_site[17] = {
+                    formats: 'GRAND ANGLE',
                     sites: data_grand_angle.grandAngle_dtj_siteName,
                     impressions: data_grand_angle.total_impressions_dtjGrandAngle,
                     clics: data_grand_angle.total_clicks_dtjGrandAngle,
                     ctr_clics: data_grand_angle.grandAngle_dtj_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'GRAND ANGLE',
+                    vtr: '-',
+        
+                }
+        
+            }
+            if (data_grand_angle.total_impressions_antenneGrandAngle !== "0" ) {
+        
+                
+                dataset_site[18] =    {
+                    formats: 'GRAND ANGLE',
                     sites: data_grand_angle.grandAngle_antenne_siteName,
                     impressions: data_grand_angle.total_impressions_antenneGrandAngle,
                     clics: data_grand_angle.total_clicks_antenneGrandAngle,
                     ctr_clics: data_grand_angle.grandAngle_antenne_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'GRAND ANGLE',
-                    sites: data_grand_angle.grandAngle_orange_siteName,
-                    impressions: data_grand_angle.total_impressions_orangeGrandAngle,
-                    clics: data_grand_angle.total_clicks_orangeGrandAngle,
-                    ctr_clics: data_grand_angle.grandAngle_orange_ctr,
-                     vtr: '-',
-    
-                },
-                 //VIDEO par sites
-                 {
+                    vtr: '-',
+        
+                }
+        
+            }
+        
+        
+        
+         }
 
-                    formats :'VIDEO',
+         if(data_video.videoImpressions.length > 0 ) {
+
+            if (data_video.total_impressions_linfoVideo !== "0" ) {
+        
+                dataset_site[19] =   {
+        
+                    formats: 'VIDEO',
                     sites: data_video.video_linfo_siteName,
                     impressions: data_video.total_impressions_linfoVideo,
                     clics: data_video.total_clicks_linfoVideo,
                     ctr_clics: data_video.video_linfo_ctr,
-                     vtr: data_video.VTR_linfo,
-    
-                },
-                {
-                    formats :'VIDEO',
+                    vtr: data_video.VTR_linfo,
+        
+                }
+             
+              
+            }
+            if (data_video.total_impressions_linfo_androidVideo !== "0" ) {
+                dataset_site[20] =  {
+                    formats: 'VIDEO',
                     sites: data_video.video_linfo_android_siteName,
                     impressions: data_video.total_impressions_linfo_androidVideo,
                     clics: data_video.total_clicks_linfo_androidVideo,
                     ctr_clics: data_video.video_linfo_android_ctr,
                     vtr: data_video.VTR_linfo_android,
-    
-                },
-                {
-                    formats :'VIDEO',
+        
+                }
+            }
+            if (data_video.total_impressions_linfo_iosVideo !== "0" ) {
+                dataset_site[21] =   {
+                    formats: 'VIDEO',
                     sites: data_video.video_linfo_ios_siteName,
                     impressions: data_video.total_impressions_linfo_iosVideo,
                     clics: data_video.total_clicks_linfo_iosVideo,
                     ctr_clics: data_video.video_linfo_ios_ctr,
                     vtr: data_video.VTR_linfo_ios,
-    
-                },
-                {
-                    formats :'VIDEO',
+        
+                }
+            }
+        
+            if (data_video.total_impressions_dtjVideo !== "0" ) {
+        
+                
+                dataset_site[22] =    {
+                    formats: 'VIDEO',
                     sites: data_video.video_antenne_siteName,
                     impressions: data_video.total_impressions_antenneVideo,
                     clics: data_video.total_clicks_antenneVideo,
                     ctr_clics: data_video.video_antenne_ctr,
                     vtr: data_video.VTR_antenne,
-    
-                },
-                {
-                    formats :'VIDEO',
+        
+                }
+        
+            }
+            if (data_video.total_impressions_antenneVideo !== "0" ) {
+        
+                
+                dataset_site[23] =    {
+                    formats: 'VIDEO',
+                    sites: data_video.video_antenne_siteName,
+                    impressions:data_video.total_impressions_antenneVideo,
+                    clics: data_video.total_clicks_antenneVideo,
+                    ctr_clics: data_video.video_antenne_ctr,
+                    vtr: data_video.VTR_antenne,
+        
+                }
+        
+            }
+        
+            if (data_video.total_impressions_tf1Video !== "0" ) {
+        
+                
+                dataset_site[24] =      {
+                    formats: 'VIDEO',
                     sites: data_video.video_tf1_siteName,
                     impressions: data_video.total_impressions_tf1Video,
                     clics: data_video.total_clicks_tf1Video,
                     ctr_clics: data_video.video_tf1_ctr,
                     vtr: data_video.VTR_tf1,
-    
-                },
-                {
-                    formats :'VIDEO',
+        
+                }
+            }
+        
+            if (data_video.total_impressions_m6Video !== "0" ) {
+        
+                
+                dataset_site[25] = {
+                    formats: 'VIDEO',
                     sites: data_video.video_m6_siteName,
                     impressions: data_video.total_impressions_m6Video,
                     clics: data_video.total_clicks_m6Video,
                     ctr_clics: data_video.video_m6_ctr,
                     vtr: data_video.VTR_m6,
-    
-                },
-                {
-                    formats :'VIDEO',
+        
+                }
+            }
+        
+            if (data_video.total_impressions_dailymotionVideo !== "0" ) {
+        
+                
+                dataset_site[26] = {
+                    formats: 'VIDEO',
                     sites: data_video.video_dailymotion_siteName,
                     impressions: data_video.total_impressions_dailymotionVideo,
                     clics: data_video.total_clicks_dailymotionVideo,
                     ctr_clics: data_video.video_dailymotion_ctr,
                     vtr: data_video.VTR_dailymotion,
-    
-                },
+        
+                }
+            }
+        
+        
+        
+         }
 
-                  //NATIVE par sites
-                  {
 
-                    formats :'NATIVE',
+         if(data_native.nativeImpressions.length > 0 ) {
+
+            if (data_native.total_impressions_linfoNative !== "0" ) {
+        
+                dataset_site[27] =  {
+        
+                    formats: 'NATIVE',
                     sites: data_native.native_linfo_siteName,
                     impressions: data_native.total_impressions_linfoNative,
                     clics: data_native.total_clicks_linfoNative,
                     ctr_clics: data_native.native_linfo_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'NATIVE',
+                    vtr: '-',
+        
+                }
+             
+              
+            }
+            if (data_native.total_impressions_linfo_androidNative !== "0" ) {
+                dataset_site[28] =  {
+                    formats: 'NATIVE',
                     sites: data_native.native_linfo_android_siteName,
                     impressions: data_native.total_impressions_linfo_androidNative,
                     clics: data_native.total_clicks_linfo_androidNative,
                     ctr_clics: data_native.native_linfo_android_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'NATIVE',
+                    vtr: '-',
+        
+                }
+            }
+            if (data_native.total_impressions_linfo_iosNative !== "0" ) {
+                dataset_site[29] ={
+                    formats: 'NATIVE',
                     sites: data_native.native_linfo_ios_siteName,
                     impressions: data_native.total_impressions_linfo_iosNative,
                     clics: data_native.total_clicks_linfo_iosNative,
                     ctr_clics: data_native.native_linfo_ios_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'NATIVE',
+                    vtr: '-',
+        
+                }
+            }
+        
+            if (data_native.total_impressions_dtjNative !== "0" ) {
+        
+                
+                dataset_site[30] = {
+                    formats: 'NATIVE',
                     sites: data_native.native_dtj_siteName,
                     impressions: data_native.total_impressions_dtjNative,
                     clics: data_native.total_clicks_dtjNative,
                     ctr_clics: data_native.native_dtj_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'NATIVE',
+                    vtr: '-',
+        
+                }
+        
+            }
+            if (data_native.total_impressions_antenneNative !== "0" ) {
+        
+                
+                dataset_site[31] =    {
+                    formats: 'NATIVE',
                     sites: data_native.native_antenne_siteName,
                     impressions: data_native.total_impressions_antenneNative,
                     clics: data_native.total_clicks_antenneNative,
                     ctr_clics: data_native.native_antenne_ctr,
-                     vtr: '-',
-    
-                },
-                {
-                    formats :'NATIVE',
-                    sites: data_native.native_orange_siteName,
-                    impressions: data_native.total_impressions_orangeNative,
-                    clics: data_native.total_clicks_orangeNative,
-                    ctr_clics: data_native.native_orange_ctr,
-                     vtr: '-',
-    
-                },
+                    vtr: '-',
+        
+                }
+        
+            }
+        
+        
+        
+         }
 
-        ]
+
+
+
 
         // Define an array of merges. 1-1 = A:1
         // The merges are independent of the data.
@@ -762,13 +933,13 @@ exports.export_excel = async (req, res) => {
                 },
                 {
                     name: 'Formats',
-                   // heading : headingformats,
-                    specification: bilan_formats, 
+                    // heading : headingformats,
+                    specification: bilan_formats,
                     data: dataset_format
                 },
                 {
                     name: 'Sites',
-                   // heading : headingsites, 
+                    // heading : headingsites, 
                     specification: bilan_sites, // <- Report specification
                     data: dataset_site // <-- Report data
                 }
@@ -987,7 +1158,7 @@ exports.test_exportExcel = async (req, res) => {
                 },
                 {
                     name: 'Bilan_par_sites', // <- Specify sheet name (optional)
-                    heading : headingformats,
+                    heading: headingformats,
                     // merges: merges2, // <- Merge cell ranges
                     specification: bilan_sites, // <- Report specification
                     data: dataset2 // <-- Report data

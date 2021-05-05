@@ -100,9 +100,18 @@
             </div>
         </div>
 
-        <div class="row p-3 m-5">
+        <div class="row p-4 m-5">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Date de génération</strong> : <%=table.Date_rapport%> </li>
+
+                <li class="list-group-item"><strong>Date de génération</strong> : <%=table.Date_rapport%> 
+                
+                    <a href='/r/<%=table.campaigncrypt%>/export'
+                        class="btn btn-xs btn-success pull-right">
+                        <i class="fas fa-file-excel"> </i> Télécharger en version excel </a>
+                </li>
+            
+
+
                 <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=table.Campagne_name%></li>
                 <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=table.StartDate%> au
                     <%=table.EndDate%></li>
@@ -110,8 +119,7 @@
             </ul>
         </div>
 
-        <a href='/r/export/<%=table.campaigncrypt%>' class="btn btn-xs btn-success pull-right" >
-            <i class="fas fa-file-excel">   </i>  Export Excel  </a>
+
 
         <hr />
 
@@ -666,7 +674,7 @@
 
                 </thead>
                 <tbody>
-                    <% if (data_video.total_impressions_linfo_androidVideo !== "0" ) { %>
+                    <% if (data_video.total_impressions_linfoVideo !== "0" ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_linfo_siteName%></td>
