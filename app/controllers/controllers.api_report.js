@@ -3164,7 +3164,7 @@ exports.report = async (req, res) => {
 
 exports.export_excel = async (req, res) => {
 
-  var campaigncrypt = req.params.campaigncrypt
+  var campaigncrypt = req.params.campaigncrypt;
 
 
   try {
@@ -3194,7 +3194,7 @@ exports.export_excel = async (req, res) => {
 
       });
 
-      let campaignid = campaign.campaign_id
+      let campaignid = campaign.campaign_id;
 
 
       // crée label avec le date du jour ex : 20210403
@@ -3216,10 +3216,10 @@ exports.export_excel = async (req, res) => {
       var dts_table = data_report_view.table;
 
 
-      var campaign_name = dts_table.Campagne_name
-      var date_now = dts_table.Date_rapport
-      var StartDate = dts_table.StartDate
-      var EndDate = dts_table.EndDate
+      var campaign_name = dts_table.Campagne_name;
+      var date_now = dts_table.Date_rapport;
+      var StartDate = dts_table.StartDate;
+      var EndDate = dts_table.EndDate;
 
       var table = data_report_view.table;
       var data_interstitiel = data_report_view.data_interstitiel;
@@ -3294,24 +3294,7 @@ exports.export_excel = async (req, res) => {
         ['Période diffusion : Du ' + StartDate + ' au ' + EndDate]
       ];
 
-      const headingformats = [
-        [{
-            value: 'Par Format',
-            style: styles.headerDark,
-          }
-
-        ]
-
-      ];
-      const headingsites = [
-        [{
-            value: 'Par Sites',
-            style: styles.headerDark,
-          }
-
-        ]
-
-      ];
+      
 
 
       //Here you specify the export structure
@@ -3345,7 +3328,7 @@ exports.export_excel = async (req, res) => {
         }
 
 
-      }
+      };
 
 
       const bilan_formats = {
@@ -3377,7 +3360,7 @@ exports.export_excel = async (req, res) => {
           width: 120 // <- width in pixels
         },
 
-      }
+      };
 
 
       const bilan_sites = {
@@ -3413,7 +3396,7 @@ exports.export_excel = async (req, res) => {
           width: 220 // <- width in pixels
         }
 
-      }
+      };
 
 
 
@@ -3433,7 +3416,7 @@ exports.export_excel = async (req, res) => {
 
 
 
-      ]
+      ];
       const dataset_format = [{
           Formats: 'INTERSTITIEL',
           Impressions: table.sommeInterstitielImpression,
@@ -3488,7 +3471,7 @@ exports.export_excel = async (req, res) => {
         },
 
 
-      ]
+      ];
 
       const dataset_site = [
 
@@ -3840,7 +3823,7 @@ exports.export_excel = async (req, res) => {
 
         },
 
-      ]
+      ];
 
       // Define an array of merges. 1-1 = A:1
       // The merges are independent of the data.
@@ -3857,7 +3840,7 @@ exports.export_excel = async (req, res) => {
         },
 
 
-      ]
+      ];
 
 
       // Create the excel report.
