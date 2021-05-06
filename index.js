@@ -297,6 +297,8 @@ app.use('/alerts', alert);
 const tests = require('./app/routes/routes.tests');
 app.use('/test', tests);
 
+const application = require('./app/routes/routes.application');
+app.use('/app', application);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
