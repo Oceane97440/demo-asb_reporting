@@ -100,24 +100,25 @@
             </div>
         </div>
 
-        <div class="row p-4 m-5">
-            <ul class="list-group list-group-flush">
+        <div class="row p-1 m-5">
+            <div class="col-md-10">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Date de génération</strong> : <%=table.Date_rapport%>
+                    <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=table.Campagne_name%></li>
+                    <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=table.StartDate%> au
+                        <%=table.EndDate%></li>
+                    <li class="list-group-item">
+                        <a href='/r/<%=table.campaigncrypt%>/export' class="btn btn-xs btn-success pull-left">
+                            <i class="fas fa-file-excel"> </i> Télécharger (Excel) </a>
 
-                <li class="list-group-item"><strong>Date de génération</strong> : <%=table.Date_rapport%> 
-                
-                    <a href='/r/<%=table.campaigncrypt%>/export'
-                        class="btn btn-xs btn-success pull-right">
-                        <i class="fas fa-file-excel"> </i> Télécharger en version excel </a>
-                </li>
-            
+                    </li>
 
 
-                <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=table.Campagne_name%></li>
-                <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=table.StartDate%> au
-                    <%=table.EndDate%></li>
+                </ul>
+            </div>
 
-            </ul>
         </div>
+
 
 
 
