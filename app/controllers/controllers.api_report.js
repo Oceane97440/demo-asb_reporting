@@ -7,7 +7,7 @@ localStorage_tasks = new LocalStorage('./taskID');
 const {
   Op
 } = require("sequelize");
-const excel = require('node-excel-export');
+// const excel = require('node-excel-export');
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
@@ -34,21 +34,6 @@ const AxiosFunction = require('../functions/functions.axios');
 const ModelAdvertiser = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 
-exports.test = async (req, res) => {
-
-
-  let timer = setInterval(function () {
-    console.log('counter :   ' + counter);
-
-    counter += 1000;
-
-    if (counter >= 10000) {
-      clearInterval(timer);
-    }
-  }, 1000);
-
-
-}
 
 
 
@@ -95,13 +80,37 @@ exports.generate = async (req, res) => {
     const timestamp_startdate = Date.parse(campaign.campaign_start_date);
     const date_now = Date.now();
 
+    const campaign_StartDate = campaign.campaign_start_date;
+    var startDate_split = campaign_StartDate.split('T');
+    const start_Date = startDate_split[0]
+
+    var campaign_EndDate = campaign.campaign_end_date;
+    var endDate_split = campaign_EndDate.split('T');
+    const end_Date = endDate_split[0]
+
+
+    const dateStart = new Date(start_Date);
+    JJ = ('0' + (dateStart.getDate())).slice(-2);
+    MM = ('0' + (dateStart.getMonth())).slice(-2);
+    AAAA = dateStart.getFullYear();
+    const StartDate = JJ + '/' + MM + '/' + AAAA;
+
+
+    const dateEnd = new Date(end_Date);
+    JJ = ('0' + (dateEnd.getDate())).slice(-2);
+    MM = ('0' + (dateEnd.getMonth())).slice(-2);
+    AAAA = dateEnd.getFullYear();
+    const EndDate = JJ + '/' + MM + '/' + AAAA;
+
+
+
+
     res.render("reporting/generate.ejs", {
       advertiserid: campaign.advertiser_id,
       campaignid: campaign.campaign_id,
-      startDate: campaign.campaign_start_date,
-      endDate: campaign.campaign_end_date,
+      startDate: StartDate,
+      endDate: EndDate,
       campaigncrypt: campaign.campaign_crypt,
-      //campaigncrypt:campaigncrypt,
       campaign: campaign,
       timestamp_startdate: timestamp_startdate,
       date_now: date_now

@@ -107,11 +107,11 @@
                     <li class="list-group-item"><strong>Nom de la campagne</strong> : <%=table.Campagne_name%></li>
                     <li class="list-group-item"><strong>Période diffusion</strong> : Du <%=table.StartDate%> au
                         <%=table.EndDate%></li>
-                    <li class="list-group-item">
+                    <!-- <li class="list-group-item">
                         <a href='/r/<%=table.campaigncrypt%>/export' class="btn btn-xs btn-success pull-left">
                             <i class="fas fa-file-excel"> </i> Télécharger (Excel) </a>
 
-                    </li>
+                    </li> -->
 
 
                 </ul>
@@ -133,64 +133,32 @@
             </h3>
 
             <table class="table">
-                <thead class="text-left thead-dark">
+                <thead class="text-center thead-dark">
                     <tr>
                         <th scope="col">Impressions</th>
                         <th scope="col">Clics</th>
                         <th scope="col">Taux de clics</th>
                         <th scope="col">Visiteurs Uniques</th>
                         <th scope="col">Répétition</th>
+                        
 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     <tr>
                         <td><%=table.total_impression_format%></td>
                         <td><%=table.total_click_format%></td>
                         <td><%=table.CTR%>%</td>
                         <td><%=table.Total_VU%></td>
                         <td><%=table.Repetition%></td>
-
-
-                    </tr>
-                </tbody>
-            </table>
-
-        </div>
-        <% if(table.TotalComplete > 0 ) { %>
-        <div class="row p-3 m-5" id="table_uu">
-            <h3 class="title"><i class="fas fa-chart-line"></i> <strong>Bilan global de la campagne vidéo</strong>
-            </h3>
-
-            <table class="table">
-                <thead class="text-left thead-dark">
-                    <tr>
-                        <th scope="col">Impressions vidéo</th>
-                        <th scope="col">Clics vidéo</th>
-                        <th scope="col">Taux de clics vidéo</th>
-                        <th scope="col">Total Complete</th>
-                        <th scope="col">VTR%</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><%=table.sommeVideoImpression%></td>
-                        <td><%=table.sommeVideoClicks%></td>
-                        <td><%=table.CTR_video%>%</td>
-                        <% if(table.TotalComplete > 0 ) { %>
-                        <td><%=table.TotalComplete%></td>
-                        <td><%=table.VTR%>%</td>
-                        <% }%>
+                   
 
                     </tr>
                 </tbody>
             </table>
 
         </div>
-
-        <% }%>
-
+      
 
         <div class="row p-3 m-5" id="table_global_format">
             <h3 class="title"><i class="fas fa-chart-line"></i> <strong>Par Format</strong>
@@ -201,9 +169,9 @@
                 <thead class="text-left thead-dark">
                     <tr>
                         <th scope="col">Format</th>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
+                        <th scope="col" class="text-right">Impressions</th>
+                        <th scope="col" class="text-right">Clics</th>
+                        <th scope="col" class="text-right">Taux de clics</th>
 
                     </tr>
                 </thead>
@@ -214,9 +182,9 @@
                     <tr>
 
                         <td>HABILLAGE</td>
-                        <td><%=table.sommeHabillageImpression%></td>
-                        <td><%=table.sommeHabillageClicks%></td>
-                        <td><%=table.CTR_habillage%>%</td>
+                        <td class="text-right"><%=table.sommeHabillageImpression%></td>
+                        <td class="text-right"><%=table.sommeHabillageClicks%></td>
+                        <td class="text-right"><%=table.CTR_habillage%>%</td>
 
                     </tr>
                     <% } %>
@@ -225,9 +193,9 @@
                     <tr>
 
                         <td>INTERSTITIEL</td>
-                        <td><%=table.sommeInterstitielImpression%></td>
-                        <td><%=table.sommeInterstitielClicks%></td>
-                        <td><%=table.CTR_interstitiel%>%</td>
+                        <td class="text-right"><%=table.sommeInterstitielImpression%></td>
+                        <td class="text-right"><%=table.sommeInterstitielClicks%></td>
+                        <td class="text-right"><%=table.CTR_interstitiel%>%</td>
 
                     </tr>
                     <% } %>
@@ -236,9 +204,9 @@
                     <tr>
 
                         <td>MASTHEAD</td>
-                        <td><%=table.sommeMastheadImpression%></td>
-                        <td><%=table.sommeMastheadClicks%></td>
-                        <td><%=table.CTR_masthead%>%</td>
+                        <td class="text-right"><%=table.sommeMastheadImpression%></td>
+                        <td class="text-right"><%=table.sommeMastheadClicks%></td>
+                        <td class="text-right"><%=table.CTR_masthead%>%</td>
 
                     </tr>
                     <% } %>
@@ -247,9 +215,9 @@
                     <tr>
 
                         <td>GRAND ANGLE</td>
-                        <td><%=table.sommeGrand_AngleImpression%></td>
-                        <td><%=table.sommeGrand_AngleClicks%></td>
-                        <td><%=table.CTR_grand_angle%>%</td>
+                        <td class="text-right"><%=table.sommeGrand_AngleImpression%></td>
+                        <td class="text-right"><%=table.sommeGrand_AngleClicks%></td>
+                        <td class="text-right"><%=table.CTR_grand_angle%>%</td>
 
                     </tr>
                     <% } %>
@@ -258,9 +226,9 @@
                     <tr>
 
                         <td>NATIVE</td>
-                        <td><%=table.sommeNativeImpression%></td>
-                        <td><%=table.sommeNativeClicks%></td>
-                        <td><%=table.CTR_native%>%</td>
+                        <td class="text-right"><%=table.sommeNativeImpression%></td>
+                        <td class="text-right"><%=table.sommeNativeClicks%></td>
+                        <td class="text-right"><%=table.CTR_native%>%</td>
 
                     </tr>
                     <% } %>
@@ -269,20 +237,20 @@
                     <tr>
 
                         <td>VIDEO</td>
-                        <td><%=table.sommeVideoImpression%></td>
-                        <td><%=table.sommeVideoClicks%></td>
-                        <td><%=table.CTR_video%>%</td>
+                        <td class="text-right"><%=table.sommeVideoImpression%></td>
+                        <td class="text-right"><%=table.sommeVideoClicks%></td>
+                        <td class="text-right"><%=table.CTR_video%>%</td>
 
                     </tr>
                     <% } %>
 
 
-                <tfoot>
+                <tfoot class="table-dark">
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.total_impression_format%></td>
-                        <td><%=table.total_click_format%></td>
-                        <td><%=table.CTR%>%</td>
+                        <td class="text-right"><%=table.total_impression_format%></td>
+                        <td class="text-right"><%=table.total_click_format%></td>
+                        <td class="text-right"><%=table.CTR%>%</td>
                     </tr>
                 </tfoot>
                 </tbody>
@@ -298,12 +266,12 @@
             <h3 class="title"><i class="fas fa-chart-line"></i> <strong>HABILLAGE / par site</strong></h3>
 
             <table class="table">
-                <thead class="text-left thead-dark">
+                <thead class="thead-dark">
                     <tr>
                         <th scope="col">Sites</th>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
+                        <th scope="col" class="text-right">Impressions</th>
+                        <th scope="col" class="text-right">Clics</th>
+                        <th scope="col" class="text-right">Taux de clics</th>
 
 
                     </tr>
@@ -312,10 +280,10 @@
                     <% if (data_habillage.total_impressions_linfoHabillage !== "0"  ) { %>
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_linfo_siteName%></td>
-                        <td><%=data_habillage.total_impressions_linfoHabillage%></td>
-                        <td><%=data_habillage.total_clicks_linfoHabillage%></td>
-                        <td><%=data_habillage.habillage_linfo_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_linfo_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_linfoHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_linfoHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_linfo_ctr%>%</td>
 
 
                     </tr>
@@ -325,10 +293,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_linfo_android_siteName%></td>
-                        <td><%=data_habillage.total_impressions_linfo_androidHabillage%></td>
-                        <td><%=data_habillage.total_clicks_linfo_androidHabillage%></td>
-                        <td><%=data_habillage.habillage_linfo_android_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_linfo_android_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_linfo_androidHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_linfo_androidHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_linfo_android_ctr%>%</td>
 
 
                     </tr>
@@ -338,10 +306,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_linfo_ios_siteName%></td>
-                        <td><%=data_habillage.total_impressions_linfo_iosHabillage%></td>
-                        <td><%=data_habillage.total_clicks_linfo_iosHabillage%></td>
-                        <td><%=data_habillage.habillage_linfo_ios_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_linfo_ios_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_linfo_iosHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_linfo_iosHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_linfo_ios_ctr%>%</td>
 
 
                     </tr>
@@ -351,10 +319,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_dtj_siteName%></td>
-                        <td><%=data_habillage.total_impressions_dtjHabillage%></td>
-                        <td><%=data_habillage.total_clicks_dtjHabillage%></td>
-                        <td><%=data_habillage.habillage_dtj_ctr%>%</td>
+                        <td "><%=data_habillage.habillage_dtj_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_dtjHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_dtjHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_dtj_ctr%>%</td>
 
 
                     </tr>
@@ -364,10 +332,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_antenne_siteName%></td>
-                        <td><%=data_habillage.total_impressions_antenneHabillage%></td>
-                        <td><%=data_habillage.total_clicks_antenneHabillage%></td>
-                        <td><%=data_habillage.habillage_antenne_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_antenne_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_antenneHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_antenneHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_antenne_ctr%>%</td>
 
 
                     </tr>
@@ -377,10 +345,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_orange_siteName%></td>
-                        <td><%=data_habillage.total_impressions_orangeHabillage%></td>
-                        <td><%=data_habillage.total_clicks_orangeHabillage%></td>
-                        <td><%=data_habillage.habillage_orange_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_orange_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_orangeHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_orangeHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_orange_ctr%>%</td>
 
 
                     </tr>
@@ -390,10 +358,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_tf1_siteName%></td>
-                        <td><%=data_habillage.total_impressions_tf1Habillage%></td>
-                        <td><%=data_habillage.total_clicks_tf1Habillage%></td>
-                        <td><%=data_habillage.habillage_tf1_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_tf1_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_tf1Habillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_tf1Habillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_tf1_ctr%>%</td>
 
 
                     </tr>
@@ -404,10 +372,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_m6_siteName%></td>
-                        <td><%=data_habillage.total_impressions_m6Habillage%></td>
-                        <td><%=data_habillage.total_clicks_m6Habillage%></td>
-                        <td><%=data_habillage.habillage_m6_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_m6_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_m6Habillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_m6Habillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_m6_ctr%>%</td>
 
 
                     </tr>
@@ -417,10 +385,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_dailymotion_siteName%></td>
-                        <td><%=data_habillage.total_impressions_dailymotionHabillage%></td>
-                        <td><%=data_habillage.total_clicks_dailymotionHabillage%></td>
-                        <td><%=data_habillage.habillage_dailymotion_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_dailymotion_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_dailymotionHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_dailymotionHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_dailymotion_ctr%>%</td>
 
 
                     </tr>
@@ -430,10 +398,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_actu_ios_siteName%></td>
-                        <td><%=data_habillage.total_impressions_actu_iosHabillage%></td>
-                        <td><%=data_habillage.total_clicks_actu_iosHabillage%></td>
-                        <td><%=data_habillage.habillage_actu_ios_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_actu_ios_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_actu_iosHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_actu_iosHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_actu_ios_ctr%>%</td>
 
 
                     </tr>
@@ -443,22 +411,22 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_habillage.habillage_actu_android_siteName%></td>
-                        <td><%=data_habillage.total_impressions_actu_androidHabillage%></td>
-                        <td><%=data_habillage.total_clicks_actu_androidHabillage%></td>
-                        <td><%=data_habillage.habillage_actu_android_ctr%>%</td>
+                        <td ><%=data_habillage.habillage_actu_android_siteName%></td>
+                        <td class="text-right"><%=data_habillage.total_impressions_actu_androidHabillage%></td>
+                        <td class="text-right"><%=data_habillage.total_clicks_actu_androidHabillage%></td>
+                        <td class="text-right"><%=data_habillage.habillage_actu_android_ctr%>%</td>
 
 
                     </tr>
                     <% }%>
 
 
-                <tfoot>
+                <tfoot class="table-dark">
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.sommeHabillageImpression%></td>
-                        <td><%=table.sommeHabillageClicks%></td>
-                        <td><%=table.CTR_habillage%>%</td>
+                        <td class="text-right"><%=table.sommeHabillageImpression%></td>
+                        <td class="text-right"><%=table.sommeHabillageClicks%></td>
+                        <td class="text-right"><%=table.CTR_habillage%>%</td>
 
                     </tr>
                 </tfoot>
@@ -480,9 +448,9 @@
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Sites</th>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
+                        <th scope="col" class="text-right">Impressions</th>
+                        <th scope="col" class="text-right">Clics</th>
+                        <th scope="col" class="text-right">Taux de clics</th>
 
                     </tr>
                 </thead>
@@ -492,10 +460,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_linfo_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_linfoInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_linfoInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_linfo_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_linfo_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_linfoInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_linfoInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_linfo_ctr%>%</td>
 
 
                     </tr>
@@ -506,10 +474,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_linfo_android_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_linfo_androidInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_linfo_androidInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_linfo_android_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_linfo_android_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_linfo_androidInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_linfo_androidInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_linfo_android_ctr%>%</td>
 
 
                     </tr>
@@ -520,10 +488,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_linfo_ios_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_linfo_iosInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_linfo_iosInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_linfo_ios_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_linfo_ios_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_linfo_iosInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_linfo_iosInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_linfo_ios_ctr%>%</td>
 
 
                     </tr>
@@ -533,10 +501,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_dtj_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_dtjInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_dtjInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_dtj_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_dtj_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_dtjInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_dtjInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_dtj_ctr%>%</td>
 
 
                     </tr>
@@ -546,10 +514,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_antenne_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_antenneInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_antenneInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_antenne_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_antenne_siteName%></td>
+                        <td class="text-right" ><%=data_interstitiel.total_impressions_antenneInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_antenneInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_antenne_ctr%>%</td>
 
 
                     </tr>
@@ -559,10 +527,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_orange_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_orangeInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_orangeInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_orange_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_orange_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_orangeInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_orangeInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_orange_ctr%>%</td>
 
 
                     </tr>
@@ -572,10 +540,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_tf1_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_tf1Interstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_tf1Interstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_tf1_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_tf1_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_tf1Interstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_tf1Interstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_tf1_ctr%>%</td>
 
 
                     </tr>
@@ -585,10 +553,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_m6_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_m6Interstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_m6Interstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_m6_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_m6_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_m6Interstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_m6Interstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_m6_ctr%>%</td>
 
 
                     </tr>
@@ -598,10 +566,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_dailymotion_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_dailymotionInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_dailymotionInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_dailymotion_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_dailymotion_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_dailymotionInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_dailymotionInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_dailymotion_ctr%>%</td>
 
 
                     </tr>
@@ -611,10 +579,10 @@
 
                     <tr>
                         <!-- Agrega par format / site  -->
-                        <td><%=data_interstitiel.interstitiel_actu_ios_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_actu_iosInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_actu_iosInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_actu_ios_ctr%>%</td>
+                        <td ><%=data_interstitiel.interstitiel_actu_ios_siteName%></td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_actu_iosInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_actu_iosInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_actu_ios_ctr%>%</td>
 
 
                     </tr>
@@ -625,9 +593,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_interstitiel.interstitiel_actu_android_siteName%></td>
-                        <td><%=data_interstitiel.total_impressions_actu_androidInterstitiel%></td>
-                        <td><%=data_interstitiel.total_clicks_actu_androidInterstitiel%></td>
-                        <td><%=data_interstitiel.interstitiel_actu_android_ctr%>%</td>
+                        <td class="text-right"><%=data_interstitiel.total_impressions_actu_androidInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.total_clicks_actu_androidInterstitiel%></td>
+                        <td class="text-right"><%=data_interstitiel.interstitiel_actu_android_ctr%>%</td>
 
 
                     </tr>
@@ -635,12 +603,12 @@
 
 
 
-                <tfoot>
+                <tfoot class="table-dark">
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.sommeInterstitielImpression%></td>
-                        <td><%=table.sommeInterstitielClicks%></td>
-                        <td><%=table.CTR_interstitiel%>%</td>
+                        <td class="text-right"><%=table.sommeInterstitielImpression%></td>
+                        <td class="text-right"><%=table.sommeInterstitielClicks%></td>
+                        <td class="text-right"><%=table.CTR_interstitiel%>%</td>
 
 
                     </tr>
@@ -665,10 +633,10 @@
 
                     <tr>
                         <th scope="col">Sites</th>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
-                        <th scope="col">VTR</th>
+                        <th scope="col" class="text-right">Impressions</th>
+                        <th scope="col" class="text-right">Clics</th>
+                        <th scope="col" class="text-right">Taux de clics</th>
+                        <th scope="col" class="text-right">VTR</th>
 
 
                     </tr>
@@ -679,10 +647,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_linfo_siteName%></td>
-                        <td><%=data_video.total_impressions_linfoVideo%></td>
-                        <td><%=data_video.total_clicks_linfoVideo%></td>
-                        <td><%=data_video.video_linfo_ctr%>%</td>
-                        <td><%=data_video.VTR_linfo%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_linfoVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_linfoVideo%></td>
+                        <td class="text-right"><%=data_video.video_linfo_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_linfo%>%</td>
 
 
 
@@ -694,10 +662,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_linfo_android_siteName%></td>
-                        <td><%=data_video.total_impressions_linfo_androidVideo%></td>
-                        <td><%=data_video.total_clicks_linfo_androidVideo%></td>
-                        <td><%=data_video.video_linfo_android_ctr%>%</td>
-                        <td><%=data_video.VTR_linfo_android%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_linfo_androidVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_linfo_androidVideo%></td>
+                        <td class="text-right"><%=data_video.video_linfo_android_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_linfo_android%>%</td>
 
 
                     </tr>
@@ -708,10 +676,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_linfo_ios_siteName%></td>
-                        <td><%=data_video.total_impressions_linfo_iosVideo%></td>
-                        <td><%=data_video.total_clicks_linfo_iosVideo%></td>
-                        <td><%=data_video.video_linfo_ios_ctr%>%</td>
-                        <td><%=data_video.VTR_linfo_ios%>%</td>
+                        <td  class="text-right"><%=data_video.total_impressions_linfo_iosVideo%></td>
+                        <td  class="text-right"><%=data_video.total_clicks_linfo_iosVideo%></td>
+                        <td  class="text-right"><%=data_video.video_linfo_ios_ctr%>%</td>
+                        <td  class="text-right"><%=data_video.VTR_linfo_ios%>%</td>
 
 
 
@@ -723,10 +691,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_dtj_siteName%></td>
-                        <td><%=data_video.total_impressions_dtjVideo%></td>
-                        <td><%=data_video.total_clicks_dtjVideo%></td>
-                        <td><%=data_video.video_dtj_ctr%>%</td>
-                        <td><%=data_video.VTR_dtj%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_dtjVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_dtjVideo%></td>
+                        <td class="text-right"><%=data_video.video_dtj_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_dtj%>%</td>
 
 
 
@@ -737,10 +705,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_antenne_siteName%></td>
-                        <td><%=data_video.total_impressions_antenneVideo%></td>
-                        <td><%=data_video.total_clicks_antenneVideo%></td>
-                        <td><%=data_video.video_antenne_ctr%>%</td>
-                        <td><%=data_video.VTR_antenne%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_antenneVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_antenneVideo%></td>
+                        <td class="text-right"><%=data_video.video_antenne_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_antenne%>%</td>
 
 
 
@@ -752,10 +720,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_orange_siteName%></td>
-                        <td><%=data_video.total_impressions_orangeVideo%></td>
-                        <td><%=data_video.total_clicks_orangeVideo%></td>
-                        <td><%=data_video.video_orange_ctr%>%</td>
-                        <td><%=data_video.VTR_orange%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_orangeVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_orangeVideo%></td>
+                        <td class="text-right"><%=data_video.video_orange_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_orange%>%</td>
 
 
                     </tr>
@@ -766,10 +734,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_tf1_siteName%></td>
-                        <td><%=data_video.total_impressions_tf1Video%></td>
-                        <td><%=data_video.total_clicks_tf1Video%></td>
-                        <td><%=data_video.video_tf1_ctr%>%</td>
-                        <td><%=data_video.VTR_tf1%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_tf1Video%></td>
+                        <td class="text-right"><%=data_video.total_clicks_tf1Video%></td>
+                        <td class="text-right"><%=data_video.video_tf1_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_tf1%>%</td>
 
 
 
@@ -781,10 +749,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_m6_siteName%></td>
-                        <td><%=data_video.total_impressions_m6Video%></td>
-                        <td><%=data_video.total_clicks_m6Video%></td>
-                        <td><%=data_video.video_m6_ctr%>%</td>
-                        <td><%=data_video.VTR_m6%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_m6Video%></td>
+                        <td class="text-right"><%=data_video.total_clicks_m6Video%></td>
+                        <td class="text-right"><%=data_video.video_m6_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_m6%>%</td>
 
 
                     </tr>
@@ -795,10 +763,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_dailymotion_siteName%></td>
-                        <td><%=data_video.total_impressions_dailymotionVideo%></td>
-                        <td><%=data_video.total_clicks_dailymotionVideo%></td>
-                        <td><%=data_video.video_dailymotion_ctr%>%</td>
-                        <td><%=data_video.VTR_dailymotion%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_dailymotionVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_dailymotionVideo%></td>
+                        <td class="text-right"><%=data_video.video_dailymotion_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_dailymotion%>%</td>
 
 
                     </tr>
@@ -809,10 +777,10 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_actu_ios_siteName%></td>
-                        <td><%=data_video.total_impressions_actu_iosVideo%></td>
-                        <td><%=data_video.total_clicks_actu_iosVideo%></td>
-                        <td><%=data_video.video_actu_ios_ctr%>%</td>
-                        <td><%=data_video.VTR_actu_ios%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_actu_iosVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_actu_iosVideo%></td>
+                        <td class="text-right"><%=data_video.video_actu_ios_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_actu_ios%>%</td>
 
 
                     </tr>
@@ -824,23 +792,23 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_video.video_actu_android_siteName%></td>
-                        <td><%=data_video.total_impressions_actu_androidVideo%></td>
-                        <td><%=data_video.total_clicks_actu_androidVideo%></td>
-                        <td><%=data_video.video_actu_android_ctr%>%</td>
-                        <td><%=data_video.VTR_actu_android%>%</td>
+                        <td class="text-right"><%=data_video.total_impressions_actu_androidVideo%></td>
+                        <td class="text-right"><%=data_video.total_clicks_actu_androidVideo%></td>
+                        <td class="text-right"><%=data_video.video_actu_android_ctr%>%</td>
+                        <td class="text-right"><%=data_video.VTR_actu_android%>%</td>
 
 
                     </tr>
                     <% }%>
 
 
-                <tfoot>
+                <tfoot class="table-dark">
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.sommeVideoImpression%></td>
-                        <td><%=table.sommeVideoClicks%></td>
-                        <td><%=table.CTR_video%>%</td>
-                        <td><%=table.VTR%>%</td>
+                        <td class="text-right"><%=table.sommeVideoImpression%></td>
+                        <td class="text-right"><%=table.sommeVideoClicks%></td>
+                        <td class="text-right"><%=table.CTR_video%>%</td>
+                        <td class="text-right"><%=table.VTR%>%</td>
 
                     </tr>
                 </tfoot>
@@ -862,9 +830,9 @@
                 <thead class="text-left thead-dark">
                     <tr>
                         <th scope="col">Sites</th>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
+                        <th scope="col" class="text-right">Impressions</th>
+                        <th scope="col" class="text-right">Clics</th>
+                        <th scope="col" class="text-right">Taux de clics</th>
 
 
                     </tr>
@@ -874,9 +842,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_linfo_siteName%></td>
-                        <td><%=data_masthead.total_impressions_linfoMasthead%></td>
-                        <td><%=data_masthead.total_clicks_linfoMasthead%></td>
-                        <td><%=data_masthead.masthead_linfo_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_linfoMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_linfoMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_linfo_ctr%>%</td>
 
 
                     </tr>
@@ -886,9 +854,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_linfo_android_siteName%></td>
-                        <td><%=data_masthead.total_impressions_linfo_androidMasthead%></td>
-                        <td><%=data_masthead.total_clicks_linfo_androidMasthead%></td>
-                        <td><%=data_masthead.masthead_linfo_android_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_linfo_androidMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_linfo_androidMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_linfo_android_ctr%>%</td>
 
 
                     </tr>
@@ -899,9 +867,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_linfo_ios_siteName%></td>
-                        <td><%=data_masthead.total_impressions_linfo_iosMasthead%></td>
-                        <td><%=data_masthead.total_clicks_linfo_iosMasthead%></td>
-                        <td><%=data_masthead.masthead_linfo_ios_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_linfo_iosMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_linfo_iosMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_linfo_ios_ctr%>%</td>
 
 
                     </tr>
@@ -913,9 +881,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_dtj_siteName%></td>
-                        <td><%=data_masthead.total_impressions_dtjMasthead%></td>
-                        <td><%=data_masthead.total_clicks_dtjMasthead%></td>
-                        <td><%=data_masthead.masthead_dtj_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_dtjMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_dtjMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_dtj_ctr%>%</td>
 
 
                     </tr>
@@ -926,9 +894,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_antenne_siteName%></td>
-                        <td><%=data_masthead.total_impressions_antenneMasthead%></td>
-                        <td><%=data_masthead.total_clicks_antenneMasthead%></td>
-                        <td><%=data_masthead.masthead_antenne_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_antenneMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_antenneMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_antenne_ctr%>%</td>
 
 
 
@@ -940,9 +908,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_orange_siteName%></td>
-                        <td><%=data_masthead.total_impressions_orangeMasthead%></td>
-                        <td><%=data_masthead.total_clicks_orangeMasthead%></td>
-                        <td><%=data_masthead.masthead_orange_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_orangeMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_orangeMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_orange_ctr%>%</td>
 
 
 
@@ -954,9 +922,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_tf1_siteName%></td>
-                        <td><%=data_masthead.total_impressions_tf1Masthead%></td>
-                        <td><%=data_masthead.total_clicks_tf1Masthead%></td>
-                        <td><%=data_masthead.masthead_tf1_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_tf1Masthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_tf1Masthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_tf1_ctr%>%</td>
 
 
 
@@ -968,9 +936,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_m6_siteName%></td>
-                        <td><%=data_masthead.total_impressions_m6Masthead%></td>
-                        <td><%=data_masthead.total_clicks_m6Masthead%></td>
-                        <td><%=data_masthead.masthead_m6_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_m6Masthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_m6Masthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_m6_ctr%>%</td>
 
 
 
@@ -982,9 +950,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_dailymotion_siteName%></td>
-                        <td><%=data_masthead.total_impressions_dailymotionMasthead%></td>
-                        <td><%=data_masthead.total_clicks_dailymotionMasthead%></td>
-                        <td><%=data_masthead.masthead_dailymotion_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_dailymotionMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_dailymotionMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_dailymotion_ctr%>%</td>
 
 
 
@@ -996,9 +964,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_actu_ios_siteName%></td>
-                        <td><%=data_masthead.total_impressions_actu_iosMasthead%></td>
-                        <td><%=data_masthead.total_clicks_actu_iosMasthead%></td>
-                        <td><%=data_masthead.masthead_actu_ios_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_actu_iosMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_actu_iosMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_actu_ios_ctr%>%</td>
 
 
 
@@ -1010,9 +978,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_masthead.masthead_actu_android_siteName%></td>
-                        <td><%=data_masthead.total_impressions_actu_androidMasthead%></td>
-                        <td><%=data_masthead.total_clicks_actu_androidMasthead%></td>
-                        <td><%=data_masthead.masthead_actu_android_ctr%>%</td>
+                        <td class="text-right"><%=data_masthead.total_impressions_actu_androidMasthead%></td>
+                        <td class="text-right"><%=data_masthead.total_clicks_actu_androidMasthead%></td>
+                        <td class="text-right"><%=data_masthead.masthead_actu_android_ctr%>%</td>
 
 
 
@@ -1023,12 +991,12 @@
 
 
 
-                <tfoot>
+                <tfoot class="table-dark">
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.sommeMastheadImpression%></td>
-                        <td><%=table.sommeMastheadClicks%></td>
-                        <td><%=table.CTR_masthead%>%</td>
+                        <td class="text-right"><%=table.sommeMastheadImpression%></td>
+                        <td class="text-right"><%=table.sommeMastheadClicks%></td>
+                        <td class="text-right"><%=table.CTR_masthead%>%</td>
 
 
                     </tr>
@@ -1050,9 +1018,9 @@
                 <thead class="text-left thead-dark">
                     <tr>
                         <th scope="col">Sites</th>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
+                        <th scope="col" class="text-right">Impressions</th>
+                        <th scope="col" class="text-right">Clics</th>
+                        <th scope="col" class="text-right">Taux de clics</th>
 
 
                     </tr>
@@ -1064,9 +1032,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_linfo_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_linfoGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_linfoGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_linfo_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_linfoGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_linfoGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_linfo_ctr%>%</td>
 
 
                     </tr>
@@ -1078,9 +1046,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_linfo_android_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_linfo_androidGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_linfo_androidGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_linfo_android_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_linfo_androidGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_linfo_androidGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_linfo_android_ctr%>%</td>
 
 
                     </tr>
@@ -1091,9 +1059,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_linfo_ios_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_linfo_iosGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_linfo_iosGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_linfo_ios_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_linfo_iosGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_linfo_iosGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_linfo_ios_ctr%>%</td>
 
 
                     </tr>
@@ -1104,9 +1072,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_dtj_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_dtjGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_dtjGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_dtj_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_dtjGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_dtjGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_dtj_ctr%>%</td>
 
 
                     </tr>
@@ -1117,9 +1085,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_antenne_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_antenneGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_antenneGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_antenne_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_antenneGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_antenneGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_antenne_ctr%>%</td>
 
 
                     </tr>
@@ -1130,9 +1098,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_orange_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_orangeGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_orangeGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_orange_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_orangeGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_orangeGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_orange_ctr%>%</td>
 
 
                     </tr>
@@ -1143,9 +1111,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_tf1_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_tf1GrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_tf1GrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_tf1_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_tf1GrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_tf1GrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_tf1_ctr%>%</td>
 
 
                     </tr>
@@ -1156,9 +1124,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_m6_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_m6GrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_m6GrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_m6_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_m6GrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_m6GrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_m6_ctr%>%</td>
 
 
                     </tr>
@@ -1169,9 +1137,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_dailymotion_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_dailymotionGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_dailymotionGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_dailymotion_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_dailymotionGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_dailymotionGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_dailymotion_ctr%>%</td>
 
 
                     </tr>
@@ -1182,9 +1150,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_actu_ios_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_actu_iosGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_actu_iosGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_actu_ios_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_actu_iosGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_actu_iosGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_actu_ios_ctr%>%</td>
 
 
                     </tr>
@@ -1195,21 +1163,21 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_grand_angle.grandAngle_actu_android_siteName%></td>
-                        <td><%=data_grand_angle.total_impressions_actu_androidGrandAngle%></td>
-                        <td><%=data_grand_angle.total_clicks_actu_androidGrandAngle%></td>
-                        <td><%=data_grand_angle.grandAngle_actu_android_ctr%>%</td>
+                        <td class="text-right"><%=data_grand_angle.total_impressions_actu_androidGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.total_clicks_actu_androidGrandAngle%></td>
+                        <td class="text-right"><%=data_grand_angle.grandAngle_actu_android_ctr%>%</td>
 
 
                     </tr>
                     <% }%>
 
 
-                <tfoot>
+                <tfoot class="table-dark">
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.sommeGrand_AngleImpression%></td>
-                        <td><%=table.sommeGrand_AngleClicks%></td>
-                        <td><%=table.CTR_grand_angle%>%</td>
+                        <td class="text-right"><%=table.sommeGrand_AngleImpression%></td>
+                        <td class="text-right"><%=table.sommeGrand_AngleClicks%></td>
+                        <td class="text-right"><%=table.CTR_grand_angle%>%</td>
 
 
                     </tr>
@@ -1234,9 +1202,9 @@
                 <thead class="text-left thead-dark">
                     <tr>
                         <th scope="col">Sites</th>
-                        <th scope="col">Impressions</th>
-                        <th scope="col">Clics</th>
-                        <th scope="col">Taux de clics</th>
+                        <th scope="col" class="text-right">Impressions</th>
+                        <th scope="col" class="text-right">Clics</th>
+                        <th scope="col" class="text-right">Taux de clics</th>
 
 
                     </tr>
@@ -1249,9 +1217,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_linfo_siteName%></td>
-                        <td><%=data_native.total_impressions_linfoNative%></td>
-                        <td><%=data_native.total_clicks_linfoNative%></td>
-                        <td><%=data_native.native_linfo_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_linfoNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_linfoNative%></td>
+                        <td class="text-right"><%=data_native.native_linfo_ctr%>%</td>
 
 
                     </tr>
@@ -1262,9 +1230,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_linfo_android_siteName%></td>
-                        <td><%=data_native.total_impressions_linfo_androidNative%></td>
-                        <td><%=data_native.total_clicks_linfo_androidNative%></td>
-                        <td><%=data_native.native_linfo_android_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_linfo_androidNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_linfo_androidNative%></td>
+                        <td class="text-right"><%=data_native.native_linfo_android_ctr%>%</td>
 
 
                     </tr>
@@ -1275,9 +1243,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_linfo_ios_siteName%></td>
-                        <td><%=data_native.total_impressions_linfo_iosNative%></td>
-                        <td><%=data_native.total_clicks_linfo_iosNative%></td>
-                        <td><%=data_native.native_linfo_ios_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_linfo_iosNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_linfo_iosNative%></td>
+                        <td class="text-right"><%=data_native.native_linfo_ios_ctr%>%</td>
 
 
                     </tr>
@@ -1288,9 +1256,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_dtj_siteName%></td>
-                        <td><%=data_native.total_impressions_dtjNative%></td>
-                        <td><%=data_native.total_clicks_dtjNative%></td>
-                        <td><%=data_native.native_dtj_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_dtjNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_dtjNative%></td>
+                        <td class="text-right"><%=data_native.native_dtj_ctr%>%</td>
 
 
                     </tr>
@@ -1301,9 +1269,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_antenne_siteName%></td>
-                        <td><%=data_native.total_impressions_antenneNative%></td>
-                        <td><%=data_native.total_clicks_antenneNative%></td>
-                        <td><%=data_native.native_antenne_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_antenneNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_antenneNative%></td>
+                        <td class="text-right"><%=data_native.native_antenne_ctr%>%</td>
 
 
                     </tr>
@@ -1314,9 +1282,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_orange_siteName%></td>
-                        <td><%=data_native.total_impressions_orangeNative%></td>
-                        <td><%=data_native.total_clicks_orangeNative%></td>
-                        <td><%=data_native.native_orange_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_orangeNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_orangeNative%></td>
+                        <td class="text-right"><%=data_native.native_orange_ctr%>%</td>
 
 
                     </tr>
@@ -1327,9 +1295,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_tf1_siteName%></td>
-                        <td><%=data_native.total_impressions_tf1Native%></td>
-                        <td><%=data_native.total_clicks_tf1Native%></td>
-                        <td><%=data_native.native_tf1_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_tf1Native%></td>
+                        <td class="text-right"><%=data_native.total_clicks_tf1Native%></td>
+                        <td class="text-right"><%=data_native.native_tf1_ctr%>%</td>
 
 
                     </tr>
@@ -1340,9 +1308,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_m6_siteName%></td>
-                        <td><%=data_native.total_impressions_m6Native%></td>
-                        <td><%=data_native.total_clicks_m6Native%></td>
-                        <td><%=data_native.native_m6_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_m6Native%></td>
+                        <td class="text-right"><%=data_native.total_clicks_m6Native%></td>
+                        <td class="text-right"><%=data_native.native_m6_ctr%>%</td>
 
 
                     </tr>
@@ -1353,9 +1321,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_dailymotion_siteName%></td>
-                        <td><%=data_native.total_impressions_dailymotionNative%></td>
-                        <td><%=data_native.total_clicks_dailymotionNative%></td>
-                        <td><%=data_native.native_dailymotion_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_dailymotionNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_dailymotionNative%></td>
+                        <td class="text-right"><%=data_native.native_dailymotion_ctr%>%</td>
 
 
                     </tr>
@@ -1366,9 +1334,9 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_actu_ios_siteName%></td>
-                        <td><%=data_native.total_impressions_actu_iosNative%></td>
-                        <td><%=data_native.total_clicks_actu_iosNative%></td>
-                        <td><%=data_native.native_actu_ios_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_actu_iosNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_actu_iosNative%></td>
+                        <td class="text-right"><%=data_native.native_actu_ios_ctr%>%</td>
 
 
                     </tr>
@@ -1380,21 +1348,21 @@
                     <tr>
                         <!-- Agrega par format / site  -->
                         <td><%=data_native.native_actu_android_siteName%></td>
-                        <td><%=data_native.total_impressions_actu_androidNative%></td>
-                        <td><%=data_native.total_clicks_actu_androidNative%></td>
-                        <td><%=data_native.native_actu_android_ctr%>%</td>
+                        <td class="text-right"><%=data_native.total_impressions_actu_androidNative%></td>
+                        <td class="text-right"><%=data_native.total_clicks_actu_androidNative%></td>
+                        <td class="text-right"><%=data_native.native_actu_android_ctr%>%</td>
 
 
                     </tr>
                     <% }%>
 
 
-                <tfoot>
+                <tfoot class="table-dark">
                     <tr>
                         <td><strong>Total</strong></td>
-                        <td><%=table.sommeNativeImpression%></td>
-                        <td><%=table.sommeNativeClicks%></td>
-                        <td><%=table.CTR_native%>%</td>
+                        <td class="text-right"><%=table.sommeNativeImpression%></td>
+                        <td class="text-right"><%=table.sommeNativeClicks%></td>
+                        <td class="text-right"><%=table.CTR_native%>%</td>
 
 
                     </tr>

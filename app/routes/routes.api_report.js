@@ -6,7 +6,6 @@ const api = require("../controllers/controllers.api_report");
 
 
 // Affiche la page api
-router.get("/test", api.test);
 
 router.get("/", api.index);
 router.get("/rapport/:campaigncrypt", api.report);
