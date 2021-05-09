@@ -93,7 +93,14 @@ exports.signup_add = async (req, res) => {
   try {
     /**verifier si les champs ne son pas vide*/
     if (email === '' || password === '' || role === '') {
-      return res.render('users/signup.ejs')
+
+      req.session.message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Les champs ne doivents pas être vide'
+      }
+      return res.redirect('/signup')
+      // return res.render('users/signup.ejs')
     }
 
     /**verifie si email est valide avec le regex*/
@@ -130,12 +137,17 @@ exports.signup_add = async (req, res) => {
         })
 
 
+
         const user_role = ModelUser_Role.create({
           role_id: role,
           user_id: user.id
         })
 
-
+        req.session.message = {
+          type: 'success',
+          intro: 'Ok',
+          message: 'Redirection vers le login'
+        }
 
         res.redirect('/login')
 

@@ -15,9 +15,11 @@
 <body>
 
 
-
-	<div class="container" >
+	
+	<div class="container">
 		<div class="row" style="margin-top: 20px;">
+
+
 
 
 			<!--section 1-->
@@ -26,10 +28,16 @@
 				<div class="card bg-dark text-dark">
 					<img src="/admin/photos/signup.jpg" class="card-img" alt="..." id="img_signup">
 					<div class="card-img-overlay">
-						<h5 class="card-title">Card title</h5>
-						<p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-							additional content. This content is a little bit longer.</p>
-						<p class="card-text">Last updated 3 mins ago</p>
+						<% if (message) { %>
+
+							<div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
+								<%=message.intro%>:<%=message.message%>
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+						
+							<% } %>
 					</div>
 				</div>
 			</div>
@@ -45,9 +53,11 @@
 							<h4 class="card-title">
 								Créer votre compte
 							</h4>
+					
 						</div>
 
 						<div class="card-body text-left">
+						
 
 
 							<form action="/signup/add" method="POST">
@@ -106,7 +116,7 @@
 							</div>
 						</div>
 						<div class="col text-center">
-							<small><a class=" text-white"href="/login">Connexion</a></small>
+							<small><a class=" text-white" href="/login">Connexion</a></small>
 
 						</div>
 						</form>
@@ -121,5 +131,7 @@
 		</div>
 
 	</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
 </body>

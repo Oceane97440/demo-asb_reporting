@@ -206,7 +206,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-
 /**
  * @MidleWare
  * UTILISATEUR CONNECTÉ
@@ -240,7 +239,12 @@ app.post('/*', function (req, res, next) {
   next();
 });
 
-
+//flash message middleware
+app.use((req, res, next)=>{
+  res.locals.message = req.session.message
+  delete req.session.message
+  next()
+})
 
 app.post('/uploads', function (req) {
   console.log(req.files.file_csv.name); //requette.files.nom du file 
