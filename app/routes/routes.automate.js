@@ -16,12 +16,10 @@ router.get("/insertionstatus", automate.insertionstatus);
 
 router.get("/insertions", automate.insertions);
 
-
 router.get("/insertionstemplates", automate.insertionstemplates);
 router.get("/creatives", automate.creatives);
-
 router.get("/countries", automate.countries);
-
+router.get("/reports", automate.reports);
 
 
 /*

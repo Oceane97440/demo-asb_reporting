@@ -1,0 +1,28 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Annonceur</th>
+            <th>Nom</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Status</th>
+            <th>Archiver</th>
+            <th>Dernière MAJ</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let i=0; i < campaigns.length; i++) { %>
+        <tr>
+            <td><a href="/manager/campaigns/<%= campaigns[i].campaign_id %>" title="<%= campaigns[i].campaign_name %>"><%= campaigns[i].campaign_id %></td>
+            <td><a href="/manager/advertisers/<%= campaigns[i].advertiser.advertiser_id %>" title="<%= campaigns[i].advertiser.advertiser_name %>"><%= campaigns[i].advertiser.advertiser_name %></a></td>
+            <td class="col-5"><a href="/manager/campaigns/<%= campaigns[i].campaign_id %>" title="<%= campaigns[i].campaign_name %>"><%= campaigns[i].campaign_name %></td>
+            <td><%= campaigns[i].campaign_start_date %></td>
+            <td><%= campaigns[i].campaign_end_date %></td>
+            <td class="col-1"><%= campaigns[i].campaign_status_id %></td>
+            <td class="col-1"><%= campaigns[i].campaign_archived %></td>
+            <td><%= campaigns[i].campaign_updated %></td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>

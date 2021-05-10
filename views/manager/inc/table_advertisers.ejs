@@ -1,0 +1,27 @@
+
+        <table class="table_sort">
+
+            <thead class="text-left thead-dark">
+                <tr>
+
+                    <th scope="col">ID clients</th>
+                    <th scope="col">Noms annonceurs</th>
+                    <th scope="col">Campagnes </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% for (let i=0; i < advertisers.length; i++) { %>
+                <tr>
+
+
+                    <td><%=advertisers[i].advertiser_id%></td>
+                    <td><%=advertisers[i].advertiser_name%></td>
+                    <td><a class="btn btn-sm btn-warning"
+                                href="/manager/view_campagne/<%= advertisers[i].advertiser_id %>">Voir les campagnes</a></td>
+                </tr>
+
+                <% } %>
+
+            </tbody>
+        </table>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title></title>
+        <!--[if lt IE 11]> <script
+        src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script> <script
+        src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <!-- Meta -->
+        <meta charset="utf-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+       
+        <!-- Favicon icon -->
+        <link rel="icon" href="/assets/images/favicon.svg" type="image/x-icon">
+
+        <!-- font css -->
+        <link rel="stylesheet" href="/assets/fonts/feather.css">
+        <link rel="stylesheet" href="/assets/fonts/fontawesome.css">
+        <link rel="stylesheet" href="/assets/fonts/material.css">
+
+        <!-- vendor css -->
+        <link rel="stylesheet" href="/assets/css/style.css" id="main-style-link">
+
+    </head>
+
+    <body class="">
+        <!-- [ Pre-loader ] start -->
+        <div class="loader-bg">
+            <div class="loader-track">
+                <div class="loader-fill"></div>
+            </div>
+        </div>
+        <!-- [ Pre-loader ] End -->
+        <!-- [ Mobile header ] start -->
+        <div class="pc-mob-header pc-header">
+            <div class="pcm-logo">
+                <img src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png" alt="" class="logo logo-lg">
+            </div>
+            <div class="pcm-toolbar">
+                <a href="#!" class="pc-head-link" id="mobile-collapse">
+                    <div class="hamburger hamburger--arrowturn">
+                        <div class="hamburger-box">
+                            <div class="hamburger-inner"></div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#!" class="pc-head-link" id="headerdrp-collapse">
+                    <i data-feather="align-right"></i>
+                </a>
+                <a href="#!" class="pc-head-link" id="header-collapse">
+                    <i data-feather="more-vertical"></i>
+                </a>
+            </div>
+        </div>
+        <!-- [ Mobile header ] End -->
+       
+        <%- include("sidebar.ejs") -%>
+        <%- include("header.ejs") -%>
+
+        <!-- [ Main Content ] start -->
+        <div class="pc-container">
+            <div class="pcoded-content">
+                <%- include("breadcrumb.ejs") -%>
+
+                <!-- [ Main Content ] start -->
+                <div class="row">
