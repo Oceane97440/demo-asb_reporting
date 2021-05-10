@@ -9,6 +9,15 @@ const app = require("../controllers/controllers.application");
    
     router.post("/login/add",app.login_add)
     router.get("/logout",app.logout)
+    router.post("/forecast/add",app.forcast)
+
+    router.get("/json/formats",app.formast_json)
+    router.get("/json/packs",app.packs_json)
+    router.get("/json/countrys",app.countrys_json)
+    router.get("/json/packs/sites",app.packs_sites_json)
+
+
+
 
 
 

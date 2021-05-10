@@ -245,27 +245,20 @@ exports.report = async (req, res) => {
         const startDate_yesterday = new Date(startDate);
         const start_date_timezone = startDate_yesterday.setHours(-4);
 
+        //recup la date de fin de la campagne ajoute +1jour 
+        const endDate_day = new Date(EndtDate);
+        const endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
+
         function getStartDate_timezone(unixTimeStamp) {
           let date = new Date(unixTimeStamp);
           return (date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + 'T' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + '00')
         }
         var s = parseInt(start_date_timezone);
+        var t3 = parseInt(endDate_last)
 
         const StartDate_timezone = getStartDate_timezone(s);
+        const EndDate = getStartDate_timezone(t3)
 
-
-        //recup la date de fin de la campagne ajoute +1jour 
-        const endDate_day = new Date(EndtDate);
-        const endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
-
-
-        function getEndDate_last(unixTimeStamp) {
-          let date_last = new Date(unixTimeStamp);
-          return (date_last.getFullYear() + '-' + ('0' + (date_last.getMonth() + 1)).slice(-2) + '-' + ('0' + date_last.getDate()).slice(-2) + 'T' + ('0' + date_last.getHours()).slice(-2) + ':' + ('0' + date_last.getMinutes()).slice(-2) + ':' + '00')
-        }
-        var t3 = parseInt(endDate_last);
-
-        const EndDate = getEndDate_last(t3);
         //si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour
         if (endDate_last < timestamp_datenow) {
 
