@@ -71,7 +71,7 @@ exports.login_add = async (req, res) => {
     if (!email || !password) {
 
 
-      console.log("Incorrect")
+      res.json("Incorrect")
 
     }
 
@@ -88,11 +88,12 @@ exports.login_add = async (req, res) => {
     if (user.email !== email && user.password !== password) {
 
 
-      console.log("Incorrect")
+      res.json("Incorrect")
 
 
     } else {
       req.session.user = user
+      console.log( req.session)
 
       console.log("Correcte")
       res.status(200).json({
@@ -107,7 +108,7 @@ exports.login_add = async (req, res) => {
   } catch (error) {
     console.log(error)
 
-    console.log("Erreur")
+    res.json("Erreur")
   }
 
 }
