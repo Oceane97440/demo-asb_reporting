@@ -6,7 +6,8 @@ const request = require('request');
 const bodyParser = require('body-parser');
 
 //let csvToJson = require('convert-csv-to-json');
-
+const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const axios = require(`axios`);
 
@@ -63,59 +64,105 @@ exports.login_add = async (req, res) => {
   const email = req.body.email;
   const password = req.body.mdp;
 
-  console.log(email)
 
 
   try {
-
-    if (!email || !password) {
-
-
-      res.json("Incorrect")
-
-    }
-
-    let user = await ModelUser.findOne({
-
-      where: {
-
-        email: email,
-        password: password
+    if (email == '' || password == '') {
+      message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Email ou mot passe est incorrect'
       }
 
-    })
-    // console.log(user)
-    if (user.email !== email && user.password !== password) {
-
-
-      res.json("Incorrect")
-
-
-    } else {
-      req.session.user = user
-      console.log(req.session)
-
-      console.log("Correcte")
-      res.status(200).json({
-        success: true,
-
-      });
-
-
-
-
+      return res.json({
+        success: false,
+        message: message
+      })
     }
+
+
+    ModelUser.findOne({
+      where: {
+        email: email
+      }
+    }).then(async function (user) {
+
+
+
+      //si email trouvé
+      if (user) {
+
+        //on verifie si l'utilisateur à utiliser le bon mot de passe avec bycrypt
+
+        const isEqual = await bcrypt.compare(password, user.password);
+
+        //Si le mot de passe correpond au caratère hashé
+        if (isEqual) {
+
+          if (user.email !== email && user.password !== password) {
+
+            return res.json({
+              success: false
+            })
+          } else {
+            // use session for user connected
+            req.session.user = user
+
+            //console.log(req.session)
+
+            return res.json({
+              success: true
+            })
+          }
+
+        } else {
+          message = {
+            type: 'danger',
+            intro: 'Erreur',
+            message: 'Adresse email ou mot de passe invalide"'
+          }
+          return res.json({
+            success: false,
+            message: message
+
+          })
+        }
+
+      } else {
+        message = {
+          type: 'danger',
+          intro: 'Erreur',
+          message: 'Adresse email ou mot de passe invalide"'
+        }
+        return res.json({
+          success: false,
+          message: message
+
+        })
+
+      }
+
+
+
+    })
+
+
   } catch (error) {
     console.log(error)
 
-    res.json("Erreur")
+    return res.json({
+      'success': false
+    })
   }
 
 }
 
 exports.logout = async (req, res) => {
   req.session = null
-  res.redirect('/login')
+  return res.json({
+    success: true
+  })
+
 }
 
 
@@ -142,6 +189,53 @@ exports.forcast = async (req, res) => {
 
     date_start = date_start + 'T00:00:00.000Z'
     date_end = date_end + 'T23:59:00.000Z'
+
+    //si l'un des champs sont vide
+    if (date_start == '' || date_start == '' || format == '' || packs == '' || countries == '') {
+      message = {
+        type: 'danger',
+        intro: 'Un problème est survenu',
+        message: 'Les champs doivent être complétés'
+      }
+      return res.json({
+        success: false,
+        message: message
+      })
+    }
+
+    //date aujourd'hui en timestamp 
+    const date_now = Date.now();
+
+    const timstasp_start = Date.parse(date_start)
+
+    // si date aujourd'hui est >= à la date selectionné envoie une erreur
+    if (timstasp_start <= date_now) {
+      message = {
+        type: 'danger',
+        intro: 'Un problème est survenu',
+        message: 'La date de début doit être J+1 à la date du jour'
+      }
+      return res.json({
+        success: false,
+        message: message
+      })
+    }
+    const timstasp_end = Date.parse(date_end)
+
+    // si date aujourd'hui est >= à la date selectionné envoie une erreur
+
+    if (timstasp_end <= date_now) {
+
+      message = {
+        type: 'danger',
+        intro: 'Un problème est survenu',
+        message: 'La date de fin doit être supérieur à la date du jour'
+      }
+      return res.json({
+        success: false,
+        message: message
+      })
+    }
 
 
     const campaign_StartDate = await date_start;
@@ -461,10 +555,14 @@ exports.forcast = async (req, res) => {
           volumeDispo,
         }
 
-
+       
+         
+     
 
         return res.json({
-          table: table
+          table: table,
+          
+          success: true,
         });
 
 

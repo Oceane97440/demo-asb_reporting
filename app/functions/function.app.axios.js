@@ -102,9 +102,11 @@ exports.dataFormatingForForecast = async (dataArrayFromReq, StartDate, EndDate, 
     sommeImpressions = numStr(sommeImpressions);
     sommeOccupied = numStr(sommeOccupied);
     volumeDispo = numStr(volumeDispo);
+   
 
 
     var tableData = {
+        success: true,
         StartDate,
         EndDate,
         format,
