@@ -2,96 +2,95 @@ const axios = require(`axios`);
 const dbApi = require("../config/config.api");
 
 exports.getForecastData = async (method, urlForecast, data = null) => {
-    var test;
-    if (method == 'GET') {
+  var test;
+  if (method == 'GET') {
 
-        test = await axios({
-            method: method,
-            url: urlForecast,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-type": "Application/json"
-            },
-            auth: {
-                username: dbApi.SMART_login,
-                password: dbApi.SMART_password
-            }
-        });
+    test = await axios({
+      method: method,
+      url: urlForecast,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json"
+      },
+      auth: {
+        username: dbApi.SMART_login,
+        password: dbApi.SMART_password
+      }
+    });
 
-    } else if(method == 'POST') {
-        test = await axios({
-            method: 'POST',
-            url: 'https://forecast.smartadserverapis.com/2044/forecast',
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-type": "Application/json"
-            },
-            auth: {
-                username: dbApi.SMART_login,
-                password: dbApi.SMART_password
-            },
-            data
-        });
-    }
-    return test;
+  } else if (method == 'POST') {
+    test = await axios({
+      method: 'POST',
+      url: 'https://forecast.smartadserverapis.com/2044/forecast',
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json"
+      },
+      auth: {
+        username: dbApi.SMART_login,
+        password: dbApi.SMART_password
+      },
+      data
+    });
+  }
+  return test;
 }
 
 exports.getReportingData = async (method, urlReporting, data = null) => {
 
-    var return_data;
-    if (method == 'POST') {
+  var return_data;
+  if (method == 'POST') {
 
-     return_data = await axios({
-        method: method,
-        url: 'https://reporting.smartadserverapis.com/2044/reports',
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-type": "Application/json"
-        },
-        auth: {
-          username: dbApi.SMART_login,
-          password: dbApi.SMART_password
-        },
-        data: data
-      }).catch(function (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-         
-          console.log('response.data',error.response.data);
-          console.log('response.status',error.response.status);
-          console.log('response.headers',error.response.headers);
-          return return_data = null
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log('request',error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
-        }
-        console.log(error.config);
-      });
-    }
-    else if(method == 'GET'){
+    return_data = await axios({
+      method: method,
+      url: 'https://reporting.smartadserverapis.com/2044/reports',
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json"
+      },
+      auth: {
+        username: dbApi.SMART_login,
+        password: dbApi.SMART_password
+      },
+      data: data
+    }).catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
 
-        return_data =  await axios({
-            method: method,
-            url:urlReporting,
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json"
-            },
-            auth: {
-              username: dbApi.SMART_login,
-              password: dbApi.SMART_password
-            }
-          })
+        console.log('response.data', error.response.data);
+        console.log('response.status', error.response.status);
+        console.log('response.headers', error.response.headers);
+        return return_data = null
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log('request', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+  } else if (method == 'GET') {
+
+    return_data = await axios({
+      method: method,
+      url: urlReporting,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json"
+      },
+      auth: {
+        username: dbApi.SMART_login,
+        password: dbApi.SMART_password
+      }
+    })
 
 
-    }
-    return return_data
+  }
+  return return_data
 }
 
 /**
@@ -110,51 +109,66 @@ exports.dataFormatingForForecast = async (dataArrayFromReq) => {
   var FormatName = []
 
   for (let i = 0; i < dataArrayFromReq.length; i++) {
-      if(dataArrayFromReq[i]) {
-          var data = dataArrayFromReq[i];
-        
-          //delete les ; et delete les blanc
-          line = data.split(';');
-          let dataTotalImpression     = line[6].split('\r\n')[1];
-          // let dataAvailableImpression = line[12].split('\r\n')[0];
+    if (dataArrayFromReq[i]) {
+      var data = dataArrayFromReq[i];
 
-          //push la donnéé splité dans un tab vide
-          TotalImpressions.push(dataTotalImpression);
-          OccupiedImpressions.push(line[7]);
-          SiteID.push(line[8]);
-          SiteName.push(line[9]);
-          FormatID.push(line[10]);
-          FormatName.push(line[11]);
-      }
+      //delete les ; et delete les blanc
+      line = data.split(';');
+      let dataTotalImpression = line[6].split('\r\n')[1];
+      // let dataAvailableImpression = line[12].split('\r\n')[0];
+
+      //push la donnéé splité dans un tab vide
+      TotalImpressions.push(dataTotalImpression);
+      OccupiedImpressions.push(line[7]);
+      SiteID.push(line[8]);
+      SiteName.push(line[9]);
+      FormatID.push(line[10]);
+      FormatName.push(line[11]);
+    }
   }
 
 
   var sommeImpressions = 0
   var sommeOccupied = 0
-  
+
   for (let k = 0; k < TotalImpressions.length; k++) {
-      if (TotalImpressions[k] != '') {
-          sommeImpressions += parseInt(TotalImpressions[k])
-          sommeOccupied += parseInt(OccupiedImpressions[k])
-      }
+    if (TotalImpressions[k] != '') {
+      sommeImpressions += parseInt(TotalImpressions[k])
+      sommeOccupied += parseInt(OccupiedImpressions[k])
+    }
   }
 
   var volumeDispo = sommeImpressions - sommeOccupied;
-  
-  sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
-  sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
-  //volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
-  
+
+  //SEPARATEUR DE MILLIER universel 
+  function numStr(a, b) {
+    a = '' + a;
+    b = b || ' ';
+    var c = '',
+      d = 0;
+    while (a.match(/^0[0-9]/)) {
+      a = a.substr(1);
+    }
+    for (var i = a.length - 1; i >= 0; i--) {
+      c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
+      d++;
+    }
+    return c;
+  }
+  sommeImpressions = numStr(sommeImpressions);
+  sommeOccupied = numStr(sommeOccupied);
+  volumeDispo = numStr(volumeDispo);
+
   var tableData = {
-      TotalImpressions,
-      OccupiedImpressions,
-      SiteID,
-      SiteName,
-      FormatID,
-      FormatName,
-      sommeImpressions,
-      sommeOccupied,
-      volumeDispo
+    TotalImpressions,
+    OccupiedImpressions,
+    SiteID,
+    SiteName,
+    FormatID,
+    FormatName,
+    sommeImpressions,
+    sommeOccupied,
+    volumeDispo
   }
   return tableData;
 }
@@ -162,57 +176,55 @@ exports.dataFormatingForForecast = async (dataArrayFromReq) => {
 exports.getManageData = async (method) => {
   var format_data;
 
-    if (method == 'GET') {
+  if (method == 'GET') {
 
-     format_data = await axios({
-        method: method,
-        url: 'https://manage.smartadserverapis.com/2044/formats',
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-type": "Application/json"
-        },
-        auth: {
-          username: dbApi.SMART_login,
-          password: dbApi.SMART_password
-        },
-      
-      })
-      
-      // .then(function (res) {
+    format_data = await axios({
+      method: method,
+      url: 'https://manage.smartadserverapis.com/2044/formats',
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json"
+      },
+      auth: {
+        username: dbApi.SMART_login,
+        password: dbApi.SMART_password
+      },
 
-      //   console.log(JSON.stringify(res.data));
+    })
 
-      // })
-     
-    }
+    // .then(function (res) {
 
-    return format_data
+    //   console.log(JSON.stringify(res.data));
+
+    // })
+
+  }
+
+  return format_data
 }
 
-exports.getManage_AdvertiserData = async (method, urlManage,data=null) => {
+exports.getManage_AdvertiserData = async (method, urlManage, data = null) => {
 
-    if (method == 'GET') {
+  if (method == 'GET') {
 
-      var advertiser_data = await axios({
-        method: method,
-        url: urlManage,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        auth: {
-          username: dbApi.SMART_login,
-          password: dbApi.SMART_password
-        },
-        data:data
-      
-      }).then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-    }
-    console.log(advertiser_data)
+    var advertiser_data = await axios({
+      method: method,
+      url: urlManage,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      auth: {
+        username: dbApi.SMART_login,
+        password: dbApi.SMART_password
+      },
+      data: data
 
-    return advertiser_data
+    }).then(function (response) {
+      console.log(JSON.stringify(response.data));
+    })
+  }
+  console.log(advertiser_data)
+
+  return advertiser_data
 }
-
-

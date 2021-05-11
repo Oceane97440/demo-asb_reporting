@@ -15,13 +15,23 @@
 	<%- include ("../../layouts/admin/navbar.ejs") -%>
 
 	<div class="container">
+		<% if (message) { %>
+
+			<div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
+				<%=message.intro%>:<%=message.message%>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		
+			<% } %>
+
 		<div class="row">
 
 			<div class="col-lg-6">
 				<div class="our-team-main">
 
-
-
+				
 					<div id="card-forecast" class="card">
 						<div class="card-header">
 							<h4 class="card-title">
