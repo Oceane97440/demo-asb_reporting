@@ -61,4 +61,128 @@
 	</form>
 </div>
 
+
+<div class="card text-center" style="margin-top: 30px;">
+    <div class="card-header">
+        <h4 class="card-title">
+            Liste des campagnes Epilot
+        </h4>
+    </div>
+    <div class="card-header tab-card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+
+            <li class="nav-item">
+                <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
+                    aria-selected="true">Campagnes confirmées</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                    aria-selected="false">Campagnes réservées</a>
+            </li>
+           
+
+        </ul>
+    </div>
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+
+            <h6 class="card-subtitle text-right mb-2 text-muted ">Résultats: <%= result_confirmer%></h6>
+        
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+                      <th scope="col">Noms campagnes</th>
+                      <th scope="col">Formats</th>
+                      <th scope="col">Date début campagne</th>
+                      <th scope="col">Date fin campagne</th>
+                      <th scope="col">Volume prévu</th>
+					  <th scope="col">Action</th>
+
+
+                    </tr>
+                  </thead>
+
+                <tbody class="text-left">
+                    <% for(let i=0; i < confirmer.length; i++) {%>
+
+                        <tr>
+    
+    
+                        <td><%= confirmer[i].campaign_name %></td>
+                        <td><%= confirmer[i].format_name %></td>
+                        <td><%= confirmer[i].campaign_start_date %></td>
+                        <td><%= confirmer[i].campaign_end_date %></td>
+                        <td><%= confirmer[i].volume_prevue %></td>
+						<td>
+							<a class="btn btn-sm btn-warning" href="/utilisateur/campagne_epilot/edit/<%= confirmer[i].campaign_epilot_id %>"><i
+									class="fas fa-pencil-alt"></i></a>
+							<a class="btn btn-sm btn-danger" href="/utilisateur/campagne_epilot/delete/<%= confirmer[i].campaign_epilot_id %>"
+								type="button"><i class="fas fa-times-circle"></i></a>
+						</td>
+                        </tr>
+
+					<% } %>
+    
+    
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+            <h6 class="card-subtitle text-right mb-2 text-muted">Résultats: <%= result_reserver%> </h6>
+
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+                      <th scope="col">Noms campagnes</th>
+                      <th scope="col">Formats</th>
+                      <th scope="col">Date début campagne</th>
+                      <th scope="col">Date fincampagne</th>
+                      <th scope="col">Volume prévu</th>
+					  <th scope="col">Action</th>
+
+                    </tr>
+                  </thead>
+
+                  <tbody class="text-left">
+
+                    <% for(let i=0; i < reserver.length; i++) {%>
+
+                        <tr>
+    
+    
+                        <td><%= reserver[i].campaign_name %></td>
+                        <td><%= reserver[i].format_name %></td>
+                        <td><%= reserver[i].campaign_start_date %></td>
+                        <td><%= reserver[i].campaign_end_date %></td>
+                        <td><%= reserver[i].volume_prevue %></td>
+    
+						<td>
+							<a class="btn btn-sm btn-warning" href="/utilisateur/campagne_epilot/edit/<%= reserver[i].campaign_epilot_id %>"><i
+									class="fas fa-pencil-alt"></i></a>
+							<a class="btn btn-sm btn-danger" href="/utilisateur/campagne_epilot/delete/<%= reserver[i].campaign_epilot_id %>"
+								type="button"><i class="fas fa-times-circle"></i></a>
+						</td>
+
+                        </tr>
+
+					<% } %>
+    
+    
+                </tbody>
+            </table>
+
+        </div>
+
+
+     
+
+    </div>
+</div>
+
 <%- include("../layouts/admin/footer.ejs") -%>

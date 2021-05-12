@@ -886,28 +886,62 @@ exports.forecast_user = async (req, res, next) => {
 
 
 
-
+//Formulaire ajout Epilot
 exports.epilot = async (req, res, next) => {
 
     try {
 
-        var formats = await ModelFormat.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
-            group: ['format_group'],
-            where: {
-                format_group: {
-                    [Op.not]: null
-                }
-            },
-            order: [
-                ['format_group', 'ASC']
-            ],
-        })
+        
+    var confirmer = await ModelCampaign_epilot.findAll({
+        attributes: ['campaign_epilot_id','campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
+  
+        where: {
+          etat: 1
+        },
+        order: [
+          ['campaign_name', 'ASC']
+        ],
+      })
+  
+      var reserver = await ModelCampaign_epilot.findAll({
+        attributes: ['campaign_epilot_id', 'campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
+  
+        where: {
+          etat: 2
+        },
+        order: [
+          ['campaign_name', 'ASC']
+        ],
+      })
+  
 
+      var formats = await ModelFormat.findAll({
+        attributes: ['format_id', 'format_name', 'format_group'],
+        group: ['format_group'],
+        where: {
+            format_group: {
+                [Op.not]: null
+            }
+        },
+        order: [
+            ['format_group', 'ASC']
+        ],
+    })
+
+
+      var result_confirmer = Object.keys(confirmer).length;
+  
+      var result_reserver = Object.keys(reserver).length;
+  
+  
+      
 
         res.render('forecast/form_epilot.ejs', {
             formats: formats,
-
+            confirmer: confirmer,
+            reserver: reserver,
+            result_confirmer: result_confirmer,
+            result_reserver: result_reserver
         });
 
     } catch (error) {
@@ -923,7 +957,7 @@ exports.epilot = async (req, res, next) => {
 }
 
 
-
+//Action ajout de la campagne
 exports.campaign_epilot = async (req, res, next) => {
 
     var campaign_name = req.body.campaign_name
@@ -933,7 +967,6 @@ exports.campaign_epilot = async (req, res, next) => {
     var campaign_end_date = req.body.campaign_end_date
     var volume_prevue = req.body.volume_prevue
 
-    //console.log(req.body)
 
 
     var campaign_debut = campaign_start_date + 'T00:00:00.000Z'
@@ -995,4 +1028,100 @@ exports.campaign_epilot = async (req, res, next) => {
         })
     }
 
+}
+
+
+//Formulaire ajout Epilot
+exports.epilot_edit = async (req, res, next) => {
+
+    try {
+
+
+
+      await  ModelCampaign_epilot.findOne({
+            where: {
+                campaign_epilot_id: req.params.id
+            }
+    
+        }).then( async function (campaign_epilot) {
+                
+        
+            var formats = await ModelFormat.findAll({
+                attributes: ['format_id', 'format_name', 'format_group'],
+                group: ['format_group'],
+                where: {
+                    format_group: {
+                        [Op.not]: null
+                    }
+                },
+                order: [
+                    ['format_group', 'ASC']
+                ],
+            })
+    
+
+
+
+          res.render('forecast/form_edit_epilot.ejs', {
+            campaign_epilot: campaign_epilot,
+            formats
+        });
+        })
+
+
+  
+  
+      
+
+      
+
+    } catch (error) {
+        console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error.ejs", {
+            statusCoded: statusCoded,
+
+        })
+    }
+
+}
+
+exports.update = async (req, res, next) => {
+
+    ModelCampaign_epilot.findOne({
+        where: {
+            campaign_epilot_id: req.params.id
+        }
+    }).then(campaign_epilot => {
+
+        ModelCampaign_epilot.update({
+            campaign_name: req.body.campaign_name,
+            format_name: req.body.format,
+            etat: req.body.etat,
+            campaign_start_date: req.body.campaign_start_date,
+            campaign_end_date: req.body.campaign_end_date,
+            volume_prevue: req.body.volume_prevue
+
+
+
+
+        }, {
+            where: {
+                campaign_epilot_id: req.params.id
+            }
+        }).then(res.redirect('/utilisateur/campagne_epilot'))
+    })
+
+}
+
+exports.delete = async (req, res, next) => {
+
+    ModelCampaign_epilot.destroy({
+        where: {
+            campaign_epilot_id: req.params.id
+        }
+    }).then(() => {
+        res.redirect('/utilisateur/campagne_epilot')
+    })
 }
