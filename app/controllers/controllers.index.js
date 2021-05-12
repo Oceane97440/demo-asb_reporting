@@ -154,17 +154,18 @@ exports.signup_add = async (req, res) => {
           user_id: user.id
         })
 
-        req.session.message = {
-          type: 'success',
-          intro: 'Ok',
-          message: 'Redirection vers le login'
-        }
+      
 
         res.redirect('/login')
 
       } else {
 
-        res.send("email est déjà utilisé")
+        req.session.message = {
+          type: 'danger',
+          intro: 'Erreur',
+          message: 'Email est déjà utilisé'
+        }
+        return res.redirect('/signup')
       }
 
     })

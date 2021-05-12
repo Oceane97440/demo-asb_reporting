@@ -64,7 +64,7 @@ exports.index = async (req, res) => {
 
 
             const formats = await ModelFormat.findAll({
-                attributes:['format_group'],
+                attributes: ['format_group'],
                 group: "format_group",
                 where: {
                     format_group: {
@@ -143,8 +143,71 @@ exports.forecast = async (req, res, next) => {
 
     try {
 
+        //si l'un des champs sont vide
+        if (date_start == '' || date_start == '' || format == '' || packs == '' || countries == '') {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'Les champs doivent être complétés'
+            }
+            return res.redirect('/forecast')
+        }
+
+        //date aujourd'hui en timestamp 
+        const date_now = Date.now();
+
+        const timstasp_start = Date.parse(date_start)
+
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur
+        if (timstasp_start <= date_now) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'La date de début doit être J+1 à la date du jour'
+            }
+            return res.redirect('/forecast')
+        }
+        const timstasp_end = Date.parse(date_end)
+
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur
+
+        if (timstasp_end <= date_now) {
+
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'La date de fin doit être supérieur à la date du jour'
+            }
+            return res.redirect('/forecast')
+        }
+
+
+
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
+
+
+        const campaign_StartDate = await date_start;
+        var startDate_split = await campaign_StartDate.split('T');
+        const start_Date = await startDate_split[0]
+
+        var campaign_EndDate = await date_end;
+        var endDate_split = await campaign_EndDate.split('T');
+        const end_Date = await endDate_split[0]
+
+
+        const dateStart = new Date(start_Date);
+        JJ = ('0' + (dateStart.getDate())).slice(-2);
+        MM = ('0' + (dateStart.getMonth())).slice(-2);
+        AAAA = dateStart.getFullYear();
+        const StartDate = await JJ + '/' + MM + '/' + AAAA;
+
+
+        const dateEnd = new Date(end_Date);
+        JJ = ('0' + (dateEnd.getDate())).slice(-2);
+        MM = ('0' + (dateEnd.getMonth())).slice(-2);
+        AAAA = dateEnd.getFullYear();
+        const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
 
         //recupération des site d'un pack
@@ -508,8 +571,9 @@ exports.forecast = async (req, res, next) => {
 
 
             const infos = {
-                date_start,
-                date_end,
+
+                StartDate,
+                EndDate,
                 format,
             }
 
@@ -876,9 +940,24 @@ exports.forecast = async (req, res, next) => {
                     sommeReserver = 0
                 }
 
-                sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
-                sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
-                volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
+                //SEPARATEUR DE MILLIER universel 
+                function numStr(a, b) {
+                    a = '' + a;
+                    b = b || ' ';
+                    var c = '',
+                        d = 0;
+                    while (a.match(/^0[0-9]/)) {
+                        a = a.substr(1);
+                    }
+                    for (var i = a.length - 1; i >= 0; i--) {
+                        c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
+                        d++;
+                    }
+                    return c;
+                }
+                sommeImpressions = numStr(sommeImpressions);
+                sommeOccupied = numStr(sommeOccupied);
+                volumeDispo = numStr(volumeDispo);
 
                 var table = {
 
@@ -912,8 +991,9 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 const infos = {
-                    date_start,
-                    date_end,
+
+                    StartDate,
+                    EndDate,
                     format,
                 }
 
@@ -943,6 +1023,6 @@ exports.forecast = async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-      
+
     }
 }
