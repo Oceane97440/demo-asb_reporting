@@ -168,7 +168,7 @@ exports.logout = async (req, res) => {
 
 exports.forcast = async (req, res) => {
   // Définition des variables
-  console.log(req.body)
+ // console.log(req.body)
 
   var headerlocation, table, requestForecast;
   var date_start = await req.body.date_start;
@@ -207,6 +207,8 @@ exports.forcast = async (req, res) => {
     const date_now = Date.now();
 
     const timstasp_start = Date.parse(date_start)
+    const timstasp_end = Date.parse(date_end)
+
 
     // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
     if (timstasp_start <= date_now || timstasp_start >=timstasp_end) {
@@ -220,7 +222,6 @@ exports.forcast = async (req, res) => {
         message: message
       })
     }
-    const timstasp_end = Date.parse(date_end)
 
     // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
 

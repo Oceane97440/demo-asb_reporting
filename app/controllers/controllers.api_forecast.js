@@ -157,6 +157,7 @@ exports.forecast = async (req, res, next) => {
         const date_now = Date.now();
 
         const timstasp_start = Date.parse(date_start)
+        const timstasp_end = Date.parse(date_end)
 
         // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
         if (timstasp_start <= date_now || timstasp_start >= timstasp_end) {
@@ -167,7 +168,6 @@ exports.forecast = async (req, res, next) => {
             }
             return res.redirect('/forecast')
         }
-        const timstasp_end = Date.parse(date_end)
 
 
         // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
