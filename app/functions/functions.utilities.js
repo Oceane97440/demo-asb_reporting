@@ -66,6 +66,9 @@ exports.getDateTimeTimestamp = function (refrechTimeStamp) {
 
 
 
+
+
+
 //SEPARATEUR DE MILLIER universel
 exports.numStr = function (a, b) {
     a = '' + a;
@@ -94,6 +97,4 @@ exports.numStr = function (a, b) {
         )
     ).slice(-2) + '/' + date.getFullYear();
 }
-
-
 
