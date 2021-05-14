@@ -119,7 +119,7 @@ exports.login_add = async (req, res) => {
           message = {
             type: 'danger',
             intro: 'Erreur',
-            message: 'Adresse email ou mot de passe invalide"'
+            message: 'Adresse email ou mot de passe invalide'
           }
           return res.json({
             success: false,
@@ -132,7 +132,7 @@ exports.login_add = async (req, res) => {
         message = {
           type: 'danger',
           intro: 'Erreur',
-          message: 'Adresse email ou mot de passe invalide"'
+          message: 'Adresse email ou mot de passe invalide'
         }
         return res.json({
           success: false,
@@ -249,14 +249,14 @@ exports.forcast = async (req, res) => {
 
     const dateStart = new Date(start_Date);
     JJ = ('0' + (dateStart.getDate())).slice(-2);
-    MM = ('0' + (dateStart.getMonth())).slice(-2);
+    MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
     AAAA = dateStart.getFullYear();
     const StartDate = await JJ + '/' + MM + '/' + AAAA;
 
 
     const dateEnd = new Date(end_Date);
     JJ = ('0' + (dateEnd.getDate())).slice(-2);
-    MM = ('0' + (dateEnd.getMonth())).slice(-2);
+    MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
     AAAA = dateEnd.getFullYear();
     const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
@@ -555,7 +555,7 @@ exports.forcast = async (req, res) => {
           volumeDispo,
         }
 
-       
+       console.log(table)
          
      
 

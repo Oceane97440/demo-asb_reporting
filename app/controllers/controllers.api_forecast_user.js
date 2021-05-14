@@ -206,14 +206,14 @@ exports.forecast_user = async (req, res, next) => {
 
         const dateStart = new Date(start_Date);
         JJ = ('0' + (dateStart.getDate())).slice(-2);
-        MM = ('0' + (dateStart.getMonth())).slice(-2);
+        MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
         AAAA = dateStart.getFullYear();
         const StartDate = await JJ + '/' + MM + '/' + AAAA;
 
 
         const dateEnd = new Date(end_Date);
         JJ = ('0' + (dateEnd.getDate())).slice(-2);
-        MM = ('0' + (dateEnd.getMonth())).slice(-2);
+        MM = ('0' + (dateEnd.getMonth()+1)).slice(-2);
         AAAA = dateEnd.getFullYear();
         const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
