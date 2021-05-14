@@ -893,7 +893,6 @@ exports.epilot = async (req, res, next) => {
 
         
     var confirmer = await ModelCampaign_epilot.findAll({
-        attributes: ['campaign_epilot_id','campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
   
         where: {
           etat: 1
@@ -904,7 +903,6 @@ exports.epilot = async (req, res, next) => {
       })
   
       var reserver = await ModelCampaign_epilot.findAll({
-        attributes: ['campaign_epilot_id', 'campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
   
         where: {
           etat: 2
@@ -916,8 +914,8 @@ exports.epilot = async (req, res, next) => {
   
 
       var formats = await ModelFormat.findAll({
-        attributes: ['format_id', 'format_name', 'format_group'],
-        group: ['format_group'],
+        attributes: ['format_group'],
+        group: "format_group",
         where: {
             format_group: {
                 [Op.not]: null
@@ -1045,10 +1043,10 @@ exports.epilot_edit = async (req, res, next) => {
     
         }).then( async function (campaign_epilot) {
                 
-        
+      
             var formats = await ModelFormat.findAll({
-                attributes: ['format_id', 'format_name', 'format_group'],
-                group: ['format_group'],
+                attributes: ['format_group'],
+                group: "format_group",
                 where: {
                     format_group: {
                         [Op.not]: null
