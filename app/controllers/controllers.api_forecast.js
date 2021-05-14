@@ -158,8 +158,8 @@ exports.forecast = async (req, res, next) => {
 
         const timstasp_start = Date.parse(date_start)
 
-        // si date aujourd'hui est >= à la date selectionné envoie une erreur
-        if (timstasp_start <= date_now) {
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
+        if (timstasp_start <= date_now || timstasp_start >= timstasp_end) {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
@@ -169,9 +169,10 @@ exports.forecast = async (req, res, next) => {
         }
         const timstasp_end = Date.parse(date_end)
 
-        // si date aujourd'hui est >= à la date selectionné envoie une erreur
 
-        if (timstasp_end <= date_now) {
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
+
+        if (timstasp_end <= date_now || timstasp_end <= timstasp_start) {
 
             req.session.message = {
                 type: 'danger',
@@ -198,14 +199,14 @@ exports.forecast = async (req, res, next) => {
 
         const dateStart = new Date(start_Date);
         JJ = ('0' + (dateStart.getDate())).slice(-2);
-        MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
+        MM = ('0' + (dateStart.getMonth() + 1)).slice(-2);
         AAAA = dateStart.getFullYear();
         const StartDate = await JJ + '/' + MM + '/' + AAAA;
 
 
         const dateEnd = new Date(end_Date);
         JJ = ('0' + (dateEnd.getDate())).slice(-2);
-        MM = ('0' + (dateEnd.getMonth()+1)).slice(-2);
+        MM = ('0' + (dateEnd.getMonth() + 1)).slice(-2);
         AAAA = dateEnd.getFullYear();
         const EndDate = await JJ + '/' + MM + '/' + AAAA;
 

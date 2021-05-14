@@ -151,45 +151,48 @@ exports.forecast_user = async (req, res, next) => {
     try {
 
         //si l'un des champs sont vide
-        if (date_start ==''||date_start ==''||format ==''||packs ==''||countries =='') {
+        if (date_start == '' || date_start == '' || format == '' || packs == '' || countries == '') {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
                 message: 'Les champs doivent être complétés'
-              }
-              return res.redirect('/utilisateur')
+            }
+            return res.redirect('/utilisateur')
         }
 
-          //date aujourd'hui en timestamp 
-          const date_now = Date.now();
-         
-          const timstasp_start = Date.parse(date_start)
-          
-          // si date aujourd'hui est >= à la date selectionné envoie une erreur
-          if(timstasp_start<=date_now){
+        //date aujourd'hui en timestamp 
+        const date_now = Date.now();
+
+        const timstasp_start = Date.parse(date_start)
+
+
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
+        if (timstasp_start <= date_now || timstasp_start >= timstasp_end) {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
                 message: 'La date de début doit être J+1 à la date du jour'
-              }
-              return res.redirect('/utilisateur')
-          }
-          const timstasp_end = Date.parse(date_end)
+            }
+            return res.redirect('/forecast')
+        }
+        const timstasp_end = Date.parse(date_end)
 
-            // si date aujourd'hui est >= à la date selectionné envoie une erreur
 
-          if(timstasp_end<=date_now){
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
+
+        if (timstasp_end <= date_now || timstasp_end <= timstasp_start) {
 
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
                 message: 'La date de fin doit être supérieur à la date du jour'
-              }
-              return res.redirect('/utilisateur')
-          }
+            }
+            return res.redirect('/forecast')
+        }
 
 
-          
+
+
 
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
@@ -206,14 +209,14 @@ exports.forecast_user = async (req, res, next) => {
 
         const dateStart = new Date(start_Date);
         JJ = ('0' + (dateStart.getDate())).slice(-2);
-        MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
+        MM = ('0' + (dateStart.getMonth() + 1)).slice(-2);
         AAAA = dateStart.getFullYear();
         const StartDate = await JJ + '/' + MM + '/' + AAAA;
 
 
         const dateEnd = new Date(end_Date);
         JJ = ('0' + (dateEnd.getDate())).slice(-2);
-        MM = ('0' + (dateEnd.getMonth()+1)).slice(-2);
+        MM = ('0' + (dateEnd.getMonth() + 1)).slice(-2);
         AAAA = dateEnd.getFullYear();
         const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
@@ -891,48 +894,48 @@ exports.epilot = async (req, res, next) => {
 
     try {
 
-        
-    var confirmer = await ModelCampaign_epilot.findAll({
-  
-        where: {
-          etat: 1
-        },
-        order: [
-          ['campaign_name', 'ASC']
-        ],
-      })
-  
-      var reserver = await ModelCampaign_epilot.findAll({
-  
-        where: {
-          etat: 2
-        },
-        order: [
-          ['campaign_name', 'ASC']
-        ],
-      })
-  
 
-      var formats = await ModelFormat.findAll({
-        attributes: ['format_group'],
-        group: "format_group",
-        where: {
-            format_group: {
-                [Op.not]: null
-            }
-        },
-        order: [
-            ['format_group', 'ASC']
-        ],
-    })
+        var confirmer = await ModelCampaign_epilot.findAll({
+
+            where: {
+                etat: 1
+            },
+            order: [
+                ['campaign_name', 'ASC']
+            ],
+        })
+
+        var reserver = await ModelCampaign_epilot.findAll({
+
+            where: {
+                etat: 2
+            },
+            order: [
+                ['campaign_name', 'ASC']
+            ],
+        })
 
 
-      var result_confirmer = Object.keys(confirmer).length;
-  
-      var result_reserver = Object.keys(reserver).length;
-  
-  
-      
+        var formats = await ModelFormat.findAll({
+            attributes: ['format_group'],
+            group: "format_group",
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
+
+
+        var result_confirmer = Object.keys(confirmer).length;
+
+        var result_reserver = Object.keys(reserver).length;
+
+
+
 
         res.render('forecast/form_epilot.ejs', {
             formats: formats,
@@ -1036,14 +1039,14 @@ exports.epilot_edit = async (req, res, next) => {
 
 
 
-      await  ModelCampaign_epilot.findOne({
+        await ModelCampaign_epilot.findOne({
             where: {
                 campaign_epilot_id: req.params.id
             }
-    
-        }).then( async function (campaign_epilot) {
-                
-      
+
+        }).then(async function (campaign_epilot) {
+
+
             var formats = await ModelFormat.findAll({
                 attributes: ['format_group'],
                 group: "format_group",
@@ -1056,22 +1059,22 @@ exports.epilot_edit = async (req, res, next) => {
                     ['format_group', 'ASC']
                 ],
             })
-    
 
 
 
-          res.render('forecast/form_edit_epilot.ejs', {
-            campaign_epilot: campaign_epilot,
-            formats
-        });
+
+            res.render('forecast/form_edit_epilot.ejs', {
+                campaign_epilot: campaign_epilot,
+                formats
+            });
         })
 
 
-  
-  
-      
 
-      
+
+
+
+
 
     } catch (error) {
         console.log(error)

@@ -208,8 +208,8 @@ exports.forcast = async (req, res) => {
 
     const timstasp_start = Date.parse(date_start)
 
-    // si date aujourd'hui est >= à la date selectionné envoie une erreur
-    if (timstasp_start <= date_now) {
+    // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
+    if (timstasp_start <= date_now || timstasp_start >=timstasp_end) {
       message = {
         type: 'danger',
         intro: 'Un problème est survenu',
@@ -222,9 +222,9 @@ exports.forcast = async (req, res) => {
     }
     const timstasp_end = Date.parse(date_end)
 
-    // si date aujourd'hui est >= à la date selectionné envoie une erreur
+    // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
 
-    if (timstasp_end <= date_now) {
+    if (timstasp_end <= date_now || timstasp_end <=timstasp_start ) {
 
       message = {
         type: 'danger',
@@ -555,7 +555,6 @@ exports.forcast = async (req, res) => {
           volumeDispo,
         }
 
-       console.log(table)
          
      
 
