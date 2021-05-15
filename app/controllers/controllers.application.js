@@ -71,7 +71,7 @@ exports.login_add = async (req, res) => {
       message = {
         type: 'danger',
         intro: 'Erreur',
-        message: 'Email ou mot passe est incorrect'
+        message: 'Saisissez votre email ou mot passe est incorrect'
       }
 
       return res.json({
@@ -119,7 +119,7 @@ exports.login_add = async (req, res) => {
           message = {
             type: 'danger',
             intro: 'Erreur',
-            message: 'Adresse email ou mot de passe invalide'
+            message: 'Email ou mot passe est incorrect'
           }
           return res.json({
             success: false,
@@ -132,7 +132,7 @@ exports.login_add = async (req, res) => {
         message = {
           type: 'danger',
           intro: 'Erreur',
-          message: 'Adresse email ou mot de passe invalide'
+          message: 'Email ou mot passe est incorrect'
         }
         return res.json({
           success: false,
@@ -168,7 +168,6 @@ exports.logout = async (req, res) => {
 
 exports.forcast = async (req, res) => {
   // Définition des variables
- // console.log(req.body)
 
   var headerlocation, table, requestForecast;
   var date_start = await req.body.date_start;
@@ -176,7 +175,6 @@ exports.forcast = async (req, res) => {
   var format = await req.body.format;
   var packs = await req.body.packs;
   var countries = await req.body.countries;
-
 
 
   const formatIdsArray = [];
@@ -191,7 +189,7 @@ exports.forcast = async (req, res) => {
     date_end = date_end + 'T23:59:00.000Z'
 
     //si l'un des champs sont vide
-    if (date_start == '' || date_start == '' || format == '' || packs == '' || countries == '') {
+    if (date_start == '' || date_start == '' || format == null || packs == null || countries == '') {
       message = {
         type: 'danger',
         intro: 'Un problème est survenu',
@@ -210,22 +208,9 @@ exports.forcast = async (req, res) => {
     const timstasp_end = Date.parse(date_end)
 
 
-    // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
-    if (timstasp_start <= date_now || timstasp_start >=timstasp_end) {
-      message = {
-        type: 'danger',
-        intro: 'Un problème est survenu',
-        message: 'La date de début doit être J+1 à la date du jour'
-      }
-      return res.json({
-        success: false,
-        message: message
-      })
-    }
-
     // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
 
-    if (timstasp_end <= date_now || timstasp_end <=timstasp_start ) {
+    if (date_now >= timstasp_end  || timstasp_start >= timstasp_end  ) {
 
       message = {
         type: 'danger',
@@ -238,7 +223,18 @@ exports.forcast = async (req, res) => {
       })
     }
 
-
+    // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
+    if (timstasp_start <= date_now || timstasp_start >= timstasp_end) {
+      message = {
+        type: 'danger',
+        intro: 'Un problème est survenu',
+        message: 'La date de début doit être supérieur à la date du jour'
+      }
+      return res.json({
+        success: false,
+        message: message
+      })
+    }
     const campaign_StartDate = await date_start;
     var startDate_split = await campaign_StartDate.split('T');
     const start_Date = await startDate_split[0]
@@ -250,14 +246,14 @@ exports.forcast = async (req, res) => {
 
     const dateStart = new Date(start_Date);
     JJ = ('0' + (dateStart.getDate())).slice(-2);
-    MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
+    MM = ('0' + (dateStart.getMonth() + 1)).slice(-2);
     AAAA = dateStart.getFullYear();
     const StartDate = await JJ + '/' + MM + '/' + AAAA;
 
 
     const dateEnd = new Date(end_Date);
     JJ = ('0' + (dateEnd.getDate())).slice(-2);
-    MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
+    MM = ('0' + (dateStart.getMonth() + 1)).slice(-2);
     AAAA = dateEnd.getFullYear();
     const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
@@ -545,7 +541,24 @@ exports.forcast = async (req, res) => {
 
         var volumeDispo = sommeImpressions - sommeOccupied;
 
-
+        //SEPARATEUR DE MILLIER universel 
+        function numStr(a, b) {
+          a = '' + a;
+          b = b || ' ';
+          var c = '',
+            d = 0;
+          while (a.match(/^0[0-9]/)) {
+            a = a.substr(1);
+          }
+          for (var i = a.length - 1; i >= 0; i--) {
+            c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
+            d++;
+          }
+          return c;
+        }
+        sommeImpressions = numStr(sommeImpressions);
+        sommeOccupied = numStr(sommeOccupied);
+        volumeDispo = numStr(volumeDispo);
 
         var table = {
           StartDate,
@@ -556,12 +569,12 @@ exports.forcast = async (req, res) => {
           volumeDispo,
         }
 
-         
-     
+
+
 
         return res.json({
           table: table,
-          
+
           success: true,
         });
 
