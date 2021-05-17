@@ -84,6 +84,14 @@ exports.list = async (req, res) => {
 }
 
 exports.view = async (req, res) => {
+    if (req.session.user.role == 1) {
+        console.log('Administrateur',req.session.user)
+
+    } else {
+        console.log('Visiteur')
+
+    }
+
     try {
         const data = new Object();
         data.breadcrumb = "Campagnes";
@@ -126,6 +134,45 @@ exports.view = async (req, res) => {
             });
 
         console.log(campaign);
+
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
+}
+
+exports.create = async (req, res) => {
+    try {
+        const data = new Object();
+        data.breadcrumb = "Ajouter une campagne";
+        
+        // Récupére l'ensemble des annonceurs
+        var advertisers = await ModelAdvertisers.findAll(            
+            {
+                order: [
+                    // Will escape title and validate DESC against a list of valid direction
+                    // parameters
+                    ['advertiser_name', 'ASC']
+                ]
+            }
+        ).then(async function (advertisers) {
+            data.advertisers = advertisers;
+        });
+
+        res.render('manager/campaigns/create.ejs', data);
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
+}
+
+
+
+exports.create_post = async (req, res) => {
+    try {
+      console.log(req.body);
 
     } catch (error) {
         console.log(error);
