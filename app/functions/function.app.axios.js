@@ -1,5 +1,6 @@
 const axios = require(`axios`);
 const dbApi = require("../config/config.api");
+const Utilities = require('../functions/functions.utilities');
 
 exports.getForecastData = async (method, urlForecast, data = null) => {
     var test;
@@ -43,7 +44,7 @@ exports.getForecastData = async (method, urlForecast, data = null) => {
  */
 
 exports.dataFormatingForForecast = async (dataArrayFromReq, StartDate, EndDate, format) => {
-  
+
 
     var TotalImpressions = []
     var OccupiedImpressions = []
@@ -85,24 +86,10 @@ exports.dataFormatingForForecast = async (dataArrayFromReq, StartDate, EndDate, 
     var volumeDispo = sommeImpressions - sommeOccupied;
 
     //SEPARATEUR DE MILLIER universel 
-    function numStr(a, b) {
-        a = '' + a;
-        b = b || ' ';
-        var c = '',
-            d = 0;
-        while (a.match(/^0[0-9]/)) {
-            a = a.substr(1);
-        }
-        for (var i = a.length - 1; i >= 0; i--) {
-            c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
-            d++;
-        }
-        return c;
-    }
-    sommeImpressions = numStr(sommeImpressions);
-    sommeOccupied = numStr(sommeOccupied);
-    volumeDispo = numStr(volumeDispo);
-   
+    sommeImpressions = Utilities.numStr(sommeImpressions);
+    sommeOccupied = Utilities.numStr(sommeOccupied);
+    volumeDispo = Utilities.numStr(volumeDispo);
+
 
 
     var tableData = {
