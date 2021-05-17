@@ -151,13 +151,13 @@ exports.forecast_user = async (req, res, next) => {
     try {
 
         //si l'un des champs sont vide
-        if (date_start ==''||date_start ==''||format ==''||packs ==''||countries =='') {
+        if (date_start == '' || date_start == '' || format == '' || packs == '' || countries == '') {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
                 message: 'Les champs doivent être complétés'
-              }
-              return res.redirect('/utilisateur')
+            }
+            return res.redirect('/utilisateur')
         }
 
           //date aujourd'hui en timestamp 
@@ -176,7 +176,6 @@ exports.forecast_user = async (req, res, next) => {
               return res.redirect('/utilisateur')
           }
 
-            // si date aujourd'hui est >= à la date selectionné envoie une erreur
 
           if(timstasp_end<=date_now || timstasp_end <= timstasp_start){
 
@@ -184,12 +183,13 @@ exports.forecast_user = async (req, res, next) => {
                 type: 'danger',
                 intro: 'Un problème est survenu',
                 message: 'La date de fin doit être supérieur à la date du jour'
-              }
-              return res.redirect('/utilisateur')
-          }
+            }
+            return res.redirect('/forecast')
+        }
 
 
-          
+
+
 
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
@@ -927,12 +927,6 @@ exports.epilot = async (req, res, next) => {
     })
 
 
-      var result_confirmer = Object.keys(confirmer).length;
-  
-      var result_reserver = Object.keys(reserver).length;
-  
-  
-      
 
         res.render('forecast/form_epilot.ejs', {
             formats: formats,
@@ -1036,7 +1030,7 @@ exports.epilot_edit = async (req, res, next) => {
 
 
 
-      await  ModelCampaign_epilot.findOne({
+        await ModelCampaign_epilot.findOne({
             where: {
                 campaign_epilot_id: req.params.id
             }
@@ -1056,22 +1050,22 @@ exports.epilot_edit = async (req, res, next) => {
                     ['format_group', 'ASC']
                 ],
             })
-    
 
 
 
-          res.render('forecast/form_edit_epilot.ejs', {
-            campaign_epilot: campaign_epilot,
-            formats
-        });
+
+            res.render('forecast/form_edit_epilot.ejs', {
+                campaign_epilot: campaign_epilot,
+                formats
+            });
         })
 
 
-  
-  
-      
 
-      
+
+
+
+
 
     } catch (error) {
         console.log(error)

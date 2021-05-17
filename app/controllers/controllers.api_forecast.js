@@ -157,19 +157,20 @@ exports.forecast = async (req, res, next) => {
         const timstasp_start = Date.parse(date_start)
         const timstasp_end = Date.parse(date_end)
 
-        // si date aujourd'hui est >= à la date selectionné envoie une erreur
-        if(timstasp_start<=date_now ||timstasp_start>=timstasp_end){
-          req.session.message = {
-              type: 'danger',
-              intro: 'Un problème est survenu',
-              message: 'La date de début doit être J+1 à la date du jour'
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
+        if (timstasp_start <= date_now || timstasp_start >= timstasp_end) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'La date de début doit être J+1 à la date du jour'
             }
             return res.redirect('/forecast')
         }
 
-          // si date aujourd'hui est >= à la date selectionné envoie une erreur
 
-        if(timstasp_end<=date_now || timstasp_end <= timstasp_start){
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
+
+        if (timstasp_end <= date_now || timstasp_end <= timstasp_start) {
 
           req.session.message = {
               type: 'danger',
@@ -194,6 +195,11 @@ exports.forecast = async (req, res, next) => {
       var endDate_split = await campaign_EndDate.split('T');
       const end_Date = await endDate_split[0]
 
+        const dateStart = new Date(start_Date);
+        JJ = ('0' + (dateStart.getDate())).slice(-2);
+        MM = ('0' + (dateStart.getMonth() + 1)).slice(-2);
+        AAAA = dateStart.getFullYear();
+        const StartDate = await JJ + '/' + MM + '/' + AAAA;
 
       const dateStart = new Date(start_Date);
       JJ = ('0' + (dateStart.getDate())).slice(-2);
@@ -201,6 +207,11 @@ exports.forecast = async (req, res, next) => {
       AAAA = dateStart.getFullYear();
       const StartDate = await JJ + '/' + MM + '/' + AAAA;
 
+        const dateEnd = new Date(end_Date);
+        JJ = ('0' + (dateEnd.getDate())).slice(-2);
+        MM = ('0' + (dateEnd.getMonth() + 1)).slice(-2);
+        AAAA = dateEnd.getFullYear();
+        const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
       const dateEnd = new Date(end_Date);
       JJ = ('0' + (dateEnd.getDate())).slice(-2);
