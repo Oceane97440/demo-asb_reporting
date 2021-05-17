@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Formats = sequelize.define('_asb_formats', {
+const Formats = sequelize.define('formats', {
     format_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

@@ -1,0 +1,41 @@
+<table class="table table-striped table_sort">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Campagne</th>
+            <th>Nom</th>
+            <th class="d-none">Date de début</th>
+            <th class="d-none">Date de fin</th>
+            <th>Priorité</th>
+            <th>Format</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let i=0; i < insertions.length; i++) { %>           
+            <tr>
+                <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_id %></a></td> 
+                <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>" title="<%= insertions[i].campaign.campaign_name %>"><%= insertions[i].campaign.campaign_name %></a></td> 
+                <td>
+                    <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_name %></a>
+                    <br />
+                    <span class="small"><%= moment(insertions[i].insertion_start_date).format('DD/MM/YYYY') %></span> - 
+                    <span class="small"><%= insertions[i].insertion_end_date %></span>
+                </td> 
+                <td class="d-none"><%= insertions[i].insertion_start_date %></td>
+                <td class="d-none"><%= insertions[i].insertion_end_date %></td>
+                <td><%= insertions[i].priority_id %></td>
+                <td><%= insertions[i].format_id %></td>
+                <td><%= insertions[i].insertion_status_id %></td>
+                <td>
+                    
+                   <a href="https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%= insertions[i].insertion_id %>" target="_blank" title="Accéder à l'insertion sur SMARTADSERVER"><img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER" /></a>
+                   &nbsp; <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>/edit" title="Modifier cette campagne"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                
+
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>

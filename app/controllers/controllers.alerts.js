@@ -3,23 +3,16 @@ const https = require('https');
 const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
-const {
-    Op
-} = require("sequelize");
+const {Op} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {
-    QueryTypes
-} = require('sequelize');
+const {QueryTypes} = require('sequelize');
 
-const {
-    check,
-    query
-} = require('express-validator');
+const {check, query} = require('express-validator');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -28,7 +21,7 @@ const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
-const ModelFormats = require("../models/__models.formats");
+const ModelFormats = require("../models/models.formats");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelSites = require("../models/models.sites");
@@ -43,19 +36,13 @@ const ModelGroupsFormatsTypes = require(
 const ModelFormatsTemplates = require("../models/models.formats_templates")
 const ModelGroupsFormats = require("../models/models.groups_formats");
 const ModelInsertions = require("../models/models.insertions");
-const ModelInsertionsTemplates = require("../models/models.insertionstemplates");
+const ModelInsertionsTemplates = require(
+    "../models/models.insertionstemplates"
+);
 const ModelCreatives = require("../models/models.creatives");
 
-
-
-const {
-    resolve
-} = require('path');
-const {
-    cpuUsage
-} = require('process');
-
-
+const {resolve} = require('path');
+const {cpuUsage} = require('process');
 
 exports.alerts = async (req, res) => {
 
@@ -66,13 +53,27 @@ exports.alerts = async (req, res) => {
         const url = 'https://cdn.antennepublicite.re';
         const extention = 'mp4|gif|jpeg|png|html';
 
-
         const creatives = await sequelize.query(
-            'SELECT creatives.creative_id, creatives.creative_name, creatives.insertion_id, creatives.creative_url, creatives.creative_mime_type, creatives.creatives_activated, creatives.creatives_archived,campaigns.campaign_id ,campaigns.campaign_name ,campaigns.campaign_archived , advertisers.advertiser_name, campaigns.advertiser_id FROM asb_creatives AS creatives INNER JOIN asb_insertions AS insertion ON creatives.insertion_id = insertion.insertion_id AND insertion.insertion_archived = 0 AND insertion.insertion_end_date >= ? INNER JOIN asb_campaigns AS campaigns ON campaigns.campaign_id = insertion.campaign_id INNER JOIN asb_advertisers AS advertisers ON advertisers.advertiser_id = campaigns.advertiser_id  WHERE (creatives.creative_url NOT REGEXP ? OR creatives.creative_mime_type NOT REGEXP ?) AND creatives.creatives_activated = 1 AND creatives.creatives_archived = 0 AND campaigns.campaign_archived = 0 AND advertisers.advertiser_id  NOT IN (409707,320778)', {
-                replacements: [NOW, url, extention],
+            'SELECT creatives.creative_id, creatives.creative_name, creatives.insertion_id,' +
+                    ' creatives.creative_url, creatives.creative_mime_type, creatives.creatives_act' +
+                    'ivated, creatives.creatives_archived,campaigns.campaign_id ,campaigns.campaign' +
+                    '_name ,campaigns.campaign_archived , advertisers.advertiser_name, campaigns.ad' +
+                    'vertiser_id FROM asb_creatives AS creatives INNER JOIN asb_insertions AS inser' +
+                    'tion ON creatives.insertion_id = insertion.insertion_id AND insertion.insertio' +
+                    'n_archived = 0 AND insertion.insertion_end_date >= ? INNER JOIN asb_campaigns ' +
+                    'AS campaigns ON campaigns.campaign_id = insertion.campaign_id INNER JOIN asb_a' +
+                    'dvertisers AS advertisers ON advertisers.advertiser_id = campaigns.advertiser_' +
+                    'id  WHERE (creatives.creative_url NOT REGEXP ? OR creatives.creative_mime_type' +
+                    ' NOT REGEXP ?) AND creatives.creatives_activated = 1 AND creatives.creatives_a' +
+                    'rchived = 0 AND campaigns.campaign_archived = 0 AND advertisers.advertiser_id ' +
+                    ' NOT IN (409707,320778)',
+            {
+                replacements: [
+                    NOW, url, extention
+                ],
                 type: QueryTypes.SELECT
-            });
-
+            }
+        );
 
         //La campagne est programmée mais pas en ligne
 
@@ -83,34 +84,47 @@ exports.alerts = async (req, res) => {
                 insertion_archived: 0,
                 insertion_status_id: 0,
                 insertion_start_date: {
-                    [Op.gt]: NOW,
-                },
+                    [Op.gt]: NOW
+                }
             },
 
-            include: [{
-                model: ModelCampaigns,
+            include: [
+                {
+                    model: ModelCampaigns,
 
-                include: [{
-                    model: ModelAdvertisers,
-
-                }]
-            }],
-
-
-
-
-
+                    include: [
+                        {
+                            model: ModelAdvertisers
+                        }
+                    ]
+                }
+            ]
         });
 
-
-
-        //Template (erreur ou oubli) : Vérifier que le template corresponde au format sur lequel il est diffusé
+        // Template (erreur ou oubli) : Vérifier que le template corresponde au format
+        // sur lequel il est diffusé
 
         const insertionsOnline = await sequelize.query(
-            'SELECT asb_insertions.insertion_id, insertion_name, insertion_status_id,insertion_start_date,insertion_end_date,asb_insertions.format_id,asb_formats.format_id,format_name,asb_insertionstemplates.insertion_id,asb_insertionstemplates.template_id,asb_templates.template_name,asb_templates.template_official,asb_templates.template_archived,asb_templates.template_updated_at, asb_templates.template_description, asb_formats_templates.format_id,asb_formats_templates.template_id , asb_insertions.campaign_id , asb_campaigns.campaign_name   FROM `asb_insertions`,asb_insertionstemplates, asb_formats, asb_templates, asb_formats_templates , asb_campaigns  WHERE `insertion_archived` = "0" AND insertion_status_id = "1" AND insertion_end_date >= ?  AND asb_insertions.insertion_id = asb_insertionstemplates.insertion_id   AND asb_templates.template_id = asb_insertionstemplates.template_id  AND asb_insertions.format_id = asb_formats.format_id AND asb_formats_templates.format_id = asb_insertions.format_id AND asb_formats_templates.template_id=  asb_insertionstemplates.template_id AND asb_insertions.campaign_id=  asb_campaigns.campaign_id', {
+            'SELECT asb_insertions.insertion_id, insertion_name, insertion_status_id,insert' +
+                    'ion_start_date,insertion_end_date,asb_insertions.format_id,asb_formats.format_' +
+                    'id,format_name,asb_insertionstemplates.insertion_id,asb_insertionstemplates.te' +
+                    'mplate_id,asb_templates.template_name,asb_templates.template_official,asb_temp' +
+                    'lates.template_archived,asb_templates.template_updated_at, asb_templates.templ' +
+                    'ate_description, asb_formats_templates.format_id,asb_formats_templates.templat' +
+                    'e_id , asb_insertions.campaign_id , asb_campaigns.campaign_name   FROM `asb_in' +
+                    'sertions`,asb_insertionstemplates, asb_formats, asb_templates, asb_formats_tem' +
+                    'plates , asb_campaigns  WHERE `insertion_archived` = "0" AND insertion_status_' +
+                    'id = "1" AND insertion_end_date >= ?  AND asb_insertions.insertion_id = asb_in' +
+                    'sertionstemplates.insertion_id   AND asb_templates.template_id = asb_insertion' +
+                    'stemplates.template_id  AND asb_insertions.format_id = asb_formats.format_id A' +
+                    'ND asb_formats_templates.format_id = asb_insertions.format_id AND asb_formats_' +
+                    'templates.template_id=  asb_insertionstemplates.template_id AND asb_insertions' +
+                    '.campaign_id=  asb_campaigns.campaign_id',
+            {
                 replacements: [NOW],
                 type: QueryTypes.SELECT
-            });
+            }
+        );
 
         const number_insertionsOnline = insertionsOnline.length;
 
@@ -128,8 +142,6 @@ exports.alerts = async (req, res) => {
             obj["format_name"] = insertionsOnline[i].format_name;
             obj["template_id"] = insertionsOnline[i].template_id;
             obj["template_name"] = insertionsOnline[i].template_name;
-
-
 
             const insertiontemplate = await ModelFormatsTemplates.findOne({
 
@@ -149,9 +161,6 @@ exports.alerts = async (req, res) => {
 
         }
 
-
-
-
         //Template "Advanced Banner" verif du champs maxWidth = 100%
         const AdvancedBanner = await ModelInsertionsTemplates.findAll({
 
@@ -159,31 +168,25 @@ exports.alerts = async (req, res) => {
                 template_id: 89074,
                 parameter_value: {
                     [Op.notRegexp]: 'maxWidth=100%'
-                },
-
+                }
             },
 
-            include: [{
-                model: ModelInsertions,
-                where: {
-                    insertion_archived: 0,
-                    insertion_status_id: 1,
-                    insertion_start_date: {
-                        [Op.gt]: NOW
-                    },
+            include: [
+                {
+                    model: ModelInsertions,
+                    where: {
+                        insertion_archived: 0,
+                        insertion_status_id: 1,
+                        insertion_start_date: {
+                            [Op.gt]: NOW
+                        }
+                    }
+
                 }
-
-
-            }],
-
-
-
-
-
+            ]
         });
 
         console.log(AdvancedBanner)
-
 
         res.render("manage/alerts.ejs", {
 
@@ -191,9 +194,7 @@ exports.alerts = async (req, res) => {
             insertions: insertions,
             formatstemplates: obj_TemplateFormat
 
-
         })
-
 
         /*
                 obj["campagne_id"] = 1850219
@@ -215,14 +216,6 @@ exports.alerts = async (req, res) => {
                 obj["template_name"] = "Default Banner"
 
         */
-
-
-
-
-
-
-
-
 
     } catch (error) {
         console.error('Error : ', error);

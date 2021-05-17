@@ -1,0 +1,84 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h1><%= advertiser.advertiser_name %></h1>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 col-sm-12">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <span class="labelname">
+                                    <i class="material-icons-two-tone">info</i>
+                                    ID</span>:
+                                <a
+                                    href="/manager/advertisers/<%= advertiser.advertiser_id %>"
+                                    title="<%= advertiser.advertiser_name %>"><%= advertiser.advertiser_id %></a>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="labelname">
+                                    <i class="material-icons-two-tone">archive</i>
+                                    Archive</span>:
+                                <% switch(advertiser.advertiser_archived) { case 0: %>
+                                    <span class="badge bg-warning">Archiv&eacute;</span>
+                                    <% break; default: %>
+                                        -
+                                        <% break; }  %>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="labelname">
+                                                <i class="material-icons-two-tone">content_paste</i>
+                                                Campagnes diffusées</span>:
+                                            <%= campaigns.length %></li>
+                                    </ul>
+
+                                    <hr/>
+
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <span class="labelname">
+                                                <i class="material-icons-two-tone">history</i>
+                                                Dernière mise à jour</span>:
+                                            <%= moment(advertiser.updated_at).format('DD/MM/YYYY'); %></li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12">
+
+                                    <div class="d-grid gap-2">
+                                        <a
+                                            href="https://manage.smartadserver.com/gestion/smartprog2.asp?AnnonceurID=<%= advertiser.advertiser_id %>"
+                                            target="_blank"
+                                            class="btn btn-warning"
+                                            title="Voir sur SMARTADSERVER">
+                                            <i class="material-icons-two-tone">send</i>
+                                            Accéder à SMARTADSERVER</a>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Campagnes</h3>
+                        </div>
+                        <div class="card-body">
+                            <% if(campaigns) { %>
+                                <%- include("../inc/table_campaigns.ejs") -%>
+                                <% } else { %>
+                                    <div class="alert alert-warning" role="alert">
+                                        Aucune campagne.
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <%- include("../../layouts/manager/footer.ejs") -%>

@@ -4,6 +4,7 @@ const dbApi = require("../config/config.api");
 const request = require('request');
 // Initialise le module
 const bodyParser = require('body-parser');
+const Utilities = require('../functions/functions.utilities');
 
 //let csvToJson = require('convert-csv-to-json');
 const bcrypt = require('bcrypt');
@@ -556,9 +557,11 @@ exports.forcast = async (req, res) => {
           }
           return c;
         }
-        sommeImpressions = numStr(sommeImpressions);
-        sommeOccupied = numStr(sommeOccupied);
-        volumeDispo = numStr(volumeDispo);
+       
+        sommeImpressions = Utilities.numStr(sommeImpressions);
+        sommeOccupied = Utilities.numStr(sommeOccupied);
+        volumeDispo = Utilities.numStr(volumeDispo);
+
 
         var table = {
           StartDate,

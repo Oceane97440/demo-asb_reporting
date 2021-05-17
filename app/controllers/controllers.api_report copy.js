@@ -30,7 +30,7 @@ const {
 const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models
-const ModelAdvertiser = require("../models/models.advertisers");
+const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 
 exports.test = async (req, res) => {
@@ -86,7 +86,7 @@ exports.generate = async (req, res) => {
 
     },
     include: [{
-      model: ModelAdvertiser
+      model: ModelAdvertisers
     }],
 
   }).then(async function (campaign)  {
@@ -145,7 +145,7 @@ exports.report = async (req, res) => {
 
     },
     include: [{
-      model: ModelAdvertiser
+      model: ModelAdvertisers
     }],
 
   }).then(async function (campaign) {
