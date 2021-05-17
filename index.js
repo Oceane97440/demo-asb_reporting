@@ -9,30 +9,29 @@ var fileUpload = require('express-fileupload');
 
 const db = require("./app/config/_config.database");
 
-const campaings_epilot = require('./app/models/models.campaings_epilot');
-const countries = require('./app/models/models.countries')
-const sites = require('./app/models/models.sites')
-const packs = require('./app/models/models.packs')
-const packs_sites = require('./app/models/models.packs_sites')
-const users = require('./app/models/models.users')
-const roles = require('./app/models/models.roles')
-const users_roles = require('./app/models/models.users_roles')
-const campaigns = require('./app/models/models.campaigns')
-const advertisers = require('./app/models/models.advertisers')
-const agencies = require('./app/models/models.agencies')
-const formats = require('./app/models/models.formats')
-const formats_all = require('./app/models/__models.formats')
+const campaings_epilot = require('./app/models/models.campaings_epilot');;
+const countries = require('./app/models/models.countries');
+const sites = require('./app/models/models.sites');
+const packs = require('./app/models/models.packs');
+const packs_sites = require('./app/models/models.packs_sites');
+const users = require('./app/models/models.users');
+const roles = require('./app/models/models.roles');
+const users_roles = require('./app/models/models.users_roles');
+const campaigns = require('./app/models/models.campaigns');
+const advertisers = require('./app/models/models.advertisers');
+const agencies = require('./app/models/models.agencies');
+const formats = require('./app/models/models.formats');
 
-const groups_formats = require('./app/models/models.groups_formats')
+const groups_formats = require('./app/models/models.groups_formats');
 const groups_formats_types = require(
     './app/models/models.formats_groups_types'
 )
 const formatstemplates = require("./app/models/models.formats_templates")
-const insertions = require('./app/models/models.insertions')
-const templates = require('./app/models/models.templates')
-const insertions_templates = require('./app/models/models.insertionstemplates')
-const creatives = require('./app/models/models.creatives')
-const insertionstatus = require('./app/models/models.insertionstatus')
+const insertions = require('./app/models/models.insertions');
+const templates = require('./app/models/models.templates');
+const insertions_templates = require('./app/models/models.insertionstemplates');
+const creatives = require('./app/models/models.creatives');
+const insertionstatus = require('./app/models/models.insertionstatus');
 
 /* Mettre les relation ici */
 /*sites.belongsTo(countries);
@@ -92,6 +91,7 @@ campaigns.belongsTo(advertisers, {
     onDelete: 'cascade',
     hooks: true
 }); // la campagne à un format.
+
 advertisers.hasMany(campaigns, {
     foreignKey: 'advertiser_id',
     onDelete: 'cascade',
@@ -100,7 +100,7 @@ advertisers.hasMany(campaigns, {
 
 insertions.belongsTo(campaigns, {
     foreignKey: 'campaign_id',
-    onDelete: 'cascade',
+   onDelete: 'cascade',
     hooks: true
 }); // la campagne à un format.
 campaigns.hasMany(insertions, {
@@ -109,12 +109,12 @@ campaigns.hasMany(insertions, {
     hooks: true
 });
 
-insertions.belongsTo(formats_all, {
+insertions.belongsTo(formats, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true
 }); // la campagne à un format.
-formats_all.hasMany(insertions, {
+formats.hasMany(insertions, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true
@@ -211,17 +211,20 @@ app.get('/*', function (req, res, next) {
 app.post('/*', function (req, res, next) {
     res.locals.user = {}
     // nom de l'utilisateur connecté (dans le menu) accessible pour toutes les vues
-
     if (req.session.user) {
-
         res.locals.user.email = req.session.user.email;
         res.locals.user.role = req.session.user.role;
-
         //console.log(res.locals.user.email)
     }
-
     next();
 });
+
+//flash message middleware
+app.use((req, res, next) => {
+    res.locals.message = req.session.message
+    delete req.session.message
+    next()
+})
 
 app.post('/uploads', function (req) {
     console.log(req.files.file_csv.name); //requette.files.nom du file
@@ -269,18 +272,19 @@ const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
 
 // Crée des alerting
-const alert = require('./app/routes/routes.alerts');
-app.use('/alerts', alert);
+const alerts = require('./app/routes/routes.alerts');
+app.use('/alerts', alerts);
 
 const tests = require('./app/routes/routes.tests');
 app.use('/test', tests);
 
+const application = require('./app/routes/routes.application');
+app.use('/app', application);
+
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3600);
+app.set("port", process.env.PORT || 3670);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);
 });
-// app.listen(3000, function () {  console.log(`Server running at
-// http://${hostname}:${port}/`); });

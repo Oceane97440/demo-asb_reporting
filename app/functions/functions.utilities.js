@@ -33,8 +33,6 @@ exports.updateOrCreate = async function (model, where, newItem) {
     return {item, created: false};
 }
 
-
-
 exports.getDateTimezone = function (unixTimeStamp) {
     let date = new Date(unixTimeStamp);
     return (date.getFullYear() + '-' + (
@@ -50,7 +48,6 @@ exports.getDateTimezone = function (unixTimeStamp) {
     ).slice(-2) + ':00')
 }
 
-
 exports.getDateTimeTimestamp = function (refrechTimeStamp) {
     let dates = new Date(refrechTimeStamp);
     return ('0' + dates.getDate()).slice(-2) + '/' + (
@@ -64,12 +61,7 @@ exports.getDateTimeTimestamp = function (refrechTimeStamp) {
     ).slice(-2);
 }
 
-
-
-
-
-
-//SEPARATEUR DE MILLIER universel
+// Séparateur de millier universel
 exports.numStr = function (a, b) {
     a = '' + a;
     b = b || ' ';
@@ -87,8 +79,7 @@ exports.numStr = function (a, b) {
     return c;
 }
 
-
- //Convertie les Timestamp campagne startdate et enddate / date du jour
+// Convertie les Timestamp campagne startdate et enddate / date du jour
  exports.getDateTimeFromTimestamp = function (unixTimeStamp) {
     let date = new Date(unixTimeStamp);
     return ('0' + date.getDate()).slice(-2) + '/' + (
@@ -97,4 +88,3 @@ exports.numStr = function (a, b) {
         )
     ).slice(-2) + '/' + date.getFullYear();
 }
-

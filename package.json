@@ -25,6 +25,7 @@
     "@fast-csv/parse": "^4.3.6",
     "async": "^3.2.0",
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.5",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
@@ -39,11 +40,11 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
     "node-cache": "^5.1.2",
-    "node-excel-export": "^1.4.4",
     "node-localstorage": "^2.1.6",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
     "request": "^2.88.2",
-    "sequelize": "^5.21.13"
+    "sequelize": "^5.21.13",
+    "validator": "^13.6.0"
   }
 }

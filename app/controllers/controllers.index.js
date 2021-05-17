@@ -6,7 +6,8 @@ const request = require('request');
 const bodyParser = require('body-parser');
 
 //let csvToJson = require('convert-csv-to-json');
-
+const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const axios = require(`axios`);
 
@@ -39,24 +40,16 @@ const {
 } = require('express-validator');
 
 
-
-// Charge l'ensemble des functions de l'API
-//const AxiosFunction = require('../functions/functions.axios');
-
-// Initialise les models
-//const ModelSite = require("../models/models.site");
-//const ModelFormat = require("../models/models.format");
-//const ModelCountry = require("../models/models.country")
-//const ModelCampaign_epilot = require("../models/models.campaing_epilot")
-//const ModelPack = require("../models/models.pack")
-//const ModelPack_Site = require("../models/models.pack_site")
 const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
 const ModelUser_Role = require("../models/models.users_roles")
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
+
 
 exports.home_page = async (req, res) => {
 
-  if (req.session.user.role === 1){
+  if (req.session.user.role === 1) {
 
     res.send("Home page")
 
@@ -67,28 +60,28 @@ exports.signup = async (req, res) => {
 
 
   try {
-      var roles = await ModelRole.findAll({
-          where: {
-              role_id: [2, 3]
-          },
-          attributes: ['role_id', 'label'],
-          order: [
-              ['role_id', 'ASC']
-          ],
-      })
+    var roles = await ModelRole.findAll({
+      where: {
+        role_id: [2, 3]
+      },
+      attributes: ['role_id', 'label'],
+      order: [
+        ['role_id', 'ASC']
+      ],
+    })
 
 
 
 
-      res.render('users/signup.ejs', {
-          roles: roles
-      });
+    res.render('users/signup.ejs', {
+      roles: roles
+    });
 
 
   } catch (err) {
-      res.status(500).json({
-          'error': 'cannot fetch country'
-      });
+    res.status(500).json({
+      'error': 'cannot fetch country'
+    });
   }
 
 }
@@ -97,37 +90,99 @@ exports.signup_add = async (req, res) => {
   const email = req.body.email;
   const password = req.body.mdp;
   const role = req.body.role;
+
   try {
+    /**verifier si les champs ne son pas vide*/
+    if (email === '' || password === '' || role === '') {
+
+      req.session.message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Les champs ne doivents pas être vide'
+      }
+      return res.redirect('/signup')
+      // return res.render('users/signup.ejs')
+    }
+
+    /**verifie si email est valide avec le regex*/
+    if (!EMAIL_REGEX.test(email)) {
+      req.session.message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Email invalide'
+      }
+      return res.redirect('/signup')
+    }
+    /**verifie si le password contien entre min 4 et max 8 caratère + un number*/
+    if (!PASSWORD_REGEX.test(password)) {
+      req.session.message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Le mot de passe doit être compris entre 4 et 12 caratères avec 1 chiffre et un caratère spécial'
+      }
+      return res.redirect('/signup')
+   
+
+    }
+
+    /**search si email exsite déjà dans le bdd*/
+
+    await ModelUser.findOne({
+      attributes: ['email'],
+      where: {
+        email: email
+      }
+    }).then(async function (userFound) {
 
 
+      if (!userFound) {
 
 
-      const user = await ModelUser.create({
-          email,
-          password,
-          role,
+        //validator + bycrypt
+        const hashedPwd = await bcrypt.hash(password, 12);
 
-      })
-      //console.log(user.id)
+        const user = await ModelUser.create({
+
+          email: validator.normalizeEmail(email),
+          password: hashedPwd,
+          role
+        })
 
 
-      const user_role = ModelUser_Role.create({
+        await ModelUser_Role.create({
           role_id: role,
           user_id: user.id
-      })
-      //  console.log(user_role)
+        })
 
-      res.redirect('/login')
+      
+
+        res.redirect('/login')
+
+      } else {
+
+        req.session.message = {
+          type: 'danger',
+          intro: 'Erreur',
+          message: 'Email est déjà utilisé'
+        }
+        return res.redirect('/signup')
+      }
+
+    })
 
 
 
-  } catch (error) { 
+
+
+
+
+  } catch (error) {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-     
+    res.render("error.ejs", {
+      statusCoded: statusCoded,
+
     })
   }
 
@@ -147,46 +202,89 @@ exports.login_add = async (req, res) => {
   const email = req.body.email;
   const password = req.body.mdp;
 
-  if (!email || !password) {
 
+
+
+  try {
+
+    /**verifie si les donnée son correcte et non null */
+    if (email == '' || password == '') {
+      req.session.message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Email ou mot passe est incorrect'
+      }
       return res.redirect('/login')
+    }
 
-  } else {
-      try {
+    /**verifie si le email est présent dans la base*/
+    ModelUser.findOne({
+      where: {
+        email: email
+      }
+    }).then(async function (user) {
 
-          let user = await ModelUser.findOne({
 
-              where: {
 
-                  email: email,
-                  password: password
-              }
+      //si email trouvé
+      if (user) {
 
-          })
-          // console.log(user)
+        /**on verifie si l'utilisateur à utiliser le bon mot de passe avec bycrypt*/
+
+        const isEqual = await bcrypt.compare(password, user.password);
+
+        //Si le mot de passe correpond au caratère hashé
+        if (isEqual) {
+
           if (user.email !== email && user.password !== password) {
 
-              res.redirect('/login')
+            res.redirect('/login')
           } else {
-              req.session.user = user
-               // use session for user connected
-               //console.log(req.session.user.role)
-               
-              if (req.session.user.role === 1){
-                return res.redirect('/home_page')
+            // use session for user connected
+            req.session.user = user
 
-              }
-              if (req.session.user.role === 2 || req.session.user.role === 3){
-                return res.redirect('/utilisateur')
 
-              }
+            if (req.session.user.role === 1) {
+              return res.redirect('/home_page')
+
+            }
+            if (req.session.user.role === 2 || req.session.user.role === 3) {
+              return res.redirect('/utilisateur')
+
+            }
           }
-      } catch (error) { 
-        console.log(error)
 
-          res.redirect('/login')
+        } else {
+          req.session.message = {
+            type: 'danger',
+            intro: 'Erreur',
+            message: 'Adresse email ou mot de passe invalide"'
+          }
+          return res.redirect('/login')
+        }
+
+      } else {
+        req.session.message = {
+          type: 'danger',
+          intro: 'Erreur',
+          message: 'Adresse email ou mot de passe invalide"'
+        }
+        return res.redirect('/login')
+
       }
+
+
+
+    })
+
+
+
+  } catch (error) {
+    console.log(error)
+
+    res.redirect('/login')
   }
+
 }
 
 exports.logout = async (req, res) => {
@@ -203,21 +301,21 @@ exports.index = async (req, res) => {
   try {
 
 
-    if (req.session.user.role === 1){
+    if (req.session.user.role === 1) {
       res.render('home-page.ejs');
     }
 
-   
 
 
 
-  } catch (error) { 
+
+  } catch (error) {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-     
+    res.render("error.ejs", {
+      statusCoded: statusCoded,
+
     })
   }
 

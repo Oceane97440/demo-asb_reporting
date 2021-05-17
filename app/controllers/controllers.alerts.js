@@ -21,7 +21,7 @@ const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
-const ModelFormats = require("../models/__models.formats");
+const ModelFormats = require("../models/models.formats");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelSites = require("../models/models.sites");
@@ -134,7 +134,6 @@ exports.alerts = async (req, res) => {
 
             const obj = {};
 
-            obj["campagne_id"] = insertionsOnline[i].campaign_id;
             obj["campagne_id"] = insertionsOnline[i].campaign_id;
             obj["campagne_name"] = insertionsOnline[i].campaign_name;
             obj["insertion_id"] = insertionsOnline[i].insertion_id;

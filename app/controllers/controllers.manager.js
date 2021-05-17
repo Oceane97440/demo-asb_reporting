@@ -15,6 +15,8 @@ const {QueryTypes} = require('sequelize');
 
 const {check, query} = require('express-validator');
 
+const moment = require('moment');
+
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 
@@ -40,11 +42,15 @@ exports.index = async (req, res) => {
         data.users = await ModelUsers.count();
 
         data.breadcrumb = "Tableau de bord";
-
+        data.moment = moment;
+        
         res.render('manager/index.ejs', data);
-    } catch (error) {
-        console.log(error);
+    } catch (error) {       
         var statusCoded = error.response.status;
-        res.render("error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
+}
+
+exports.error = async (req, res) => {
+    data.breadcrumb = "Erreur";
 }

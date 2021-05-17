@@ -65,7 +65,7 @@ exports.index = async (req, res) => {
         if (req.session.user.role == 2 || req.session.user.role == 3) {
 
             const formats = await ModelFormat.findAll({
-                attributes:['format_group'],
+                attributes: ['format_group'],
                 group: "format_group",
                 where: {
                     format_group: {
@@ -125,10 +125,10 @@ exports.forecast_user = async (req, res, next) => {
     // Définition des variables
     var headerlocation, table, requestForecast;
     var date_start = await req.body.date_start;
-    var date_end =await req.body.date_end;
+    var date_end = await req.body.date_end;
     var format = await req.body.format;
-    var packs =await req.body.packs;
-    var countries =await req.body.countries;
+    var packs = await req.body.packs;
+    var countries = await req.body.countries;
     var option = await req.body.case
 
 
@@ -150,9 +150,72 @@ exports.forecast_user = async (req, res, next) => {
 
     try {
 
+        //si l'un des champs sont vide
+        if (date_start ==''||date_start ==''||format ==''||packs ==''||countries =='') {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'Les champs doivent être complétés'
+              }
+              return res.redirect('/utilisateur')
+        }
+
+          //date aujourd'hui en timestamp 
+          const date_now = Date.now();
+
+          const timstasp_start = Date.parse(date_start)
+          const timstasp_end = Date.parse(date_end)
+
+          // si date aujourd'hui est >= à la date selectionné envoie une erreur
+          if(timstasp_start<=date_now ||timstasp_start>=timstasp_end){
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'La date de début doit être J+1 à la date du jour'
+              }
+              return res.redirect('/utilisateur')
+          }
+
+            // si date aujourd'hui est >= à la date selectionné envoie une erreur
+
+          if(timstasp_end<=date_now || timstasp_end <= timstasp_start){
+
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'La date de fin doit être supérieur à la date du jour'
+              }
+              return res.redirect('/utilisateur')
+          }
+
+
+          
+
         date_start = date_start + 'T00:00:00.000Z'
         date_end = date_end + 'T23:59:00.000Z'
 
+
+        const campaign_StartDate = await date_start;
+        var startDate_split = await campaign_StartDate.split('T');
+        const start_Date = await startDate_split[0]
+
+        var campaign_EndDate = await date_end;
+        var endDate_split = await campaign_EndDate.split('T');
+        const end_Date = await endDate_split[0]
+
+
+        const dateStart = new Date(start_Date);
+        JJ = ('0' + (dateStart.getDate())).slice(-2);
+        MM = ('0' + (dateStart.getMonth()+1)).slice(-2);
+        AAAA = dateStart.getFullYear();
+        const StartDate = await JJ + '/' + MM + '/' + AAAA;
+
+
+        const dateEnd = new Date(end_Date);
+        JJ = ('0' + (dateEnd.getDate())).slice(-2);
+        MM = ('0' + (dateEnd.getMonth()+1)).slice(-2);
+        AAAA = dateEnd.getFullYear();
+        const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
         //recupération des site d'un pack
         const sitesdb = await ModelPack_Site.findAll({
@@ -401,8 +464,8 @@ exports.forecast_user = async (req, res, next) => {
             var insertions = {
 
 
-                date_start,
-                date_end,
+                StartDate,
+                EndDate,
                 format,
 
             }
@@ -745,10 +808,25 @@ exports.forecast_user = async (req, res, next) => {
                     reserver_reel = 0;
                     sommeReserver = 0
                 }
+                //SEPARATEUR DE MILLIER universel 
+                function numStr(a, b) {
+                    a = '' + a;
+                    b = b || ' ';
+                    var c = '',
+                        d = 0;
+                    while (a.match(/^0[0-9]/)) {
+                        a = a.substr(1);
+                    }
+                    for (var i = a.length - 1; i >= 0; i--) {
+                        c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
+                        d++;
+                    }
+                    return c;
+                }
+                sommeImpressions = numStr(sommeImpressions);
+                sommeOccupied = numStr(sommeOccupied);
+                volumeDispo = numStr(volumeDispo);
 
-                sommeImpressions = new Number(sommeImpressions).toLocaleString("fi-FI");
-                sommeOccupied = new Number(sommeOccupied).toLocaleString("fi-FI");
-                volumeDispo = new Number(volumeDispo).toLocaleString("fi-FI");
 
                 var table = {
 
@@ -768,8 +846,8 @@ exports.forecast_user = async (req, res, next) => {
 
                 var insertions = {
 
-                    date_start,
-                    date_end,
+                    StartDate,
+                    EndDate,
                     format,
 
                 }
@@ -795,7 +873,8 @@ exports.forecast_user = async (req, res, next) => {
             }
         }
 
-    } catch (error) { console.log(error)
+    } catch (error) {
+        console.log(error)
         var statusCoded = error.response.status;
 
         res.render("error.ejs", {
@@ -807,44 +886,76 @@ exports.forecast_user = async (req, res, next) => {
 
 
 
-
+//Formulaire ajout Epilot
 exports.epilot = async (req, res, next) => {
 
     try {
 
-        var formats = await ModelFormat.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
-            group: ['format_group'],
-            where: {
-                format_group: {
-                    [Op.not]: null
-                }
-            },
-            order: [
-                ['format_group', 'ASC']
-            ],
-        })
+        
+    var confirmer = await ModelCampaign_epilot.findAll({
+  
+        where: {
+          etat: 1
+        },
+        order: [
+          ['campaign_name', 'ASC']
+        ],
+      })
+  
+      var reserver = await ModelCampaign_epilot.findAll({
+  
+        where: {
+          etat: 2
+        },
+        order: [
+          ['campaign_name', 'ASC']
+        ],
+      })
+  
 
+      var formats = await ModelFormat.findAll({
+        attributes: ['format_group'],
+        group: "format_group",
+        where: {
+            format_group: {
+                [Op.not]: null
+            }
+        },
+        order: [
+            ['format_group', 'ASC']
+        ],
+    })
+
+
+      var result_confirmer = Object.keys(confirmer).length;
+  
+      var result_reserver = Object.keys(reserver).length;
+  
+  
+      
 
         res.render('forecast/form_epilot.ejs', {
             formats: formats,
-
+            confirmer: confirmer,
+            reserver: reserver,
+            result_confirmer: result_confirmer,
+            result_reserver: result_reserver
         });
 
     } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
 
-        res.render("error.ejs",{
-          statusCoded:statusCoded,
-         
+        res.render("error.ejs", {
+            statusCoded: statusCoded,
+
         })
     }
 
 }
 
 
-
+//Action ajout de la campagne
 exports.campaign_epilot = async (req, res, next) => {
 
     var campaign_name = req.body.campaign_name
@@ -854,7 +965,6 @@ exports.campaign_epilot = async (req, res, next) => {
     var campaign_end_date = req.body.campaign_end_date
     var volume_prevue = req.body.volume_prevue
 
-    //console.log(req.body)
 
 
     var campaign_debut = campaign_start_date + 'T00:00:00.000Z'
@@ -910,10 +1020,106 @@ exports.campaign_epilot = async (req, res, next) => {
         console.log(error)
         var statusCoded = error.response.status;
 
-        res.render("error.ejs",{
-          statusCoded:statusCoded,
-         
+        res.render("error.ejs", {
+            statusCoded: statusCoded,
+
         })
     }
 
+}
+
+
+//Formulaire ajout Epilot
+exports.epilot_edit = async (req, res, next) => {
+
+    try {
+
+
+
+      await  ModelCampaign_epilot.findOne({
+            where: {
+                campaign_epilot_id: req.params.id
+            }
+    
+        }).then( async function (campaign_epilot) {
+                
+      
+            var formats = await ModelFormat.findAll({
+                attributes: ['format_group'],
+                group: "format_group",
+                where: {
+                    format_group: {
+                        [Op.not]: null
+                    }
+                },
+                order: [
+                    ['format_group', 'ASC']
+                ],
+            })
+    
+
+
+
+          res.render('forecast/form_edit_epilot.ejs', {
+            campaign_epilot: campaign_epilot,
+            formats
+        });
+        })
+
+
+  
+  
+      
+
+      
+
+    } catch (error) {
+        console.log(error)
+        var statusCoded = error.response.status;
+
+        res.render("error.ejs", {
+            statusCoded: statusCoded,
+
+        })
+    }
+
+}
+
+exports.update = async (req, res, next) => {
+
+    ModelCampaign_epilot.findOne({
+        where: {
+            campaign_epilot_id: req.params.id
+        }
+    }).then(campaign_epilot => {
+
+        ModelCampaign_epilot.update({
+            campaign_name: req.body.campaign_name,
+            format_name: req.body.format,
+            etat: req.body.etat,
+            campaign_start_date: req.body.campaign_start_date,
+            campaign_end_date: req.body.campaign_end_date,
+            volume_prevue: req.body.volume_prevue
+
+
+
+
+        }, {
+            where: {
+                campaign_epilot_id: req.params.id
+            }
+        }).then(res.redirect('/utilisateur/campagne_epilot'))
+    })
+
+}
+
+exports.delete = async (req, res, next) => {
+
+    ModelCampaign_epilot.destroy({
+        where: {
+            campaign_epilot_id: req.params.id
+        }
+    }).then(() => {
+        res.redirect('/utilisateur/campagne_epilot')
+    })
 }

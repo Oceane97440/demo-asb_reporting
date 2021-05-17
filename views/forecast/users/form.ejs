@@ -7,7 +7,17 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
 		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 	<link href="/admin/css/style.css" rel="stylesheet" />
-	<title>Forecast</title>
+	<title>Disponibilités</title>
+	
+    <link rel="icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png"
+        sizes="32x32" />
+    <link rel="icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-192x192.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
+
 </head>
 
 <body>
@@ -15,17 +25,27 @@
 	<%- include ("../../layouts/admin/navbar.ejs") -%>
 
 	<div class="container">
+		<% if (message) { %>
+
+		<div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
+			<%=message.intro%>:<%=message.message%>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+		<% } %>
+
 		<div class="row">
 
 			<div class="col-lg-6">
 				<div class="our-team-main">
 
 
-
 					<div id="card-forecast" class="card">
 						<div class="card-header">
 							<h4 class="card-title">
-								Inventaire SMART
+								Disponibilités
 							</h4>
 						</div>
 
@@ -35,27 +55,26 @@
 							<form action="/utilisateur/add" id="forecast" method="POST">
 								<div class="row">
 
-										<div class="col-md-6">
-											<div class="md-form">
-												<label for=" date_start">Date de début </label>
-												<input type="date" class="form-control" name="date_start"
-													id="date_start" value="" required>
-											</div>
+									<div class="col-md-6">
+										<div class="md-form">
+											<label for=" date_start">Date de début </label>
+											<input type="date" class="form-control" name="date_start" id="date_start"
+												value="" required>
 										</div>
-
-										<div class="col-md-6">
-											<div class="md-form">
-												<label for="date_end">Date de fin </label>
-												<input type="date" class="form-control" name="date_end" id="date_end"
-													value="" required>
-											</div>
+									</div>
+									<div class="col-md-6">
+										<div class="md-form">
+											<label for="date_end">Date de fin </label>
+											<input type="date" class="form-control" name="date_end" id="date_end"
+												value="" required>
 										</div>
+									</div>
 
 								</div>
 
 
 								<div class="form-group">
-									<label for="format">Format</label>
+									<label for="format">Formats</label>
 									<select class="form-control" name="format" onchange="myFunction()" id="format"
 										required="required">
 										<option value="">Sélectionner un format</option>
@@ -91,7 +110,7 @@
 
 
 								<div class="form-group">
-									<label for="countries">Géolocalisation</label><br>
+									<label for="countries">Géolocalisations</label><br>
 									<% for(let i=0; i < countrys.length; i++) {%>
 									<label class="form-check-label"><%= countrys[i].country_name %></label>
 									<input class="form-check-input" type="checkbox" name="countries" id="countries"
@@ -102,7 +121,7 @@
 
 
 
-							
+
 
 
 
@@ -135,7 +154,7 @@
 						<div class="card-body">
 							<blockquote class="blockquote mb-0">
 								<img src="/admin/photos/search.jpg"></img>
-								<p>Choisir une date prévisionnel
+								<p>Choisir une date prévisionnelle
 								</p>
 							</blockquote>
 						</div>
@@ -167,5 +186,17 @@
 		</div>
 
 	</div>
+	<script>
+		const now = new Date();
 
+		var timestamp_now = now.setDate(now.getDate() + 1);
+		var timestamp_end = now.setDate(now.getDate() + 15);
+
+		const date_start_last = new Date(timestamp_now)
+		const date_end_last = new Date(timestamp_end)
+
+
+		document.getElementById("date_start").valueAsDate = date_start_last;
+		document.getElementById("date_end").valueAsDate = date_end_last;
+	</script>
 	<%- include("../../layouts/admin/footer.ejs") -%>

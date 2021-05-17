@@ -1,14 +1,15 @@
-<table class="table table-striped">
+<table class="table table-striped table_sort">
     <thead>
         <tr>
             <th>#</th>
             <th>Annonceur</th>
             <th>Nom</th>
-            <th>Date de début</th>
-            <th>Date de fin</th>
+            <th class="d-none">Date de début</th>
+            <th class="d-none">Date de fin</th>
             <th>Status</th>
-            <th>Archiver</th>
+            <th>Archive</th>
             <th>Dernière MAJ</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -16,12 +17,30 @@
         <tr>
             <td><a href="/manager/campaigns/<%= campaigns[i].campaign_id %>" title="<%= campaigns[i].campaign_name %>"><%= campaigns[i].campaign_id %></td>
             <td><a href="/manager/advertisers/<%= campaigns[i].advertiser.advertiser_id %>" title="<%= campaigns[i].advertiser.advertiser_name %>"><%= campaigns[i].advertiser.advertiser_name %></a></td>
-            <td class="col-5"><a href="/manager/campaigns/<%= campaigns[i].campaign_id %>" title="<%= campaigns[i].campaign_name %>"><%= campaigns[i].campaign_name %></td>
-            <td><%= campaigns[i].campaign_start_date %></td>
-            <td><%= campaigns[i].campaign_end_date %></td>
-            <td class="col-1"><%= campaigns[i].campaign_status_id %></td>
-            <td class="col-1"><%= campaigns[i].campaign_archived %></td>
-            <td><%= campaigns[i].campaign_updated %></td>
+            <td>
+                <a href="/manager/campaigns/<%= campaigns[i].campaign_id %>" title="<%= campaigns[i].campaign_name %>"><%= campaigns[i].campaign_name %>
+                    <br />
+                    <span class="small">(Du <%= moment(campaigns[i].campaign_start_date).format('DD/MM/YYYY') %> au 
+                    <%= moment(campaigns[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
+                </td>
+            <td class="d-none"><%= campaigns[i].campaign_start_date %></td>
+            <td class="d-none"><%= campaigns[i].campaign_end_date %></td>
+            <td>
+                <% switch(campaigns[i].campaign_status_id) { 
+                 case 0: %> <span class="badge bg-light">En Brouillon</span> <% break;
+                 case 1: %> <span class="badge bg-secondary">Pré réservé</span> <% break; 
+                 case 2: %> <span class="badge bg-warning">Réservé</span> <% break; 
+                 case 3: %> <span class="badge bg-success">Vendue</span> <% break; 
+                 case 4: %> <span class="badge bg-danger">Annulée</span> <% break; 
+                 default: %> - <% 
+                    }  %>
+            </td>
+            <td><% switch(campaigns[i].campaign_archived) { case 0: %> <span class="badge bg-warning">Archiv&eacute;</span> <% break; default: %> - <% break; }  %></td>
+            <td><%= moment(campaigns[i].updated_at).fromNow() %></td>          
+            <td>               
+                   <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaigns[i].campaign_id %>&AnnonceurID=<%= campaigns[i].advertiser_id %>" target="_blank" title="Accéder à la campagne sur SMARTADSERVER"><img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER" /></a>
+                   &nbsp; <a href="/manager/campaigns/<%= campaigns[i].campaign_id %>/edit" title="Modifier cette campagne"><i class="icon feather icon-edit f-16 text-success"></i></a>
+            </td>
         </tr>
         <% } %>
     </tbody>

@@ -21,13 +21,10 @@ router.get("/creatives", automate.creatives);
 router.get("/countries", automate.countries);
 router.get("/reports", automate.reports);
 
-
-/*
-
-router.get("/cities", automate.cities);
-router.get("/continents", automate.continents);
+/* router.get("/cities", automate.cities);
+router.get("/continents",
+ * automate.continents);
 router.get("/packs", automate.packs);
-router.get("/pages", automate.pages);
-
-*/
+ * router.get("/pages", automate.pages);
+ */
 module.exports = router;
