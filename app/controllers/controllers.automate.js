@@ -1101,7 +1101,7 @@ exports.reports = async (req, res) => {
                     // Calcule la différence entre les 2 dates
                     var Difference_In_Time = campaign_new_end_date.getTime() - campaign_date_start.getTime();                  
                     // Arrondie au supérieur
-                    var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));                   
+                    var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)); 
 
                     if (campaign && (Difference_In_Days < 30) && (campaign.campaign_start_date < Dday)) {
                         // fonctionnalité generation du rapport
@@ -1211,7 +1211,7 @@ exports.reports = async (req, res) => {
                                     var dts_data_video = data_report_view.data_video;
                                     
                                     var dts_date_expiry = data_report_view.date_expirer;
-            
+                                    /*
                                     res.render('reporting/data-reporting-template.ejs', {
                                         table: dts_table,
                                         data_habillage: dts_data_habillage,
@@ -1222,6 +1222,7 @@ exports.reports = async (req, res) => {
                                         data_video: dts_data_video,
                                         data_expirer: dts_date_expiry
                                     });
+                                    */
             
                                 } else {
                                     //si le local storage est expire supprime item precedent et les taskid
@@ -2656,6 +2657,9 @@ exports.reports = async (req, res) => {
                                                         interstitiel_actu_android_siteId.push(Array_SiteID[element]);
                                                         interstitiel_actu_android_siteName.push(Array_SiteName[element]);
                                                     }
+
+
+
             
                                                 }
                                                 // Function foreach qui met dans un tableau les impressions correspondant au
@@ -5854,7 +5858,7 @@ exports.reports = async (req, res) => {
                                             };
             
                                             localStorage.setItem('campagneId-' + campaignid, JSON.stringify(testObject));
-                                            res.json('Load Storage :','campagneId-' + campaignid);
+                                            res.json(200,'Load Storage : campagneId-' + campaignid);
                                         }
             
                                     }, time);
