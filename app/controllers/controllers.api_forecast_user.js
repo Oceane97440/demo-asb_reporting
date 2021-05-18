@@ -6,6 +6,7 @@ const request = require('request');
 const bodyParser = require('body-parser');
 
 //let csvToJson = require('convert-csv-to-json');
+const Utilities = require('../functions/functions.utilities');
 
 
 const axios = require(`axios`);
@@ -809,23 +810,9 @@ exports.forecast_user = async (req, res, next) => {
                     sommeReserver = 0
                 }
                 //SEPARATEUR DE MILLIER universel 
-                function numStr(a, b) {
-                    a = '' + a;
-                    b = b || ' ';
-                    var c = '',
-                        d = 0;
-                    while (a.match(/^0[0-9]/)) {
-                        a = a.substr(1);
-                    }
-                    for (var i = a.length - 1; i >= 0; i--) {
-                        c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
-                        d++;
-                    }
-                    return c;
-                }
-                sommeImpressions = numStr(sommeImpressions);
-                sommeOccupied = numStr(sommeOccupied);
-                volumeDispo = numStr(volumeDispo);
+                sommeImpressions = Utilities.numStr(sommeImpressions);
+                sommeOccupied = Utilities.numStr(sommeOccupied);
+                volumeDispo = Utilities.numStr(volumeDispo);
 
 
                 var table = {
@@ -1030,49 +1017,49 @@ exports.epilot_edit = async (req, res, next) => {
 
     try {
 
- 
 
-       await ModelCampaign_epilot.findOne({
+
+        await ModelCampaign_epilot.findOne({
             where: {
                 campaign_epilot_id: req.params.id
             }
 
         }).then(async function (campaign_epilot) {
-           // console.log(campaign_epilot)
+            // console.log(campaign_epilot)
 
-                var formats = await ModelFormat.findAll({
-                    attributes: ['format_group'],
-                    group: "format_group",
-                    where: {
-                        format_group: {
-                            [Op.not]: null
-                        }
-                    },
-                    order: [
-                        ['format_group', 'ASC']
-                    ],
-                })
+            var formats = await ModelFormat.findAll({
+                attributes: ['format_group'],
+                group: "format_group",
+                where: {
+                    format_group: {
+                        [Op.not]: null
+                    }
+                },
+                order: [
+                    ['format_group', 'ASC']
+                ],
+            })
 
 
-                   return res.render('forecast/form_edit_epilot.ejs', {
-                        campaign_epilot: campaign_epilot,
-                        formats,
-                    })
-                
-                
-                
-              
-                    
-                   
-                    
-                    
-                    
-    
-    
-    
-             
-            
-           
+            return res.render('forecast/form_edit_epilot.ejs', {
+                campaign_epilot: campaign_epilot,
+                formats,
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         })
 
 
