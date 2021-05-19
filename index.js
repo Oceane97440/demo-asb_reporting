@@ -283,7 +283,7 @@ app.use('/app', application);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3670);
+app.set("port", process.env.PORT || 3671);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

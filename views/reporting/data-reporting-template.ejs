@@ -90,7 +90,7 @@
         <!-- End Google Tag Manager (noscript) -->
 
         <div class="container p-2 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
-
+            <% if(table.EndDate < Date.now()) { %>
             <div
                 class="alert alert-danger alert-dismissible fade show"
                 role="alert"
@@ -103,7 +103,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
+            <% } %>
+            
             <div class="row p-3 m-5">
                 <div class="col-md-3">
                     <a href="https://antennesb.fr/">

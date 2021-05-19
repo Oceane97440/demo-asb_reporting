@@ -29,6 +29,7 @@ exports.index = async (req, res) => {
     }
 }
 
+
 exports.generate = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
 
@@ -65,14 +66,15 @@ exports.generate = async (req, res) => {
 
             const timestamp_startdate = Date.parse(campaign.campaign_start_date);
             const date_now = Date.now();
-
+                    /*
             const campaign_StartDate = campaign.campaign_start_date;
             var startDate_split = campaign_StartDate.split('T');
-            const start_Date = startDate_split[0]
+          
+            const start_Date = startDate_split[0];
 
             var campaign_EndDate = campaign.campaign_end_date;
             var endDate_split = campaign_EndDate.split('T');
-            const end_Date = endDate_split[0]
+            const end_Date = endDate_split[0];
 
             const dateStart = new Date(start_Date);
             JJ = ('0' + (
@@ -93,16 +95,18 @@ exports.generate = async (req, res) => {
             )).slice(-2);
             AAAA = dateEnd.getFullYear();
             const EndDate = JJ + '/' + MM + '/' + AAAA;
+           */
 
             res.render("reporting/generate.ejs", {
                 advertiserid: campaign.advertiser_id,
                 campaignid: campaign.campaign_id,
-                startDate: StartDate,
-                endDate: EndDate,
+               // startDate: StartDate,
+              //  endDate: EndDate,
                 campaigncrypt: campaign.campaign_crypt,
                 campaign: campaign,
                 timestamp_startdate: timestamp_startdate,
-                date_now: date_now
+                date_now: date_now,
+                moment: moment
             })
 
         });
@@ -112,8 +116,7 @@ exports.generate = async (req, res) => {
 exports.report = async (req, res) => {
 
     let campaigncrypt = req.params.campaigncrypt;
-
-    
+   
                     
     var campaign = await ModelCampaigns
     .findOne({
