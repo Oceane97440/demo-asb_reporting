@@ -2,9 +2,10 @@
   "name": "asb_report",
   "version": "1.0.0",
   "description": "Antenne Solutions Business Report",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node index.js",
+    "start-electron": "electron ./main.js",
+    "start": "node ./app.js",
     "installme": "npm i --unsafe-perms"
   },
   "repository": {
@@ -46,5 +47,8 @@
     "request": "^2.88.2",
     "sequelize": "^5.21.13",
     "validator": "^13.6.0"
+  },
+  "devDependencies": {
+    "electron": "^12.0.8"
   }
 }
