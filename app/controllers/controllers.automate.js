@@ -108,22 +108,26 @@ exports.advertisers = async (req, res) => {
             var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
-
             const addItem = async () => {
                 for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
+                   console.log(offset)
+                  
                     var config2 = SmartFunction.config('advertisers', offset);
                     await axios(config2).then(function (response) {
+                        console.log(response.data)
                         var dataValue = response.data;
                         var number_line_offset = data.length;
 
                         for (i = 0; i < number_line_offset; i++) {
+                            console.log(dataValue);
+                           
                             var advertiser_id = dataValue[i].id;
                             var advertiser_name = dataValue[i].name;
                             var advertiser_archived = dataValue[i].isArchived;
 
-                            //  console.log(dataValue);
 
+                         
                             Utilities
                                 .updateOrCreate(ModelAdvertisers, {
                                     advertiser_id: advertiser_id
@@ -152,7 +156,7 @@ exports.advertisers = async (req, res) => {
 
             addItem();
 
-            process.exit(1);
+            return false;
         });
 
     } catch (error) {
@@ -231,7 +235,8 @@ exports.campaigns = async (req, res) => {
                 }
 
                 addItem();
-                process.exit(1);
+                return false;
+
             } else {
                 console.error('Error : Aucune donnée disponible');
             }
@@ -468,6 +473,8 @@ exports.templates = async (req, res) => {
                 }
 
                 addItem();
+                return false;
+
 
             } else {
                 console.error('Error : Aucune donnée disponible');

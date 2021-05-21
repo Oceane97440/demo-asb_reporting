@@ -60,28 +60,40 @@ exports.signup = async (req, res) => {
 
 
   try {
-    var roles = await ModelRole.findAll({
-      where: {
-        role_id: [2, 3]
-      },
-      attributes: ['role_id', 'label'],
-      order: [
-        ['role_id', 'ASC']
-      ],
-    })
+    if (req.session.user.role === 1) {
+      var roles = await ModelRole.findAll({
+        where: {
+          role_id: [2, 3]
+        },
+        attributes: ['role_id', 'label'],
+        order: [
+          ['role_id', 'ASC']
+        ],
+      })
 
 
 
 
-    res.render('users/signup.ejs', {
-      roles: roles
-    });
+      res.render('users/signup.ejs', {
+        roles: roles
+      });
 
+
+    } else {
+      var statusCoded = 404;
+
+      res.status(404).render("error-status.ejs", {
+        statusCoded,
+
+      });
+
+    }
 
   } catch (err) {
-    res.status(500).json({
-      'error': 'cannot fetch country'
-    });
+    res.status(500).render("error-status.ejs", {
+        statusCoded,
+
+      });
   }
 
 }
@@ -92,98 +104,105 @@ exports.signup_add = async (req, res) => {
   const role = req.body.role;
 
   try {
-    /**verifier si les champs ne son pas vide*/
-    if (email === '' || password === '' || role === '') {
-
-      req.session.message = {
-        type: 'danger',
-        intro: 'Erreur',
-        message: 'Les champs ne doivents pas être vide'
-      }
-      return res.redirect('/signup')
-      // return res.render('users/signup.ejs')
-    }
-
-    /**verifie si email est valide avec le regex*/
-    if (!EMAIL_REGEX.test(email)) {
-      req.session.message = {
-        type: 'danger',
-        intro: 'Erreur',
-        message: 'Email invalide'
-      }
-      return res.redirect('/signup')
-    }
-    /**verifie si le password contien entre min 4 et max 8 caratère + un number*/
-    if (!PASSWORD_REGEX.test(password)) {
-      req.session.message = {
-        type: 'danger',
-        intro: 'Erreur',
-        message: 'Le mot de passe doit être compris entre 4 et 12 caratères avec 1 chiffre et un caratère spécial'
-      }
-      return res.redirect('/signup')
-   
-
-    }
-
-    /**search si email exsite déjà dans le bdd*/
-
-    await ModelUser.findOne({
-      attributes: ['email'],
-      where: {
-        email: email
-      }
-    }).then(async function (userFound) {
-
-
-      if (!userFound) {
-
-
-        //validator + bycrypt
-        const hashedPwd = await bcrypt.hash(password, 12);
-
-        const user = await ModelUser.create({
-
-          email: validator.normalizeEmail(email),
-          password: hashedPwd,
-          role
-        })
-
-
-        await ModelUser_Role.create({
-          role_id: role,
-          user_id: user.id
-        })
-
-      
-
-        res.redirect('/login')
-
-      } else {
+    if (req.session.user.role === 1) {
+      /**verifier si les champs ne son pas vide*/
+      if (email === '' || password === '' || role === '') {
 
         req.session.message = {
           type: 'danger',
           intro: 'Erreur',
-          message: 'Email est déjà utilisé'
+          message: 'Les champs ne doivents pas être vide'
+        }
+        return res.redirect('/signup')
+        // return res.render('users/signup.ejs')
+      }
+
+      /**verifie si email est valide avec le regex*/
+      if (!EMAIL_REGEX.test(email)) {
+        req.session.message = {
+          type: 'danger',
+          intro: 'Erreur',
+          message: 'Email invalide'
         }
         return res.redirect('/signup')
       }
+      /**verifie si le password contien entre min 4 et max 8 caratère + un number*/
+      if (!PASSWORD_REGEX.test(password)) {
+        req.session.message = {
+          type: 'danger',
+          intro: 'Erreur',
+          message: 'Le mot de passe doit être compris entre 4 et 12 caratères avec 1 chiffre et un caratère spécial'
+        }
+        return res.redirect('/signup')
 
-    })
+
+      }
+
+      /**search si email exsite déjà dans le bdd*/
+
+      await ModelUser.findOne({
+        attributes: ['email'],
+        where: {
+          email: email
+        }
+      }).then(async function (userFound) {
+
+
+        if (!userFound) {
+
+
+          //validator + bycrypt
+          const hashedPwd = await bcrypt.hash(password, 12);
+
+          const user = await ModelUser.create({
+
+            email: validator.normalizeEmail(email),
+            password: hashedPwd,
+            role
+          })
+
+
+          await ModelUser_Role.create({
+            role_id: role,
+            user_id: user.id
+          })
 
 
 
+          res.redirect('/login')
+
+        } else {
+
+          req.session.message = {
+            type: 'danger',
+            intro: 'Erreur',
+            message: 'Email est déjà utilisé'
+          }
+          return res.redirect('/signup')
+        }
+
+      })
+
+
+
+    } else {
+
+      res.status(404).render("error-status.ejs", {
+        statusCoded,
+
+      });
+
+    }
 
 
 
 
   } catch (error) {
     console.log(error)
-    var statusCoded = error.response.status;
+    res.status(500).render("error-status.ejs", {
+      statusCoded,
 
-    res.render("error.ejs", {
-      statusCoded: statusCoded,
-
-    })
+    });
   }
 
 
@@ -245,7 +264,8 @@ exports.login_add = async (req, res) => {
 
 
             if (req.session.user.role === 1) {
-              return res.redirect('/home_page')
+              return res.redirect('/manager');
+
 
             }
             if (req.session.user.role === 2 || req.session.user.role === 3) {
@@ -293,7 +313,7 @@ exports.logout = async (req, res) => {
 }
 
 
-
+/*
 exports.index = async (req, res) => {
 
 
@@ -303,6 +323,13 @@ exports.index = async (req, res) => {
 
     if (req.session.user.role === 1) {
       res.render('home-page.ejs');
+    }else {
+
+      res.status(404).render("error-status.ejs", {
+        statusCoded,
+
+      });
+
     }
 
 
@@ -313,14 +340,14 @@ exports.index = async (req, res) => {
     console.log(error)
     var statusCoded = error.response.status;
 
-    res.render("error.ejs", {
-      statusCoded: statusCoded,
+    res.status(500).render("error-status.ejs", {
+      statusCoded,
 
-    })
+    });
   }
 
 
 
 
 
-}
+}*/
