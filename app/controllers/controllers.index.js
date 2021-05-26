@@ -91,9 +91,9 @@ exports.signup = async (req, res) => {
 
   } catch (err) {
     res.status(500).render("error-status.ejs", {
-        statusCoded,
+      statusCoded,
 
-      });
+    });
   }
 
 }
@@ -169,7 +169,7 @@ exports.signup_add = async (req, res) => {
 
 
 
-          res.redirect('/login')
+          res.redirect('/manager')
 
         } else {
 
@@ -207,6 +207,75 @@ exports.signup_add = async (req, res) => {
 
 
 }
+
+exports.signup_edit = async (req, res) => {
+
+  ModelUser.findOne({
+    where: {
+      id: req.params.id
+    }
+
+  }).then(async function (user) {
+
+
+    var roles = await ModelRole.findAll({
+      where: {
+        role_id: [2, 3]
+      },
+      attributes: ['role_id', 'label'],
+      order: [
+        ['role_id', 'ASC']
+      ],
+    })
+
+
+    res.render('users/edit', {
+      user: user,
+      roles: roles
+    })
+
+  })
+}
+
+exports.update = async (req, res) => {
+
+  const email = req.body.email
+  const mdp =  req.body.mdp
+
+
+  ModelUser.findOne({
+    where: {
+      id: req.params.id
+    }
+  }).then(user => {
+    ModelUser.update({
+
+      email:email ,
+      password:mdp,
+
+    }, {
+      where: {
+        id: req.params.id
+      }
+    }).then(res.redirect('/manager'))
+  })
+}
+
+exports.signup_delete = async (req, res) => {
+
+  ModelUser.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then(() => {
+    res.redirect('/manager')
+  })
+}
+
+
+
+
+
 
 exports.login = async (req, res) => {
 

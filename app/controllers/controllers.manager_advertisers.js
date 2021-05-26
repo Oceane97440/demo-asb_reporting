@@ -125,7 +125,7 @@ exports.view = async (req, res) => {
                 res.render('manager/advertisers/view.ejs', data);
             });
 
-        console.log(campaign);
+       // console.log(campaign);
 
     } catch (error) {
         console.log(error);
