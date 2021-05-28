@@ -12,7 +12,7 @@ function createWindow() {
         minHeight:700,
         maxWidth:1500,
         maxHeight:700,
-        resizable: false,
+        resizable: true,
         icon: 'logo.png',
         frame: true
     });
@@ -22,7 +22,7 @@ function createWindow() {
     //  window.webContents.openDevTools(); 
 
     /* Display the homepage of the server */
-    window.loadURL('https://reporting.antennesb.fr/manager');
+    window.loadURL('https://reporting-antennesb.herokuapp.com/login');
 
     /* Lorsque la fenêtre est fermée, on l'indique au système */
     window.on('closed', () => {
