@@ -221,6 +221,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Email</th>
+                                <th>Rôles</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -231,6 +232,15 @@
                                 <td><%=infos[i].id%></td>
                                 <td><%=infos[i].email%></td>
 
+
+                                <td>  
+                                    <% switch(infos[i].role) { 
+                                     case 1: %> <span class="badge bg-primary">Admin</span> <% break; 
+                                     case 2: %> <span class="badge bg-warning">Utilisateur</span> <% break; 
+                                     case 3: %> <span class="badge bg-success">Utilisateur</span> <% break; 
+                                     default: %> - <% 
+                                        }  %>
+                                </td>
                                 <td>
 
                                     <label class="badge bg-light-success">Actif</label>
@@ -332,7 +342,7 @@
                     <div class="col">
 
 
-                        <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=<%=creatives[i].insertion_id%>">
+                        <a target="_blank" href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=<%=creatives[i].insertion_id%>">
                             <h6 class="m-b-5">Problème url de la créative !
                               <a class="example-image-link" href="<%=creatives[i].creative_url%>" data-lightbox="example-1">
                                     <img class="example-image" src="<%=creatives[i].creative_url%>" alt="image-1" />
@@ -358,7 +368,7 @@
                       
                         <div class="col">
     
-                            <a
+                            <a target="_blank"
                                 href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%=insertions_alert[i].campaign_id%>">
                                 <h6 class="m-b-5">La campagne est programmé mais pas en ligne !
                                     <span class="text-muted float-right f-14">Just Now</span>

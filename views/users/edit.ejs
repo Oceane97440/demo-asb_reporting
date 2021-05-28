@@ -9,7 +9,7 @@
 	<link href="/admin/css/style.css" rel="stylesheet" />
 	<script src="https://kit.fontawesome.com/4d66efb478.js"></script>
 
-	<title>Edit User</title>
+	<title>Modifier un utilisateur</title>
 </head>
 
 <body>
@@ -51,7 +51,7 @@
 					<div id="card-signup" class="card">
 						<div class="card-header">
 							<h4 class="card-title">
-								Créer votre compte
+								Formulaire ajout d'un utilisateur
 							</h4>
 					
 						</div>
@@ -68,7 +68,7 @@
 									<div class="md-form">
 										<label for="email"><i class="fas fa-at" id="icon"></i>Email</label>
 										<input type="email" class="form-control" name="email" id="email"  value="<%= user.email %>"
-											placeholder="email@gmail.com" required>
+											placeholder="saisissez un email valide" required>
 									</div>
 								</div>
 
@@ -80,7 +80,7 @@
 
 
 										<input type="password" class="form-control" name="mdp" id="mdp" value="<%= user.mdp %>"
-											placeholder="6 caratères + 1 caratère spécial" required>
+											placeholder="saisissez un mot de passe valide" required>
 
 									</div>
 								</div>

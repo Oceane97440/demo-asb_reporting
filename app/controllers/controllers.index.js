@@ -246,6 +246,7 @@ exports.update = async (req, res) => {
 
   const email = req.body.email
   const mdp =  req.body.mdp
+  const role = req.body.role;
 
 
   ModelUser.findOne({
@@ -257,6 +258,7 @@ exports.update = async (req, res) => {
 
       email:email ,
       password:mdp,
+      role:role
 
     }, {
       where: {
