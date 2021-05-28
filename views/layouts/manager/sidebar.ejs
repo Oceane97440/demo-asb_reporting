@@ -12,6 +12,8 @@
                         <li class="pc-item pc-caption">
                             <label>Navigation</label>
                         </li>
+                        <% if(locals.user.role === 1) { %>
+
                         <li class="pc-item">
                             <a href="/manager/" class="pc-link">
                                 <span class="pc-micon">
@@ -20,9 +22,11 @@
                                 <span class="pc-mtext">Tableau de bord</span>
                             </a>
                         </li>
+                        <%}%>
 
                         <li class="pc-item pc-hasmenu">
-                            <a href="/forecast" class="pc-link">
+                            <a class="pc-link" href=<% if(locals.user.role === 2 || locals.user.role === 3) { %> /utilisateur 
+                                <%} else { %> /manager <%}%>>
                                 <span class="pc-micon">
                                     <i class="material-icons-two-tone">flag</i>
                                 </span>
@@ -34,6 +38,7 @@
                             
                         </li>
 
+
                         <li class="pc-item pc-hasmenu">
                             <a href="#!" class="pc-link">
                                 <span class="pc-micon">
@@ -44,7 +49,9 @@
                                     <i data-feather="chevron-right"></i>
                                 </span>
                             </a>
-                            <ul class="pc-submenu">
+                    
+                            <ul class="pc-submenu">        
+                                <% if(locals.user.role === 1) { %>
                                 <li class="pc-item" style="display: none;">
                                     <a class="pc-link" href="/manager/campaigns/">Accueil</a>
                                 </li>
@@ -52,15 +59,18 @@
                                     <a class="pc-link" href="/manager/campaigns/list">Liste des campagnes</a>
                                 </li>
                                 <li class="pc-item">
-                                    <a class="pc-link" href="/manager/epilot/list">Liste des campagnes EPILOT</a>
-                                </li>
-                                <li class="pc-item">
                                     <a class="pc-link" href="/manager/campaigns/create">Ajouter une campagne</a>
                                 </li>
+                                <%}%>
+
+                                <li class="pc-item">
+                                    <a class="pc-link" href="/manager/epilot/list">Liste des campagnes EPILOT</a>
+                                </li>
+                             
 
                             </ul>
                         </li>
-
+                        <% if(locals.user.role === 1) { %>
                         <li class="pc-item pc-hasmenu">
                             <a href="#!" class="pc-link">
                                 <span class="pc-micon">
@@ -167,6 +177,7 @@
                                 </li>
                             </ul>
                         </li>
+                        <%}%>
 
                         <!-- <li class="pc-item pc-hasmenu"> <a href="#!" class="pc-link"> <span
                         class="pc-micon"> <i class="material-icons-two-tone">business_center</i>

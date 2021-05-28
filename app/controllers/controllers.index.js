@@ -342,8 +342,12 @@ exports.login_add = async (req, res) => {
 
 
             }
-            if (req.session.user.role === 2 || req.session.user.role === 3) {
+            if (req.session.user.role === 2 ) {
               return res.redirect('/utilisateur')
+
+            }
+            if (req.session.user.role === 3) {
+              return res.redirect('/manager/epilot/list')
 
             }
           }

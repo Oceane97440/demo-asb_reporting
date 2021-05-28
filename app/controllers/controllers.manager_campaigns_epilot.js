@@ -42,6 +42,18 @@ exports.list = async (req, res) => {
         data.breadcrumb = "Liste des campagnes";
 
         data.epilot = await ModelCampaignsEpilot.findAll({});
+        data.formats = await ModelFormats.findAll({
+            attributes: ['format_group'],
+            group: "format_group",
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
         data.moment = moment;
 
         res.render('manager/epilot/list.ejs', data);

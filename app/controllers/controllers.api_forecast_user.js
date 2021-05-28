@@ -103,6 +103,11 @@ exports.index = async (req, res) => {
             });
 
 
+        } else {
+            var statusCoded = 404;
+            res.render("error-status.ejs", {
+                statusCoded: statusCoded
+            });
         }
 
 
@@ -959,7 +964,13 @@ exports.campaign_epilot = async (req, res, next) => {
         if (campaign_debut > campaign_fin || campaign_fin < campaign_debut)
 
         {
-            return res.send("La date debut et fin est invalide")
+            req.session.message = {
+                type: 'danger',
+                intro: 'Erreur',
+                message: 'La date debut ou la date de fin est invalide'
+            }
+            return res.redirect('/manager/epilot/list')
+
         } else {
 
             var campagne_search = await ModelCampaign_epilot.findOne({
@@ -988,11 +999,21 @@ exports.campaign_epilot = async (req, res, next) => {
 
                 })
                 .then(campagne => {
-                    return res.send("OK: le campagne est ajouté à la bdd")
+                    req.session.message = {
+                        type: 'success',
+                        intro: 'Ok',
+                        message: 'La campagne a été ajoutée'
+                    }
+                    return res.redirect('/manager/epilot/list')
                 })
 
         } else {
-            return res.send("la données exsite, verifier que le nom de campagne, le formar, la date de debut et fin ne soit pas identique")
+            req.session.message = {
+                type: 'danger',
+                intro: 'Erreur',
+                message: 'Cette campagne existe'
+            }
+            return res.redirect('/manager/epilot/list')
         }
 
 
@@ -1040,7 +1061,7 @@ exports.epilot_edit = async (req, res, next) => {
                 ],
             })
 
-     
+
             // return res.render('forecast/form_edit_epilot.ejs', {
             //     campaign_epilot: campaign_epilot,
             //     formats,
@@ -1048,7 +1069,7 @@ exports.epilot_edit = async (req, res, next) => {
 
 
 
-        return res.render('manager/epilot/edit.ejs', {
+            return res.render('manager/epilot/edit.ejs', {
                 campaign_epilot: campaign_epilot,
                 formats,
             })
@@ -1107,9 +1128,14 @@ exports.update = async (req, res, next) => {
             where: {
                 campaign_epilot_id: req.params.id
             }
-        }).then(()=>{
+        }).then(() => {
             if (req.session.user.role == 3) {
-                res.redirect('/utilisateur/campagne_epilot')
+                req.session.message = {
+                    type: 'success',
+                    intro: 'Ok',
+                    message: 'La campagne a été modifier'
+                }
+                res.redirect('/manager/epilot/list')
 
             }
             if (req.session.user.role == 1) {
@@ -1126,7 +1152,7 @@ exports.update = async (req, res, next) => {
         })
     })
 
-}           
+}
 
 
 exports.delete = async (req, res, next) => {
@@ -1137,7 +1163,12 @@ exports.delete = async (req, res, next) => {
         }
     }).then(() => {
         if (req.session.user.role == 3) {
-            res.redirect('/utilisateur/campagne_epilot')
+            req.session.message = {
+                type: 'success',
+                intro: 'Ok',
+                message: 'La campagne a été supprimer'
+            }
+            res.redirect('/manager/epilot/list')
 
         }
         if (req.session.user.role == 1) {

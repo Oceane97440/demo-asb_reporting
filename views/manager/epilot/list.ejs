@@ -1,40 +1,117 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-  
-    <div class="col-xl-12 col-md-12">
-        <div class="card table-card">
-            <div class="card-header">
-                <h1>Campagnes Epilot</h1>
-                
-                <% if (message) { %>
 
-                    <div class="alert alert-<%=message.type%>" role="alert">
-                        <%=message.intro%>:<%=message.message%>
-                     
-                    </div>
-            
-                    <% } %>
-                <div style="margin-top: 20px;">
-                    <form action="/epilot/csv_import/add"  method="POST" enctype="multipart/form-data"> 
-        
-                   <input type="file" name="file_csv" required>
-                   <button type="submit">Importer</button>
-        
-                   </form>
-                </div>
+<div class="col-xl-12 col-md-12">
+    <div class="card table-card">
+        <div class="card-header">
+            <h1>Campagnes Epilot</h1>
+
+            <% if (message) { %>
+
+            <div class="alert alert-<%=message.type%>" role="alert">
+                <%=message.intro%>:<%=message.message%>
 
             </div>
-            <div class="pro-scroll">
-                <div class="card-body p-0">
 
-                    <div class="table-responsive">
+            <% } %>
+            <% if(locals.user.role === 1) { %>
 
-                        
-                        <%- include("../inc/table_campaigns_epilot.ejs") -%> 
+            <div style="margin-top: 20px;">
+                <form action="/epilot/csv_import/add" method="POST" enctype="multipart/form-data">
+
+                    <input type="file" name="file_csv" required>
+                    <button type="submit">Importer</button>
+
+                </form>
+            </div>
+            <% } %>
+            <% if(locals.user.role === 3) { %>
+            <div class="card">
+                <form method="POST" action="/utilisateur/campagne_epilot/add">
+                    <div class="card-header">
+                        <h5>Créer une campagne</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="alert alert-primary">
+                            <div class="media align-items-center">
+                                <i class="feather icon-alert-circle h2"></i>
+                                <div class="media-body ml-3">
+                                    Créer une campagne en toute simplicité.
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="form-label" for="campaign_name">Nom de la campagne</label>
+                            <input type="text" name="campaign_name" id="campaign_name" class="form-control"
+                                placeholder="Saisissez le nom de la campagne" required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="format">Format
+                            </label>
+                            <select class="form-control" id="format" name="format" required="required">
+                                <% for(let i=0; i < formats.length; i++) {%>
+
+                                <option value="<%= formats[i].format_group %>"><%= formats[i].format_group %></option>
+                                <% } %>
+
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label lass="form-label" for="etat">Etat</label><br>
+                            <label class="form-check-label">Confirmée</label>
+                            <input class="form-check-input" type="radio" name="etat" id="etat" value="1">
+                            <label class="form-check-label">Réservée</label>
+                            <input class="form-check-input" type="radio" name="etat" id="etat" value="2">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="campaign_start_date">Date de début de la campagne</label>
+                            <input type="date" class="form-control" name="campaign_start_date" id="campaign_start_date"
+                                value="" required>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="campaign_end_date">Date de fin de la campagne</label>
+                            <input type="date" class="form-control" name="campaign_end_date" id="campaign_end_date"
+                                value="" required>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="form-label" for="volume_prevue">Volumes</label>
+                            <input type="number" name="volume_prevue" id="volume_prevue" class="form-control" value=""
+                                placeholder="Saisissez le montant du volume prévue" required="required">
+                        </div>
 
                     </div>
+                    <div class="card-footer">
+                        <input type="submit" name="submit" class="btn btn-primary mr-2 btn-submit"
+                            value="Créer une nouvelle campagne" />
+                    </div>
+                </form>
+            </div>
+            <% } %>
+
+        </div>
+        <div class="pro-scroll">
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+
+
+                    <%- include("../inc/table_campaigns_epilot.ejs") -%>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <%- include("../../layouts/manager/footer.ejs") -%>
