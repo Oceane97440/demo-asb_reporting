@@ -1040,15 +1040,18 @@ exports.epilot_edit = async (req, res, next) => {
                 ],
             })
 
+     
+            // return res.render('forecast/form_edit_epilot.ejs', {
+            //     campaign_epilot: campaign_epilot,
+            //     formats,
+            // })
 
-            return res.render('forecast/form_edit_epilot.ejs', {
+
+
+        return res.render('manager/epilot/edit.ejs', {
                 campaign_epilot: campaign_epilot,
                 formats,
             })
-
-
-
-
 
 
 
@@ -1104,10 +1107,27 @@ exports.update = async (req, res, next) => {
             where: {
                 campaign_epilot_id: req.params.id
             }
-        }).then(res.redirect('/utilisateur/campagne_epilot'))
+        }).then(()=>{
+            if (req.session.user.role == 3) {
+                res.redirect('/utilisateur/campagne_epilot')
+
+            }
+            if (req.session.user.role == 1) {
+                req.session.message = {
+                    type: 'success',
+                    intro: 'Ok',
+                    message: 'La campagne a été modifier'
+                }
+                res.redirect('/manager/epilot/list')
+
+            }
+
+
+        })
     })
 
-}
+}           
+
 
 exports.delete = async (req, res, next) => {
 
@@ -1116,6 +1136,18 @@ exports.delete = async (req, res, next) => {
             campaign_epilot_id: req.params.id
         }
     }).then(() => {
-        res.redirect('/utilisateur/campagne_epilot')
+        if (req.session.user.role == 3) {
+            res.redirect('/utilisateur/campagne_epilot')
+
+        }
+        if (req.session.user.role == 1) {
+            req.session.message = {
+                type: 'success',
+                intro: 'Ok',
+                message: 'La campagne a été supprimer'
+            }
+            res.redirect('/manager/epilot/list')
+
+        }
     })
 }

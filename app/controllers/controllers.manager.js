@@ -30,6 +30,8 @@ const AxiosFunction = require('../functions/functions.axios');
 // Initialise les models 
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
+const ModelAgencies = require("../models/models.agencies");
+
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
 const ModelSites = require("../models/models.sites");
@@ -39,6 +41,8 @@ const ModelTemplates = require("../models/models.templates");
 const ModelPlatforms = require("../models/models.platforms");
 const ModelDeliverytypes = require("../models/models.deliverytypes");
 const ModelCountries = require("../models/models.countries");
+const ModelCampaignsEpilot = require("../models/models.campaings_epilot")
+
 
 const ModelGroupsFormatsTypes = require(
     "../models/models.formats_groups_types"
@@ -69,6 +73,8 @@ exports.index = async (req, res) => {
             data.sites = await ModelSites.count();
             data.creatives = await ModelCreatives.count();
             data.users = await ModelUsers.count();
+            data.epilot = await ModelCampaignsEpilot.count();
+
             data.infos = await ModelUsers.findAll();
 
             data.breadcrumb = "Tableau de bord";
@@ -136,6 +142,44 @@ exports.index = async (req, res) => {
   
              
             res.render('manager/index.ejs',data);
+        } else {
+            res.status(404).render("error-status.ejs", {
+                statusCoded,
+
+            });
+        }  
+    } catch (error) {
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
+
+exports.data = async (req, res) => {
+    try {
+        if (req.session.user.role === 1) { 
+
+            // Liste tous les campagnes
+            const data = new Object();
+            data.agencies = await ModelAgencies.count();
+            data.advertisers = await ModelAdvertisers.count();
+            data.campaigns = await ModelCampaigns.count();
+            data.formats = await ModelFormats.count();
+            data.insertions = await ModelInsertions.count();
+            data.sites = await ModelSites.count();
+            data.templates = await ModelTemplates.count()
+
+
+
+            data.breadcrumb = "Tableau de bord";
+            data.moment = moment;
+
+
+
+  
+             
+            res.render('manager/api_data.ejs',data);
         } else {
             res.status(404).render("error-status.ejs", {
                 statusCoded,

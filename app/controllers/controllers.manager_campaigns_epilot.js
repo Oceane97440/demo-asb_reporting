@@ -7,23 +7,16 @@ const axios = require(`axios`);
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
-const {
-    Op
-} = require("sequelize");
+const {Op} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {
-    QueryTypes
-} = require('sequelize');
+const {QueryTypes} = require('sequelize');
 
-const {
-    check,
-    query
-} = require('express-validator');
+const {check, query} = require('express-validator');
 
 const moment = require('moment');
 
@@ -34,43 +27,13 @@ const AxiosFunction = require('../functions/functions.axios');
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
+const ModelCampaignsEpilot = require("../models/models.campaings_epilot");
+
 const ModelInsertions = require("../models/models.insertions");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
-const {
-    promiseImpl
-} = require('ejs');
+const {promiseImpl} = require('ejs');
 
-exports.index = async (req, res) => {
-    try {
-        if (req.session.user.role === 1) {
-            // Liste tous les campagnes
-            const data = new Object();
-            data.breadcrumb = "Campagnes";
-            data.campaigns = await ModelCampaigns.findAll({
-                include: [{
-                    model: ModelAdvertisers
-                }]
-            });
-
-            data.moment = moment;
-            res.render('manager/campaigns/index.ejs', data);
-
-        } else {
-            res.status(404).render("error-status.ejs", {
-                statusCoded,
-
-            });
-        }
-
-    } catch (error) {
-        console.log(error);
-        var statusCoded = error.response.status;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
-    }
-}
 
 exports.list = async (req, res) => {
     try {
@@ -78,32 +41,20 @@ exports.list = async (req, res) => {
         const data = new Object();
         data.breadcrumb = "Liste des campagnes";
 
-        data.campaigns = await ModelCampaigns.findAll({
-            include: [{
-                model: ModelAdvertisers
-            }]
-        }, {
-            order: [
-                // Will escape title and validate DESC against a list of valid direction
-                // parameters
-                ['campaign_id', 'DESC']
-            ]
-        });
-
+        data.epilot = await ModelCampaignsEpilot.findAll({});
         data.moment = moment;
-        res.render('manager/campaigns/list.ejs', data);
+
+        res.render('manager/epilot/list.ejs', data);
     } catch (error) {
         console.log(error);
         var statusCoded = error.response.status;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
-
+/*
 exports.view = async (req, res) => {
     if (req.session.user.role == 1) {
-        console.log('Administrateur', req.session.user)
+        console.log('Administrateur',req.session.user)
 
     } else {
         console.log('Visiteur')
@@ -120,43 +71,43 @@ exports.view = async (req, res) => {
                 where: {
                     campaign_id: campaign_id
                 },
-                include: [{
-                    model: ModelAdvertisers
-                }]
+                include: [
+                    {
+                        model: ModelAdvertisers
+                    }
+                ]
             })
             .then(async function (campaign) {
-                if (!campaign)
+                if (!campaign) 
                     return res
                         .status(404)
-                        .render("manager/error.ejs", {
-                            statusCoded: 404
-                        });
-
+                        .render("manager/error.ejs", {statusCoded: 404});
+                
                 // Récupére les données des insertions de la campagne
                 insertions = await ModelInsertions.findAll({
                     where: {
                         campaign_id: campaign_id
                     },
-                    include: [{
-                        model: ModelCampaigns
-                    }]
+                    include: [
+                        {
+                            model: ModelCampaigns
+                        }
+                    ]
                 });
-
+                
                 // Attribue les données de la campagne
-                data.insertions = insertions
+                data.insertions = insertions 
                 data.campaign = campaign;
                 data.moment = moment;
                 res.render('manager/campaigns/view.ejs', data);
             });
 
-        // console.log(campaign);
+       // console.log(campaign);
 
     } catch (error) {
         console.log(error);
         var statusCoded = error.response.status;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -164,15 +115,17 @@ exports.create = async (req, res) => {
     try {
         const data = new Object();
         data.breadcrumb = "Ajouter une campagne";
-
+        
         // Récupére l'ensemble des annonceurs
-        var advertisers = await ModelAdvertisers.findAll({
-            order: [
-                // Will escape title and validate DESC against a list of valid direction
-                // parameters
-                ['advertiser_name', 'ASC']
-            ]
-        }).then(async function (advertisers) {
+        var advertisers = await ModelAdvertisers.findAll(            
+            {
+                order: [
+                    // Will escape title and validate DESC against a list of valid direction
+                    // parameters
+                    ['advertiser_name', 'ASC']
+                ]
+            }
+        ).then(async function (advertisers) {
             data.advertisers = advertisers;
         });
 
@@ -180,9 +133,7 @@ exports.create = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response.status;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -190,13 +141,12 @@ exports.create = async (req, res) => {
 
 exports.create_post = async (req, res) => {
     try {
-        console.log(req.body);
+      console.log(req.body);
 
     } catch (error) {
         console.log(error);
         var statusCoded = error.response.status;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
+*/

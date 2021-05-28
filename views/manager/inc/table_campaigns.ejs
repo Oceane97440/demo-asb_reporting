@@ -6,9 +6,9 @@
             <th>Nom</th>
             <th class="d-none">Date de début</th>
             <th class="d-none">Date de fin</th>
-            <th>Status</th>
+            <th style="display: none;">Status</th>
             <th>Archive</th>
-            <th>Dernière MAJ</th>
+            <th >Dernière MAJ</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -25,7 +25,7 @@
                 </td>
             <td class="d-none"><%= campaigns[i].campaign_start_date %></td>
             <td class="d-none"><%= campaigns[i].campaign_end_date %></td>
-            <td>
+            <td  style="display: none;">  
                 <% switch(campaigns[i].campaign_status_id) { 
                  case 0: %> <span class="badge bg-light">En Brouillon</span> <% break;
                  case 1: %> <span class="badge bg-secondary">Pré réservé</span> <% break; 

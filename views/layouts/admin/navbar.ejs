@@ -8,21 +8,15 @@
 
 
     <li class="nav-item text-white">
-      <a class="nav-link text-white" href=<% if(locals.user.role === 2 || locals.user.role === 3) { %>
-        /utilisateur
-        <%} else { %>
-        /home_page
-        <%}%>
+      <a class="nav-link text-white" href=<% if(locals.user.role === 2 || locals.user.role === 3) { %> /utilisateur
+        <%} else { %> /manager <%}%>
 
         
         ><i class="fas fa-arrow-left"
           style="font-size: medium;padding-right: 10px;"></i>Accueil</a>
     </li>
-    <% if(locals.user.email) { %>
-
-
-    <li class="nav-item text-white">
-      <a class="nav-link text-white" href="/logout">Déconnexion</a>
+    <% if(locals.user.email) { %> <li class="nav-item text-white">
+        <a class="nav-link text-white" href="/logout">Déconnexion</a>
     </li>
     <%}%>
   
@@ -42,29 +36,26 @@
     </li>
     <%}%>
     <% if(locals.user.role === 2) { %>
-      <li class="nav-item text-white">
-        <a class="nav-link text-white" href="/utilisateur">Forecast</a>
-      </li>
-   
-      <%}%>
+    <li class="nav-item text-white">
+      <a class="nav-link text-white" href="/utilisateur">Forecast</a>
+    </li>
+
+    <%}%>
 
    <% if(locals.user.role === 1) { %>
 
     <li class="nav-item text-white">
-      <a class="nav-link text-white" href="#">Admin</a>
+      <a class="nav-link text-white" href="/manager">Admin</a>
     </li>
 
     <li class="nav-item text-white">
       <a class="nav-link text-white" href="/forecast">Forecast</a>
     </li>
     <li class="nav-item text-white">
-      <a class="nav-link text-white" href="#">Reporting</a>
+      <a class="nav-link text-white" href="/manager/epilot/list">Campagnes epilot</a>
     </li>
     <li class="nav-item text-white">
-      <a class="nav-link text-white" href="/epilot">Campagnes epilot</a>
-    </li>
-    <li class="nav-item text-white">
-      <a class="nav-link text-white" href="/manager/list_advertisers">Manager</a>
+      <a class="nav-link text-white" href="/manager/advertisers/list">Manager</a>
     </li>
 
     <%}%>

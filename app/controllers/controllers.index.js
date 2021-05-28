@@ -53,7 +53,12 @@ exports.home_page = async (req, res) => {
 
     res.send("Home page")
 
-  }
+  }else {
+    res.status(404).render("error-status.ejs", {
+        statusCoded,
+
+    });
+}  
 }
 
 exports.signup = async (req, res) => {

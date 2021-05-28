@@ -1,0 +1,40 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+  
+    <div class="col-xl-12 col-md-12">
+        <div class="card table-card">
+            <div class="card-header">
+                <h1>Campagnes Epilot</h1>
+                
+                <% if (message) { %>
+
+                    <div class="alert alert-<%=message.type%>" role="alert">
+                        <%=message.intro%>:<%=message.message%>
+                     
+                    </div>
+            
+                    <% } %>
+                <div style="margin-top: 20px;">
+                    <form action="/epilot/csv_import/add"  method="POST" enctype="multipart/form-data"> 
+        
+                   <input type="file" name="file_csv" required>
+                   <button type="submit">Importer</button>
+        
+                   </form>
+                </div>
+
+            </div>
+            <div class="pro-scroll">
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+
+                        
+                        <%- include("../inc/table_campaigns_epilot.ejs") -%> 
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<%- include("../../layouts/manager/footer.ejs") -%>

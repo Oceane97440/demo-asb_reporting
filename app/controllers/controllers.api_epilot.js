@@ -228,7 +228,7 @@ exports.csv_import = async (req, res) => {
                   intro: 'Ok',
                   message: 'Votre fichier csv est valide'
                 }
-                return res.redirect('/epilot')
+                return res.redirect('/manager/epilot/list')
 
               }
 
@@ -256,10 +256,10 @@ exports.csv_import = async (req, res) => {
     } else {
       req.session.message = {
         type: 'danger',
-        intro: 'Ok',
+        intro: 'Erreur',
         message: 'Extention du fichier invalide'
       }
-      return res.redirect('/epilot')
+      return res.redirect('/manager/epilot/list')
 
     }
 
