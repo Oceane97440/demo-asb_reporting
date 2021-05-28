@@ -205,6 +205,7 @@ app.get('/*', function (req, res, next) {
 
         //console.log(res.locals.user.email)
     }
+    
     next();
 });
 

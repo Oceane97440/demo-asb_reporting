@@ -1,0 +1,128 @@
+<%- include("../layouts/manager/head.ejs") -%>
+
+<!-- support-section start -->
+<div >
+    <div class="alert alert-primary">
+        <div class="media align-items-center">
+            <i class="feather icon-alert-circle h2"></i>
+            <div class="media-body ml-3">
+                Récupérer les données de l'API de SMARTADSERVER en toute simplicité.
+            </div>
+        </div>
+    </div>
+    <% if (message) { %>
+
+        <div class="alert alert-<%=message.type%>" role="alert">
+            <%=message.intro%>:<%=message.message%>
+         
+        </div>
+
+        <% } %>
+    <div class="card flat-card">
+        <div class="row-table">
+            <div class="col-sm-6 card-body br">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="material-icons-two-tone text-primary mb-1">content_paste</i>
+                    </div>
+                    <div class="col-sm-8 text-md-center">
+                        <h5>
+                            <a href="/automate/campaigns" title="<%=campaigns%> Campagnes"><%=campaigns%></a>
+                        </h5>
+                        <span>
+                            <a href="/automate/campaigns" title="<%=campaigns%> Campagnes">Campagnes</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 d-none d-md-table-cell d-lg-table-cell d-xl-table-cell card-body br">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="material-icons-two-tone text-primary mb-1">business</i>
+                    </div>
+                    <div class="col-sm-8 text-md-center">
+                        <h5>
+                            <a href="/automate/advertisers" title="<%=advertisers%> Annonceurs"><%=advertisers%></a>
+                        </h5>
+                        <span>
+                            <a href="/automate/advertisers" title="<%=advertisers%> Annonceurs">Annonceurs</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="material-icons-two-tone text-primary mb-1">rule</i>
+                    </div>
+                    <div class="col-sm-8 text-md-center">
+                        <h5>
+                            <a href="/automate/insertions" title="<%=insertions%> Insertions"><%=insertions%></a>
+                        </h5>
+                        <span>
+                            <a href="/automate/insertions" title="<%=insertions%> Insertions">Insertions</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-table">
+            <div class="col-sm-6 card-body br">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="material-icons-two-tone text-primary mb-1">web</i>
+                    </div>
+                    <div class="col-sm-8 text-md-center">
+                        <h5>
+                            <a href="/automate/sites" title="<%=sites%> sites"><%=sites%></a>
+                        </h5>
+                        <span>
+                            <a href="/automate/sites" title="<%=sites%> sites">Sites</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 d-none d-md-table-cell d-lg-table-cell d-xl-table-cell card-body br">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="material-icons-two-tone text-primary mb-1">people</i>
+                    </div>
+                    <div class="col-sm-8 text-md-center">
+                        <h5>
+                            <a href="/automate/agencies"><%=agencies%></a>
+                        </h5>
+                        <span>
+                            <a href="/automate/agencies" >Agences</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <i class="material-icons-two-tone text-primary mb-1">shopping_cart</i>
+                    </div>
+                    <div class="col-sm-8 text-md-center">
+                        <h5>
+                            <a href="/automate/templates" ><%=templates%></a>
+                        </h5>
+                        <span>
+                            <a href="/automate/templates" >Templates</a>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>
+
+
+
+<!-- customer-section end -->
+
+<%- include("../layouts/manager/footer.ejs") -%>

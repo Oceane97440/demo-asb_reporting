@@ -102,11 +102,30 @@
                         role="button"
                         aria-haspopup="false"
                         aria-expanded="false">
-                        <img src="../../assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar">
+                        <% if(locals.user.role === 1) { %>
+
+                        <img src="../../../assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar">
+                        <%}%>
+                        <% if(locals.user.role === 3) { %>
+
+                            <img src="../../../assets/images/user/avatar-1.jpg" alt="user-image" class="user-avtar">
+                            <%}%>
+
                         <span>
-                            <span class="user-name">Joseph William</span>
-                            <span class="user-desc">Administrateur</span>
+
+                            <% if(locals.user.email) { %>
+                                <span class="user-name"><%=locals.user.email%></span>
+                                <% if(locals.user.role === 1) { %>
+                                <span class="user-desc">Administrateur</span>
+                                <%}%>
+                                <% if(locals.user.role === 3) { %>
+                                    <span class="user-desc">Utilisateur</span>
+                                    <%}%>
+
+                                <a class="nav-link btn-danger" href="/logout">Déconnexion</a>
+                              <%}%>
                         </span>
+                        
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right pc-h-dropdown">

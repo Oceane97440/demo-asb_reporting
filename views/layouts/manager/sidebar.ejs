@@ -4,14 +4,16 @@
         <div class="m-header">
             <a href="index.html" class="b-brand">
                 <!-- ======== change your logo hear ============ -->
-                <img href="../../assets/images/logo.svg" alt="" class="logo logo-lg">
-                    <img href="../../assets/images/logo-sm.svg" alt="" class="logo logo-sm"></a>
+                <img href="../../../assets/images/logo.svg" alt="" class="logo logo-lg">
+                    <img href="../../../assets/images/logo-sm.svg" alt="" class="logo logo-sm"></a>
                 </div>
                 <div class="navbar-content">
                     <ul class="pc-navbar">
                         <li class="pc-item pc-caption">
                             <label>Navigation</label>
                         </li>
+                        <% if(locals.user.role === 1) { %>
+
                         <li class="pc-item">
                             <a href="/manager/" class="pc-link">
                                 <span class="pc-micon">
@@ -20,6 +22,22 @@
                                 <span class="pc-mtext">Tableau de bord</span>
                             </a>
                         </li>
+                        <%}%>
+
+                        <li class="pc-item pc-hasmenu">
+                            <a class="pc-link" href=<% if(locals.user.role === 2 || locals.user.role === 3) { %> /utilisateur 
+                                <%} else { %> /manager <%}%>>
+                                <span class="pc-micon">
+                                    <i class="material-icons-two-tone">flag</i>
+                                </span>
+                                <span class="pc-mtext">Forecast</span>
+                                <span class="pc-arrow">
+                                    <i data-feather="chevron-right"></i>
+                                </span>
+                            </a>
+                            
+                        </li>
+
 
                         <li class="pc-item pc-hasmenu">
                             <a href="#!" class="pc-link">
@@ -31,23 +49,28 @@
                                     <i data-feather="chevron-right"></i>
                                 </span>
                             </a>
-                            <ul class="pc-submenu">
-                                <li class="pc-item">
+                    
+                            <ul class="pc-submenu">        
+                                <% if(locals.user.role === 1) { %>
+                                <li class="pc-item" style="display: none;">
                                     <a class="pc-link" href="/manager/campaigns/">Accueil</a>
                                 </li>
                                 <li class="pc-item">
                                     <a class="pc-link" href="/manager/campaigns/list">Liste des campagnes</a>
                                 </li>
                                 <li class="pc-item">
-                                    <a class="pc-link" href="/manager/campaigns/epilot">Liste des campagnes EPILOT</a>
-                                </li>
-                                <li class="pc-item">
                                     <a class="pc-link" href="/manager/campaigns/create">Ajouter une campagne</a>
                                 </li>
+                                <%}%>
+
+                                <li class="pc-item">
+                                    <a class="pc-link" href="/manager/epilot/list">Liste des campagnes EPILOT</a>
+                                </li>
+                             
 
                             </ul>
                         </li>
-
+                        <% if(locals.user.role === 1) { %>
                         <li class="pc-item pc-hasmenu">
                             <a href="#!" class="pc-link">
                                 <span class="pc-micon">
@@ -62,31 +85,23 @@
                                 <li class="pc-item">
                                     <a class="pc-link" href="/manager/advertisers/list">Liste des annonceurs</a>
                                 </li>
-                                <li class="pc-item">
+                                <li class="pc-item" style="display: none;">
                                     <a class="pc-link" href="/manager/advertisers/create">Ajouter un annonceur</a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="pc-item pc-hasmenu">
-                            <a href="#!" class="pc-link">
+
+                        <li class="pc-item pc-hasmenu" >
+                            <a href="/manager/api/data" class="pc-link">
                                 <span class="pc-micon">
                                     <i class="material-icons-two-tone">web</i>
                                 </span>
-                                <span class="pc-mtext">Sites</span>
-                                <span class="pc-arrow">
-                                    <i data-feather="chevron-right"></i>
-                                </span>
+                                <span class="pc-mtext">Récupération données API</span>
+                          
                             </a>
-                            <ul class="pc-submenu">
-                                <li class="pc-item">
-                                    <a class="pc-link" href="/manager/sites/list">Liste des sites / applis</a>
-                                </li>
-                                <li class="pc-item">
-                                    <a class="pc-link" href="/manager/sites/packs">Liste des packs</a>
-                                </li>
-                            </ul>
+                    
                         </li>
-                        <li class="pc-item pc-hasmenu">
+                        <li class="pc-item pc-hasmenu" style="display: none;">
                             <a href="#!" class="pc-link">
                                 <span class="pc-micon">
                                     <i class="material-icons-two-tone">picture_in_picture</i>
@@ -105,7 +120,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="pc-item pc-hasmenu">
+                        <li class="pc-item pc-hasmenu" style="display: none;">
                             <a href="#!" class="pc-link">
                                 <span class="pc-micon">
                                     <i class="material-icons-two-tone">next_week</i>
@@ -122,7 +137,7 @@
                             </ul>
                         </li>
 
-                        <li class="pc-item pc-hasmenu">
+                        <li class="pc-item pc-hasmenu" style="display: none;">
                             <a href="#!" class="pc-link">
                                 <span class="pc-micon">
                                     <i class="material-icons-two-tone">contacts</i>
@@ -146,7 +161,7 @@
                         </li>
 
 
-                        <li class="pc-item pc-hasmenu">
+                        <li class="pc-item pc-hasmenu" style="display: none;">
                             <a href="#!" class="pc-link">
                                 <span class="pc-micon">
                                     <i class="material-icons-two-tone">flag</i>
@@ -162,6 +177,7 @@
                                 </li>
                             </ul>
                         </li>
+                        <%}%>
 
                         <!-- <li class="pc-item pc-hasmenu"> <a href="#!" class="pc-link"> <span
                         class="pc-micon"> <i class="material-icons-two-tone">business_center</i>

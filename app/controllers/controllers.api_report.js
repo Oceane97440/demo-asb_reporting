@@ -4,7 +4,7 @@ localStorage = new LocalStorage('./report_storage');
 localStorage_tasks = new LocalStorage('./taskID');
 
 const {Op} = require("sequelize");
-// const excel = require('node-excel-export');
+ const excel = require('node-excel-export');
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"

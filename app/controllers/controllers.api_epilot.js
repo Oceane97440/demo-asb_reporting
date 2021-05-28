@@ -59,52 +59,55 @@ exports.index = async (req, res) => {
 
 
   try {
-    if (req.session.user.role === 1||req.session.user.role === 2||req.session.user.role === 3) {
+    if (req.session.user.role === 1) {
 
-    var confirmer = await ModelCampaign_epilot.findAll({
-      attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
+      var confirmer = await ModelCampaign_epilot.findAll({
+        attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
 
-      where: {
-        etat: 1
-      },
-      order: [
-        ['campaign_name', 'ASC']
-      ],
-    })
+        where: {
+          etat: 1
+        },
+        order: [
+          ['campaign_name', 'ASC']
+        ],
+      })
 
-    var reserver = await ModelCampaign_epilot.findAll({
-      attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
+      var reserver = await ModelCampaign_epilot.findAll({
+        attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
 
-      where: {
-        etat: 2
-      },
-      order: [
-        ['campaign_name', 'ASC']
-      ],
-    })
+        where: {
+          etat: 2
+        },
+        order: [
+          ['campaign_name', 'ASC']
+        ],
+      })
 
-    var reult_confirmer = Object.keys(confirmer).length;
+      var reult_confirmer = Object.keys(confirmer).length;
 
-    var reult_reserver = Object.keys(reserver).length;
+      var reult_reserver = Object.keys(reserver).length;
 
 
-    res.render('forecast/liste_epilot.ejs', {
-      confirmer: confirmer,
-      reserver: reserver,
-      reult_confirmer: reult_confirmer,
-      reult_reserver: reult_reserver
-    });
+      res.render('forecast/liste_epilot.ejs', {
+        confirmer: confirmer,
+        reserver: reserver,
+        reult_confirmer: reult_confirmer,
+        reult_reserver: reult_reserver
+      });
 
-  }
+    } else {
+      var statusCoded = 404;
+      res.render("error-status.ejs", {
+        statusCoded: statusCoded
+      });
+    }
 
-  } catch (error) { 
-    console.log(error)
+  } catch (error) {
+    console.log(error);
     var statusCoded = error.response.status;
-
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-     
-    })
+    res.render("error-status.ejs", {
+      statusCoded: statusCoded
+    });
   }
 
 
@@ -119,14 +122,15 @@ exports.csv_import = async (req, res) => {
 
   const uploadedFile = req.files.file_csv;
 
+
   try {
 
-    //console.log(req.files)
+
 
 
 
     //verification de extention du fichier
-    if ((uploadedFile.mimetype === 'application/vnd.ms-excel')) {
+    if ((uploadedFile.mimetype === 'application/vnd.ms-excel' || uploadedFile.mimetype === 'application/octet-stream')) {
 
       //il faut que le dossier upload existe. 
       //crée des dossier archive (ex:upload20210108)
@@ -150,7 +154,7 @@ exports.csv_import = async (req, res) => {
 
         .on('data', (data) => results.push(data))
         .on('end', () => {
-        //  console.log(results);
+          //  console.log(results);
 
           for (let i = 0; i < results.length; i++) {
 
@@ -175,10 +179,10 @@ exports.csv_import = async (req, res) => {
 
 
             }
-/*
-             if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
-            {return res.send("La date debut et fin est invalide")}
-*/
+            /*
+                         if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
+                        {return res.send("La date debut et fin est invalide")}
+            */
 
 
             //remplace les valeurs
@@ -209,7 +213,7 @@ exports.csv_import = async (req, res) => {
 
 
             //apres tout mes test passé add les données
-             ModelCampaign_epilot.create({
+            ModelCampaign_epilot.create({
               campaign_name: campaign_name,
               format_name: format_name,
               etat: etat,
@@ -217,9 +221,25 @@ exports.csv_import = async (req, res) => {
               campaign_end_date: campaign_fin,
               volume_prevue: volume_prevue
 
+            }).then(async function (campagne_epilot) {
+              if (campagne_epilot) {
+                req.session.message = {
+                  type: 'success',
+                  intro: 'Ok',
+                  message: 'Votre fichier csv est valide'
+                }
+                return res.redirect('/manager/epilot/list')
+
+              }
+
+
             })
 
-          // return res.render('forecast/liste_epilot.ejs')
+
+
+
+
+
 
 
 
@@ -234,11 +254,13 @@ exports.csv_import = async (req, res) => {
 
 
     } else {
-      return res.send({
-        error: {
-          message: "Extention du fichier invalide"
-        }
-      });
+      req.session.message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Extention du fichier invalide'
+      }
+      return res.redirect('/manager/epilot/list')
+
     }
 
 
@@ -246,14 +268,12 @@ exports.csv_import = async (req, res) => {
 
 
 
-  } catch (error) { 
-    console.log(error)
+  } catch (error) {
+    console.log(error);
     var statusCoded = error.response.status;
-
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-     
-    })
+    res.render("manager/error.ejs", {
+      statusCoded: statusCoded
+    });
   }
 
 

@@ -52,6 +52,13 @@ localStorage_tasks = new LocalStorage('./taskID');
 
 exports.agencies = async (req, res) => {
     try {
+        
+        req.session.message = {
+            type: 'success',
+            intro: 'Succès',
+            message: 'Les données ont été récupérées (API SMART)'
+          }
+         res.redirect('/manager/api/data')
         var config = SmartFunction.config('agencies');
         await axios(config).then(function (res) {
             var data = res.data;
@@ -66,11 +73,11 @@ exports.agencies = async (req, res) => {
                     let offset = page * 100;
                     var config2 = SmartFunction.config('agencies', offset);
                     await axios(config2).then(function (response) {
+                    
                         var dataValue = response.data;
                         var number_line_offset = data.length;
 
                         for (i = 0; i < number_line_offset; i++) {
-                            console.log(dataValue);
 
                             var agency_id = dataValue[i].id;
                             var agency_name = dataValue[i].name;
@@ -78,8 +85,14 @@ exports.agencies = async (req, res) => {
 
                             const agencies = ModelAgencies.create(
                                 {agency_id, agency_name, agency_archived}
-                            );
 
+                            )
+                                   
+
+                  
+                            
+                  
+                  
                         }
 
                         // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
@@ -88,6 +101,8 @@ exports.agencies = async (req, res) => {
             }
 
             addItem();
+            
+           
 
             return false;
         });
@@ -108,22 +123,26 @@ exports.advertisers = async (req, res) => {
             var number_pages = Math.round((number_total_count / 100) + 1);
             console.log(number_total_count);
             console.log('Number Pages :' + number_pages);
-
             const addItem = async () => {
                 for (let page = 0; page <= number_pages; page++) {
                     let offset = page * 100;
+                   console.log(offset)
+                  
                     var config2 = SmartFunction.config('advertisers', offset);
                     await axios(config2).then(function (response) {
+                        console.log(response.data)
                         var dataValue = response.data;
                         var number_line_offset = data.length;
 
                         for (i = 0; i < number_line_offset; i++) {
+                            console.log(dataValue);
+                           
                             var advertiser_id = dataValue[i].id;
                             var advertiser_name = dataValue[i].name;
                             var advertiser_archived = dataValue[i].isArchived;
 
-                            //  console.log(dataValue);
 
+                         
                             Utilities
                                 .updateOrCreate(ModelAdvertisers, {
                                     advertiser_id: advertiser_id
@@ -152,7 +171,7 @@ exports.advertisers = async (req, res) => {
 
             addItem();
 
-            process.exit(1);
+            return false;
         });
 
     } catch (error) {
@@ -217,6 +236,7 @@ exports.campaigns = async (req, res) => {
                                             .then(function (result) {
                                                 result.item; // the model
                                                 result.created; // bool, if a new item was created.
+                                                console.error('Ok');
                                             });
 
                                     }
@@ -231,7 +251,8 @@ exports.campaigns = async (req, res) => {
                 }
 
                 addItem();
-                process.exit(1);
+                return false;
+
             } else {
                 console.error('Error : Aucune donnée disponible');
             }
@@ -468,6 +489,8 @@ exports.templates = async (req, res) => {
                 }
 
                 addItem();
+                return false;
+
 
             } else {
                 console.error('Error : Aucune donnée disponible');
