@@ -5,8 +5,10 @@
   "main": "main.js",
   "scripts": {
     "start-electron": "electron ./main.js",
-    "start": "node ./app.js",
-    "installme": "npm i --unsafe-perms"
+    "start": "electron-forge start",
+    "installme": "npm i --unsafe-perms",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,7 @@
     "csv-parser": "^3.0.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.3",
+    "electron-squirrel-startup": "^1.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "express-validator": "^6.6.0",
@@ -50,6 +53,38 @@
     "validator": "^13.6.0"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.57",
+    "@electron-forge/maker-deb": "^6.0.0-beta.57",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.57",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.57",
+    "@electron-forge/maker-zip": "^6.0.0-beta.57",
     "electron": "^12.0.8"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "asb_report"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }
