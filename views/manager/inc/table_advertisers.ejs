@@ -15,7 +15,7 @@
             <td>
                 <a href="/manager/advertisers/<%= advertisers[i].advertiser_id %>" title="<%= advertisers[i].advertiser_name %>"><%= advertisers[i].advertiser_name %>
             </td>
-            <td><% switch(advertisers[i].advertiser_archived) { case 0: %> <span class="badge bg-warning">Archiv&eacute;</span> <% break; default: %> - <% break; }  %></td>
+            <td><% switch(advertisers[i].advertiser_archived) { case 1: %> <span class="badge bg-warning">Archiv&eacute;</span> <% break; default: %> - <% break; }  %></td>
             <td><%= advertisers[i].updated_at %></td>
             <td>
                

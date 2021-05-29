@@ -215,3 +215,47 @@ exports.getManage_AdvertiserData = async (method, urlManage, data = null) => {
 
   return advertiser_data
 }
+
+exports.getManage = async (method, data = null) => {
+
+  var test;
+
+ // console.log(method)
+ // console.log(data)
+
+  switch (method) {
+    case 'agencies':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/agencies';
+      break;
+    case 'advertisers':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers';
+      break;
+    case 'campaigns':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns';
+      break;
+    case 'insertions':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
+      break;
+
+    default:
+
+      break;
+  }
+
+  test = await axios({
+    method: 'POST',
+    url: configApiUrl,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    },
+    auth: {
+      username: dbApi.SMART_login,
+      password: dbApi.SMART_password
+    },
+    data
+  })
+
+
+  return test;
+}

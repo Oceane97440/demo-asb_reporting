@@ -115,6 +115,7 @@ exports.agencies = async (req, res) => {
 
 exports.advertisers = async (req, res) => {
     try {
+     
         var config = SmartFunction.config('advertisers');
         await axios(config).then(function (res) {
             var data = res.data;

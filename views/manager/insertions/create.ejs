@@ -3,9 +3,9 @@
     <div class="col-xl-12 col-md-12">
 
         <div class="card">
-            <form method="POST" action="/manager/campaigns/create">
+            <form method="POST" action="/manager/insertions/create">
             <div class="card-header">
-                <h5>Créer une campagne</h5>
+                <h5>Créer une insertions</h5>
             </div>
             <div class="card-body">
 
@@ -14,7 +14,7 @@
                     <div class="media align-items-center">
                         <i class="feather icon-alert-circle h2"></i>
                         <div class="media-body ml-3">
-                            Créer une campagne sur SMARTADSERVER en toute simplicité.
+                            Créer une insertion sur SMARTADSERVER en toute simplicité.
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         <%=message.intro%>:<%=message.message%>
                         <% if (message.type === 'success') { %>
 
-                        <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?AnnonceurID=<%=message.id_advertiser%>" target="_blank"> 
+                        <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%=message.id_campaign%>" target="_blank"> 
                         <img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER"></a>
                         <% } %>
 
@@ -34,29 +34,64 @@
 
                  
                 <div class="form-group">
-                    <label class="form-label" for="advertiser_id">Annonceur
+                    <label class="form-label" for="campaign">Campagne
                     </label>
                     <select
                         class="form-control"
-                        id="advertiser_id"
-                        name="advertiser_id"
+                        id="campaign"
+                        name="campaign"
                         required="required">
-                        <option value="">Choisir un annonceur</option>
-                        <% for (let i=0; i < advertisers.length; i++) { %>
-                            <option value="<%= advertisers[i].advertiser_id %>"><%= advertisers[i].advertiser_name %></option>
+                        <option value="">Choisir une campagne</option>
+                        <% for (let i=0; i < campaigns.length; i++) { %>
+                            <option value="<%= campaigns[i].campaign_id %>"
+                                <%- (campaigns[i].campaign_id == '1682740') ? 'selected="selected"' : '' -%>>
+                                <%= campaigns[i].campaign_name %>
+
+                            </option>
                         <% } %>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="campaign_name">Nom de la campagne</label>
+                    <label class="form-label" for="insertion">Nom de l'insertion</label>
                     <input
                         type="text"
-                        name="campaign_name"
-                        id="campaign_name"
+                        name="insertion"
+                        id="insertion"
                         class="form-control"
-                        placeholder="Saisissez le nom de la campagne"
+                        placeholder="Saisissez le nom de l'insertion"
                         required="required"/>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="form-label" for="format">Formats
+                    </label>
+                    <select
+                        class="form-control"
+                        id="format"
+                        name="format"
+                        required="required">
+                        <option value="">Choisir un format</option>
+                        <% for (let i=0; i < formats.length; i++) { %>
+                            <option value="<%= formats[i].format_id %>"><%= formats[i].format_name %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="site">Sites
+                    </label>
+                    <select
+                        class="form-control"
+                        id="site"
+                        name="site"
+                        multiple
+                        required="required">
+                        <% for (let i=0; i < sites.length; i++) { %>
+                            <option value="<%= sites[i].site_id %>"><%= sites[i].site_name %></option>
+                        <% } %>
+                    </select>
                 </div>
 
                 <div class="form-group">

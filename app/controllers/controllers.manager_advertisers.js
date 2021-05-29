@@ -41,6 +41,11 @@ const {
     promiseImpl
 } = require('ejs');
 
+const TEXT_REGEX =/^.{1,51}$/
+
+
+
+
 exports.index = async (req, res) => {
     try {
         if (req.session.user.role === 1) {
@@ -151,66 +156,91 @@ exports.view = async (req, res) => {
     }
 }
 
-/*exports.advertiser_add = async (req, res) => {
-
-  //ajoute dans la bdd les annonceurs
-
-  try {
-
-    if (req.session.user.role == 1) {
+exports.create = async (req, res) => {
+    try {
 
 
-      var config = {
-        method: 'GET',
-        url: 'https://manage.smartadserverapis.com/2044/advertisers/',
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        auth: {
-          username: dbApi.SMART_login,
-          password: dbApi.SMART_password
-        },
+        res.render('manager/advertisers/create.ejs');
 
-      };
-      await axios(config)
-        .then(function (res) {
-
-          var data = res.data
-          var number_line = data.length
-
-          for (i = 0; i < number_line; i++) {
-
-            var advertiser_id = data[i].id
-            var advertiser_name = data[i].name
-
-            const advertiser = ModelAdvertisers.create({
-              advertiser_id,
-              advertiser_name,
-
-
-            })
-
-          }
-
-        })
-        res.redirect("/manager/list_advertisers")
-
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
+}
+
+exports.create_post = async (req, res) => {
+    try {
+        const advertiser = req.body.advertiser_name
+        var archived = req.body.archived
+
+        if (!TEXT_REGEX.test(advertiser)) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Erreur',
+                message: 'Le nombre de caratère est limité à 50'
+            }
+            return res.redirect('/manager/advertisers/create');
+        }
+
+        if (advertiser == '' || archived == '') {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'Les champs doivent être complétés'
+            }
+            return res.redirect('/manager/advertisers/create');
+        }
+
+        if (archived === 1) {
+            archived = true
+        } else {
+            archived = false
+        }
+
+        var requestAdvertiser = {
+            "name": advertiser,
+
+            "isDirectAdvertiser": true,
+
+            "isHouseAds": false,
+
+            "isArchived": archived,
+
+            "userGroupId": 12958
+
+        }
+
+        let advertiser_create = await AxiosFunction.getManage('advertisers', requestAdvertiser);
+        if (advertiser_create.headers.location) {
+
+            req.session.message = {
+                type: 'success',
+                intro: 'Ok',
+                message: 'L\'annonceur a été dans SMARTADSERVEUR',
+
+            }
+            return res.redirect('/manager/advertisers/create');
+        } else {
+            res.status(404).render("error-status.ejs", {
+                statusCoded,
+
+            });
+        }
 
 
-  }catch (error) {
-    console.log(error)
-    var statusCoded = error.response.status;
 
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
+    } catch (error) {
+        console.log(error);
 
-    })
-  }
-
-
-}*/
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
 
 exports.advertiser_list = async (req, res) => {
 

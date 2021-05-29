@@ -39,11 +39,16 @@ router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
 router.get("/campaigns/:id", manager_campaigns.view);
 
+router.get('/insertions/create', manager_campaigns.create_insertions);
+router.post('/insertions/create', manager_campaigns.create_post_insertions);
+
 router.get("/epilot/list", manager_campaigns_epilot.list);
 
 
 router.get("/advertisers", manager_advertisers.index);
 router.get("/advertisers/list", manager_advertisers.list);
+router.get('/advertisers/create', manager_advertisers.create);
+router.post('/advertisers/create', manager_advertisers.create_post);
 router.get("/advertisers/:id", manager_advertisers.view);
 
 
