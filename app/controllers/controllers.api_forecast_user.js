@@ -1133,7 +1133,7 @@ exports.update = async (req, res, next) => {
                 req.session.message = {
                     type: 'success',
                     intro: 'Ok',
-                    message: 'La campagne a été modifier'
+                    message: 'La campagne a été modifiée'
                 }
                 res.redirect('/manager/epilot/list')
 
@@ -1142,7 +1142,7 @@ exports.update = async (req, res, next) => {
                 req.session.message = {
                     type: 'success',
                     intro: 'Ok',
-                    message: 'La campagne a été modifier'
+                    message: 'La campagne a été modifiée'
                 }
                 res.redirect('/manager/epilot/list')
 

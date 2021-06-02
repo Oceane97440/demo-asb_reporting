@@ -262,7 +262,7 @@ exports.create_post = async (req, res) => {
             req.session.message = {
                 type: 'success',
                 intro: 'Ok',
-                message: 'La campagne a été dans SMARTADSERVEUR',
+                message: 'La campagne a été crée dans SMARTADSERVEUR',
                 id_advertiser : advertiser
 
             }
@@ -478,7 +478,7 @@ exports.create_post_insertions = async (req, res) => {
             req.session.message = {
                 type: 'success',
                 intro: 'Ok',
-                message: 'L\'inserion a été dans SMARTADSERVEUR',
+                message: 'L\'inserion a été crée dans SMARTADSERVEUR',
                 id_campaign : campaign
 
             }
