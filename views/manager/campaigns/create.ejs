@@ -43,8 +43,13 @@
                         required="required">
                         <option value="">Choisir un annonceur</option>
                         <% for (let i=0; i < advertisers.length; i++) { %>
-                            <option value="<%= advertisers[i].advertiser_id %>"><%= advertisers[i].advertiser_name %></option>
+                            <option value="<%= advertisers[i].advertiser_id %>"
+                                <%- (advertisers[i].advertiser_id == '425912') ? 'selected="selected"' : '' -%>>
+                                <%= advertisers[i].advertiser_name %>
+
+                            </option>
                         <% } %>
+                       
                     </select>
                 </div>
 

@@ -1166,7 +1166,7 @@ exports.delete = async (req, res, next) => {
             req.session.message = {
                 type: 'success',
                 intro: 'Ok',
-                message: 'La campagne a été supprimer'
+                message: 'La campagne a été supprimée'
             }
             res.redirect('/manager/epilot/list')
 
@@ -1175,7 +1175,7 @@ exports.delete = async (req, res, next) => {
             req.session.message = {
                 type: 'success',
                 intro: 'Ok',
-                message: 'La campagne a été supprimer'
+                message: 'La campagne a été supprimée'
             }
             res.redirect('/manager/epilot/list')
 
