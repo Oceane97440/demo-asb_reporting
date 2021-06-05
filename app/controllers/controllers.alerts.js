@@ -37,7 +37,7 @@ const ModelFormatsTemplates = require("../models/models.formats_templates")
 const ModelGroupsFormats = require("../models/models.groups_formats");
 const ModelInsertions = require("../models/models.insertions");
 const ModelInsertionsTemplates = require(
-    "../models/models.insertionstemplates"
+    "../models/models.insertions_templates"
 );
 const ModelCreatives = require("../models/models.creatives");
 
@@ -107,18 +107,18 @@ exports.alerts = async (req, res) => {
         const insertionsOnline = await sequelize.query(
             'SELECT asb_insertions.insertion_id, insertion_name, insertion_status_id,insert' +
                     'ion_start_date,insertion_end_date,asb_insertions.format_id,asb_formats.format_' +
-                    'id,format_name,asb_insertionstemplates.insertion_id,asb_insertionstemplates.te' +
+                    'id,format_name,asb_insertions_templates.insertion_id,asb_insertions_templates.te' +
                     'mplate_id,asb_templates.template_name,asb_templates.template_official,asb_temp' +
                     'lates.template_archived,asb_templates.template_updated_at, asb_templates.templ' +
                     'ate_description, asb_formats_templates.format_id,asb_formats_templates.templat' +
                     'e_id , asb_insertions.campaign_id , asb_campaigns.campaign_name   FROM `asb_in' +
-                    'sertions`,asb_insertionstemplates, asb_formats, asb_templates, asb_formats_tem' +
+                    'sertions`,asb_insertions_templates, asb_formats, asb_templates, asb_formats_tem' +
                     'plates , asb_campaigns  WHERE `insertion_archived` = "0" AND insertion_status_' +
                     'id = "1" AND insertion_end_date >= ?  AND asb_insertions.insertion_id = asb_in' +
                     'sertionstemplates.insertion_id   AND asb_templates.template_id = asb_insertion' +
                     'stemplates.template_id  AND asb_insertions.format_id = asb_formats.format_id A' +
                     'ND asb_formats_templates.format_id = asb_insertions.format_id AND asb_formats_' +
-                    'templates.template_id=  asb_insertionstemplates.template_id AND asb_insertions' +
+                    'templates.template_id=  asb_insertions_templates.template_id AND asb_insertions' +
                     '.campaign_id=  asb_campaigns.campaign_id',
             {
                 replacements: [NOW],
@@ -154,9 +154,7 @@ exports.alerts = async (req, res) => {
 
             //push si template incompatible avec les formats
             if (!insertiontemplate) {
-
-                obj_TemplateFormat.push(obj)
-
+                obj_TemplateFormat.push(obj);
             }
 
         }

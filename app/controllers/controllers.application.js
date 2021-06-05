@@ -58,14 +58,8 @@ const ModelUser_Role = require("../models/models.users_roles")
 
 
 exports.login_add = async (req, res) => {
-
-
-
-
   const email = req.body.email;
   const password = req.body.mdp;
-
-
 
   try {
     if (email == '' || password == '') {
@@ -80,7 +74,6 @@ exports.login_add = async (req, res) => {
         message: message
       })
     }
-
 
     ModelUser.findOne({
       where: {

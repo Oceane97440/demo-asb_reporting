@@ -33,12 +33,13 @@ const ModelSites = require("../models/models.sites");
 const ModelTemplates = require("../models/models.templates");
 const ModelPlatforms = require("../models/models.platforms");
 const ModelDeliverytypes = require("../models/models.deliverytypes");
-const ModelInsertionsStatus = require("../models/models.insertionstatus");
+const ModelInsertionsStatus = require("../models/models.insertions_status");
 
 const ModelCountries = require("../models/models.countries");
 const ModelInsertions = require("../models/models.insertions");
+const ModelInsertionsPriorities = require("../models/models.insertions_priorities");
 const ModelInsertionsTemplates = require(
-    "../models/models.insertionstemplates"
+    "../models/models.insertions_templates"
 );
 const ModelCreatives = require("../models/models.creatives");
 
@@ -550,11 +551,11 @@ exports.deliverytypes = async (req, res) => {
                         var number_line_offset = data.length;
 
                         for (i = 0; i < number_line_offset; i++) {
-                            var deliverytype_id = dataValue[i].id;
-                            var deliverytype_name = dataValue[i].name;
+                            var priority_id = dataValue[i].id;
+                            var priority_name = dataValue[i].name;
 
                             //  console.log(dataValue);
-                            ModelDeliverytypes.create({deliverytype_id, deliverytype_name});
+                            ModelDeliverytypes.create({priority_id, priority_name});
 
                         }
 
@@ -574,9 +575,9 @@ exports.deliverytypes = async (req, res) => {
     }
 }
 
-exports.insertionstatus = async (req, res) => {
+exports.insertions_status = async (req, res) => {
     try {
-        var config = SmartFunction.config('insertionstatus');
+        var config = SmartFunction.config('insertions_status');
         await axios(config).then(function (res) {
             var data = res.data;
             var number_line = data.length;
@@ -592,17 +593,17 @@ exports.insertionstatus = async (req, res) => {
                 for (let page = 0; page <= number_pages; page++) {
                     //  page = 0
                     let offset = page * 100;
-                    var config2 = SmartFunction.config('insertionstatus', offset);
+                    var config2 = SmartFunction.config('insertions_status', offset);
                     await axios(config2).then(function (response) {
                         var dataValue = response.data;
                         var number_line_offset = data.length;
 
                         for (i = 0; i < number_line_offset; i++) {
-                            var insertionstatus_id = dataValue[i].id;
-                            var insertionstatus_name = dataValue[i].name;
+                            var insertion_status_id = dataValue[i].id;
+                            var insertion_status_name = dataValue[i].name;
 
                             //  console.log(dataValue);
-                            ModelInsertionsStatus.create({insertionstatus_id, insertionstatus_name});
+                            ModelInsertionsStatus.create({insertion_status_id, insertion_status_name});
 
                         }
 
@@ -686,12 +687,12 @@ exports.countries = async (req, res) => {
     }
 }
 
-exports.insertionstemplates = async (req, res) => {
+exports.insertions_templates = async (req, res) => {
     // Délai d'attente
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     try {
-        // Listes toutes les données de InsertionsTemplates
+        // Listes toutes les données de insertions_templates
         var insertionTemplatesDB = await ModelInsertionsTemplates.findAll(
             {attributes: ['insertion_id']}
         );
@@ -730,7 +731,7 @@ exports.insertionstemplates = async (req, res) => {
                 console.log(j++);
 
                 var config = SmartFunction.config(
-                    'insertionstemplates',
+                    'insertions_templates',
                     '',
                     '',
                     insertionObject
@@ -773,7 +774,7 @@ exports.creatives = async (req, res) => {
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     try {
-        // Listes toutes les données de InsertionsTemplates
+        // Listes toutes les données de insertions_templates
         var insertionCreativesDB = await ModelCreatives.findAll(
             {attributes: ['insertion_id']}
         );
@@ -811,7 +812,8 @@ exports.creatives = async (req, res) => {
                 };
                 // console.log(j++);
 
-                var config = SmartFunction.config('creatives', '', '', insertionObject);
+                // var config = SmartFunction.config('creatives', '', '', insertionObject);
+                var config = SmartFunction.config('creatives', insertionObject);
 
                 await axios(config).then(function (res) {
                     //console.log(res.data); process.exit(1);
@@ -895,7 +897,12 @@ exports.insertions = async (req, res) => {
                 const addItem = async () => {
                     for (let page = 0; page <= number_pages; page++) {
                         let offset = page * 100;
-                        var config2 = SmartFunction.config('insertions', offset);
+
+                        paramsObject = { "offset": offset };        
+                        // var config = SmartFunction.config('creatives', '', '', insertionObject);
+                        var config = SmartFunction.config('creatives', paramsObject);
+
+                        var config2 = SmartFunction.config('insertions', paramsObject);
                         await axios(config2).then(function (response) {
                             if (!Utilities.empty(response.data)) {
                                 var dataValue = response.data;
@@ -915,7 +922,7 @@ exports.insertions = async (req, res) => {
                                         //  var site_id = dataValue[i].siteIds;
 
                                         var pack_id = dataValue[i].packIds;
-                                        var insertion_status_id = dataValue[i].insertionStatusId;
+                                        var insertion_status_id = dataValue[i].insertions_statusId;
                                         var insertion_start_date = dataValue[i].startDate;
                                         var insertion_end_date = dataValue[i].endDate;
                                         var campaign_id = dataValue[i].campaignId;
@@ -1042,6 +1049,240 @@ exports.insertions = async (req, res) => {
         });
     } catch (error) {
         console.error('Error : ' + error);
+    }
+}
+
+
+exports.insertions_priorities = async (req, res) => {
+ 
+        try {
+            var config = SmartFunction.config('insertions_priorities');
+            await axios(config).then(function (res) {
+                var data = res.data;
+                var number_line = data.length;
+                var number_total_count = res.headers['x-pagination-total-count'];
+                var number_pages = Math.round((number_total_count / 100) + 1);
+                console.log(number_total_count);
+                console.log('Number Pages :' + number_pages);
+    
+                const addItem = async () => {
+    
+                    // <= car si le nombre de page est = 0 et que page = 0 la condiction ne
+                    // fonctionne pas
+                    for (let page = 0; page <= number_pages; page++) {
+                        //  page = 0
+                        let offset = page * 100;
+                        var config2 = SmartFunction.config('insertions_priorities', offset);
+                        await axios(config2).then(function (response) {
+                            var dataValue = response.data;
+                            var number_line_offset = data.length;
+    
+                            for (i = 0; i < number_line_offset; i++) {
+                                var priority_id = dataValue[i].id;
+                                var priority_name = dataValue[i].name;  
+
+                                ModelInsertionsPriorities.create({priority_id, priority_name});    
+                            }
+                        });
+                    }
+                }
+    
+                addItem();
+    
+                return false;
+            });
+    
+        } catch (error) {
+            console.error('Error : ' + error);    
+        }
+}
+
+exports.campaignsInsertions = async (req, res) => {
+    try {        
+        campaignObject = {
+            "campaign_id": req.query.campaign_id
+        };
+        console.log(campaignObject);
+       
+      
+        var config = SmartFunction.config('campaignsInsertions',campaignObject);
+        
+         await axios(config).then(function (res) {           
+            if (!Utilities.empty(res.data)) {
+                var data = res.data;
+
+                console.log(data);
+                var number_line = data.length;
+                var number_total_count = res.headers['x-pagination-total-count'];
+                var number_pages = Math.round((number_total_count / 100) + 1);
+                console.log(number_total_count);
+                console.log('Number Pages :' + number_pages);
+          
+                const addItem = async () => {
+                    for (let page = 0; page <= number_pages; page++) {
+                    
+
+                        let offset = page * 100;
+                        campaignObject2 = {
+                            "campaign_id": req.query.campaign_id,
+                            "offset": offset
+                        };
+
+                        var config2 =  SmartFunction.config('campaignsInsertions',campaignObject2);
+                        await axios(config2).then(function (response) {
+                            if (!Utilities.empty(response.data)) {
+                                var dataValue = response.data;
+                                var number_line_offset = data.length;
+                                if (number_line_offset >= 0) {
+                                    for (i = 0; i < number_line_offset; i++) {
+
+                                        // console.log(dataValue)
+                                        var insertion_id = dataValue[i].id;
+                                        var delivery_regulated = dataValue[i].isDeliveryRegulated;
+                                        var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
+                                        var used_non_guaranteed_deal = dataValue[i].heigisUsedByNonGuaranteedDealht;
+                                        var voice_share = dataValue[i].voiceShare;
+                                        var event_id = dataValue[i].eventId;
+                                        var insertion_name = dataValue[i].name;
+                                        var insertion_description = dataValue[i].description;
+                                        //  var site_id = dataValue[i].siteIds;
+
+                                        var pack_id = dataValue[i].packIds;
+                                        var insertion_status_id = dataValue[i].insertions_statusId;
+                                        var insertion_start_date = dataValue[i].startDate;
+                                        var insertion_end_date = dataValue[i].endDate;
+                                        var campaign_id = dataValue[i].campaignId;
+                                        var insertion_type_id = dataValue[i].insertionTypeId;
+                                        var delivery_type_id = dataValue[i].deliveryTypeId;
+                                        var timezone_id = dataValue[i].timezoneId;
+                                        var priority_id = dataValue[i].priorityId;
+                                        var periodic_capping_id = dataValue[i].periodicCappingId;
+                                        var group_capping_id = dataValue[i].groupCappingId;
+                                        var max_impression = dataValue[i].maxImpressions;
+                                        var weight = dataValue[i].weight;
+                                        var max_click = dataValue[i].maxClicks;
+                                        var max_impression_perday = dataValue[i].maxImpressionsPerDay;
+                                        var max_click_perday = dataValue[i].maxClicksPerDay;
+                                        var insertion_groupe_volume = dataValue[i].insertionGroupedVolumeId
+                                        var event_impression = dataValue[i].eventImpressions;
+                                        var holistic_yield_enabled = dataValue[i].isHolisticYieldEnabled;
+                                        var deliver_left_volume_after_end_date = dataValue[i].deliverLeftVolumeAfterEndDate;
+                                        var global_capping = dataValue[i].globalCapping;
+                                        var capping_per_visit = dataValue[i].cappingPerVisit;
+                                        var capping_per_click = dataValue[i].cappingPerClick;
+                                        var auto_capping = dataValue[i].autoCapping;
+                                        var periodic_capping_impression = dataValue[i].periodicCappingImpressions;
+                                        var periodic_capping_period = dataValue[i].periodicCappingPeriod;
+                                        var oba_icon_enabled = dataValue[i].isObaIconEnabled;
+                                        //test
+                                        if (dataValue[i].formatId === 0) {
+                                            var format_id = "NULL"
+                                        } else {
+                                            var format_id = dataValue[i].formatId;
+                                        }
+                                        var external_id = dataValue[i].externalId;
+                                        var external_description = dataValue[i].externalDescription;
+                                        var insertion_updated_at = dataValue[i].updatedAt;
+                                        var insertion_created_at = dataValue[i].createdAt;
+                                        var insertion_archived = dataValue[i].isArchived;
+                                        var rate_type_id = dataValue[i].rateTypeId;
+                                        var rate = dataValue[i].rate;
+                                        var rate_net = dataValue[i].rateNet;
+                                        var discount = dataValue[i].discount;
+                                        var currency_id = dataValue[i].currencyId;
+                                        var insertion_link_id = dataValue[i].insertionLinkId;
+                                        var insertion_exclusion_id = dataValue[i].insertionExclusionIds;
+                                        var customized_script = dataValue[i].customizedScript;
+                                        var sale_channel_id = dataValue[i].salesChannelId;
+
+                                        Utilities
+                                            .updateOrCreate(ModelInsertions, {
+                                                insertion_id: insertion_id
+                                            }, {
+                                                insertion_id,
+                                                delivery_regulated,
+                                                used_guaranteed_deal,
+                                                used_non_guaranteed_deal,
+                                                voice_share,
+                                                event_id,
+                                                insertion_name,
+                                                insertion_description,
+                                                pack_id,
+                                                insertion_status_id,
+                                                insertion_start_date,
+                                                insertion_end_date,
+                                                campaign_id,
+                                                insertion_type_id,
+                                                delivery_type_id,
+                                                timezone_id,
+                                                priority_id,
+                                                periodic_capping_id,
+                                                group_capping_id,
+                                                max_impression,
+                                                weight,
+                                                max_click,
+                                                max_impression_perday,
+                                                max_click_perday,
+                                                insertion_groupe_volume,
+                                                event_impression,
+                                                holistic_yield_enabled,
+                                                deliver_left_volume_after_end_date,
+                                                global_capping,
+                                                capping_per_visit,
+                                                capping_per_click,
+                                                auto_capping,
+                                                periodic_capping_impression,
+                                                periodic_capping_period,
+                                                oba_icon_enabled,
+                                                format_id,
+                                                external_id,
+                                                external_description,
+                                                insertion_updated_at,
+                                                insertion_created_at,
+                                                insertion_archived,
+                                                rate_type_id,
+                                                rate,
+                                                rate_net,
+                                                discount,
+                                                currency_id,
+                                                insertion_link_id,
+                                                insertion_exclusion_id,
+                                                customized_script,
+                                                sale_channel_id
+                                            })
+                                            .then(function (result) {
+                                                result.item; // the model
+                                                result.created; // bool, if a new item was created.
+                                            });
+
+                                    }
+
+                                }
+                            } else {
+                                console.error('Error : Aucune donnée disponible');
+                            }
+
+                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        });
+                    }
+                }
+
+                addItem();
+              // return res.json({'status': 'Insertions MAJ'});
+              return res.status(200).json({
+                success: true,
+                message: 'insertions maj'
+              })
+        
+
+            } else {
+                console.error('Error : Aucune donnée disponible');
+            }
+
+
+        });
+    } catch (error) {
+        console.error(error);
     }
 }
 

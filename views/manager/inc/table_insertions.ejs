@@ -14,26 +14,23 @@
     </thead>
     <tbody>
         <% for (let i=0; i < insertions.length; i++) { %>           
-            <tr>
-                <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_id %></a></td> 
+            <tr>               
+              <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_id %></a></td> 
                 <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>" title="<%= insertions[i].campaign.campaign_name %>"><%= insertions[i].campaign.campaign_name %></a></td> 
                 <td>
                     <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_name %></a>
                     <br />
                     <span class="small"><%= moment(insertions[i].insertion_start_date).format('DD/MM/YYYY') %></span> - 
-                    <span class="small"><%= insertions[i].insertion_end_date %></span>
+                    <span class="small"><%= moment(insertions[i].insertion_end_date).format('DD/MM/YYYY') %></span>
                 </td> 
                 <td class="d-none"><%= insertions[i].insertion_start_date %></td>
                 <td class="d-none"><%= insertions[i].insertion_end_date %></td>
-                <td><%= insertions[i].priority_id %></td>
-                <td><%= insertions[i].format_id %></td>
-                <td><%= insertions[i].insertion_status_id %></td>
-                <td>
-                    
+                <td><%= insertions[i].insertions_priority.priority_name %></td>
+                <td><%= insertions[i].format.format_name %></td>
+                <td><span class="badge bg-success"><%= insertions[i].insertions_status.insertion_status_name %></span></td>
+                <td>                    
                    <a href="https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%= insertions[i].insertion_id %>" target="_blank" title="Accéder à l'insertion sur SMARTADSERVER"><img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER" /></a>
                    &nbsp; <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>/edit" title="Modifier cette campagne"><i class="icon feather icon-edit f-16 text-success"></i></a>
-                
-
                 </td>
             </tr>
         <% } %>

@@ -1,5 +1,5 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-<div class="col-sm-12">
+<div class="col-sm-12" id="campaign-main">
     <div class="card">
         <div class="card-header">
             <h1><%= campaign.campaign_name %></h1>
@@ -45,15 +45,14 @@
     </div>
 </div>
 
-
-<div class="col-sm-12">
+<div class="col-sm-12" id="campaign-insertions">
     <div class="card">
         <div class="card-header">
             <h3>Insertions</h3>
         </div>
         <div class="card-body">
             <% if(insertions) { %>
-                <%# include("../inc/table_insertions.ejs") -%> 
+                <%- include("../inc/table_insertions.ejs") -%> 
             <% } else { %>
                 <div class="alert alert-warning" role="alert">
                    Aucune insertion.
@@ -63,5 +62,21 @@
     </div>
 </div>
 
+<div class="col-sm-12" id="campaign-creatives">
+    <div class="card">
+        <div class="card-header">
+            <h3>Créatives</h3>
+        </div>
+        <div class="card-body">
+            <% if(creatives) { %>
+                <%- include("../inc/table_creatives.ejs") -%> 
+            <% } else { %>
+                <div class="alert alert-warning" role="alert">
+                   Aucune créative.
+                </div> 
+            <% } %>
+        </div>
+    </div>
+</div>
 
 <%- include("../../layouts/manager/footer.ejs") -%>

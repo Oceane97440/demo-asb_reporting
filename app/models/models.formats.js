@@ -37,7 +37,7 @@ const Formats = sequelize.define('formats', {
         allowNull: true
     }
 }, {
-    tableName: '_asb_formats',
+    tableName: 'asb_formats',
     underscored: true,
     timestamps: false
 });

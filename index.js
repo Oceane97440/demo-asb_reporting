@@ -29,9 +29,10 @@ const groups_formats_types = require(
 const formatstemplates = require("./app/models/models.formats_templates")
 const insertions = require('./app/models/models.insertions');
 const templates = require('./app/models/models.templates');
-const insertions_templates = require('./app/models/models.insertionstemplates');
+const insertions_templates = require('./app/models/models.insertions_templates');
 const creatives = require('./app/models/models.creatives');
-const insertionstatus = require('./app/models/models.insertionstatus');
+const insertions_status = require('./app/models/models.insertions_status');
+const insertions_priorities = require('./app/models/models.insertions_priorities');
 
 /* Mettre les relation ici */
 /*sites.belongsTo(countries);
@@ -49,7 +50,7 @@ sites.hasMany(packs_sites, {
     hooks: true
 });
 
-//un user possède un role un role possède un à plusieur user
+//un user posséde un role un role posséde un à plusieur user
 users.hasOne(users_roles, {
     foreignKey: 'user_id',
     onDelete: 'cascade',
@@ -61,7 +62,7 @@ roles.hasMany(users_roles, {
     hooks: true
 });
 
-//un format possède un ou plusieur group un group possède un à plusieur format
+//un format posséde un ou plusieur group un group posséde un à plusieur format
 formats.hasMany(groups_formats_types, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
@@ -73,8 +74,8 @@ groups_formats.hasMany(groups_formats_types, {
     hooks: true
 });
 
-// un format possède un ou plusieur template un template possède un à plusieur
-// format
+// un format posséde un ou plusieur template un template posséde un à plusieurs
+// formats
 formats.hasMany(formatstemplates, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
@@ -100,9 +101,28 @@ advertisers.hasMany(campaigns, {
 
 insertions.belongsTo(campaigns, {
     foreignKey: 'campaign_id',
-   onDelete: 'cascade',
+    onDelete: 'cascade',
     hooks: true
-}); // la campagne à un format.
+});
+
+insertions.belongsTo(insertions_priorities, {
+    foreignKey: 'priority_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+insertions_status.hasMany(insertions, {
+    foreignKey: 'insertion_status_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+insertions.belongsTo(insertions_status, {
+    foreignKey: 'insertion_status_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+// la campagne à un format.
 campaigns.hasMany(insertions, {
     foreignKey: 'campaign_id',
     onDelete: 'cascade',
@@ -113,20 +133,11 @@ insertions.belongsTo(formats, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true
-}); // la campagne à un format.
-formats.hasMany(insertions, {
-    foreignKey: 'format_id',
-    onDelete: 'cascade',
-    hooks: true
 });
 
-insertionstatus.belongsTo(insertions, {
-    foreignKey: 'insertion_status_id',
-    onDelete: 'cascade',
-    hooks: true
-});
-insertions.hasMany(insertionstatus, {
-    foreignKey: 'insertion_status_id',
+// la campagne à un format.
+formats.hasMany(insertions, {
+    foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true
 });

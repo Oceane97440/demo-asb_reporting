@@ -1,7 +1,7 @@
 const dbApi = require("../config/config.api");
 const ModelInsertions = require("../models/models.insertions");
 
-exports.config = function (method, offset = 0, limit = 100, params = '') {
+exports.config = function (method, params = '') {
 
     switch (method) {
         case 'agencies':
@@ -12,6 +12,10 @@ exports.config = function (method, offset = 0, limit = 100, params = '') {
             break;
         case 'campaigns':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/';
+            break;
+        case 'campaignsInsertions':
+            campaign_id = params.campaign_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/'+campaign_id+'/insertions/';
             break;
         case 'formats':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/formats';
@@ -28,16 +32,19 @@ exports.config = function (method, offset = 0, limit = 100, params = '') {
         case 'deliverytypes':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/deliverytypes';
             break;
-        case 'insertionstatus':
-            var configApiUrl = 'https://manage.smartadserverapis.com/2044/InsertionStatus';
+        case 'insertions_status':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions_status';
             break;
+        case 'insertions_priorities':
+                var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertionpriorities';
+                break;
         case 'countries':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/countries';
             break;
         case 'insertions':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
             break;
-        case 'insertionstemplates':
+        case 'insertions_templates':
 
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
@@ -69,14 +76,20 @@ exports.config = function (method, offset = 0, limit = 100, params = '') {
             username: dbApi.SMART_login,
             password: dbApi.SMART_password
         },
-
+/*
         //condition config
         params: {
             limit: limit,
             offset: offset
            // isArchived: "both"
-        }
+        }*/
     };
 
+    if(params.limit) { config['params']['limit'] = params.limit;}
+    if(params.offset) { config['params']['offset'] = params.offset;}
+    if(params.isArchived) { config['params']['isArchived'] = params.isArchived;}
+
+
+    console.log(config)
     return config;
 }

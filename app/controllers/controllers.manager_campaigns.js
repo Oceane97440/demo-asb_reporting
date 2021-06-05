@@ -28,9 +28,12 @@ const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
+const ModelInsertionsPriorities = require("../models/models.insertions_priorities");
+const ModelInsertionsStatus = require("../models/models.insertions_status");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
 const {promiseImpl} = require('ejs');
+const { insertions } = require('./controllers.automate');
 
 exports.index = async (req, res) => {
     try {
@@ -84,15 +87,7 @@ exports.list = async (req, res) => {
 }
 
 exports.view = async (req, res) => {
-    if (req.session.user.role == 1) {
-        console.log('Administrateur',req.session.user)
-
-    } else {
-        console.log('Visiteur')
-
-    }
-
-    try {
+     try {
         const data = new Object();
         data.breadcrumb = "Campagnes";
 
@@ -109,31 +104,33 @@ exports.view = async (req, res) => {
                 ]
             })
             .then(async function (campaign) {
-                if (!campaign) 
+                if (!campaign) {
                     return res
                         .status(404)
                         .render("manager/error.ejs", {statusCoded: 404});
-                
+                }
+
                 // Récupére les données des insertions de la campagne
-                insertions = await ModelInsertions.findAll({
+               var insertionList = await ModelInsertions.findAll({
                     where: {
                         campaign_id: campaign_id
                     },
                     include: [
-                        {
-                            model: ModelCampaigns
-                        }
+                        { model: ModelCampaigns, attributes: ['campaign_id', 'campaign_name'] },
+                        { model: ModelFormats, attributes: ['format_id', 'format_name'] },
+                        { model: ModelInsertionsPriorities, attributes: ['priority_id', 'priority_name'] },
+                        { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] }
                     ]
-                });
-                
+                })
+                               
                 // Attribue les données de la campagne
-                data.insertions = insertions 
+                data.insertions = insertionList;
+                data.creatives = false;
                 data.campaign = campaign;
                 data.moment = moment;
+
                 res.render('manager/campaigns/view.ejs', data);
             });
-
-       // console.log(campaign);
 
     } catch (error) {
         console.log(error);

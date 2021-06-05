@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const InsertionsTemplates = sequelize.define('insertionstemplates', {
+const insertions_templates = sequelize.define('insertions_templates', {
     insertiontemplate_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -22,9 +22,9 @@ const InsertionsTemplates = sequelize.define('insertionstemplates', {
 
     },
 }, {
-    tableName: 'asb_insertionstemplates',
+    tableName: 'asb_insertions_templates',
     underscored: true,
     timestamps: false
 });
 
-module.exports = InsertionsTemplates;
+module.exports = insertions_templates;
