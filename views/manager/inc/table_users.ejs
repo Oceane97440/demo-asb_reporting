@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>#</th>
+            <th>Prénom Nom</th>
             <th>Email</th>
             <th>Rôle</th>
             <th>Actions</th>
@@ -10,9 +11,10 @@
     <tbody>
         <% for (let i=0; i < users.length; i++) { %>           
             <tr>
-                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_name %>"><%= users[i].user_id %></a></td> 
-                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_name %>"><%= users[i].user_name %></a></td> 
-                <td><%= users[i].role %></td>
+                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_id %>"><%= users[i].user_id %></a></td> 
+                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_firstname %> <%= users[i].user_lastname %>"><%= users[i].user_firstname %> <%= users[i].user_lastname %></a></td> 
+                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_email %>"><%= users[i].user_email %></a></td> 
+                <td><%= users[i].user_role %></td>
                 <td>                    
                    <a href="/manager/users/<%= users[i].user_id %>/edit" title="Modifier ce rôle"><i class="icon feather icon-edit f-16 text-success"></i></a>
                 </td>

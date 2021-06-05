@@ -1,0 +1,72 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+    <!-- support-section start -->
+    <div class="col-xl-12 col-md-12">
+
+        <div class="card">
+            <form method="POST" action="/manager/users/create">
+            <div class="card-header">
+                <h5>Ajouter un utilisateur</h5>
+            </div>
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label class="form-label" for="user_firstname">Prénom</label>
+                    <input
+                        type="text"
+                        name="user_firstname"
+                        id="user_firstname"
+                        class="form-control"
+                        placeholder="Saisissez le prénom"
+                        required="required"/>
+                </div>
+               
+                <div class="form-group">
+                    <label class="form-label" for="user_lastname">Nom</label>
+                    <input
+                        type="text"
+                        name="user_lastname"
+                        id="user_lastname"
+                        class="form-control"
+                        placeholder="Saisissez le nom"
+                        required="required"/>
+                </div>
+               
+                <div class="form-group">
+                    <label class="form-label" for="user_email">Email</label>
+                    <input
+                        type="text"
+                        name="user_email"
+                        id="user_email"
+                        class="form-control"
+                        placeholder="Saisissez l'email"
+                        required="required"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="user_role">Rôle</label>
+                    <input
+                        type="text"
+                        name="user_role"
+                        id="user_role"
+                        class="form-control"
+                        placeholder="Saisissez le rôle"
+                        required="required"/>
+                </div>
+
+               
+
+              
+            </div>
+            <div class="card-footer">
+                <input
+                    type="submit"
+                    name="submit"
+                    class="btn btn-primary mr-2 btn-submit"
+                    value="Ajouter un utilisateur"/>
+            </div>
+        </form>
+        </div>
+
+    </div>
+
+    <%- include("../../layouts/manager/footer.ejs") -%>

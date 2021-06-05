@@ -101,7 +101,7 @@ exports.view = async (req, res) => {
                         model: ModelPacksSites
                     }
                 ]
-            })
+            }) 
             .then(async function (site) {
                 if (!site) 
                     return res

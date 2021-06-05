@@ -13,30 +13,56 @@
             content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-        
-       <!-- Favicon icon
-        <link rel="icon" href="../assets/images/favicon.svg" type="image/x-icon"> -->
+        <!-- Favicon icon <link rel="icon" href="../assets/images/favicon.svg"
+        type="image/x-icon"> -->
 
-     <!-- font css-->
-        <link rel="stylesheet" href="../../assets/fonts/feather.css">
-           <link rel="stylesheet" href="../../assets/fonts/fontawesome.css">
-        <link rel="stylesheet" href="../../assets/fonts/material.css"> 
+        <!-- font css-->
+        <link rel="stylesheet" href="../../../assets/fonts/feather.css">
+        <link rel="stylesheet" href="../../../assets/fonts/fontawesome.css">
+        <link rel="stylesheet" href="../../../assets/fonts/material.css">
         <!-- vendor css -->
-        <link rel="stylesheet" href="../../assets/css/style.css" id="main-style-link">
-        <link rel="stylesheet" href="../../assets/css/manager.css" id="main-style-link"> 
-       
-       
-      <!--    <link rel="icon" href="http://localhost:3670/assets/images/favicon.svg" type="image/x-icon">
+        <link
+            rel="stylesheet"
+            href="../../../assets/css/style.css"
+            id="main-style-link">
+        <link
+            rel="stylesheet"
+            href="../../../assets/css/manager.css"
+            id="main-style-link">
 
-        <link rel="stylesheet" href="http://localhost:3670/assets/fonts/feather.css">
-        <link rel="stylesheet" href="http://localhost:3670/assets/fonts/fontawesome.css">
-        <link rel="stylesheet" href="http://localhost:3670/assets/fonts/material.css">
+        <!-- 
+            <link rel="icon" href="http://localhost:3670/assets/images/favicon.svg"
+        type="image/x-icon"> <link rel="stylesheet"
+        href="http://localhost:3670/assets/fonts/feather.css"> <link rel="stylesheet"
+        href="http://localhost:3670/assets/fonts/fontawesome.css"> <link
+        rel="stylesheet" href="http://localhost:3670/assets/fonts/material.css"> <link
+        rel="stylesheet" href="http://localhost:3670/assets/css/style.css"
+        id="main-style-link"> <link rel="stylesheet"
+        href="http://localhost:3670/assets/css/manager.css" id="main-style-link"> 
+    -->
 
-        <link rel="stylesheet" href="http://localhost:3670/assets/css/style.css" id="main-style-link">
-        <link rel="stylesheet" href="http://localhost:3670/assets/css/manager.css" id="main-style-link">-->
-        
-        
-        <link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+        <!-- Google Tag Manager -->
+        <script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s),
+                    dl = l != 'dataLayer'
+                        ? '&l=' + l
+                        : '';
+                j.async = true;
+                j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f
+                    .parentNode
+                    .insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-WCLMFB5');
+        </script>
+        <!-- End Google Tag Manager -->
+
+        <link
+            href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css"
+            rel="stylesheet"/>
     </head>
 
     <body class="">
@@ -50,7 +76,10 @@
         <!-- [ Mobile header ] start -->
         <div class="pc-mob-header pc-header">
             <div class="pcm-logo">
-                <img src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png" alt="" class="logo logo-lg">
+                <img
+                    src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png"
+                    alt=""
+                    class="logo logo-lg">
             </div>
             <div class="pcm-toolbar">
                 <a href="#!" class="pc-head-link" id="mobile-collapse">
@@ -69,16 +98,16 @@
             </div>
         </div>
         <!-- [ Mobile header ] End -->
-       
-        <%- include("sidebar.ejs") -%>
-        <%- include("header.ejs") -%>
 
-        <!-- [ Main Content ] start -->
-        <div class="pc-container">
-            <div class="pcoded-content">
-                
-                <%# if (breadcrumb) { %>
-                    <%# include("breadcrumb.ejs") -%>
-                    <%# } %>
+        <%- include("sidebar.ejs") -%>
+            <%- include("header.ejs") -%>
+
                 <!-- [ Main Content ] start -->
-                <div class="row">
+                <div class="pc-container">
+                    <div class="pcoded-content">
+
+                        <%# if (breadcrumb) { %>
+                            <%# include("breadcrumb.ejs") -%>
+                                <%# } %>
+                                    <!-- [ Main Content ] start -->
+                                    <div class="row">

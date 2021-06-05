@@ -12,6 +12,11 @@ const manager_advertisers = require(
 const manager_sites = require(
     "../controllers/controllers.manager_sites"
 );
+
+const manager_users = require(
+    "../controllers/controllers.manager_users"
+);
+
 /**
 * Middleware to know if user is connected
  */
@@ -26,6 +31,9 @@ router.use(function (req, res, next) {
 router.get("/", manager.index);
 
 // router.get("/", manager.error);
+
+
+
 
 router.get("/campaigns", manager_campaigns.index);
 router.get("/campaigns/list", manager_campaigns.list);
@@ -42,6 +50,13 @@ router.get("/advertisers/:id", manager_advertisers.view);
 router.get("/sites", manager_sites.index);
 router.get("/sites/list", manager_sites.list);
 router.get("/sites/:id", manager_sites.view);
+
+router.get("/users", manager_users.index);
+router.get("/users/list", manager_users.list);
+router.get("/users/create", manager_users.create);
+router.get("/users/:id", manager_users.view);
+router.get("/users/:id/edit", manager_users.edit);
+
 // router.get('/advertisers/create', manager_advertisers.create);
 
 

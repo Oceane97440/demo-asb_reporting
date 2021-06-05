@@ -1,6 +1,6 @@
 // Récupére les données de configuration de l`API
 const dbApi = require("../config/config.api");
-// Initialise le module request
+// Initialise le module request 
 const request = require('request');
 // Initialise le module
 const bodyParser = require('body-parser');

@@ -114,7 +114,7 @@ exports.view = async (req, res) => {
                var insertionList = await ModelInsertions.findAll({
                     where: {
                         campaign_id: campaign_id
-                    },
+                    }, 
                     include: [
                         { model: ModelCampaigns, attributes: ['campaign_id', 'campaign_name'] },
                         { model: ModelFormats, attributes: ['format_id', 'format_name'] },
@@ -122,7 +122,7 @@ exports.view = async (req, res) => {
                         { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] }
                     ]
                 })
-                               
+
                 // Attribue les données de la campagne
                 data.insertions = insertionList;
                 data.creatives = false;
