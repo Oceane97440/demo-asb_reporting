@@ -123,9 +123,7 @@ exports.view = async (req, res) => {
                 data.advertiser = advertiser;
                 data.moment = moment;
                 res.render('manager/advertisers/view.ejs', data);
-            });
-
-        console.log(campaign);
+            });      
 
     } catch (error) {
         console.log(error);
@@ -140,7 +138,7 @@ exports.view = async (req, res) => {
 
   try {
 
-    if (req.session.user.role == 1) {
+    if (req.session.user.user_role == 1) {
 
 
       var config = {
@@ -228,7 +226,7 @@ exports.advertiser_list = async (req, res) => {
   //ajoute les campagnes dans la bdd
 
   try {
-    if (req.session.user.role == 1) {
+    if (req.session.user.user_role == 1) {
 
 
       var config = {
@@ -294,7 +292,7 @@ exports.view_campagne = async (req, res) => {
     //affiche dans une vue les campagnes liée à annnonceur id
 
     try {
-        if (req.session.user.role === 1) {
+        if (req.session.user.user_role === 1) {
 
             var advertiser_id = req.params.id
 

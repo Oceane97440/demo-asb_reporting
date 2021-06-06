@@ -51,6 +51,16 @@ var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('./report_storage');
 localStorage_tasks = new LocalStorage('./taskID');
 
+exports.json  = async (req, res) => {
+    try {
+        return res.json({'lol':'lol'});
+    } catch (error) {
+        return res.json({'error':'lol'});
+    }
+
+}
+
+
 exports.agencies = async (req, res) => {
     try {
         var config = SmartFunction.config('agencies');
@@ -83,7 +93,7 @@ exports.agencies = async (req, res) => {
 
                         }
 
-                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        
                     });
                 }
             }
@@ -146,14 +156,13 @@ exports.advertisers = async (req, res) => {
                             } */
                         }
 
-                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        
                     });
                 }
             }
 
             addItem();
 
-            process.exit(1);
         });
 
     } catch (error) {
@@ -226,13 +235,12 @@ exports.campaigns = async (req, res) => {
                                 console.error('Error : Aucune donnée disponible');
                             }
 
-                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                            
                         });
                     }
                 }
 
                 addItem();
-                process.exit(1);
             } else {
                 console.error('Error : Aucune donnée disponible');
             }
@@ -292,7 +300,7 @@ exports.formats = async (req, res) => {
 
                         }
 
-                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        
                     });
                 }
             }
@@ -463,7 +471,7 @@ exports.templates = async (req, res) => {
                                 console.error('Error : Aucune donnée disponible');
                             }
 
-                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                            
                         });
                     }
                 }
@@ -511,7 +519,7 @@ exports.platforms = async (req, res) => {
 
                         }
 
-                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        
                     });
                 }
             }
@@ -559,7 +567,7 @@ exports.deliverytypes = async (req, res) => {
 
                         }
 
-                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        
                     });
                 }
             }
@@ -571,7 +579,6 @@ exports.deliverytypes = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-
     }
 }
 
@@ -601,20 +608,16 @@ exports.insertions_status = async (req, res) => {
                         for (i = 0; i < number_line_offset; i++) {
                             var insertion_status_id = dataValue[i].id;
                             var insertion_status_name = dataValue[i].name;
-
-                            //  console.log(dataValue);
                             ModelInsertionsStatus.create({insertion_status_id, insertion_status_name});
-
                         }
-
-                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        
                     });
                 }
             }
 
             addItem();
 
-            return false;
+            return res.json({status:'lol'});
         });
 
     } catch (error) {
@@ -671,7 +674,7 @@ exports.countries = async (req, res) => {
                             } */
                         }
 
-                        // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                        
                     });
                 }
             }
@@ -719,8 +722,7 @@ exports.insertions_templates = async (req, res) => {
         var number_pages = Math.round((number_total_count / 20) + 1);
         console.log('number_total_count', number_total_count);
         console.log('number_pages', number_pages);
-        // await delay(10000); process.exit(1);
-
+     
         if (number_total_count > 0) {
             j = 0;
             for (i = 0; i < number_total_count; i++) {
@@ -1036,7 +1038,7 @@ exports.insertions = async (req, res) => {
                                 console.error('Error : Aucune donnée disponible');
                             }
 
-                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                            
                         });
                     }
                 }
@@ -1102,26 +1104,18 @@ exports.campaignsInsertions = async (req, res) => {
         campaignObject = {
             "campaign_id": req.query.campaign_id
         };
-        console.log(campaignObject);
-       
-      
-        var config = SmartFunction.config('campaignsInsertions',campaignObject);
         
-         await axios(config).then(function (res) {           
-            if (!Utilities.empty(res.data)) {
-                var data = res.data;
-
-                console.log(data);
+        var config = SmartFunction.config('campaignsInsertions',campaignObject);
+        await axios(config).then(function (result) {           
+            if (!Utilities.empty(result.data)) {
+                var data = result.data;
+              
                 var number_line = data.length;
-                var number_total_count = res.headers['x-pagination-total-count'];
+                var number_total_count = result.headers['x-pagination-total-count'];
                 var number_pages = Math.round((number_total_count / 100) + 1);
-                console.log(number_total_count);
-                console.log('Number Pages :' + number_pages);
-          
+              
                 const addItem = async () => {
-                    for (let page = 0; page <= number_pages; page++) {
-                    
-
+                    for (let page = 0; page <= number_pages; page++) {  
                         let offset = page * 100;
                         campaignObject2 = {
                             "campaign_id": req.query.campaign_id,
@@ -1253,6 +1247,7 @@ exports.campaignsInsertions = async (req, res) => {
                                             .then(function (result) {
                                                 result.item; // the model
                                                 result.created; // bool, if a new item was created.
+                                                return res.json({'status' : 'ok'});
                                             });
 
                                     }
@@ -1261,28 +1256,22 @@ exports.campaignsInsertions = async (req, res) => {
                             } else {
                                 console.error('Error : Aucune donnée disponible');
                             }
-
-                            // Sleep pendant 10s  await new Promise(r => setTimeout(r, 10000));
+                            
                         });
                     }
                 }
 
                 addItem();
-              // return res.json({'status': 'Insertions MAJ'});
-              return res.status(200).json({
-                success: true,
-                message: 'insertions maj'
-              })
-        
-
+              
+              return res.json({ type: 'success', message: 'Les insertions de la campagne "'+campaignObject.campaign_id+'"' });
             } else {
-                console.error('Error : Aucune donnée disponible');
+              return res.json({ type: 'error', message: 'Aucune insertion pour la campagne "'+campaignObject.campaign_id+'"' });
             }
-
 
         });
     } catch (error) {
-        console.error(error);
+        // return res.json({ type: 'error', message: error });
+        console.error(error)
     }
 }
 

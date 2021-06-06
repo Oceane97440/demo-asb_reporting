@@ -24,10 +24,10 @@
                     <span class="small"><%= moment(insertions[i].insertion_end_date).format('DD/MM/YYYY') %></span>
                 </td> 
                 <td class="d-none"><%= insertions[i].insertion_start_date %></td>
+                <td><% if(!insertions[i].insertions_priority.priority_id) { %><%= insertions[i].insertions_priority.priority_name %><% } else { %>-<% } %></td>
                 <td class="d-none"><%= insertions[i].insertion_end_date %></td>
-                <td><%= insertions[i].insertions_priority.priority_name %></td>
-                <td><%= insertions[i].format.format_name %></td>
-                <td><span class="badge bg-success"><%= insertions[i].insertions_status.insertion_status_name %></span></td>
+                 <td><%= insertions[i].format.format_name %></td>
+                <td><% if(insertions[i].insertions_status) { %><span class="badge bg-success"><%= insertions[i].insertions_status.insertion_status_name %></span><% } else { %>-<% } %></td>
                 <td>                    
                    <a href="https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%= insertions[i].insertion_id %>" target="_blank" title="Accéder à l'insertion sur SMARTADSERVER"><img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER" /></a>
                    &nbsp; <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>/edit" title="Modifier cette campagne"><i class="icon feather icon-edit f-16 text-success"></i></a>

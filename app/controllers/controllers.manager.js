@@ -20,7 +20,7 @@ const moment = require('moment');
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 
-// Initialise les models 
+// Initialise les models
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
@@ -43,9 +43,27 @@ exports.index = async (req, res) => {
 
         data.breadcrumb = "Tableau de bord";
         data.moment = moment;
-        
+
+        // Affiche les campagnes qui se terminent dans les 5 derniers jours
+        campaigns_last = await ModelCampaigns.findAll(
+            {
+                where: {
+                    campaign_start_date: { 
+                        [Op.between]: ['2021-06-01', '2021-06-13'],  
+                     }
+                }
+            }
+        );
+
+        data.campaigns_last = campaigns_last;
+       // console.log(campaigns_last);
+      //  process.exit()
+
+        // SELECT * FROM `asb_campaigns` WHERE (`campaign_start_date` BETWEEN '2021-06-05' AND '2021-06-13') OR (`campaign_end_date` BETWEEN '2021-06-05' AND '2021-06-13')
+
+
         res.render('manager/index.ejs', data);
-    } catch (error) {       
+    } catch (error) {
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }

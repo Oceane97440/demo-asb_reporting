@@ -211,10 +211,10 @@ app.get('/*', function (req, res, next) {
     res.locals.user = {}
     if (req.session.user) {
 
-        res.locals.user.email = req.session.user.email;
-        res.locals.user.role = req.session.user.role;
+        res.locals.user.user_email = req.session.user.user_email;
+        res.locals.user.user_role = req.session.user.user_role;
 
-        //console.log(res.locals.user.email)
+        //console.log(res.locals.user.user_email)
     }
     next();
 });
@@ -223,9 +223,9 @@ app.post('/*', function (req, res, next) {
     res.locals.user = {}
     // nom de l'utilisateur connecté (dans le menu) accessible pour toutes les vues
     if (req.session.user) {
-        res.locals.user.email = req.session.user.email;
-        res.locals.user.role = req.session.user.role;
-        //console.log(res.locals.user.email)
+        res.locals.user.user_email = req.session.user.user_email;
+        res.locals.user.user_role = req.session.user.user_role;
+        //console.log(res.locals.user.user_email)
     }
     next();
 });
@@ -294,7 +294,7 @@ app.use('/app', application);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3001);
+app.set("port", process.env.PORT || 3002);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

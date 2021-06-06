@@ -31,13 +31,7 @@ exports.config = function (method, params = '') {
             break;
         case 'deliverytypes':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/deliverytypes';
-            break;
-        case 'insertions_status':
-            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions_status';
-            break;
-        case 'insertions_priorities':
-                var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertionpriorities';
-                break;
+            break;      
         case 'countries':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/countries';
             break;
@@ -45,24 +39,23 @@ exports.config = function (method, params = '') {
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
             break;
         case 'insertions_templates':
-
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
                     insertion_id + '/insertiontemplates';
-            // console.log(configApiUrl); process.exit(1);
             break;
-
+        case 'insertions_status':
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions_status';
+            break;
+        case 'insertions_priorities':
+                var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertionpriorities';
+                break;   
         case 'creatives':
-
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
                     insertion_id + '/creatives';
-
-            break;
-
+        break;
         default:
-
-            break;
+        break;
     }
 
     var config = {
@@ -89,7 +82,5 @@ exports.config = function (method, params = '') {
     if(params.offset) { config['params']['offset'] = params.offset;}
     if(params.isArchived) { config['params']['isArchived'] = params.isArchived;}
 
-
-    console.log(config)
     return config;
 }

@@ -53,7 +53,7 @@ exports.test = async (req, res) => {
 
 exports.index = async (req, res) => {
 
-  if (req.session.user.role == 1) {
+  if (req.session.user.user_role == 1) {
 
 
     res.render("reporting/dasbord_report.ejs");

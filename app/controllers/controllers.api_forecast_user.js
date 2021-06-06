@@ -63,7 +63,7 @@ exports.index = async (req, res) => {
 
 
 
-        if (req.session.user.role == 2 || req.session.user.role == 3) {
+        if (req.session.user.user_role == 2 || req.session.user.user_role == 3) {
 
             const formats = await ModelFormat.findAll({
                 attributes: ['format_group'],

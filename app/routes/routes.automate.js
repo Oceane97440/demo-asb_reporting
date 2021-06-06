@@ -3,6 +3,8 @@ const Sequelize = require('sequelize');
 
 const automate = require("../controllers/controllers.automate");
 
+router.get("/json", automate.json);
+
 router.get("/agencies", automate.agencies);
 router.get("/advertisers", automate.advertisers);
 router.get("/campaigns", automate.campaigns);

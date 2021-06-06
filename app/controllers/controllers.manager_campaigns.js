@@ -123,6 +123,7 @@ exports.view = async (req, res) => {
                     ]
                 })
 
+               
                 // Attribue les données de la campagne
                 data.insertions = insertionList;
                 data.creatives = false;

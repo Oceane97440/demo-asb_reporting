@@ -48,16 +48,12 @@ const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 
 
 exports.home_page = async (req, res) => {
-
-  if (req.session.user.role === 1) {
-
-    res.send("Home page")
-
+  if (req.session.user.user_role === 1) {
+    res.send("Home page");
   }
 }
 
 exports.signup = async (req, res) => {
-
 
   try {
     var roles = await ModelRole.findAll({
@@ -70,13 +66,9 @@ exports.signup = async (req, res) => {
       ],
     })
 
-
-
-
     res.render('users/signup.ejs', {
       roles: roles
     });
-
 
   } catch (err) {
     res.status(500).json({
@@ -87,170 +79,132 @@ exports.signup = async (req, res) => {
 }
 exports.signup_add = async (req, res) => {
 
-  const email = req.body.email;
-  const password = req.body.mdp;
-  const role = req.body.role;
+  const user_email = req.body.user_email;
+  const user_password = req.body.user_password;
+  const user_role = req.body.user_role;
 
   try {
     /**verifier si les champs ne son pas vide*/
-    if (email === '' || password === '' || role === '') {
-
+    if (user_email === '' || user_password === '' || user_role === '') {
       req.session.message = {
         type: 'danger',
         intro: 'Erreur',
         message: 'Les champs ne doivents pas être vide'
       }
-      return res.redirect('/signup')
+      return res.redirect('/signup');
       // return res.render('users/signup.ejs')
     }
 
     /**verifie si email est valide avec le regex*/
-    if (!EMAIL_REGEX.test(email)) {
+    if (!EMAIL_REGEX.test(user_email)) {
       req.session.message = {
         type: 'danger',
         intro: 'Erreur',
         message: 'Email invalide'
       }
-      return res.redirect('/signup')
+      return res.redirect('/signup');
     }
     /**verifie si le password contien entre min 4 et max 8 caratère + un number*/
-    if (!PASSWORD_REGEX.test(password)) {
+    if (!PASSWORD_REGEX.test(user_password)) {
       req.session.message = {
         type: 'danger',
         intro: 'Erreur',
         message: 'Le mot de passe doit être compris entre 4 et 12 caratères avec 1 chiffre et un caratère spécial'
       }
-      return res.redirect('/signup')
-   
-
+      return res.redirect('/signup');  
     }
 
     /**search si email exsite déjà dans le bdd*/
 
     await ModelUser.findOne({
-      attributes: ['email'],
+      attributes: ['user_email'],
       where: {
-        email: email
+        user_email: user_email
       }
     }).then(async function (userFound) {
 
-
       if (!userFound) {
-
-
         //validator + bycrypt
-        const hashedPwd = await bcrypt.hash(password, 12);
-
+        const hashedPwd = await bcrypt.hash(user_password, 12);
         const user = await ModelUser.create({
-
-          email: validator.normalizeEmail(email),
-          password: hashedPwd,
-          role
-        })
-
+          user_email: validator.normalizeEmail(user_email),
+          user_password: hashedPwd,
+          user_role
+        });
 
         await ModelUser_Role.create({
-          role_id: role,
+          role_id: user_role,
           user_id: user.id
-        })
+        });      
 
-      
-
-        res.redirect('/login')
+        res.redirect('/login');
 
       } else {
-
         req.session.message = {
           type: 'danger',
           intro: 'Erreur',
           message: 'Email est déjà utilisé'
         }
-        return res.redirect('/signup')
+        return res.redirect('/signup');
       }
 
-    })
-
-
-
-
-
-
+    });
 
   } catch (error) {
-    console.log(error)
+    console.log(error);
     var statusCoded = error.response.status;
-
     res.render("error.ejs", {
-      statusCoded: statusCoded,
-
-    })
+      statusCoded: statusCoded
+    });
   }
-
 
 }
 
 exports.login = async (req, res) => {
-
-
   res.render('users/login.ejs');
-
-
 }
-
+/*
 exports.login_add = async (req, res) => {
+  const user_email = req.body.user_email;
+  const user_password = req.body.user_password;
 
-  const email = req.body.email;
-  const password = req.body.mdp;
-
-
-
-
+  console.log('Email : ',user_email,' - Password : ',user_password);
+  
   try {
-
-    /**verifie si les donnée son correcte et non null */
-    if (email == '' || password == '') {
+    // verifie si les donnée son correcte et non null 
+    if (user_email == '' || user_password == '') {
       req.session.message = {
         type: 'danger',
         intro: 'Erreur',
         message: 'Email ou mot passe est incorrect'
       }
-      return res.redirect('/login')
+      return res.redirect('/login');
     }
 
-    /**verifie si le email est présent dans la base*/
+    // verifie si le email est présent dans la base
     ModelUser.findOne({
       where: {
-        email: email
+        user_email: user_email
       }
     }).then(async function (user) {
-
-
-
-      //si email trouvé
+      // si email trouvé
       if (user) {
-
-        /**on verifie si l'utilisateur à utiliser le bon mot de passe avec bycrypt*/
-
-        const isEqual = await bcrypt.compare(password, user.password);
-
-        //Si le mot de passe correpond au caratère hashé
+        console.log(user)
+        // on verifie si l'utilisateur à utiliser le bon mot de passe avec bcrypt
+        const isEqual = await bcrypt.compare(user_password, user.user_password);
+        // Si le mot de passe correpond au caratère hashé
         if (isEqual) {
-
-          if (user.email !== email && user.password !== password) {
-
-            res.redirect('/login')
+          if (user.user_email !== user_email && user.user_password !== user_password) {
+            res.redirect('/login');
           } else {
             // use session for user connected
-            req.session.user = user
-
-
-            if (req.session.user.role === 1) {
-              return res.redirect('/home_page')
-
+            req.session.user = user;
+            console.log('Req session user_role :',req.session.user.user_role)
+            if (req.session.user.user_role === 1) {
+              return res.redirect('/home_page');
             }
-            if (req.session.user.role === 2 || req.session.user.role === 3) {
-              return res.redirect('/utilisateur')
-
+            if (req.session.user.user_role === 2 || req.session.user.user_role === 3) {
+              return res.redirect('/utilisateur');
             }
           }
 
@@ -260,67 +214,47 @@ exports.login_add = async (req, res) => {
             intro: 'Erreur',
             message: 'Adresse email ou mot de passe invalide"'
           }
-          return res.redirect('/login')
+          return res.redirect('/login');
         }
 
       } else {
         req.session.message = {
           type: 'danger',
           intro: 'Erreur',
-          message: 'Adresse email ou mot de passe invalide"'
+          message: 'Adresse email ou mot de passe invalide'
         }
-        return res.redirect('/login')
-
+        return res.redirect('/login');
       }
-
-
 
     })
 
-
-
   } catch (error) {
-    console.log(error)
-
-    res.redirect('/login')
+    console.log(error);
+    res.redirect('/login');
   }
 
 }
 
 exports.logout = async (req, res) => {
-  req.session = null
-  res.redirect('/login')
+  req.session = null;
+  res.redirect('/login');
 }
-
-
+*/
 
 exports.index = async (req, res) => {
 
-
-
   try {
-
-
-    if (req.session.user.role === 1) {
+    if (req.session.user.user_role === 1) {
       res.render('home-page.ejs');
     }
 
-
-
-
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
     var statusCoded = error.response.status;
 
     res.render("error.ejs", {
       statusCoded: statusCoded,
-
-    })
+    });
   }
-
-
-
-
 
 }
