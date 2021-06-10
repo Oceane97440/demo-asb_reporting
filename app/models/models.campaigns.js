@@ -5,8 +5,8 @@ const sequelize = require('../config/_config.database').sequelize;
 const Campaigns = sequelize.define('campaigns', {
     campaign_id: {
         type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+        //autoIncrement: true,
+         primaryKey: true
     },
     campaign_name: {
         type: Sequelize.STRING(255),
@@ -19,8 +19,7 @@ const Campaigns = sequelize.define('campaigns', {
     advertiser_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        defaultValue: 0
-
+        //defaultValue: 0
     },
     agency_id: {
         type: Sequelize.INTEGER,

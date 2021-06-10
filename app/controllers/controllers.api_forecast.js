@@ -430,7 +430,7 @@ exports.forecast = async (req, res, next) => {
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaigns_epilots WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaigns_epilots.format_name ASC', {
+                'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC', {
                     replacements: [date_start, date_end, date_start, date_end, format_filtre],
                     type: QueryTypes.SELECT
                 }
@@ -812,7 +812,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaigns_epilots WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilots.format_name ASC', {
+                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }

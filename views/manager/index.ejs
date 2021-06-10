@@ -101,13 +101,13 @@
 
         <div class="card table-card">
             <div class="card-header">
-                <h5>Campagnes</h5>
+                <h5>Campagnes se terminant dans les 10 prochains jours</h5>
             </div>
             <div class="pro-scroll">
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
                         <% for (let i=0; i < campaigns_last.length; i++) { %>
-                           <li> <a class="list-group-item list-group-item-action" href="/manager/campaigns/<%= campaigns_last[i].campaign_id %>" title="<%= campaigns_last[i].campaign_name %>"><%= campaigns_last[i].campaign_name %></a></li>
+                           <li> <a class="list-group-item list-group-item-action" href="/manager/campaigns/<%= campaigns_last[i].campaign_id %>" title="<%= campaigns_last[i].campaign_name %>"><%= campaigns_last[i].campaign_name %> <span class="badge bg-light-warning text-right"><%= moment(campaigns_last[i].campaign_start_date).fromNow() %></span> </a></li>
                         <% } %>
                     </ul>                    
 

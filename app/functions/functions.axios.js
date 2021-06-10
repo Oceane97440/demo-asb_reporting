@@ -41,7 +41,6 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
 
   var return_data;
   if (method == 'POST') {
-
     return_data = await axios({
       method: method,
       url: 'https://reporting.smartadserverapis.com/2044/reports',

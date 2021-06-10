@@ -89,13 +89,13 @@ templates.hasMany(formatstemplates, {
 
 campaigns.belongsTo(advertisers, {
     foreignKey: 'advertiser_id',
-    onDelete: 'cascade',
+  //  onDelete: 'cascade',
     hooks: true
-}); // la campagne à un format.
+}); 
 
 advertisers.hasMany(campaigns, {
     foreignKey: 'advertiser_id',
-    onDelete: 'cascade',
+  //  onDelete: 'cascade',
     hooks: true
 });
 
@@ -122,7 +122,20 @@ insertions.belongsTo(insertions_status, {
     hooks: true
 });
 
-// la campagne à un format.
+// Campaign epilot
+campaings_epilot.belongsTo(advertisers, {
+    foreignKey: 'advertiser_id',
+    onDelete: 'cascade'
+});
+
+campaings_epilot.belongsTo(formats, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade'
+});
+
+
+
+// la campagne a un format.
 campaigns.hasMany(insertions, {
     foreignKey: 'campaign_id',
     onDelete: 'cascade',
@@ -135,7 +148,7 @@ insertions.belongsTo(formats, {
     hooks: true
 });
 
-// la campagne à un format.
+// l'insertion a un format.
 formats.hasMany(insertions, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
@@ -239,8 +252,8 @@ app.use((req, res, next) => {
 
 app.post('/uploads', function (req) {
     console.log(req.files.file_csv.name); //requette.files.nom du file
-
 });
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -294,7 +307,7 @@ app.use('/app', application);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3002);
+app.set("port", process.env.PORT || 3000);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

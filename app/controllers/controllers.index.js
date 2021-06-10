@@ -163,7 +163,7 @@ exports.signup_add = async (req, res) => {
 exports.login = async (req, res) => {
   res.render('users/login.ejs');
 }
-/*
+
 exports.login_add = async (req, res) => {
   const user_email = req.body.user_email;
   const user_password = req.body.user_password;
@@ -239,7 +239,6 @@ exports.logout = async (req, res) => {
   req.session = null;
   res.redirect('/login');
 }
-*/
 
 exports.index = async (req, res) => {
 

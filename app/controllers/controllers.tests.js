@@ -3,19 +3,17 @@ const {
 } = require("sequelize");
 
 // const excel = require('node-excel-export');
-
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
+
 const {
     QueryTypes
 } = require('sequelize');
 
-
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
-
 
 // Initialise les models
 //const ModelSite = require("../models/models.site");
@@ -25,11 +23,7 @@ const ModelPack = require("../models/models.packs")
 
 exports.index = async (req, res) => {
 
-
-
     try {
-
-
         // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
         const formats = await ModelFormat.findAll({
             attributes: ['format_group'],
@@ -44,14 +38,12 @@ exports.index = async (req, res) => {
             ],
         })
 
-
         const packs = await ModelPack.findAll({
             attributes: ['pack_id', 'pack_name'],
             order: [
                 ['pack_name', 'ASC']
             ],
         })
-
 
         const countrys = await ModelCountry.findAll({
             attributes: ['country_id', 'country_name'],
@@ -63,28 +55,25 @@ exports.index = async (req, res) => {
             ],
         })
 
-
-
         res.render('forecast/form.ejs', {
             formats: formats,
             packs: packs,
             countrys: countrys
         });
-
-
     } catch (error) {
-        console.log(error)
-
+        console.log(error);
     }
-
 };
 
+exports.campaignday = async(req, res) => {
+  var file = 'https://reporting.smartadserverapis.com/2044/reports/E0F446DB-34BF-4975-9D1A-C502197C0D4F/file';
+  // Récupère la date de chaque requête
+  dataFile2 = await AxiosFunction.getReportingData('GET', file, '');
+  res.json(dataFile2.data);
+}
+
 exports.export_excel = async (req, res) => {
-
-
-
-
-    // crée label avec le date du jour ex : 20210403
+    // Crée label avec le date du jour ex : 20210403
     const date = new Date();
     const JJ = ('0' + (date.getDate())).slice(-2);
 
@@ -92,17 +81,11 @@ exports.export_excel = async (req, res) => {
     const AAAA = date.getFullYear();
 
     const label_now = AAAA + MM + JJ;
-
-
-    //recherche dans le local storage id qui correspond à la campagne
-
-     var data_localStorage = localStorage.getItem('campagneId' + '-' + '1883260');
-
-
+    // recherche dans le local storage id qui correspond à la campagne
+    var data_localStorage = localStorage.getItem('campagneId' + '-' + '1883260');
     var data_report_view = JSON.parse(data_localStorage);
 
     var dts_table = data_report_view.table;
-
 
     var campaign_name = dts_table.Campagne_name
     var date_now = dts_table.Date_rapport

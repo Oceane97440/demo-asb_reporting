@@ -7,5 +7,6 @@ const test = require("../controllers/controllers.tests");
 router.get("/", test.index);
 router.get("/test_exportExcel", test.test_exportExcel);
 router.get("/export_excel", test.export_excel);
+router.get('/campaignday', test.campaignday);
 
 module.exports = router;

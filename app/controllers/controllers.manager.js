@@ -44,24 +44,22 @@ exports.index = async (req, res) => {
         data.breadcrumb = "Tableau de bord";
         data.moment = moment;
 
-        // Affiche les campagnes qui se terminent dans les 5 derniers jours
+        var yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
+        var todayAdd10 = moment().add(10, 'days').format('YYYY-MM-DD');
+       
+        // Affiche les campagnes qui se terminent dans les 10 prochains jours
         campaigns_last = await ModelCampaigns.findAll(
             {
                 where: {
                     campaign_start_date: { 
-                        [Op.between]: ['2021-06-01', '2021-06-13'],  
+                        [Op.between]: [yesterday, todayAdd10]
                      }
                 }
             }
         );
 
         data.campaigns_last = campaigns_last;
-       // console.log(campaigns_last);
-      //  process.exit()
-
-        // SELECT * FROM `asb_campaigns` WHERE (`campaign_start_date` BETWEEN '2021-06-05' AND '2021-06-13') OR (`campaign_end_date` BETWEEN '2021-06-05' AND '2021-06-13')
-
-
+  
         res.render('manager/index.ejs', data);
     } catch (error) {
         var statusCoded = error.response.status;

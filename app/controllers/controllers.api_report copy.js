@@ -381,8 +381,6 @@ exports.report = async (req, res) => {
         var taskId = firstLink.data.taskId;
         var taskId_uu = twoLink.data.taskId;
 
-
-
         let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
         let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
 
@@ -403,7 +401,6 @@ exports.report = async (req, res) => {
             let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
             let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
 
-
             //si le job progresse des 2 taskId est = 100% ou SUCCESS on arrête le fonction setInterval
             if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.jobProgress == '1.0') &&
               (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')
@@ -417,8 +414,8 @@ exports.report = async (req, res) => {
                 dataFile = await AxiosFunction.getReportingData('GET', `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`, '');
                 //save la data requête 1 dans le local storage
                 var obj_dataFile = {
-                  'datafile': dataFile.data
-                };
+                  'datafile': dataFile.data }
+;
 
                 localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global", JSON.stringify(obj_dataFile));
               }
@@ -430,16 +427,14 @@ exports.report = async (req, res) => {
 
                 //save la data requête 2 dans le local storage
                 var obj_dateFile2 = {
-                  'datafile': dataFile2.data
-                };
+                  'datafile': dataFile2.data }
+;
 
                 localStorage_tasks.setItem('campagneId' + '-' + campaignid + '-' + "task_global_vu", JSON.stringify(obj_dateFile2));
               }
-
             }
 
           } else {
-
             //on arrête la fonction setInterval si il y a les 2 taskID en cache
             clearInterval(timerFile);
 
@@ -451,7 +446,6 @@ exports.report = async (req, res) => {
             const obj_vu = JSON.parse(dataLSTaskGlobalVU);
             var data_split_vu = obj_vu.datafile;
 
-
             //4) Traitement des données
             const UniqueVisitors = [];
 
@@ -459,10 +453,8 @@ exports.report = async (req, res) => {
             var number_line = data_splinter_vu.length;
             //boucle sur les ligne
             for (i = 1; i < number_line; i++) {
-
               line = data_splinter_vu[i].split(';');
               UniqueVisitors.push(line[0]);
-
             }
 
             var Total_VU = UniqueVisitors[0];
@@ -497,18 +489,14 @@ exports.report = async (req, res) => {
               ClickRate.push(line[8]);
               Clicks.push(line[9]);
               Complete.push(line[10]);
-
-
             }
 
-
-
-            //Convertie les Timestamp campagne startdate et enddate / date du jour
+            // Convertie les Timestamp campagne startdate et enddate / date du jour
             function getDateTimeFromTimestamp(unixTimeStamp) {
               let date = new Date(unixTimeStamp);
               return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
-
             }
+
             var t1 = parseInt(CampaignStartDate[0]);
             var t2 = parseInt(CampaignEndtDate[0]);
             const timeElapsed = Date.now();
@@ -517,7 +505,7 @@ exports.report = async (req, res) => {
             const StartDate = getDateTimeFromTimestamp(t1);
             const EndDate = getDateTimeFromTimestamp(t2);
 
-            //filte les array exclure les valeur undefined qui empêche le calcule des somme
+            // filtre les array exclure les valeur undefined qui empêche le calcule des somme
 
             const Array_Impression = [];
             const Array_Clicks = [];
@@ -528,13 +516,11 @@ exports.report = async (req, res) => {
             const Array_ClickRate = [];
             const Array_Complete = [];
 
-
             const Remove_undefined = undefined;
 
             //exclure les valeur undefined des array
             for (let i = 0; i < Impressions.length; i++) {
               if (Impressions[i] !== Remove_undefined) {
-
                 Array_Impression.push(Impressions[i]);
                 Array_Clicks.push(Clicks[i]);
                 Array_InsertionName.push(InsertionName[i]);
@@ -543,16 +529,11 @@ exports.report = async (req, res) => {
                 Array_FormatName.push(FormatName[i]);
                 Array_ClickRate.push(ClickRate[i]);
                 Array_Complete.push(Complete[i]);
-
-
               }
-
             }
-
 
             //test si le tableau est un array + si il comporte 1 éléments dans l'array
             if ((InsertionName.length > 1) && (Array.isArray(InsertionName) === true)) {
-
               var habillage = new Array();
               var interstitiel = new Array();
               var grand_angle = new Array();
@@ -707,6 +688,7 @@ exports.report = async (req, res) => {
               var habillage_actu_android_siteId = new Array()
               var habillage_actu_android_siteName = new Array()
               var habillage_actu_android_ctr = new Array()
+
               //////////////////FORMAT MASTHEAD//////////////////////
 
               var mastheadImpressions = new Array();
@@ -744,7 +726,6 @@ exports.report = async (req, res) => {
               var masthead_antenne_siteId = new Array()
               var masthead_antenne_siteName = new Array()
               var masthead_antenne_ctr = new Array()
-
 
               var masthead_orange_impression = new Array()
               var masthead_orange_click = new Array()
@@ -812,7 +793,6 @@ exports.report = async (req, res) => {
               var grandAngle_dtj_siteId = new Array()
               var grandAngle_dtj_siteName = new Array()
               var grandAngle_dtj_ctr = new Array()
-
 
               var grandAngle_antenne_impression = new Array()
               var grandAngle_antenne_click = new Array()
@@ -882,7 +862,6 @@ exports.report = async (req, res) => {
               var native_linfo_ios_siteName = new Array();
               var native_linfo_ios_ctr = new Array();
 
-
               var native_dtj_impression = new Array();
               var native_dtj_click = new Array();
               var native_dtj_siteId = new Array();
@@ -894,7 +873,6 @@ exports.report = async (req, res) => {
               var native_antenne_siteId = new Array();
               var native_antenne_siteName = new Array();
               var native_antenne_ctr = new Array();
-
 
               var native_orange_impression = new Array();
               var native_orange_click = new Array();
@@ -956,15 +934,12 @@ exports.report = async (req, res) => {
               var video_linfo_android_ctr = new Array();
               var video_linfo_android_Complete = new Array();
 
-
               var video_linfo_ios_impression = new Array();
               var video_linfo_ios_click = new Array();
               var video_linfo_ios_siteId = new Array();
               var video_linfo_ios_siteName = new Array();
               var video_linfo_ios_ctr = new Array();
               var video_linfo_ios_Complete = new Array();
-
-
 
               var video_dtj_impression = new Array();
               var video_dtj_click = new Array();
@@ -973,14 +948,12 @@ exports.report = async (req, res) => {
               var video_dtj_ctr = new Array();
               var video_dtj_Complete = new Array();
 
-
               var video_antenne_impression = new Array();
               var video_antenne_click = new Array();
               var video_antenne_siteId = new Array();
               var video_antenne_siteName = new Array();
               var video_antenne_ctr = new Array();
               var video_antenne_Complete = new Array();
-
 
               var video_orange_impression = new Array();
               var video_orange_click = new Array();
@@ -989,14 +962,12 @@ exports.report = async (req, res) => {
               var video_orange_ctr = new Array();
               var video_orange_Complete = new Array();
 
-
               var video_tf1_impression = new Array();
               var video_tf1_click = new Array();
               var video_tf1_siteId = new Array();
               var video_tf1_siteName = new Array();
               var video_tf1_ctr = new Array();
               var video_tf1_Complete = new Array();
-
 
               var video_m6_impression = new Array();
               var video_m6_click = new Array();
@@ -1005,14 +976,12 @@ exports.report = async (req, res) => {
               var video_m6_ctr = new Array();
               var video_m6_Complete = new Array();
 
-
               var video_dailymotion_impression = new Array();
               var video_dailymotion_click = new Array();
               var video_dailymotion_siteId = new Array();
               var video_dailymotion_siteName = new Array();
               var video_dailymotion_ctr = new Array();
               var video_dailymotion_Complete = new Array();
-
 
               var video_actu_ios_impression = new Array();
               var video_actu_ios_click = new Array();
@@ -1021,8 +990,6 @@ exports.report = async (req, res) => {
               var video_actu_ios_ctr = new Array();
               var video_actu_ios_Complete = new Array();
 
-
-
               var video_actu_android_impression = new Array();
               var video_actu_android_click = new Array();
               var video_actu_android_siteId = new Array();
@@ -1030,31 +997,29 @@ exports.report = async (req, res) => {
               var video_actu_android_ctr = new Array();
               var video_actu_android_Complete = new Array();
 
-
               //regex sur les insertions name si il y a match push dans le tableau qui correspond au format
               Array_InsertionName.filter(function (word, index) {
-
                 if (word.match(/^\INTERSTITIEL{1}/igm)) {
-                  interstitiel.push(index);
-                }
+                  interstitiel.push(index); }
+
                 if (word.match(/^\HABILLAGE{1}/igm)) {
-                  habillage.push(index);
-                }
+                  habillage.push(index); }
+
                 if (word.match(/^\MASTHEAD{1}/igm)) {
-                  masthead.push(index);
-                }
+                  masthead.push(index); }
+
                 if (word.match(/^\GRAND ANGLE{1}/igm)) {
-                  grand_angle.push(index);
-                }
+                  grand_angle.push(index); }
+
                 if (word.match(/^\NATIVE{1}/igm)) {
-                  native.push(index);
-                }
+                  native.push(index); }
+
                 if (word.match(/^\PREROLL{1}/gim)) {
-                  video.push(index);
-                }
+                  video.push(index); }
+
                 if (word.match(/^\MIDROLL{1}/gim)) {
-                  video.push(index);
-                }
+                  video.push(index); }
+
 
               });
 
@@ -1077,148 +1042,119 @@ exports.report = async (req, res) => {
                   video_linfo_click.push(eval(Array_Clicks[element]));
                   video_linfo_siteId.push(Array_SiteID[element]);
                   video_linfo_siteName.push(Array_SiteName[element]);
-                  video_linfo_Complete.push(eval(Array_Complete[element]));
+                  video_linfo_Complete.push(eval(Array_Complete[element])); }
 
 
-
-                }
                 //LINFO_android
                 if (Array_SiteID[element] === "299249") {
-
                   video_linfo_android_impression.push(eval(Array_Impression[element]));
                   video_linfo_android_click.push(eval(Array_Clicks[element]));
                   video_linfo_android_siteId.push(Array_SiteID[element]);
                   video_linfo_android_siteName.push(Array_SiteName[element]);
-                  video_linfo_android_Complete.push(eval(Array_Complete[element]));
+                  video_linfo_android_Complete.push(eval(Array_Complete[element])); }
 
 
-                }
                 //LINFO_ios
-
                 if (Array_SiteID[element] === "299248") {
-
                   video_linfo_ios_impression.push(eval(Array_Impression[element]));
                   video_linfo_ios_click.push(eval(Array_Clicks[element]));
                   video_linfo_ios_siteId.push(Array_SiteID[element]);
                   video_linfo_ios_siteName.push(Array_SiteName[element]);
-                  video_linfo_ios_Complete.push(eval(Array_Complete[element]));
-
-
-
-                }
+                  video_linfo_ios_Complete.push(eval(Array_Complete[element])); }
 
 
                 if (Array_SiteID[element] === "323124") {
-
                   video_dtj_impression.push(eval(Array_Impression[element]));
                   video_dtj_click.push(eval(Array_Clicks[element]));
                   video_dtj_siteId.push(Array_SiteID[element]);
                   video_dtj_siteName.push(Array_SiteName[element]);
-                  video_dtj_Complete.push(eval(Array_Complete[element]));
-
-
-                }
+                  video_dtj_Complete.push(eval(Array_Complete[element])); }
 
 
                 if (Array_SiteID[element] === "299263") {
-
                   video_antenne_impression.push(eval(Array_Impression[element]));
                   video_antenne_click.push(eval(Array_Clicks[element]));
                   video_antenne_siteId.push(Array_SiteID[element]);
                   video_antenne_siteName.push(Array_SiteName[element]);
-                  video_antenne_Complete.push(eval(Array_Complete[element]));
+                  video_antenne_Complete.push(eval(Array_Complete[element])); }
 
 
-                }
                 if (Array_SiteID[element] === "299252") {
                   video_orange_impression.push(eval(Array_Impression[element]));
                   video_orange_click.push(eval(Array_Clicks[element]));
                   video_orange_siteId.push(Array_SiteID[element]);
                   video_orange_siteName.push(Array_SiteName[element]);
-                  video_orange_Complete.push(eval(Array_Complete[element]));
+                  video_orange_Complete.push(eval(Array_Complete[element])); }
 
 
-                }
                 if (Array_SiteID[element] === "299245") {
                   video_tf1_impression.push(eval(Array_Impression[element]));
                   video_tf1_click.push(eval(Array_Clicks[element]));
                   video_tf1_siteId.push(Array_SiteID[element]);
                   video_tf1_siteName.push(Array_SiteName[element]);
-                  video_tf1_Complete.push(eval(Array_Complete[element]));
+                  video_tf1_Complete.push(eval(Array_Complete[element])); }
 
 
-
-                }
                 if (Array_SiteID[element] === "299244") {
-
                   video_m6_impression.push(eval(Array_Impression[element]));
                   video_m6_click.push(eval(Array_Clicks[element]));
                   video_m6_siteId.push(Array_SiteID[element]);
                   video_m6_siteName.push(Array_SiteName[element]);
-                  video_m6_Complete.push(eval(Array_Complete[element]));
+                  video_m6_Complete.push(eval(Array_Complete[element])); }
 
 
-                }
                 if (Array_SiteID[element] === "337707") {
                   video_dailymotion_impression.push(eval(Array_Impression[element]));
                   video_dailymotion_click.push(eval(Array_Clicks[element]));
                   video_dailymotion_siteId.push(Array_SiteID[element]);
                   video_dailymotion_siteName.push(Array_SiteName[element]);
-                  video_dailymotion_Complete.push(eval(Array_Complete[element]));
+                  video_dailymotion_Complete.push(eval(Array_Complete[element])); }
 
-                }
+
                 if (Array_SiteID[element] === "299253") {
                   video_actu_ios_impression.push(eval(Array_Impression[element]));
                   video_actu_ios_click.push(eval(Array_Clicks[element]));
                   video_actu_ios_siteId.push(Array_SiteID[element]);
                   video_actu_ios_siteName.push(Array_SiteName[element]);
-                  video_actu_ios_Complete.push(eval(Array_Complete[element]));
+                  video_actu_ios_Complete.push(eval(Array_Complete[element])); }
 
-                }
+
                 if (Array_SiteID[element] === "299254") {
                   video_actu_android_impression.push(eval(Array_Impression[element]));
                   video_actu_android_click.push(eval(Array_Clicks[element]));
                   video_actu_android_siteId.push(Array_SiteID[element]);
                   video_actu_android_siteName.push(Array_SiteName[element]);
-                  video_actu_android_Complete.push(eval(Array_Complete[element]));
+                  video_actu_android_Complete.push(eval(Array_Complete[element])); }
 
-
-                }
-
-
-
-
-
-
-
+                
 
                 /*if (Array_SiteID[element] ==="389207") {
                                     sm_immo974.push(index);
+ }
 
-                }
               
                
                 if (Array_SiteID[element] ==="299254") {
                                     sm_actu_reunion_android.push(index);
+ }
 
-                }
                 if (Array_SiteID[element] ==="336662") {
                                     sm_rodzafer_ios.push(index);
+ }
 
-                }
                 if (Array_SiteID[element] ==="336733") {
                                     sm_rodzafer_android.push(index);
+ }
 
-                }
                 if (Array_SiteID[element] ==="371544") {
                                     sm_rodzafer_lp.push(index);
+ }
 
-                }
                 if (Array_SiteID[element] ==="369138") {
                                     sm_rodali.push(index);
 
-
-                }*/
+ }
+*/
 
               }
 
@@ -1237,83 +1173,77 @@ exports.report = async (req, res) => {
                   interstitiel_linfo_impression.push(eval(Array_Impression[element]));
                   interstitiel_linfo_click.push(eval(Array_Clicks[element]));
                   interstitiel_linfo_siteId.push(Array_SiteID[element]);
-                  interstitiel_linfo_siteName.push(Array_SiteName[element]);
+                  interstitiel_linfo_siteName.push(Array_SiteName[element]); }
 
 
-                }
                 if (Array_SiteID[element] === "299249") {
-
                   interstitiel_linfo_android_impression.push(eval(Array_Impression[element]));
                   interstitiel_linfo_android_click.push(eval(Array_Clicks[element]));
                   interstitiel_linfo_android_siteId.push(Array_SiteID[element]);
-                  interstitiel_linfo_android_siteName.push(Array_SiteName[element]);
+                  interstitiel_linfo_android_siteName.push(Array_SiteName[element]); }
 
-
-                }
 
                 if (Array_SiteID[element] === "299248") {
-
                   interstitiel_linfo_ios_impression.push(eval(Array_Impression[element]));
                   interstitiel_linfo_ios_click.push(eval(Array_Clicks[element]));
                   interstitiel_linfo_ios_siteId.push(Array_SiteID[element]);
-                  interstitiel_linfo_ios_siteName.push(Array_SiteName[element]);
+                  interstitiel_linfo_ios_siteName.push(Array_SiteName[element]); }
 
 
-                }
                 if (Array_SiteID[element] === "323124") {
-
                   interstitiel_dtj_impression.push(eval(Array_Impression[element]));
                   interstitiel_dtj_click.push(eval(Array_Clicks[element]));
                   interstitiel_dtj_siteId.push(Array_SiteID[element]);
-                  interstitiel_dtj_siteName.push(Array_SiteName[element]);
+                  interstitiel_dtj_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299263") {
-
                   interstitiel_antenne_impression.push(eval(Array_Impression[element]));
                   interstitiel_antenne_click.push(eval(Array_Clicks[element]));
                   interstitiel_antenne_siteId.push(Array_SiteID[element]);
-                  interstitiel_antenne_siteName.push(Array_SiteName[element]);
+                  interstitiel_antenne_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299252") {
                   interstitiel_orange_impression.push(eval(Array_Impression[element]));
                   interstitiel_orange_click.push(eval(Array_Clicks[element]));
                   interstitiel_orange_siteId.push(Array_SiteID[element]);
-                  interstitiel_orange_siteName.push(Array_SiteName[element]);
+                  interstitiel_orange_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299245") {
                   interstitiel_tf1_impression.push(eval(Array_Impression[element]));
                   interstitiel_tf1_click.push(eval(Array_Clicks[element]));
                   interstitiel_tf1_siteId.push(Array_SiteID[element]);
-                  interstitiel_tf1_siteName.push(Array_SiteName[element]);
-                }
+                  interstitiel_tf1_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299244") {
                   interstitiel_m6_impression.push(eval(Array_Impression[element]));
                   interstitiel_m6_click.push(eval(Array_Clicks[element]));
                   interstitiel_m6_siteId.push(Array_SiteID[element]);
-                  interstitiel_m6_siteName.push(Array_SiteName[element]);
+                  interstitiel_m6_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "337707") {
                   interstitiel_dailymotion_impression.push(eval(Array_Impression[element]));
                   interstitiel_dailymotion_click.push(eval(Array_Clicks[element]));
                   interstitiel_dailymotion_siteId.push(Array_SiteID[element]);
-                  interstitiel_dailymotion_siteName.push(Array_SiteName[element]);
-                }
+                  interstitiel_dailymotion_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299253") {
                   interstitiel_actu_ios_impression.push(eval(Array_Impression[element]));
                   interstitiel_actu_ios_click.push(eval(Array_Clicks[element]));
                   interstitiel_actu_ios_siteId.push(Array_SiteID[element]);
-                  interstitiel_actu_ios_siteName.push(Array_SiteName[element]);
-                }
+                  interstitiel_actu_ios_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299254") {
                   interstitiel_actu_android_impression.push(eval(Array_Impression[element]));
                   interstitiel_actu_android_click.push(eval(Array_Clicks[element]));
                   interstitiel_actu_android_siteId.push(Array_SiteID[element]);
-                  interstitiel_actu_android_siteName.push(Array_SiteName[element]);
-                }
+                  interstitiel_actu_android_siteName.push(Array_SiteName[element]); }
 
 
               }
@@ -1331,92 +1261,85 @@ exports.report = async (req, res) => {
                 let h = Math.round(Array_ClickRate[element] * 100) / 100;
                 habillageCTR.push(h);
 
-
                 //sous traitement des array / filtre par format et par site
                 if (Array_SiteID[element] === "322433") {
                   habillage_linfo_impression.push(eval(Array_Impression[element]));
                   habillage_linfo_click.push(eval(Array_Clicks[element]));
                   habillage_linfo_siteId.push(Array_SiteID[element]);
-                  habillage_linfo_siteName.push(Array_SiteName[element]);
+                  habillage_linfo_siteName.push(Array_SiteName[element]); }
 
 
-                }
                 if (Array_SiteID[element] === "299249") {
-
                   habillage_linfo_android_impression.push(eval(Array_Impression[element]));
                   habillage_linfo_android_click.push(eval(Array_Clicks[element]));
                   habillage_linfo_android_siteId.push(Array_SiteID[element]);
-                  habillage_linfo_android_siteName.push(Array_SiteName[element]);
+                  habillage_linfo_android_siteName.push(Array_SiteName[element]); }
 
-
-                }
 
                 if (Array_SiteID[element] === "299248") {
-
                   habillage_linfo_ios_impression.push(eval(Array_Impression[element]));
                   habillage_linfo_ios_click.push(eval(Array_Clicks[element]));
                   habillage_linfo_ios_siteId.push(Array_SiteID[element]);
-                  habillage_linfo_ios_siteName.push(Array_SiteName[element]);
+                  habillage_linfo_ios_siteName.push(Array_SiteName[element]); }
 
 
-                }
                 if (Array_SiteID[element] === "323124") {
-
                   habillage_dtj_impression.push(eval(Array_Impression[element]));
                   habillage_dtj_click.push(eval(Array_Clicks[element]));
                   habillage_dtj_siteId.push(Array_SiteID[element]);
-                  habillage_dtj_siteName.push(Array_SiteName[element]);
+                  habillage_dtj_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299263") {
                   habillage_antenne_impression.push(eval(Array_Impression[element]));
                   habillage_antenne_click.push(eval(Array_Clicks[element]));
                   habillage_antenne_siteId.push(Array_SiteID[element]);
-                  habillage_antenne_siteName.push(Array_SiteName[element]);
-                }
-                if (Array_SiteID[element] === "299252") {
+                  habillage_antenne_siteName.push(Array_SiteName[element]); }
 
+
+                if (Array_SiteID[element] === "299252") {
                   habillage_orange_impression.push(eval(Array_Impression[element]));
                   habillage_orange_click.push(eval(Array_Clicks[element]));
                   habillage_orange_siteId.push(Array_SiteID[element]);
-                  habillage_orange_siteName.push(Array_SiteName[element]);
-                }
+                  habillage_orange_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299245") {
                   habillage_tf1_impression.push(eval(Array_Impression[element]));
                   habillage_tf1_click.push(eval(Array_Clicks[element]));
                   habillage_tf1_siteId.push(Array_SiteID[element]);
-                  habillage_tf1_siteName.push(Array_SiteName[element]);
+                  habillage_tf1_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299244") {
                   habillage_m6_impression.push(eval(Array_Impression[element]));
                   habillage_m6_click.push(eval(Array_Clicks[element]));
                   habillage_m6_siteId.push(Array_SiteID[element]);
-                  habillage_m6_siteName.push(Array_SiteName[element]);
+                  habillage_m6_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "337707") {
                   habillage_dailymotion_impression.push(eval(Array_Impression[element]));
                   habillage_dailymotion_click.push(eval(Array_Clicks[element]));
                   habillage_dailymotion_siteId.push(Array_SiteID[element]);
-                  habillage_dailymotion_siteName.push(Array_SiteName[element]);
+                  habillage_dailymotion_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299253") {
                   habillage_actu_ios_impression.push(eval(Array_Impression[element]));
                   habillage_actu_ios_click.push(eval(Array_Clicks[element]));
                   habillage_actu_ios_siteId.push(Array_SiteID[element]);
-                  habillage_actu_ios_siteName.push(Array_SiteName[element]);
-                }
+                  habillage_actu_ios_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299254") {
                   habillage_actu_android_impression.push(eval(Array_Impression[element]));
                   habillage_actu_android_click.push(eval(Array_Clicks[element]));
                   habillage_actu_android_siteId.push(Array_SiteID[element]);
-                  habillage_actu_android_siteName.push(Array_SiteName[element]);
-                }
+                  habillage_actu_android_siteName.push(Array_SiteName[element]); }
+
 
               }
-
 
               async function mastheadArrayElements(element, index, array) {
                 mastheadImpressions.push(eval(Array_Impression[element]));
@@ -1426,89 +1349,82 @@ exports.report = async (req, res) => {
                 let m = Math.round(Array_ClickRate[element] * 100) / 100
                 mastheadCTR.push(m);
 
-
                 //sous traitement des array / filtre par format et par site
                 if (Array_SiteID[element] === "322433") {
                   masthead_linfo_impression.push(eval(Array_Impression[element]));
                   masthead_linfo_click.push(eval(Array_Clicks[element]));
                   masthead_linfo_siteId.push(Array_SiteID[element]);
-                  masthead_linfo_siteName.push(Array_SiteName[element]);
+                  masthead_linfo_siteName.push(Array_SiteName[element]); }
 
 
-                }
                 if (Array_SiteID[element] === "299249") {
-
                   masthead_linfo_android_impression.push(eval(Array_Impression[element]));
                   masthead_linfo_android_click.push(eval(Array_Clicks[element]));
                   masthead_linfo_android_siteId.push(Array_SiteID[element]);
-                  masthead_linfo_android_siteName.push(Array_SiteName[element]);
+                  masthead_linfo_android_siteName.push(Array_SiteName[element]); }
 
-
-                }
 
                 if (Array_SiteID[element] === "299248") {
-
                   masthead_linfo_ios_impression.push(eval(Array_Impression[element]));
                   masthead_linfo_ios_click.push(eval(Array_Clicks[element]));
                   masthead_linfo_ios_siteId.push(Array_SiteID[element]);
-                  masthead_linfo_ios_siteName.push(Array_SiteName[element]);
+                  masthead_linfo_ios_siteName.push(Array_SiteName[element]); }
 
 
-                }
                 if (Array_SiteID[element] === "323124") {
-
                   masthead_dtj_impression.push(eval(Array_Impression[element]));
                   masthead_dtj_click.push(eval(Array_Clicks[element]));
                   masthead_dtj_siteId.push(Array_SiteID[element]);
-                  masthead_dtj_siteName.push(Array_SiteName[element]);
+                  masthead_dtj_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299263") {
                   masthead_antenne_impression.push(eval(Array_Impression[element]));
                   masthead_antenne_click.push(eval(Array_Clicks[element]));
                   masthead_antenne_siteId.push(Array_SiteID[element]);
-                  masthead_antenne_siteName.push(Array_SiteName[element]);
-                }
+                  masthead_antenne_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299252") {
                   masthead_orange_impression.push(eval(Array_Impression[element]));
                   masthead_orange_click.push(eval(Array_Clicks[element]));
                   masthead_orange_siteId.push(Array_SiteID[element]);
-                  masthead_orange_siteName.push(Array_SiteName[element]);
-                }
+                  masthead_orange_siteName.push(Array_SiteName[element]); }
+
 
                 if (Array_SiteID[element] === "299245") {
                   masthead_tf1_impression.push(eval(Array_Impression[element]));
                   masthead_tf1_click.push(eval(Array_Clicks[element]));
                   masthead_tf1_siteId.push(Array_SiteID[element]);
-                  masthead_tf1_siteName.push(Array_SiteName[element]);
+                  masthead_tf1_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299244") {
                   masthead_m6_impression.push(eval(Array_Impression[element]));
                   masthead_m6_click.push(eval(Array_Clicks[element]));
                   masthead_m6_siteId.push(Array_SiteID[element]);
-                  masthead_m6_siteName.push(Array_SiteName[element]);
+                  masthead_m6_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "337707") {
                   masthead_dailymotion_impression.push(eval(Array_Impression[element]));
                   masthead_dailymotion_click.push(eval(Array_Clicks[element]));
                   masthead_dailymotion_siteId.push(Array_SiteID[element]);
-                  masthead_dailymotion_siteName.push(Array_SiteName[element]);
-                }
+                  masthead_dailymotion_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299253") {
                   masthead_actu_ios_impression.push(eval(Array_Impression[element]));
                   masthead_actu_ios_click.push(eval(Array_Clicks[element]));
                   masthead_actu_ios_siteId.push(Array_SiteID[element]);
-                  masthead_actu_ios_siteName.push(Array_SiteName[element]);
-                }
+                  masthead_actu_ios_siteName.push(Array_SiteName[element]); }
+
+
                 if (Array_SiteID[element] === "299254") {
                   masthead_actu_android_impression.push(eval(Array_Impression[element]));
                   masthead_actu_android_click.push(eval(Array_Clicks[element]));
                   masthead_actu_android_siteId.push(Array_SiteID[element]);
-                  masthead_actu_android_siteName.push(Array_SiteName[element]);
-                }
-
+                  masthead_actu_android_siteName.push(Array_SiteName[element]); }
 
               }
 
@@ -1523,94 +1439,82 @@ exports.report = async (req, res) => {
 
                 //sous traitement des array / filtre par format et par site
                 if (Array_SiteID[element] === "322433") {
-
                   grandAngle_linfo_impression.push(eval(Array_Impression[element]));
                   grandAngle_linfo_click.push(eval(Array_Clicks[element]));
                   grandAngle_linfo_siteId.push(Array_SiteID[element]);
-                  grandAngle_linfo_siteName.push(Array_SiteName[element]);
+                  grandAngle_linfo_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299249") {
-
                   grandAngle_linfo_android_impression.push(eval(Array_Impression[element]));
                   grandAngle_linfo_android_click.push(eval(Array_Clicks[element]));
                   grandAngle_linfo_android_siteId.push(Array_SiteID[element]);
-                  grandAngle_linfo_android_siteName.push(Array_SiteName[element]);
+                  grandAngle_linfo_android_siteName.push(Array_SiteName[element]);                }
 
-
-                }
 
                 if (Array_SiteID[element] === "299248") {
-
                   grandAngle_linfo_ios_impression.push(eval(Array_Impression[element]));
                   grandAngle_linfo_ios_click.push(eval(Array_Clicks[element]));
                   grandAngle_linfo_ios_siteId.push(Array_SiteID[element]);
-                  grandAngle_linfo_ios_siteName.push(Array_SiteName[element]);
+                  grandAngle_linfo_ios_siteName.push(Array_SiteName[element]); }
 
 
-                }
                 if (Array_SiteID[element] === "323124") {
-
                   grandAngle_dtj_impression.push(eval(Array_Impression[element]));
                   grandAngle_dtj_click.push(eval(Array_Clicks[element]));
                   grandAngle_dtj_siteId.push(Array_SiteID[element]);
-                  grandAngle_dtj_siteName.push(Array_SiteName[element]);
+                  grandAngle_dtj_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299263") {
-
                   grandAngle_antenne_impression.push(eval(Array_Impression[element]));
                   grandAngle_antenne_click.push(eval(Array_Clicks[element]));
                   grandAngle_antenne_siteId.push(Array_SiteID[element]);
-                  grandAngle_antenne_siteName.push(Array_SiteName[element]);
+                  grandAngle_antenne_siteName.push(Array_SiteName[element]); }
 
-                }
+
                 if (Array_SiteID[element] === "299252") {
                   grandAngle_orange_impression.push(eval(Array_Impression[element]));
                   grandAngle_orange_click.push(eval(Array_Clicks[element]));
                   grandAngle_orange_siteId.push(Array_SiteID[element]);
                   grandAngle_orange_siteName.push(Array_SiteName[element]);
+ }
 
-                }
 
                 if (Array_SiteID[element] === "299245") {
                   grandAngle_tf1_impression.push(eval(Array_Impression[element]));
                   grandAngle_tf1_click.push(eval(Array_Clicks[element]));
                   grandAngle_tf1_siteId.push(Array_SiteID[element]);
                   grandAngle_tf1_siteName.push(Array_SiteName[element]);
+ }
 
-                }
                 if (Array_SiteID[element] === "299244") {
                   grandAngle_m6_impression.push(eval(Array_Impression[element]));
                   grandAngle_m6_click.push(eval(Array_Clicks[element]));
                   grandAngle_m6_siteId.push(Array_SiteID[element]);
                   grandAngle_m6_siteName.push(Array_SiteName[element]);
+ }
 
-                }
                 if (Array_SiteID[element] === "337707") {
                   grandAngle_dailymotion_impression.push(eval(Array_Impression[element]));
                   grandAngle_dailymotion_click.push(eval(Array_Clicks[element]));
                   grandAngle_dailymotion_siteId.push(Array_SiteID[element]);
-                  grandAngle_dailymotion_siteName.push(Array_SiteName[element]);
-                }
+                  grandAngle_dailymotion_siteName.push(Array_SiteName[element]); }
+
                 if (Array_SiteID[element] === "299253") {
                   grandAngle_actu_ios_impression.push(eval(Array_Impression[element]));
                   grandAngle_actu_ios_click.push(eval(Array_Clicks[element]));
                   grandAngle_actu_ios_siteId.push(Array_SiteID[element]);
-                  grandAngle_actu_ios_siteName.push(Array_SiteName[element]);
-                }
+                  grandAngle_actu_ios_siteName.push(Array_SiteName[element]); }
+
                 if (Array_SiteID[element] === "299254") {
                   grandAngle_actu_android_impression.push(eval(Array_Impression[element]));
                   grandAngle_actu_android_click.push(eval(Array_Clicks[element]));
                   grandAngle_actu_android_siteId.push(Array_SiteID[element]);
-                  grandAngle_actu_android_siteName.push(Array_SiteName[element]);
-
-                }
-
+                  grandAngle_actu_android_siteName.push(Array_SiteName[element]); }
 
 
               }
-
 
               async function nativeArrayElements(element, index, array) {
                 nativeImpressions.push(eval(Array_Impression[element]));
@@ -1628,8 +1532,8 @@ exports.report = async (req, res) => {
                   native_linfo_siteId.push(Array_SiteID[element]);
                   native_linfo_siteName.push(Array_SiteName[element]);
 
+ }
 
-                }
                 if (Array_SiteID[element] === "299249") {
 
                   native_linfo_android_impression.push(eval(Array_Impression[element]));
@@ -1637,8 +1541,8 @@ exports.report = async (req, res) => {
                   native_linfo_android_siteId.push(Array_SiteID[element]);
                   native_linfo_android_siteName.push(Array_SiteName[element]);
 
+ }
 
-                }
 
                 if (Array_SiteID[element] === "299248") {
 
@@ -1647,61 +1551,60 @@ exports.report = async (req, res) => {
                   native_linfo_ios_siteId.push(Array_SiteID[element]);
                   native_linfo_ios_siteName.push(Array_SiteName[element]);
 
+ }
 
-                }
                 if (Array_SiteID[element] === "323124") {
 
                   native_dtj_impression.push(eval(Array_Impression[element]));
                   native_dtj_click.push(eval(Array_Clicks[element]));
                   native_dtj_siteId.push(Array_SiteID[element]);
                   native_dtj_siteName.push(Array_SiteName[element]);
+ }
 
-                }
                 if (Array_SiteID[element] === "299263") {
                   native_antenne_impression.push(eval(Array_Impression[element]));
                   native_antenne_click.push(eval(Array_Clicks[element]));
                   native_antenne_siteId.push(Array_SiteID[element]);
                   native_antenne_siteName.push(Array_SiteName[element]);
+ }
 
-                }
                 if (Array_SiteID[element] === "299252") {
                   native_orange_impression.push(eval(Array_Impression[element]));
                   native_orange_click.push(eval(Array_Clicks[element]));
                   native_orange_siteId.push(Array_SiteID[element]);
-                  native_orange_siteName.push(Array_SiteName[element]);
+                  native_orange_siteName.push(Array_SiteName[element]); }
 
-                }
                 if (Array_SiteID[element] === "299245") {
                   native_tf1_impression.push(eval(Array_Impression[element]));
                   native_tf1_click.push(eval(Array_Clicks[element]));
                   native_tf1_siteId.push(Array_SiteID[element]);
-                  native_tf1_siteName.push(Array_SiteName[element]);
-                }
+                  native_tf1_siteName.push(Array_SiteName[element]); }
+
                 if (Array_SiteID[element] === "299244") {
                   native_m6_impression.push(eval(Array_Impression[element]));
                   native_m6_click.push(eval(Array_Clicks[element]));
                   native_m6_siteId.push(Array_SiteID[element]);
-                  native_m6_siteName.push(Array_SiteName[element]);
-                }
+                  native_m6_siteName.push(Array_SiteName[element]); }
+
                 if (Array_SiteID[element] === "337707") {
                   native_dailymotion_impression.push(eval(Array_Impression[element]));
                   native_dailymotion_click.push(eval(Array_Clicks[element]));
                   native_dailymotion_siteId.push(Array_SiteID[element]);
-                  native_dailymotion_siteName.push(Array_SiteName[element]);
-                }
+                  native_dailymotion_siteName.push(Array_SiteName[element]); }
+
                 if (Array_SiteID[element] === "299253") {
                   native_actu_ios_impression.push(eval(Array_Impression[element]));
                   native_actu_ios_click.push(eval(Array_Clicks[element]));
                   native_actu_ios_siteId.push(Array_SiteID[element]);
-                  native_actu_ios_siteName.push(Array_SiteName[element]);
-                }
+                  native_actu_ios_siteName.push(Array_SiteName[element]); }
+
                 if (Array_SiteID[element] === "299254") {
                   native_actu_android_impression.push(eval(Array_Impression[element]));
                   native_actu_android_click.push(eval(Array_Clicks[element]));
                   native_actu_android_siteId.push(Array_SiteID[element]);
                   native_actu_android_siteName.push(Array_SiteName[element]);
+ }
 
-                }
 
 
               }

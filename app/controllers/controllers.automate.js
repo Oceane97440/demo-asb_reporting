@@ -50,6 +50,7 @@ const {cpuUsage} = require('process');
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('./report_storage');
 localStorage_tasks = new LocalStorage('./taskID');
+localStorageAutomate = new LocalStorage('./automate');
 
 exports.json  = async (req, res) => {
     try {
@@ -57,9 +58,7 @@ exports.json  = async (req, res) => {
     } catch (error) {
         return res.json({'error':'lol'});
     }
-
 }
-
 
 exports.agencies = async (req, res) => {
     try {
@@ -90,9 +89,7 @@ exports.agencies = async (req, res) => {
                             const agencies = ModelAgencies.create(
                                 {agency_id, agency_name, agency_archived}
                             );
-
                         }
-
                         
                     });
                 }
@@ -164,6 +161,8 @@ exports.advertisers = async (req, res) => {
             addItem();
 
         });
+
+        res.json('automate advertisers');
 
     } catch (error) {
         console.error('Error : ' + error);
@@ -241,6 +240,8 @@ exports.campaigns = async (req, res) => {
                 }
 
                 addItem();
+                res.json('automate campaigns');
+
             } else {
                 console.error('Error : Aucune donnée disponible');
             }
@@ -248,6 +249,107 @@ exports.campaigns = async (req, res) => {
     } catch (error) {
         console.error('Error : ' + error);
     }
+}
+
+exports.campaignsDays = async(req, res) => {
+    // 1 - Charge la requête pour récupérer les campagnes du jour (+ Annonceur)
+    let dateYesterday = moment().subtract(1, 'days').format('YYYY-MM-DD')+'T00:00:00';
+    let dateToday = moment().format('YYYY-MM-DD')+'T00:00:00';
+    let cacheStorageID = 'campaignsToday-'+moment().format('YYYYMMDD');   
+
+    // Initialise les valeurs
+    var campaignsIds = new Array();
+    var campaignsIdsBdd = new Array();
+    var advertisersIds = new Array();    
+    var advertisersIdsBdd = new Array();
+
+    // Récupére l'ensemble des annonceurs dans la bdd
+    var advertisersList = await ModelAdvertisers.findAll({ attributes: ['advertiser_id'] }); 
+    if(advertisersList) {
+        var linesAdvertisers = advertisersList.length;
+       // Boucle sur les lignes
+        for (a = 1; a < linesAdvertisers; a++) {
+         advertisersIdsBdd.push(advertisersList[a].advertiser_id);
+        }
+    }
+    
+    // Récupére l'ensemble des campagnes dans la bdd
+    var campaignsList = await ModelCampaigns.findAll({ attributes: ['campaign_id'] }); 
+    if(campaignsList) {
+        var linescampaigns = campaignsList.length;
+       // Boucle sur les lignes
+        for (a = 1; a < linescampaigns; a++) {
+         campaignsIdsBdd.push(campaignsList[a].campaign_id);
+        }
+    }
+
+    // récupére la task Campaigns Days
+    var taskCampaignsDays = localStorageAutomate.getItem(cacheStorageID);
+
+    if(!taskCampaignsDays) {
+        // Requête sur les campagnes                      
+        var requestCampaignToday = { 
+            "startDate": dateYesterday, 
+            "endDate": dateToday, 
+            "fields": [ { "CampaignId": {} },{ "CampaignName": {} }, { "AdvertiserId": {} }, { "AdvertiserName": {} }, { "Impressions": {} }] 
+            }
+                                                        
+        let link = await AxiosFunction.getReportingData('POST','',requestCampaignToday)
+                    .then(async function (link) {                  
+                        if (link.status == 201) {                           
+                            linkTaskId = link.data.taskId; 
+                            return linkTaskId;
+                        }                    
+                    })
+                    .then(async function (linkTaskId) { 
+                        console.log('linkTaskId :',linkTaskId);
+                        var file = 'https://reporting.smartadserverapis.com/2044/reports/'+linkTaskId;
+                                        
+                        var time = 10000;
+                        let timerFile = setInterval(async () => {
+                            time += 10000;
+                            var dataTask = await AxiosFunction.getReportingData('GET', file, '');
+
+                            if ((dataTask.data.lastTaskInstance.jobProgress == '1.0') && 
+                            (dataTask.data.lastTaskInstance.instanceStatus == 'SUCCESS') &&
+                            (dataTask.data.lastTaskInstance.nbOutputLines > 0)) {
+                                var linkTaskFile = 'https://reporting.smartadserverapis.com/2044/reports/'+linkTaskId+'/file';
+                                clearInterval(timerFile);
+                            }
+
+                            // Si la task est OK
+                            if(linkTaskFile) {
+                                dataFile = await AxiosFunction.getReportingData('GET', linkTaskFile, '');
+                                var dataSplit = dataFile.data;
+                                localStorageAutomate.setItem(cacheStorageID, JSON.stringify(dataSplit));
+                            }          
+                
+                        }, time); 
+                    
+                    });
+    } 
+
+    // Récupére les données du forecast
+    var dataSplit = taskCampaignsDays;
+    data_splinter = dataSplit.split(/\r?\n/);                                    
+    var lines = data_splinter.length;
+   
+    // Boucle sur les lignes
+    for (i = 1; i < lines; i++) {
+        line = data_splinter[i].split(';');
+        if (!Utilities.empty(line[0])) { campaignsIds.push(line[0]); }
+        if (!Utilities.empty(line[2])) { advertisersIds.push(line[2]); }
+    }
+
+    // Teste si les annonceurs existent
+    console.log(advertisersIds);
+    console.log(advertisersIds.length);
+    console.log(advertisersIds.toString());
+    
+    var myAdvertiser = Utilities.arrayDiff(advertisersIds,advertisersIdsBdd);
+    var myCampaign = Utilities.arrayDiff(campaignsIds,campaignsIdsBdd);
+
+    res.json(myCampaign);   
 }
 
 exports.formats = async (req, res) => {

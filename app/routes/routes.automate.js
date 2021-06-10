@@ -9,6 +9,7 @@ router.get("/agencies", automate.agencies);
 router.get("/advertisers", automate.advertisers);
 router.get("/campaigns", automate.campaigns);
 router.get("/campaigns/insertions", automate.campaignsInsertions);
+router.get("/campaigns/days", automate.campaignsDays);
 router.get("/formats", automate.formats);
 
 router.get("/sites", automate.sites);

@@ -178,3 +178,40 @@ exports.create_post = async (req, res) => {
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
+
+
+
+exports.epilot_create = async (req, res) => {
+    try {
+        const data = new Object();
+        data.breadcrumb = "Ajouter une campagne EPILOT";
+        
+        // Récupére l'ensemble des annonceurs
+        var advertisers = await ModelAdvertisers.findAll(            
+            {
+                order: [
+                    ['advertiser_name', 'ASC']
+                ]
+            }
+        ).then(async function (advertisers) {
+            data.advertisers = advertisers;
+        });
+
+         // Récupére l'ensemble des annonceurs
+         var formats = await ModelFormats.findAll(            
+            {
+                order: [
+                    ['format_name', 'ASC']
+                ]
+            }
+        ).then(async function (formats) {
+            data.formats = formats;
+        });
+
+        res.render('manager/campaigns/epilot_create.ejs', data);
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
+}

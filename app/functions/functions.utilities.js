@@ -88,3 +88,17 @@ exports.numStr = function (a, b) {
         )
     ).slice(-2) + '/' + date.getFullYear();
 }
+
+
+//Function to get difference between 2 arrays
+//For every element of arrayA check if present in arrayB, if not, push in result array
+
+exports.arrayDiff = function (arrayA, arrayB){
+    var result = [];
+    for (var i=0; i < arrayA.length; i++) {
+      if ( arrayB.indexOf(arrayA[i]) <= -1 ) { 
+          result.push(arrayA[i]);
+        }
+    }
+    return result;
+}

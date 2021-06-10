@@ -2,39 +2,47 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const CampaingsEpilot = sequelize.define('campaigns_epilots', {
+const CampaingsEpilot = sequelize.define('campaigns_epilot', {
 
     campaign_epilot_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    campaign_name: {
-        type: Sequelize.STRING(45),
+    campaign_epilot_code: {
+        type: Sequelize.INTEGER,
         allowNull: false
     },
-    format_name: {
-        type: Sequelize.STRING(45),
+    campaign_epilot_name: {
+        type: Sequelize.STRING(255),
         allowNull: false
     },
-    etat: {
+    advertiser_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    format_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    campaign_epilot_status: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
+    campaign_epilot_start_date: {
+        type: Sequelize.DATE(),
+        allowNull: false
+    },
+    campaign_epilot_end_date: {
+        type: Sequelize.DATE(),
+        allowNull: false
+    },
+    campaign_epilot_volume: {
         type: Sequelize.BIGINT(),
-        allowNull: false
-    },
-    campaign_start_date: {
-        type: Sequelize.DATE(),
-        allowNull: false
-    },
-    campaign_end_date: {
-        type: Sequelize.DATE(),
-        allowNull: false
-    },
-    volume_prevue: {
-        type: Sequelize.FLOAT,
         allowNull: false
     }
 }, {
-    tableName: 'asb_campaigns_epilots',
+    tableName: 'asb_campaigns_epilot',
     underscored: true,
     timestamps: false
 });
