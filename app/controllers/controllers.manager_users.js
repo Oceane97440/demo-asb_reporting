@@ -34,7 +34,7 @@ exports.index = async (req, res) => {
         // Liste tous les campagnes
         const data = new Object();
         data.users = await ModelUsers.findAll();
-
+        data.metas.title = 'Utilisateurs';
         data.breadcrumb = "Utilisateurs";
         data.moment = moment;
 

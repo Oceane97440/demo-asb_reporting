@@ -8,28 +8,30 @@
         <![endif]-->
         <!-- Meta -->
         <meta charset="utf-8">
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <!-- font css
+        <link rel="stylesheet" href="http://127.0.0.1/dashboardkit-free-v1.0/dist/assets/fonts/feather.css">
+        <link rel="stylesheet" href="http://127.0.0.1/dashboardkit-free-v1.0/dist/assets/fonts/fontawesome.css">
+        <link rel="stylesheet" href="http://127.0.0.1/dashboardkit-free-v1.0/dist/assets/fonts/material.css">
+        -->
+        <!-- vendor css -->
+        <link rel="stylesheet" href="../../../assets/css/style.css" id="main-style-link">
 
-        <!-- Favicon icon <link rel="icon" href="../assets/images/favicon.svg"
+        <!-- Favicon icon <link rel="icon" href="../../../assets/images/favicon.svg"
         type="image/x-icon"> -->
-
-        <!-- font css-->
+        <!-- font css -->
         <link rel="stylesheet" href="../../../assets/fonts/feather.css">
         <link rel="stylesheet" href="../../../assets/fonts/fontawesome.css">
         <link rel="stylesheet" href="../../../assets/fonts/material.css">
-        <!-- vendor css -->
         <link
             rel="stylesheet"
-            href="../../../assets/css/style.css"
+            href="http://localhost:3001/assets/css/style.css"
             id="main-style-link">
         <link
             rel="stylesheet"
-            href="../../../assets/css/manager.css"
+            href="http://localhost:3001/assets/css/manager.css"
             id="main-style-link">
-
         <!-- 
             <link rel="icon" href="http://localhost:3670/assets/images/favicon.svg"
         type="image/x-icon"> <link rel="stylesheet"
@@ -39,9 +41,8 @@
         rel="stylesheet" href="http://localhost:3670/assets/css/style.css"
         id="main-style-link"> <link rel="stylesheet"
         href="http://localhost:3670/assets/css/manager.css" id="main-style-link"> 
-    -->
-
-        <!-- Google Tag Manager -->
+  
+        <!-- Google Tag Manager 
         <script>
             (function (w, d, s, l, i) {
                 w[l] = w[l] || [];
@@ -58,11 +59,12 @@
                     .insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', 'GTM-WCLMFB5');
         </script>
-        <!-- End Google Tag Manager -->
-
+       End Google Tag Manager -->
+       
         <link
             href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css"
             rel="stylesheet"/>
+     
     </head>
 
     <body class="">
@@ -100,14 +102,14 @@
         <!-- [ Mobile header ] End -->
 
         <%- include("sidebar.ejs") -%>
-            <%- include("header.ejs") -%>
+        <%- include("header.ejs") -%>
 
-                <!-- [ Main Content ] start -->
-                <div class="pc-container">
-                    <div class="pcoded-content">
+        <!-- [ Main Content ] start -->
+        <div class="pc-container">
+            <div class="pcoded-content">
 
-                        <%# if (breadcrumb) { %>
-                            <%# include("breadcrumb.ejs") -%>
-                                <%# } %>
-                                    <!-- [ Main Content ] start -->
-                                    <div class="row">
+            <%# if (breadcrumb) { %>
+                <%# include("breadcrumb.ejs") -%>
+            <%# } %>
+            <!-- [ Main Content ] start -->
+            <div class="row">

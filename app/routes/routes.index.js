@@ -8,8 +8,10 @@ router.get("/", api.home_page);
 router.get("/login", api.login);
 router.post("/login/add", api.login_add);
 router.get("/home_page", api.index);
+/*
 router.get("/signup", api.signup);
 router.post("/signup/add", api.signup_add);
+*/
 router.get("/logout", api.logout)
 
 module.exports = router;

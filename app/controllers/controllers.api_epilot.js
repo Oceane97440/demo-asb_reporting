@@ -153,8 +153,6 @@ exports.csv_import = async (req, res) => {
         //  console.log(results);
 
           for (let i = 0; i < results.length; i++) {
-
-
             //recupère mes donnée puis assigné à une variabme
             var campaign_name = results[i].Campagne;
             var format_name = results[i].Formats;
@@ -170,16 +168,12 @@ exports.csv_import = async (req, res) => {
             //Test si les valeurs sont vide
             if (campaign_name === '' || format_name === '' || etat === '' ||
               campaign_start_date === '' || campaign_end_date === '' || volume_prevue === '' || annonceurs === '') {
-
-              return res.send("des champs sont vides")
-
-
+              return res.send("des champs sont vides");
             }
 /*
              if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
             {return res.send("La date debut et fin est invalide")}
 */
-
 
             //remplace les valeurs
             if (etat === "Confirmee") {
@@ -206,8 +200,6 @@ exports.csv_import = async (req, res) => {
             campaign_debut = date_start_format + 'T00:00:00.000Z'
             campaign_fin = date_end_format + 'T00:00:00.000Z'
 
-
-
             //apres tout mes test passé add les données
              ModelCampaign_epilot.create({
               campaign_name: campaign_name,
@@ -221,17 +213,9 @@ exports.csv_import = async (req, res) => {
 
           // return res.render('forecast/liste_epilot.ejs')
 
-
-
-
-
-
           }
 
         });
-
-
-
 
     } else {
       return res.send({

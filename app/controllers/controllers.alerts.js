@@ -78,25 +78,17 @@ exports.alerts = async (req, res) => {
         //La campagne est programmée mais pas en ligne
 
         const insertions = await ModelInsertions.findAll({
-
             where: {
-
                 insertion_archived: 0,
                 insertion_status_id: 0,
                 insertion_start_date: {
                     [Op.gt]: NOW
                 }
             },
-
             include: [
                 {
                     model: ModelCampaigns,
-
-                    include: [
-                        {
-                            model: ModelAdvertisers
-                        }
-                    ]
+                    include: [{ model: ModelAdvertisers }]
                 }
             ]
         });

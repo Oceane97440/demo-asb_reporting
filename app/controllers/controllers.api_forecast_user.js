@@ -17,8 +17,6 @@ const fileGetContents = require('file-get-contents');
 
 // Initiliase le module axios
 //const axios = require(`axios`);
-
-
 const {
     Op
 } = require("sequelize");
@@ -27,8 +25,6 @@ process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
-
-
 
 const {
     QueryTypes
@@ -39,11 +35,8 @@ const {
     query
 } = require('express-validator');
 
-
-
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
-
 
 // Initialise les models
 //const ModelSite = require("../models/models.site");
@@ -54,15 +47,9 @@ const ModelCampaign_epilot = require("../models/models.campaings_epilot")
 const ModelPack = require("../models/models.packs")
 const ModelPack_Site = require("../models/models.packs_sites")
 
-
 exports.index = async (req, res) => {
 
-
-
     try {
-
-
-
         if (req.session.user.user_role == 2 || req.session.user.user_role == 3) {
 
             const formats = await ModelFormat.findAll({
@@ -85,7 +72,6 @@ exports.index = async (req, res) => {
                 ],
             })
 
-
             const countrys = await ModelCountry.findAll({
                 attributes: ['country_id', 'country_name'],
                 where: {
@@ -102,26 +88,19 @@ exports.index = async (req, res) => {
                 countrys: countrys
             });
 
-
         }
-
-
 
     } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
 
-        res.render("error.ejs", {
-            statusCoded: statusCoded,
-
-        })
+        res.render("error.ejs", { statusCoded: statusCoded  })
     }
 
 };
 
 
 exports.forecast_user = async (req, res, next) => {
-
 
     // Définition des variables
     var headerlocation, table, requestForecast;
@@ -131,7 +110,6 @@ exports.forecast_user = async (req, res, next) => {
     var packs = await req.body.packs;
     var countries = await req.body.countries;
     var option = await req.body.case
-
 
     //si la case n'est pas coché renvoie false sinon true
     if (option == undefined) {
@@ -1019,11 +997,7 @@ exports.update = async (req, res, next) => {
             campaign_start_date: req.body.campaign_start_date,
             campaign_end_date: req.body.campaign_end_date,
             volume_prevue: req.body.volume_prevue
-
-
-
-
-        }, {
+         }, {
             where: {
                 campaign_epilot_id: req.params.id
             }

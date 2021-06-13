@@ -18,10 +18,11 @@
               <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_id %></a></td> 
                 <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>" title="<%= insertions[i].campaign.campaign_name %>"><%= insertions[i].campaign.campaign_name %></a></td> 
                 <td>
-                    <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_name %></a>
-                    <br />
-                    <span class="small"><%= moment(insertions[i].insertion_start_date).format('DD/MM/YYYY') %></span> - 
-                    <span class="small"><%= moment(insertions[i].insertion_end_date).format('DD/MM/YYYY') %></span>
+                    <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_name %>
+                        <br />
+                        <span class="small">(Du <%= moment(insertions[i].insertion_start_date).format('DD/MM/YYYY') %> au 
+                        <%= moment(insertions[i].insertion_end_date).format('DD/MM/YYYY') %>)</span>
+                    </a>
                 </td> 
                 <td class="d-none"><%= insertions[i].insertion_start_date %></td>
                 <td><% if(!insertions[i].insertions_priority.priority_id) { %><%= insertions[i].insertions_priority.priority_name %><% } else { %>-<% } %></td>

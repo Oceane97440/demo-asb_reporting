@@ -8,5 +8,6 @@ router.get("/", test.index);
 router.get("/test_exportExcel", test.test_exportExcel);
 router.get("/export_excel", test.export_excel);
 router.get('/campaignday', test.campaignday);
+router.get("/template", test.template);
 
 module.exports = router;

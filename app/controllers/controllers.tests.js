@@ -65,6 +65,11 @@ exports.index = async (req, res) => {
     }
 };
 
+exports.template = async (req, res) => {
+res.render('manager/template.ejs');
+};
+
+
 exports.campaignday = async(req, res) => {
   var file = 'https://reporting.smartadserverapis.com/2044/reports/E0F446DB-34BF-4975-9D1A-C502197C0D4F/file';
   // Récupère la date de chaque requête

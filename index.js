@@ -199,6 +199,8 @@ Sequelize = db.Sequelize;
 
 //
 /** view engine setup*/
+
+app.use(cors());
 app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname + '/public'));
@@ -254,41 +256,30 @@ app.post('/uploads', function (req) {
     console.log(req.files.file_csv.name); //requette.files.nom du file
 });
 
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 // signup login home page
 const index = require('./app/routes/routes.index');
-
 app.use('/', index);
 
 // action admin forecast
 const forecast = require('./app/routes/routes.api_forecast');
-
 app.use('/forecast', forecast);
 
 // action admin reporting
-
 const reporting = require('./app/routes/routes.api_report');
-
 app.use('/r/', reporting);
 
 // action liste campagne epilot
-
 const epilot = require('./app/routes/routes.api_epilot');
-
 app.use('/epilot', epilot);
 
 // action admin recupération donnée api
-
 const manager = require('./app/routes/routes.manager');
-
 app.use('/manager', manager);
 
 // action user forecast
-
 const user = require('./app/routes/routes.api_user');
-
 app.use('/utilisateur', user);
 
 // Automatise la récupération de donnée
@@ -307,7 +298,7 @@ app.use('/app', application);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3021);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

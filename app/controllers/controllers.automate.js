@@ -102,7 +102,6 @@ exports.agencies = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
-
     }
 }
 
@@ -142,7 +141,6 @@ exports.advertisers = async (req, res) => {
                                 });
 
                             /*
-
                             const advertiserDb = ModelFormats.findByPk(advertiser_id);
                             if (advertiserDb === null) {
                               console.log('Not found!');
@@ -150,7 +148,8 @@ exports.advertisers = async (req, res) => {
                             } else {
                               console.log('Else : '+advertiserDb instanceof ModelFormats); // true
                               // Its primary key is 123
-                            } */
+                            }
+                            */
                         }
 
                         
@@ -1203,179 +1202,277 @@ exports.insertions_priorities = async (req, res) => {
 
 exports.campaignsInsertions = async (req, res) => {
     try {        
+        let campaign_id = req.query.campaign_id;
         campaignObject = {
             "campaign_id": req.query.campaign_id
         };
-        
-        var config = SmartFunction.config('campaignsInsertions',campaignObject);
-        await axios(config).then(function (result) {           
-            if (!Utilities.empty(result.data)) {
-                var data = result.data;
-              
-                var number_line = data.length;
-                var number_total_count = result.headers['x-pagination-total-count'];
-                var number_pages = Math.round((number_total_count / 100) + 1);
-              
-                const addItem = async () => {
-                    for (let page = 0; page <= number_pages; page++) {  
-                        let offset = page * 100;
-                        campaignObject2 = {
-                            "campaign_id": req.query.campaign_id,
-                            "offset": offset
-                        };
+     
+        if(campaign_id) {
+            var config = SmartFunction.config('campaignsInsertions',campaignObject);
+            await axios(config).then(function (result) {           
+                
+                if (!Utilities.empty(result.data)) {
+                    var data = result.data;
+                   
+                    var number_line = data.length;
+                    var number_total_count = result.headers['x-pagination-total-count'];
+                    var number_pages = Math.round((number_total_count / 100) + 1);
+                
+                    const addItem = async () => {
+                        for (let page = 0; page <= number_pages; page++) {  
+                            let offset = page * 100;
+                            campaignObject2 = {
+                                "campaign_id": req.query.campaign_id,
+                                "offset": offset
+                            };
 
-                        var config2 =  SmartFunction.config('campaignsInsertions',campaignObject2);
-                        await axios(config2).then(function (response) {
-                            if (!Utilities.empty(response.data)) {
-                                var dataValue = response.data;
-                                var number_line_offset = data.length;
-                                if (number_line_offset >= 0) {
-                                    for (i = 0; i < number_line_offset; i++) {
+                            var config2 =  SmartFunction.config('campaignsInsertions',campaignObject2);
+                            await axios(config2).then(function (response) {
+                                if (!Utilities.empty(response.data)) {
+                                    var dataValue = response.data;
+                                    var number_line_offset = data.length;
+                                    if (number_line_offset >= 0) {
+                                        for (i = 0; i < number_line_offset; i++) {
 
-                                        // console.log(dataValue)
-                                        var insertion_id = dataValue[i].id;
-                                        var delivery_regulated = dataValue[i].isDeliveryRegulated;
-                                        var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
-                                        var used_non_guaranteed_deal = dataValue[i].heigisUsedByNonGuaranteedDealht;
-                                        var voice_share = dataValue[i].voiceShare;
-                                        var event_id = dataValue[i].eventId;
-                                        var insertion_name = dataValue[i].name;
-                                        var insertion_description = dataValue[i].description;
-                                        //  var site_id = dataValue[i].siteIds;
+                                            // console.log(dataValue)
+                                            var insertion_id = dataValue[i].id;
+                                            var delivery_regulated = dataValue[i].isDeliveryRegulated;
+                                            var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
+                                            var used_non_guaranteed_deal = dataValue[i].heigisUsedByNonGuaranteedDealht;
+                                            var voice_share = dataValue[i].voiceShare;
+                                            var event_id = dataValue[i].eventId;
+                                            var insertion_name = dataValue[i].name;
+                                            var insertion_description = dataValue[i].description;
+                                            //  var site_id = dataValue[i].siteIds;
 
-                                        var pack_id = dataValue[i].packIds;
-                                        var insertion_status_id = dataValue[i].insertions_statusId;
-                                        var insertion_start_date = dataValue[i].startDate;
-                                        var insertion_end_date = dataValue[i].endDate;
-                                        var campaign_id = dataValue[i].campaignId;
-                                        var insertion_type_id = dataValue[i].insertionTypeId;
-                                        var delivery_type_id = dataValue[i].deliveryTypeId;
-                                        var timezone_id = dataValue[i].timezoneId;
-                                        var priority_id = dataValue[i].priorityId;
-                                        var periodic_capping_id = dataValue[i].periodicCappingId;
-                                        var group_capping_id = dataValue[i].groupCappingId;
-                                        var max_impression = dataValue[i].maxImpressions;
-                                        var weight = dataValue[i].weight;
-                                        var max_click = dataValue[i].maxClicks;
-                                        var max_impression_perday = dataValue[i].maxImpressionsPerDay;
-                                        var max_click_perday = dataValue[i].maxClicksPerDay;
-                                        var insertion_groupe_volume = dataValue[i].insertionGroupedVolumeId
-                                        var event_impression = dataValue[i].eventImpressions;
-                                        var holistic_yield_enabled = dataValue[i].isHolisticYieldEnabled;
-                                        var deliver_left_volume_after_end_date = dataValue[i].deliverLeftVolumeAfterEndDate;
-                                        var global_capping = dataValue[i].globalCapping;
-                                        var capping_per_visit = dataValue[i].cappingPerVisit;
-                                        var capping_per_click = dataValue[i].cappingPerClick;
-                                        var auto_capping = dataValue[i].autoCapping;
-                                        var periodic_capping_impression = dataValue[i].periodicCappingImpressions;
-                                        var periodic_capping_period = dataValue[i].periodicCappingPeriod;
-                                        var oba_icon_enabled = dataValue[i].isObaIconEnabled;
-                                        //test
-                                        if (dataValue[i].formatId === 0) {
-                                            var format_id = "NULL"
-                                        } else {
-                                            var format_id = dataValue[i].formatId;
+                                            var pack_id = dataValue[i].packIds;
+                                            var insertion_status_id = dataValue[i].insertions_statusId;
+                                            var insertion_start_date = dataValue[i].startDate;
+                                            var insertion_end_date = dataValue[i].endDate;
+                                            var campaign_id = dataValue[i].campaignId;
+                                            var insertion_type_id = dataValue[i].insertionTypeId;
+                                            var delivery_type_id = dataValue[i].deliveryTypeId;
+                                            var timezone_id = dataValue[i].timezoneId;
+                                            var priority_id = dataValue[i].priorityId;
+                                            var periodic_capping_id = dataValue[i].periodicCappingId;
+                                            var group_capping_id = dataValue[i].groupCappingId;
+                                            var max_impression = dataValue[i].maxImpressions;
+                                            var weight = dataValue[i].weight;
+                                            var max_click = dataValue[i].maxClicks;
+                                            var max_impression_perday = dataValue[i].maxImpressionsPerDay;
+                                            var max_click_perday = dataValue[i].maxClicksPerDay;
+                                            var insertion_groupe_volume = dataValue[i].insertionGroupedVolumeId
+                                            var event_impression = dataValue[i].eventImpressions;
+                                            var holistic_yield_enabled = dataValue[i].isHolisticYieldEnabled;
+                                            var deliver_left_volume_after_end_date = dataValue[i].deliverLeftVolumeAfterEndDate;
+                                            var global_capping = dataValue[i].globalCapping;
+                                            var capping_per_visit = dataValue[i].cappingPerVisit;
+                                            var capping_per_click = dataValue[i].cappingPerClick;
+                                            var auto_capping = dataValue[i].autoCapping;
+                                            var periodic_capping_impression = dataValue[i].periodicCappingImpressions;
+                                            var periodic_capping_period = dataValue[i].periodicCappingPeriod;
+                                            var oba_icon_enabled = dataValue[i].isObaIconEnabled;
+                                            
+                                            if (dataValue[i].formatId === 0) {
+                                                var format_id = "NULL"
+                                            } else {
+                                                var format_id = dataValue[i].formatId;
+                                            }
+                                            var external_id = dataValue[i].externalId;
+                                            var external_description = dataValue[i].externalDescription;
+                                            var insertion_updated_at = dataValue[i].updatedAt;
+                                            var insertion_created_at = dataValue[i].createdAt;
+                                            var insertion_archived = dataValue[i].isArchived;
+                                            var rate_type_id = dataValue[i].rateTypeId;
+                                            var rate = dataValue[i].rate;
+                                            var rate_net = dataValue[i].rateNet;
+                                            var discount = dataValue[i].discount;
+                                            var currency_id = dataValue[i].currencyId;
+                                            var insertion_link_id = dataValue[i].insertionLinkId;
+                                            var insertion_exclusion_id = dataValue[i].insertionExclusionIds;
+                                            var customized_script = dataValue[i].customizedScript;
+                                            var sale_channel_id = dataValue[i].salesChannelId;
+
+                                            Utilities
+                                                .updateOrCreate(ModelInsertions, {
+                                                    insertion_id: insertion_id
+                                                }, {
+                                                    insertion_id,
+                                                    delivery_regulated,
+                                                    used_guaranteed_deal,
+                                                    used_non_guaranteed_deal,
+                                                    voice_share,
+                                                    event_id,
+                                                    insertion_name,
+                                                    insertion_description,
+                                                    pack_id,
+                                                    insertion_status_id,
+                                                    insertion_start_date,
+                                                    insertion_end_date,
+                                                    campaign_id,
+                                                    insertion_type_id,
+                                                    delivery_type_id,
+                                                    timezone_id,
+                                                    priority_id,
+                                                    periodic_capping_id,
+                                                    group_capping_id,
+                                                    max_impression,
+                                                    weight,
+                                                    max_click,
+                                                    max_impression_perday,
+                                                    max_click_perday,
+                                                    insertion_groupe_volume,
+                                                    event_impression,
+                                                    holistic_yield_enabled,
+                                                    deliver_left_volume_after_end_date,
+                                                    global_capping,
+                                                    capping_per_visit,
+                                                    capping_per_click,
+                                                    auto_capping,
+                                                    periodic_capping_impression,
+                                                    periodic_capping_period,
+                                                    oba_icon_enabled,
+                                                    format_id,
+                                                    external_id,
+                                                    external_description,
+                                                    insertion_updated_at,
+                                                    insertion_created_at,
+                                                    insertion_archived,
+                                                    rate_type_id,
+                                                    rate,
+                                                    rate_net,
+                                                    discount,
+                                                    currency_id,
+                                                    insertion_link_id,
+                                                    insertion_exclusion_id,
+                                                    customized_script,
+                                                    sale_channel_id
+                                                })
+                                                .then(function (result) {
+                                                    result.item; // the model
+                                                    result.created; // bool, if a new item was created.
+                                                    return res.json({ type: 'success', message: 'Les insertions de la campagne "'+campaignObject.campaign_id+'" ont bien été ajoutées.' });
+                                                });
                                         }
-                                        var external_id = dataValue[i].externalId;
-                                        var external_description = dataValue[i].externalDescription;
-                                        var insertion_updated_at = dataValue[i].updatedAt;
-                                        var insertion_created_at = dataValue[i].createdAt;
-                                        var insertion_archived = dataValue[i].isArchived;
-                                        var rate_type_id = dataValue[i].rateTypeId;
-                                        var rate = dataValue[i].rate;
-                                        var rate_net = dataValue[i].rateNet;
-                                        var discount = dataValue[i].discount;
-                                        var currency_id = dataValue[i].currencyId;
-                                        var insertion_link_id = dataValue[i].insertionLinkId;
-                                        var insertion_exclusion_id = dataValue[i].insertionExclusionIds;
-                                        var customized_script = dataValue[i].customizedScript;
-                                        var sale_channel_id = dataValue[i].salesChannelId;
-
-                                        Utilities
-                                            .updateOrCreate(ModelInsertions, {
-                                                insertion_id: insertion_id
-                                            }, {
-                                                insertion_id,
-                                                delivery_regulated,
-                                                used_guaranteed_deal,
-                                                used_non_guaranteed_deal,
-                                                voice_share,
-                                                event_id,
-                                                insertion_name,
-                                                insertion_description,
-                                                pack_id,
-                                                insertion_status_id,
-                                                insertion_start_date,
-                                                insertion_end_date,
-                                                campaign_id,
-                                                insertion_type_id,
-                                                delivery_type_id,
-                                                timezone_id,
-                                                priority_id,
-                                                periodic_capping_id,
-                                                group_capping_id,
-                                                max_impression,
-                                                weight,
-                                                max_click,
-                                                max_impression_perday,
-                                                max_click_perday,
-                                                insertion_groupe_volume,
-                                                event_impression,
-                                                holistic_yield_enabled,
-                                                deliver_left_volume_after_end_date,
-                                                global_capping,
-                                                capping_per_visit,
-                                                capping_per_click,
-                                                auto_capping,
-                                                periodic_capping_impression,
-                                                periodic_capping_period,
-                                                oba_icon_enabled,
-                                                format_id,
-                                                external_id,
-                                                external_description,
-                                                insertion_updated_at,
-                                                insertion_created_at,
-                                                insertion_archived,
-                                                rate_type_id,
-                                                rate,
-                                                rate_net,
-                                                discount,
-                                                currency_id,
-                                                insertion_link_id,
-                                                insertion_exclusion_id,
-                                                customized_script,
-                                                sale_channel_id
-                                            })
-                                            .then(function (result) {
-                                                result.item; // the model
-                                                result.created; // bool, if a new item was created.
-                                                return res.json({'status' : 'ok'});
-                                            });
-
                                     }
-
-                                }
-                            } else {
-                                console.error('Error : Aucune donnée disponible');
-                            }
-                            
-                        });
+                                } else {
+                                    return res.json({ type: 'error', message : 'Error : Aucune donnée disponible'});
+                                }  
+                            });
+                        }
                     }
+
+                    addItem();
+                } else {
+                    return res.json({ type: 'error', message: 'Aucune insertion pour la campagne "'+campaignObject.campaign_id+'"' });
                 }
 
-                addItem();
-              
-              return res.json({ type: 'success', message: 'Les insertions de la campagne "'+campaignObject.campaign_id+'"' });
-            } else {
-              return res.json({ type: 'error', message: 'Aucune insertion pour la campagne "'+campaignObject.campaign_id+'"' });
-            }
-
-        });
+            });
+        } else {
+            return res.json({ type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.' });
+        }
     } catch (error) {
-        // return res.json({ type: 'error', message: error });
-        console.error(error)
+         return res.json({ type: 'error', message: error });
     }
 }
+
+exports.campaignsCreatives = async (req, res) => {
+    try {        
+        let campaignID = req.query.campaign_id;
+             
+        if(campaignID) {
+            const insertions = await ModelInsertions.findAll({
+                where: {
+                    campaign_id: campaignID                
+                }
+            });
+
+            if(insertions.length > 0) {
+                for (let i = 0; i < insertions.length; i++) {
+                    insertionObject = {
+                        "insertion_id": insertions[i].insertion_id
+                    };                   
+                  
+                    var config = SmartFunction.config('creatives',insertionObject);
+                    await axios(config).then(function (response) {
+                        if (!Utilities.empty(response.data)) {
+                            return creativesData = response.data;
+                        }
+                       // creatives = result.data;
+                    }).then(creativesData => {
+                        if (!Utilities.empty(creativesData)) {
+                            var number_line_offset = creativesData.length;
+                           
+
+                            
+                            if (number_line_offset > 0) {
+                               for (m = 0; m < number_line_offset; m++) {
+                              
+                                    var creative_id = creativesData[m].id;
+                                    var creative_name = creativesData[m].name;
+                                    var file_name = creativesData[m].fileName;
+                                    var insertion_id = creativesData[m].insertionId;
+                                    var creative_resource_url = creativesData[m].resourceUrl;
+                                    var creative_url = creativesData[m].url;
+                                    var creative_click_url = creativesData[m].clickUrl;
+                                    var creative_width = creativesData[m].width;
+                                    var creative_height = creativesData[m].height;
+                                    var creative_mime_type = creativesData[m].mimeType;
+                                    var creative_percentage_delivery = creativesData[m].percentageOfDelivery;
+                                    var creatives_type_id = creativesData[m].creativeTypeId;
+                                    var creatives_activated = creativesData[m].isActivated;
+                                    var creatives_archived = creativesData[m].isArchived;
+                                   // console.log(creative_name)
+
+                                  var result = Utilities
+                                        .updateOrCreate(ModelCreatives, {
+                                            creative_id: creative_id
+                                        }, {
+                                            creative_id,
+                                            creative_name,
+                                            file_name,
+                                            insertion_id,
+                                            creative_resource_url,
+                                            creative_url,
+                                            creative_click_url,
+                                            creative_width,
+                                            creative_height,
+                                            creative_mime_type,
+                                            creative_percentage_delivery,
+                                            creatives_type_id,
+                                            creatives_activated,
+                                            creatives_archived
+                                        })
+                                        .then(function (result) {
+                                            result.item; // the model
+                                            result.created; // bool, if a new item was created.
+                                            return res.json({ type: 'sucess', message: 'Creatives ok' });
+                                        });
+                                      
+                                }
+                            }
+
+
+                        }                    
+                       
+
+                    });  
+
+                }
+               
+            } else {
+                return res.json({ type: 'error', message: 'Aucune créative pour la campagne "'+campaignObject.campaign_id+'"' });
+            }
+
+
+        } else {
+            return res.json({ type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.' });
+        }
+    } catch (error) {
+         return res.json({ type: 'error', message: error });
+    }
+}
+
 
 exports.reports = async (req, res) => {
     try {
@@ -1387,7 +1484,7 @@ exports.reports = async (req, res) => {
         var Dday = moment().format('YYYY-MM-DD');
         var DdayTime = moment().format('YYYY-MM-DDTHH:mm:ss');
         var DateNow = new Date().getTime();
-        //  console.log(year); process.exit(1);
+       
         campaigns = await ModelCampaigns
             .findAll({
                 where: {

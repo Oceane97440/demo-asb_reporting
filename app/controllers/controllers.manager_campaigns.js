@@ -22,6 +22,7 @@ const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
+const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
@@ -67,6 +68,9 @@ exports.list = async (req, res) => {
             include: [
                 {
                     model: ModelAdvertisers
+                },
+                {
+                    model: ModelInsertions
                 }
             ]
         }, {
@@ -90,6 +94,7 @@ exports.view = async (req, res) => {
      try {
         const data = new Object();
         data.breadcrumb = "Campagnes";
+        var insertionsIds = new Array();
 
         var campaign_id = req.params.id;
         var campaign = await ModelCampaigns
@@ -100,6 +105,9 @@ exports.view = async (req, res) => {
                 include: [
                     {
                         model: ModelAdvertisers
+                    },
+                    {
+                        model: ModelInsertions
                     }
                 ]
             })
@@ -110,7 +118,7 @@ exports.view = async (req, res) => {
                         .render("manager/error.ejs", {statusCoded: 404});
                 }
 
-                // Récupére les données des insertions de la campagne
+               // Récupére les données des insertions de la campagne
                var insertionList = await ModelInsertions.findAll({
                     where: {
                         campaign_id: campaign_id
@@ -119,13 +127,22 @@ exports.view = async (req, res) => {
                         { model: ModelCampaigns, attributes: ['campaign_id', 'campaign_name'] },
                         { model: ModelFormats, attributes: ['format_id', 'format_name'] },
                         { model: ModelInsertionsPriorities, attributes: ['priority_id', 'priority_name'] },
-                        { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] }
+                        { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] },
                     ]
-                })
-
-               
+                }) .then(async function (insertionList) {
+                    if (!Utilities.empty(insertionList)) {
+                       
+                        data.insertions = insertionList;
+                        for(i = 0; i <= insertionList.length; i++) {
+                            insertionsIds.push(insertionList[i].insertion_id);
+                        }
+                        
+                       
+                    }
+                });
+              
                 // Attribue les données de la campagne
-                data.insertions = insertionList;
+              
                 data.creatives = false;
                 data.campaign = campaign;
                 data.moment = moment;
@@ -166,8 +183,6 @@ exports.create = async (req, res) => {
     }
 }
 
-
-
 exports.create_post = async (req, res) => {
     try {
       console.log(req.body);
@@ -178,8 +193,6 @@ exports.create_post = async (req, res) => {
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
-
-
 
 exports.epilot_create = async (req, res) => {
     try {

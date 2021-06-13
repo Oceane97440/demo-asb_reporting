@@ -111,12 +111,6 @@ const campaignEpilotSchema = {
 }
 
 
-
-
-
-
-
-
 router.get("/", manager.index);
 // router.get("/", manager.error);
 
@@ -138,10 +132,16 @@ router.post('/campaigns/epilot/create', checkSchema(campaignEpilotSchema), (req,
         });
     }
 
-    res.status(200).json({
-        success: true,
+    
+
+    req.session.message = {
+        type: 'success', 
+        intro : '',   
         message: 'Registration successful',
-    });
+    }
+
+   res.redirect('/manager/campaigns/epilot/create');
+
 })
 
 

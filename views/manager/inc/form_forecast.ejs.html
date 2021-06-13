@@ -1,0 +1,76 @@
+
+                <% if (message) { %>
+                    <div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
+                        <%=message.intro%>:<%=message.message%>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>            
+                <% } %>
+
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-label" for="campaign_epilot_start_date">Date de début de la campagne</label>
+                        <input
+                            type="date"
+                            name="campaign_epilot_start_date"
+                            id="campaign_epilot_start_date"
+                            class="form-control"
+                            placeholder="Saisissez la date de début de la campagne"
+                            required="required"/>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="form-label" for="campaign_epilot_end_date">Date de fin de la campagne</label>
+                        <input
+                            type="date"
+                            name="campaign_epilot_end_date"
+                            id="campaign_epilot_end_date"
+                            class="form-control"
+                            placeholder="Saisissez la date de fin de la campagne"
+                            required="required">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="form-label" for="pack">Pack
+                    </label>
+                    <select
+                        class="form-control"
+                        id="pack"
+                        name="pack"
+                        required="required">
+                        <% for (let i=0; i < pack.length; i++) { %>
+                            <option value="<%= pack[i].pack_id %>"><%= pack[i].pack_name %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+              
+
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-label" for="format_id">Format
+                        </label>
+                        <select
+                            class="form-control"
+                            id="format_id"
+                            name="format_id"
+                            required="required">
+                            <option value="">Choisir un format</option>
+                            <% for(let i=0; i < formats.length; i++) {%>
+                                <option onchange="myFunction()" value="<%= formats[i].format_group %>"><%= formats[i].format_group %></option>
+                                <% } %>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-footer">
+                <input
+                    type="submit"
+                    name="submit"
+                    class="btn btn-primary mr-2 btn-submit"
+                    value="Vérifier la disponibilité"/>
+            </div>

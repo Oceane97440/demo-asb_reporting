@@ -18,7 +18,6 @@ const fileGetContents = require('file-get-contents');
 // Initiliase le module axios
 //const axios = require(`axios`);
 
-
 const {
   Op
 } = require("sequelize");
@@ -27,8 +26,6 @@ process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
   console.log('unhandledRejection', error.message);
 });
-
-
 
 const {
   QueryTypes
@@ -46,15 +43,14 @@ const ModelUser_Role = require("../models/models.users_roles")
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 
-
 exports.home_page = async (req, res) => {
   if (req.session.user.user_role === 1) {
     res.send("Home page");
   }
 }
 
+/*
 exports.signup = async (req, res) => {
-
   try {
     var roles = await ModelRole.findAll({
       where: {
@@ -84,7 +80,7 @@ exports.signup_add = async (req, res) => {
   const user_role = req.body.user_role;
 
   try {
-    /**verifier si les champs ne son pas vide*/
+    // verifier si les champs ne son pas vide
     if (user_email === '' || user_password === '' || user_role === '') {
       req.session.message = {
         type: 'danger',
@@ -95,7 +91,7 @@ exports.signup_add = async (req, res) => {
       // return res.render('users/signup.ejs')
     }
 
-    /**verifie si email est valide avec le regex*/
+    // verifie si email est valide avec le regex
     if (!EMAIL_REGEX.test(user_email)) {
       req.session.message = {
         type: 'danger',
@@ -104,7 +100,8 @@ exports.signup_add = async (req, res) => {
       }
       return res.redirect('/signup');
     }
-    /**verifie si le password contien entre min 4 et max 8 caratère + un number*/
+
+    // verifie si le password contien entre min 4 et max 8 caratère + un number
     if (!PASSWORD_REGEX.test(user_password)) {
       req.session.message = {
         type: 'danger',
@@ -114,7 +111,7 @@ exports.signup_add = async (req, res) => {
       return res.redirect('/signup');  
     }
 
-    /**search si email exsite déjà dans le bdd*/
+    // search si email exsite déjà dans le bdd
 
     await ModelUser.findOne({
       attributes: ['user_email'],
@@ -160,6 +157,9 @@ exports.signup_add = async (req, res) => {
 
 }
 
+*/
+
+
 exports.login = async (req, res) => {
   res.render('users/login.ejs');
 }
@@ -201,7 +201,7 @@ exports.login_add = async (req, res) => {
             req.session.user = user;
             console.log('Req session user_role :',req.session.user.user_role)
             if (req.session.user.user_role === 1) {
-              return res.redirect('/home_page');
+              return res.redirect('/manager');
             }
             if (req.session.user.user_role === 2 || req.session.user.user_role === 3) {
               return res.redirect('/utilisateur');
@@ -241,7 +241,6 @@ exports.logout = async (req, res) => {
 }
 
 exports.index = async (req, res) => {
-
   try {
     if (req.session.user.user_role === 1) {
       res.render('home-page.ejs');
@@ -250,10 +249,9 @@ exports.index = async (req, res) => {
   } catch (error) {
     console.log(error);
     var statusCoded = error.response.status;
-
     res.render("error.ejs", {
       statusCoded: statusCoded,
     });
   }
-
 }
+
