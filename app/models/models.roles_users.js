@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const UsersRoles = sequelize.define('users_roles', {
+const RolesUsers = sequelize.define('roles_users', {
     roles_users_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -22,4 +22,4 @@ const UsersRoles = sequelize.define('users_roles', {
     timestamps: false
 });
 
-module.exports = UsersRoles;
+module.exports = RolesUsers;

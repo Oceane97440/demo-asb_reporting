@@ -8,16 +8,11 @@ const bodyParser = require('body-parser');
 //let csvToJson = require('convert-csv-to-json');
 const Utilities = require('../functions/functions.utilities');
 
-
 const axios = require(`axios`);
-
-//const asyncly = require('async');
 
 const fileGetContents = require('file-get-contents');
 
 // Initiliase le module axios
-//const axios = require(`axios`);
-
 
 const {
     Op
@@ -44,9 +39,9 @@ const AxiosFunction = require('../functions/functions.axios');
 //const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
-const ModelCampaign_epilot = require("../models/models.campaigns_epilot")
-const ModelPack = require("../models/models.packs")
-const ModelPack_Site = require("../models/models.packs_sites")
+const ModelCampaignsEpilot = require("../models/models.campaigns_epilot")
+const ModelPacks = require("../models/models.packs")
+const ModelPacksSites = require("../models/models.packs_sites")
 
 exports.index = async (req, res) => {
     try {
@@ -64,7 +59,7 @@ exports.index = async (req, res) => {
                 ],
             })
 
-            const packs = await ModelPack.findAll({
+            const packs = await ModelPacks.findAll({
                 attributes: ['pack_id', 'pack_name'],
                 order: [
                     ['pack_name', 'ASC']
@@ -81,7 +76,7 @@ exports.index = async (req, res) => {
                 ],
             })
 
-            res.render('forecast/form.ejs', {
+            res.render('manager/forecast/index.ejs', {
                 formats: formats,
                 packs: packs,
                 countrys: countrys
@@ -179,7 +174,7 @@ exports.forecast = async (req, res, next) => {
         const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
         // recupération des site d'un pack
-        const sitesdb = await ModelPack_Site.findAll({
+        const sitesdb = await ModelPacksSites.findAll({
             attributes: ['pack_id', 'site_id'],
             where: {
                 pack_id: {
@@ -188,13 +183,15 @@ exports.forecast = async (req, res, next) => {
             }
         });
 
-        for (let l = 0; l < sitesdb.length; l++) {
-            sites.push(sitesdb[l].site_id);
-        }
+        if(sitesdb.length > 0) {
+            for (let l = 0; l < sitesdb.length; l++) {
+                sites.push(sitesdb[l].site_id);
+            }
 
-        // Si c'est un string on met en tableau pour respecter l'api
-        if (typeof sites == 'string') {
-            sites = [sites];
+            // Si c'est un string on met en tableau pour respecter l'api
+            if (typeof sites == 'string') {
+                sites = [sites];
+            }
         }
 
         // si format site countrie ne sont pas vide selectionne le groupe format
@@ -261,9 +258,8 @@ exports.forecast = async (req, res, next) => {
                 //compte le nbr ligne 
                 var number_line = await data_split.length;
 
-                //boucle sur les ligne
+                //boucle sur les lignes
                 for (i = 0; i < number_line; i++) {
-
                     //delete les ; et delete les blanc
                     line = await data_split[i].split(';');
 
@@ -367,7 +363,7 @@ exports.forecast = async (req, res, next) => {
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC', {
+                'SELECT * FROM asb_campaigns_epilot WHERE ((asb_campaigns_epilot.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_campaigns_epilot.campaign_epilot_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC', {
                     replacements: [date_start, date_end, date_start, date_end, format_filtre],
                     type: QueryTypes.SELECT
                 }
@@ -384,13 +380,13 @@ exports.forecast = async (req, res, next) => {
             if(requete.length > 0) {
                 for (let i = 0; i < requete.length; i++) {
                     // Calculer l'intervalle de date sur la période
-                    const campaign_start_date = requete[i].campaign_start_date;
-                    const campaign_end_date = requete[i].campaign_end_date;
+                    const campaign_epilot_start_date = requete[i].campaign_epilot_start_date;
+                    const campaign_epilot_end_date = requete[i].campaign_epilot_end_date;
                     const volumes_prevue = requete[i].volume_prevue;
                     
-                    const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                    const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                    date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
+                    const campaign_date_start = await campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z';
+                    const campaign_date_end = await campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z';
+                    date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
 
                     const nb_jour_interval = (date_interval / 86400000);
 
@@ -430,8 +426,8 @@ exports.forecast = async (req, res, next) => {
                         } else {
                             array_reserver.push(volumes_prevu_diffuse);
                             Campagnes_reserver.push(requete[i].campaign_name);
-                            Campagne_start_reserver.push(campaign_start_date);
-                            Campagne_end_reserver.push(campaign_end_date);
+                            Campagne_start_reserver.push(campaign_epilot_start_date);
+                            Campagne_end_reserver.push(campaign_epilot_end_date);
                             Interval_reserver.push(nb_jour_interval);
                             Nbr_cheval_reserver.push(nb_jour_cheval);
                         }
@@ -452,15 +448,11 @@ exports.forecast = async (req, res, next) => {
 
             // Calcule du volume dispo reserer  
             var reserver_reel = Volume_dispo_forecast - sommeReserver;
-
-            //console.log(Volume_dispo_forecast)
-            //console.log(sommeReserver)
-            // console.log(reserver_reel)
-
             if (reserver_reel == Volume_dispo_forecast || sommeReserver == 0) {
                 reserver_reel = 0;
                 sommeReserver = 0;
             }
+
             var reserver = {
                 //RESERVER//
                 array_reserver,
@@ -479,18 +471,7 @@ exports.forecast = async (req, res, next) => {
                 format,
             }
 
-            /* if (reserver_reel === undefined) {
-                 //console.log("aucun requête")
-                 return res.render('forecast/data.ejs', {
-                     table: table,
-                     insertions: insertions,
-                     infos:infos, 
-                 });
-
-             }*/
-
-
-            return res.render('forecast/data1.ejs', {
+            return res.render('manager/forecast/view.ejs', {
                 table: table,
                 insertions: insertions,
                 infos: infos,
@@ -641,14 +622,6 @@ exports.forecast = async (req, res, next) => {
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
 
-                //Requête sql campagne epilot
-                // const requete = await sequelize.query(
-                //     'SELECT * FROM asb_campaign_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  = ? ORDER BY asb_campaign_epilot.format_name ASC', {
-                //         replacements: [date_start, date_end, date_start, date_end, format],
-                //         type: QueryTypes.SELECT
-                //     }
-                // );
-
                 switch (format) {
                     case "HABILLAGE":
                         //si c habillage -> web_habillage / app_mban_atf
@@ -680,7 +653,7 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC', {
+                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }
@@ -698,12 +671,12 @@ exports.forecast = async (req, res, next) => {
                 for (let i = 0; i < requete.length; i++) {
 
                     // Calculer l'intervalle de date sur la période
-                    const campaign_start_date = requete[i].campaign_start_date;
-                    const campaign_end_date = requete[i].campaign_end_date;
+                    const campaign_epilot_start_date = requete[i].campaign_epilot_start_date;
+                    const campaign_epilot_end_date = requete[i].campaign_epilot_end_date;
                     const volumes_prevue = requete[i].volume_prevue;
-                    const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                    const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                    date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
+                    const campaign_date_start = await campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z';
+                    const campaign_date_end = await campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z';
+                    date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
                     
                     const nb_jour_interval = (date_interval / 86400000);
 
@@ -742,7 +715,7 @@ exports.forecast = async (req, res, next) => {
                         } else {
                             array_reserver.push(volumes_prevu_diffuse);
                             Campagnes_reserver.push(requete[i].campaign_name);
-                            Campagne_start_reserver.push(campaign_start_date);
+                            Campagne_start_reserver.push(campaign_epilot_start_date);
                             Campagne_end_reserver.push(campaign_date_end);
                             Interval_reserver.push(nb_jour_interval);
                             Nbr_cheval_reserver.push(nb_jour_cheval);
@@ -803,17 +776,7 @@ exports.forecast = async (req, res, next) => {
                     format
                 }
 
-                /* if (reserver_reel === undefined) {
-                     console.log("aucun requête")
-                     return res.render('forecast/data.ejs', {
-                         table: table,
-                         insertions: insertions,
-                         infos:infos, 
-                     });
-
-                 }*/
-
-                return res.render('forecast/data1.ejs', {
+                return res.render('manager/forecast/view.ejs', {
                     table: table,
                     insertions: insertions,
                     reserver: reserver,

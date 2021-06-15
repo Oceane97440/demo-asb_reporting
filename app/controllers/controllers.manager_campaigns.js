@@ -130,13 +130,13 @@ exports.view = async (req, res) => {
                         { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] },
                     ]
                 }) .then(async function (insertionList) {
-                    if (!Utilities.empty(insertionList)) {
+                    if (!Utilities.empty(insertionList) && (insertionList.length > 0)) {
                        
                         data.insertions = insertionList;
-                        for(i = 0; i <= insertionList.length; i++) {
-                            insertionsIds.push(insertionList[i].insertion_id);
-                        }
-                        
+                        for(i = 0; i < insertionList.length; i++) {
+                           insertionsIds.push(insertionList[i].insertion_id);
+                            //  console.log(i,' : ',insertionList[i].insertion_id);
+                        }                       
                        
                     }
                 });

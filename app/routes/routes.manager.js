@@ -2,20 +2,11 @@ const router = require("express").Router();
 const Sequelize = require('sequelize');
 
 const manager = require("../controllers/controllers.manager");
-const manager_campaigns = require(
-    "../controllers/controllers.manager_campaigns"
-);
-const manager_advertisers = require(
-    "../controllers/controllers.manager_advertisers"
-);
-
-const manager_sites = require(
-    "../controllers/controllers.manager_sites"
-);
-
-const manager_users = require(
-    "../controllers/controllers.manager_users"
-);
+const manager_campaigns = require("../controllers/controllers.manager_campaigns");
+const manager_advertisers = require("../controllers/controllers.manager_advertisers");
+const manager_sites = require("../controllers/controllers.manager_sites");
+const manager_users = require("../controllers/controllers.manager_users");
+const manager_forecast = require("../controllers/controllers.manager_forecast");
 
 /**
 * Middleware to know if user is connected
@@ -30,7 +21,12 @@ router.use(function (req, res, next) {
 
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
+const ModelCampaignsEpilot = require("../models/models.campaigns_epilot");
 const {body, checkSchema, validationResult} = require('express-validator');
+const ValidateCustom = require("../functions/functions.form.validate");
+
+
+/*
 const campaignEpilotSchema = {
     advertiser_id: {
         custom: {
@@ -44,11 +40,7 @@ const campaignEpilotSchema = {
                 })
             }
         }
-    },
-    campaign_epilot_code: {
-        notEmpty: true,
-        errorMessage: "Saisir un code campagne"
-    },
+    },   
     campaign_epilot_name: {
         notEmpty: true,
         errorMessage: "Saisir le nom de la campagne"
@@ -77,39 +69,9 @@ const campaignEpilotSchema = {
     campaign_epilot_volume: {
         isInt: true,
         errorMessage: "Saisir le volume de diffusion pour ce format"
-    },
-
-    /*
-    password: {
-        isStrongPassword: {
-            minLength: 8,
-            minLowercase: 1,
-            minUppercase: 1,
-            minNumbers: 1
-        },
-        errorMessage: "Password must be greater than 8 and contain at least one uppercase letter, one lowercase letter, and one number",
-    },
-    phone: {
-        notEmpty: true,
-        errorMessage: "Phone number cannot be empty"
-    },
-    email: {
-        normalizeEmail: true,
-        custom: {
-            options: value => {
-                return User.find({
-                    email: value
-                }).then(user => {
-                    if (user.length > 0) {
-                        return Promise.reject('Email address already taken')
-                    }
-                })
-            }
-        }
-    }
-    */
+    }   
 }
-
+*/
 
 router.get("/", manager.index);
 // router.get("/", manager.error);
@@ -122,7 +84,7 @@ router.get("/campaigns/:id", manager_campaigns.view);
 router.get('/campaigns/epilot/create', manager_campaigns.epilot_create);
 
 
-router.post('/campaigns/epilot/create', checkSchema(campaignEpilotSchema), (req, res) => {
+router.post('/campaigns/epilot/create', checkSchema(ValidateCustom.campaignEpilotSchema), (req, res) => {
     // Validate incoming input
     const errors = validationResult(req);
 
@@ -130,16 +92,39 @@ router.post('/campaigns/epilot/create', checkSchema(campaignEpilotSchema), (req,
         return res.status(400).json({
             errors: errors.array()
         });
+    } 
+
+    // Supprime l'object submit
+    delete req.body.submit;
+    var where = req.body;
+    console.log(req.body)
+
+    const foundItem =  ModelCampaignsEpilot.findOne(where).count();
+   
+    console.log('WHERE : ',where)
+
+    console.log('Number : ',foundItem.length)
+    if (!foundItem) {
+        // Item not found, create a new one
+        const item =  ModelCampaignsEpilot.create(where);
+        if(item) {
+            req.session.message = {
+                type: 'success', 
+                intro : '',   
+                message: 'La campagne a bien été ajouté.',
+            }        
+        }
+    } else {
+        req.session.message = {
+            type: 'error', 
+            intro : '',   
+            message: 'Cette campagne existe déjà dans la base de donnée.',
+        }        
     }
 
-    
+ //   ModelCampaignsEpilot.findOne(req.body)
 
-    req.session.message = {
-        type: 'success', 
-        intro : '',   
-        message: 'Registration successful',
-    }
-
+  
    res.redirect('/manager/campaigns/epilot/create');
 
 })
@@ -160,10 +145,8 @@ router.get("/users/create", manager_users.create);
 router.get("/users/:id", manager_users.view);
 router.get("/users/:id/edit", manager_users.edit);
 
-
-
-
-
+router.get("/forecast", manager_forecast.index);
+router.post("forecast/add", manager_forecast.index);
 
 // router.get('/advertisers/create', manager_advertisers.create);
 

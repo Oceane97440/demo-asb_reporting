@@ -28,6 +28,8 @@ const ModelInsertions = require("../models/models.insertions");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
 const ModelUsers = require("../models/models.users");
+const ModelRolesUsers = require("../models/models.roles_users");
+const ModelRoles = require("../models/models.roles");
 
 exports.index = async (req, res) => {
     try {
@@ -51,9 +53,19 @@ exports.list = async (req, res) => {
         const data = new Object();
         data.breadcrumb = "Liste des utilisateurs";
 
-        var userList = await ModelUsers.findAll();
+        var userList = await ModelUsers.findAll({
+            include: [
+                {
+                    model: ModelRolesUsers
+                },
+                {
+                    model: ModelRoles
+                }
+            ]
+        });
         data.users = userList;
         console.log(userList)
+        
         data.moment = moment;
         res.render('manager/users/list.ejs', data);
     } catch (error) {
@@ -64,7 +76,10 @@ exports.list = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-    try {} catch (error) {
+    try {
+
+
+    } catch (error) {
         console.log(error);
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {statusCoded: statusCoded});

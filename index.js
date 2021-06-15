@@ -9,16 +9,17 @@ var fileUpload = require('express-fileupload');
 
 const db = require("./app/config/_config.database");
 
-const campaings_epilot = require('./app/models/models.campaings_epilot');;
+const campaings_epilot = require('./app/models/models.campaigns_epilot');;
 const countries = require('./app/models/models.countries');
 const sites = require('./app/models/models.sites');
 const packs = require('./app/models/models.packs');
 const packs_sites = require('./app/models/models.packs_sites');
 const users = require('./app/models/models.users');
 const roles = require('./app/models/models.roles');
-const users_roles = require('./app/models/models.users_roles');
+const roles_users = require('./app/models/models.roles_users');
 const campaigns = require('./app/models/models.campaigns');
 const advertisers = require('./app/models/models.advertisers');
+const advertisers_users = require('./app/models/models.advertisers_users');
 const agencies = require('./app/models/models.agencies');
 const formats = require('./app/models/models.formats');
 
@@ -50,17 +51,32 @@ sites.hasMany(packs_sites, {
     hooks: true
 });
 
-//un user posséde un role un role posséde un à plusieur user
-users.hasOne(users_roles, {
+//un user posséde un role un role posséde un à plusieurs user
+users.hasOne(roles_users, {
     foreignKey: 'user_id',
     onDelete: 'cascade',
     hooks: true
 });
-roles.hasMany(users_roles, {
+roles.hasMany(roles_users, {
     foreignKey: 'role_id',
     onDelete: 'cascade',
     hooks: true
 });
+
+
+//un user posséde un ou plusieurs annonceurs,  un role posséde un ou plusieurs users
+users.hasOne(advertisers_users, {
+    foreignKey: 'user_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+advertisers.hasMany(advertisers_users, {
+    foreignKey: 'advertiser_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
 
 //un format posséde un ou plusieur group un group posséde un à plusieur format
 formats.hasMany(groups_formats_types, {

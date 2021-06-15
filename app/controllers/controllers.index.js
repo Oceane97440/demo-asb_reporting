@@ -39,7 +39,7 @@ const {
 
 const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
-const ModelUser_Role = require("../models/models.users_roles")
+const ModelUser_Role = require("../models/models.roles_users")
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 

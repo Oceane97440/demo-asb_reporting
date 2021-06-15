@@ -14,7 +14,7 @@
                 <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_id %>"><%= users[i].user_id %></a></td> 
                 <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_firstname %> <%= users[i].user_lastname %>"><%= users[i].user_firstname %> <%= users[i].user_lastname %></a></td> 
                 <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_email %>"><%= users[i].user_email %></a></td> 
-                <td><%= users[i].user_role %></td>
+                <td><%= users[i].roles_user.role_id%> - <%= users[i].roles_user.user_id %></td>
                 <td>                    
                    <a href="/manager/users/<%= users[i].user_id %>/edit" title="Modifier ce rôle"><i class="icon feather icon-edit f-16 text-success"></i></a>
                 </td>

@@ -47,7 +47,7 @@ const {
 //const ModelSite = require("../models/models.site");
 //const ModelFormat = require("../models/models.format");
 //const ModelCountry = require("../models/models.country")
-const ModelCampaign_epilot = require("../models/models.campaings_epilot")
+const ModelCampaignsEpilot = require("../models/models.campaigns_epilot")
 //const ModelPack = require("../models/models.pack")
 //const ModelPack_Site = require("../models/models.pack_site")
 
@@ -61,7 +61,7 @@ exports.index = async (req, res) => {
   try {
     if (req.session.user.user_role === 1||req.session.user.user_role === 2||req.session.user.user_role === 3) {
 
-    var confirmer = await ModelCampaign_epilot.findAll({
+    var confirmer = await ModelCampaignsEpilot.findAll({
       attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
 
       where: {
@@ -72,7 +72,7 @@ exports.index = async (req, res) => {
       ],
     })
 
-    var reserver = await ModelCampaign_epilot.findAll({
+    var reserver = await ModelCampaignsEpilot.findAll({
       attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
 
       where: {
@@ -201,7 +201,7 @@ exports.csv_import = async (req, res) => {
             campaign_fin = date_end_format + 'T00:00:00.000Z'
 
             //apres tout mes test passé add les données
-             ModelCampaign_epilot.create({
+             ModelCampaignsEpilot.create({
               campaign_name: campaign_name,
               format_name: format_name,
               etat: etat,

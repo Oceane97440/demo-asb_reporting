@@ -27,6 +27,19 @@ const Users = sequelize.define('users', {
     user_role: {
         type: Sequelize.INTEGER(),
         allowNull: false
+    },
+    user_status: {
+        type: Sequelize.INTEGER(),
+        allowNull: false
+    },
+    created_at: {
+        type: Sequelize.DATE(),
+        allowNull: true
+    }
+    ,
+    updated_at: {
+        type: Sequelize.DATE(),
+        allowNull: true
     }
 }, {
     tableName: 'asb_users',

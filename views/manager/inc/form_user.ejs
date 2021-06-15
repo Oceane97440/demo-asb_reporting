@@ -1,0 +1,66 @@
+
+
+   
+        <div class="card-body">
+            <% if (message) { %>
+                <div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
+                    <%=message.intro%>:<%=message.message%>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>            
+            <% } %>
+        
+            <div class="form-group">
+                <label class="form-label" for="user_firstname">Prénom</label>
+                <input
+                    type="text"
+                    name="user_firstname"
+                    id="user_firstname"
+                    class="form-control"
+                    placeholder="Saisissez le prénom"
+                    required="required"/>
+            </div>
+           
+            <div class="form-group">
+                <label class="form-label" for="user_lastname">Nom</label>
+                <input
+                    type="text"
+                    name="user_lastname"
+                    id="user_lastname"
+                    class="form-control"
+                    placeholder="Saisissez le nom"
+                    required="required"/>
+            </div>
+           
+            <div class="form-group">
+                <label class="form-label" for="user_email">Email</label>
+                <input
+                    type="text"
+                    name="user_email"
+                    id="user_email"
+                    class="form-control"
+                    placeholder="Saisissez l'email"
+                    required="required"/>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="user_role">Rôle</label>
+                <input
+                    type="text"
+                    name="user_role"
+                    id="user_role"
+                    class="form-control"
+                    placeholder="Saisissez le rôle"
+                    required="required"/>
+            </div>
+         
+        </div>
+        <div class="card-footer">
+            <input
+                type="submit"
+                name="submit"
+                class="btn btn-primary mr-2 btn-submit"
+                value="Ajouter un utilisateur"/>
+        </div>
+    

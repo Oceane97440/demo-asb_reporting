@@ -1,0 +1,211 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+
+<% if (table.option == false) { %>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
+    <strong>Cocher la case <a href="/forecast">"Elargir la proposition"</a>!
+
+    </strong> Si le volume ne vous convient pas
+
+
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+<% } %>
+
+<div id="card-forecast" class="card" style="margin-top: 30px;">
+    <div class="card-header">
+        <h1 class="card-title">
+            Données du Forecast
+        </h1>
+    </div>
+
+    <div class="card-body">
+
+        <ul>
+            <li>Date de début: <%=infos.StartDate%></li>
+            <li>Date de fin: <%=infos.EndDate%></li>
+            <li><strong>Format: <%=infos.format%></strong></li>
+
+
+        </ul>
+
+        <ul>
+            <li><strong>Volume total: <%=table.sommeImpressions%></strong></li>
+            <li>Volume occupé:<%=table.sommeOccupied%></li>
+            <li><strong>Volume disponible:<%=table.volumeDispo%></strong></li>
+
+        </ul>
+
+        <hr>
+        <br>
+        <h3>Tableau récapitulatif des données du forecast</h3>
+        <br>
+
+        <table class="table">
+
+            <thead class="text-left thead-dark">
+                <tr>
+
+                    <!-- <th scope="d-none d-print-block">Site ID</th> -->
+                    <th scope="col">Sites</th>
+                    <!-- <th scope="d-none d-print-block">Formats ID</th> -->
+                    <th scope="col">Formats</th>
+                    <th scope="col">Total Impressions </th>
+                    <th scope="col">Volumes occupés</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% for (let i=1; i < table.TotalImpressions.length; i++) { %>
+                <% if (table.TotalImpressions[i] != '' ) { %>
+                <tr>
+
+
+                    <!-- <td class="d-none d-print-block"><%=table.SiteID[i]%></td> -->
+                    <td><%=table.SiteName[i]%></td>
+                    <!-- <td class="d-none d-print-block"><%=table.FormatID[i]%></td> -->
+                    <td><%=table.FormatName[i]%></td>
+                    <td><strong><%=table.TotalImpressions[i]%></strong></td>
+                    <td><strong><%=table.OccupiedImpressions[i]%></strong></td>
+                </tr>
+                <% } %>
+
+                <% } %>
+
+            </tbody>
+        </table>
+
+
+
+
+    </div>
+</div>
+
+<br>
+
+
+
+<div class="card text-center">
+    <div class="card-header tab-card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+
+            <li class="nav-item">
+                <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One"
+                    aria-selected="true">Campagnes réservées</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two"
+                    aria-selected="false">Liste des insertions</a>
+            </li>
+
+
+        </ul>
+    </div>
+    <div class="tab-content" id="myTabContent">
+
+
+        <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+            <% if (reserver.reserver_reel > 0) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Totals réservées réel = </strong><%=reserver.reserver_reel%>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <% } %>
+            <% if (reserver.reserver_reel <= 0) { %>
+
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Aucune données!</strong> Aucune campagne réservée sur cette période.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <% } %>
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+                        <th>Campagnes</th>
+                        <th>Date de début campagne</th>
+                        <th>Date de fin campagne</th>
+                        <th>Nbr de jour</th>
+                        <th>Jour à Cheval</th>
+                        <th>Volume des dispo</th>
+                    </tr>
+                </thead>
+
+                <tbody class="text-left">
+
+                    <% for (let i=0; i < reserver.array_reserver.length; i++) { %>
+                    <% if (reserver.array_reserver[i] != '' ) { %>
+                    <tr>
+
+
+                        <td><%=reserver.Campagnes_reserver[i]%></td>
+                        <td><%=reserver.Campagne_start_reserver[i]%></td>
+                        <td><%=reserver.Campagne_end_reserver[i]%></td>
+                        <td><%=reserver.Interval_reserver[i]%></td>
+                        <td><%=reserver.Nbr_cheval_reserver[i]%></td>
+                        <td><%=reserver.array_reserver[i]%></td>
+
+                    </tr>
+                    <% } %>
+
+                    <% } %>
+
+
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+
+
+            <table class="table">
+
+                <thead class="text-left thead-dark">
+                    <tr>
+
+                        <th scope="col">Campagnes</th>
+                        <th scope="col">Insertions</th>
+                        <th scope="col">Volume réservé par insertion</th>
+                        <th scope="col">Volume livré prévu d'insertion</th>
+                        <th scope="col">Surréservation(%)</th>
+                    </tr>
+                </thead>
+
+                <tbody class="text-left">
+                    <% for (let i=1; i < insertions.CampaignName.length; i++) { %>
+                    <% if (insertions.CampaignName[i] != '' ) { %>
+                    <tr>
+
+                        <td><%=insertions.CampaignName[i]%></td>
+                        <td><%=insertions.InsertionName[i]%></td>
+                        <td><%=insertions.InsertionBookedVolume[i]%></td>
+                        <td><%=insertions.InsertionForecastedDeliveredVolume[i]%></td>
+                        <td><%=insertions.InsertionForecastedDeliveredPercentage[i]%>%</td>
+
+                    </tr>
+
+                    <% } %>
+
+                    <% } %>
+                </tbody>
+            </table>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<%- include("../../layouts/manager/footer.ejs") -%>
