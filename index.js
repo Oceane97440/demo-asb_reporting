@@ -149,8 +149,6 @@ campaings_epilot.belongsTo(formats, {
     onDelete: 'cascade'
 });
 
-
-
 // la campagne a un format.
 campaigns.hasMany(insertions, {
     foreignKey: 'campaign_id',
@@ -176,6 +174,7 @@ insertions_templates.belongsTo(insertions, {
     onDelete: 'cascade',
     hooks: true
 });
+
 insertions.hasMany(insertions_templates, {
     foreignKey: 'insertion_id',
     onDelete: 'cascade',
@@ -314,7 +313,7 @@ app.use('/app', application);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3021);
+app.set("port", process.env.PORT || 3022);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

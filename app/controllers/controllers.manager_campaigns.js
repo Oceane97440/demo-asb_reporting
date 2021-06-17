@@ -141,11 +141,11 @@ exports.view = async (req, res) => {
                     }
                 });
               
-                // Attribue les données de la campagne
-              
+                // Attribue les données de la campagne              
                 data.creatives = false;
                 data.campaign = campaign;
                 data.moment = moment;
+                data.insertions = insertionList;
 
                 res.render('manager/campaigns/view.ejs', data);
             });

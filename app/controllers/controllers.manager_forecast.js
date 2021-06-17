@@ -44,8 +44,7 @@ const ModelPacks = require("../models/models.packs")
 const ModelPacksSites = require("../models/models.packs_sites")
 
 exports.index = async (req, res) => {
-    try {
-        if (req.session.user.user_role == 1) {
+    try {      
             const formats = await ModelFormat.findAll({
                 attributes: ['format_group'],
                 group: "format_group",
@@ -81,7 +80,7 @@ exports.index = async (req, res) => {
                 packs: packs,
                 countrys: countrys
             });
-        }
+      
 
     } catch (error) {
         console.log(error)
@@ -94,7 +93,42 @@ exports.index = async (req, res) => {
 };
 
 exports.forecast = async (req, res, next) => {
-   // Définition des variables
+  
+  
+    const formats = await ModelFormat.findAll({
+        attributes: ['format_group'],
+        group: "format_group",
+        where: {
+            format_group: {
+                [Op.not]: null
+            }
+        },
+        order: [
+            ['format_group', 'ASC']
+        ],
+    })
+
+    const packsDB = await ModelPacks.findAll({
+        attributes: ['pack_id', 'pack_name'],
+        order: [
+            ['pack_name', 'ASC']
+        ],
+    })
+
+    const countrys = await ModelCountry.findAll({
+        attributes: ['country_id', 'country_name'],
+        where: {
+            country_id: [61, 125, 184]
+        },
+        order: [
+            ['country_name', 'DESC']
+        ],
+    })
+  
+  
+  
+  
+    // Définition des variables
     var headerlocation, table, requestForecast;
     var date_start = await req.body.date_start;
     var date_end = await req.body.date_end;
@@ -137,7 +171,7 @@ exports.forecast = async (req, res, next) => {
                 intro: 'Un problème est survenu',
                 message: 'La date de début doit être J+1 à la date du jour'
             }
-            return res.redirect('/forecast');
+            return res.redirect('manager/forecast');
         }
 
         // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
@@ -147,7 +181,7 @@ exports.forecast = async (req, res, next) => {
                 intro: 'Un problème est survenu',
                 message: 'La date de fin doit être supérieur à la date du jour'
             }
-            return res.redirect('/forecast');
+            return res.redirect('manager/forecast');
         }
 
         date_start = date_start + 'T00:00:00.000Z';
@@ -352,6 +386,7 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
             }
+            
             switch (format) {
                 case "INTERSTITIEL":
                     //si interstitiel -> web_interstitiel / app_interstitiel
@@ -363,8 +398,8 @@ exports.forecast = async (req, res, next) => {
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaigns_epilot WHERE ((asb_campaigns_epilot.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_campaigns_epilot.campaign_epilot_end_date BETWEEN ? AND ?)) AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC', {
-                    replacements: [date_start, date_end, date_start, date_end, format_filtre],
+                'SELECT * FROM asb_campaigns_epilot WHERE ((asb_campaigns_epilot.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_campaigns_epilot.campaign_epilot_end_date BETWEEN ? AND ?))', { /*AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC*/
+                    replacements: [date_start, date_end, date_start, date_end/*, format_filtre*/],
                     type: QueryTypes.SELECT
                 }
             );
@@ -653,13 +688,12 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC', {
+                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', { /*AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC*/
                         replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }
                 );
-                //  console.log(requete)
-
+               
                 //Initialisation du tableau
                 var array_reserver = [];
                 var Campagnes_reserver = [];
@@ -669,7 +703,6 @@ exports.forecast = async (req, res, next) => {
                 var Nbr_cheval_reserver = [];
 
                 for (let i = 0; i < requete.length; i++) {
-
                     // Calculer l'intervalle de date sur la période
                     const campaign_epilot_start_date = requete[i].campaign_epilot_start_date;
                     const campaign_epilot_end_date = requete[i].campaign_epilot_end_date;
@@ -780,7 +813,10 @@ exports.forecast = async (req, res, next) => {
                     table: table,
                     insertions: insertions,
                     reserver: reserver,
-                    infos: infos
+                    infos: infos,
+                    formats: formats,
+                    packs: packsDB,
+                    countrys: countrys
                 });
 
             }

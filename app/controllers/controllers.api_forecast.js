@@ -99,7 +99,8 @@ exports.index = async (req, res) => {
 };
 
 exports.forecast = async (req, res, next) => {
-   // Définition des variables
+  
+    // Définition des variables
     var headerlocation, table, requestForecast;
     var date_start = await req.body.date_start;
     var date_end = await req.body.date_end;

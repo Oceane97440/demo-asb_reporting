@@ -146,7 +146,7 @@ router.get("/users/:id", manager_users.view);
 router.get("/users/:id/edit", manager_users.edit);
 
 router.get("/forecast", manager_forecast.index);
-router.post("forecast/add", manager_forecast.index);
+router.post("/forecast", manager_forecast.forecast);
 
 // router.get('/advertisers/create', manager_advertisers.create);
 

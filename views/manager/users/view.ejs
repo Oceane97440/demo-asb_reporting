@@ -2,26 +2,14 @@
 <div class="col-sm-12" id="user-main">
     <div class="card">
         <div class="card-header">
-            <h1><%= user.user_name %></h1>
+            <h1><%= user.user_firstname %> <%= user.user_lastname %></h1>
         </div>
         <div class="card-body">
             <div class="row">
             <div class="col-md-8 col-sm-12">
           <ul class="list-group list-group-flush">
-            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">info</i> ID</span>: <a href="/manager/users/<%= user.user_id %>" title="<%= user.user_name %>"><%= user.user_id %></a></li>
-            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">store</i> Annonceur</span>: <a href="/manager/advertisers/<%= user.advertiser_id %>" title="<%= user.advertiser.advertiser_name %>"><%= user.advertiser.advertiser_name %></a></li>
-            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">next_week</i> Agence</span>: <a href="/manager/agencies/<%= user.agency_id %>" title="<%= user.agency_id %>"><%= user.agency_id %></a></li>
-            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">date_range</i> Période du</span>: Du <%= moment(user.user_start_date).format('DD/MM/YYYY') %> au <%= moment(user.user_end_date).format('DD/MM/YYYY') %> </li>
-            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">visibility</i> Status </span>: <% switch(user.user_status_id) { 
-                case 0: %> <span class="badge bg-light">En Brouillon</span> <% break;
-                case 1: %> <span class="badge bg-secondary">Pré réservé</span> <% break; 
-                case 2: %> <span class="badge bg-warning">Réservé</span> <% break; 
-                case 3: %> <span class="badge bg-success">Vendue</span> <% break; 
-                case 4: %> <span class="badge bg-danger">Annulée</span> <% break; 
-                default: %> - <% 
-                   }  %></li>
-            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">archive</i> Archive</span>: <% switch(user.user_archived) { case 1: %> <span class="badge bg-warning">Archiv&eacute;</span> <% break; default: %> - <% break; }  %></li>
-          </ul>
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">info</i> ID</span>: <a href="/manager/users/<%= user.user_id %>" title="<%= user.user_firstname %> <%= user.user_lastname %>"><%= user.user_id %></a></li>
+           </ul>
 
           <hr />
 
@@ -32,11 +20,6 @@
 
         <div class="col-md-3 col-sm-12">
 
-            <div class="d-grid gap-2">
-                <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?UtilisateurID=<%= user.user_id %>&AnnonceurID=<%= user.advertiser_id %>" target="_blank" class="btn btn-warning" title="Voir sur SMARTADSERVER"><i class="material-icons-two-tone">send</i> Accéder à SMARTADSERVER</a>
-                <a href="/r/<%= user.user_crypt %>" target="_blank" class="btn btn-primary" title="Accéder au rapport de campagne"><i class="material-icons-two-tone">link</i> Accéder au rapport de campagne</a>
-            </div>
-
         </div>
 
     </div>
@@ -45,34 +28,17 @@
     </div>
 </div>
 
-<div class="col-sm-12" id="user-insertions">
+<div class="col-sm-12" id="user-campaigns">
     <div class="card">
         <div class="card-header">
-            <h3>Insertions</h3>
+            <h3>Campagnes</h3>
         </div>
         <div class="card-body">
-            <% if(insertions) { %>
-                <%- include("../inc/table_insertions.ejs") -%> 
+            <% if(campaigns) { %>
+                <%- include("../inc/table_campaigns.ejs") -%> 
             <% } else { %>
                 <div class="alert alert-warning" role="alert">
-                   Aucune insertion.
-                </div> 
-            <% } %>
-        </div>
-    </div>
-</div>
-
-<div class="col-sm-12" id="user-creatives">
-    <div class="card">
-        <div class="card-header">
-            <h3>Créatives</h3>
-        </div>
-        <div class="card-body">
-            <% if(creatives) { %>
-                <%- include("../inc/table_creatives.ejs") -%> 
-            <% } else { %>
-                <div class="alert alert-warning" role="alert">
-                   Aucune créative.
+                   Aucune campagne.
                 </div> 
             <% } %>
         </div>

@@ -57,15 +57,14 @@ exports.list = async (req, res) => {
             include: [
                 {
                     model: ModelRolesUsers
-                },
+                }/*,
                 {
                     model: ModelRoles
-                }
+                }*/
             ]
         });
         data.users = userList;
-        console.log(userList)
-        
+               
         data.moment = moment;
         res.render('manager/users/list.ejs', data);
     } catch (error) {
@@ -100,7 +99,100 @@ exports.edit = async (req, res) => {
 }
 
 exports.view = async (req, res) => {
-    try {} catch (error) {
+    try {
+
+       
+       /*
+        data.breadcrumb = "Liste des utilisateurs";
+
+        const data = new Object();
+        var userList = await ModelUsers.findOne({
+            include: [
+                {
+                    model: ModelRolesUsers
+                },
+                {
+                    model: ModelRoles
+                }
+            ]
+        });
+        data.users = userList;
+               
+        data.moment = moment;
+        */
+
+        const data = new Object();
+        data.moment = moment;
+        data.breadcrumb = "Utilisateurs";
+        var insertionsIds = new Array();
+
+        var user_id = req.params.id;
+        var user = await ModelUsers
+            .findOne({
+                where: {
+                    user_id: user_id
+                }
+            })
+            .then(async function (user) {
+                if (!user) {
+                    return res
+                        .status(404)
+                        .render("manager/error.ejs", {statusCoded: 404});
+                }
+                data.user = user;
+
+                data.campaigns = await ModelCampaigns.findAll({
+                    include: [
+                        {
+                            model: ModelAdvertisers
+                        },
+                        {
+                            model: ModelInsertions
+                        }
+                    ]
+                }, {
+                    order: [
+                        // Will escape title and validate DESC against a list of valid direction
+                        // parameters
+                        ['campaign_id', 'DESC']
+                    ]
+                });
+
+
+                /*
+               // Récupére les données des insertions de la campagne
+               var insertionList = await ModelInsertions.findAll({
+                    where: {
+                        user_id: user_id
+                    }, 
+                    include: [
+                        { model: Modelusers, attributes: ['user_id', 'user_name'] },
+                        { model: ModelFormats, attributes: ['format_id', 'format_name'] },
+                        { model: ModelInsertionsPriorities, attributes: ['priority_id', 'priority_name'] },
+                        { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] },
+                    ]
+                }) .then(async function (insertionList) {
+                    if (!Utilities.empty(insertionList) && (insertionList.length > 0)) {
+                       
+                        data.insertions = insertionList;
+                        for(i = 0; i < insertionList.length; i++) {
+                           insertionsIds.push(insertionList[i].insertion_id);
+                            //  console.log(i,' : ',insertionList[i].insertion_id);
+                        }                       
+                       
+                    }
+                });
+              
+                // Attribue les données de la campagne
+              
+                data.creatives = false;
+                data.user = user;
+                data.moment = moment;
+                */
+                res.render('manager/users/view.ejs', data);
+            });
+
+    } catch (error) {
         console.log(error);
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {statusCoded: statusCoded});

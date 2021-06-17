@@ -312,12 +312,12 @@ exports.forecast_user = async (req, res, next) => {
 
             for (let i = 0; i < requete.length; i++) {
                 // Calculer l'intervalle de date sur la période
-                const campaign_start_date = requete[i].campaign_start_date;
-                const campaign_end_date = requete[i].campaign_end_date;
+                const campaign_epilot_start_date = requete[i].campaign_epilot_start_date;
+                const campaign_epilot_end_date = requete[i].campaign_epilot_end_date;
                 const volumes_prevue = requete[i].volume_prevue;
-                const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
+                const campaign_date_start = campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z';
+                const campaign_date_end = campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z';
+                date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
                 const nb_jour_interval = (date_interval / 86400000);
 
                 // Calculer le nombre de jour à cheval en fonction des dates du forecast
@@ -594,7 +594,7 @@ exports.forecast_user = async (req, res, next) => {
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_start_date BETWEEN ? AND ?) OR (campaign_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC', {
+                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC', {
                         replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }
@@ -612,17 +612,17 @@ exports.forecast_user = async (req, res, next) => {
 
 
                     // Calculer l'intervalle de date sur la période
-                    const campaign_start_date = requete[i].campaign_start_date
+                    const campaign_epilot_start_date = requete[i].campaign_epilot_start_date
 
-                    const campaign_end_date = requete[i].campaign_end_date
+                    const campaign_epilot_end_date = requete[i].campaign_epilot_end_date
 
                     const volumes_prevue = requete[i].volume_prevue
 
-                    const campaign_date_start = campaign_start_date.split(' ')[0] + 'T00:00:00.000Z'
+                    const campaign_date_start = campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z'
 
-                    const campaign_date_end = campaign_end_date.split(' ')[0] + 'T23:59:00.000Z'
+                    const campaign_date_end = campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z'
 
-                    date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
+                    date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
 
                     const nb_jour_interval = (date_interval / 86400000)
 
@@ -772,8 +772,6 @@ exports.forecast_user = async (req, res, next) => {
     }
 }
 
-
-
 //Formulaire ajout Epilot
 exports.epilot = async (req, res, next) => {
 
@@ -838,21 +836,20 @@ exports.epilot = async (req, res, next) => {
 
 }
 
-
 //Action ajout de la campagne
 exports.campaign_epilot = async (req, res, next) => {
 
     var campaign_name = req.body.campaign_name
     var format_name = req.body.format
     var etat = req.body.etat
-    var campaign_start_date = req.body.campaign_start_date;
-    var campaign_end_date = req.body.campaign_end_date
+    var campaign_epilot_start_date = req.body.campaign_epilot_start_date;
+    var campaign_epilot_end_date = req.body.campaign_epilot_end_date
     var volume_prevue = req.body.volume_prevue
 
 
 
-    var campaign_debut = campaign_start_date + 'T00:00:00.000Z'
-    var campaign_fin = campaign_end_date + 'T00:00:00.000Z'
+    var campaign_debut = campaign_epilot_start_date + 'T00:00:00.000Z'
+    var campaign_fin = campaign_epilot_end_date + 'T00:00:00.000Z'
 
 
     try {
@@ -864,12 +861,12 @@ exports.campaign_epilot = async (req, res, next) => {
         } else {
 
             var campagne_search = await ModelCampaign_epilot.findOne({
-                attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date'],
+                attributes: ['campaign_name', 'format_name', 'campaign_epilot_start_date', 'campaign_epilot_end_date'],
                 where: {
                     campaign_name: campaign_name,
                     format_name: format_name,
-                    campaign_start_date: campaign_debut,
-                    campaign_end_date: campaign_fin
+                    campaign_epilot_start_date: campaign_debut,
+                    campaign_epilot_end_date: campaign_fin
                 }
 
             })
@@ -883,8 +880,8 @@ exports.campaign_epilot = async (req, res, next) => {
                     campaign_name: campaign_name,
                     format_name: format_name,
                     etat: etat,
-                    campaign_start_date: campaign_debut,
-                    campaign_end_date: campaign_fin,
+                    campaign_epilot_start_date: campaign_debut,
+                    campaign_epilot_end_date: campaign_fin,
                     volume_prevue: volume_prevue
 
                 })
@@ -911,7 +908,6 @@ exports.campaign_epilot = async (req, res, next) => {
     }
 
 }
-
 
 //Formulaire ajout Epilot
 exports.epilot_edit = async (req, res, next) => {
@@ -994,8 +990,8 @@ exports.update = async (req, res, next) => {
             campaign_name: req.body.campaign_name,
             format_name: req.body.format,
             etat: req.body.etat,
-            campaign_start_date: req.body.campaign_start_date,
-            campaign_end_date: req.body.campaign_end_date,
+            campaign_epilot_start_date: req.body.campaign_epilot_start_date,
+            campaign_epilot_end_date: req.body.campaign_epilot_end_date,
             volume_prevue: req.body.volume_prevue
          }, {
             where: {
