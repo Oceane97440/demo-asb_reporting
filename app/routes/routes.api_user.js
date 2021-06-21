@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Sequelize = require('sequelize');
 
-const api = require("../controllers/controllers.api_forecast_user");
+const api = require("../controllers/controllers.api_forecast_user-delete");
 
 // Affiche la page api
 router.get("/", api.index);

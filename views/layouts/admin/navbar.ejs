@@ -8,7 +8,7 @@
 
 
     <li class="nav-item text-white">
-      <a class="nav-link text-white" href=<% if(locals.user.role === 2 || locals.user.role === 3) { %>
+      <a class="nav-link text-white" href=<% if(locals.user.user_role === 2 || locals.user.user_role === 3) { %>
         /utilisateur
         <%} else { %>
         /home_page
@@ -33,22 +33,22 @@
       <div class="bg-dark p-4">
       <ul class="navbar-nav text-white">
 
-    <% if(locals.user.role === 3) { %>
+    <% if(locals.user.user_role === 3) { %>
     <li class="nav-item text-white">
-      <a class="nav-link text-white" href="/utilisateur">Forecast</a>
+      <a class="nav-link text-white" href="/forecast">Forecast</a>
     </li>
     <li class="nav-item text-white">
       <a class="nav-link text-white" href="/utilisateur/campagne_epilot">Campagne_epilot</a>
     </li>
     <%}%>
-    <% if(locals.user.role === 2) { %>
+    <% if(locals.user.user_role === 2) { %>
       <li class="nav-item text-white">
-        <a class="nav-link text-white" href="/utilisateur">Forecast</a>
+        <a class="nav-link text-white" href="/forecast">Forecast</a>
       </li>
    
       <%}%>
 
-   <% if(locals.user.role === 1) { %>
+   <% if(locals.user.user_role === 1) { %>
 
     <li class="nav-item text-white">
       <a class="nav-link text-white" href="#">Admin</a>
