@@ -50,7 +50,7 @@ const ModelPack_Site = require("../models/models.packs_sites")
 
 exports.index = async (req, res) => {
     try {
-        if (req.session.user.user_role == 1) {
+        if (req.session.user.user_role == 1 || req.session.user.user_role == 2 || req.session.user.user_role == 3) {
             const formats = await ModelFormat.findAll({
                 attributes: ['format_group'],
                 group: "format_group",
@@ -525,27 +525,42 @@ exports.forecast = async (req, res, next) => {
         };
 
         //si la case "élargir la propo" est coché les web et ap mban son add de la requête
-        if (option == true && format == "GRAND ANGLE") {
+        if (format == "GRAND ANGLE") {
             requestForecast.filter[2] = {
                 "FormatID": [
                     //App_mban / Web_mban et Web_mpave / App_mpave
-                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
-                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
+                    //App_mban
+                    "79638", "79642", "79643", "79644", "79645", "79646", "79647", "79648", "79649",
+
+                    "84657", "84658", "84656",
+                    //web_mban
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655",
+
+                    //App_mpave
+                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
                 ]
             }
         }
 
         //si la case "élargir la propo" est coché les web et ap pave son add de la requête
-        if (option == true && format == "MASTHEAD") {
+        if (format == "MASTHEAD") {
             requestForecast.filter[2] = {
                 "FormatID": [
                     // App_mban / Web_mban et Web_mpave / App_mpave
-                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+
+                    //Web_mban
+                    "79409", "84652", "84653", "84654", "84655", "79421",
+
+                    //App_mban
+                    "79638", "79642", "79643", "79644", "79645", "79646",
+
+                    "84657", "84658", "84656",
+
+                    //Web_mpave
                     "84659", "84660", "84661", "84652", "84653", "84654", "84655"
                 ]
             }
         }
-
         //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
         if (option == true && format == "HABILLAGE") {
             requestForecast.filter[2] = {
@@ -814,14 +829,40 @@ exports.forecast = async (req, res, next) => {
 
                  }*/
 
-                return res.render('forecast/data1.ejs', {
-                    table: table,
-                    insertions: insertions,
-                    reserver: reserver,
-                    infos: infos
-                });
+               
+                if (req.session.user.user_role == 1) {
+
+
+
+                    return res.render('forecast/data1.ejs', {
+                        table: table,
+                        insertions: insertions,
+                        reserver: reserver,
+                        infos: infos
+                    });
+                }
+
+                if (req.session.user.user_role == 2 || req.session.user.user_role == 3) {
+
+
+                    var insertions = {
+
+                        StartDate,
+                        EndDate,
+                        format,
+
+                    }
+
+                    return res.render('forecast/users/data_user.ejs', {
+                        table: table,
+                        insertions: insertions,
+                        reserver: reserver
+                    });
+                }
 
             }
+
+            
         }
 
     } catch (error) {

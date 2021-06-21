@@ -44,57 +44,57 @@ const ModelPacks = require("../models/models.packs")
 const ModelPacksSites = require("../models/models.packs_sites")
 
 exports.index = async (req, res) => {
-    try {      
-            const formats = await ModelFormat.findAll({
-                attributes: ['format_group'],
-                group: "format_group",
-                where: {
-                    format_group: {
-                        [Op.not]: null
-                    }
-                },
-                order: [
-                    ['format_group', 'ASC']
-                ],
-            })
+    try {
+        const formats = await ModelFormat.findAll({
+            attributes: ['format_group'],
+            group: "format_group",
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
 
-            const packs = await ModelPacks.findAll({
-                attributes: ['pack_id', 'pack_name'],
-                order: [
-                    ['pack_name', 'ASC']
-                ],
-            })
+        const packs = await ModelPacks.findAll({
+            attributes: ['pack_id', 'pack_name'],
+            order: [
+                ['pack_name', 'ASC']
+            ],
+        })
 
-            const countrys = await ModelCountry.findAll({
-                attributes: ['country_id', 'country_name'],
-                where: {
-                    country_id: [61, 125, 184]
-                },
-                order: [
-                    ['country_name', 'DESC']
-                ],
-            })
+        const countrys = await ModelCountry.findAll({
+            attributes: ['country_id', 'country_name'],
+            where: {
+                country_id: [61, 125, 184]
+            },
+            order: [
+                ['country_name', 'DESC']
+            ],
+        })
 
-            res.render('manager/forecast/index.ejs', {
-                formats: formats,
-                packs: packs,
-                countrys: countrys
-            });
-      
+        res.render('manager/forecast/index.ejs', {
+            formats: formats,
+            packs: packs,
+            countrys: countrys
+        });
+
 
     } catch (error) {
         console.log(error)
         var statusCoded = error.response.status;
         res.render("error.ejs", {
-           statusCoded: statusCoded,
+            statusCoded: statusCoded,
         });
     }
 
 };
 
 exports.forecast = async (req, res, next) => {
-  
-  
+
+
     const formats = await ModelFormat.findAll({
         attributes: ['format_group'],
         group: "format_group",
@@ -124,10 +124,10 @@ exports.forecast = async (req, res, next) => {
             ['country_name', 'DESC']
         ],
     })
-  
-  
-  
-  
+
+
+
+
     // Définition des variables
     var headerlocation, table, requestForecast;
     var date_start = await req.body.date_start;
@@ -157,8 +157,8 @@ exports.forecast = async (req, res, next) => {
                 message: 'Les champs doivent être complétés'
             }
             return res.redirect('/forecast');
-        } 
-        
+        }
+
         //date aujourd'hui en timestamp 
         const date_now = Date.now();
         const timstasp_start = Date.parse(date_start);
@@ -217,7 +217,7 @@ exports.forecast = async (req, res, next) => {
             }
         });
 
-        if(sitesdb.length > 0) {
+        if (sitesdb.length > 0) {
             for (let l = 0; l < sitesdb.length; l++) {
                 sites.push(sitesdb[l].site_id);
             }
@@ -270,7 +270,7 @@ exports.forecast = async (req, res, next) => {
         };
 
         let threeLink = await AxiosFunction.getForecastData('POST', '', requestInsertions);
-        
+
         if (threeLink.headers.location) {
             headerlocation = threeLink.headers.location;
             let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
@@ -278,7 +278,7 @@ exports.forecast = async (req, res, next) => {
                 headerlocation = insertionLink.headers.location;
 
                 let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
-                
+
                 // liste des insertions
                 var CampaignName = [];
                 var InsertionName = [];
@@ -386,20 +386,21 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
             }
-            
+
             switch (format) {
                 case "INTERSTITIEL":
                     //si interstitiel -> web_interstitiel / app_interstitiel
                     format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
                     break;
-                    default:
+                default:
                     break;
             }
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaigns_epilot WHERE ((asb_campaigns_epilot.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_campaigns_epilot.campaign_epilot_end_date BETWEEN ? AND ?))', { /*AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC*/
-                    replacements: [date_start, date_end, date_start, date_end/*, format_filtre*/],
+                'SELECT * FROM asb_campaigns_epilot WHERE ((asb_campaigns_epilot.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_campaigns_epilot.campaign_epilot_end_date BETWEEN ? AND ?))', {
+                    /*AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC*/
+                    replacements: [date_start, date_end, date_start, date_end /*, format_filtre*/ ],
                     type: QueryTypes.SELECT
                 }
             );
@@ -411,14 +412,14 @@ exports.forecast = async (req, res, next) => {
             var Campagne_end_reserver = [];
             var Interval_reserver = [];
             var Nbr_cheval_reserver = [];
-            
-            if(requete.length > 0) {
+
+            if (requete.length > 0) {
                 for (let i = 0; i < requete.length; i++) {
                     // Calculer l'intervalle de date sur la période
                     const campaign_epilot_start_date = requete[i].campaign_epilot_start_date;
                     const campaign_epilot_end_date = requete[i].campaign_epilot_end_date;
                     const volumes_prevue = requete[i].volume_prevue;
-                    
+
                     const campaign_date_start = await campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z';
                     const campaign_date_end = await campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z';
                     date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
@@ -457,8 +458,7 @@ exports.forecast = async (req, res, next) => {
                     const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
 
                     if (requete[i].etat == "2") {
-                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
-                        } else {
+                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
                             array_reserver.push(volumes_prevu_diffuse);
                             Campagnes_reserver.push(requete[i].campaign_name);
                             Campagne_start_reserver.push(campaign_epilot_start_date);
@@ -529,7 +529,7 @@ exports.forecast = async (req, res, next) => {
                     "FormatID": formatIdsArray // new Array(79633,44152) //formats
                 }
             ],
-           "fields": [
+            "fields": [
                 "TotalImpressions",
                 "OccupiedImpressions",
                 "SiteID",
@@ -540,22 +540,38 @@ exports.forecast = async (req, res, next) => {
         };
 
         //si la case "élargir la propo" est coché les web et ap mban son add de la requête
-        if (option == true && format == "GRAND ANGLE") {
+        if (format == "GRAND ANGLE") {
             requestForecast.filter[2] = {
                 "FormatID": [
                     //App_mban / Web_mban et Web_mpave / App_mpave
-                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
-                    "84659", "84660", "84661", "84652", "84653", "84654", "84655"
+                    //App_mban
+                    "79638", "79642", "79643", "79644", "79645", "79646", "79647", "79648", "79649",
+
+                    "84657", "84658", "84656",
+                    //web_mban
+                    "84659", "84660", "84661", "84652", "84653", "84654", "84655",
+
+                    //App_mpave
+                    "79956", "79650", "79651", "79652", "79653", "79654", "79655",
                 ]
             }
         }
 
         //si la case "élargir la propo" est coché les web et ap pave son add de la requête
-        if (option == true && format == "MASTHEAD") {
+        if (format == "MASTHEAD") {
             requestForecast.filter[2] = {
                 "FormatID": [
                     // App_mban / Web_mban et Web_mpave / App_mpave
-                    "79638", "79642", "79643", "79644", "79645", "79646", "84657", "84658", "84656",
+
+                    //Web_mban
+                    "79409", "84652", "84653", "84654", "84655", "79421",
+
+                    //App_mban
+                    "79638", "79642", "79643", "79644", "79645", "79646",
+
+                    "84657", "84658", "84656",
+
+                    //Web_mpave
                     "84659", "84660", "84661", "84652", "84653", "84654", "84655"
                 ]
             }
@@ -684,16 +700,17 @@ exports.forecast = async (req, res, next) => {
                         format_filtre = new Array("SLIDE", "APP_SLIDE")
                         break;
                     default:
-                    break;
+                        break;
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', { /*AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC*/
+                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', {
+                        /*AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC*/
                         replacements: [date_start, date_end, date_start, date_end, format_filtre],
                         type: QueryTypes.SELECT
                     }
                 );
-               
+
                 //Initialisation du tableau
                 var array_reserver = [];
                 var Campagnes_reserver = [];
@@ -710,7 +727,7 @@ exports.forecast = async (req, res, next) => {
                     const campaign_date_start = await campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z';
                     const campaign_date_end = await campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z';
                     date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
-                    
+
                     const nb_jour_interval = (date_interval / 86400000);
 
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
@@ -721,7 +738,7 @@ exports.forecast = async (req, res, next) => {
                         //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
                         if (date_start_forecast < campaign_date_start) {
                             //alors la date début à cheval = date de début campagne 
-                           var date_start_cheval = campaign_date_start;
+                            var date_start_cheval = campaign_date_start;
                         } else {
                             var date_start_cheval = date_start_forecast;
                         }
@@ -809,17 +826,43 @@ exports.forecast = async (req, res, next) => {
                     format
                 }
 
-                return res.render('manager/forecast/view.ejs', {
-                    table: table,
-                    insertions: insertions,
-                    reserver: reserver,
-                    infos: infos,
-                    formats: formats,
-                    packs: packsDB,
-                    countrys: countrys
-                });
+                if (req.session.user.user_role == 1) {
+
+
+
+                    return res.render('manager/forecast/view.ejs', {
+                        table: table,
+                        insertions: insertions,
+                        reserver: reserver,
+                        infos: infos,
+                        formats: formats,
+                        packs: packsDB,
+                        countrys: countrys
+                    });
+                }
+
+                if (req.session.user.user_role == 2 || req.session.user.user_role == 3) {
+
+
+                    var insertions = {
+
+                        StartDate,
+                        EndDate,
+                        format,
+
+                    }
+
+                    return res.render('forecast/users/data_user.ejs', {
+                        table: table,
+                        insertions: insertions,
+                        reserver: reserver
+                    });
+                }
 
             }
+
+
+
         }
 
     } catch (error) {
