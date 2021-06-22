@@ -535,7 +535,9 @@ exports.forecast = async (req, res, next) => {
                 "SiteID",
                 "SiteName",
                 "FormatID",
-                "FormatName"
+                "FormatName",
+                "pageID",
+                "PageName",
             ]
         };
 
@@ -576,6 +578,62 @@ exports.forecast = async (req, res, next) => {
                 ]
             }
         }
+
+        //si le format choisi est Linear
+        if (format == "VIDEOS") {
+
+            //site m6 et tf1
+            requestForecast.filter[1] = {
+                "siteID": [
+                    "299244", "299245"
+                ]
+            }
+            // tous les preroll et midroll de tf1 /m6
+            requestForecast.filter[3] = {
+                "pageID": [
+                    //midroll m6
+                    "1108384",
+                    "1108386",
+                    "1108389",
+                    "1108390",
+                    "1108392",
+                    "1108393",
+                    "1108394",
+                    //preroll m6
+                    "1108371",
+                    "1108373",
+                    "1108375",
+                    "1108377",
+                    // midroll tf1 ici
+                    "1108365",
+                    "1108366",
+                    "1108367",
+                    "1108368",
+                    "1108369",
+                    "1108370",
+                    // preroll tf1 ici
+                    "1108360",
+                    "1108361",
+                    "1108362",
+                    "1108363",
+                    //midroll tf1 mytf1
+                    "1107007",
+                    "1107008",
+                    "1107009",
+                    "1108354",
+                    "1108355",
+                    "1108356",
+                    "1108357",
+                    // preroll tf1 mytf1    
+                    "1107003",
+                    "1107004",
+                    "1107005",
+                    "1107006"
+                ]
+            }
+         
+        }
+        //console.log(requestForecast)
 
         //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
         if (option == true && format == "HABILLAGE") {
@@ -639,10 +697,13 @@ exports.forecast = async (req, res, next) => {
                 var SiteName = [];
                 var FormatID = [];
                 var FormatName = [];
+                var PageID = [];
+                var PageName = [];
 
                 var data_forecast = await csvLink.data;
+                
                 var data_split = data_forecast.split(/\r?\n/);
-
+                console.log(data_split)
                 //compte le nbr ligne 
                 var number_line = data_split.length;
 
@@ -659,6 +720,8 @@ exports.forecast = async (req, res, next) => {
                     SiteName.push(line[3]);
                     FormatID.push(line[4]);
                     FormatName.push(line[5]);
+                    PageID.push(line[6]);
+                    PageName.push(line[7]);
                 }
 
                 var sommeImpressions = 0;
@@ -802,6 +865,9 @@ exports.forecast = async (req, res, next) => {
                     SiteName,
                     FormatID,
                     FormatName,
+                    //add page
+                    PageID,
+                    PageName,
                     sommeImpressions,
                     sommeOccupied,
                     volumeDispo,
