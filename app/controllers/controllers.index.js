@@ -204,7 +204,7 @@ exports.login_add = async (req, res) => {
               return res.redirect('/manager');
             }
             if (req.session.user.user_role === 2 || req.session.user.user_role === 3) {
-              return res.redirect('/utilisateur');
+              return res.redirect('/forecast');
             }
           }
 
