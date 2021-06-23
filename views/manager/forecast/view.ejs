@@ -123,9 +123,6 @@
                         <tr>
 
                             <th scope="col">Sites</th>
-                            <% if (table.SiteID[i] === '299244' || table.SiteID[i] === '299245') { %>
-                            <th scope="col">Pages</th>
-                            <% } %>
                             <th scope="col">Formats</th>
                             <th scope="col">Total Impressions </th>
                             <th scope="col">Volumes occupés</th>
@@ -139,9 +136,6 @@
 
 
                             <td><%=table.SiteName[i]%></td>
-                            <% if (table.SiteID[i] === '299244' || table.SiteID[i] === '299245') { %>
-                            <td><%=table.PageName[i]%></td>
-                            <% } %>
 
 
                             <td><%=table.FormatName[i]%></td>
