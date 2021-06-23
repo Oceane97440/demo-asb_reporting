@@ -102,3 +102,9 @@ exports.arrayDiff = function (arrayA, arrayB){
     }
     return result;
 }
+
+exports.array_unique =  function (array) {
+    return array.filter(function (el, index, arr) {
+        return index == arr.indexOf(el);
+    });
+}

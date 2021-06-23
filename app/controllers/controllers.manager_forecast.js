@@ -261,15 +261,144 @@ exports.forecast = async (req, res, next) => {
                 }
             ],
             "fields": [
-                "CampaignName",
                 "InsertionName",
                 "InsertionBookedVolume",
                 "InsertionForecastedDeliveredVolume",
-                "InsertionForecastedDeliveredPercentage"
+                "InsertionForecastedDeliveredPercentage",
+                "TotalImpressions",
+                "OccupiedImpressions",
             ]
         };
 
+        // si le packs choisi "Rotation Générale" / "Rotation Générale-DESKTOP"
+        if (packs =="1" || packs =="2" || packs =="7") {
+            
+        }
+        if (format == "VIDEOS" || SiteID == 322433 || SiteID == 299263) {
+
+            //liste des campagne_id video Linfo.re / antenne
+            var requestCampaign_video = {
+                "startDate": date_start,
+                "endDate": date_end,
+                "timeZoneId": "Arabian Standard Time",
+                "filter": [{
+                        "CountryID": [countries]
+                    },
+                    {
+                        "SiteID": ["322433","299263"]
+                    },
+                    {
+                        "FormatID": formatIdsArray // new Array(79633,44152) //formats
+                    }
+                ],
+                "fields": [
+                    "CampaignID",
+                  //  "CampaignName",
+                ]
+            };
+
+            //liste des insertion video adbreak 1 Linfo.re / antenne
+
+            var requestForecast_video = {
+
+                "startDate": date_start,
+                "endDate": date_end,
+                "timeZoneId": "Arabian Standard Time",
+                "filter": [
+
+                    {
+                        "formatID":formatIdsArray
+                    },
+                    {
+                        "SiteID": ["322433","299263"]
+
+                    },
+                    {
+                        "countryID":[countries]
+                    },
+                    {
+                        "adBreakID": ["1"]
+
+                    }
+
+                ],
+
+                "fields": [
+
+                    "InsertionID",
+
+                    "InsertionName",
+
+                    "TotalImpressions",
+
+                    "OccupiedImpressions",
+
+                    "InsertionBookedVolume",
+
+                    "InsertionForecastedDeliveredVolume",
+
+                    "InsertionForecastedDeliveredPercentage"
+
+                ],
+
+             
+
+            }
+
+            // traitement et envoie des 2 requêtes video
+            let LinkCampaign_adbreak = await AxiosFunction.getForecastData('POST', '', requestCampaign_video);
+            let LinkForecast_adbreak = await AxiosFunction.getForecastData('POST', '', requestForecast_video );
+
+            if (LinkCampaign_adbreak.headers.location || LinkForecast_adbreak.headers.location ) {
+
+                headerlocationVideo_campaign = LinkCampaign_adbreak.headers.location;
+                headerlocationVideo_forecast = LinkForecast_adbreak.headers.location;
+
+                let campaignLink = await AxiosFunction.getForecastData('GET', headerlocationVideo_campaign);
+                let forecastLink = await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
+
+                if (campaignLink.data.progress == '100') {
+                    headerlocationVideo_campaign = campaignLink.headers.location;
+                    headerlocationVideo_forecast= forecastLink.headers.location;
+
+    
+                    let csvLink_campaign = await AxiosFunction.getForecastData('GET', headerlocationVideo_campaign);
+                    let csvLink_forecast= await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
+
+
+                  //  console.log(csvLink_campaign.data)
+                    console.log(csvLink_forecast.data)
+
+
+                    var CampaignId = [];
+
+                    var data_campaignid = await csvLink_campaign.data;
+                    var data_split = await data_campaignid.split(/\r?\n/);
+                    var number_line = await data_split.length;
+    
+                    for (i = 1; i < number_line; i++) {
+                        //delete les ; et delete les blanc
+                        line = await data_split[i].split(';');
+                        CampaignId.push(line[0]);
+                       
+                    }
+                    //exclure les doublon campagne_id
+                    const uniqueArray = Utilities.array_unique(CampaignId);
+
+                    console.log(uniqueArray)
+
+                
+    
+    
+                }
+    
+            }
+
+        }
+
         let threeLink = await AxiosFunction.getForecastData('POST', '', requestInsertions);
+
+       
 
         if (threeLink.headers.location) {
             headerlocation = threeLink.headers.location;
@@ -280,7 +409,6 @@ exports.forecast = async (req, res, next) => {
                 let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
 
                 // liste des insertions
-                var CampaignName = [];
                 var InsertionName = [];
                 var InsertionBookedVolume = [];
                 var InsertionForecastedDeliveredVolume = [];
@@ -299,20 +427,20 @@ exports.forecast = async (req, res, next) => {
 
                     //push la donnéé splité dans un tab vide
                     //liste des insertions
-                    CampaignName.push(line[0]);
-                    InsertionName.push(line[1]);
-                    InsertionBookedVolume.push(line[2]);
-                    InsertionForecastedDeliveredVolume.push(line[3]);
-                    InsertionForecastedDeliveredPercentage.push(line[4]);
+                    InsertionName.push(line[0]);
+                    InsertionBookedVolume.push(line[1]);
+                    InsertionForecastedDeliveredVolume.push(line[2]);
+                    InsertionForecastedDeliveredPercentage.push(line[3]);
                 }
 
                 var insertions = {
                     //liste des insertions
-                    CampaignName,
+
                     InsertionName,
                     InsertionBookedVolume,
                     InsertionForecastedDeliveredVolume,
-                    InsertionForecastedDeliveredPercentage
+                    InsertionForecastedDeliveredPercentage,
+
                 }
             }
 
@@ -541,6 +669,8 @@ exports.forecast = async (req, res, next) => {
             ]
         };
 
+   
+
         //si la case "élargir la propo" est coché les web et ap mban son add de la requête
         if (format == "GRAND ANGLE") {
             requestForecast.filter[2] = {
@@ -583,11 +713,7 @@ exports.forecast = async (req, res, next) => {
         if (format == "VIDEOS") {
 
             //site m6 et tf1
-            requestForecast.filter[1] = {
-                "siteID": [
-                    "299244", "299245"
-                ]
-            }
+         
             // tous les preroll et midroll de tf1 /m6
             requestForecast.filter[3] = {
                 "pageID": [
@@ -631,9 +757,10 @@ exports.forecast = async (req, res, next) => {
                     "1107006"
                 ]
             }
-         
+
         }
-        //console.log(requestForecast)
+
+
 
         //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
         if (option == true && format == "HABILLAGE") {
@@ -701,7 +828,7 @@ exports.forecast = async (req, res, next) => {
                 var PageName = [];
 
                 var data_forecast = await csvLink.data;
-                
+
                 var data_split = data_forecast.split(/\r?\n/);
                 console.log(data_split)
                 //compte le nbr ligne 

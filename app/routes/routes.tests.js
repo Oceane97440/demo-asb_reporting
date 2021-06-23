@@ -10,4 +10,6 @@ router.get("/export_excel", test.export_excel);
 router.get('/campaignday', test.campaignday);
 router.get("/template", test.template);
 
+router.get("/array", test.array_unique);
+
 module.exports = router;
