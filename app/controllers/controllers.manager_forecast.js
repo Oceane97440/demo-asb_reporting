@@ -271,8 +271,8 @@ exports.forecast = async (req, res, next) => {
         };
 
         // si le packs choisi "Rotation Générale" / "Rotation Générale-DESKTOP"
-        if (packs =="1" || packs =="2" || packs =="7") {
-            
+        if (packs == "1" || packs == "2" || packs == "7") {
+
         }
         if (format == "VIDEOS" || SiteID == 322433 || SiteID == 299263) {
 
@@ -285,7 +285,7 @@ exports.forecast = async (req, res, next) => {
                         "CountryID": [countries]
                     },
                     {
-                        "SiteID": ["322433","299263"]
+                        "SiteID": ["322433", "299263"]
                     },
                     {
                         "FormatID": formatIdsArray // new Array(79633,44152) //formats
@@ -293,7 +293,7 @@ exports.forecast = async (req, res, next) => {
                 ],
                 "fields": [
                     "CampaignID",
-                  //  "CampaignName",
+                    //  "CampaignName",
                 ]
             };
 
@@ -307,14 +307,14 @@ exports.forecast = async (req, res, next) => {
                 "filter": [
 
                     {
-                        "formatID":formatIdsArray
+                        "formatID": formatIdsArray
                     },
                     {
-                        "SiteID": ["322433","299263"]
+                        "SiteID": ["322433", "299263"]
 
                     },
                     {
-                        "countryID":[countries]
+                        "countryID": [countries]
                     },
                     {
                         "adBreakID": ["1"]
@@ -337,19 +337,18 @@ exports.forecast = async (req, res, next) => {
 
                     "InsertionForecastedDeliveredVolume",
 
-                    "InsertionForecastedDeliveredPercentage"
 
                 ],
 
-             
+
 
             }
 
             // traitement et envoie des 2 requêtes video
             let LinkCampaign_adbreak = await AxiosFunction.getForecastData('POST', '', requestCampaign_video);
-            let LinkForecast_adbreak = await AxiosFunction.getForecastData('POST', '', requestForecast_video );
+            let LinkForecast_adbreak = await AxiosFunction.getForecastData('POST', '', requestForecast_video);
 
-            if (LinkCampaign_adbreak.headers.location || LinkForecast_adbreak.headers.location ) {
+            if (LinkCampaign_adbreak.headers.location || LinkForecast_adbreak.headers.location) {
 
                 headerlocationVideo_campaign = LinkCampaign_adbreak.headers.location;
                 headerlocationVideo_forecast = LinkForecast_adbreak.headers.location;
@@ -359,46 +358,99 @@ exports.forecast = async (req, res, next) => {
 
                 if (campaignLink.data.progress == '100') {
                     headerlocationVideo_campaign = campaignLink.headers.location;
-                    headerlocationVideo_forecast= forecastLink.headers.location;
+                    headerlocationVideo_forecast = forecastLink.headers.location;
 
-    
+
                     let csvLink_campaign = await AxiosFunction.getForecastData('GET', headerlocationVideo_campaign);
-                    let csvLink_forecast= await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
+                    let csvLink_forecast = await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
 
 
-                  //  console.log(csvLink_campaign.data)
-                    console.log(csvLink_forecast.data)
+                    //  console.log(csvLink_campaign.data)
+                    //  console.log( csvLink_forecast.data)
 
 
-                    var CampaignId = [];
+                    const campaigns = [];
 
                     var data_campaignid = await csvLink_campaign.data;
                     var data_split = await data_campaignid.split(/\r?\n/);
                     var number_line = await data_split.length;
-    
+
                     for (i = 1; i < number_line; i++) {
-                        //delete les ; et delete les blanc
                         line = await data_split[i].split(';');
-                        CampaignId.push(line[0]);
-                       
+                        campaigns.push(line[0]);
+
                     }
                     //exclure les doublon campagne_id
-                    const uniqueArray = Utilities.array_unique(CampaignId);
+                    const campaignUnique = Utilities.array_unique(campaigns);
+                    console.log('number_line',number_line)
+                    console.log('all campaign_id ' ,campaigns)
+                    console.log('all campaign_unique ',campaignUnique)
 
-                    console.log(uniqueArray)
 
-                
-    
-    
+                    console.log('-----------------------------------')
+
+                    var InsertionId = [];
+                    var InsertionName = [];
+                    var InsertionImpression = [];
+                    var InsertionOccupied = [];
+                    var InsertionVolume = [];
+                    var InsertionDeliveredVolume = [];
+
+
+                 
+
+                    var data_insertions = await csvLink_forecast.data;
+                    var data_split = await data_insertions.split(/\r?\n/);
+                    var number_line = await data_split.length;
+
+                    for (i = 1; i < number_line; i++) {
+                        line = await data_split[i].split(';');
+                        InsertionId.push(line[0]);
+                        InsertionName.push(line[1]);
+                        InsertionImpression.push(line[2]);
+                        InsertionOccupied.push(line[3]);
+                        InsertionVolume.push(line[4]);
+                        InsertionDeliveredVolume.push(line[5]);
+
+
+
+                    }
+                    console.log('number_line',number_line)
+                    console.log(InsertionVolume)
+
+                    console.log('-----------------------------------')
+
+
+                    var sommeVolumeCampaign = new Array();
+
+
+                    for (i = 0; i < campaignUnique.length; i++) {
+                        for (j = 0; j < campaigns.length; j++) {
+                            if (campaignUnique[i] === campaigns[j]) {
+                                sommeVolumeCampaign[i] = InsertionVolume[j]
+                               // console.log(sommeVolumeCampaign[i])
+                            }
+                        }
+                    }
+
+
+
+                    for (i = 0; i < campaignUnique.length; i++) {
+                        sommeVolumeCampaign[i]
+                        console.log('number line campaing_unique ',campaignUnique.length)
+                        console.log(sommeVolumeCampaign[i])
+
+                    }
+
                 }
-    
+
             }
 
         }
 
         let threeLink = await AxiosFunction.getForecastData('POST', '', requestInsertions);
 
-       
+
 
         if (threeLink.headers.location) {
             headerlocation = threeLink.headers.location;
@@ -669,7 +721,7 @@ exports.forecast = async (req, res, next) => {
             ]
         };
 
-   
+
 
         //si la case "élargir la propo" est coché les web et ap mban son add de la requête
         if (format == "GRAND ANGLE") {
@@ -713,7 +765,7 @@ exports.forecast = async (req, res, next) => {
         if (format == "VIDEOS") {
 
             //site m6 et tf1
-         
+
             // tous les preroll et midroll de tf1 /m6
             requestForecast.filter[3] = {
                 "pageID": [
@@ -830,7 +882,7 @@ exports.forecast = async (req, res, next) => {
                 var data_forecast = await csvLink.data;
 
                 var data_split = data_forecast.split(/\r?\n/);
-                console.log(data_split)
+                //console.log(data_split)
                 //compte le nbr ligne 
                 var number_line = data_split.length;
 
@@ -895,8 +947,8 @@ exports.forecast = async (req, res, next) => {
 
                 const requete = await sequelize.query(
                     'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', {
-                        /*AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC*/
-                        replacements: [date_start, date_end, date_start, date_end, format_filtre],
+                        //  AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC// format_filtre
+                        replacements: [date_start, date_end, date_start, date_end],
                         type: QueryTypes.SELECT
                     }
                 );
