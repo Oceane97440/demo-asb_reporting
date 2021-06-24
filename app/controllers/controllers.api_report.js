@@ -1445,8 +1445,8 @@ exports.report = async (req, res) => {
                                     let v = Math.round(Array_ClickRate[element] * 100) / 100
                                     videoCTR.push(v);
 
-                                    //sous traitement des array / filtre par format et par site LINFO.re
-                                    if (Array_SiteID[element] === "322433") {
+                                    //sous traitement des array / filtre par format et par site. On prendre les N/A 
+                                    if (Array_SiteID[element] === "322433" || Array_SiteID[element] === "0") {
                                         video_linfo_impression.push(eval(Array_Impressions[element]));
                                         video_linfo_click.push(eval(Array_Clicks[element]));
                                         video_linfo_siteId.push(Array_SiteID[element]);
@@ -1558,8 +1558,8 @@ exports.report = async (req, res) => {
                                     let i = Math.round(Array_ClickRate[element] * 100) / 100
                                     interstitielCTR.push(i);
 
-                                    //sous traitement des array / filtre par format et par site
-                                    if (Array_SiteID[element] === "322433") {
+                                     //sous traitement des array / filtre par format et par site. On prendre les N/A 
+                                     if (Array_SiteID[element] === "322433" || Array_SiteID[element] === "0") {
                                         interstitiel_linfo_impression.push(eval(Array_Impressions[element]));
                                         interstitiel_linfo_click.push(eval(Array_Clicks[element]));
                                         interstitiel_linfo_siteId.push(Array_SiteID[element]);
@@ -1652,8 +1652,8 @@ exports.report = async (req, res) => {
                                     let h = Math.round(Array_ClickRate[element] * 100) / 100;
                                     habillageCTR.push(h);
 
-                                    //sous traitement des array / filtre par format et par site
-                                    if (Array_SiteID[element] === "322433") {
+                                     //sous traitement des array / filtre par format et par site. On prendre les N/A 
+                                     if (Array_SiteID[element] === "322433" || Array_SiteID[element] === "0") {
                                         habillage_linfo_impression.push(eval(Array_Impressions[element]));
                                         habillage_linfo_click.push(eval(Array_Clicks[element]));
                                         habillage_linfo_siteId.push(Array_SiteID[element]);
@@ -1740,8 +1740,8 @@ exports.report = async (req, res) => {
                                     let m = Math.round(Array_ClickRate[element] * 100) / 100
                                     mastheadCTR.push(m);
 
-                                    //sous traitement des array / filtre par format et par site
-                                    if (Array_SiteID[element] === "322433") {
+                                     //sous traitement des array / filtre par format et par site. On prendre les N/A 
+                                     if (Array_SiteID[element] === "322433" || Array_SiteID[element] === "0") {
                                         masthead_linfo_impression.push(eval(Array_Impressions[element]));
                                         masthead_linfo_click.push(eval(Array_Clicks[element]));
                                         masthead_linfo_siteId.push(Array_SiteID[element]);
@@ -1829,8 +1829,8 @@ exports.report = async (req, res) => {
                                     let g = Math.round(Array_ClickRate[element] * 100) / 100;
                                     grand_angleCTR.push(g);
 
-                                    //sous traitement des array / filtre par format et par site
-                                    if (Array_SiteID[element] === "322433") {
+                                    //sous traitement des array / filtre par format et par site. On prendre les N/A 
+                                    if (Array_SiteID[element] === "322433" || Array_SiteID[element] === "0") {
 
                                         grand_angle_linfo_impression.push(eval(Array_Impressions[element]));
                                         grand_angle_linfo_click.push(eval(Array_Clicks[element]));
@@ -1923,9 +1923,8 @@ exports.report = async (req, res) => {
                                     let n = Math.round(Array_ClickRate[element] * 100) / 100;
                                     nativeCTR.push(n);
 
-                                    //sous traitement des array / filtre par format et par site
-
-                                    if (Array_SiteID[element] === "322433") {
+                                     //sous traitement des array / filtre par format et par site. On prendre les N/A 
+                                     if (Array_SiteID[element] === "322433" || Array_SiteID[element] === "0") {
                                         native_linfo_impression.push(eval(Array_Impressions[element]));
                                         native_linfo_click.push(eval(Array_Clicks[element]));
                                         native_linfo_siteId.push(Array_SiteID[element]);
@@ -2014,7 +2013,7 @@ exports.report = async (req, res) => {
 
                                     switch (Array_SiteID[element]) {
                                             //sous traitement des array / filtre par format et par site
-                                        case "322433":
+                                        case "322433" || "0":
                                             rectangle_video_linfo_impression.push(eval(Array_Impressions[element]));
                                             rectangle_video_linfo_click.push(eval(Array_Clicks[element]));
                                             rectangle_video_linfo_siteId.push(Array_SiteID[element]);
@@ -2096,7 +2095,7 @@ exports.report = async (req, res) => {
                                 
                                     switch (Array_SiteID[element]) {
                                             //sous traitement des array / filtre par format et par site
-                                        case "322433":
+                                        case "322433" || "0":
                                             slider_linfo_impression.push(eval(Array_Impressions[element]));
                                             slider_linfo_click.push(eval(Array_Clicks[element]));
                                             slider_linfo_siteId.push(Array_SiteID[element]);
