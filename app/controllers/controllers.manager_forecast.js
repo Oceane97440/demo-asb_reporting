@@ -421,26 +421,30 @@ exports.forecast = async (req, res, next) => {
                     console.log('-----------------------------------')
 
 
+                    var insertionId = new Array();
                     var sommeVolumeCampaign = new Array();
 
 
                     for (i = 0; i < campaignUnique.length; i++) {
                         for (j = 0; j < campaigns.length; j++) {
                             if (campaignUnique[i] === campaigns[j]) {
-                                sommeVolumeCampaign[i] = InsertionVolume[j]
-                               // console.log(sommeVolumeCampaign[i])
+                               sommeVolumeCampaign[i] = InsertionVolume[j]
+                                insertionId[i] = InsertionId[j]
+
+
                             }
                         }
                     }
-
-
-
+                       
                     for (i = 0; i < campaignUnique.length; i++) {
-                        sommeVolumeCampaign[i]
-                        console.log('number line campaing_unique ',campaignUnique.length)
-                        console.log(sommeVolumeCampaign[i])
-
+                        sommeVolumeCampaign[i]=sommeVolumeCampaign[i]
                     }
+
+
+                    console.log("---------------------")
+                    console.log(insertionId)
+                    console.log(sommeVolumeCampaign)
+
 
                 }
 
