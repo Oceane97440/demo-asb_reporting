@@ -1,0 +1,85 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+
+<div class="col-sm-12" id="insertion-main">
+    <div class="card">
+        <div class="card-header">
+            <h1><%= insertion.insertion_name %></h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+            <div class="col-md-8 col-sm-12">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">info</i> ID</span>: <strong><%= insertion.insertion_id %></strong></li>
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">store</i> Annonceur</span>: <a href="/manager/advertisers/<%= campaign.advertiser_id %>" title="<%= campaign.advertiser.advertiser_name %>"><%= campaign.advertiser.advertiser_name %></a></li>
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">store</i> Campagne</span>: <a href="/manager/campaigns/<%= campaign.campaign_id %>" title="<%= campaign.campaign_name %>"><%= campaign.campaign_name %></a></li>
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">image</i> Format</span>: <a href="/manager/formats/<%= insertion.format_id %>" title="<%= insertion.format.format_name %>"><%= insertion.format.format_name %></a></li>
+           <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">date_range</i> Période du</span>: Du <%= moment(insertion.insertion_start_date).format('DD/MM/YYYY') %> au <%= moment(insertion.insertion_end_date).format('DD/MM/YYYY') %> </li>
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">visibility</i> Status </span>: <% switch(insertion.insertion_status_id) { 
+                case 0: %> <span class="badge bg-light">En Brouillon</span> <% break;
+                case 1: %> <span class="badge bg-secondary">Pré réservé</span> <% break; 
+                case 2: %> <span class="badge bg-warning">Réservé</span> <% break; 
+                case 3: %> <span class="badge bg-success">Vendue</span> <% break; 
+                case 4: %> <span class="badge bg-danger">Annulée</span> <% break; 
+                default: %> - <% 
+                   }  %></li>
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">archive</i> Archive</span>: <% switch(insertion.insertion_archived) { case 1: %> <span class="badge bg-warning">Archiv&eacute;</span> <% break; default: %> - <% break; }  %></li>
+          </ul>
+
+          <hr />
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><span class="labelname"> Priorité</span>: <% if(insertion.priority_id) { %><%= insertion.insertions_priority.priority_name %><% } else { %>-<% } %></li>
+            <% if(insertion.max_impression && (insertion.max_impression > 0)) { %><li class="list-group-item"><span class="labelname"> Impressions max.</span>: <%= Utilities.numStr(insertion.max_impression) %></li><% } %>
+            <% if(insertion.max_impression_perday && (insertion.max_impression_perday > 0)) { %><li class="list-group-item"><span class="labelname"> Impressions max./jour</span>: <%= Utilities.numStr(insertion.max_impression_perday) %></li><% } %>
+            <% if(insertion.max_click && (insertion.max_click > 0)) { %><li class="list-group-item"><span class="labelname"> Clics max. par jour</span>: <%= Utilities.numStr(insertion.max_click) %></li><% } %>     
+          </ul>
+
+          <ul class="list-group list-group-flush">
+            <% if(insertion.insertion_groupe_volume) { %><li class="list-group-item"><span class="labelname"> Volume groupé</span>: <%= Utilities.numStr(insertion.insertion_groupe_volume) %> impressions</li><% }  %>
+            <% if(insertion.periodic_capping_impression || insertion.periodic_capping_period) { %><li class="list-group-item"><span class="labelname"> Capping</span>:  <%= insertion.periodic_capping_impression %> tous <%= insertion.periodic_capping_period %> min. </li><% } %>
+          </ul>       
+
+          <hr />
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">history</i> Dernière MAJ</span>: <abbr title="<%= insertion.updated_at %>"><%= moment(insertion.updated_at).fromNow() %></abbr></li>
+          </ul>
+        </div>
+
+        <div class="col-md-4 col-sm-12">
+
+            <div class="d-grid gap-2">                
+                <a href="https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%= insertion.insertion_id %>" target="_blank" class="btn btn-warning" title="Voir sur SMARTADSERVER"><i class="material-icons-two-tone">send</i> Accéder à SMARTADSERVER</a>
+                <a href="/r/<%= campaign.campaign_crypt %>" target="_blank" class="btn btn-primary" title="Accéder au rapport de campagne"><i class="material-icons-two-tone">link</i> Accéder au rapport de campagne</a>
+            </div>
+
+        </div>
+
+    </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="col-sm-12" id="insertion-creatives">
+    <div class="card">
+        <div class="card-header">
+            <h3>Créatives</h3>
+        </div>
+        <div class="card-body">
+            <% if(creatives) { %>
+                <%- include("../inc/card_creatives.ejs") -%> 
+            <% } else { %>
+                <div class="alert alert-warning" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                      </svg> Aucune créative pour cette insertion.
+                </div> 
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include("../../layouts/manager/footer.ejs") -%>

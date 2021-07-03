@@ -95,6 +95,8 @@ exports.view = async (req, res) => {
         const data = new Object();
         data.breadcrumb = "Campagnes";
         var insertionsIds = new Array();
+        data.insertions = new Array();
+        data.creatives = new Array();
 
         var campaign_id = req.params.id;
         var campaign = await ModelCampaigns
@@ -130,23 +132,32 @@ exports.view = async (req, res) => {
                         { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] },
                     ]
                 }) .then(async function (insertionList) {
+                    
                     if (!Utilities.empty(insertionList) && (insertionList.length > 0)) {
                        
                         data.insertions = insertionList;
                         for(i = 0; i < insertionList.length; i++) {
                            insertionsIds.push(insertionList[i].insertion_id);
-                            //  console.log(i,' : ',insertionList[i].insertion_id);
-                        }                       
+                        } 
                        
+                        // Récupére l'ensemble des insertions IDs pour afficher l'ensemble des créatives
+                        if(insertionsIds) {                           
+                             // Récupére les données des creatives de l'insertion
+                            var creativesList = await ModelCreatives.findAll({
+                                                            where: { insertion_id: insertionsIds },
+                                                            group: 'creative_url' 
+                                                        }).then(async function (creativesList) {
+                                                            data.creatives = creativesList;  
+                                                        });                      
+                        }
+
                     }
                 });
               
-                // Attribue les données de la campagne              
-                data.creatives = false;
+                // Attribue les données de la campagne   
                 data.campaign = campaign;
                 data.moment = moment;
-                data.insertions = insertionList;
-
+                
                 res.render('manager/campaigns/view.ejs', data);
             });
 

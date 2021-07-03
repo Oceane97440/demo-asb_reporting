@@ -1,0 +1,45 @@
+<div class="row" data-masonry="{'percentPosition': true }">
+    <% for (let i=0; i < creatives.length; i++) { %>       
+    <div class="card p-2 m-1 col-sm-6 col-md-3 border<% if(creatives[i].creatives_activated == "1") { %> border-success<% } else { %> border-warning<% } %>">
+        <a href="<%= creatives[i].creative_url %>" title="<%= creatives[i].creative_name %>" target="_blank">
+            <% switch(creatives[i].creative_mime_type) {
+                case "image/jpeg": 
+                case "image/png": 
+                case "image/gif": 
+                %> 
+                <img src="<%= creatives[i].creative_url %>" class="card-img-top" alt="" /> 
+                <% break; %>
+                <% case "video/mp4": %> 
+                <video controls class="img-fluid">
+                    <source src="<%= creatives[i].creative_url %>" type="video/mp4">
+                </video>
+                <% break; %>
+                <% case "text/html": %> 
+                    <div class="embed-responsive embed-responsive-21by9">
+                     <iframe class="embed-responsive-item" src="<%= creatives[i].creative_url %>"></iframe>
+                    </div>                  
+                <% break; %>
+              <% } %>
+        </a>
+        <div class="card-body">
+            <h6 class="card-title"><%= creatives[i].creative_name %></h6>   
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><span class="small">Nom du fichier :  <% if(creatives[i].file_name) { creatives[i].file_name } else { %>-<% } %></span></li>
+                <li class="list-group-item"><span class="small">Url de clic : <a href="<%= creatives[i].creative_click_url %>" title="Url de redirection"><%= creatives[i].creative_click_url %></a></span></li>
+            </ul>
+        </div>
+        <div class="card-footer">            
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group rounded">
+                    <a href="<%= creatives[i].creative_url %>" class="btn btn-sm btn-secondary" target="_blank"><i class="material-icons-two-tone text-white">image</i></a>
+                    <a href="<%= creatives[i].creative_click_url %>" class="btn btn-sm btn-primary" title="Url de redirection" target="_blank"><i class="material-icons-two-tone text-white">link</i></a>
+                </div>
+                <small class="text-muted">
+                    <% if(creatives[i].creatives_activated == "1") { %> <span class="material-icons-two-tone text-success">visibility</span> <% } else { %> <span class="material-icons-two-tone text-danger">visibility_off</span> <% } %>
+                </small>
+              </div>
+        
+        </div>
+    </div>
+    <% } %>
+</div>

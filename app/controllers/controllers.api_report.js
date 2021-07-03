@@ -29,7 +29,6 @@ exports.index = async (req, res) => {
     }
 }
 
-
 exports.generate = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
 
@@ -62,8 +61,6 @@ exports.generate = async (req, res) => {
                         campaigncrypt: campaigncrypt
                     });
             
-            // res.json(campaign);
-
             const timestamp_startdate = Date.parse(campaign.campaign_start_date);
             const date_now = Date.now();
                     /*
@@ -114,10 +111,8 @@ exports.generate = async (req, res) => {
 }
 
 exports.report = async (req, res) => {
-
     let campaigncrypt = req.params.campaigncrypt;
-   
-                    
+              
     var campaign = await ModelCampaigns
     .findOne({
         attributes: [
@@ -148,8 +143,7 @@ exports.report = async (req, res) => {
                     campaigncrypt: campaigncrypt
                 });
         
-        //fonctionnalité generation du rapport
-
+        // fonctionnalité generation du rapport
         let campaigncrypt = campaign.campaign_crypt
         let advertiserid = campaign.advertiser_id;
         let campaignid = campaign.campaign_id;
@@ -168,7 +162,6 @@ exports.report = async (req, res) => {
             if (data_localStorage) {
                 //convertie la date JSON en objet
                 var data_report_view = JSON.parse(data_localStorage);
-
                 var date_expiry = data_report_view.date_expiry;
 
                 //date aujourd'hui en timestamp
@@ -225,12 +218,11 @@ exports.report = async (req, res) => {
                 const now = new Date();
                 const timestamp_datenow = now.getTime();
 
-                // recup la date de début de la campagne -3heure pour règler le prob du décalage
-                // horraire
+                // recup la date de début de la campagne -3heure pour règler le prob du décalage horraire
                 const startDate_yesterday = new Date(startDate);
                 const start_date_timezone = startDate_yesterday.setHours(-4);
 
-                //recup la date de fin de la campagne ajoute +1jour
+                // recup la date de fin de la campagne ajoute +1jour
                 const endDate_day = new Date(EndtDate);
                 const endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
 

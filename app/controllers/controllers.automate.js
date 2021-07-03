@@ -232,8 +232,7 @@ exports.campaigns = async (req, res) => {
                             } else {
                                 console.error('Error : Aucune donnée disponible');
                             }
-
-                            
+                          
                         });
                     }
                 }
@@ -258,6 +257,10 @@ exports.campaignsDays = async(req, res) => {
 
     // Initialise les valeurs
     var campaignsIds = new Array();
+    var campaignsName = new Array();
+    var campaignsStartDate = new Array();
+    var campaignsEndDate = new Array();
+
     var campaignsIdsBdd = new Array();
     var advertisersIds = new Array();    
     var advertisersIdsBdd = new Array();
@@ -290,20 +293,29 @@ exports.campaignsDays = async(req, res) => {
         var requestCampaignToday = { 
             "startDate": dateYesterday, 
             "endDate": dateToday, 
-            "fields": [ { "CampaignId": {} },{ "CampaignName": {} }, { "AdvertiserId": {} }, { "AdvertiserName": {} }, { "Impressions": {} }] 
+            "fields": [ 
+                    { "AdvertiserId": {} },
+                    { "AdvertiserName": {} }, 
+                    { "CampaignId": {} }, 
+                    { "CampaignName": {} },   
+                    { "CampaignStartDate": {} }, 
+                    { "CampaignEndDate": {} },
+                    { "Impressions": {} }
+                ] 
             }
-                                                        
+        console.log('Request :',requestCampaignToday);                                          
         let link = await AxiosFunction.getReportingData('POST','',requestCampaignToday)
                     .then(async function (link) {                  
                         if (link.status == 201) {                           
-                            linkTaskId = link.data.taskId; 
-                            return linkTaskId;
+                            linkTaskId = link.data.taskId;
+                           return linkTaskId;
                         }                    
                     })
                     .then(async function (linkTaskId) { 
                         console.log('linkTaskId :',linkTaskId);
                         var file = 'https://reporting.smartadserverapis.com/2044/reports/'+linkTaskId;
-                                        
+                        console.log('file :',file) 
+                            
                         var time = 10000;
                         let timerFile = setInterval(async () => {
                             time += 10000;
@@ -330,25 +342,32 @@ exports.campaignsDays = async(req, res) => {
 
     // Récupére les données du forecast
     var dataSplit = taskCampaignsDays;
-    data_splinter = dataSplit.split(/\r?\n/);                                    
-    var lines = data_splinter.length;
-   
-    // Boucle sur les lignes
-    for (i = 1; i < lines; i++) {
-        line = data_splinter[i].split(';');
-        if (!Utilities.empty(line[0])) { campaignsIds.push(line[0]); }
-        if (!Utilities.empty(line[2])) { advertisersIds.push(line[2]); }
+ 
+    if(dataSplit) {
+        data_splinter = dataSplit.split(/\r?\\n/);                                    
+        var lines = data_splinter.length;
+    
+        // Boucle sur les lignes
+        for (i = 0; i < lines; i++) {
+            line = data_splinter[i].split(';');
+            if (!Utilities.empty(line[0])) { campaignsIds.push(line[0]); }
+            if (!Utilities.empty(line[2])) { advertisersIds.push(line[2]); }
+            if (!Utilities.empty(line[3])) { campaignsName.push(line[3]); }
+            if (!Utilities.empty(line[4])) { campaignsStartDate.push(line[4]); }
+            if (!Utilities.empty(line[5])) { campaignsEndDate.push( (line[5]/100) ); }  //    var Dday = moment().format('YYYY-MM-DD');
+        }
+
+        // Teste si les annonceurs existent
+        console.log(campaignsName);
+        console.log(campaignsName.length);
+        console.log(campaignsEndDate);
+       // console.log(advertisersIds.toString());
+
+      //  var myAdvertiser = Utilities.arrayDiff(advertisersIds,advertisersIdsBdd);
+      //  var myCampaign = Utilities.arrayDiff(campaignsIds,campaignsIdsBdd);
     }
 
-    // Teste si les annonceurs existent
-    console.log(advertisersIds);
-    console.log(advertisersIds.length);
-    console.log(advertisersIds.toString());
-    
-    var myAdvertiser = Utilities.arrayDiff(advertisersIds,advertisersIdsBdd);
-    var myCampaign = Utilities.arrayDiff(campaignsIds,campaignsIdsBdd);
-
-    res.json(myCampaign);   
+   // res.json(myCampaign);   
 }
 
 exports.formats = async (req, res) => {
@@ -881,6 +900,7 @@ exports.creatives = async (req, res) => {
         var insertionCreativesDB = await ModelCreatives.findAll(
             {attributes: ['insertion_id']}
         );
+
         insertionCreativesDBIds = new Array();
         for (o = 0; o < insertionCreativesDB.length; o++) {
             insertionCreativesDBIds[o] = insertionCreativesDB[o].insertion_id;
@@ -913,8 +933,7 @@ exports.creatives = async (req, res) => {
                 insertionObject = {
                     "insertion_id": insertionDB[i].insertion_id
                 };
-                // console.log(j++);
-
+               
                 // var config = SmartFunction.config('creatives', '', '', insertionObject);
                 var config = SmartFunction.config('creatives', insertionObject);
 
@@ -1154,7 +1173,6 @@ exports.insertions = async (req, res) => {
         console.error('Error : ' + error);
     }
 }
-
 
 exports.insertions_priorities = async (req, res) => {
  
@@ -1403,11 +1421,8 @@ exports.campaignsCreatives = async (req, res) => {
                         if (!Utilities.empty(creativesData)) {
                             var number_line_offset = creativesData.length;
                            
-
-                            
                             if (number_line_offset > 0) {
                                for (m = 0; m < number_line_offset; m++) {
-                              
                                     var creative_id = creativesData[m].id;
                                     var creative_name = creativesData[m].name;
                                     var file_name = creativesData[m].fileName;
@@ -1422,9 +1437,8 @@ exports.campaignsCreatives = async (req, res) => {
                                     var creatives_type_id = creativesData[m].creativeTypeId;
                                     var creatives_activated = creativesData[m].isActivated;
                                     var creatives_archived = creativesData[m].isArchived;
-                                   // console.log(creative_name)
-
-                                  var result = Utilities
+                                 
+                                    var result = Utilities
                                         .updateOrCreate(ModelCreatives, {
                                             creative_id: creative_id
                                         }, {
@@ -1446,15 +1460,13 @@ exports.campaignsCreatives = async (req, res) => {
                                         .then(function (result) {
                                             result.item; // the model
                                             result.created; // bool, if a new item was created.
-                                            return res.json({ type: 'sucess', message: 'Creatives ok' });
+                                            return res.json({ type: 'success', message: 'Les creatives de la campagne "'+campaignID+'" ont bien été ajoutées.' });
                                         });
                                       
                                 }
                             }
 
-
-                        }                    
-                       
+                        }                        
 
                     });  
 
@@ -1472,7 +1484,6 @@ exports.campaignsCreatives = async (req, res) => {
          return res.json({ type: 'error', message: error });
     }
 }
-
 
 exports.reports = async (req, res) => {
     try {
@@ -1563,14 +1574,11 @@ exports.reports = async (req, res) => {
                             var campaignCrypt = campaign.campaign_crypt;
                            break;
                         }
-                    }
-                 
+                    }                 
                 }
-
                 
                 // Récupére l'ID de la camapagne
-                if(campaignCrypt) {
-                    
+                if(campaignCrypt) {                    
                     var campaign = await ModelCampaigns
                     .findOne({
                         attributes: [

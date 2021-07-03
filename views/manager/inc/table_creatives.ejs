@@ -18,6 +18,7 @@
               <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_id %></a></td> 
                 <td><a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>" title="<%= insertions[i].campaign.campaign_name %>"><%= insertions[i].campaign.campaign_name %></a></td> 
                 <td>
+                <td>
                     <a href="/manager/campaigns/<%= insertions[i].campaign.campaign_id %>/insertions/<%= insertions[i].insertion_id %>" title="<%= insertions[i].insertion_name %>"><%= insertions[i].insertion_name %>
                         <br />
                         <span class="small">(Du <%= moment(insertions[i].insertion_start_date).format('DD/MM/YYYY') %> au 
@@ -27,7 +28,7 @@
                 <td class="d-none"><%= insertions[i].insertion_start_date %></td>
                 <td><% if(insertions[i].priority_id) { %><%= insertions[i].insertions_priority.priority_name %><% } else { %>-<% } %></td>
                 <td class="d-none"><%= insertions[i].insertion_end_date %></td>
-                 <td><% if(insertions[i].format) { %><%= insertions[i].format.format_name %><% } else { %>-<% } %></td>
+                 <td><%= insertions[i].format.format_name %></td>
                 <td><% if(insertions[i].insertions_status) { %><span class="badge bg-success"><%= insertions[i].insertions_status.insertion_status_name %></span><% } else { %>-<% } %></td>
                 <td>                    
                    <a href="https://manage.smartadserver.com/gestion/smartprog3.asp?InsertionID=<%= insertions[i].insertion_id %>" target="_blank" title="Accéder à l'insertion sur SMARTADSERVER"><img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER" /></a>

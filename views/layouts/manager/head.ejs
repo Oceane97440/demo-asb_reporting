@@ -16,22 +16,22 @@
         <link rel="stylesheet" href="http://127.0.0.1/dashboardkit-free-v1.0/dist/assets/fonts/material.css">
         -->
         <!-- vendor css -->
-        <link rel="stylesheet" href="../../../assets/css/style.css" id="main-style-link">
+        <link rel="stylesheet" href="http://localhost:3022/assets/css/style.css" id="main-style-link">
 
-        <!-- Favicon icon <link rel="icon" href="../../../assets/images/favicon.svg"
+        <!-- Favicon icon <link rel="icon" href="http://localhost:3022/assets/images/favicon.svg"
         type="image/x-icon"> -->
         <!-- font css -->
-        <link rel="stylesheet" href="../../../assets/fonts/feather.css">
-        <link rel="stylesheet" href="../../../assets/fonts/fontawesome.css">
-        <link rel="stylesheet" href="../../../assets/fonts/material.css">
-        <link
+        <link rel="stylesheet" href="http://localhost:3022/assets/fonts/feather.css">
+        <link rel="stylesheet" href="http://localhost:3022/assets/fonts/fontawesome.css">
+        <link rel="stylesheet" href="http://localhost:3022/assets/fonts/material.css">
+        <!-- <link
             rel="stylesheet"
             href="http://localhost:3001/assets/css/style.css"
             id="main-style-link">
         <link
             rel="stylesheet"
             href="http://localhost:3001/assets/css/manager.css"
-            id="main-style-link">
+            id="main-style-link"> -->
         <!-- 
             <link rel="icon" href="http://localhost:3670/assets/images/favicon.svg"
         type="image/x-icon"> <link rel="stylesheet"
@@ -64,7 +64,7 @@
         <link
             href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css"
             rel="stylesheet"/>
-     
+        
     </head>
 
     <body class="">
@@ -111,5 +111,16 @@
             <%# if (breadcrumb) { %>
                 <%# include("breadcrumb.ejs") -%>
             <%# } %>
+
+            <div class="row"> 
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Tableau de bord</a></li>
+                        <li class="breadcrumb-item">Campagnes</li>
+                    </ul>          
+            </div>
+
+            <!-- Chargement des widgets toast-->
+            <div id="toast-widget"></div>
+
             <!-- [ Main Content ] start -->
             <div class="row">
