@@ -26,6 +26,7 @@ const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
+const ModelAgencies = require("../models/models.agencies");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
@@ -48,8 +49,23 @@ exports.index = async (req, res) => {
                 }
             ]
         });
-        
+
+        // Affiche les campagnes se terminant aujourd'hui
+        data.campaigns_today = await ModelCampaigns.findAll({
+            where : {
+                campaign_end_date : {
+                    [Op.like]: '%2021-07-04%'
+                }
+            },
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
+        });
+
         data.moment = moment;
+        
         res.render('manager/campaigns/index.ejs', data);
     } catch (error) {
         console.log(error);
@@ -105,12 +121,9 @@ exports.view = async (req, res) => {
                     campaign_id: campaign_id
                 },
                 include: [
-                    {
-                        model: ModelAdvertisers
-                    },
-                    {
-                        model: ModelInsertions
-                    }
+                    { model: ModelAdvertisers },
+                    { model: ModelAgencies },
+                    { model: ModelInsertions }
                 ]
             })
             .then(async function (campaign) {
@@ -155,7 +168,7 @@ exports.view = async (req, res) => {
                 });
               
                 // Attribue les données de la campagne   
-                data.campaign = campaign;
+                data.campaign = campaign;              
                 data.moment = moment;
                 
                 res.render('manager/campaigns/view.ejs', data);

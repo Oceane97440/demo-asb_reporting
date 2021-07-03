@@ -100,8 +100,14 @@ $(document).ready(
         $(".toast").toast('show');
     }
 
+    var config = {
+        baseurl : "http://localhost:3023/", 
+        basedata : "http://localhost:3023/"
+     };  
+     
     // Automatisations des éléments
     function automateAction(automate) {
+
         switch(automate) {
             case "insertions":
                 // Récupére les insertions
@@ -142,10 +148,7 @@ $(document).ready(
 
 
 
-    var config = {
-                baseurl : "http://localhost:3022/", 
-                basedata : "http://localhost:3022/"
-             };  
+    
 
     // Charge les éléments en ajax
     var campaign_id = $('div.card').attr('data-campaign_id');

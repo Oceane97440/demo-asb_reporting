@@ -61,7 +61,7 @@ exports.list = async (req, res) => {
         data.agencies = await ModelAgencies.findAll({
             include: [
                 {
-                  //  model: ModelAdvertisers
+                   model: ModelCampaigns
                 }
             ]
         }, {
@@ -87,37 +87,38 @@ exports.view = async (req, res) => {
         data.breadcrumb = "Agences";
 
         var agency_id = req.params.id;
+        
         var agency = await ModelAgencies
             .findOne({
                 where: {
                     agency_id: agency_id
-                },
+                }/*,
                 include: [
                     {
                         model: ModelAdvertisers
                     }
-                ]
+                ]*/
             })
             .then(async function (agency) {
-                if (!advertiser) 
+                if (!agency) 
                     return res
                         .status(404)
                         .render("manager/error.ejs", {statusCoded: 404});
                 
-                // Récupére les données des annonceurs
-                advertisers = await ModelAdvertisers.findAll({
+                // Récupére les données des campaigns
+                campaigns = await ModelCampaigns.findAll({
                     where: {
                         agency_id: agency_id
                     },
                     include: [
                         {
-                            model: ModelCampaigns
+                            model: ModelAdvertisers
                         }
                     ]
                 });
-                
+               
                 // Attribue les données de la campagne
-                data.advertisers = advertisers; 
+                data.campaigns = campaigns; 
                 data.agency = agency;
                 data.moment = moment;
                 res.render('manager/agencies/view.ejs', data);

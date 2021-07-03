@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
-                <h1><%= advertiser.advertiser_name %></h1>
+                <h1><%= agency.agency_name %></h1>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -12,13 +12,13 @@
                                 <span class="labelname">
                                     <i class="material-icons-two-tone">info</i>
                                     ID</span>:
-                           <strong><%= advertiser.advertiser_id %></strong>
+                           <strong><%= agency.agency_id %></strong>
                             </li>
                             <li class="list-group-item">
                                 <span class="labelname">
                                     <i class="material-icons-two-tone">archive</i>
                                     Archive</span>:
-                                <% switch(advertiser.advertiser_archived) { case 0: %>
+                                <% switch(agency.agency_archived) { case 0: %>
                                     <span class="badge bg-warning">Archiv&eacute;</span>
                                     <% break; default: %>
                                         -
@@ -38,20 +38,15 @@
                                             <span class="labelname">
                                                 <i class="material-icons-two-tone">history</i>
                                                 Dernière mise à jour</span>:
-                                            <%= moment(advertiser.updated_at).format('DD/MM/YYYY'); %></li>
+                                            <%= moment(agency.updated_at).format('DD/MM/YYYY'); %></li>
                                     </ul>
                                 </div>
 
                                 <div class="col-md-3 col-sm-12">
 
                                     <div class="d-grid gap-2">
-                                        <a
-                                            href="https://manage.smartadserver.com/gestion/smartprog2.asp?AnnonceurID=<%= advertiser.advertiser_id %>"
-                                            target="_blank"
-                                            class="btn btn-warning"
-                                            title="Voir sur SMARTADSERVER">
-                                            <i class="material-icons-two-tone">send</i>
-                                            Accéder à SMARTADSERVER</a>
+                                       
+                                        
                                     </div>
 
                                 </div>
@@ -68,11 +63,11 @@
                             <h3>Campagnes</h3>
                         </div>
                         <div class="card-body">
-                            <% if(campaigns) { %>
+                            <% if(campaigns && (campaigns.length > 0)) { %>
                                 <%- include("../inc/table_campaigns.ejs") -%>
                                 <% } else { %>
                                     <div class="alert alert-warning" role="alert">
-                                        Aucune campagne.
+                                        Aucune campagne pour cette agence.
                                     </div>
                                 <% } %>
                             </div>

@@ -22,9 +22,10 @@
               <% } %>
         </a>
         <div class="card-body">
-            <h6 class="card-title"><%= creatives[i].creative_name %></h6>   
+            <h6 class="card-title"></h6>   
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><span class="small">Nom du fichier :  <% if(creatives[i].file_name) { creatives[i].file_name } else { %>-<% } %></span></li>
+                <li class="list-group-item"><span class="small">Nom :  <% if(creatives[i].creative_name) { %><%= creatives[i].creative_name %> <% } else { %>-<% } %></span></li>
+                <li class="list-group-item"><span class="small">Nom du fichier : <% if(creatives[i].file_name) { creatives[i].file_name } else { %>-<% } %></span></li>
                 <li class="list-group-item"><span class="small">Url de clic : <a href="<%= creatives[i].creative_click_url %>" title="Url de redirection"><%= creatives[i].creative_click_url %></a></span></li>
             </ul>
         </div>

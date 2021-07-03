@@ -70,13 +70,12 @@ users.hasOne(advertisers_users, {
     onDelete: 'cascade',
     hooks: true
 });
+
 advertisers.hasMany(advertisers_users, {
     foreignKey: 'advertiser_id',
     onDelete: 'cascade',
     hooks: true
 });
-
-
 
 //un format posséde un ou plusieur group un group posséde un à plusieur format
 formats.hasMany(groups_formats_types, {
@@ -90,8 +89,7 @@ groups_formats.hasMany(groups_formats_types, {
     hooks: true
 });
 
-// un format posséde un ou plusieur template un template posséde un à plusieurs
-// formats
+// un format posséde un ou plusieurs templates : un template posséde un à plusieurs formats
 formats.hasMany(formatstemplates, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
@@ -107,13 +105,25 @@ campaigns.belongsTo(advertisers, {
     foreignKey: 'advertiser_id',
   //  onDelete: 'cascade',
     hooks: true
-}); 
-
+});
 advertisers.hasMany(campaigns, {
     foreignKey: 'advertiser_id',
   //  onDelete: 'cascade',
     hooks: true
 });
+
+campaigns.belongsTo(agencies, {
+    foreignKey: 'agency_id',
+  //  onDelete: 'cascade',
+    hooks: true
+});
+agencies.hasMany(campaigns, {
+    foreignKey: 'agency_id',
+  //  onDelete: 'cascade',
+    hooks: true
+});
+
+
 
 insertions.belongsTo(campaigns, {
     foreignKey: 'campaign_id',
@@ -313,7 +323,7 @@ app.use('/app', application);
 
 /**Le serveur ecoute sur le port 3000  */
 // app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3022);
+app.set("port", process.env.PORT || 3023);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);
