@@ -14,11 +14,13 @@ const manager_forecast = require("../controllers/controllers.manager_forecast");
 * Middleware to know if user is connected
 **/
 router.use(function (req, res, next) {
-        if ((!req.session.user)) {           
-            console.log('no access');
-            return res.redirect('../../login');    
-        }        
-        next();  
+    if ((!req.session.user)) {           
+        console.log('no access');
+        return res.redirect('../../login');    
+    } 
+    res.locals.user = req.session.user;  
+    next();  
+    console.log('User Login :',req.session.user)
 });
 
 const ModelFormats = require("../models/models.formats");
@@ -27,6 +29,7 @@ const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaignsEpilot = require("../models/models.campaigns_epilot");
 const {body, checkSchema, validationResult} = require('express-validator');
 const ValidateCustom = require("../functions/functions.form.validate");
+const csvParser = require("csv-parser");
 
 /*
 const campaignEpilotSchema = {

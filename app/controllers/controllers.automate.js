@@ -48,9 +48,9 @@ const {cpuUsage} = require('process');
 
 // Initialise le module
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./report_storage');
-localStorage_tasks = new LocalStorage('./taskID');
-localStorageAutomate = new LocalStorage('./automate');
+localStorage = new LocalStorage('data/reporting');
+localStorage_tasks = new LocalStorage('data/taskID');
+localStorageAutomate = new LocalStorage('data/automate');
 
 exports.json  = async (req, res) => {
     try {
@@ -238,7 +238,7 @@ exports.campaigns = async (req, res) => {
                 }
 
                 addItem();
-                res.json('automate campaigns');
+                return res.json({ type: 'success', message: 'Les campagnes ont bien été ajoutées.' });
 
             } else {
                 console.error('Error : Aucune donnée disponible');
@@ -415,19 +415,14 @@ exports.formats = async (req, res) => {
                                 .then(function (result) {
                                     result.item; // the model
                                     result.created; // bool, if a new item was created.
-                                });
-                            //  console.log(formats)
-
-                        }
-
-                        
+                                });                            
+                        }                       
                     });
                 }
             }
 
             addItem();
-
-            return false;
+            res.json('Les formats ont été chargés.');
         });
 
     } catch (error) {

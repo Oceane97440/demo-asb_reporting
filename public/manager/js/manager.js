@@ -101,8 +101,8 @@ $(document).ready(
     }
 
     var config = {
-        baseurl : "http://localhost:3023/", 
-        basedata : "http://localhost:3023/"
+        baseurl : "http://localhost:3022/", 
+        basedata : "http://localhost:3022/"
      };  
      
     // Automatisations des éléments

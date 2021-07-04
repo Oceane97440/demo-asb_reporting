@@ -4,7 +4,6 @@ const Sequelize = require('sequelize');
 const api = require("../controllers/controllers.api_report");
 
 // Affiche la page api
-
 router.get("/", api.index);
 router.get("/rapport/:campaigncrypt", api.report);
 router.get("/:campaigncrypt", api.generate);

@@ -295,23 +295,16 @@ app.use('/forecast', forecast);
 const reporting = require('./app/routes/routes.api_report');
 app.use('/r/', reporting);
 
+
 // action liste campagne epilot
 const epilot = require('./app/routes/routes.api_epilot');
 app.use('/epilot', epilot);
-
-// action admin recupération donnée api
-const manager = require('./app/routes/routes.manager');
-app.use('/manager', manager);
 
 // action user forecast
 const user = require('./app/routes/routes.api_user');
 app.use('/utilisateur', user);
 
-// Automatise la récupération de donnée
-const automate = require('./app/routes/routes.automate');
-app.use('/automate', automate);
-
-// Crée des alerting
+// Créer des alerting
 const alerts = require('./app/routes/routes.alerts');
 app.use('/alerts', alerts);
 
@@ -321,9 +314,20 @@ app.use('/test', tests);
 const application = require('./app/routes/routes.application');
 app.use('/app', application);
 
-/**Le serveur ecoute sur le port 3000  */
-// app.set("port", process.env.PORT || 3000);
-app.set("port", process.env.PORT || 3023);
+// Gestion du reporting
+const reporting_rs = require('./app/routes/routes.reporting');
+app.use('/rs/', reporting_rs);
+
+// Gestion du management
+const manager = require('./app/routes/routes.manager');
+app.use('/manager', manager);
+
+// Automatise la récupération de donnée
+const automate = require('./app/routes/routes.automate');
+app.use('/automate', automate);
+
+// Le serveur ecoute sur le port 3022
+app.set("port", process.env.PORT || 3022);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

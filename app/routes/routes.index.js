@@ -1,17 +1,13 @@
 const router = require("express").Router();
 const Sequelize = require('sequelize');
 
-const api = require("../controllers/controllers.index");
+const index = require("../controllers/controllers.index");
 
-// Affiche la page api
-router.get("/", api.home_page);
-router.get("/login", api.login);
-router.post("/login/add", api.login_add);
-router.get("/home_page", api.index);
-/*
-router.get("/signup", api.signup);
-router.post("/signup/add", api.signup_add);
-*/
-router.get("/logout", api.logout)
+// Affiche la page Index
+router.get("/", index.home_page);
+router.get("/login", index.login);
+router.post("/login/add", index.login_add);
+router.get("/home_page", index.index);
+router.get("/logout", index.logout)
 
 module.exports = router;

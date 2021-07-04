@@ -102,21 +102,22 @@
                         role="button"
                         aria-haspopup="false"
                         aria-expanded="false">
-                        <img src="../../assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar">
+                        <img src="../../assets/images/user/avatar.jpg" alt="user-image" class="user-avtar">
                         <span>
-                            <span class="user-name">Joseph William</span>
-                            <span class="user-desc">Administrateur</span>
+                            <span class="user-name"><%= locals.user.user_firstname %> <%= locals.user.user_lastname %></span>
+                            <span class="user-desc">                            
+                                <% switch(locals.user.user_role) { 
+                                    case 1: %>Administrateur<% break; 
+                                    case 2: %>Commercial<% break;
+                                    default: %>
+                                        -
+                                <% break; }  %>
+                            </span>
                         </span>
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right pc-h-dropdown">
-                        <div class=" dropdown-header">
-                            <h5 class="text-overflow m-0">
-                                <span class="badge bg-light-primary">
-                                    <a href="https://gumroad.com/dashboardkit" target="_blank">Upgrade to Pro</a></span></h5>
-                        </div>
-
-                        <a href="auth-signin.html" class="dropdown-item">
+                        <a href="../logout" class="dropdown-item">
                             <i class="material-icons-two-tone">chrome_reader_mode</i>
                             <span>Déconnexion</span>
                         </a>
