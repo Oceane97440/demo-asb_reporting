@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet" />
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WCLMFB5');
+    </script>
+    <!-- End Google Tag Manager -->
+    <title>Rapport de la campagne "<%= reporting.campaign.campaign_name %>" - Antenne Solutions Business</title>
+
+    <link rel="icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png"
+        sizes="32x32" />
+    <link rel="icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-192x192.png"
+        sizes="192x192" />
+    <link rel="apple-touch-icon" type="image/png"
+        href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
+
+    <style>
+        body {
+            background: #eee;
+            font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif
+        }
+
+        #reporting-board {
+            background: #fff
+        }
+
+        hr {
+            margin-top: 10px;
+            border-color: #ddd;
+        }
+
+        .list-group-flush {
+            width: 100%
+        }
+
+        .list-group-flush li strong {
+            width: 20%;
+            display: inline-block
+        }
+
+        img {
+            image-rendering: -webkit-optimize-contrast
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCLMFB5" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+
+
+    <div class="container p-2 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
+
+        <% if(reporting.campaign.campaign_end_date > reporting.reporting_start_date) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 30px;">
+            <strong>Les statistiques de cette campagne sont mises à jour toutes les 2 heures. (Prochaine MAJ
+                : <%= reporting.reporting_end_date %> )</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <% } %>
+
+        <div class="row p-3 m-5">
+            <div class="col-md-3">
+                <a href="https://antennesb.fr/">
+                    <img src="/admin/photos/logo.png" alt="logo_antenne" /></a>
+
+            </div>
+            <div class="col-md-9">
+                <h2 class="position-absolute top-50 start-50">Rapport de la campagne : <%= reporting.campaign.campaign_name %></h2>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Date de génération</strong> : <%= moment(reporting.reporting_end_date).format('MMMM Do YYYY, h:mm:ss a'); %></li>
+                <li class="list-group-item"><strong>Annonceur</strong> : <%= reporting.campaign.advertiser_name %></li>
+                <li class="list-group-item"><strong>Campagne</strong> : <%= reporting.campaign.campaign_name %></li>
+                <li class="list-group-item"><strong>Période diffusion</strong> : Du <%= reporting.campaign.campaign_start_date %> au <%= reporting.campaign.campaign_end_date %></li>
+                <!-- <li class="list-group-item">
+                    <a href='/r/352d45a7088ea53e4cd0338b1d59e1f2/export' class="btn btn-xs btn-success pull-left">
+                        <i class="fas fa-file-excel"> </i> Télécharger (Excel) </a>
+
+                </li> -->
+            </ul>
+        </div>
+
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+    <script>
+        $(document).ready(function () {
+            //appel ajax ici
+            //compte le nombre de tr du tableau 
+            $.fn.rowCount = function () {
+                return $('tr', $(this).find('tbody')).length;
+            };
+            var rowctr = $('#table_campaigns').rowCount();
+
+            //si le tableau des formats global contient qu'une seule ligne on affiche pas
+            if (rowctr <= 1) {
+                //console.log('No of Rows:' + rowctr);
+                $("#table_global_format").hide();
+            }
+        })
+        //attention version en ligne (en tête)
+    </script>
+
+</body>
+
+</html>

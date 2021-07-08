@@ -53,7 +53,7 @@ exports.index = async (req, res) => {
         res.render('manager/insertions/index.ejs', data);
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -82,7 +82,7 @@ exports.list = async (req, res) => {
         res.render('manager/insertions/list.ejs', data);
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -144,7 +144,7 @@ exports.view = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -170,7 +170,7 @@ exports.create = async (req, res) => {
         res.render('manager/insertions/create.ejs', data);
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }

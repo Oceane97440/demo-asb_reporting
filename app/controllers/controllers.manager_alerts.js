@@ -62,7 +62,7 @@ exports.index = async (req, res) => {
   
         res.render('manager/index.ejs', data);
     } catch (error) {
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }*/
 }

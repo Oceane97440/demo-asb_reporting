@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="/admin/css/style.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-192x192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" type="image/png" href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
+
+    <title>Accueil</title>
+</head>
+
+<body>
+    <%- include ("../layouts/admin/navbar.ejs") -%>
+
+
+  <main>
+
+    <h1 class="text-center">Dasbord Reporting</h1>
+
+
+    <div class="container">
+        <div class="row">
+
+            <!--team-1-->
+            <div class="col-lg-4">
+                <div class="our-team-main">
+
+                    <a href="/reporting/liste_report">
+
+                        <div class="card text-center" id="card_menu">
+                            <div class="card-body">
+                                <i class="far fa-calendar-alt"></i>
+                                <h4 class="card-title">LISTE RAPPORT</h4>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+            <!--team-1-->
+
+            <!--team-2-->
+            <div class="col-lg-4">
+                <div class="our-team-main">
+
+                    <a href="/reporting/generate_link">
+                        <div class="card text-center" id="card_menu">
+                            <div class="card-body">
+                                <i class="fas fa-chart-pie"></i>
+    
+                                <h4 class="card-title">GENERATION DU LIEN</h4>
+                                
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+      
+
+
+
+          
+
+         
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <%- include ("../layouts/admin/footer.ejs") -%>
+</body>
+
+</html>

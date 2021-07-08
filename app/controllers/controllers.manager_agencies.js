@@ -47,7 +47,7 @@ exports.index = async (req, res) => {
         res.render('manager/agencies/index.ejs', data);
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -76,7 +76,7 @@ exports.list = async (req, res) => {
         res.render('manager/agencies/list.ejs', data);
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -126,7 +126,7 @@ exports.view = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -181,7 +181,7 @@ exports.view = async (req, res) => {
 
   }catch (error) {
     console.log(error)
-    var statusCoded = error.response.status;
+    var statusCoded = error.response;
 
     res.render("error.ejs",{
       statusCoded:statusCoded,

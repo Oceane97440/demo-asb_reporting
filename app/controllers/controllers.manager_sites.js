@@ -50,7 +50,7 @@ exports.index = async (req, res) => {
         res.render('manager/sites/index.ejs', data);
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -79,7 +79,7 @@ exports.list = async (req, res) => {
         res.render('manager/sites/list.ejs', data);
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
@@ -115,7 +115,7 @@ exports.view = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }

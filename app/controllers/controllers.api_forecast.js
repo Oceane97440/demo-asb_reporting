@@ -90,7 +90,7 @@ exports.index = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        var statusCoded = error.response.status;
+        var statusCoded = error.response;
         res.render("error.ejs", {
            statusCoded: statusCoded,
         });
