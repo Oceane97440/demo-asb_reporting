@@ -33,14 +33,31 @@ exports.index = async (req, res) => {
 exports.test = async (req, res) => {
     campaigncrypt = req.params.campaigncrypt;
     // Convertie le fichier localStorage task_global en objet
-    filetasKID = 'campaignID-1914252-taskGlobal';
-    var dataLSTaskGlobal = localStorageTasks.getItem(filetasKID);
-    const objDefault = JSON.parse(dataLSTaskGlobal);
-    var dataSplitGlobal = objDefault.datafile;
+    filetasKID = 'campaignID-1914252-taskGlobalVU';
+    var dataLSTaskGlobalVU = localStorageTasks.getItem(filetasKID);
+    const objDefault = JSON.parse(dataLSTaskGlobalVU);
+    var dataSplitGlobalVU = objDefault.datafile;
+    
+    
+    var dataSplitGlobalVU = dataSplitGlobalVU.split(/\r?\n/);
+    if (dataSplitGlobalVU) {
+        var numberLine = dataSplitGlobalVU.length;
+        for (i = 1; i < numberLine; i++) {
+            // split push les données dans chaque colone
+            line = dataSplitGlobalVU[i].split(';');
+            if (!Utilities.empty(line[0])) {
+                console.log({ vu : line[0] });
+            }
+        }
+    }
+
+
 
     // Permet de faire l'addition
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
+    
+   // res.json(dataList);
+/*
     var impressions = new Array();
     var clicks = new Array();
     var complete = new Array();
@@ -444,6 +461,7 @@ exports.test = async (req, res) => {
     }
 
     res.json(formatObjects);
+    */
 }
 
 exports.generate = async (req, res) => {
@@ -565,11 +583,10 @@ exports.report = async (req, res) => {
 
                        console.log('campaign_start_date :', campaign_start_date);
                        console.log('campaign_end_date :', campaign_end_date);
-;
 
                         // si la date d'expiration est < au moment de la requête on garde la cache
-                        if ((reporting_requete_date < reporting_end_date) || (campaign_end_date > reporting_start_date)) {
-                            res.render('report/template.ejs', { reporting : reportingData, moment : moment});
+                        if ((reporting_requete_date < reporting_end_date) && (campaign_end_date < reporting_start_date)) {
+                            res.render('report/template.ejs', { reporting : reportingData, moment: moment, utilities : Utilities });
                         }  else {
                             console.log('Supprime et relance la generation du rapport')
                             
@@ -585,42 +602,6 @@ exports.report = async (req, res) => {
                             res.redirect('/rs/${campaigncrypt}');
                         }
 
-                        /*
-                     
-        
-                            // Date aujourd'hui en timestamp
-                            const now = new Date();
-                            var timestamp_now = now.getTime();
-        
-                            //si la date expiration est < a  la date du jour on garde la cache
-                            if (timestamp_now < date_expiry) {
-                                // Intervalle de temps < 2h
-                                var dts_table = data_report_view.table;
-                                var dts_data_habillage = data_report_view.data_habillage;
-                                var dts_data_interstitiel = data_report_view.data_interstitiel;
-                                var dts_data_masthead = data_report_view.data_masthead;
-                                var dts_data_grand_angle = data_report_view.data_grand_angle;
-                                var dts_data_native = data_report_view.data_native;
-                                var dts_data_video = data_report_view.data_video;
-                                var dts_data_rectangle_video = data_report_view.data_rectangle_video;
-                                var dts_data_slider = data_report_view.data_slider;
-                                var dts_data_logo = data_report_view.data_logo;
-                                var dts_date_expiry = data_report_view.date_expirer;
-        
-                                res.render('reporting/data-reporting-template.ejs', {
-                                    table: dts_table,
-                                    data_habillage: dts_data_habillage,
-                                    data_interstitiel: dts_data_interstitiel,
-                                    data_masthead: dts_data_masthead,
-                                    data_grand_angle: dts_data_grand_angle,
-                                    data_native: dts_data_native,
-                                    data_video: dts_data_video,
-                                    data_rectangle_video: dts_data_rectangle_video,
-                                    data_slider: dts_data_slider,
-                                    data_logo: dts_data_logo,
-                                    data_expirer: dts_date_expiry
-                                });
-                           */
                     } else {
                         console.log('data_localStorage no existe');
 
@@ -1160,7 +1141,7 @@ exports.report = async (req, res) => {
                                                 key = formatSearch[kn];
                                                 impressionsSite = parseInt(dataObject[key].impressions);
                                                 clicksSite = parseInt(dataObject[key].clicks);
-                                                completeSite = parseInt(dataObject[key].complet);
+                                                completeSite = parseInt(dataObject[key].complete);
                                                 var nameSite = sites[kn];
                             
                                                 // Rentre les impressions
@@ -1231,6 +1212,8 @@ exports.report = async (req, res) => {
                                         impressionsSUM = impressions.reduce(reducer);
                                         clicksSUM = clicks.reduce(reducer);
                                         ctrSUM = eval((clicksSUM/impressionsSUM)*100).toFixed(2);
+                                        completeSUM = complete.reduce(reducer);
+                                        ctrComplete = eval((completeSUM/impressionsSUM)*100).toFixed(2);
 
                                         resultDateReport = {
                                             formatKey: formatSearch,
@@ -1241,10 +1224,11 @@ exports.report = async (req, res) => {
                                             // impressions : impressions,
                                             impressions: impressions.reduce(reducer),
                                             // clicks : clicks,
-                                            clicks: clicks.reduce(reducer),
-                                            ctr: ctrSUM,
+                                            clicks : clicks.reduce(reducer),
+                                            ctr : ctrSUM,
                                             // complete : complete,
-                                            completeSUM: complete.reduce(reducer)
+                                            complete : completeSUM,
+                                            ctrComplete : ctrComplete
                                         };
                                         
                                         return resultDateReport;
@@ -1285,7 +1269,8 @@ exports.report = async (req, res) => {
                                         formatObjects.slidervideo = sortDataReport(formatSliderVideo, dataList);
                                     }
                                 }
-                                                              
+                                             
+                               
                                 // Ajoute les infos de la campagne
                                 campaignImpressions = Impressions.reduce(reducer);
                                 campaignClicks = Clicks.reduce(reducer);
@@ -1297,6 +1282,7 @@ exports.report = async (req, res) => {
                                                            campaign_name : campaign.campaign_name, 
                                                            campaign_start_date : campaign.campaign_start_date,
                                                            campaign_end_date : campaign.campaign_end_date, 
+                                                           campaigncrypt : campaign.campaigncrypt,
                                                            advertiser_id : campaign.advertiser.advertiser_id,
                                                            advertiser_name : campaign.advertiser.advertiser_name,
                                                            impressions : campaignImpressions,
@@ -1304,13 +1290,33 @@ exports.report = async (req, res) => {
                                                            ctr : campaignCtr,
                                                            complete : campaignComplete,
                                                            ctrComplete : campaignCtrComplete
-                                                        }                             
+                                                        } 
+                                                        
+                                 
+                                // Récupére les infos des VU
+                                const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
+                                var dataSplitGlobalVU = objDefaultVU.datafile;                                
                                 
-                             
+                                var dataSplitGlobalVU = dataSplitGlobalVU.split(/\r?\n/);
+                                if (dataSplitGlobalVU) {
+                                    var numberLine = dataSplitGlobalVU.length;
+                                    for (i = 1; i < numberLine; i++) {
+                                        // split push les données dans chaque colone
+                                        line = dataSplitGlobalVU[i].split(';');
+                                        if (!Utilities.empty(line[0])) {
+                                            unique_visitor = parseInt(line[0]);
+                                            formatObjects.campaign.vu = parseInt(unique_visitor);
+                                            repetition = parseFloat((campaignImpressions/parseInt(unique_visitor))).toFixed(2);
+                                            formatObjects.campaign.repetition = repetition;
+                                        }
+                                    }
+                                }
+                           
                                 formatObjects.reporting_start_date = moment().format('YYYY-MM-DD h:m:s');
                                 formatObjects.reporting_end_date = moment().add(2, 'hours').format('YYYY-MM-DD h:m:s');
 
                                 localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));                                                            
+                                res.redirect('/rs/${campaigncrypt}');
                             }
 
                         }, time);

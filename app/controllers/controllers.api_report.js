@@ -1,7 +1,7 @@
 // Initialise le module
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./report_storage');
-localStorage_tasks = new LocalStorage('./taskID');
+localStorage = new LocalStorage('data/reporting');
+localStorage_tasks = new LocalStorage('data/taskID');
 
 const {Op} = require("sequelize");
 // const excel = require('node-excel-export');
