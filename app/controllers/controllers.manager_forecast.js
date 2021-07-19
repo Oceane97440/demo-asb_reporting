@@ -136,7 +136,6 @@ exports.forecast = async (req, res, next) => {
     var packs = await req.body.packs;
     var countries = await req.body.countries;
     var option = await req.body.case
-
     //si la case n'est pas coché renvoie false sinon true
     if (option == undefined) {
         var option = false;
@@ -382,9 +381,9 @@ exports.forecast = async (req, res, next) => {
                     }
                     //exclure les doublon campagne_id
                     const campaignUnique = Utilities.array_unique(campaigns);
-                    console.log('number_line',number_line)
-                    console.log('all campaign_id ' ,campaigns)
-                    console.log('all campaign_unique ',campaignUnique)
+                    console.log('number_line', number_line)
+                    console.log('all campaign_id ', campaigns)
+                    console.log('all campaign_unique ', campaignUnique)
 
 
                     console.log('-----------------------------------')
@@ -397,7 +396,7 @@ exports.forecast = async (req, res, next) => {
                     var InsertionDeliveredVolume = [];
 
 
-                 
+
 
                     var data_insertions = await csvLink_forecast.data;
                     var data_split = await data_insertions.split(/\r?\n/);
@@ -415,7 +414,7 @@ exports.forecast = async (req, res, next) => {
 
 
                     }
-                    console.log('number_line',number_line)
+                    console.log('number_line', number_line)
                     console.log(InsertionVolume)
 
                     console.log('-----------------------------------')
@@ -428,16 +427,16 @@ exports.forecast = async (req, res, next) => {
                     for (i = 0; i < campaignUnique.length; i++) {
                         for (j = 0; j < campaigns.length; j++) {
                             if (campaignUnique[i] === campaigns[j]) {
-                               sommeVolumeCampaign[i] = InsertionVolume[j]
+                                sommeVolumeCampaign[i] = InsertionVolume[j]
                                 insertionId[i] = InsertionId[j]
 
 
                             }
                         }
                     }
-                       
+
                     for (i = 0; i < campaignUnique.length; i++) {
-                        sommeVolumeCampaign[i]=sommeVolumeCampaign[i]
+                        sommeVolumeCampaign[i] = sommeVolumeCampaign[i]
                     }
 
 
@@ -691,6 +690,9 @@ exports.forecast = async (req, res, next) => {
             }
 
             return res.render('manager/forecast/view.ejs', {
+                formats: formats,
+                packs: packsDB,
+                countrys: countrys,
                 table: table,
                 insertions: insertions,
                 infos: infos,
