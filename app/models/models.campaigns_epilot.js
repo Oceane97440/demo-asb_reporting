@@ -11,7 +11,7 @@ const CampaingsEpilot = sequelize.define('campaigns_epilot', {
     },
     campaign_epilot_code: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     campaign_epilot_name: {
         type: Sequelize.STRING(255),
@@ -23,10 +23,14 @@ const CampaingsEpilot = sequelize.define('campaigns_epilot', {
     },
     format_id: {
         type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    format_name: {
+        type: Sequelize.STRING(255),
         allowNull: false
     },
     campaign_epilot_status: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.TINYINT,
         allowNull: false
     },
     campaign_epilot_start_date: {
@@ -38,7 +42,7 @@ const CampaingsEpilot = sequelize.define('campaigns_epilot', {
         allowNull: false
     },
     campaign_epilot_volume: {
-        type: Sequelize.BIGINT(),
+        type: Sequelize.FLOAT(),
         allowNull: false
     }
 }, {

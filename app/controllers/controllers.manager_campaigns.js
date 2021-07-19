@@ -7,16 +7,23 @@ const axios = require(`axios`);
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
-const {Op} = require("sequelize");
+const {
+    Op
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 
-const {check, query} = require('express-validator');
+const {
+    check,
+    query
+} = require('express-validator');
 
 const moment = require('moment');
 
@@ -34,8 +41,15 @@ const ModelInsertionsPriorities = require("../models/models.insertions_prioritie
 const ModelInsertionsStatus = require("../models/models.insertions_status");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
-const {promiseImpl} = require('ejs');
-const { insertions } = require('./controllers.automate');
+const ModelCampaignsEpilot = require("../models/models.campaigns_epilot")
+
+
+const {
+    promiseImpl
+} = require('ejs');
+const {
+    insertions
+} = require('./controllers.automate');
 
 exports.index = async (req, res) => {
     try {
@@ -43,34 +57,32 @@ exports.index = async (req, res) => {
         const data = new Object();
         data.breadcrumb = "Campagnes";
         data.campaigns = await ModelCampaigns.findAll({
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
 
         // Affiche les campagnes se terminant aujourd'hui
         data.campaigns_today = await ModelCampaigns.findAll({
-            where : {
-                campaign_end_date : {
+            where: {
+                campaign_end_date: {
                     [Op.like]: '%2021-07-04%'
                 }
             },
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
 
         data.moment = moment;
-        
+
         res.render('manager/campaigns/index.ejs', data);
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
@@ -81,8 +93,7 @@ exports.list = async (req, res) => {
         data.breadcrumb = "Liste des campagnes";
 
         data.campaigns = await ModelCampaigns.findAll({
-            include: [
-                {
+            include: [{
                     model: ModelAdvertisers
                 },
                 {
@@ -102,12 +113,14 @@ exports.list = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
 exports.view = async (req, res) => {
-     try {
+    try {
         const data = new Object();
         data.breadcrumb = "Campagnes";
         var insertionsIds = new Array();
@@ -120,64 +133,86 @@ exports.view = async (req, res) => {
                 where: {
                     campaign_id: campaign_id
                 },
-                include: [
-                    { model: ModelAdvertisers },
-                    { model: ModelAgencies },
-                    { model: ModelInsertions }
+                include: [{
+                        model: ModelAdvertisers
+                    },
+                    {
+                        model: ModelAgencies
+                    },
+                    {
+                        model: ModelInsertions
+                    }
                 ]
             })
             .then(async function (campaign) {
                 if (!campaign) {
                     return res
                         .status(404)
-                        .render("manager/error.ejs", {statusCoded: 404});
+                        .render("manager/error.ejs", {
+                            statusCoded: 404
+                        });
                 }
 
-               // Récupére les données des insertions de la campagne
-               var insertionList = await ModelInsertions.findAll({
+                // Récupére les données des insertions de la campagne
+                var insertionList = await ModelInsertions.findAll({
                     where: {
                         campaign_id: campaign_id
-                    }, 
-                    include: [
-                        { model: ModelCampaigns, attributes: ['campaign_id', 'campaign_name'] },
-                        { model: ModelFormats, attributes: ['format_id', 'format_name'] },
-                        { model: ModelInsertionsPriorities, attributes: ['priority_id', 'priority_name'] },
-                        { model: ModelInsertionsStatus, attributes: ['insertion_status_id', 'insertion_status_name'] },
+                    },
+                    include: [{
+                            model: ModelCampaigns,
+                            attributes: ['campaign_id', 'campaign_name']
+                        },
+                        {
+                            model: ModelFormats,
+                            attributes: ['format_id', 'format_name']
+                        },
+                        {
+                            model: ModelInsertionsPriorities,
+                            attributes: ['priority_id', 'priority_name']
+                        },
+                        {
+                            model: ModelInsertionsStatus,
+                            attributes: ['insertion_status_id', 'insertion_status_name']
+                        },
                     ]
-                }) .then(async function (insertionList) {
-                    
+                }).then(async function (insertionList) {
+
                     if (!Utilities.empty(insertionList) && (insertionList.length > 0)) {
-                       
+
                         data.insertions = insertionList;
-                        for(i = 0; i < insertionList.length; i++) {
-                           insertionsIds.push(insertionList[i].insertion_id);
-                        } 
-                       
+                        for (i = 0; i < insertionList.length; i++) {
+                            insertionsIds.push(insertionList[i].insertion_id);
+                        }
+
                         // Récupére l'ensemble des insertions IDs pour afficher l'ensemble des créatives
-                        if(insertionsIds) {                           
-                             // Récupére les données des creatives de l'insertion
+                        if (insertionsIds) {
+                            // Récupére les données des creatives de l'insertion
                             var creativesList = await ModelCreatives.findAll({
-                                                            where: { insertion_id: insertionsIds },
-                                                            group: 'creative_url' 
-                                                        }).then(async function (creativesList) {
-                                                            data.creatives = creativesList;  
-                                                        });                      
+                                where: {
+                                    insertion_id: insertionsIds
+                                },
+                                group: 'creative_url'
+                            }).then(async function (creativesList) {
+                                data.creatives = creativesList;
+                            });
                         }
 
                     }
                 });
-              
+
                 // Attribue les données de la campagne   
-                data.campaign = campaign;              
+                data.campaign = campaign;
                 data.moment = moment;
-                
+
                 res.render('manager/campaigns/view.ejs', data);
             });
 
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
@@ -185,17 +220,15 @@ exports.create = async (req, res) => {
     try {
         const data = new Object();
         data.breadcrumb = "Ajouter une campagne";
-        
+
         // Récupére l'ensemble des annonceurs
-        var advertisers = await ModelAdvertisers.findAll(            
-            {
-                order: [
-                    // Will escape title and validate DESC against a list of valid direction
-                    // parameters
-                    ['advertiser_name', 'ASC']
-                ]
-            }
-        ).then(async function (advertisers) {
+        var advertisers = await ModelAdvertisers.findAll({
+            order: [
+                // Will escape title and validate DESC against a list of valid direction
+                // parameters
+                ['advertiser_name', 'ASC']
+            ]
+        }).then(async function (advertisers) {
             data.advertisers = advertisers;
         });
 
@@ -203,45 +236,80 @@ exports.create = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
 exports.create_post = async (req, res) => {
     try {
-      console.log(req.body);
+        console.log(req.body);
 
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
+
+
+exports.list_epilot = async (req, res) => {
+
+    try {
+        // Liste tous les campagnes
+        const data = new Object();
+        data.breadcrumb = "Liste des campagnes";
+
+        data.epilot = await ModelCampaignsEpilot.findAll({});
+        data.formats = await ModelFormats.findAll({
+            attributes: ['format_group'],
+            group: "format_group",
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
+        data.moment = moment;
+
+        res.render('manager/campaigns/list_epilot.ejs', data);
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
+
+
 
 exports.epilot_create = async (req, res) => {
     try {
         const data = new Object();
         data.breadcrumb = "Ajouter une campagne EPILOT";
-        
+
         // Récupére l'ensemble des annonceurs
-        var advertisers = await ModelAdvertisers.findAll(            
-            {
-                order: [
-                    ['advertiser_name', 'ASC']
-                ]
-            }
-        ).then(async function (advertisers) {
+        var advertisers = await ModelAdvertisers.findAll({
+            order: [
+                ['advertiser_name', 'ASC']
+            ]
+        }).then(async function (advertisers) {
             data.advertisers = advertisers;
         });
 
-         // Récupére l'ensemble des annonceurs
-         var formats = await ModelFormats.findAll(            
-            {
-                order: [
-                    ['format_name', 'ASC']
-                ]
-            }
-        ).then(async function (formats) {
+        // Récupére l'ensemble des annonceurs
+        var formats = await ModelFormats.findAll({
+            order: [
+                ['format_name', 'ASC']
+            ]
+        }).then(async function (formats) {
             data.formats = formats;
         });
 
@@ -249,6 +317,8 @@ exports.epilot_create = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }

@@ -114,19 +114,19 @@ exports.index = async (req, res) => {
 }
 
 
-
 exports.csv_import = async (req, res) => {
 
   const uploadedFile = req.files.file_csv;
 
+
   try {
 
-    //console.log(req.files)
+
 
 
 
     //verification de extention du fichier
-    if ((uploadedFile.mimetype === 'application/vnd.ms-excel')) {
+    if ((uploadedFile.mimetype === 'application/vnd.ms-excel' || uploadedFile.mimetype === 'application/octet-stream')) {
 
       //il faut que le dossier upload existe. 
       //crée des dossier archive (ex:upload20210108)
@@ -150,9 +150,11 @@ exports.csv_import = async (req, res) => {
 
         .on('data', (data) => results.push(data))
         .on('end', () => {
-        //  console.log(results);
+          //  console.log(results);
 
           for (let i = 0; i < results.length; i++) {
+
+
             //recupère mes donnée puis assigné à une variabme
             var campaign_name = results[i].Campagne;
             var format_name = results[i].Formats;
@@ -168,12 +170,16 @@ exports.csv_import = async (req, res) => {
             //Test si les valeurs sont vide
             if (campaign_name === '' || format_name === '' || etat === '' ||
               campaign_start_date === '' || campaign_end_date === '' || volume_prevue === '' || annonceurs === '') {
-              return res.send("des champs sont vides");
+
+              return res.send("des champs sont vides")
+
+
             }
-/*
-             if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
-            {return res.send("La date debut et fin est invalide")}
-*/
+            /*
+                         if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
+                        {return res.send("La date debut et fin est invalide")}
+            */
+
 
             //remplace les valeurs
             if (etat === "Confirmee") {
@@ -200,29 +206,57 @@ exports.csv_import = async (req, res) => {
             campaign_debut = date_start_format + 'T00:00:00.000Z'
             campaign_fin = date_end_format + 'T00:00:00.000Z'
 
+
+
             //apres tout mes test passé add les données
-             ModelCampaignsEpilot.create({
-              campaign_name: campaign_name,
+            ModelCampaignsEpilot.create({
+              campaign_epilot_name: campaign_name,
               format_name: format_name,
-              etat: etat,
-              campaign_start_date: campaign_debut,
-              campaign_end_date: campaign_fin,
-              volume_prevue: volume_prevue
+              campaign_epilot_status: etat,
+              campaign_epilot_start_date: campaign_debut,
+              campaign_epilot_end_date: campaign_fin,
+              campaign_epilot_volume: volume_prevue
+
+            }).then(async function (campagne_epilot) {
+              if (campagne_epilot) {
+                req.session.message = {
+                  type: 'success',
+                  intro: 'Ok',
+                  message: 'Votre fichier csv est valide'
+                }
+                return res.redirect('manager/campaigns/epilot/list')
+
+              }
+
 
             })
 
-          // return res.render('forecast/liste_epilot.ejs')
+
+
+
+
+
+
+
+
+
+
 
           }
 
         });
 
+
+
+
     } else {
-      return res.send({
-        error: {
-          message: "Extention du fichier invalide"
-        }
-      });
+      req.session.message = {
+        type: 'danger',
+        intro: 'Erreur',
+        message: 'Extention du fichier invalide'
+      }
+      return res.redirect('/manager/epilot/list')
+
     }
 
 
@@ -230,14 +264,12 @@ exports.csv_import = async (req, res) => {
 
 
 
-  } catch (error) { 
-    console.log(error)
-    var statusCoded = error.response;
-
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-     
-    })
+  } catch (error) {
+    console.log(error);
+    var statusCoded = error.response.status;
+    res.render("manager/error.ejs", {
+      statusCoded: statusCoded
+    });
   }
 
 

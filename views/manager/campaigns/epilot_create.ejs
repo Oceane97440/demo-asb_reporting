@@ -1,27 +1,63 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-    <!-- support-section start -->
-    <div class="col-xl-12 col-md-12">
+<!-- support-section start -->
+<div class="col-xl-12 col-md-12">
 
-        <div class="card">
-            <form method="POST" action="/manager/campaigns/epilot/create">
-            <div class="card-header">
-                <h5>Créer une campagne EPILOT</h5>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h5>Créer une campagne EPILOT</h5>
+        </div>
+
+
+        <form method="POST" action="/manager/campaigns/epilot/create">
+
             <div class="card-body">
 
                 <div class="alert alert-primary">
                     <div class="media align-items-center">
                         <i class="feather icon-alert-circle h2"></i>
                         <div class="media-body ml-3">
-                          La campagne EPILOT permet de vérifier et confirmer que la campagne SMARTADSERVER diffuse correctement.
+                            La campagne EPILOT permet de vérifier et confirmer que la campagne SMARTADSERVER diffuse
+                            correctement.
                         </div>
                     </div>
                 </div>
 
+
                 <%- include("../inc/form_campaign_epilot.ejs") -%>
 
         </form>
+
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Importer des campagnes EPILOT</h5>
         </div>
+
+
+        <form action="/epilot/csv_import/add" method="POST" enctype="multipart/form-data">
+
+            <div class="card-body">
+
+                <div class="alert alert-primary">
+                    <div class="media align-items-center">
+                        <i class="feather icon-alert-circle h2"></i>
+                        <div class="media-body ml-3">
+                            Importer des campagnes EPILOT avec une fichier csv
+                        </div>
+                    </div>
+                </div>
+                <% if (message) { %>
+                <div class="alert alert-<%=message.type%>" role="alert">
+                    <%=message.intro%>:<%=message.message%>
+                </div>
+                <% } %>
+
+                <input type="file" name="file_csv" required>
+                <button type="submit">Importer</button>
+
+        </form>
 
     </div>
 
