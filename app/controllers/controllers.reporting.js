@@ -12,6 +12,7 @@ process.on('unhandledRejection', error => {
 
 const {QueryTypes} = require('sequelize');
 const moment = require('moment');
+moment.locale('fr');
 const {check, query} = require('express-validator');
 
 // Charge l'ensemble des functions de l'API
@@ -604,15 +605,18 @@ exports.report = async (req, res) => {
                         console.log('data_localStorage no existe');
 
                         // Récupére les dates des insertions
-                        insertion_end_date = await ModelInsertions.max('insertion_end_date', { where: { campaign_id: campaignid } });
-                        insertion_start_date = await ModelInsertions.max('insertion_start_date', { where: { campaign_id: campaignid } });
-                        console.log('insertion_end_date : ',insertion_end_date);
+                       insertion_start_date = await ModelInsertions.max('insertion_start_date', { where: { campaign_id: campaignid } });
+                       insertion_end_date = await ModelInsertions.max('insertion_end_date', { where: { campaign_id: campaignid } });
+                       console.log('insertion_end_date : ',insertion_end_date);
 
-                        const now = new Date();
-                        const timestamp_datenow = now.getTime();
-
-                        // recup la date de début de la campagne -4 heures pour règler le prob du
-                        // décalage horaire
+                      // const now = new Date();
+                       // const timestamp_datenow = now.getTime();
+                        
+                       // Déclare la date du moment
+                        var timestamp_datenow = moment().format("DD/MM/YYYY HH:mm:ss");
+                       
+                        
+                        // recup la date de début de la campagne -4 heures pour règler le prob du décalage horaire
                         const campaign_start_date_yesterday = new Date(campaign_start_date);
                         var start_date_timezone = campaign_start_date_yesterday.setHours(-4);
 
@@ -624,12 +628,24 @@ exports.report = async (req, res) => {
                         var endDate_day = new Date(campaign_end_date);
                         var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
                         if(insertion_end_date > endDate_last) { endDate_last = insertion_end_date; } 
-
+                        console.log('insertion_end_date : ',insertion_end_date,' - end_date_timezone :',endDate_last);
+                        /*
                         var s = parseInt(start_date_timezone);
-                        var t3 = parseInt(endDate_last)
+                        var t3 = parseInt(endDate_last);
+                        var t4  = moment(endDate_last).format("X");
+                        console.log('t3 : ',t3,' - t4 :',t4);
+
+
 
                         const StartDate_timezone = Utilities.getDateTimezone(s);
                         const EndDate = Utilities.getDateTimezone(t3);
+                        var t5  = moment(start_date_timezone).format("X");
+                        console.log(' t5 :',t5, ' - StartDate_timezone : ',StartDate_timezone,' - EndDate :',EndDate);
+                       
+                        */
+
+                        const StartDate_timezone = moment(start_date_timezone).format('YYYY-MM-DDTHH:mm:ss');
+                        const EndDate = moment(endDate_last).format('YYYY-MM-DDTHH:mm:ss');
 
                         // si la date du jour est > à la date de fin on prend la date de fin sinon la
                         // date du jour
@@ -685,7 +701,7 @@ exports.report = async (req, res) => {
                         }
 
                          console.log('requestReporting : ',requestReporting);
-
+                        // process.exit(1);
                         // console.log(requestReporting) test si la date de fin de la campagne est =>
                         // date au jourd'hui = 31j ne pas effectuer la requête date_fin - date du jour =
                         // nbr jour Requête visitor unique
@@ -953,39 +969,39 @@ exports.report = async (req, res) => {
                                         var insertion_name = dataList[index].insertion_name;
                                         var site_id = dataList[index].site_id;
                                         var site_name = dataList[index].site_name;
-                            
+                                        console.log(insertion_name)
                                         // Créer les tableaux des formats
-                                        if (insertion_name.match(/^\HABILLAGE{1}/igm)) {
+                                        if (insertion_name.match(/HABILLAGE{1}/igm)) {
                                             formatHabillage.push(index);
                                         }
-                                        if (insertion_name.match(/^\INTERSTITIEL{1}/igm)) {
+                                        if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
                                             formatInterstitiel.push(index);
                                         }
-                                        if (insertion_name.match(/^\MASTHEAD{1}/igm)) {
+                                        if (insertion_name.match(/MASTHEAD{1}/igm)) {
                                             formatMasthead.push(index);
                                         }
-                                        if (insertion_name.match(/^\GRAND ANGLE{1}/igm)) {
+                                        if (insertion_name.match(/GRAND ANGLE{1}/igm)) {
                                             formatGrandAngle.push(index);
                                         }
-                                        if (insertion_name.match(/^\PREROLL|MIDROLL{1}/igm)) {
+                                        if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
                                             formatInstream.push(index);
                                         }
-                                        if (insertion_name.match(/^\RECTANGLE VIDEO{1}/igm)) {
-                                            formatRectangleVideo.push(index);
+                                        if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                                            formatRectangleVideo.push(index);                                           
                                         }
-                                        if (insertion_name.match(/^\LOGO{1}/igm)) {
+                                        if (insertion_name.match(/LOGO{1}/igm)) {
                                             formatLogo.push(index);
                                         }
-                                        if (insertion_name.match(/^\NATIVE{1}/igm)) {
+                                        if (insertion_name.match(/NATIVE{1}/igm)) {
                                             formatNative.push(index);
                                         }
-                                        if (insertion_name.match(/^\SLIDER{1}/igm)) {
+                                        if (insertion_name.match(/SLIDER{1}/igm)) {
                                             formatSlider.push(index);
                                         }
                                         if (insertion_name.match(/^\MEA{1}/igm)) {
                                             formatMea.push(index);
                                         }
-                                        if (insertion_name.match(/^\SLIDER VIDEO{1}/igm)) {
+                                        if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
                                             formatSliderVideo.push(index);
                                         }
                             
@@ -1320,8 +1336,8 @@ exports.report = async (req, res) => {
                                     }
                                 }
                            
-                                formatObjects.reporting_start_date = moment().format('YYYY-MM-DD h:m:s');
-                                formatObjects.reporting_end_date = moment().add(2, 'hours').format('YYYY-MM-DD h:m:s');
+                                formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
+                                formatObjects.reporting_end_date = moment().add(2, 'hours').format('YYYY-MM-DD HH:m:s');
 
                                 localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));                                                            
                                 res.redirect('/rs/${campaigncrypt}');

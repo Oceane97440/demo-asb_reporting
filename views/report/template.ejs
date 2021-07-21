@@ -90,8 +90,9 @@
         <!-- End Google Tag Manager (noscript) -->
 
         <div class="container p-3 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
-            <div class="row">
+            
                 <% if(reporting.campaign.campaign_end_date > reporting.reporting_start_date) { %>
+                <div class="col-12 mb-5">
                     <div
                         class="alert alert-danger alert-dismissible fade show"
                         role="alert"
@@ -104,8 +105,9 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                </div>
                 <% } %>
-            </div>
+            
 
             <div class="row">
                 <div class="col-md-3">
@@ -123,7 +125,7 @@
                         <li class="list-group-item">
                             <strong>Date de génération</strong>
                             :
-                            <%= moment(reporting.reporting_start_date).format('DD/MM/YYYY - HH:mm:ss'); %></li>
+                            <%= moment(reporting.reporting_start_date).format('DD/MM/YYYY - HH:mm'); %></li>
                         <li class="list-group-item">
                             <strong>Annonceur</strong>
                             :

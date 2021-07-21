@@ -79,19 +79,8 @@
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
 
-        <% if(date_now < timestamp_startdate) { %>
-            <div
-                class="alert alert-danger alert-dismissible fade show"
-                role="alert"
-                style="margin-top: 30px;">
-                <strong>Attention : La campagne demandée n'existe pas pour le moment.</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        <% } %>
 
-        <div class="container  d-flex justify-content-center">
+        <div class="container d-flex justify-content-center">
 
             <div class="row">
 
@@ -100,6 +89,16 @@
                 <div class="card m-3 p-3">
                     <h2 class="card-title text-center">Rapport de campagne</h2>
                     <div class="card-body">
+                        
+                        <% if(date_now < timestamp_startdate) { %>
+                            <div
+                                class="alert alert-danger alert-dismissible fade show mb-3"
+                                role="alert">
+                                <strong>Attention : La campagne demandée n'existe pas pour le moment.</strong>
+                            </div>
+                        <% } %>
+
+
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <strong>Annonceur</strong>
