@@ -3,17 +3,25 @@ var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('data/reporting');
 localStorageTasks = new LocalStorage('data/taskID');
 
-const {Op, and} = require("sequelize");
+const {
+    Op,
+    and
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 const moment = require('moment');
 moment.locale('fr');
-const {check, query} = require('express-validator');
+const {
+    check,
+    query
+} = require('express-validator');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -39,7 +47,7 @@ exports.test = async (req, res) => {
     var dataLSTaskGlobalVU = localStorageTasks.getItem(filetasKID);
     const objDefault = JSON.parse(dataLSTaskGlobalVU);
     var dataSplitGlobalVU = objDefault.datafile;
-        
+
     var dataSplitGlobalVU = dataSplitGlobalVU.split(/\r?\n/);
     if (dataSplitGlobalVU) {
         var numberLine = dataSplitGlobalVU.length;
@@ -47,420 +55,422 @@ exports.test = async (req, res) => {
             // split push les données dans chaque colone
             line = dataSplitGlobalVU[i].split(';');
             if (!Utilities.empty(line[0])) {
-                console.log({ vu : line[0] });
+                console.log({
+                    vu: line[0]
+                });
             }
         }
     }
 
     // Permet de faire l'addition
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    
-   // res.json(dataList);
-/*
-    var impressions = new Array();
-    var clicks = new Array();
-    var complete = new Array();
 
-    const CampaignStartDate = [];
-    const CampaignEndtDate = [];
-    const CampaignId = [];
-    const CampaignName = [];
-    const InsertionId = [];
-    const InsertionName = [];
-    const FormatId = [];
-    const FormatName = [];
-    const SiteId = [];
-    const SiteName = [];
-    const Impressions = [];
-    const ClickRate = [];
-    const Clicks = [];
-    const Complete = [];
+    // res.json(dataList);
+    /*
+        var impressions = new Array();
+        var clicks = new Array();
+        var complete = new Array();
 
-    const dataList = new Object();
-    const formatObjects = new Object();
+        const CampaignStartDate = [];
+        const CampaignEndtDate = [];
+        const CampaignId = [];
+        const CampaignName = [];
+        const InsertionId = [];
+        const InsertionName = [];
+        const FormatId = [];
+        const FormatName = [];
+        const SiteId = [];
+        const SiteName = [];
+        const Impressions = [];
+        const ClickRate = [];
+        const Clicks = [];
+        const Complete = [];
 
-    var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
-    if (dataSplitGlobal) {
-        var numberLine = dataSplitGlobal.length;
-        for (i = 1; i < numberLine; i++) {
-            // split push les données dans chaque colone
-            line = dataSplitGlobal[i].split(';');
-            if (!Utilities.empty(line[0])) {
-                InsertionName.push(line[5]);
-                dataList[i] = {
-                    'campaign_start_date': line[0],
-                    'campaign_end_date': line[1],
-                    'campaign_id': line[2],
-                    'campaign_name': line[3],
-                    'insertion_id': line[4],
-                    'insertion_name': line[5],
-                    'format_id': line[6],
-                    'format_name': line[7],
-                    'site_id': line[8],
-                    'site_name': line[9],
-                    'impressions': line[10],
-                    'click_rate': line[11],
-                    'clicks': line[12],
-                    'complete': line[13]
+        const dataList = new Object();
+        const formatObjects = new Object();
+
+        var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
+        if (dataSplitGlobal) {
+            var numberLine = dataSplitGlobal.length;
+            for (i = 1; i < numberLine; i++) {
+                // split push les données dans chaque colone
+                line = dataSplitGlobal[i].split(';');
+                if (!Utilities.empty(line[0])) {
+                    InsertionName.push(line[5]);
+                    dataList[i] = {
+                        'campaign_start_date': line[0],
+                        'campaign_end_date': line[1],
+                        'campaign_id': line[2],
+                        'campaign_name': line[3],
+                        'insertion_id': line[4],
+                        'insertion_name': line[5],
+                        'format_id': line[6],
+                        'format_name': line[7],
+                        'site_id': line[8],
+                        'site_name': line[9],
+                        'impressions': line[10],
+                        'click_rate': line[11],
+                        'clicks': line[12],
+                        'complete': line[13]
+                    }
                 }
             }
         }
-    }
 
-    //
-    if (dataList) {
-        // console.log('Nombre object : ',Object.keys(dataList).length) Initialise les
-        // formats
-      
-        var formatHabillage = new Array();
-        var formatInterstitiel = new Array();
-        var formatGrandAngle = new Array();
-        var formatMasthead = new Array();
-        var formatInstream = new Array();
-        var formatRectangleVideo = new Array();
-        var formatLogo = new Array();
-        var formatNative = new Array();
-        var formatSlider = new Array();
-        var formatMea = new Array();
-        var formatSliderVideo = new Array();
+        //
+        if (dataList) {
+            // console.log('Nombre object : ',Object.keys(dataList).length) Initialise les
+            // formats
+          
+            var formatHabillage = new Array();
+            var formatInterstitiel = new Array();
+            var formatGrandAngle = new Array();
+            var formatMasthead = new Array();
+            var formatInstream = new Array();
+            var formatRectangleVideo = new Array();
+            var formatLogo = new Array();
+            var formatNative = new Array();
+            var formatSlider = new Array();
+            var formatMea = new Array();
+            var formatSliderVideo = new Array();
 
-        // initialise les sites
+            // initialise les sites
 
-        var siteObjects = new Object();
+            var siteObjects = new Object();
 
-        var siteLINFO = new Array();
-        var siteLINFO_ANDROID = new Array();
-        var siteLINFO_IOS = new Array();
-        var siteANTENNEREUNION = new Array();
-        var siteDOMTOMJOB = new Array();
-        var siteIMMO974 = new Array();
-        var siteRODZAFER_LP = new Array();
-        var siteRODZAFER_ANDROID = new Array();
-        var siteRODZAFER_IOS = new Array();
-        var siteRODALI = new Array();
-        var siteORANGE_REUNION = new Array();
-        var siteTF1 = new Array();
-        var siteM6 = new Array();
-        var siteDAILYMOTION = new Array();
+            var siteLINFO = new Array();
+            var siteLINFO_ANDROID = new Array();
+            var siteLINFO_IOS = new Array();
+            var siteANTENNEREUNION = new Array();
+            var siteDOMTOMJOB = new Array();
+            var siteIMMO974 = new Array();
+            var siteRODZAFER_LP = new Array();
+            var siteRODZAFER_ANDROID = new Array();
+            var siteRODZAFER_IOS = new Array();
+            var siteRODALI = new Array();
+            var siteORANGE_REUNION = new Array();
+            var siteTF1 = new Array();
+            var siteM6 = new Array();
+            var siteDAILYMOTION = new Array();
 
-        for (var index = 1; index <= Object.keys(dataList).length; index++) {
-            var insertion_name = dataList[index].insertion_name;
-            var site_id = dataList[index].site_id;
-            var site_name = dataList[index].site_name;
+            for (var index = 1; index <= Object.keys(dataList).length; index++) {
+                var insertion_name = dataList[index].insertion_name;
+                var site_id = dataList[index].site_id;
+                var site_name = dataList[index].site_name;
 
-            // Créer les tableaux des formats
-            if (insertion_name.match(/^\HABILLAGE{1}/igm)) {
-                formatHabillage.push(index);
-            }
-            if (insertion_name.match(/^\INTERSTITIEL{1}/igm)) {
-                formatInterstitiel.push(index);
-            }
-            if (insertion_name.match(/^\MASTHEAD{1}/igm)) {
-                formatMasthead.push(index);
-            }
-            if (insertion_name.match(/^\GRAND ANGLE{1}/igm)) {
-                formatGrandAngle.push(index);
-            }
-            if (insertion_name.match(/^\PREROLL|MIDROLL{1}/igm)) {
-                formatInstream.push(index);
-            }
-            if (insertion_name.match(/^\RECTANGLE VIDEO{1}/igm)) {
-                formatRectangleVideo.push(index);
-            }
-            if (insertion_name.match(/^\LOGO{1}/igm)) {
-                formatLogo.push(index);
-            }
-            if (insertion_name.match(/^\NATIVE{1}/igm)) {
-                formatNative.push(index);
-            }
-            if (insertion_name.match(/^\SLIDER{1}/igm)) {
-                formatSlider.push(index);
-            }
-            if (insertion_name.match(/^\MEA{1}/igm)) {
-                formatMea.push(index);
-            }
-            if (insertion_name.match(/^\SLIDER VIDEO{1}/igm)) {
-                formatSliderVideo.push(index);
-            }
+                // Créer les tableaux des formats
+                if (insertion_name.match(/^\HABILLAGE{1}/igm)) {
+                    formatHabillage.push(index);
+                }
+                if (insertion_name.match(/^\INTERSTITIEL{1}/igm)) {
+                    formatInterstitiel.push(index);
+                }
+                if (insertion_name.match(/^\MASTHEAD{1}/igm)) {
+                    formatMasthead.push(index);
+                }
+                if (insertion_name.match(/^\GRAND ANGLE{1}/igm)) {
+                    formatGrandAngle.push(index);
+                }
+                if (insertion_name.match(/^\PREROLL|MIDROLL{1}/igm)) {
+                    formatInstream.push(index);
+                }
+                if (insertion_name.match(/^\RECTANGLE VIDEO{1}/igm)) {
+                    formatRectangleVideo.push(index);
+                }
+                if (insertion_name.match(/^\LOGO{1}/igm)) {
+                    formatLogo.push(index);
+                }
+                if (insertion_name.match(/^\NATIVE{1}/igm)) {
+                    formatNative.push(index);
+                }
+                if (insertion_name.match(/^\SLIDER{1}/igm)) {
+                    formatSlider.push(index);
+                }
+                if (insertion_name.match(/^\MEA{1}/igm)) {
+                    formatMea.push(index);
+                }
+                if (insertion_name.match(/^\SLIDER VIDEO{1}/igm)) {
+                    formatSliderVideo.push(index);
+                }
 
-            // Créer les tableaux des sites
-            if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-                siteLINFO.push(index);
-            }
-            if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
-                siteLINFO_ANDROID.push(index);
-            }
-            if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
-                siteLINFO_IOS.push(index);
-            }
-            if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-                siteANTENNEREUNION.push(index);
-            }
-            if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-                siteDOMTOMJOB.push(index);
-            }
-            if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-                siteIMMO974.push(index);
-            }
-            if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-                siteRODZAFER_LP.push(index);
-            }
-            if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-                siteRODZAFER_ANDROID.push(index);
-            }
-            if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                siteRODZAFER_IOS.push(index);
-            }
-            if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-                siteORANGE_REUNION.push(index);
-            }
-            if (site_name.match(/^\SM_TF1{1}/igm)) {
-                siteTF1.push(index);
-            }
-            if (site_name.match(/^\SM_M6{1}/igm)) {
-                siteM6.push(index);
-            }
-            if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-                siteDAILYMOTION.push(index);
-            }
-            if (site_name.match(/^\SM_RODALI{1}/igm)) {
-                siteRODALI.push(index);
-            }
-        }
-
-        // Function de trie et de récupération de données
-        function sortDataReport(formatSearch, dataObject) {
-            insertions = new Array();
-            impressions = new Array();
-            clicks = new Array();
-            complete = new Array();
-            sites = new Array();
-            sites_rename = new Array();
-
-            for (var jn = 0; jn < formatSearch.length; jn++) {
-                key = formatSearch[jn];
-                site_name = dataObject[key].site_name;
-                insertion_name = dataObject[key].insertion_name;
-
-                insertions.push(insertion_name);
-                impressions.push(parseInt(dataObject[key].impressions));
-                clicks.push(parseInt(dataObject[key].clicks));
-                complete.push(parseInt(dataObject[key].complete));
-                sites_rename.push(site_name);
-
-                // Récupére le nom des sites et les classes Créer les tableaux des sites
+                // Créer les tableaux des sites
                 if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-                    sites.push(site_name);
+                    siteLINFO.push(index);
                 }
-                if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
-                    sites.push(site_name);
+                if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
+                    siteLINFO_ANDROID.push(index);
                 }
-                if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
-                    sites.push(site_name);
+                if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
+                    siteLINFO_IOS.push(index);
                 }
                 if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-                    sites.push(site_name);
+                    siteANTENNEREUNION.push(index);
                 }
                 if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-                    sites.push(site_name);
+                    siteDOMTOMJOB.push(index);
                 }
                 if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-                    sites.push(site_name);
+                    siteIMMO974.push(index);
                 }
                 if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-                    sites.push(site_name);
+                    siteRODZAFER_LP.push(index);
                 }
                 if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-                    sites.push(site_name);
+                    siteRODZAFER_ANDROID.push(index);
                 }
                 if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                    sites.push(site_name);
+                    siteRODZAFER_IOS.push(index);
                 }
                 if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-                    sites.push(site_name);
+                    siteORANGE_REUNION.push(index);
                 }
                 if (site_name.match(/^\SM_TF1{1}/igm)) {
-                    sites.push(site_name);
+                    siteTF1.push(index);
                 }
                 if (site_name.match(/^\SM_M6{1}/igm)) {
-                    sites.push(site_name);
+                    siteM6.push(index);
                 }
                 if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-                    sites.push(site_name);
+                    siteDAILYMOTION.push(index);
                 }
                 if (site_name.match(/^\SM_RODALI{1}/igm)) {
-                    sites.push(site_name);
+                    siteRODALI.push(index);
                 }
+            }
 
-                if (site_name.match(/^\N\/A{1}/i)) {
-                    // Si N/A
-                    if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
-                        sites.push('SM_DOMTOMJOB');
+            // Function de trie et de récupération de données
+            function sortDataReport(formatSearch, dataObject) {
+                insertions = new Array();
+                impressions = new Array();
+                clicks = new Array();
+                complete = new Array();
+                sites = new Array();
+                sites_rename = new Array();
+
+                for (var jn = 0; jn < formatSearch.length; jn++) {
+                    key = formatSearch[jn];
+                    site_name = dataObject[key].site_name;
+                    insertion_name = dataObject[key].insertion_name;
+
+                    insertions.push(insertion_name);
+                    impressions.push(parseInt(dataObject[key].impressions));
+                    clicks.push(parseInt(dataObject[key].clicks));
+                    complete.push(parseInt(dataObject[key].complete));
+                    sites_rename.push(site_name);
+
+                    // Récupére le nom des sites et les classes Créer les tableaux des sites
+                    if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
+                        sites.push(site_name);
                     }
-                    if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
-                        sites.push('SM_LINFO-ANDROID');
+                    if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
+                        sites.push(site_name);
                     }
-                    if (insertion_name.match(/^\LINFO{1}/igm)) {
+                    if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_IMMO974{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_TF1{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_M6{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
+                        sites.push(site_name);
+                    }
+                    if (site_name.match(/^\SM_RODALI{1}/igm)) {
+                        sites.push(site_name);
+                    }
+
+                    if (site_name.match(/^\N\/A{1}/i)) {
+                        // Si N/A
+                        if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
+                            sites.push('SM_DOMTOMJOB');
+                        }
+                        if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
+                            sites.push('SM_LINFO-ANDROID');
+                        }
+                        if (insertion_name.match(/^\LINFO{1}/igm)) {
+                            sites.push('SM_LINFO.re');
+                        }
+                        if (insertion_name.match(/^\ANTENNE REUNION{1}/igm)) {
+                            sites.push('SM_ANTENNEREUNION');
+                        }
+                        if (insertion_name.match(/^\ORANGE REUNION{1}/igm)) {
+                            sites.push('SM_ANTENNEREUNION');
+                        }
+                        if (insertion_name.match(/^\RODZAFER{1}/igm)) {
+                            sites.push('SM_ANTENNEREUNION');
+                        }
+                        if (insertion_name.match(/^\RODALI{1}/igm)) {
+                            sites.push('SM_ANTENNEREUNION');
+                        }
+                        if (insertion_name.match(/^\IMMO974{1}/igm)) {
+                            sites.push('SM_IMMO974');
+                        }
+                        if (insertion_name.match(/^\TF1{1}/igm)) {
+                            sites.push('SM_TF1');
+                        }
+                        if (insertion_name.match(/^\M6{1}/igm)) {
+                            sites.push('SM_M6');
+                        }
+                        if (insertion_name.match(/^\DAILYMOTION{1}/igm)) {
+                            sites.push('SM_DAILYMOTION');
+                        }
+
                         sites.push('SM_LINFO.re');
                     }
-                    if (insertion_name.match(/^\ANTENNE REUNION{1}/igm)) {
-                        sites.push('SM_ANTENNEREUNION');
-                    }
-                    if (insertion_name.match(/^\ORANGE REUNION{1}/igm)) {
-                        sites.push('SM_ANTENNEREUNION');
-                    }
-                    if (insertion_name.match(/^\RODZAFER{1}/igm)) {
-                        sites.push('SM_ANTENNEREUNION');
-                    }
-                    if (insertion_name.match(/^\RODALI{1}/igm)) {
-                        sites.push('SM_ANTENNEREUNION');
-                    }
-                    if (insertion_name.match(/^\IMMO974{1}/igm)) {
-                        sites.push('SM_IMMO974');
-                    }
-                    if (insertion_name.match(/^\TF1{1}/igm)) {
-                        sites.push('SM_TF1');
-                    }
-                    if (insertion_name.match(/^\M6{1}/igm)) {
-                        sites.push('SM_M6');
-                    }
-                    if (insertion_name.match(/^\DAILYMOTION{1}/igm)) {
-                        sites.push('SM_DAILYMOTION');
+                }
+
+                // Gestion des sites
+                if (sites && (sites.length > 0)) {
+                    var siteUnique = new Array();
+                    var siteUniqueKey = new Array();
+                    var SiteUniqueCount = new Array();
+                    var siteImpressions = new Array();
+                    var siteClicks = new Array();
+                    var siteComplete = new Array();
+
+                    for (var kn = 0; kn < sites.length; kn++) {
+                        key = formatSearch[kn];
+                        impressionsSite = parseInt(dataObject[key].impressions);
+                        clicksSite = parseInt(dataObject[key].clicks);
+                        completeSite = parseInt(dataObject[key].complet);
+                        var nameSite = sites[kn];
+
+                        // Rentre les impressions
+                        if (siteUnique[nameSite]) {
+                            siteUnique[nameSite].splice(siteImpressions[nameSite].length, 1, key);
+                        } else {
+                            siteUnique[nameSite] = new Array();
+                            siteUnique[nameSite][0] = key;
+                            SiteUniqueCount.push(nameSite);
+                        }
+
+                        // Rentre les impressions
+                        if (siteImpressions[nameSite]) {
+                            siteImpressions[nameSite].splice(
+                                siteImpressions[nameSite].length,
+                                1,
+                                impressionsSite
+                            );
+                        } else {
+                            siteImpressions[nameSite] = new Array();
+                            siteImpressions[nameSite][0] = impressionsSite;
+                        }
+
+                        // Rentre les Clicks
+                        if (siteClicks[nameSite]) {
+                            siteClicks[nameSite].splice(siteClicks[nameSite].length, 1, clicksSite);
+                        } else {
+                            siteClicks[nameSite] = new Array();
+                            siteClicks[nameSite][0] = clicksSite;
+                        }
+
+                        // Rentre les Complete
+                        if (siteComplete[nameSite]) {
+                            siteComplete[nameSite].splice(siteComplete[nameSite].length, 1, completeSite);
+                        } else {
+                            siteComplete[nameSite] = new Array();
+                            siteComplete[nameSite][0] = completeSite;
+                        }
                     }
 
-                    sites.push('SM_LINFO.re');
+                    // Trie les données de sites
+                    if (siteUnique && (SiteUniqueCount.length > 0)) {
+                        siteList = new Object();
+                        for (var ln = 0; ln < SiteUniqueCount.length; ln++) {
+                            sN = SiteUniqueCount[ln];
+                            siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
+                            siteClicksSUM = siteClicks[sN].reduce(reducer);
+                            siteCompleteSUM = siteComplete[sN].reduce(reducer);
+                            var itemSite = {
+                                site: sN,
+                                impressions: siteImpressionsSUM,
+                                clicks: siteClicksSUM,
+                                complete: siteCompleteSUM
+                            };
+                            siteList[ln] = itemSite;
+                        }
+
+                    }
+
                 }
+
+                resultDateReport = {
+                    formatKey: formatSearch,
+                    // insertions : insertions, sites_rename : sites_rename, sites : sites,
+                    // siteUniqueCount : SiteUniqueCount, siteUnique : siteUnique, siteImpressions :
+                    // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
+                    siteList: siteList,
+                    // impressions : impressions,
+                    impressionsSUM: impressions.reduce(reducer),
+                    // clicks : clicks,
+                    clicksSUM: clicks.reduce(reducer),
+                    // complete : complete,
+                    completeSUM: complete.reduce(reducer)
+                };
+                return resultDateReport;
             }
 
-            // Gestion des sites
-            if (sites && (sites.length > 0)) {
-                var siteUnique = new Array();
-                var siteUniqueKey = new Array();
-                var SiteUniqueCount = new Array();
-                var siteImpressions = new Array();
-                var siteClicks = new Array();
-                var siteComplete = new Array();
-
-                for (var kn = 0; kn < sites.length; kn++) {
-                    key = formatSearch[kn];
-                    impressionsSite = parseInt(dataObject[key].impressions);
-                    clicksSite = parseInt(dataObject[key].clicks);
-                    completeSite = parseInt(dataObject[key].complet);
-                    var nameSite = sites[kn];
-
-                    // Rentre les impressions
-                    if (siteUnique[nameSite]) {
-                        siteUnique[nameSite].splice(siteImpressions[nameSite].length, 1, key);
-                    } else {
-                        siteUnique[nameSite] = new Array();
-                        siteUnique[nameSite][0] = key;
-                        SiteUniqueCount.push(nameSite);
-                    }
-
-                    // Rentre les impressions
-                    if (siteImpressions[nameSite]) {
-                        siteImpressions[nameSite].splice(
-                            siteImpressions[nameSite].length,
-                            1,
-                            impressionsSite
-                        );
-                    } else {
-                        siteImpressions[nameSite] = new Array();
-                        siteImpressions[nameSite][0] = impressionsSite;
-                    }
-
-                    // Rentre les Clicks
-                    if (siteClicks[nameSite]) {
-                        siteClicks[nameSite].splice(siteClicks[nameSite].length, 1, clicksSite);
-                    } else {
-                        siteClicks[nameSite] = new Array();
-                        siteClicks[nameSite][0] = clicksSite;
-                    }
-
-                    // Rentre les Complete
-                    if (siteComplete[nameSite]) {
-                        siteComplete[nameSite].splice(siteComplete[nameSite].length, 1, completeSite);
-                    } else {
-                        siteComplete[nameSite] = new Array();
-                        siteComplete[nameSite][0] = completeSite;
-                    }
-                }
-
-                // Trie les données de sites
-                if (siteUnique && (SiteUniqueCount.length > 0)) {
-                    siteList = new Object();
-                    for (var ln = 0; ln < SiteUniqueCount.length; ln++) {
-                        sN = SiteUniqueCount[ln];
-                        siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
-                        siteClicksSUM = siteClicks[sN].reduce(reducer);
-                        siteCompleteSUM = siteComplete[sN].reduce(reducer);
-                        var itemSite = {
-                            site: sN,
-                            impressions: siteImpressionsSUM,
-                            clicks: siteClicksSUM,
-                            complete: siteCompleteSUM
-                        };
-                        siteList[ln] = itemSite;
-                    }
-
-                }
-
+            // Trie les formats et compatibilise les insertions et autres clics
+            if (!Utilities.empty(formatHabillage)) {
+                formatObjects.habillage = sortDataReport(formatHabillage, dataList);
             }
-
-            resultDateReport = {
-                formatKey: formatSearch,
-                // insertions : insertions, sites_rename : sites_rename, sites : sites,
-                // siteUniqueCount : SiteUniqueCount, siteUnique : siteUnique, siteImpressions :
-                // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
-                siteList: siteList,
-                // impressions : impressions,
-                impressionsSUM: impressions.reduce(reducer),
-                // clicks : clicks,
-                clicksSUM: clicks.reduce(reducer),
-                // complete : complete,
-                completeSUM: complete.reduce(reducer)
-            };
-            return resultDateReport;
+            if (!Utilities.empty(formatInterstitiel)) {
+                formatObjects.interstitiel = sortDataReport(formatInterstitiel, dataList);
+            }
+            if (!Utilities.empty(formatMasthead)) {
+                formatObjects.masthead = sortDataReport(formatMasthead, dataList);
+            }
+            if (!Utilities.empty(formatGrandAngle)) {
+                formatObjects.grandangle = sortDataReport(formatGrandAngle, dataList);
+            }
+            if (!Utilities.empty(formatInstream)) {
+                formatObjects.instream = sortDataReport(formatInstream, dataList);
+            }
+            if (!Utilities.empty(formatRectangleVideo)) {
+                formatObjects.rectanglevideo = sortDataReport(formatRectangleVideo, dataList);
+            }
+            if (!Utilities.empty(formatLogo)) {
+                formatObjects.logo = sortDataReport(formatLogo, dataList);
+            }
+            if (!Utilities.empty(formatNative)) {
+                formatObjects.native = sortDataReport(formatNative, dataList);
+            }
+            if (!Utilities.empty(formatSlider)) {
+                formatObjects.slider = sortDataReport(formatSlider, dataList);
+            }
+            if (!Utilities.empty(formatMea)) {
+                formatObjects.mea = sortDataReport(formatMea, dataList);
+            }
+            if (!Utilities.empty(formatSliderVideo)) {
+                formatObjects.slidervideo = sortDataReport(formatSliderVideo, dataList);
+            }
         }
 
-        // Trie les formats et compatibilise les insertions et autres clics
-        if (!Utilities.empty(formatHabillage)) {
-            formatObjects.habillage = sortDataReport(formatHabillage, dataList);
-        }
-        if (!Utilities.empty(formatInterstitiel)) {
-            formatObjects.interstitiel = sortDataReport(formatInterstitiel, dataList);
-        }
-        if (!Utilities.empty(formatMasthead)) {
-            formatObjects.masthead = sortDataReport(formatMasthead, dataList);
-        }
-        if (!Utilities.empty(formatGrandAngle)) {
-            formatObjects.grandangle = sortDataReport(formatGrandAngle, dataList);
-        }
-        if (!Utilities.empty(formatInstream)) {
-            formatObjects.instream = sortDataReport(formatInstream, dataList);
-        }
-        if (!Utilities.empty(formatRectangleVideo)) {
-            formatObjects.rectanglevideo = sortDataReport(formatRectangleVideo, dataList);
-        }
-        if (!Utilities.empty(formatLogo)) {
-            formatObjects.logo = sortDataReport(formatLogo, dataList);
-        }
-        if (!Utilities.empty(formatNative)) {
-            formatObjects.native = sortDataReport(formatNative, dataList);
-        }
-        if (!Utilities.empty(formatSlider)) {
-            formatObjects.slider = sortDataReport(formatSlider, dataList);
-        }
-        if (!Utilities.empty(formatMea)) {
-            formatObjects.mea = sortDataReport(formatMea, dataList);
-        }
-        if (!Utilities.empty(formatSliderVideo)) {
-            formatObjects.slidervideo = sortDataReport(formatSliderVideo, dataList);
-        }
-    }
-
-    res.json(formatObjects);
-    */
+        res.json(formatObjects);
+        */
 }
 
 exports.generate = async (req, res) => {
@@ -479,21 +489,19 @@ exports.generate = async (req, res) => {
             where: {
                 campaign_crypt: campaigncrypt
             },
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         })
         .then(async function (campaign) {
-            if (!campaign) 
+            if (!campaign)
                 return res
                     .status(404)
                     .render("error.ejs", {
                         statusCoded: 404,
                         campaigncrypt: campaigncrypt
                     });
-            
+
             const timestamp_startdate = Date.parse(campaign.campaign_start_date);
             const date_now = Date.now();
 
@@ -531,22 +539,20 @@ exports.report = async (req, res) => {
                 where: {
                     campaign_crypt: campaigncrypt
                 },
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }]
             })
             .then(async function (campaign) {
-               
-                if (!campaign) 
+
+                if (!campaign)
                     return res
                         .status(403)
                         .render("error.ejs", {
                             statusCoded: 403,
                             campaigncrypt: campaigncrypt
                         });
-                
+
                 // fonctionnalité de géneration du rapport
                 let campaigncrypt = campaign.campaign_crypt
                 let advertiserid = campaign.advertiser_id;
@@ -566,29 +572,33 @@ exports.report = async (req, res) => {
                     if (data_localStorage) {
                         var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
 
-                           // Si le localStorage exsite -> affiche la data du localstorage
-                       // Convertie la date JSON en objet
-                       var reportingData = JSON.parse(data_localStorage);
-                    
-                       var reporting_requete_date = moment().format('YYYY-MM-DD h:m:s');
-                       var reporting_start_date = reportingData.reporting_start_date;
-                       var reporting_end_date = reportingData.reporting_end_date;
-                       
-                       var campaign_end_date = reportingData.campaign.campaign_end_date;
-                       var campaign_start_date = reportingData.campaign.campaign_start_date;
+                        // Si le localStorage exsite -> affiche la data du localstorage
+                        // Convertie la date JSON en objet
+                        var reportingData = JSON.parse(data_localStorage);
 
-                       console.log('Date reporting_start_date :', reporting_start_date);
-                       console.log('Date reporting_end_date :', reporting_end_date);
+                        var reporting_requete_date = moment().format('YYYY-MM-DD h:m:s');
+                        var reporting_start_date = reportingData.reporting_start_date;
+                        var reporting_end_date = reportingData.reporting_end_date;
 
-                       console.log('campaign_start_date :', campaign_start_date);
-                       console.log('campaign_end_date :', campaign_end_date);
+                        var campaign_end_date = reportingData.campaign.campaign_end_date;
+                        var campaign_start_date = reportingData.campaign.campaign_start_date;
+
+                        console.log('Date reporting_start_date :', reporting_start_date);
+                        console.log('Date reporting_end_date :', reporting_end_date);
+
+                        console.log('campaign_start_date :', campaign_start_date);
+                        console.log('campaign_end_date :', campaign_end_date);
 
                         // si la date d'expiration est < au moment de la requête on garde la cache
                         if ((reporting_requete_date < reporting_end_date) || (campaign_end_date < reporting_start_date)) {
-                            res.render('report/template.ejs', { reporting : reportingData, moment: moment, utilities : Utilities });
-                        }  else {
+                            res.render('report/template.ejs', {
+                                reporting: reportingData,
+                                moment: moment,
+                                utilities: Utilities
+                            });
+                        } else {
                             console.log('Supprime et relance la generation du rapport')
-                            
+
                             // si le local storage expire; on supprime les precedents cache et les taskid                           
                             localStorage.removeItem('campaignID-' + campaignid);
                             localStorageTasks.removeItem(
@@ -597,7 +607,7 @@ exports.report = async (req, res) => {
                             localStorageTasks.removeItem(
                                 'campaignID-' + campaignid + '-taskGlobalVU'
                             );
-    
+
                             res.redirect('/rs/${campaigncrypt}');
                         }
 
@@ -605,30 +615,42 @@ exports.report = async (req, res) => {
                         console.log('data_localStorage no existe');
 
                         // Récupére les dates des insertions
-                       insertion_start_date = await ModelInsertions.max('insertion_start_date', { where: { campaign_id: campaignid } });
-                       insertion_end_date = await ModelInsertions.max('insertion_end_date', { where: { campaign_id: campaignid } });
-                       console.log('insertion_end_date : ',insertion_end_date);
+                        insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                            where: {
+                                campaign_id: campaignid
+                            }
+                        });
+                        insertion_end_date = await ModelInsertions.max('insertion_end_date', {
+                            where: {
+                                campaign_id: campaignid
+                            }
+                        });
+                        console.log('insertion_end_date : ', insertion_end_date);
 
-                      // const now = new Date();
-                       // const timestamp_datenow = now.getTime();
-                        
-                       // Déclare la date du moment
+                        // const now = new Date();
+                        // const timestamp_datenow = now.getTime();
+
+                        // Déclare la date du moment
                         var timestamp_datenow = moment().format("DD/MM/YYYY HH:mm:ss");
-                       
-                        
+
+
                         // recup la date de début de la campagne -4 heures pour règler le prob du décalage horaire
                         const campaign_start_date_yesterday = new Date(campaign_start_date);
                         var start_date_timezone = campaign_start_date_yesterday.setHours(-4);
 
                         // Teste pour récupérer la date la plus tôt
-                        if(start_date_timezone > insertion_start_date) { start_date_timezone = insertion_start_date; } 
-                        console.log('start_date_timezone :',start_date_timezone);
+                        if (start_date_timezone > insertion_start_date) {
+                            start_date_timezone = insertion_start_date;
+                        }
+                        console.log('start_date_timezone :', start_date_timezone);
 
                         // recup la date de fin de la campagne ajoute +1jour
                         var endDate_day = new Date(campaign_end_date);
                         var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
-                        if(insertion_end_date > endDate_last) { endDate_last = insertion_end_date; } 
-                        console.log('insertion_end_date : ',insertion_end_date,' - end_date_timezone :',endDate_last);
+                        if (insertion_end_date > endDate_last) {
+                            endDate_last = insertion_end_date;
+                        }
+                        console.log('insertion_end_date : ', insertion_end_date, ' - end_date_timezone :', endDate_last);
                         /*
                         var s = parseInt(start_date_timezone);
                         var t3 = parseInt(endDate_last);
@@ -659,72 +681,83 @@ exports.report = async (req, res) => {
                         var requestReporting = {
                             "startDate": StartDate_timezone,
                             "endDate": end_date,
-                            "fields": [
-                                {
-                                    "CampaignStartDate": {}
-                                }, {
-                                    "CampaignEndDate": {}
-                                }, {
-                                    "CampaignId": {}
-                                }, {
-                                    "CampaignName": {}
-                                }, {
-                                    "InsertionId": {}
-                                }, {
-                                    "InsertionName": {}
-                                }, {
-                                    "FormatId": {}
-                                }, {
-                                    "FormatName": {}
-                                }, {
-                                    "SiteId": {}
-                                }, {
-                                    "SiteName": {}
-                                }, {
-                                    "Impressions": {}
-                                }, {
-                                    "ClickRate": {}
-                                }, {
-                                    "Clicks": {}
-                                }, {
-                                    "VideoCount": {
-                                        "Id": "17",
-                                        "OutputName": "Nbr_complete"
-                                    }
+                            "fields": [{
+                                "CampaignStartDate": {}
+                            }, {
+                                "CampaignEndDate": {}
+                            }, {
+                                "CampaignId": {}
+                            }, {
+                                "CampaignName": {}
+                            }, {
+                                "InsertionId": {}
+                            }, {
+                                "InsertionName": {}
+                            }, {
+                                "FormatId": {}
+                            }, {
+                                "FormatName": {}
+                            }, {
+                                "SiteId": {}
+                            }, {
+                                "SiteName": {}
+                            }, {
+                                "Impressions": {}
+                            }, {
+                                "ClickRate": {}
+                            }, {
+                                "Clicks": {}
+                            }, {
+                                "VideoCount": {
+                                    "Id": "17",
+                                    "OutputName": "Nbr_complete"
                                 }
-                            ],
-                            "filter": [
-                                {
-                                    "CampaignId": [campaignid]
-                                }
-                            ]
+                            }],
+                            "filter": [{
+                                "CampaignId": [campaignid]
+                            }]
                         }
 
-                         console.log('requestReporting : ',requestReporting);
+                        console.log('requestReporting : ', requestReporting);
                         // process.exit(1);
                         // console.log(requestReporting) test si la date de fin de la campagne est =>
                         // date au jourd'hui = 31j ne pas effectuer la requête date_fin - date du jour =
                         // nbr jour Requête visitor unique
+
+
+                        //On calcule le nombre de jour entre la date de fin campagne et date aujourd'hui
+                      //  var date_now = Date.now();
+                        var start_date = new Date(campaign_start_date);
+                        var end_date = new Date(campaign_end_date);
+                        var date_now = Date.now();
+                        var diff_start = Utilities.nbr_jours(start_date, date_now);
+                        var diff = Utilities.nbr_jours(end_date, start_date);
+
+                        console.log(diff_start.day)
+                        console.log(diff.day)
+
+
+
+
                         var requestVisitor_unique = {
                             "startDate": StartDate_timezone,
                             "endDate": end_date,
-                            "fields": [
-                                {
-                                    "UniqueVisitors": {}
-                                }
-                            ],
-                            "filter": [
-                                {
-                                    "CampaignId": [campaignid]
-                                }
-                            ]
+                            "fields": [{
+                                "UniqueVisitors": {}
+                            }],
+                            "filter": [{
+                                "CampaignId": [campaignid]
+                            }]
                         }
+
+
+
 
                         // 1) Requête POST
                         var dataLSTaskGlobal = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-taskGlobal'
                         );
-                        
+
                         var dataLSTaskGlobalVU = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-taskGlobalVU'
                         );
@@ -749,10 +782,25 @@ exports.report = async (req, res) => {
                             }
                         }
 
+
+
+
+
                         // twoLink - Récupére la taskID de la requête reporting
                         let twoLinkTaskId = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour
                         );
+
+                     /*   // si la différence de jour est >= à 31 , on excécute pas la requête
+                        if (diff.day >= 31) {
+                            console.log('annule la requête')
+                        } else {
+                            console.log('requête')
+
+                        }*/
+
+
+
                         if (!twoLinkTaskId) {
                             let twoLink = await AxiosFunction.getReportingData(
                                 'POST',
@@ -768,6 +816,7 @@ exports.report = async (req, res) => {
                             }
                         }
 
+
                         console.log(
                             'firstLinkTaskId :',
                             firstLinkTaskId,
@@ -775,576 +824,596 @@ exports.report = async (req, res) => {
                             twoLinkTaskId
                         );
 
-                        
-                    if (firstLinkTaskId || twoLinkTaskId) {
-                        var taskId = firstLinkTaskId;
-                        var taskId_uu = twoLinkTaskId;
 
-                        console.log('taskId', taskId);
-                        console.log("taskId_uu", taskId_uu);
+                        if (firstLinkTaskId || twoLinkTaskId) {
+                            var taskId = firstLinkTaskId;
+                            var taskId_uu = twoLinkTaskId;
 
-                        let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
-                        let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
+                            console.log('taskId', taskId);
+                            console.log("taskId_uu", taskId_uu);
 
-                        // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
-                        // commence à 10sec
-                        var time = 10000;
-                        let timerFile = setInterval(async () => {
-                            // DATA STORAGE - TASK 1 et 2
-                            var dataLSTaskGlobal = localStorageTasks.getItem(
-                                'campaignID-' + campaignid + '-taskGlobal'
-                            );
+                            let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+                            let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
 
-                            var dataLSTaskGlobalVU = localStorageTasks.getItem(
-                                'campaignID-' + campaignid + '-taskGlobalVU'
-                            );
+                            // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
+                            // commence à 10sec
+                            var time = 10000;
+                            let timerFile = setInterval(async () => {
+                                // DATA STORAGE - TASK 1 et 2
+                                var dataLSTaskGlobal = localStorageTasks.getItem(
+                                    'campaignID-' + campaignid + '-taskGlobal'
+                                );
 
-                            if (!dataLSTaskGlobal || !dataLSTaskGlobalVU) {
+                                var dataLSTaskGlobalVU = localStorageTasks.getItem(
+                                    'campaignID-' + campaignid + '-taskGlobalVU'
+                                );
 
-                                if (!dataLSTaskGlobal) {
-                                    time += 5000;
-                                    let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-                                    if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-                                        // 3) Récupère la date de chaque requête
-                                        let dataLSTaskGlobal = localStorageTasks.getItem(
-                                            'campaignID-' + campaignid + '-taskGlobal'
-                                        );
-                                        if (!dataLSTaskGlobal) {
-                                            dataFile = await AxiosFunction.getReportingData(
-                                                'GET',
-                                                `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
-                                                ''
+                                if (!dataLSTaskGlobal || !dataLSTaskGlobalVU) {
+
+                                    if (!dataLSTaskGlobal) {
+                                        time += 5000;
+                                        let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+                                        if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                                            // 3) Récupère la date de chaque requête
+                                            let dataLSTaskGlobal = localStorageTasks.getItem(
+                                                'campaignID-' + campaignid + '-taskGlobal'
                                             );
-                                            // save la data requête 1 dans le local storage
-                                            dataLSTaskGlobal = {
-                                                'datafile': dataFile.data
-                                            };
-                                            localStorageTasks.setItem(
-                                                'campaignID-' + campaignid + '-taskGlobal',
-                                                JSON.stringify(dataLSTaskGlobal)
-                                            );
-                                            console.log('Creation de dataLSTaskGlobal');
+                                            if (!dataLSTaskGlobal) {
+                                                dataFile = await AxiosFunction.getReportingData(
+                                                    'GET',
+                                                    `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                                                    ''
+                                                );
+                                                // save la data requête 1 dans le local storage
+                                                dataLSTaskGlobal = {
+                                                    'datafile': dataFile.data
+                                                };
+                                                localStorageTasks.setItem(
+                                                    'campaignID-' + campaignid + '-taskGlobal',
+                                                    JSON.stringify(dataLSTaskGlobal)
+                                                );
+                                                console.log('Creation de dataLSTaskGlobal');
+                                            }
                                         }
                                     }
-                                }
 
-                                // Request task2
-                                if (!dataLSTaskGlobalVU) {
-                                    time += 5000;
-                                    let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
-                                    if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                                    // Request task2
+                                    if (!dataLSTaskGlobalVU) {
+                                        time += 5000;
+                                        let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
+                                        if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
 
-                                        // 3) Récupère la date de chaque requête
-                                        dataLSTaskGlobalVU = localStorageTasks.getItem(
-                                            'campaignID-' + campaignid + '-taskGlobalVU'
-                                        );
-                                        if (!dataLSTaskGlobalVU) {
-                                            dataFile2 = await AxiosFunction.getReportingData(
-                                                'GET',
-                                                `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}/file`,
-                                                ''
+                                            // 3) Récupère la date de chaque requête
+                                            dataLSTaskGlobalVU = localStorageTasks.getItem(
+                                                'campaignID-' + campaignid + '-taskGlobalVU'
                                             );
-                                            // save la data requête 2 dans le local storage
-                                            dataLSTaskGlobalVU = {
-                                                'datafile': dataFile2.data
-                                            };
-                                            localStorageTasks.setItem(
-                                                'campaignID-' + campaignid + '-taskGlobalVU',
-                                                JSON.stringify(dataLSTaskGlobalVU)
-                                            );
-                                            console.log('Creation de dataLSTaskGlobalVU');
+                                            if (!dataLSTaskGlobalVU) {
+                                                dataFile2 = await AxiosFunction.getReportingData(
+                                                    'GET',
+                                                    `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}/file`,
+                                                    ''
+                                                );
+                                                // save la data requête 2 dans le local storage
+                                                dataLSTaskGlobalVU = {
+                                                    'datafile': dataFile2.data
+                                                };
+                                                localStorageTasks.setItem(
+                                                    'campaignID-' + campaignid + '-taskGlobalVU',
+                                                    JSON.stringify(dataLSTaskGlobalVU)
+                                                );
+                                                console.log('Creation de dataLSTaskGlobalVU');
+                                            }
                                         }
                                     }
-                                }
 
-                                if (dataLSTaskGlobal && dataLSTaskGlobalVU) {                                  
-                                    console.log('Creation de clearInterval(timerFile)');
-                                }
+                                    if (dataLSTaskGlobal && dataLSTaskGlobalVU) {
+                                        console.log('Creation de clearInterval(timerFile)');
+                                    }
 
-                            } else {
-                                // Stoppe l'intervalle timerFile
-                                clearInterval(timerFile);
-                                console.log('Stop clearInterval timerFile');
+                                } else {
+                                    // Stoppe l'intervalle timerFile
+                                    clearInterval(timerFile);
+                                    console.log('Stop clearInterval timerFile');
 
-                                // On récupére le dataLSTaskGlobal                     
-                                const objDefault = JSON.parse(dataLSTaskGlobal);
-                                var dataSplitGlobal = objDefault.datafile;
-                            
-                                // Permet de faire l'addition
-                                const reducer = (accumulator, currentValue) => accumulator + currentValue;
-                            
-                                var impressions = new Array();
-                                var clicks = new Array();
-                                var complete = new Array();
-                            
-                                const CampaignStartDate = [];
-                                const CampaignEndtDate = [];
-                                const CampaignId = [];
-                                const CampaignName = [];
-                                const InsertionId = [];
-                                const InsertionName = [];
-                                const FormatId = [];
-                                const FormatName = [];
-                                const SiteId = [];
-                                const SiteName = [];
-                                const Impressions = [];
-                                const ClickRate = [];
-                                const Clicks = [];
-                                const Complete = [];
-                            
-                                const dataList = new Object();
-                            
-                                var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
-                                if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
-                                    var numberLine = dataSplitGlobal.length;
-                                    console.log('numberLine :',numberLine);
-                                    console.log('dataSplitGlobal :',dataSplitGlobal);
-                                    if(numberLine > 1) {
-                                        for (i = 1; i < numberLine; i++) {
-                                            // split push les données dans chaque colone
-                                            line = dataSplitGlobal[i].split(';');
-                                            if (!Utilities.empty(line[0])) {
-                                                InsertionName.push(line[5]);
-                                                Impressions.push(parseInt(line[10]));
-                                                Clicks.push(parseInt(line[12]));
-                                                Complete.push(parseInt(line[13]));
+                                    // On récupére le dataLSTaskGlobal                     
+                                    const objDefault = JSON.parse(dataLSTaskGlobal);
+                                    var dataSplitGlobal = objDefault.datafile;
 
-                                                dataList[i] = {
-                                                    'campaign_start_date': line[0],
-                                                    'campaign_end_date': line[1],
-                                                    'campaign_id': line[2],
-                                                    'campaign_name': line[3],
-                                                    'insertion_id': line[4],
-                                                    'insertion_name': line[5],
-                                                    'format_id': line[6],
-                                                    'format_name': line[7],
-                                                    'site_id': line[8],
-                                                    'site_name': line[9],
-                                                    'impressions': parseInt(line[10]),
-                                                    'click_rate': parseInt(line[11]),
-                                                    'clicks': parseInt(line[12]),
-                                                    'complete': parseInt(line[13])
+                                    // Permet de faire l'addition
+                                    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+                                    var impressions = new Array();
+                                    var clicks = new Array();
+                                    var complete = new Array();
+
+                                    const CampaignStartDate = [];
+                                    const CampaignEndtDate = [];
+                                    const CampaignId = [];
+                                    const CampaignName = [];
+                                    const InsertionId = [];
+                                    const InsertionName = [];
+                                    const FormatId = [];
+                                    const FormatName = [];
+                                    const SiteId = [];
+                                    const SiteName = [];
+                                    const Impressions = [];
+                                    const ClickRate = [];
+                                    const Clicks = [];
+                                    const Complete = [];
+
+                                    const dataList = new Object();
+
+                                    var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
+                                    if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
+                                        var numberLine = dataSplitGlobal.length;
+                                        console.log('numberLine :', numberLine);
+                                        console.log('dataSplitGlobal :', dataSplitGlobal);
+                                        if (numberLine > 1) {
+                                            for (i = 1; i < numberLine; i++) {
+                                                // split push les données dans chaque colone
+                                                line = dataSplitGlobal[i].split(';');
+                                                if (!Utilities.empty(line[0])) {
+                                                    InsertionName.push(line[5]);
+                                                    Impressions.push(parseInt(line[10]));
+                                                    Clicks.push(parseInt(line[12]));
+                                                    Complete.push(parseInt(line[13]));
+
+                                                    dataList[i] = {
+                                                        'campaign_start_date': line[0],
+                                                        'campaign_end_date': line[1],
+                                                        'campaign_id': line[2],
+                                                        'campaign_name': line[3],
+                                                        'insertion_id': line[4],
+                                                        'insertion_name': line[5],
+                                                        'format_id': line[6],
+                                                        'format_name': line[7],
+                                                        'site_id': line[8],
+                                                        'site_name': line[9],
+                                                        'impressions': parseInt(line[10]),
+                                                        'click_rate': parseInt(line[11]),
+                                                        'clicks': parseInt(line[12]),
+                                                        'complete': parseInt(line[13])
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            
-                                //
-                                var formatObjects = new Object();
-                                if (dataList && (Object.keys(dataList).length > 0)) {
-                                     console.log('Nombre object : ',Object.keys(dataList).length);
-                                     // Initialise les formats
-                                    var formatHabillage = new Array();
-                                    var formatInterstitiel = new Array();
-                                    var formatGrandAngle = new Array();
-                                    var formatMasthead = new Array();
-                                    var formatInstream = new Array();
-                                    var formatRectangleVideo = new Array();
-                                    var formatLogo = new Array();
-                                    var formatNative = new Array();
-                                    var formatSlider = new Array();
-                                    var formatMea = new Array();
-                                    var formatSliderVideo = new Array();
-                            
-                                    // initialise les sites                            
-                                    var siteObjects = new Object();
-                            
-                                    var siteLINFO = new Array();
-                                    var siteLINFO_ANDROID = new Array();
-                                    var siteLINFO_IOS = new Array();
-                                    var siteANTENNEREUNION = new Array();
-                                    var siteDOMTOMJOB = new Array();
-                                    var siteIMMO974 = new Array();
-                                    var siteRODZAFER_LP = new Array();
-                                    var siteRODZAFER_ANDROID = new Array();
-                                    var siteRODZAFER_IOS = new Array();
-                                    var siteRODALI = new Array();
-                                    var siteORANGE_REUNION = new Array();
-                                    var siteTF1 = new Array();
-                                    var siteM6 = new Array();
-                                    var siteDAILYMOTION = new Array();
-                                    
-                                    for (var index = 1; index <= Object.keys(dataList).length; index++) {
-                                        var insertion_name = dataList[index].insertion_name;
-                                        var site_id = dataList[index].site_id;
-                                        var site_name = dataList[index].site_name;
-                                        console.log(insertion_name)
-                                        // Créer les tableaux des formats
-                                        if (insertion_name.match(/HABILLAGE{1}/igm)) {
-                                            formatHabillage.push(index);
-                                        }
-                                        if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
-                                            formatInterstitiel.push(index);
-                                        }
-                                        if (insertion_name.match(/MASTHEAD{1}/igm)) {
-                                            formatMasthead.push(index);
-                                        }
-                                        if (insertion_name.match(/GRAND ANGLE{1}/igm)) {
-                                            formatGrandAngle.push(index);
-                                        }
-                                        if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
-                                            formatInstream.push(index);
-                                        }
-                                        if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
-                                            formatRectangleVideo.push(index);                                           
-                                        }
-                                        if (insertion_name.match(/LOGO{1}/igm)) {
-                                            formatLogo.push(index);
-                                        }
-                                        if (insertion_name.match(/NATIVE{1}/igm)) {
-                                            formatNative.push(index);
-                                        }
-                                        if (insertion_name.match(/SLIDER{1}/igm)) {
-                                            formatSlider.push(index);
-                                        }
-                                        if (insertion_name.match(/^\MEA{1}/igm)) {
-                                            formatMea.push(index);
-                                        }
-                                        if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
-                                            formatSliderVideo.push(index);
-                                        }
-                            
-                                        // Créer les tableaux des sites
-                                        if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-                                            siteLINFO.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
-                                            siteLINFO_ANDROID.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
-                                            siteLINFO_IOS.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-                                            siteANTENNEREUNION.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-                                            siteDOMTOMJOB.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-                                            siteIMMO974.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-                                            siteRODZAFER_LP.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-                                            siteRODZAFER_ANDROID.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                                            siteRODZAFER_IOS.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-                                            siteORANGE_REUNION.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_TF1{1}/igm)) {
-                                            siteTF1.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_M6{1}/igm)) {
-                                            siteM6.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-                                            siteDAILYMOTION.push(index);
-                                        }
-                                        if (site_name.match(/^\SM_RODALI{1}/igm)) {
-                                            siteRODALI.push(index);
-                                        }
-                                    }
-                            
-                                    // Function de trie et de récupération de données
-                                    function sortDataReport(formatSearch, dataObject) {
-                                        insertions = new Array();
-                                        impressions = new Array();
-                                        clicks = new Array();
-                                        complete = new Array();
-                                        sites = new Array();
-                                        sites_rename = new Array();
-                            
-                                        for (var jn = 0; jn < formatSearch.length; jn++) {
-                                            key = formatSearch[jn];
-                                            site_name = dataObject[key].site_name;
-                                            insertion_name = dataObject[key].insertion_name;
-                            
-                                            insertions.push(insertion_name);
-                                            impressions.push(parseInt(dataObject[key].impressions));
-                                            clicks.push(parseInt(dataObject[key].clicks));
-                                            complete.push(parseInt(dataObject[key].complete));
-                                            sites_rename.push(site_name);
-                            
-                                            // Récupére le nom des sites et les classes Créer les tableaux des sites
+
+                                    //
+                                    var formatObjects = new Object();
+                                    if (dataList && (Object.keys(dataList).length > 0)) {
+                                        console.log('Nombre object : ', Object.keys(dataList).length);
+                                        // Initialise les formats
+                                        var formatHabillage = new Array();
+                                        var formatInterstitiel = new Array();
+                                        var formatGrandAngle = new Array();
+                                        var formatMasthead = new Array();
+                                        var formatInstream = new Array();
+                                        var formatRectangleVideo = new Array();
+                                        var formatLogo = new Array();
+                                        var formatNative = new Array();
+                                        var formatSlider = new Array();
+                                        var formatMea = new Array();
+                                        var formatSliderVideo = new Array();
+
+                                        // initialise les sites                            
+                                        var siteObjects = new Object();
+
+                                        var siteLINFO = new Array();
+                                        var siteLINFO_ANDROID = new Array();
+                                        var siteLINFO_IOS = new Array();
+                                        var siteANTENNEREUNION = new Array();
+                                        var siteDOMTOMJOB = new Array();
+                                        var siteIMMO974 = new Array();
+                                        var siteRODZAFER_LP = new Array();
+                                        var siteRODZAFER_ANDROID = new Array();
+                                        var siteRODZAFER_IOS = new Array();
+                                        var siteRODALI = new Array();
+                                        var siteORANGE_REUNION = new Array();
+                                        var siteTF1 = new Array();
+                                        var siteM6 = new Array();
+                                        var siteDAILYMOTION = new Array();
+
+                                        for (var index = 1; index <= Object.keys(dataList).length; index++) {
+                                            var insertion_name = dataList[index].insertion_name;
+                                            var site_id = dataList[index].site_id;
+                                            var site_name = dataList[index].site_name;
+                                            console.log(insertion_name)
+                                            // Créer les tableaux des formats
+                                            if (insertion_name.match(/HABILLAGE{1}/igm)) {
+                                                formatHabillage.push(index);
+                                            }
+                                            if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
+                                                formatInterstitiel.push(index);
+                                            }
+                                            if (insertion_name.match(/MASTHEAD{1}/igm)) {
+                                                formatMasthead.push(index);
+                                            }
+                                            if (insertion_name.match(/GRAND ANGLE{1}/igm)) {
+                                                formatGrandAngle.push(index);
+                                            }
+                                            if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
+                                                formatInstream.push(index);
+                                            }
+                                            if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                                                formatRectangleVideo.push(index);
+                                            }
+                                            if (insertion_name.match(/LOGO{1}/igm)) {
+                                                formatLogo.push(index);
+                                            }
+                                            if (insertion_name.match(/NATIVE{1}/igm)) {
+                                                formatNative.push(index);
+                                            }
+                                            if (insertion_name.match(/SLIDER{1}/igm)) {
+                                                formatSlider.push(index);
+                                            }
+                                            if (insertion_name.match(/^\MEA{1}/igm)) {
+                                                formatMea.push(index);
+                                            }
+                                            if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                                                formatSliderVideo.push(index);
+                                            }
+
+                                            // Créer les tableaux des sites
                                             if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteLINFO.push(index);
                                             }
-                                            if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
-                                                sites.push(site_name);
+                                            if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
+                                                siteLINFO_ANDROID.push(index);
                                             }
-                                            if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
-                                                sites.push(site_name);
+                                            if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
+                                                siteLINFO_IOS.push(index);
                                             }
                                             if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteANTENNEREUNION.push(index);
                                             }
                                             if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteDOMTOMJOB.push(index);
                                             }
                                             if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteIMMO974.push(index);
                                             }
                                             if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteRODZAFER_LP.push(index);
                                             }
                                             if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteRODZAFER_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteRODZAFER_IOS.push(index);
                                             }
                                             if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteORANGE_REUNION.push(index);
                                             }
                                             if (site_name.match(/^\SM_TF1{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteTF1.push(index);
                                             }
                                             if (site_name.match(/^\SM_M6{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteM6.push(index);
                                             }
                                             if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteDAILYMOTION.push(index);
                                             }
                                             if (site_name.match(/^\SM_RODALI{1}/igm)) {
-                                                sites.push(site_name);
+                                                siteRODALI.push(index);
                                             }
-                            
-                                            if (site_name.match(/^\N\/A{1}/i)) {
-                                                // Si N/A
-                                                if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
-                                                    sites.push('SM_DOMTOMJOB');
+                                        }
+
+                                        // Function de trie et de récupération de données
+                                        function sortDataReport(formatSearch, dataObject) {
+                                            insertions = new Array();
+                                            impressions = new Array();
+                                            clicks = new Array();
+                                            complete = new Array();
+                                            sites = new Array();
+                                            sites_rename = new Array();
+
+                                            for (var jn = 0; jn < formatSearch.length; jn++) {
+                                                key = formatSearch[jn];
+                                                site_name = dataObject[key].site_name;
+                                                insertion_name = dataObject[key].insertion_name;
+
+                                                insertions.push(insertion_name);
+                                                impressions.push(parseInt(dataObject[key].impressions));
+                                                clicks.push(parseInt(dataObject[key].clicks));
+                                                complete.push(parseInt(dataObject[key].complete));
+                                                sites_rename.push(site_name);
+
+                                                // Récupére le nom des sites et les classes Créer les tableaux des sites
+                                                if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
+                                                    sites.push(site_name);
                                                 }
-                                                if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
-                                                    sites.push('SM_LINFO-ANDROID');
+                                                if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
+                                                    sites.push(site_name);
                                                 }
-                                                if (insertion_name.match(/^\LINFO{1}/igm)) {
+                                                if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_IMMO974{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_TF1{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_M6{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+                                                if (site_name.match(/^\SM_RODALI{1}/igm)) {
+                                                    sites.push(site_name);
+                                                }
+
+                                                if (site_name.match(/^\N\/A{1}/i)) {
+                                                    // Si N/A
+                                                    if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
+                                                        sites.push('SM_DOMTOMJOB');
+                                                    }
+                                                    if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
+                                                        sites.push('SM_LINFO-ANDROID');
+                                                    }
+                                                    if (insertion_name.match(/^\LINFO{1}/igm)) {
+                                                        sites.push('SM_LINFO.re');
+                                                    }
+                                                    if (insertion_name.match(/^\ANTENNE REUNION{1}/igm)) {
+                                                        sites.push('SM_ANTENNEREUNION');
+                                                    }
+                                                    if (insertion_name.match(/^\ORANGE REUNION{1}/igm)) {
+                                                        sites.push('SM_ANTENNEREUNION');
+                                                    }
+                                                    if (insertion_name.match(/^\RODZAFER{1}/igm)) {
+                                                        sites.push('SM_ANTENNEREUNION');
+                                                    }
+                                                    if (insertion_name.match(/^\RODALI{1}/igm)) {
+                                                        sites.push('SM_ANTENNEREUNION');
+                                                    }
+                                                    if (insertion_name.match(/^\IMMO974{1}/igm)) {
+                                                        sites.push('SM_IMMO974');
+                                                    }
+                                                    if (insertion_name.match(/^\TF1{1}/igm)) {
+                                                        sites.push('SM_TF1');
+                                                    }
+                                                    if (insertion_name.match(/^\M6{1}/igm)) {
+                                                        sites.push('SM_M6');
+                                                    }
+                                                    if (insertion_name.match(/^\DAILYMOTION{1}/igm)) {
+                                                        sites.push('SM_DAILYMOTION');
+                                                    }
+
                                                     sites.push('SM_LINFO.re');
                                                 }
-                                                if (insertion_name.match(/^\ANTENNE REUNION{1}/igm)) {
-                                                    sites.push('SM_ANTENNEREUNION');
-                                                }
-                                                if (insertion_name.match(/^\ORANGE REUNION{1}/igm)) {
-                                                    sites.push('SM_ANTENNEREUNION');
-                                                }
-                                                if (insertion_name.match(/^\RODZAFER{1}/igm)) {
-                                                    sites.push('SM_ANTENNEREUNION');
-                                                }
-                                                if (insertion_name.match(/^\RODALI{1}/igm)) {
-                                                    sites.push('SM_ANTENNEREUNION');
-                                                }
-                                                if (insertion_name.match(/^\IMMO974{1}/igm)) {
-                                                    sites.push('SM_IMMO974');
-                                                }
-                                                if (insertion_name.match(/^\TF1{1}/igm)) {
-                                                    sites.push('SM_TF1');
-                                                }
-                                                if (insertion_name.match(/^\M6{1}/igm)) {
-                                                    sites.push('SM_M6');
-                                                }
-                                                if (insertion_name.match(/^\DAILYMOTION{1}/igm)) {
-                                                    sites.push('SM_DAILYMOTION');
-                                                }
-                            
-                                                sites.push('SM_LINFO.re');
                                             }
-                                        }
-                            
-                                        // Gestion des sites
-                                        if (sites && (sites.length > 0)) {
-                                            var siteUnique = new Array();
-                                            var siteUniqueKey = new Array();
-                                            var SiteUniqueCount = new Array();
-                                            var siteImpressions = new Array();
-                                            var siteClicks = new Array();
-                                            var siteComplete = new Array();
-                            
-                                            for (var kn = 0; kn < sites.length; kn++) {
-                                                key = formatSearch[kn];
-                                                impressionsSite = parseInt(dataObject[key].impressions);
-                                                clicksSite = parseInt(dataObject[key].clicks);
-                                                completeSite = parseInt(dataObject[key].complete);
-                                                var nameSite = sites[kn];
-                            
-                                                // Rentre les impressions
-                                                if (siteUnique[nameSite]) {
-                                                    siteUnique[nameSite].splice(siteImpressions[nameSite].length, 1, key);
-                                                } else {
-                                                    siteUnique[nameSite] = new Array();
-                                                    siteUnique[nameSite][0] = key;
-                                                    SiteUniqueCount.push(nameSite);
+
+                                            // Gestion des sites
+                                            if (sites && (sites.length > 0)) {
+                                                var siteUnique = new Array();
+                                                var siteUniqueKey = new Array();
+                                                var SiteUniqueCount = new Array();
+                                                var siteImpressions = new Array();
+                                                var siteClicks = new Array();
+                                                var siteComplete = new Array();
+
+                                                for (var kn = 0; kn < sites.length; kn++) {
+                                                    key = formatSearch[kn];
+                                                    impressionsSite = parseInt(dataObject[key].impressions);
+                                                    clicksSite = parseInt(dataObject[key].clicks);
+                                                    completeSite = parseInt(dataObject[key].complete);
+                                                    var nameSite = sites[kn];
+
+                                                    // Rentre les impressions
+                                                    if (siteUnique[nameSite]) {
+                                                        siteUnique[nameSite].splice(siteImpressions[nameSite].length, 1, key);
+                                                    } else {
+                                                        siteUnique[nameSite] = new Array();
+                                                        siteUnique[nameSite][0] = key;
+                                                        SiteUniqueCount.push(nameSite);
+                                                    }
+
+                                                    // Rentre les impressions
+                                                    if (siteImpressions[nameSite]) {
+                                                        siteImpressions[nameSite].splice(
+                                                            siteImpressions[nameSite].length,
+                                                            1,
+                                                            impressionsSite
+                                                        );
+                                                    } else {
+                                                        siteImpressions[nameSite] = new Array();
+                                                        siteImpressions[nameSite][0] = impressionsSite;
+                                                    }
+
+                                                    // Rentre les Clicks
+                                                    if (siteClicks[nameSite]) {
+                                                        siteClicks[nameSite].splice(siteClicks[nameSite].length, 1, clicksSite);
+                                                    } else {
+                                                        siteClicks[nameSite] = new Array();
+                                                        siteClicks[nameSite][0] = clicksSite;
+                                                    }
+
+                                                    // Rentre les Complete
+                                                    if (siteComplete[nameSite]) {
+                                                        siteComplete[nameSite].splice(siteComplete[nameSite].length, 1, completeSite);
+                                                    } else {
+                                                        siteComplete[nameSite] = new Array();
+                                                        siteComplete[nameSite][0] = completeSite;
+                                                    }
                                                 }
-                            
-                                                // Rentre les impressions
-                                                if (siteImpressions[nameSite]) {
-                                                    siteImpressions[nameSite].splice(
-                                                        siteImpressions[nameSite].length,
-                                                        1,
-                                                        impressionsSite
-                                                    );
-                                                } else {
-                                                    siteImpressions[nameSite] = new Array();
-                                                    siteImpressions[nameSite][0] = impressionsSite;
-                                                }
-                            
-                                                // Rentre les Clicks
-                                                if (siteClicks[nameSite]) {
-                                                    siteClicks[nameSite].splice(siteClicks[nameSite].length, 1, clicksSite);
-                                                } else {
-                                                    siteClicks[nameSite] = new Array();
-                                                    siteClicks[nameSite][0] = clicksSite;
-                                                }
-                            
-                                                // Rentre les Complete
-                                                if (siteComplete[nameSite]) {
-                                                    siteComplete[nameSite].splice(siteComplete[nameSite].length, 1, completeSite);
-                                                } else {
-                                                    siteComplete[nameSite] = new Array();
-                                                    siteComplete[nameSite][0] = completeSite;
+
+                                                // Trie les données de sites
+                                                if (siteUnique && (SiteUniqueCount.length > 0)) {
+                                                    siteList = new Object();
+                                                    for (var ln = 0; ln < SiteUniqueCount.length; ln++) {
+                                                        sN = SiteUniqueCount[ln];
+                                                        siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
+                                                        siteClicksSUM = siteClicks[sN].reduce(reducer);
+                                                        siteCompleteSUM = siteComplete[sN].reduce(reducer);
+                                                        siteCtrSUM = parseFloat((siteClicksSUM / siteImpressionsSUM) * 100).toFixed(2);
+                                                        siteCtrComplete = parseFloat((siteCompleteSUM / siteImpressionsSUM) * 100).toFixed(2);
+
+                                                        var itemSite = {
+                                                            site: sN,
+                                                            impressions: siteImpressionsSUM,
+                                                            clicks: siteClicksSUM,
+                                                            ctr: siteCtrSUM,
+                                                            complete: siteCompleteSUM,
+                                                            ctrComplete: siteCtrComplete
+                                                        };
+                                                        siteList[ln] = itemSite;
+                                                    }
+
                                                 }
                                             }
-                            
-                                            // Trie les données de sites
-                                            if (siteUnique && (SiteUniqueCount.length > 0)) {
-                                                siteList = new Object();
-                                                for (var ln = 0; ln < SiteUniqueCount.length; ln++) {
-                                                sN = SiteUniqueCount[ln];
-                                                siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
-                                                siteClicksSUM = siteClicks[sN].reduce(reducer);
-                                                siteCompleteSUM = siteComplete[sN].reduce(reducer);
-                                                siteCtrSUM = parseFloat((siteClicksSUM/siteImpressionsSUM)*100).toFixed(2);                                                 
-                                                siteCtrComplete = parseFloat((siteCompleteSUM/siteImpressionsSUM)*100).toFixed(2);
 
-                                                    var itemSite = {
-                                                        site: sN,
-                                                        impressions: siteImpressionsSUM,
-                                                        clicks: siteClicksSUM,
-                                                        ctr : siteCtrSUM,
-                                                        complete: siteCompleteSUM,
-                                                        ctrComplete : siteCtrComplete
-                                                    };
-                                                    siteList[ln] = itemSite;
-                                                }
-                            
-                                            }                            
+                                            // Fais le calcul
+                                            impressionsSUM = impressions.reduce(reducer);
+                                            clicksSUM = clicks.reduce(reducer);
+                                            ctrSUM = eval((clicksSUM / impressionsSUM) * 100).toFixed(2);
+                                            completeSUM = complete.reduce(reducer);
+                                            ctrComplete = eval((completeSUM / impressionsSUM) * 100).toFixed(2);
+
+                                            resultDateReport = {
+                                                formatKey: formatSearch,
+                                                // insertions : insertions, sites_rename : sites_rename, sites : sites,
+                                                // siteUniqueCount : SiteUniqueCount, siteUnique : siteUnique, siteImpressions :
+                                                // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
+                                                siteList: siteList,
+                                                // impressions : impressions,
+                                                impressions: impressions.reduce(reducer),
+                                                // clicks : clicks,
+                                                clicks: clicks.reduce(reducer),
+                                                ctr: ctrSUM,
+                                                // complete : complete,
+                                                complete: completeSUM,
+                                                ctrComplete: ctrComplete
+                                            };
+
+                                            return resultDateReport;
                                         }
-                            
-                                        // Fais le calcul
-                                        impressionsSUM = impressions.reduce(reducer);
-                                        clicksSUM = clicks.reduce(reducer);
-                                        ctrSUM = eval((clicksSUM/impressionsSUM)*100).toFixed(2);
-                                        completeSUM = complete.reduce(reducer);
-                                        ctrComplete = eval((completeSUM/impressionsSUM)*100).toFixed(2);
 
-                                        resultDateReport = {
-                                            formatKey: formatSearch,
-                                            // insertions : insertions, sites_rename : sites_rename, sites : sites,
-                                            // siteUniqueCount : SiteUniqueCount, siteUnique : siteUnique, siteImpressions :
-                                            // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
-                                            siteList: siteList,
-                                            // impressions : impressions,
-                                            impressions: impressions.reduce(reducer),
-                                            // clicks : clicks,
-                                            clicks : clicks.reduce(reducer),
-                                            ctr : ctrSUM,
-                                            // complete : complete,
-                                            complete : completeSUM,
-                                            ctrComplete : ctrComplete
-                                        };
-                                        
-                                        return resultDateReport;
-                                    }
-                            
-                                    // Trie les formats et compatibilise les insertions et autres clics
-                                    if (!Utilities.empty(formatHabillage)) {
-                                        formatObjects.habillage = sortDataReport(formatHabillage, dataList);
-                                    }
-                                    if (!Utilities.empty(formatInterstitiel)) {
-                                        formatObjects.interstitiel = sortDataReport(formatInterstitiel, dataList);
-                                    }
-                                    if (!Utilities.empty(formatMasthead)) {
-                                        formatObjects.masthead = sortDataReport(formatMasthead, dataList);
-                                    }
-                                    if (!Utilities.empty(formatGrandAngle)) {
-                                        formatObjects.grandangle = sortDataReport(formatGrandAngle, dataList);
-                                    }
-                                    if (!Utilities.empty(formatInstream)) {
-                                        formatObjects.instream = sortDataReport(formatInstream, dataList);
-                                    }
-                                    if (!Utilities.empty(formatRectangleVideo)) {
-                                        formatObjects.rectanglevideo = sortDataReport(formatRectangleVideo, dataList);
-                                    }
-                                    if (!Utilities.empty(formatLogo)) {
-                                        formatObjects.logo = sortDataReport(formatLogo, dataList);
-                                    }
-                                    if (!Utilities.empty(formatNative)) {
-                                        formatObjects.native = sortDataReport(formatNative, dataList);
-                                    }
-                                    if (!Utilities.empty(formatSlider)) {
-                                        formatObjects.slider = sortDataReport(formatSlider, dataList);
-                                    }
-                                    if (!Utilities.empty(formatMea)) {
-                                        formatObjects.mea = sortDataReport(formatMea, dataList);
-                                    }
-                                    if (!Utilities.empty(formatSliderVideo)) {
-                                        formatObjects.slidervideo = sortDataReport(formatSliderVideo, dataList);
-                                    }
-                                }                                             
-                               
-                                // Ajoute les infos de la campagne
-                                if(Impressions.length > 0) { campaignImpressions = Impressions.reduce(reducer); } else { campaignImpressions = null; }
-                                if(Clicks.length > 0) { campaignClicks = Clicks.reduce(reducer); } else { campaignClicks = null; }
-                                if(!Utilities.empty(campaignClicks) && !Utilities.empty(campaignImpressions) ) { campaignCtr = parseFloat((campaignClicks/campaignImpressions)*100).toFixed(2); } else { campaignCtr = null; }
-                                if(Complete.length > 0) { campaignComplete = Complete.reduce(reducer); } else { campaignComplete = null; }
-                                if(!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions) ) { campaignCtrComplete = parseFloat((campaignComplete/campaignImpressions)*100).toFixed(2); } else { campaignCtrComplete = null; }
-                                console.log('Campaign :', formatObjects.campaign);
-                                formatObjects.campaign = { 
-                                                           campaign_id : campaign.campaign_id, 
-                                                           campaign_name : campaign.campaign_name, 
-                                                           campaign_start_date : campaign.campaign_start_date,
-                                                           campaign_end_date : campaign.campaign_end_date, 
-                                                           campaigncrypt : campaign.campaigncrypt,
-                                                           advertiser_id : campaign.advertiser.advertiser_id,
-                                                           advertiser_name : campaign.advertiser.advertiser_name,
-                                                           impressions : campaignImpressions,
-                                                           clicks : campaignClicks,
-                                                           ctr : campaignCtr,
-                                                           complete : campaignComplete,
-                                                           ctrComplete : campaignCtrComplete
-                                                        } 
-                                console.log('formatObjects :',formatObjects.campaign); 
-                                // Récupére les infos des VU
-                                const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
-                                var dataSplitGlobalVU = objDefaultVU.datafile;                                
-                                
-                                var dataSplitGlobalVU = dataSplitGlobalVU.split(/\r?\n/);
-                                if (dataSplitGlobalVU) {                                   
-                                    var numberLine = dataSplitGlobalVU.length;
-                                    for (i = 1; i < numberLine; i++) {
-                                        // split push les données dans chaque colone
-                                        line = dataSplitGlobalVU[i].split(';');
-                                        if (!Utilities.empty(line[0])) {
-                                            unique_visitor = parseInt(line[0]);
-                                            formatObjects.campaign.vu = parseInt(unique_visitor);
-                                            repetition = parseFloat((campaignImpressions/parseInt(unique_visitor))).toFixed(2);
-                                            formatObjects.campaign.repetition = repetition;
+                                        // Trie les formats et compatibilise les insertions et autres clics
+                                        if (!Utilities.empty(formatHabillage)) {
+                                            formatObjects.habillage = sortDataReport(formatHabillage, dataList);
+                                        }
+                                        if (!Utilities.empty(formatInterstitiel)) {
+                                            formatObjects.interstitiel = sortDataReport(formatInterstitiel, dataList);
+                                        }
+                                        if (!Utilities.empty(formatMasthead)) {
+                                            formatObjects.masthead = sortDataReport(formatMasthead, dataList);
+                                        }
+                                        if (!Utilities.empty(formatGrandAngle)) {
+                                            formatObjects.grandangle = sortDataReport(formatGrandAngle, dataList);
+                                        }
+                                        if (!Utilities.empty(formatInstream)) {
+                                            formatObjects.instream = sortDataReport(formatInstream, dataList);
+                                        }
+                                        if (!Utilities.empty(formatRectangleVideo)) {
+                                            formatObjects.rectanglevideo = sortDataReport(formatRectangleVideo, dataList);
+                                        }
+                                        if (!Utilities.empty(formatLogo)) {
+                                            formatObjects.logo = sortDataReport(formatLogo, dataList);
+                                        }
+                                        if (!Utilities.empty(formatNative)) {
+                                            formatObjects.native = sortDataReport(formatNative, dataList);
+                                        }
+                                        if (!Utilities.empty(formatSlider)) {
+                                            formatObjects.slider = sortDataReport(formatSlider, dataList);
+                                        }
+                                        if (!Utilities.empty(formatMea)) {
+                                            formatObjects.mea = sortDataReport(formatMea, dataList);
+                                        }
+                                        if (!Utilities.empty(formatSliderVideo)) {
+                                            formatObjects.slidervideo = sortDataReport(formatSliderVideo, dataList);
                                         }
                                     }
+
+                                    // Ajoute les infos de la campagne
+                                    if (Impressions.length > 0) {
+                                        campaignImpressions = Impressions.reduce(reducer);
+                                    } else {
+                                        campaignImpressions = null;
+                                    }
+                                    if (Clicks.length > 0) {
+                                        campaignClicks = Clicks.reduce(reducer);
+                                    } else {
+                                        campaignClicks = null;
+                                    }
+                                    if (!Utilities.empty(campaignClicks) && !Utilities.empty(campaignImpressions)) {
+                                        campaignCtr = parseFloat((campaignClicks / campaignImpressions) * 100).toFixed(2);
+                                    } else {
+                                        campaignCtr = null;
+                                    }
+                                    if (Complete.length > 0) {
+                                        campaignComplete = Complete.reduce(reducer);
+                                    } else {
+                                        campaignComplete = null;
+                                    }
+                                    if (!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions)) {
+                                        campaignCtrComplete = parseFloat((campaignComplete / campaignImpressions) * 100).toFixed(2);
+                                    } else {
+                                        campaignCtrComplete = null;
+                                    }
+                                    console.log('Campaign :', formatObjects.campaign);
+                                    formatObjects.campaign = {
+                                        campaign_id: campaign.campaign_id,
+                                        campaign_name: campaign.campaign_name,
+                                        campaign_start_date: campaign.campaign_start_date,
+                                        campaign_end_date: campaign.campaign_end_date,
+                                        campaigncrypt: campaign.campaigncrypt,
+                                        advertiser_id: campaign.advertiser.advertiser_id,
+                                        advertiser_name: campaign.advertiser.advertiser_name,
+                                        impressions: campaignImpressions,
+                                        clicks: campaignClicks,
+                                        ctr: campaignCtr,
+                                        complete: campaignComplete,
+                                        ctrComplete: campaignCtrComplete
+                                    }
+                                    console.log('formatObjects :', formatObjects.campaign);
+                                    // Récupére les infos des VU
+                                    const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
+                                    var dataSplitGlobalVU = objDefaultVU.datafile;
+
+                                    var dataSplitGlobalVU = dataSplitGlobalVU.split(/\r?\n/);
+                                    if (dataSplitGlobalVU) {
+                                        var numberLine = dataSplitGlobalVU.length;
+                                        for (i = 1; i < numberLine; i++) {
+                                            // split push les données dans chaque colone
+                                            line = dataSplitGlobalVU[i].split(';');
+                                            if (!Utilities.empty(line[0])) {
+                                                unique_visitor = parseInt(line[0]);
+                                                formatObjects.campaign.vu = parseInt(unique_visitor);
+                                                repetition = parseFloat((campaignImpressions / parseInt(unique_visitor))).toFixed(2);
+                                                formatObjects.campaign.repetition = repetition;
+                                            }
+                                        }
+                                    }
+
+                                    formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
+                                    formatObjects.reporting_end_date = moment().add(2, 'hours').format('YYYY-MM-DD HH:m:s');
+
+                                    localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
+                                    res.redirect('/rs/${campaigncrypt}');
                                 }
-                           
-                                formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
-                                formatObjects.reporting_end_date = moment().add(2, 'hours').format('YYYY-MM-DD HH:m:s');
 
-                                localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));                                                            
-                                res.redirect('/rs/${campaigncrypt}');
-                            }
-
-                        }, time);
-                    }
+                            }, time);
+                        }
 
                     }
 
@@ -1359,14 +1428,17 @@ exports.report = async (req, res) => {
                 }
 
                 // Affiche le json campaign
-               // res.json(formatObjects);
+                // res.json(formatObjects);
             });
 
-           
+
     } catch (error) {
         console.log(error)
         var statusCoded = error.response;
-        res.render("error.ejs", {statusCoded: statusCoded, campaigncrypt : campaigncrypt})
+        res.render("error.ejs", {
+            statusCoded: statusCoded,
+            campaigncrypt: campaigncrypt
+        })
     }
 
 }
@@ -1395,14 +1467,12 @@ exports.export_excel = async (req, res) => {
                     campaign_crypt: campaigncrypt
 
                 },
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }]
             })
             .then(async function (campaign) {
-                if (!campaign) 
+                if (!campaign)
                     return res
                         .status(404)
                         .render("error.ejs", {
@@ -1410,7 +1480,7 @@ exports.export_excel = async (req, res) => {
                             statusCoded: 404,
                             campaigncrypt: campaigncrypt
                         });
-                
+
                 let campaignid = campaign.campaign_id;
 
                 // crée label avec le date du jour ex : 20210403
@@ -1489,8 +1559,7 @@ exports.export_excel = async (req, res) => {
 
                 //Array of objects representing heading rows (very top)
                 const heading = [
-                    [
-                        {
+                    [{
                             value: 'Rapport : ' + campaign_name,
                             style: styles.headerDark
                         }
@@ -1542,9 +1611,9 @@ exports.export_excel = async (req, res) => {
                             // if the status is 1 then color in green else color in red Notice how we use
                             // another cell value to style the current one
 
-                            return (value === "TOTAL")
-                                ? styles.cellTotal
-                                : styles.cellNone // <- Inline cell style is possible
+                            return (value === "TOTAL") ?
+                                styles.cellTotal :
+                                styles.cellNone // <- Inline cell style is possible
                         },
                         width: 220 // <- width in pixels
                     },
@@ -1604,16 +1673,14 @@ exports.export_excel = async (req, res) => {
                 // the keys is irrelevant, it is also irrelevant if the dataset contains more
                 // fields as the report is build based on the specification provided above. But
                 // you should have all the fields that are listed in the report specification
-                const dataset_global = [
-                    {
-                        impressions: table.total_impression_format,
-                        clics: table.total_click_format,
-                        ctr_clics: table.CTR,
-                        vu: table.Total_VU,
-                        repetions: table.Repetition
+                const dataset_global = [{
+                    impressions: table.total_impression_format,
+                    clics: table.total_click_format,
+                    ctr_clics: table.CTR,
+                    vu: table.Total_VU,
+                    repetions: table.Repetition
 
-                    }
-                ];
+                }];
                 const dataset_format = []
 
                 if (table.sommeInterstitielImpression !== '0') {
@@ -2096,39 +2163,35 @@ exports.export_excel = async (req, res) => {
                 }
                 // Define an array of merges. 1-1 = A:1 The merges are independent of the data.
                 // A merge will overwrite all data _not_ in the top-left cell.
-                const merges = [
-                    {
-                        start: {
-                            row: 1,
-                            column: 1
-                        },
-                        end: {
-                            row: 1,
-                            column: 5
-                        }
+                const merges = [{
+                    start: {
+                        row: 1,
+                        column: 1
+                    },
+                    end: {
+                        row: 1,
+                        column: 5
                     }
-                ];
+                }];
 
                 // Create the excel report. This function will return Buffer
-                const report = excel.buildExport([
-                    { // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
-                        name: 'Bilan', // <- Specify sheet name (optional)
-                        heading: heading, // <- Raw heading array (optional)
-                        merges: merges, // <- Merge cell ranges
-                        specification: bilan_global, // <- Report specification
-                        data: dataset_global // <-- Report data
-                    }, {
-                        name: 'Formats',
-                        // heading : headingformats,
-                        specification: bilan_formats,
-                        data: dataset_format
-                    }, {
-                        name: 'Sites',
-                        // heading : headingsites,
-                        specification: bilan_sites, // <- Report specification
-                        data: dataset_site // <-- Report data
-                    }
-                ]);
+                const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+                    name: 'Bilan', // <- Specify sheet name (optional)
+                    heading: heading, // <- Raw heading array (optional)
+                    merges: merges, // <- Merge cell ranges
+                    specification: bilan_global, // <- Report specification
+                    data: dataset_global // <-- Report data
+                }, {
+                    name: 'Formats',
+                    // heading : headingformats,
+                    specification: bilan_formats,
+                    data: dataset_format
+                }, {
+                    name: 'Sites',
+                    // heading : headingsites,
+                    specification: bilan_sites, // <- Report specification
+                    data: dataset_site // <-- Report data
+                }]);
 
                 // You can then return this straight
                 // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls

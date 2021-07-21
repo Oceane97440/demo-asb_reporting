@@ -92,14 +92,14 @@ exports.index = async (req, res) => {
         console.log(error)
         var statusCoded = error.response;
         res.render("error.ejs", {
-           statusCoded: statusCoded,
+            statusCoded: statusCoded,
         });
     }
 
 };
 
 exports.forecast = async (req, res, next) => {
-  
+
     // Définition des variables
     var headerlocation, table, requestForecast;
     var date_start = await req.body.date_start;
@@ -129,8 +129,8 @@ exports.forecast = async (req, res, next) => {
                 message: 'Les champs doivent être complétés'
             }
             return res.redirect('/forecast');
-        } 
-        
+        }
+
         //date aujourd'hui en timestamp 
         const date_now = Date.now();
         const timstasp_start = Date.parse(date_start);
@@ -240,7 +240,7 @@ exports.forecast = async (req, res, next) => {
         };
 
         let threeLink = await AxiosFunction.getForecastData('POST', '', requestInsertions);
-        
+
         if (threeLink.headers.location) {
             headerlocation = threeLink.headers.location;
             let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
@@ -248,7 +248,7 @@ exports.forecast = async (req, res, next) => {
                 headerlocation = insertionLink.headers.location;
 
                 let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
-                
+
                 // liste des insertions
                 var CampaignName = [];
                 var InsertionName = [];
@@ -362,7 +362,7 @@ exports.forecast = async (req, res, next) => {
                     //si interstitiel -> web_interstitiel / app_interstitiel
                     format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
                     break;
-                    default:
+                default:
                     break;
             }
 
@@ -381,14 +381,14 @@ exports.forecast = async (req, res, next) => {
             var Campagne_end_reserver = [];
             var Interval_reserver = [];
             var Nbr_cheval_reserver = [];
-            
-            if(requete.length > 0) {
+
+            if (requete.length > 0) {
                 for (let i = 0; i < requete.length; i++) {
                     // Calculer l'intervalle de date sur la période
                     const campaign_start_date = requete[i].campaign_start_date;
                     const campaign_end_date = requete[i].campaign_end_date;
                     const volumes_prevue = requete[i].volume_prevue;
-                    
+
                     const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
                     const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
                     date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
@@ -427,8 +427,7 @@ exports.forecast = async (req, res, next) => {
                     const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
 
                     if (requete[i].etat == "2") {
-                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
-                        } else {
+                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
                             array_reserver.push(volumes_prevu_diffuse);
                             Campagnes_reserver.push(requete[i].campaign_name);
                             Campagne_start_reserver.push(campaign_start_date);
@@ -514,7 +513,7 @@ exports.forecast = async (req, res, next) => {
                     "FormatID": formatIdsArray // new Array(79633,44152) //formats
                 }
             ],
-           "fields": [
+            "fields": [
                 "TotalImpressions",
                 "OccupiedImpressions",
                 "SiteID",
@@ -674,6 +673,10 @@ exports.forecast = async (req, res, next) => {
                         //si grand angle ->web_mban  app_mpave_atf0 
                         format_filtre = new Array("WEB_MPAVE_ATF0", "APP_MPAVE_ATF0", "GRAND ANGLE")
                         break;
+                    case "RECTANGLE VIDEO":
+                        //si grand angle ->web_mban  app_mpave_atf0 
+                        format_filtre = new Array("WEB_MPAVE_ATF0", "APP_MPAVE_ATF0", "GRAND ANGLE")
+                        break;
                     case "MASTHEAD":
                         //si masthead -> web_mban / app_mban
                         format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0", "MASTHEAD")
@@ -692,7 +695,7 @@ exports.forecast = async (req, res, next) => {
                         format_filtre = new Array("SLIDE", "APP_SLIDE")
                         break;
                     default:
-                    break;
+                        break;
                 }
 
                 const requete = await sequelize.query(
@@ -720,7 +723,7 @@ exports.forecast = async (req, res, next) => {
                     const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
                     const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
                     date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
-                    
+
                     const nb_jour_interval = (date_interval / 86400000);
 
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
@@ -731,7 +734,7 @@ exports.forecast = async (req, res, next) => {
                         //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
                         if (date_start_forecast < campaign_date_start) {
                             //alors la date début à cheval = date de début campagne 
-                           var date_start_cheval = campaign_date_start;
+                            var date_start_cheval = campaign_date_start;
                         } else {
                             var date_start_cheval = date_start_forecast;
                         }
@@ -829,7 +832,7 @@ exports.forecast = async (req, res, next) => {
 
                  }*/
 
-               
+
                 if (req.session.user.user_role == 1) {
 
 
@@ -862,7 +865,7 @@ exports.forecast = async (req, res, next) => {
 
             }
 
-            
+
         }
 
     } catch (error) {
