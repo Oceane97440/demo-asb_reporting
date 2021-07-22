@@ -882,12 +882,6 @@ exports.report = async (req, res) => {
                                 } else {
                                     dataLSTaskGlobalVU = '';
 
-                                    localStorageTasks.setItem(
-                                        'campaignID-' + campaignid + '-taskGlobalVU',
-                                        JSON.stringify(dataLSTaskGlobalVU)
-                                    );
-                                    console.log('Creation de dataLSTaskGlobalVU');
-
                                     console.log('LocalStorage Vu est vide')
                                 }
 
