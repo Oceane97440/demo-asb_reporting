@@ -583,11 +583,7 @@ exports.report = async (req, res) => {
                         var campaign_end_date = reportingData.campaign.campaign_end_date;
                         var campaign_start_date = reportingData.campaign.campaign_start_date;
 
-                        /*  console.log('Date reporting_start_date :', reporting_start_date);
-                          console.log('Date reporting_end_date :', reporting_end_date);
 
-                          console.log('campaign_start_date :', campaign_start_date);
-                          console.log('campaign_end_date :', campaign_end_date);*/
 
                         // si la date d'expiration est < au moment de la requête on garde la cache
                       //-----  if ((reporting_requete_date < reporting_end_date) || (campaign_end_date < reporting_start_date)) {
@@ -655,21 +651,6 @@ exports.report = async (req, res) => {
                         }
 
 
-                        // console.log('insertion_end_date : ', insertion_end_date, ' - end_date_timezone :', endDate_last);
-                        /*
-                        var s = parseInt(start_date_timezone);
-                        var t3 = parseInt(endDate_last);
-                        var t4  = moment(endDate_last).format("X");
-                        console.log('t3 : ',t3,' - t4 :',t4);
-
-
-
-                        const StartDate_timezone = Utilities.getDateTimezone(s);
-                        const EndDate = Utilities.getDateTimezone(t3);
-                        var t5  = moment(start_date_timezone).format("X");
-                        console.log(' t5 :',t5, ' - StartDate_timezone : ',StartDate_timezone,' - EndDate :',EndDate);
-                       
-                        */
 
                         const StartDate_timezone = moment(start_date_timezone).format('YYYY-MM-DDTHH:mm:ss');
                         const EndDate = moment(endDate_last).format('YYYY-MM-DDTHH:mm:ss');
@@ -723,8 +704,6 @@ exports.report = async (req, res) => {
                                 "CampaignId": [campaignid]
                             }]
                         }
-
-
 
 
 
@@ -832,12 +811,23 @@ exports.report = async (req, res) => {
 
                             let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
-                            let requete_vu = null;
                             // si taskId_uu existe on exécute la requête sinon initialisation des varibales
-                            if ((!taskId_uu) && (!Utilities.empty(twoLinkTaskId))) {
-                                let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
+                            requete_vu = null;
 
-                            }/*--- else {
+                            /*if ((!taskId_uu) && (!Utilities.empty(twoLinkTaskId))) {
+                                console.log('taskUU existe ' + taskId_uu)
+                                var requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
+
+                            }*/
+                            if ((taskId_uu !== null) || (!Utilities.empty(twoLinkTaskId))) {
+                                console.log('taskUU existe ' + taskId_uu)
+                                var requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
+
+                            }
+
+
+
+                            /*--- else {
                                 requete_vu = ''
                                 console.log("Requete_vu vide")
                             }----*/
@@ -854,17 +844,11 @@ exports.report = async (req, res) => {
 
                                 // si dataLSTaskGlobalVU existe on recupère le localstorage sinon initialisation des varibales
                                 // if ((!requete_vu) && (!Utilities.empty(dataLSTaskGlobalVU))) {
-                                if (!requete_vu) {
+                                if (!requete_vu ) {
                                     var dataLSTaskGlobalVU = localStorageTasks.getItem(
                                         'campaignID-' + campaignid + '-taskGlobalVU'
                                     );
-                                }/* else {
-                                    dataLSTaskGlobalVU = 0;
-                                    console.log('LocalStorage VU est vide');
-                                }*/
-
-                                //  console.log('dataLSTaskGlobalVU 1 ' + dataLSTaskGlobalVU)
-
+                                }
 
                                 if (!dataLSTaskGlobal || !dataLSTaskGlobalVU) {
                                     console.log('!dataLSTaskGlobal || !dataLSTaskGlobalVU')
@@ -902,15 +886,18 @@ exports.report = async (req, res) => {
 
 
                                     // si dataLSTaskGlobalVU ou requete_vu existe on exécute les requête sinon initialisation des varibales
-                                    if (!Utilities.empty(dataLSTaskGlobalVU) /*--- && !Utilities.empty(requete_vu) ---*/ ) {
+                                    if (!Utilities.empty(dataLSTaskGlobalVU)  || dataLSTaskGlobalVU !== null /*---&& !Utilities.empty(requete_vu)*/ ) {
                                         time += 5000;
 
                                         console.log('dataLSTaskGlobalVU 3 si condition VU existe :' + dataLSTaskGlobalVU)
+                                        console.log('requete_vu  si condition VU existe :' + requete_vu)
 
                                         let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
 
+                                        console.log(fourLink.data.lastTaskInstance.jobProgress)
 
-                                        if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+
+                                        if ((fourLink.data.lastTaskInstance.jobProgress == '1') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
 
                                             // 3) Récupère la date de chaque requête
                                             dataLSTaskGlobalVU = localStorageTasks.getItem(
@@ -940,8 +927,7 @@ exports.report = async (req, res) => {
 
 
 
-                                        // Request task2
-                                        console.log('dataLSTaskGlobalVU 2 ' + dataLSTaskGlobalVU)
+                                       
                                     } else {
                                         // save la data requête 2 dans le local storage
                                         dataLSTaskGlobalVU = {
@@ -957,8 +943,7 @@ exports.report = async (req, res) => {
 
                                 } else {
 
-                                    console.log('dataLSTaskGlobalVU else ' + dataLSTaskGlobalVU)
-                                    console.log('dataLSTaskGlobal else ' + dataLSTaskGlobal)
+                                   console.log('dataLSTaskGlobalVU clear timeout  ' + dataLSTaskGlobalVU)
 
                                     // Stoppe l'intervalle timerFile
                                     clearInterval(timerFile);

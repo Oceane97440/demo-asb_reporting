@@ -349,21 +349,21 @@
                             </tr>
                         </thead>
                         <tbody class="text-center">
-                            <% for(i=0; i < Object.keys(reporting.grandangle.siteList).length; i++) { %>
+                            <% for(i=0; i < Object.keys(reporting.interstitiel.siteList).length; i++) { %>
                                 <tr>
-                                    <td class="text-left"><%= reporting.grandangle.siteList[i].site %></td>
-                                    <td><%= utilities.numStr(reporting.grandangle.siteList[i].impressions) %></td>
-                                    <td><%= utilities.numStr(reporting.grandangle.siteList[i].clicks) %></td>
-                                    <td class="text-right"><%= reporting.grandangle.siteList[i].ctr %>%</td>
+                                    <td class="text-left"><%= reporting.interstitiel.siteList[i].site %></td>
+                                    <td><%= utilities.numStr(reporting.interstitiel.siteList[i].impressions) %></td>
+                                    <td><%= utilities.numStr(reporting.interstitiel.siteList[i].clicks) %></td>
+                                    <td class="text-right"><%= reporting.interstitiel.siteList[i].ctr %>%</td>
                                 </tr>
                             <% } %>
                         </tbody>
                         <tfoot class="text-center table-dark">
                             <tr>
                                 <td class="text-left"><strong>Total</strong></td>
-                                <td><%= utilities.numStr(reporting.grandangle.impressions) %></td>
-                                <td><%= utilities.numStr(reporting.grandangle.clicks) %></td>
-                                <td class="text-right"><%= reporting.grandangle.ctr %>%</td>
+                                <td><%= utilities.numStr(reporting.interstitiel.impressions) %></td>
+                                <td><%= utilities.numStr(reporting.interstitiel.clicks) %></td>
+                                <td class="text-right"><%= reporting.interstitiel.ctr %>%</td>
                             </tr>
                         </tfoot>
                     </table>
