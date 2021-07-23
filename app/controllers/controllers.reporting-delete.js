@@ -590,15 +590,15 @@ exports.report = async (req, res) => {
                           console.log('campaign_end_date :', campaign_end_date);*/
 
                         // si la date d'expiration est < au moment de la requête on garde la cache
-                      //-----  if ((reporting_requete_date < reporting_end_date) || (campaign_end_date < reporting_start_date)) {
+                        if ((reporting_requete_date < reporting_end_date) || (campaign_end_date < reporting_start_date)) {
                             res.render('report/template.ejs', {
                                 reporting: reportingData,
                                 moment: moment,
                                 utilities: Utilities
                             });
-                     //----   } else {
+                        } else {
                             //console.log('Supprime et relance la generation du rapport')
-                            /*-------
+
                             // si le local storage expire; on supprime les precedents cache et les taskid                           
                             localStorage.removeItem('campaignID-' + campaignid);
                             localStorageTasks.removeItem(
@@ -607,10 +607,9 @@ exports.report = async (req, res) => {
                             localStorageTasks.removeItem(
                                 'campaignID-' + campaignid + '-taskGlobalVU'
                             );
-                       
 
                             res.redirect('/rs/${campaigncrypt}');
-                        } --------*/
+                        }
 
                     } else {
                         //  console.log('data_localStorage no existe');
@@ -628,8 +627,12 @@ exports.report = async (req, res) => {
                         });
                         // console.log('insertion_end_date : ', insertion_end_date);
 
-                        const now = new Date();
-                        const timestamp_datenow = now.getTime();
+                        // const now = new Date();
+                        // const timestamp_datenow = now.getTime();
+
+                        // Déclare la date du moment
+                        var timestamp_datenow = moment().format("DD/MM/YYYY HH:mm:ss");
+
 
                         // recup la date de début de la campagne -4 heures pour règler le prob du décalage horaire
                         const campaign_start_date_yesterday = new Date(campaign_start_date);
@@ -644,17 +647,12 @@ exports.report = async (req, res) => {
                         // recup la date de fin de la campagne ajoute +1jour
                         var endDate_day = new Date(campaign_end_date);
                         var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
-                        console.log('l.647 : endDate_last : ', endDate_last)
-                        var insertion_Enddate_timestamp = Utilities.DateToTimestamps(insertion_end_date)
+
 
 
                         if (insertion_end_date > endDate_last) {
-                            // Transformer insertion_end_date en timestamp
-                            endDate_last = insertion_Enddate_timestamp;
-                            
+                            endDate_last = insertion_end_date;
                         }
-
-
                         // console.log('insertion_end_date : ', insertion_end_date, ' - end_date_timezone :', endDate_last);
                         /*
                         var s = parseInt(start_date_timezone);
@@ -676,7 +674,6 @@ exports.report = async (req, res) => {
 
                         // si la date du jour est > à la date de fin on prend la date de fin sinon la
                         // date du jour
-                        console.log('endDate_last : ',endDate_last,' -  NOW :',timestamp_datenow);                        
                         if (endDate_last < timestamp_datenow) {
                             var end_date = EndDate;
                         } else {
@@ -747,6 +744,21 @@ exports.report = async (req, res) => {
                         // si la différence de jour est <= à 31 , on exécute pas la requête
                         if (diff_start_end_day <= 31 || diff_end_now_day <= 31) {
 
+                            /*var requestVisitor_unique = {
+                                "startDate": StartDate_timezone,
+                                "endDate": "2021-06-09T23:00:00",
+                                "fields": [{
+                                    "UniqueVisitors": {}
+                                }],
+                                "filter": [{
+                                    "CampaignId": [campaignid]
+                                }]
+                            }
+                            var requestVisitor_unique = {}
+
+
+
+                        } else {*/
                             var requestVisitor_unique = {
                                 "startDate": StartDate_timezone,
                                 "endDate": end_date,
@@ -758,7 +770,9 @@ exports.report = async (req, res) => {
                                 }]
                             }
 
+
                         }
+
 
 
                         // 1) Requête POST
@@ -781,9 +795,6 @@ exports.report = async (req, res) => {
                                 '',
                                 requestReporting
                             );
-
-                            console.log(requestReporting);
-                            console.log(firstLink);
                             if (firstLink.status == 201) {
                                 localStorageTasks.setItem(
                                     'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour,
@@ -793,10 +804,21 @@ exports.report = async (req, res) => {
                             }
                         }
 
+
+
+
+
                         // twoLink - Récupére la taskID de la requête reporting
                         let twoLinkTaskId = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour
                         );
+
+
+
+
+
+
+
 
                         if ((!twoLinkTaskId) && (!Utilities.empty(requestVisitor_unique))) {
                             let twoLink = await AxiosFunction.getReportingData(
@@ -804,7 +826,7 @@ exports.report = async (req, res) => {
                                 '',
                                 requestVisitor_unique
                             );
-
+                            console.log('twoLink' + twoLink)
                             if (twoLink.status == 201) {
                                 localStorageTasks.setItem(
                                     'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour,
@@ -812,8 +834,10 @@ exports.report = async (req, res) => {
                                 );
                                 twoLinkTaskId = twoLink.data.taskId;
                             }
-                        } 
-                        
+                        } else {
+                            twoLinkTaskId = ''
+                        }
+
 
                         console.log(
                             'firstLinkTaskId :',
@@ -827,20 +851,20 @@ exports.report = async (req, res) => {
                             var taskId = firstLinkTaskId;
                             var taskId_uu = twoLinkTaskId;
 
-                            console.log('TASK-GLOBAL-ID :', taskId , ' - TASK-UU-ID : ', taskId_uu);
+                            console.log('taskId', taskId);
+                            console.log("taskId_uu", taskId_uu);
 
 
                             let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
-                            let requete_vu = null;
                             // si taskId_uu existe on exécute la requête sinon initialisation des varibales
                             if ((!taskId_uu) && (!Utilities.empty(twoLinkTaskId))) {
                                 let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
 
-                            }/*--- else {
+                            } else {
                                 requete_vu = ''
                                 console.log("Requete_vu vide")
-                            }----*/
+                            }
 
 
                             // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
@@ -853,15 +877,15 @@ exports.report = async (req, res) => {
                                 );
 
                                 // si dataLSTaskGlobalVU existe on recupère le localstorage sinon initialisation des varibales
-                                // if ((!requete_vu) && (!Utilities.empty(dataLSTaskGlobalVU))) {
-                                if (!requete_vu) {
+                                if ((!requete_vu) && (!Utilities.empty(dataLSTaskGlobalVU))) {
                                     var dataLSTaskGlobalVU = localStorageTasks.getItem(
                                         'campaignID-' + campaignid + '-taskGlobalVU'
                                     );
-                                }/* else {
+                                } else {
                                     dataLSTaskGlobalVU = 0;
-                                    console.log('LocalStorage VU est vide');
-                                }*/
+
+                                    console.log('LocalStorage Vu est vide')
+                                }
 
                                 //  console.log('dataLSTaskGlobalVU 1 ' + dataLSTaskGlobalVU)
 
@@ -902,7 +926,7 @@ exports.report = async (req, res) => {
 
 
                                     // si dataLSTaskGlobalVU ou requete_vu existe on exécute les requête sinon initialisation des varibales
-                                    if (!Utilities.empty(dataLSTaskGlobalVU) /*--- && !Utilities.empty(requete_vu) ---*/ ) {
+                                    if (!Utilities.empty(dataLSTaskGlobalVU) /*&& !Utilities.empty(requete_vu)*/ ) {
                                         time += 5000;
 
                                         console.log('dataLSTaskGlobalVU 3 si condition VU existe :' + dataLSTaskGlobalVU)
@@ -953,7 +977,12 @@ exports.report = async (req, res) => {
                                         );
                                         console.log('Creation du localStorage si dataLSTaskGlobalVU no existe');
                                     }
-                                   
+                                    /*
+                                                                      if (dataLSTaskGlobal && dataLSTaskGlobalVU) {
+                                                                           clearInterval(timerFile);
+                                                                           console.log('Creation de clearInterval(timerFile)');
+                                                                       }
+                                                                      */
 
                                 } else {
 

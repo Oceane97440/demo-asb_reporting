@@ -127,3 +127,8 @@ exports.nbr_jours = function dateDiff(date1, date2){
      
     return diff;
 }
+
+exports.DateToTimestamps = function toTimestamp(strDate){
+    var datum = Date.parse(strDate);
+    return datum/1000;
+ }
