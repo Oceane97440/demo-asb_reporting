@@ -40,8 +40,9 @@
             <td><%= moment(campaigns[i].updated_at).fromNow() %></td>          
             <td>               
                    <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaigns[i].campaign_id %>&AnnonceurID=<%= campaigns[i].advertiser_id %>" target="_blank" title="Accéder à la campagne sur SMARTADSERVER"><img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER" /></a>
-                   &nbsp; <a href="/manager/campaigns/<%= campaigns[i].campaign_id %>/edit" title="Modifier cette campagne"><i class="icon feather icon-edit f-16 text-success"></i></a> 
+                   &nbsp; <a href="/manager/campaigns/<%= campaigns[i].campaign_id %>/edit" target="_blank" title="Modifier cette campagne"><i class="icon feather icon-edit f-16 text-success"></i></a> 
                   <% if(campaigns.insertions && (campaigns[i].insertions.length === 0)) { %> &nbsp; <a href="/automate/campaigns/insertions?campaign_id=<%= campaigns[i].campaign_id %>" title="Mise à jour des insertions" class="ajax-link"><i class="icon feather icon-wind f-16 text-success"></i></a><% } %>
+                  <a href="/rs/<%= campaigns[i].campaign_crypt %>"  target="_blank" title="Afficher le rapport de cette campagne"><i class="material-icons-two-tone">link</i></a>
             </td>
         </tr>
         <% } %>

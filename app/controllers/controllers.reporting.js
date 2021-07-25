@@ -570,13 +570,14 @@ exports.report = async (req, res) => {
                         // date JSON en objet
                         var reportingData = JSON.parse(data_localStorage);
 
-                        var reporting_requete_date = moment().format('YYYY-MM-DD h:m:s');
+                        var reporting_requete_date = moment().format('YYYY-MM-DD HH:mm:ss');
                         var reporting_start_date = reportingData.reporting_start_date;
                         var reporting_end_date = reportingData.reporting_end_date;
 
                         var campaign_end_date = reportingData.campaign.campaign_end_date;
                         var campaign_start_date = reportingData.campaign.campaign_start_date;
 
+                        console.log('DateNOW reporting_requete_date :', reporting_requete_date);
                         console.log('Date reporting_start_date :', reporting_start_date);
                         console.log('Date reporting_end_date :', reporting_end_date);
 
@@ -591,20 +592,61 @@ exports.report = async (req, res) => {
                             reporting_end_date
                         );
 
-                        // si la date d'expiration est < au moment de la requête on garde la cache  if
-                        // ((reporting_requete_date < reporting_end_date) || (campaign_end_date >
-                        // reporting_start_date)) {
-                        res.render('report/template.ejs', {
-                            reporting: reportingData,
-                            moment: moment,
-                            utilities: Utilities
-                        });
+
+                        
+
+                        // si la date d'expiration est < au moment de la requête on garde la cache  
+                        if((reporting_requete_date < reporting_end_date) || (campaign_end_date > reporting_start_date)) {
+                           
+                            if(reporting_requete_date > reporting_end_date) {
+                                localStorage.removeItem('campaignID-' + campaignid);
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobal'
+                                );
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobalVU'
+                                );
+                                res.redirect('/rs/${campaigncrypt}');
+                           }  
+
+
+                           if(reporting_requete_date < reporting_end_date) {
+                            res.render('report/template.ejs', {
+                                reporting: reportingData,
+                                moment: moment,
+                                utilities: Utilities
+                            });
+                           }
 
                         // campaign_end_date > reporting_start_date
-                        /*
+                         
                         } else {
-                            console.log('Supprime et relance la generation du rapport')
+                            console.log('Supprime et relance la génération du rapport')
+                          
+                            // On relance la génération de rapport si aucune de ses conditions n'est correct 
+                            // - La campagne n'est pas terminée
+                            if(reporting_requete_date < campaign_end_date) {
+                                // si le local storage expire; on supprime les precedents cache et les taskid
+                                localStorage.removeItem('campaignID-' + campaignid);
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobal'
+                                );
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobalVU'
+                                );
 
+                                res.redirect('/rs/${campaigncrypt}');
+                            } else {
+                                res.render('report/template.ejs', {
+                                    reporting: reportingData,
+                                    moment: moment,
+                                    utilities: Utilities
+                                });
+
+                            }
+                            
+                          
+                            /*
                             // si le local storage expire; on supprime les precedents cache et les taskid
                             localStorage.removeItem('campaignID-' + campaignid);
                             localStorageTasks.removeItem(
@@ -615,8 +657,9 @@ exports.report = async (req, res) => {
                             );
 
                             res.redirect('/rs/${campaigncrypt}');
-                        }
-*/
+                           */
+                        } 
+
                     } else {
                         console.log('data_localStorage no existe');
 
@@ -733,7 +776,7 @@ exports.report = async (req, res) => {
                             ]
                         }
 
-                        console.log('requestReporting : ', requestReporting);
+                        //---  console.log('requestReporting : ', requestReporting);
                         // process.exit(1); console.log(requestReporting) test si la date de fin de la
                         // campagne est => date au jourd'hui = 31j ne pas effectuer la requête date_fin
                         // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
@@ -768,8 +811,6 @@ exports.report = async (req, res) => {
                                 }
                             ]
                         }
-
-                        console.log('requestVisitor_unique :', requestVisitor_unique)
 
                         // 1) Requête POST
                         var dataLSTaskGlobal = localStorageTasks.getItem(
@@ -813,7 +854,13 @@ exports.report = async (req, res) => {
                         }*/
 
                         //  if (!twoLinkTaskId && ((diff.day <= 31) || (diff_start.day <= 31)) ) {
-                        if (!twoLinkTaskId && (diff_start.day <= 31)) {
+                        if (!twoLinkTaskId && (diff.day <= 31)) {
+                            console.log('twoLinkTaskId :', twoLinkTaskId)
+
+
+                            console.log('requestVisitor_unique :', requestVisitor_unique)
+
+   
                             let twoLink = await AxiosFunction.getReportingData(
                                 'POST',
                                 '',
@@ -827,7 +874,7 @@ exports.report = async (req, res) => {
                                 twoLinkTaskId = twoLink.data.taskId;
                             }
                         }
-
+    
                         console.log(
                             'firstLinkTaskId :',
                             firstLinkTaskId,

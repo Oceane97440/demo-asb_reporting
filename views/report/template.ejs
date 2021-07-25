@@ -334,7 +334,6 @@
     </div>
 <% } %>
 
-<<<<<<< HEAD
 <% if(reporting.interstitiel) { %>
     <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
         <h3 class="title">
@@ -373,44 +372,6 @@
         </table>
     </div>
 <% } %>
-=======
-            <% if(reporting.interstitiel) { %>
-                <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
-                    <h3 class="title">
-                        <i class="fas fa-chart-line"></i>
-                        <strong>INTERSTITIEL / par site</strong>
-                    </h3>
-                    <table class="table">
-                        <thead class="text-center thead-dark">
-                            <tr>
-                               <th class="text-left">Sites</th>
-                                <th>Impressions</th>
-                                <th>Clics</th>
-                                <th>Taux de clics</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <% for(i=0; i < Object.keys(reporting.interstitiel.siteList).length; i++) { %>
-                                <tr>
-                                    <td class="text-left"><%= reporting.interstitiel.siteList[i].site %></td>
-                                    <td><%= utilities.numStr(reporting.interstitiel.siteList[i].impressions) %></td>
-                                    <td><%= utilities.numStr(reporting.interstitiel.siteList[i].clicks) %></td>
-                                    <td class="text-right"><%= reporting.interstitiel.siteList[i].ctr %>%</td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                        <tfoot class="text-center table-dark">
-                            <tr>
-                                <td class="text-left"><strong>Total</strong></td>
-                                <td><%= utilities.numStr(reporting.interstitiel.impressions) %></td>
-                                <td><%= utilities.numStr(reporting.interstitiel.clicks) %></td>
-                                <td class="text-right"><%= reporting.interstitiel.ctr %>%</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            <% } %>
->>>>>>> 5aa25144efe4c225e0f60aa603b2b3c49e76bb37
 
 <% if(reporting.instream) { %>
     <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
