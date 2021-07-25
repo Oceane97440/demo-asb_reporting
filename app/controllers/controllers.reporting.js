@@ -613,7 +613,6 @@ exports.report = async (req, res) => {
                             localStorageTasks.removeItem(
                                 'campaignID-' + campaignid + '-taskGlobalVU'
                             );
-                       
 
                             res.redirect('/rs/${campaigncrypt}');
                         }
@@ -653,9 +652,7 @@ exports.report = async (req, res) => {
                         var endDate_day = new Date(campaign_end_date);
                         var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
                         if (insertion_end_date > endDate_last) {
-                            // Transformer insertion_end_date en timestamp
-                            endDate_last = insertion_Enddate_timestamp;
-                            
+                            endDate_last = insertion_end_date;
                         }
                         console.log(
                             'insertion_end_date : ',
@@ -685,7 +682,6 @@ exports.report = async (req, res) => {
 
                         // si la date du jour est > à la date de fin on prend la date de fin sinon la
                         // date du jour
-                        console.log('endDate_last : ',endDate_last,' -  NOW :',timestamp_datenow);                        
                         if (endDate_last < timestamp_datenow) {
                             var end_date = EndDate;
                         } else {
@@ -795,9 +791,6 @@ exports.report = async (req, res) => {
                                 '',
                                 requestReporting
                             );
-
-                            console.log(requestReporting);
-                            console.log(firstLink);
                             if (firstLink.status == 201) {
                                 localStorageTasks.setItem(
                                     'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour,
@@ -909,9 +902,6 @@ exports.report = async (req, res) => {
                                         let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
                                         console.log('requete_vu : ', requete_vu)
 
-                                        console.log('dataLSTaskGlobalVU 3 si condition VU existe :' + dataLSTaskGlobalVU)
-                                        console.log('requete_vu  si condition VU existe :' + requete_vu)
-
                                         let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
 
                                         console.log('fourLink : ', fourLink)
@@ -941,24 +931,11 @@ exports.report = async (req, res) => {
                                         }
                                     }
 
-                                       
-                                    } else {
-                                        // save la data requête 2 dans le local storage
-                                        dataLSTaskGlobalVU = {
-                                            'datafile': ''
-                                        };
-                                        localStorageTasks.setItem(
-                                            'campaignID-' + campaignid + '-taskGlobalVU',
-                                            JSON.stringify(dataLSTaskGlobalVU)
-                                        );
-                                        console.log('Creation du localStorage si dataLSTaskGlobalVU no existe');
+                                    if (dataLSTaskGlobal && dataLSTaskGlobalVU) {
+                                        console.log('Creation de clearInterval(timerFile)');
                                     }
-                                   
 
                                 } else {
-
-                                   console.log('dataLSTaskGlobalVU clear timeout  ' + dataLSTaskGlobalVU)
-
                                     // Stoppe l'intervalle timerFile
                                     clearInterval(timerFile);
                                     console.log('Stop clearInterval timerFile');
