@@ -13,9 +13,15 @@ exports.config = function (method, params = '') {
         case 'campaigns':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/';
             break;
+        case 'campaign':
+            campaign_id = params.campaign_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
+                    campaign_id;
+            break;
         case 'campaignsInsertions':
             campaign_id = params.campaign_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/'+campaign_id+'/insertions/';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
+                    campaign_id + '/insertions/';
             break;
         case 'formats':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/formats';
@@ -31,7 +37,7 @@ exports.config = function (method, params = '') {
             break;
         case 'deliverytypes':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/deliverytypes';
-            break;      
+            break;
         case 'countries':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/countries';
             break;
@@ -47,15 +53,15 @@ exports.config = function (method, params = '') {
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions_status';
             break;
         case 'insertions_priorities':
-                var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertionpriorities';
-                break;   
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertionpriorities';
+            break;
         case 'creatives':
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
                     insertion_id + '/creatives';
-        break;
+            break;
         default:
-        break;
+            break;
     }
 
     var config = {
@@ -69,7 +75,7 @@ exports.config = function (method, params = '') {
             username: dbApi.SMART_login,
             password: dbApi.SMART_password
         },
-/*
+        /*
         //condition config
         params: {
             limit: limit,
@@ -78,9 +84,15 @@ exports.config = function (method, params = '') {
         }*/
     };
 
-    if(params.limit) { config['params']['limit'] = params.limit;}
-    if(params.offset) { config['params']['offset'] = params.offset;}
-    if(params.isArchived) { config['params']['isArchived'] = params.isArchived;}
+    if (params.limit) {
+        config['params']['limit'] = params.limit;
+    }
+    if (params.offset) {
+        config['params']['offset'] = params.offset;
+    }
+    if (params.isArchived) {
+        config['params']['isArchived'] = params.isArchived;
+    }
 
     return config;
 }

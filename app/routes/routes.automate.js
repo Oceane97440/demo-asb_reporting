@@ -8,6 +8,7 @@ router.get("/json", automate.json);
 router.get("/agencies", automate.agencies);
 router.get("/advertisers", automate.advertisers);
 router.get("/campaigns", automate.campaigns);
+router.get("/campaign", automate.campaign);
 router.get("/campaigns/insertions", automate.campaignsInsertions);
 router.get("/campaigns/creatives", automate.campaignsCreatives);
 router.get("/campaigns/days", automate.campaignsDays);

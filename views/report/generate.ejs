@@ -94,7 +94,8 @@
                             <div
                                 class="alert alert-danger alert-dismissible fade show mb-3"
                                 role="alert">
-                                <strong>Attention : La campagne demandée n'existe pas pour le moment.</strong>
+                                <i class="fas fa-spinner fa-pulse"></i>
+                                <strong>Attention : La campagne ne débutera que <u><%= moment(campaign.campaign_start_date).fromNow(); %></u>.</strong>
                             </div>
                         <% } %>
 
@@ -115,10 +116,12 @@
                                 au
                                 <%= moment(campaign.campaign_end_date).format('DD/MM/YYYY') %></li>
                             <li class="list-group-item">
+                                <% if(date_now > timestamp_startdate) { %>
                                 <a type="button" href="#" class="btn btn-danger btn-lg btn-block">
                                     <i class="fas fa-link"></i>
                                     Générer le rapport de campagne
                                 </a>
+                                <% } %>
                             </li>
                         </ul>
 
@@ -180,15 +183,18 @@
 
             <script>
                   $(document).ready(function () {
-                      $.ajax({
-                          method: "GET",
-                          url: '/rs/report/<%=campaigncrypt%>',
-                          success: function (data) {
-                              $("#exampleModal").hide();
-                              $('body').html(data);
-                          }
-                      })
-      
+                    
+                    <% if(date_now > timestamp_startdate) { %>
+                        $.ajax({
+                            method: "GET",
+                            url: '/rs/report/<%=campaigncrypt%>',
+                            success: function (data) {
+                                $("#exampleModal").hide();
+                                $('body').html(data);
+                            }
+                        })
+                    <% } %>
+
                       //affiche la modal lors du clic du bouton
                       $('.btn').on('shown.bs.modal', function () {
                           $('#myInput').trigger('focus');
