@@ -103,21 +103,11 @@
 
         <%- include("sidebar.ejs") -%>
         <%- include("header.ejs") -%>
-
+      
         <!-- [ Main Content ] start -->
         <div class="pc-container">
-            <div class="pcoded-content">
-
-            <%# if (breadcrumb) { %>
-                <%# include("breadcrumb.ejs") -%>
-            <%# } %>
-
-            <div class="row"> 
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Tableau de bord</a></li>
-                        <li class="breadcrumb-item">Campagnes</li>
-                    </ul>          
-            </div>
+            <%- include("breadcrumb.ejs") -%>
+            <div class="pcoded-content">                     
 
             <!-- Chargement des widgets toast-->
             <div id="toast-widget"></div>

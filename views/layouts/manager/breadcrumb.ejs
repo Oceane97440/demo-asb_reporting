@@ -1,22 +1,36 @@
  <!-- [ breadcrumb ] start -->
- <% if(breadcrumb) { %>
+
  <div class="page-header">
     <div class="page-block">
         <div class="row align-items-center">
             <div class="col-md-6">
                 <div class="page-header-title">
-                    <h5 class="m-b-10"><%= breadcrumb %></h5>
+                    <h5 class="m-b-10">
+                        <a href="/manager/<%= breadcrumb[0].link %>" title="<%= breadcrumb[0].name %>"><%= breadcrumb[0].name %></a>
+                    </h5>
                 </div>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="/manager/">Accueil</a>
-                    </li>
-                    <li class="breadcrumb-item"><%= breadcrumb %></li>
+                    </li>                   
+
+                    <% for(i=0; i < Object.keys(breadcrumb).length; i++) { %>
+                        <li class="breadcrumb-item">
+                            <% if(breadcrumb[i].name && breadcrumb[i].link) { %>
+                            <a href="/manager/<%= breadcrumb[i].link %>" title="<%= breadcrumb[i].name %>"><%= breadcrumb[i].name %></a>
+                            <% } else { %>
+                                <%= breadcrumb[i].name %>
+                            <% } %>
+                        </li>
+                    <% } %>                    
+
                 </ul>
             </div>
         </div>
     </div>
 </div>
-<% } %>
+
+
+
 
 <!-- [ breadcrumb ] end -->

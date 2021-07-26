@@ -41,25 +41,30 @@ exports.index = async (req, res) => {
         data.creatives = await ModelCreatives.count();
         data.users = await ModelUsers.count();
 
-        data.breadcrumb = "Tableau de bord";
+        // Créer le fil d'ariane
+        breadcrumb = new Array({'name': 'Tableau de bord', 'link': ''});
+        data.breadcrumb = breadcrumb;
+
         data.moment = moment;
 
-        var yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
-        var todayAdd10 = moment().add(10, 'days').format('YYYY-MM-DD');
-       
+        var yesterday = moment()
+            .subtract(1, 'days')
+            .format('YYYY-MM-DD');
+        var todayAdd10 = moment()
+            .add(10, 'days')
+            .format('YYYY-MM-DD');
+
         // Affiche les campagnes qui se terminent dans les 10 prochains jours
-        campaigns_last = await ModelCampaigns.findAll(
-            {
-                where: {
-                    campaign_start_date: { 
-                        [Op.between]: [yesterday, todayAdd10]
-                     }
+        campaigns_last = await ModelCampaigns.findAll({
+            where: {
+                campaign_start_date: {
+                    [Op.between]: [yesterday, todayAdd10]
                 }
             }
-        );
+        });
 
         data.campaigns_last = campaigns_last;
-  
+
         res.render('manager/index.ejs', data);
     } catch (error) {
         var statusCoded = error.response;
@@ -68,5 +73,10 @@ exports.index = async (req, res) => {
 }
 
 exports.error = async (req, res) => {
-    data.breadcrumb = "Erreur";
+    // Créer le fil d'ariane
+    breadcrumb = new Array({
+        'name': 'Erreur',
+        'link': ''
+    },);
+    data.breadcrumb = breadcrumb;
 }

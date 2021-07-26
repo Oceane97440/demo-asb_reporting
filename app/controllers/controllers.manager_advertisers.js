@@ -36,7 +36,11 @@ exports.index = async (req, res) => {
     try {
         // Liste tous les campagnes
         const data = new Object();
-        data.breadcrumb = "Annonceurs";
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({'name': 'Annonceurs', 'link': ''});
+        data.breadcrumb = breadcrumb;
+
         data.advertisers = await ModelAdvertisers.findAll({
             include: [
                 {
@@ -58,7 +62,16 @@ exports.list = async (req, res) => {
     try {
         // Liste tous les campagnes
         const data = new Object();
-        data.breadcrumb = "Liste des annonceurs";
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Annonceurs',
+            'link': 'advertisers'
+        }, {
+            'name': 'Liste des annonceurs',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
 
         data.advertisers = await ModelAdvertisers.findAll({
             include: [
@@ -74,7 +87,7 @@ exports.list = async (req, res) => {
             ]
         });
 
-        data.moment = moment;        
+        data.moment = moment;
         res.render('manager/advertisers/list.ejs', data);
     } catch (error) {
         console.log(error);
@@ -86,7 +99,6 @@ exports.list = async (req, res) => {
 exports.view = async (req, res) => {
     try {
         const data = new Object();
-        data.breadcrumb = "Annonceurs";
 
         var advertiser_id = req.params.id;
         var advertiser = await ModelAdvertisers
@@ -106,6 +118,16 @@ exports.view = async (req, res) => {
                         .status(404)
                         .render("manager/error.ejs", {statusCoded: 404});
                 
+                // Créer le fil d'ariane
+                breadcrumb = new Array({
+                    'name': 'Annonceurs',
+                    'link': 'advertisers'
+                }, {
+                    'name': advertiser.advertiser_name,
+                    'link': ''
+                });
+                data.breadcrumb = breadcrumb;
+
                 // Récupére les données des campagnes
                 campaigns = await ModelCampaigns.findAll({
                     where: {
@@ -117,13 +139,13 @@ exports.view = async (req, res) => {
                         }
                     ]
                 });
-                
+
                 // Attribue les données de la campagne
-                data.campaigns = campaigns 
+                data.campaigns = campaigns
                 data.advertiser = advertiser;
                 data.moment = moment;
                 res.render('manager/advertisers/view.ejs', data);
-            });      
+            });
 
     } catch (error) {
         console.log(error);
@@ -197,21 +219,21 @@ exports.advertiser_list = async (req, res) => {
 
     //liste dans une vue tous les annonceurs
     try {
-       
-            const data = new Object();
-            var advertisers = await ModelAdvertisers.findAll({
-                attributes: [
-                    'advertiser_id', 'advertiser_name'
-                ],
-                order: [
-                    ['advertiser_name', 'ASC']
-                ]
-            })
 
-            data.advertisers = advertisers;
-            data.moment = moment;
-            res.render('manage/list_advertisers.ejs', data);
-       
+        const data = new Object();
+        var advertisers = await ModelAdvertisers.findAll({
+            attributes: [
+                'advertiser_id', 'advertiser_name'
+            ],
+            order: [
+                ['advertiser_name', 'ASC']
+            ]
+        })
+
+        data.advertisers = advertisers;
+        data.moment = moment;
+        res.render('manage/list_advertisers.ejs', data);
+
     } catch (error) {
         console.log(error)
         var statusCoded = error.response;
