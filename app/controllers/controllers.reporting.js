@@ -776,14 +776,14 @@ exports.report = async (req, res) => {
                         var diff_start = Utilities.nbr_jours(start_date, date_now);
                         var diff = Utilities.nbr_jours(start_date, end_date_time);
 
-                       /*--- console.log(
+                       console.log(
                             'diff_start.day :',
                             diff_start.day,
                             ' - diff.day :',
                             diff.day,
                             ' - endate : ',
                             end_date_time
-                        )*/
+                        )
 
                         var requestVisitor_unique = {
                             "startDate": StartDate_timezone,
@@ -799,6 +799,9 @@ exports.report = async (req, res) => {
                                 }
                             ]
                         }
+
+                        console.log(requestVisitor_unique.startDate)
+                        console.log(requestVisitor_unique.endDate)
 
                     
 
@@ -850,11 +853,13 @@ exports.report = async (req, res) => {
                         //si entre la date de debut et de fin de campagne est < 31j et twoLinkTaskId existe exécute la requête
                      
                        
+                        console.log(twoLinkTaskId)
+
                         if (!twoLinkTaskId && (diff.day < 31) ) {
-                            //console.log('twoLinkTaskId :', twoLinkTaskId)
+                            console.log('twoLinkTaskId :', twoLinkTaskId)
 
 
-                         //   console.log('requestVisitor_unique :', requestVisitor_unique)
+                           console.log('requestVisitor_unique :', requestVisitor_unique)
 
    
                             let twoLink = await AxiosFunction.getReportingData(
@@ -868,15 +873,17 @@ exports.report = async (req, res) => {
                                     twoLink.data.taskId
                                 );
                                 twoLinkTaskId = twoLink.data.taskId;
+                            }else{
+                                console.log("NOOOON OK")
                             }
                         }
     
-                       /*--- console.log(
+                      console.log(
                             'firstLinkTaskId :',
                             firstLinkTaskId,
                             ' - twoLinkTaskId: ',
                             twoLinkTaskId
-                        );*/
+                        );
 
                         if (firstLinkTaskId || twoLinkTaskId) {
                             var taskId = firstLinkTaskId;
