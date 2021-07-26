@@ -512,7 +512,7 @@ exports.generate = async (req, res) => {
 
 exports.report = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
-    console.log(campaigncrypt)
+    //console.log(campaigncrypt)
 
     try {
         // Réinitialise l'objet Format
@@ -577,7 +577,7 @@ exports.report = async (req, res) => {
                         var campaign_end_date = reportingData.campaign.campaign_end_date;
                         var campaign_start_date = reportingData.campaign.campaign_start_date;
 
-                        console.log('DateNOW reporting_requete_date :', reporting_requete_date);
+                       /*--- console.log('DateNOW reporting_requete_date :', reporting_requete_date);
                         console.log('Date reporting_start_date :', reporting_start_date);
                         console.log('Date reporting_end_date :', reporting_end_date);
 
@@ -590,7 +590,7 @@ exports.report = async (req, res) => {
                             reporting_requete_date,
                             ' < ',
                             reporting_end_date
-                        );
+                        );*/
 
 
                         
@@ -621,7 +621,7 @@ exports.report = async (req, res) => {
                         // campaign_end_date > reporting_start_date
                          
                         } else {
-                            console.log('Supprime et relance la génération du rapport')
+                           // console.log('Supprime et relance la génération du rapport')
                           
                             // On relance la génération de rapport si aucune de ses conditions n'est correct 
                             // - La campagne n'est pas terminée
@@ -661,7 +661,7 @@ exports.report = async (req, res) => {
                         } 
 
                     } else {
-                        console.log('data_localStorage no existe');
+                       // console.log('data_localStorage no existe');
 
                         // Récupére les dates des insertions
                         insertion_start_date = await ModelInsertions.max('insertion_start_date', {
@@ -674,11 +674,12 @@ exports.report = async (req, res) => {
                                 campaign_id: campaignid
                             }
                         });
-                        console.log('insertion_end_date : ', insertion_end_date);
+                       // console.log('insertion_end_date : ', insertion_end_date);
 
-                        // const now = new Date(); const timestamp_datenow = now.getTime(); Déclare la
-                        // date du moment
-                        var timestamp_datenow = moment().format("DD/MM/YYYY HH:mm:ss");
+                         const now = new Date();
+                        const timestamp_datenow = now.getTime(); 
+                        // Déclare la date du moment
+                     //  var timestamp_datenow = moment().format("DD/MM/YYYY HH:mm:ss");
 
                         // recup la date de début de la campagne -4 heures pour règler le prob du
                         // décalage horaire
@@ -689,7 +690,7 @@ exports.report = async (req, res) => {
                         if (start_date_timezone > insertion_start_date) {
                             start_date_timezone = insertion_start_date;
                         }
-                        console.log('start_date_timezone :', start_date_timezone);
+                        //console.log('start_date_timezone :', start_date_timezone);
 
                         // recup la date de fin de la campagne ajoute +1jour
                         var endDate_day = new Date(campaign_end_date);
@@ -697,34 +698,24 @@ exports.report = async (req, res) => {
                         if (insertion_end_date > endDate_last) {
                             endDate_last = insertion_end_date;
                         }
-                        console.log(
+                       /*--- console.log(
                             'insertion_end_date : ',
                             insertion_end_date,
                             ' - end_date_timezone :',
                             endDate_last
-                        );
-                        /*
-                        var s = parseInt(start_date_timezone);
-                        var t3 = parseInt(endDate_last);
-                        var t4  = moment(endDate_last).format("X");
-                        console.log('t3 : ',t3,' - t4 :',t4);
-
-
-
-                        const StartDate_timezone = Utilities.getDateTimezone(s);
-                        const EndDate = Utilities.getDateTimezone(t3);
-                        var t5  = moment(start_date_timezone).format("X");
-                        console.log(' t5 :',t5, ' - StartDate_timezone : ',StartDate_timezone,' - EndDate :',EndDate);
-
-                        */
+                        );*/
+             
 
                         const StartDate_timezone = moment(start_date_timezone).format(
                             'YYYY-MM-DDTHH:mm:ss'
                         );
                         const EndDate = moment(endDate_last).format('YYYY-MM-DDTHH:mm:ss');
 
-                        // si la date du jour est > à la date de fin on prend la date de fin sinon la
-                        // date du jour
+                        // si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour
+
+                        //console.log('endDate_last' + endDate_last)
+                        //console.log('timestamp_datenow' + timestamp_datenow)
+
                         if (endDate_last < timestamp_datenow) {
                             var end_date = EndDate;
                         } else {
@@ -776,26 +767,23 @@ exports.report = async (req, res) => {
                             ]
                         }
 
-                        //---  console.log('requestReporting : ', requestReporting);
-                        // process.exit(1); console.log(requestReporting) test si la date de fin de la
-                        // campagne est => date au jourd'hui = 31j ne pas effectuer la requête date_fin
+                    
                         // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
                         // entre la date de fin campagne et date aujourd'hui  var date_now = Date.now();
                         var start_date = new Date(campaign_start_date);
                         var end_date_time = new Date(campaign_end_date);
                         var date_now = Date.now();
                         var diff_start = Utilities.nbr_jours(start_date, date_now);
-                        //--- var diff = Utilities.nbr_jours(end_date_time, start_date);
                         var diff = Utilities.nbr_jours(start_date, end_date_time);
 
-                        console.log(
+                       /*--- console.log(
                             'diff_start.day :',
                             diff_start.day,
                             ' - diff.day :',
                             diff.day,
                             ' - endate : ',
                             end_date_time
-                        )
+                        )*/
 
                         var requestVisitor_unique = {
                             "startDate": StartDate_timezone,
@@ -811,6 +799,9 @@ exports.report = async (req, res) => {
                                 }
                             ]
                         }
+
+                    
+
 
                         // 1) Requête POST
                         var dataLSTaskGlobal = localStorageTasks.getItem(
@@ -832,6 +823,7 @@ exports.report = async (req, res) => {
                                 '',
                                 requestReporting
                             );
+                            
                             if (firstLink.status == 201) {
                                 localStorageTasks.setItem(
                                     'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour,
@@ -854,11 +846,15 @@ exports.report = async (req, res) => {
                         }*/
 
                         //  if (!twoLinkTaskId && ((diff.day <= 31) || (diff_start.day <= 31)) ) {
-                        if (!twoLinkTaskId && (diff.day <= 31)) {
-                            console.log('twoLinkTaskId :', twoLinkTaskId)
+
+                        //si entre la date de debut et de fin de campagne est < 31j et twoLinkTaskId existe exécute la requête
+                     
+                       
+                        if (!twoLinkTaskId && (diff.day < 31) ) {
+                            //console.log('twoLinkTaskId :', twoLinkTaskId)
 
 
-                            console.log('requestVisitor_unique :', requestVisitor_unique)
+                         //   console.log('requestVisitor_unique :', requestVisitor_unique)
 
    
                             let twoLink = await AxiosFunction.getReportingData(
@@ -875,20 +871,21 @@ exports.report = async (req, res) => {
                             }
                         }
     
-                        console.log(
+                       /*--- console.log(
                             'firstLinkTaskId :',
                             firstLinkTaskId,
                             ' - twoLinkTaskId: ',
                             twoLinkTaskId
-                        );
+                        );*/
 
                         if (firstLinkTaskId || twoLinkTaskId) {
                             var taskId = firstLinkTaskId;
                             var taskId_uu = twoLinkTaskId;
 
-                            console.log('taskId', taskId);
+                           /*------------ 
+                           console.log('taskId', taskId);
                             console.log("taskId_uu", taskId_uu);
-                            /*------------
+                            
                             let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
                             let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
                             ----------*/
@@ -897,7 +894,7 @@ exports.report = async (req, res) => {
                             var time = 20000;
                             let timerFile = setInterval(async () => {
 
-                                console.log('setInterval begin')
+                               // console.log('setInterval begin')
 
                                 // DATA STORAGE - TASK 1 et 2
                                 var dataLSTaskGlobal = localStorageTasks.getItem(
@@ -911,9 +908,10 @@ exports.report = async (req, res) => {
                                 // Vérifie que dataLSTaskGlobal -> existe OU (dataLSTaskGlobalVU -> existe &&
                                 // taskID_uu -> not null)
                                 if (!dataLSTaskGlobal || (!dataLSTaskGlobalVU && !Utilities.empty(taskId_uu))) {
-                                    console.log('!dataLSTaskGlobal || !dataLSTaskGlobalVU')
-                                    if (!dataLSTaskGlobal) {
-                                        console.log('dataLSTaskGlobal')
+                                  //  console.log('!dataLSTaskGlobal || !dataLSTaskGlobalVU')
+
+                                    if (!dataLSTaskGlobal && !Utilities.empty(taskId)) {
+                                     //   console.log('dataLSTaskGlobal')
                                         time += 10000;
                                         let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
@@ -937,21 +935,21 @@ exports.report = async (req, res) => {
                                                     'campaignID-' + campaignid + '-taskGlobal',
                                                     JSON.stringify(dataLSTaskGlobal)
                                                 );
-                                                console.log('Creation de dataLSTaskGlobal');
+                                                //console.log('Creation de dataLSTaskGlobal');
                                             }
                                         }
                                     }
 
                                     // Request task2
                                     if (!dataLSTaskGlobalVU && !Utilities.empty(taskId_uu)) {
-                                        console.log('dataLSTaskGlobalVU')
+                                       // console.log('dataLSTaskGlobalVU')
                                         time += 5000;
                                         let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
-                                        console.log('requete_vu : ', requete_vu)
+                                       // console.log('requete_vu : ', requete_vu)
 
                                         let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
 
-                                        console.log('fourLink : ', fourLink)
+                                       // console.log('fourLink : ', fourLink)
 
                                         if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
 
@@ -973,14 +971,14 @@ exports.report = async (req, res) => {
                                                     'campaignID-' + campaignid + '-taskGlobalVU',
                                                     JSON.stringify(dataLSTaskGlobalVU)
                                                 );
-                                                console.log('Creation de dataLSTaskGlobalVU');
+                                               // console.log('Creation de dataLSTaskGlobalVU');
                                             }
                                         }
                                     }
 
-                                    if (dataLSTaskGlobal && dataLSTaskGlobalVU) {
-                                        console.log('Creation de clearInterval(timerFile)');
-                                    }
+                                   /*--- if (dataLSTaskGlobal && dataLSTaskGlobalVU) {
+                                        //console.log('Creation de clearInterval(timerFile)');
+                                    }*/
 
                                 } else {
                                     // Stoppe l'intervalle timerFile
