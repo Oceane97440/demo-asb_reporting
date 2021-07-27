@@ -62,10 +62,16 @@ exports.index = async (req, res) => {
         });
 
         // Affiche les campagnes se terminant aujourd'hui
+        var dateNow = moment().format('YYYY-MM-DD');
+        var dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD');
+        var date5Days = moment().add(5, 'days').format('YYYY-MM-DD');
+
+        console.log(dateTomorrow)
+
         data.campaigns_today = await ModelCampaigns.findAll({
             where: {
                 campaign_end_date: {
-                    [Op.like]: '%2021-07-04%'
+                    [Op.like]: '%' + dateNow + '%'
                 }
             },
             include: [
@@ -74,6 +80,35 @@ exports.index = async (req, res) => {
                 }
             ]
         });
+
+        // Affiche les campagnes se terminant demain
+        data.campaigns_tomorrow = await ModelCampaigns.findAll({
+            where: {
+                campaign_end_date: {
+                    [Op.like]: '%' + dateTomorrow + '%'
+                }
+            },
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
+        });
+
+        // Affiche les campagnes se terminant demain
+        data.campaigns_nextdays = await ModelCampaigns.findAll({
+            where: {
+                campaign_end_date: {
+                    [Op.like]: '%' + date5Days + '%'
+                }
+            },
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
+        });
+
 
         data.moment = moment;
 
@@ -233,9 +268,9 @@ exports.view = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const data = new Object();
-      
-          // Créer le fil d'ariane
-          breadcrumb = new Array({
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
             'name': 'Campagnes',
             'link': 'campaigns'
         }, {
@@ -243,7 +278,6 @@ exports.create = async (req, res) => {
             'link': ''
         });
         data.breadcrumb = breadcrumb;
-
 
         // Récupére l'ensemble des annonceurs
         var advertisers = await ModelAdvertisers
