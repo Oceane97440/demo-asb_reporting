@@ -756,7 +756,10 @@ exports.report = async (req, res) => {
                                         "Id": "17",
                                         "OutputName": "Nbr_complete"
                                     }
-                                }
+                                },
+                                {
+                                    "ViewableImpressions": {}
+                                },
                             ],
                             "filter": [
                                 {
