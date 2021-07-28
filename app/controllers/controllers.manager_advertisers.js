@@ -123,6 +123,9 @@ exports.view = async (req, res) => {
                     'name': 'Annonceurs',
                     'link': 'advertisers'
                 }, {
+                    'name': 'Liste des annonceurs',
+                    'link': 'advertisers/list'
+                }, {
                     'name': advertiser.advertiser_name,
                     'link': ''
                 });

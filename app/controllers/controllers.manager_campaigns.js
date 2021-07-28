@@ -193,9 +193,13 @@ exports.view = async (req, res) => {
                 }
 
                 // Créer le fil d'ariane
+                var breadcrumbLink = 'advertisers'
                 breadcrumb = new Array({
                     'name': 'Campagnes',
                     'link': 'campaigns'
+                }, {
+                    'name': campaign.advertiser.advertiser_name,
+                    'link': breadcrumbLink.concat('/',campaign.advertiser_id)
                 }, {
                     'name': campaign.campaign_name,
                     'link': ''
@@ -254,6 +258,11 @@ exports.view = async (req, res) => {
                 // Attribue les données de la campagne
                 data.campaign = campaign;
                 data.moment = moment;
+                data.utilities = Utilities;
+
+                // Récupére l'ensemble des données du rapport
+                data_localStorage = localStorage.getItem('campaignID-' + campaign.campaign_id);
+                data.reporting = JSON.parse(data_localStorage);
 
                 res.render('manager/campaigns/view.ejs', data);
             });

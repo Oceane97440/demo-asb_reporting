@@ -170,6 +170,130 @@ exports.advertisers = async (req, res) => {
     }
 }
 
+exports.advertiser = async (req, res) => {
+    try {
+        let advertiser_id = req.query.advertiser_id;
+
+        if (advertiser_id) {
+            advertiserObject = {
+                "advertiser_id": req.query.advertiser_id
+            };
+            var config = SmartFunction.config('advertiser', advertiserObject);
+
+            await axios(config).then(function (result) {
+
+                if (!Utilities.empty(result.data)) {
+                    var dataValue = result.data;
+                    var advertiser_id = dataValue.id;
+                    var advertiser_name = dataValue.name;
+                    var advertiser_archived = dataValue.isArchived;
+
+                    Utilities
+                        .updateOrCreate(ModelAdvertisers, {
+                            advertiser_id: advertiser_id
+                        }, {advertiser_id, advertiser_name, advertiser_archived})
+                        .then(function (result) {
+                            result.item; // the model
+                            result.created; // bool, if a new item was created.                      
+                            return res.json({
+                                type: 'success',
+                                message: 'L\'annonceur <strong>' + advertiser_id + '</strong> a bien été ajouté.'
+                            });
+                        });
+                }
+
+            });
+
+        } else {
+            return res.json(
+                {type: 'error', message: 'Veuillez saisir l\'identifiant de l\'annonceur.'}
+            );
+        }
+    } catch (error) {
+        return res.json({type: 'error', message: error});
+    }
+}
+
+
+exports.advertisersCampaigns = async (req, res) => {
+    try {
+        let advertiser_id = req.query.advertiser_id;
+
+        if (advertiser_id) {
+            advertiserObject = {
+                "advertiser_id": req.query.advertiser_id
+            };
+            var config = SmartFunction.config('advertisersCampaigns', advertiserObject);
+
+            await axios(config).then(function (result) {
+                if (!Utilities.empty(result.data)) {
+                    var dataValue = result.data;
+                  //  console.log(dataValue);
+
+                    var number_line_offset = dataValue.length;
+                    if (number_line_offset >= 0) {
+                        for (i = 0; i < number_line_offset; i++) {
+
+                            var campaign_id = dataValue[i].id;
+                            var campaign_name = dataValue[i].name;
+                            var advertiser_id = dataValue[i].advertiserId;
+                            var agency_id = dataValue[i].agencyId;
+                            var campaign_start_date = dataValue[i].startDate;
+                            var campaign_end_date = dataValue[i].endDate;
+                            var campaign_status_id = dataValue[i].campaignStatusId;
+                            var campaign_archived = dataValue[i].isArchived;
+
+                            var campaign_crypt = crypto
+                                .createHash('md5')
+                                .update(campaign_id.toString())
+                                .digest("hex");
+
+                            // console.log(campaign_crypt)
+
+                            Utilities
+                                .updateOrCreate(ModelCampaigns, {
+                                    campaign_id: campaign_id
+                                }, {
+                                    campaign_id,
+                                    campaign_name,
+                                    campaign_crypt,
+                                    advertiser_id,
+                                    agency_id,
+                                    campaign_start_date,
+                                    campaign_end_date,
+                                    campaign_status_id,
+                                    campaign_archived
+                                })
+                                .then(function (result) {
+                                    result.item; // the model
+                                    result.created; // bool, if a new item was created.
+                                });
+
+                        }
+                        
+                        return res.json(
+                            {type: 'success', message: 'Les <strong>'+number_line_offset+'</strong> campagnes de l\'annonceur <strong>'+advertiser_id+'</strong> ont bien été ajoutées.'}
+                        );
+
+                    }                        
+                } else {
+                    return res.json(
+                        {type: 'error', message: 'Error : Aucune donnée disponible'});
+                }
+            });
+
+
+        } else {
+            return res.json(
+                {type: 'error', message: 'Veuillez saisir l\'identifiant de l\'annonceur.'}
+            );
+        }
+    } catch (error) {
+        return res.json({type: 'error', message: error});
+    }
+
+}
+
 exports.campaigns = async (req, res) => {
     try {
         var config = SmartFunction.config('campaigns');
@@ -316,7 +440,733 @@ exports.campaign = async (req, res) => {
     } catch (error) {
         return res.json({type: 'error', message: error});
     }
+}
 
+exports.campaignReport = async (req, res) => {
+    try {
+        let campaign_id = req.query.campaign_id;
+        if (campaign_id) {
+            campaignObject = {
+                "campaign_id": req.query.campaign_id
+            };
+           
+            var campaign = await ModelCampaigns
+            .findOne({
+                where: {
+                    campaign_id: campaign_id
+                },
+                include: [
+                    {
+                        model: ModelAdvertisers
+                    }
+                ]
+            })
+            .then(async function (campaign) {
+                if (!campaign) {
+                    return res.json(
+                        {type: 'error', message: 'Cette campagne n\'existe pas.'}
+                    );                   
+                }
+                
+                
+                              
+                // fonctionnalité de géneration du rapport
+                let campaigncrypt = campaign.campaign_crypt
+                let advertiserid = campaign.advertiser_id;
+                let campaignid = campaign.campaign_id;
+                var campaign_start_date = campaign.campaign_start_date;
+                var campaign_end_date = campaign.campaign_end_date;
+
+                // Gestion du cache
+                let cacheStorageID = 'campaignID-' + campaignid;
+                // Initialise la date
+                let date = new Date();
+                let cacheStorageIDHour = moment().format('YYYYMMDD-H');
+
+                try {
+                    var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
+                    // Si le localStorage existe -> affiche la data du localstorage
+                    if (data_localStorage) {
+                        var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
+
+                        // Si le localStorage exsite -> affiche la data du localstorage Convertie la
+                        // date JSON en objet
+                        var reportingData = JSON.parse(data_localStorage);
+
+                        var reporting_requete_date = moment().format('YYYY-MM-DD HH:mm:ss');
+                        var reporting_start_date = reportingData.reporting_start_date;
+                        var reporting_end_date = reportingData.reporting_end_date;
+
+                        var campaign_end_date = reportingData.campaign.campaign_end_date;
+                        var campaign_start_date = reportingData.campaign.campaign_start_date;
+
+
+                        // si la date d'expiration est < au moment de la requête on garde la cache
+                        if ((reporting_requete_date < reporting_end_date) || (campaign_end_date > reporting_start_date)) {
+
+                            if (reporting_requete_date > reporting_end_date) {
+                                localStorage.removeItem('campaignID-' + campaignid);
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobal'
+                                );
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobalVU'
+                                );
+                                res.redirect('/rs/${campaigncrypt}');
+                            }
+
+                            if (reporting_requete_date < reporting_end_date) {
+                                return res.json(
+                                    {type: 'success', message: 'Le rapport de campagne a été généré'}
+                                );
+
+                            }
+
+                            // campaign_end_date > reporting_start_date
+
+                        } else {
+                            // console.log('Supprime et relance la génération du rapport') On relance la
+                            // génération de rapport si aucune de ses conditions n'est correct
+                            // - La campagne n'est pas terminée
+                            if (reporting_requete_date < campaign_end_date) {
+                                // si le local storage expire; on supprime les precedents cache et les taskid
+                                localStorage.removeItem('campaignID-' + campaignid);
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobal'
+                                );
+                                localStorageTasks.removeItem(
+                                    'campaignID-' + campaignid + '-taskGlobalVU'
+                                );
+
+                               // res.redirect('/rs/${campaigncrypt}');
+                            } else {
+                               
+                                return res.json(
+                                    {type: 'success', message: 'Le rapport de campagne a été généré'}
+                                );
+
+                            }
+
+                        }
+
+                    } else {
+                        // console.log('data_localStorage no existe'); Récupére les dates des insertions
+                        insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                            where: {
+                                campaign_id: campaignid
+                            }
+                        });
+                        insertion_end_date = await ModelInsertions.max('insertion_end_date', {
+                            where: {
+                                campaign_id: campaignid
+                            }
+                        });
+                        // console.log('insertion_end_date : ', insertion_end_date);
+
+                        const now = new Date();
+                        const timestamp_datenow = now.getTime();
+                        // Déclare la date du moment  var timestamp_datenow =
+                        // moment().format("DD/MM/YYYY HH:mm:ss"); recup la date de début de la campagne
+                        // -4 heures pour règler le prob du décalage horaire
+                        const campaign_start_date_yesterday = new Date(campaign_start_date);
+                        var start_date_timezone = campaign_start_date_yesterday.setHours(-4);
+
+                        // Teste pour récupérer la date la plus tôt
+                        if (start_date_timezone > insertion_start_date) {
+                            start_date_timezone = insertion_start_date;
+                        }
+                        // console.log('start_date_timezone :', start_date_timezone); recup la date de
+                        // fin de la campagne ajoute +1jour
+                        var endDate_day = new Date(campaign_end_date);
+                        var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
+                        if (insertion_end_date > endDate_last) {
+                            endDate_last = insertion_end_date;
+                        }
+                       
+                        const StartDate_timezone = moment(start_date_timezone).format(
+                            'YYYY-MM-DDTHH:mm:ss'
+                        );
+                        const EndDate = moment(endDate_last).format('YYYY-MM-DDTHH:mm:ss');
+
+                        // si la date du jour est > à la date de fin on prend la date de fin sinon la
+                        // date du jour console.log('endDate_last' + endDate_last)
+                        // console.log('timestamp_datenow' + timestamp_datenow)
+
+                        if (endDate_last < timestamp_datenow) {
+                            var end_date = EndDate;
+                        } else {
+                            var end_date = "CURRENT_DAY+1";
+                        }
+
+                        // initialisation des requêtes
+                        var requestReporting = {
+                            "startDate": StartDate_timezone,
+                            "endDate": end_date,
+                            "fields": [
+                                {
+                                    "CampaignStartDate": {}
+                                }, {
+                                    "CampaignEndDate": {}
+                                }, {
+                                    "CampaignId": {}
+                                }, {
+                                    "CampaignName": {}
+                                }, {
+                                    "InsertionId": {}
+                                }, {
+                                    "InsertionName": {}
+                                }, {
+                                    "FormatId": {}
+                                }, {
+                                    "FormatName": {}
+                                }, {
+                                    "SiteId": {}
+                                }, {
+                                    "SiteName": {}
+                                }, {
+                                    "Impressions": {}
+                                }, {
+                                    "ClickRate": {}
+                                }, {
+                                    "Clicks": {}
+                                }, {
+                                    "VideoCount": {
+                                        "Id": "17",
+                                        "OutputName": "Nbr_complete"
+                                    }
+                                }
+                            ],
+                            "filter": [
+                                {
+                                    "CampaignId": [campaignid]
+                                }
+                            ]
+                        }
+
+                        // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
+                        // entre la date de fin campagne et date aujourd'hui  var date_now = Date.now();
+                        var start_date = new Date(campaign_start_date);
+                        var end_date_time = new Date(campaign_end_date);
+                        var date_now = Date.now();
+                        var diff_start = Utilities.nbr_jours(start_date, date_now);
+                        var diff = Utilities.nbr_jours(start_date, end_date_time);
+
+                        console.log(
+                            'diff_start.day :',
+                            diff_start.day,
+                            ' - diff.day :',
+                            diff.day,
+                            ' - endate : ',
+                            end_date_time
+                        )
+
+                        var requestVisitor_unique = {
+                            "startDate": StartDate_timezone,
+                            "endDate": end_date,
+                            "fields": [
+                                {
+                                    "UniqueVisitors": {}
+                                }
+                            ],
+                            "filter": [
+                                {
+                                    "CampaignId": [campaignid]
+                                }
+                            ]
+                        }
+
+                        console.log(requestVisitor_unique.startDate)
+                        console.log(requestVisitor_unique.endDate)
+
+                        // 1) Requête POST
+                        var dataLSTaskGlobal = localStorageTasks.getItem(
+                            'campaignID-' + campaignid + '-taskGlobal'
+                        );
+
+                        var dataLSTaskGlobalVU = localStorageTasks.getItem(
+                            'campaignID-' + campaignid + '-taskGlobalVU'
+                        );
+
+                        // firstLink - Récupére la taskID de la requête reporting
+                        let firstLinkTaskId = localStorageTasks.getItem(
+                            'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour
+                        );
+
+                        if (!firstLinkTaskId) {
+                            let firstLink = await AxiosFunction.getReportingData(
+                                'POST',
+                                '',
+                                requestReporting
+                            );
+
+                            if (firstLink.status == 201) {
+                                localStorageTasks.setItem(
+                                    'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour,
+                                    firstLink.data.taskId
+                                );
+                                firstLinkTaskId = firstLink.data.taskId;
+                            }
+                        }
+
+                        // twoLink - Récupére la taskID de la requête reporting
+                        let twoLinkTaskId = localStorageTasks.getItem(
+                            'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour
+                        );
+
+                        if (!twoLinkTaskId && (diff.day < 31)) {
+                            console.log('twoLinkTaskId :', twoLinkTaskId)
+
+                            console.log('requestVisitor_unique :', requestVisitor_unique)
+
+                            let twoLink = await AxiosFunction.getReportingData(
+                                'POST',
+                                '',
+                                requestVisitor_unique
+                            );
+                            if (twoLink.status == 201) {
+                                localStorageTasks.setItem(
+                                    'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour,
+                                    twoLink.data.taskId
+                                );
+                                twoLinkTaskId = twoLink.data.taskId;
+                            } else {
+                                console.log("NOOOON OK")
+                            }
+                        }
+
+                        console.log(
+                            'firstLinkTaskId :',
+                            firstLinkTaskId,
+                            ' - twoLinkTaskId: ',
+                            twoLinkTaskId
+                        );
+
+                        if (firstLinkTaskId || twoLinkTaskId) {
+                            var taskId = firstLinkTaskId;
+                            var taskId_uu = twoLinkTaskId;
+
+                            // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
+                            // commence à 10sec
+                            var time = 5000;
+                            let timerFile = setInterval(async () => {
+
+                                // console.log('setInterval begin') DATA STORAGE - TASK 1 et 2
+                                var dataLSTaskGlobal = localStorageTasks.getItem(
+                                    'campaignID-' + campaignid + '-taskGlobal'
+                                );
+
+                                var dataLSTaskGlobalVU = localStorageTasks.getItem(
+                                    'campaignID-' + campaignid + '-taskGlobalVU'
+                                );
+
+                                // Vérifie que dataLSTaskGlobal -> existe OU (dataLSTaskGlobalVU -> existe &&
+                                // taskID_uu -> not null)
+                                if (!dataLSTaskGlobal || (!dataLSTaskGlobalVU && !Utilities.empty(taskId_uu))) {
+                                    //  console.log('!dataLSTaskGlobal || !dataLSTaskGlobalVU')
+
+                                    if (!dataLSTaskGlobal && !Utilities.empty(taskId)) {
+                                        //   console.log('dataLSTaskGlobal')
+                                        time += 10000;
+                                        let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+
+                                        let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+                                        if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                                            // 3) Récupère la date de chaque requête
+                                            let dataLSTaskGlobal = localStorageTasks.getItem(
+                                                'campaignID-' + campaignid + '-taskGlobal'
+                                            );
+                                            if (!dataLSTaskGlobal) {
+                                                dataFile = await AxiosFunction.getReportingData(
+                                                    'GET',
+                                                    `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                                                    ''
+                                                );
+                                                // save la data requête 1 dans le local storage
+                                                dataLSTaskGlobal = {
+                                                    'datafile': dataFile.data
+                                                };
+                                                localStorageTasks.setItem(
+                                                    'campaignID-' + campaignid + '-taskGlobal',
+                                                    JSON.stringify(dataLSTaskGlobal)
+                                                );
+                                                //console.log('Creation de dataLSTaskGlobal');
+                                            }
+                                        }
+                                    }
+
+                                    // Request task2
+                                    if (!dataLSTaskGlobalVU && !Utilities.empty(taskId_uu)) {
+                                        // console.log('dataLSTaskGlobalVU')
+                                        time += 5000;
+                                        let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
+                                        // console.log('requete_vu : ', requete_vu)
+
+                                        let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
+
+                                        // console.log('fourLink : ', fourLink)
+
+                                        if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+
+                                            // 3) Récupère la date de chaque requête
+                                            dataLSTaskGlobalVU = localStorageTasks.getItem(
+                                                'campaignID-' + campaignid + '-taskGlobalVU'
+                                            );
+                                            if (!dataLSTaskGlobalVU) {
+                                                dataFile2 = await AxiosFunction.getReportingData(
+                                                    'GET',
+                                                    `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}/file`,
+                                                    ''
+                                                );
+                                                // save la data requête 2 dans le local storage
+                                                dataLSTaskGlobalVU = {
+                                                    'datafile': dataFile2.data
+                                                };
+                                                localStorageTasks.setItem(
+                                                    'campaignID-' + campaignid + '-taskGlobalVU',
+                                                    JSON.stringify(dataLSTaskGlobalVU)
+                                                );
+                                                // console.log('Creation de dataLSTaskGlobalVU');
+                                            }
+                                        }
+                                    }
+
+                                    /*--- if (dataLSTaskGlobal && dataLSTaskGlobalVU) {
+                                        //console.log('Creation de clearInterval(timerFile)');
+                                    }*/
+
+                                } else {
+                                    // Stoppe l'intervalle timerFile
+                                    clearInterval(timerFile);
+                                    console.log('Stop clearInterval timerFile');
+
+                                    // On récupére le dataLSTaskGlobal
+                                    const objDefault = JSON.parse(dataLSTaskGlobal);
+                                    var dataSplitGlobal = objDefault.datafile;
+
+                                    // Permet de faire l'addition
+                                    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+                                    var impressions = new Array();
+                                    var clicks = new Array();
+                                    var complete = new Array();
+
+                                    const CampaignStartDate = [];
+                                    const CampaignEndtDate = [];
+                                    const CampaignId = [];
+                                    const CampaignName = [];
+                                    const InsertionId = [];
+                                    const InsertionName = [];
+                                    const FormatId = [];
+                                    const FormatName = [];
+                                    const SiteId = [];
+                                    const SiteName = [];
+                                    const Impressions = [];
+                                    const ClickRate = [];
+                                    const Clicks = [];
+                                    const Complete = [];
+
+                                    const dataList = new Object();
+
+                                    var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
+                                    if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
+                                        var numberLine = dataSplitGlobal.length;
+                                        console.log('numberLine :', numberLine);
+                                        console.log('dataSplitGlobal :', dataSplitGlobal);
+                                        if (numberLine > 1) {
+                                            for (i = 1; i < numberLine; i++) {
+                                                // split push les données dans chaque colone
+                                                line = dataSplitGlobal[i].split(';');
+                                                if (!Utilities.empty(line[0])) {
+                                                    InsertionName.push(line[5]);
+                                                    Impressions.push(parseInt(line[10]));
+                                                    Clicks.push(parseInt(line[12]));
+                                                    Complete.push(parseInt(line[13]));
+
+                                                    dataList[i] = {
+                                                        'campaign_start_date': line[0],
+                                                        'campaign_end_date': line[1],
+                                                        'campaign_id': line[2],
+                                                        'campaign_name': line[3],
+                                                        'insertion_id': line[4],
+                                                        'insertion_name': line[5],
+                                                        'format_id': line[6],
+                                                        'format_name': line[7],
+                                                        'site_id': line[8],
+                                                        'site_name': line[9],
+                                                        'impressions': parseInt(line[10]),
+                                                        'click_rate': parseInt(line[11]),
+                                                        'clicks': parseInt(line[12]),
+                                                        'complete': parseInt(line[13])
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    //
+                                    var formatObjects = new Object();
+                                    if (dataList && (Object.keys(dataList).length > 0)) {
+                                        console.log('Nombre object : ', Object.keys(dataList).length);
+                                        // Initialise les formats
+                                        var formatHabillage = new Array();
+                                        var formatInterstitiel = new Array();
+                                        var formatGrandAngle = new Array();
+                                        var formatMasthead = new Array();
+                                        var formatInstream = new Array();
+                                        var formatRectangleVideo = new Array();
+                                        var formatLogo = new Array();
+                                        var formatNative = new Array();
+                                        var formatSlider = new Array();
+                                        var formatMea = new Array();
+                                        var formatSliderVideo = new Array();
+
+                                        // initialise les sites
+                                        var siteObjects = new Object();
+
+                                        var siteLINFO = new Array();
+                                        var siteLINFO_ANDROID = new Array();
+                                        var siteLINFO_IOS = new Array();
+                                        var siteANTENNEREUNION = new Array();
+                                        var siteDOMTOMJOB = new Array();
+                                        var siteIMMO974 = new Array();
+                                        var siteRODZAFER_LP = new Array();
+                                        var siteRODZAFER_ANDROID = new Array();
+                                        var siteRODZAFER_IOS = new Array();
+                                        var siteRODALI = new Array();
+                                        var siteORANGE_REUNION = new Array();
+                                        var siteTF1 = new Array();
+                                        var siteM6 = new Array();
+                                        var siteDAILYMOTION = new Array();
+
+                                        for (var index = 1; index <= Object.keys(dataList).length; index++) {
+                                            var insertion_name = dataList[index].insertion_name;
+                                            var site_id = dataList[index].site_id;
+                                            var site_name = dataList[index].site_name;
+                                            console.log(insertion_name);
+                                            
+                                            // Créer les tableaux des formats
+                                            if (insertion_name.match(/HABILLAGE{1}/igm)) {
+                                                formatHabillage.push(index);
+                                            }
+                                            if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
+                                                formatInterstitiel.push(index);
+                                            }
+                                            if (insertion_name.match(/MASTHEAD{1}/igm)) {
+                                                formatMasthead.push(index);
+                                            }
+                                            if (insertion_name.match(/GRAND ANGLE{1}/igm)) {
+                                                formatGrandAngle.push(index);
+                                            }
+                                            if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
+                                                formatInstream.push(index);
+                                            }
+                                            if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                                                formatRectangleVideo.push(index);
+                                            }
+                                            if (insertion_name.match(/LOGO{1}/igm)) {
+                                                formatLogo.push(index);
+                                            }
+                                            if (insertion_name.match(/NATIVE{1}/igm)) {
+                                                formatNative.push(index);
+                                            }
+                                            if (insertion_name.match(/SLIDER{1}/igm)) {
+                                                formatSlider.push(index);
+                                            }
+                                            if (insertion_name.match(/^\MEA{1}/igm)) {
+                                                formatMea.push(index);
+                                            }
+                                            if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                                                formatSliderVideo.push(index);
+                                            }
+
+                                            // Créer les tableaux des sites
+                                            if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
+                                                siteLINFO.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
+                                                siteLINFO_ANDROID.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
+                                                siteLINFO_IOS.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
+                                                siteANTENNEREUNION.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
+                                                siteDOMTOMJOB.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_IMMO974{1}/igm)) {
+                                                siteIMMO974.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
+                                                siteRODZAFER_LP.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
+                                                siteRODZAFER_ANDROID.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
+                                                siteRODZAFER_IOS.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
+                                                siteORANGE_REUNION.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_TF1{1}/igm)) {
+                                                siteTF1.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_M6{1}/igm)) {
+                                                siteM6.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
+                                                siteDAILYMOTION.push(index);
+                                            }
+                                            if (site_name.match(/^\SM_RODALI{1}/igm)) {
+                                                siteRODALI.push(index);
+                                            }
+                                        }
+
+                                      
+                                        // Trie les formats et compatibilise les insertions et autres clics
+                                        if (!Utilities.empty(formatHabillage)) {
+                                            formatObjects.habillage = SmartFunction.sortDataReport(formatHabillage, dataList);
+                                        }
+                                        if (!Utilities.empty(formatInterstitiel)) {
+                                            formatObjects.interstitiel = SmartFunction.sortDataReport(formatInterstitiel, dataList);
+                                        }
+                                        if (!Utilities.empty(formatMasthead)) {
+                                            formatObjects.masthead = SmartFunction.sortDataReport(formatMasthead, dataList);
+                                        }
+                                        if (!Utilities.empty(formatGrandAngle)) {
+                                            formatObjects.grandangle = SmartFunction.sortDataReport(formatGrandAngle, dataList);
+                                        }
+                                        if (!Utilities.empty(formatInstream)) {
+                                            formatObjects.instream = SmartFunction.sortDataReport(formatInstream, dataList);
+                                        }
+                                        if (!Utilities.empty(formatRectangleVideo)) {
+                                            formatObjects.rectanglevideo = SmartFunction.sortDataReport(formatRectangleVideo, dataList);
+                                        }
+                                        if (!Utilities.empty(formatLogo)) {
+                                            formatObjects.logo = SmartFunction.sortDataReport(formatLogo, dataList);
+                                        }
+                                        if (!Utilities.empty(formatNative)) {
+                                            formatObjects.native = SmartFunction.sortDataReport(formatNative, dataList);
+                                        }
+                                        if (!Utilities.empty(formatSlider)) {
+                                            formatObjects.slider = SmartFunction.sortDataReport(formatSlider, dataList);
+                                        }
+                                        if (!Utilities.empty(formatMea)) {
+                                            formatObjects.mea = SmartFunction.sortDataReport(formatMea, dataList);
+                                        }
+                                        if (!Utilities.empty(formatSliderVideo)) {
+                                            formatObjects.slidervideo = SmartFunction.sortDataReport(formatSliderVideo, dataList);
+                                        }
+                                    }
+
+                                    // Ajoute les infos de la campagne
+                                    if (Impressions.length > 0) {
+                                        campaignImpressions = Impressions.reduce(reducer);
+                                    } else {
+                                        campaignImpressions = null;
+                                    }
+                                    if (Clicks.length > 0) {
+                                        campaignClicks = Clicks.reduce(reducer);
+                                    } else {
+                                        campaignClicks = null;
+                                    }
+                                    if (!Utilities.empty(campaignClicks) && !Utilities.empty(campaignImpressions)) {
+                                        campaignCtr = parseFloat((campaignClicks / campaignImpressions) * 100).toFixed(
+                                            2
+                                        );
+                                    } else {
+                                        campaignCtr = null;
+                                    }
+                                    if (Complete.length > 0) {
+                                        campaignComplete = Complete.reduce(reducer);
+                                    } else {
+                                        campaignComplete = null;
+                                    }
+                                    if (!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions)) {
+                                        campaignCtrComplete = parseFloat(
+                                            (campaignComplete / campaignImpressions) * 100
+                                        ).toFixed(2);
+                                    } else {
+                                        campaignCtrComplete = null;
+                                    }
+                                    console.log('Campaign :', formatObjects.campaign);
+                                    formatObjects.campaign = {
+                                        campaign_id: campaign.campaign_id,
+                                        campaign_name: campaign.campaign_name,
+                                        campaign_start_date: campaign.campaign_start_date,
+                                        campaign_end_date: campaign.campaign_end_date,
+                                        campaigncrypt: campaign.campaigncrypt,
+                                        advertiser_id: campaign.advertiser.advertiser_id,
+                                        advertiser_name: campaign.advertiser.advertiser_name,
+                                        impressions: campaignImpressions,
+                                        clicks: campaignClicks,
+                                        ctr: campaignCtr,
+                                        complete: campaignComplete,
+                                        ctrComplete: campaignCtrComplete
+                                    }
+                                    console.log('formatObjects :', formatObjects.campaign);
+
+                                    // Récupére les infos des VU s'il existe
+                                    if (!Utilities.empty(dataLSTaskGlobalVU)) {
+                                        const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
+                                        var dataSplitGlobalVU = objDefaultVU.datafile;
+
+                                        var dataSplitGlobalVU = dataSplitGlobalVU.split(/\r?\n/);
+                                        if (dataSplitGlobalVU) {
+                                            var numberLine = dataSplitGlobalVU.length;
+                                            for (i = 1; i < numberLine; i++) {
+                                                // split push les données dans chaque colone
+                                                line = dataSplitGlobalVU[i].split(';');
+                                                if (!Utilities.empty(line[0])) {
+                                                    unique_visitor = parseInt(line[0]);
+                                                    formatObjects.campaign.vu = parseInt(unique_visitor);
+                                                    repetition = parseFloat((campaignImpressions / parseInt(unique_visitor))).toFixed(
+                                                        2
+                                                    );
+                                                    formatObjects.campaign.repetition = repetition;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
+                                    formatObjects.reporting_end_date = moment()
+                                        .add(2, 'hours')
+                                        .format('YYYY-MM-DD HH:m:s');
+
+                                    localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
+                                    
+                                    return res.json(
+                                        {type: 'success', message: 'Le rapport de campagne a été généré'}
+                                    );
+                                    
+                                }
+
+                            }, time);
+                        }
+
+                    }
+
+                } catch (error) {
+                    return res.json(
+                        {type: 'error', message: 'Un probléme est survenu sur cette campagne'}
+                    );
+                }
+
+
+
+            });
+
+        } else {
+            return res.json(
+                {type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.'}
+            );
+        }
+    } catch (error) {
+        return res.json({type: 'error', message: error});
+    }
 }
 
 exports.campaignsDays = async (req, res) => {
@@ -718,14 +1568,15 @@ exports.campaignsCreatives = async (req, res) => {
                                             })
                                             .then(function (result) {
                                                 result.item; // the model
-                                                result.created; // bool, if a new item was created.
-                                                return res.json({
-                                                    type: 'success',
-                                                    message: 'Les creatives de la campagne "' + campaignID + '" ont bien été ajoutées.'
-                                                });
+                                                result.created; // bool, if a new item was created.                                               
                                             });
 
                                     }
+
+                                    return res.json({
+                                        type: 'success',
+                                        message: 'Les créatives de la campagne <strong>' + campaignID + '</strong> ont bien été ajoutées.'
+                                    });
                                 }
 
                             }

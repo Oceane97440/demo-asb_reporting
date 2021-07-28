@@ -7,11 +7,17 @@ router.get("/json", automate.json);
 
 router.get("/agencies", automate.agencies);
 router.get("/advertisers", automate.advertisers);
+
+router.get("/advertisers/campaigns", automate.advertisersCampaigns);
+router.get("/advertiser", automate.advertiser);
+
 router.get("/campaigns", automate.campaigns);
 router.get("/campaign", automate.campaign);
+router.get("/campaign/report", automate.campaignReport);
 router.get("/campaigns/insertions", automate.campaignsInsertions);
 router.get("/campaigns/creatives", automate.campaignsCreatives);
 router.get("/campaigns/days", automate.campaignsDays);
+
 router.get("/formats", automate.formats);
 
 router.get("/sites", automate.sites);

@@ -10,6 +10,11 @@ exports.config = function (method, params = '') {
         case 'advertisers':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/';
             break;
+        case 'advertisersCampaigns':
+                advertiser_id = params.advertiser_id;
+                var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
+                advertiser_id + '/campaigns/';
+                break;
         case 'campaigns':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/';
             break;
@@ -95,4 +100,220 @@ exports.config = function (method, params = '') {
     }
 
     return config;
+}
+
+
+   // Function de trie et de récupération de données
+   
+exports.sortDataReport = function (formatSearch, dataObject) {
+     // Permet de faire l'addition
+     const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  
+    insertions = new Array();
+    impressions = new Array();
+    clicks = new Array();
+    complete = new Array();
+    sites = new Array();
+    sites_rename = new Array();
+
+    for (var jn = 0; jn < formatSearch.length; jn++) {
+        key = formatSearch[jn];
+        site_name = dataObject[key].site_name;
+        insertion_name = dataObject[key].insertion_name;
+
+        insertions.push(insertion_name);
+        impressions.push(parseInt(dataObject[key].impressions));
+        clicks.push(parseInt(dataObject[key].clicks));
+        complete.push(parseInt(dataObject[key].complete));
+        sites_rename.push(site_name);
+
+        // Récupére le nom des sites et les classes Créer les tableaux des sites
+        if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_IMMO974{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_TF1{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_M6{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
+            sites.push(site_name);
+        }
+        if (site_name.match(/^\SM_RODALI{1}/igm)) {
+            sites.push(site_name);
+        }
+
+        if (site_name.match(/^\N\/A{1}/i)) {
+            // Si N/A
+            if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
+                sites.push('SM_DOMTOMJOB');
+            }
+            if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
+                sites.push('SM_LINFO-ANDROID');
+            }
+            if (insertion_name.match(/^\LINFO{1}/igm)) {
+                sites.push('SM_LINFO.re');
+            }
+            if (insertion_name.match(/^\ANTENNE REUNION{1}/igm)) {
+                sites.push('SM_ANTENNEREUNION');
+            }
+            if (insertion_name.match(/^\ORANGE REUNION{1}/igm)) {
+                sites.push('SM_ANTENNEREUNION');
+            }
+            if (insertion_name.match(/^\RODZAFER{1}/igm)) {
+                sites.push('SM_ANTENNEREUNION');
+            }
+            if (insertion_name.match(/^\RODALI{1}/igm)) {
+                sites.push('SM_ANTENNEREUNION');
+            }
+            if (insertion_name.match(/^\IMMO974{1}/igm)) {
+                sites.push('SM_IMMO974');
+            }
+            if (insertion_name.match(/^\TF1{1}/igm)) {
+                sites.push('SM_TF1');
+            }
+            if (insertion_name.match(/^\M6{1}/igm)) {
+                sites.push('SM_M6');
+            }
+            if (insertion_name.match(/^\DAILYMOTION{1}/igm)) {
+                sites.push('SM_DAILYMOTION');
+            }
+
+            sites.push('SM_LINFO.re');
+        }
+    }
+
+    // Gestion des sites
+    if (sites && (sites.length > 0)) {
+        var siteUnique = new Array();
+        var siteUniqueKey = new Array();
+        var SiteUniqueCount = new Array();
+        var siteImpressions = new Array();
+        var siteClicks = new Array();
+        var siteComplete = new Array();
+
+        for (var kn = 0; kn < sites.length; kn++) {
+            key = formatSearch[kn];
+            impressionsSite = parseInt(dataObject[key].impressions);
+            clicksSite = parseInt(dataObject[key].clicks);
+            completeSite = parseInt(dataObject[key].complete);
+            var nameSite = sites[kn];
+
+            // Rentre les impressions
+            if (siteUnique[nameSite]) {
+                siteUnique[nameSite].splice(siteImpressions[nameSite].length, 1, key);
+            } else {
+                siteUnique[nameSite] = new Array();
+                siteUnique[nameSite][0] = key;
+                SiteUniqueCount.push(nameSite);
+            }
+
+            // Rentre les impressions
+            if (siteImpressions[nameSite]) {
+                siteImpressions[nameSite].splice(
+                    siteImpressions[nameSite].length,
+                    1,
+                    impressionsSite
+                );
+            } else {
+                siteImpressions[nameSite] = new Array();
+                siteImpressions[nameSite][0] = impressionsSite;
+            }
+
+            // Rentre les Clicks
+            if (siteClicks[nameSite]) {
+                siteClicks[nameSite].splice(siteClicks[nameSite].length, 1, clicksSite);
+            } else {
+                siteClicks[nameSite] = new Array();
+                siteClicks[nameSite][0] = clicksSite;
+            }
+
+            // Rentre les Complete
+            if (siteComplete[nameSite]) {
+                siteComplete[nameSite].splice(siteComplete[nameSite].length, 1, completeSite);
+            } else {
+                siteComplete[nameSite] = new Array();
+                siteComplete[nameSite][0] = completeSite;
+            }
+        }
+
+        // Trie les données de sites
+        if (siteUnique && (SiteUniqueCount.length > 0)) {
+            siteList = new Object();
+            for (var ln = 0; ln < SiteUniqueCount.length; ln++) {
+                sN = SiteUniqueCount[ln];
+                siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
+                siteClicksSUM = siteClicks[sN].reduce(reducer);
+                siteCompleteSUM = siteComplete[sN].reduce(reducer);
+                siteCtrSUM = parseFloat((siteClicksSUM / siteImpressionsSUM) * 100).toFixed(2);
+                siteCtrComplete = parseFloat((siteCompleteSUM / siteImpressionsSUM) * 100).toFixed(
+                    2
+                );
+
+                var itemSite = {
+                    site: sN,
+                    impressions: siteImpressionsSUM,
+                    clicks: siteClicksSUM,
+                    ctr: siteCtrSUM,
+                    complete: siteCompleteSUM,
+                    ctrComplete: siteCtrComplete
+                };
+                siteList[ln] = itemSite;
+            }
+
+        }
+    }
+
+    // Fais le calcul
+    impressionsSUM = impressions.reduce(reducer);
+    clicksSUM = clicks.reduce(reducer);
+    ctrSUM = eval((clicksSUM / impressionsSUM) * 100).toFixed(2);
+    completeSUM = complete.reduce(reducer);
+    ctrComplete = eval((completeSUM / impressionsSUM) * 100).toFixed(2);
+
+    resultDateReport = {
+        formatKey: formatSearch,
+        // insertions : insertions, sites_rename : sites_rename, sites : sites,
+        // siteUniqueCount : SiteUniqueCount, siteUnique : siteUnique, siteImpressions :
+        // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
+        siteList: siteList,
+        // impressions : impressions,
+        impressions: impressions.reduce(reducer),
+        // clicks : clicks,
+        clicks: clicks.reduce(reducer),
+        ctr: ctrSUM,
+        // complete : complete,
+        complete: completeSUM,
+        ctrComplete: ctrComplete
+    };
+
+    return resultDateReport;
 }
