@@ -667,7 +667,9 @@ exports.report = async (req, res) => {
                                 campaign_id: campaignid
                             }
                         });
-                        // console.log('insertion_end_date : ', insertion_end_date);
+                        console.log('insertion_start_date : ', insertion_start_date);
+
+                         console.log('insertion_end_date : ', insertion_end_date);
 
                         const now = new Date();
                         const timestamp_datenow = now.getTime();
@@ -677,16 +679,24 @@ exports.report = async (req, res) => {
                         const campaign_start_date_yesterday = new Date(campaign_start_date);
                         var start_date_timezone = campaign_start_date_yesterday.setHours(-4);
 
-                        // Teste pour récupérer la date la plus tôt
-                        if (start_date_timezone > insertion_start_date) {
+                        // Teste pour récupérer la date la plus tôt si les insertions existe pour la campagne
+
+                        if ((insertion_start_date) && (start_date_timezone > insertion_start_date)) {
                             start_date_timezone = insertion_start_date;
+                        }else{
+                            start_date_timezone = start_date_timezone
                         }
                         // console.log('start_date_timezone :', start_date_timezone); recup la date de
                         // fin de la campagne ajoute +1jour
                         var endDate_day = new Date(campaign_end_date);
                         var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
-                        if (insertion_end_date > endDate_last) {
+
+                          // Teste pour récupérer la date la plus tardive si les insertions existe pour la campagne
+
+                        if ((insertion_end_date) && (insertion_end_date > endDate_last)) {
                             endDate_last = insertion_end_date;
+                        }else{
+                            endDate_last = endDate_last
                         }
                         /*--- console.log(
                             'insertion_end_date : ',
