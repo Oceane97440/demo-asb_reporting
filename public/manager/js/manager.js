@@ -109,7 +109,24 @@ $(document).ready(
     function automateAction(automate) {
 
         switch(automate) {
-            case "insertions":
+            case "campaign-report":
+                 // Récupére les insertions
+                 $.ajax({ 
+                    type: 'GET', 
+                    url: config.baseurl+'automate/campaign/report', 
+                    dataType: 'json',
+                    data : 'campaign_id=' + campaign_id,
+                    success: function( data ) {                        
+                        toastWidget('Mise à jour du rapport','',data.message);
+                       // automateAction('campaign-report');
+                    },
+                    error: function() { 
+                        // swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning"); 
+                    },
+                    timeout: 300000 
+                });
+            break;
+            case "campaign-insertions":
                 // Récupére les insertions
                 $.ajax({ 
                     type: 'GET', 
@@ -118,7 +135,7 @@ $(document).ready(
                     data : 'campaign_id=' + campaign_id,
                     success: function( data ) {                        
                         toastWidget('Mise à jour des insertions','',data.message);
-                        automateAction('creatives');
+                        automateAction('campaign-creatives');
                     },
                     error: function() { 
                         // swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning"); 
@@ -126,7 +143,7 @@ $(document).ready(
                     timeout: 300000 
                 });
             break;
-            case "creatives":
+            case "campaign-creatives":
                 // Récupére les creatives
                 $.ajax({ 
                     type: 'GET', 
@@ -143,22 +160,45 @@ $(document).ready(
                 });
             break;
 
+            case "advertiser-campaigns":
+                // Récupére les campagnes des annonceurs
+                //console.log( config.baseurl+'automate/advertisers/campaigns?advertiser='+id)
+                 $.ajax({ 
+                    type: 'GET', 
+                    url: config.baseurl+'automate/advertisers/campaigns', 
+                    dataType: 'json',
+                    data : 'advertiser_id=' + advertiser_id,
+                    success: function( data ) {
+                        toastWidget('Mise à jour des campagnes','',data.message);
+                    },
+                    error: function() { 
+                        // swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning"); 
+                    },
+                    timeout: 300000 
+                });
+            break;
         }
     }
-
-
-
-    
-
+   
     // Charge les éléments en ajax
     var campaign_id = $('div.card').attr('data-campaign_id');
+    var advertiser_id = $('div.card').attr('data-advertiser_id');
     var automate = $('div.alert').attr('data-automate');
-  
-    
-
+   
     if(campaign_id) { 
        automateAction(automate);
     }
+
+    if(advertiser_id) { 
+       automateAction(automate);       
+     }
+
+    $('.btn-automate').click(function() { 
+        var btnAutomate = $(this).attr('data-automate');
+        automateAction(btnAutomate);
+      return false;
+  })
+
     
 
 });
