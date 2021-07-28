@@ -173,6 +173,7 @@ exports.advertisers = async (req, res) => {
 exports.advertiser = async (req, res) => {
     try {
         let advertiser_id = req.query.advertiser_id;
+       //console.log(advertiser_id)
 
         if (advertiser_id) {
             advertiserObject = {

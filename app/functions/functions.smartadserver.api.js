@@ -10,23 +10,28 @@ exports.config = function (method, params = '') {
         case 'advertisers':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/';
             break;
+        case 'advertiser':
+            advertiser_id = params.advertiser_id;
+
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' + advertiser_id;
+            break;
         case 'advertisersCampaigns':
-                advertiser_id = params.advertiser_id;
-                var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
+            advertiser_id = params.advertiser_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
                 advertiser_id + '/campaigns/';
-                break;
+            break;
         case 'campaigns':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/';
             break;
         case 'campaign':
             campaign_id = params.campaign_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
-                    campaign_id;
+                campaign_id;
             break;
         case 'campaignsInsertions':
             campaign_id = params.campaign_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
-                    campaign_id + '/insertions/';
+                campaign_id + '/insertions/';
             break;
         case 'formats':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/formats';
@@ -52,7 +57,7 @@ exports.config = function (method, params = '') {
         case 'insertions_templates':
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
-                    insertion_id + '/insertiontemplates';
+                insertion_id + '/insertiontemplates';
             break;
         case 'insertions_status':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions_status';
@@ -63,7 +68,7 @@ exports.config = function (method, params = '') {
         case 'creatives':
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
-                    insertion_id + '/creatives';
+                insertion_id + '/creatives';
             break;
         default:
             break;
@@ -103,12 +108,12 @@ exports.config = function (method, params = '') {
 }
 
 
-   // Function de trie et de récupération de données
-   
+// Function de trie et de récupération de données
+
 exports.sortDataReport = function (formatSearch, dataObject) {
-     // Permet de faire l'addition
-     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  
+    // Permet de faire l'addition
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
     insertions = new Array();
     impressions = new Array();
     clicks = new Array();
