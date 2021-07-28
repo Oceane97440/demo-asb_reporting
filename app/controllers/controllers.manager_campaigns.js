@@ -66,8 +66,6 @@ exports.index = async (req, res) => {
         var dateTomorrow = moment().add(1, 'days').format('YYYY-MM-DD');
         var date5Days = moment().add(5, 'days').format('YYYY-MM-DD');
 
-        console.log(dateTomorrow)
-
         data.campaigns_today = await ModelCampaigns.findAll({
             where: {
                 campaign_end_date: {
@@ -95,11 +93,41 @@ exports.index = async (req, res) => {
             ]
         });
 
-        // Affiche les campagnes se terminant demain
+        // Affiche les campagnes se terminant dans les 5 prochains jours
         data.campaigns_nextdays = await ModelCampaigns.findAll({
             where: {
-                campaign_end_date: {
-                    [Op.like]: '%' + date5Days + '%'
+                [Op.or]: [
+                    {
+                        campaign_start_date: {
+                            [Op.between]: [ dateNow, date5Days ]  
+                        }
+                }
+                ],
+                [Op.or]: [
+                    {                       
+                        campaign_end_date: {
+                            [Op.between]: [ dateNow, date5Days ]  
+                        }
+                }
+                ]      
+            },
+            order: [
+                // Will escape title and validate DESC against a list of valid direction parameters
+                ['campaign_start_date', 'ASC']
+            ],
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
+        });
+
+
+         // Affiche les campagnes se terminant dans les 5 prochains jours
+         data.campaigns_online = await ModelCampaigns.findAll({
+            where: {
+                campaign_start_date: {
+                    [Op.gte]: '%' + dateNow + '%'
                 }
             },
             include: [
@@ -109,8 +137,11 @@ exports.index = async (req, res) => {
             ]
         });
 
-
         data.moment = moment;
+
+        console.log('dateNow :',dateNow)
+        console.log('dateTomorrow :',dateTomorrow)
+        console.log('date5Days :',date5Days, ' - ',data.campaigns_nextdays.length)
 
         res.render('manager/campaigns/index.ejs', data);
     } catch (error) {

@@ -109,6 +109,26 @@ $(document).ready(
     function automateAction(automate) {
 
         switch(automate) {
+            case "campaign-update":
+              // Récupére les insertions
+              $.ajax({ 
+                type: 'GET', 
+                url: config.baseurl+'automate/campaign', 
+                dataType: 'json',
+                data : 'campaign_id=' + campaign_id,
+                success: function( data ) {                        
+                    toastWidget('Mise à jour de la campagne','',data.message);
+                    automateAction('campaign-insertions');
+                  //  automateAction('campaign-report');
+                },
+                error: function() { 
+                    // swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning"); 
+                },
+                timeout: 300000 
+            });           
+            
+           
+            break;
             case "campaign-report":
                  // Récupére les insertions
                  $.ajax({ 
@@ -194,7 +214,7 @@ $(document).ready(
      }
 
     $('.btn-automate').click(function() { 
-        var btnAutomate = $(this).attr('data-automate');
+        var btnAutomate = $(this).attr('data-automate-btn');
         automateAction(btnAutomate);
       return false;
   })
