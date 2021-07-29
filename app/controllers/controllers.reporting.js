@@ -1468,6 +1468,13 @@ exports.report = async (req, res) => {
                                     } else {
                                         campaignCtrComplete = null;
                                     }
+
+                                    if (!Utilities.empty(campaignViewableImpressions) && !Utilities.empty(campaignImpressions)) {
+                                        campaignImpressions_Viewable= campaignImpressions + campaignViewableImpressions
+                                        console.log('campaignImpressions_Viewable' + campaignImpressions_Viewable)
+                                    } else {
+                                        campaignImpressions_Viewable = null;
+                                    }
                                     console.log('Campaign :', formatObjects.campaign);
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
@@ -1482,7 +1489,8 @@ exports.report = async (req, res) => {
                                         ctr: campaignCtr,
                                         complete: campaignComplete,
                                         ctrComplete: campaignCtrComplete,
-                                        viewable_impressions: campaignViewableImpressions
+                                        viewable_impressions: campaignViewableImpressions,
+                                        impressions_viewable_sum : campaignImpressions_Viewable
 
                                     }
                                     console.log('formatObjects :', formatObjects.campaign);
