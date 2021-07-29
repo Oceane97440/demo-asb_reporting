@@ -210,7 +210,7 @@ $(document).ready(
     }
 
     if(advertiser_id) { 
-       automateAction(automate);       
+        automateAction(automate);       
      }
 
     $('.btn-automate').click(function() { 

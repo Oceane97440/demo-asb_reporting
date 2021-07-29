@@ -13,12 +13,13 @@ exports.config = function (method, params = '') {
         case 'advertiser':
             advertiser_id = params.advertiser_id;
 
-            var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' + advertiser_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
+                    advertiser_id;
             break;
         case 'advertisersCampaigns':
             advertiser_id = params.advertiser_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
-                advertiser_id + '/campaigns/';
+                    advertiser_id + '/campaigns/';
             break;
         case 'campaigns':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/';
@@ -26,12 +27,12 @@ exports.config = function (method, params = '') {
         case 'campaign':
             campaign_id = params.campaign_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
-                campaign_id;
+                    campaign_id;
             break;
         case 'campaignsInsertions':
             campaign_id = params.campaign_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
-                campaign_id + '/insertions/';
+                    campaign_id + '/insertions/';
             break;
         case 'formats':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/formats';
@@ -57,7 +58,7 @@ exports.config = function (method, params = '') {
         case 'insertions_templates':
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
-                insertion_id + '/insertiontemplates';
+                    insertion_id + '/insertiontemplates';
             break;
         case 'insertions_status':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions_status';
@@ -68,7 +69,7 @@ exports.config = function (method, params = '') {
         case 'creatives':
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
-                insertion_id + '/creatives';
+                    insertion_id + '/creatives';
             break;
         default:
             break;
@@ -107,7 +108,6 @@ exports.config = function (method, params = '') {
     return config;
 }
 
-
 // Function de trie et de récupération de données
 
 exports.sortDataReport = function (formatSearch, dataObject) {
@@ -116,7 +116,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
     insertions = new Array();
     impressions = new Array();
-    viewable_impression = new Array();
+    viewable_impressions = new Array();
     clicks = new Array();
     complete = new Array();
     sites = new Array();
@@ -131,7 +131,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         impressions.push(parseInt(dataObject[key].impressions));
         clicks.push(parseInt(dataObject[key].clicks));
         complete.push(parseInt(dataObject[key].complete));
-        viewable_impression.push(parseInt(dataObject[key].viewable_impressions));
+        viewable_impressions.push(parseInt(dataObject[key].viewable_impressions));
         sites_rename.push(site_name);
 
         // Récupére le nom des sites et les classes Créer les tableaux des sites
@@ -222,9 +222,9 @@ exports.sortDataReport = function (formatSearch, dataObject) {
     if (sites && (sites.length > 0)) {
         var siteUnique = new Array();
         var siteUniqueKey = new Array();
-        var SiteUniqueCount = new Array();
+        var siteUniqueCount = new Array();
         var siteImpressions = new Array();
-        var viewableImpressions = new Array();
+        var siteViewableImpressions = new Array();
         var siteClicks = new Array();
         var siteComplete = new Array();
 
@@ -243,7 +243,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             } else {
                 siteUnique[nameSite] = new Array();
                 siteUnique[nameSite][0] = key;
-                SiteUniqueCount.push(nameSite);
+                siteUniqueCount.push(nameSite);
             }
 
             // Rentre les impressions
@@ -274,24 +274,28 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 siteComplete[nameSite][0] = completeSite;
             }
 
-             // Rentre les Viewable Impression
-             if (viewableImpressions[nameSite]) {
-                viewableImpressions[nameSite].splice(viewableImpressions[nameSite].length, 1, viewableimpressionsSite);
+            // Rentre les Viewable Impression
+            if (siteViewableImpressions[nameSite]) {
+                siteViewableImpressions[nameSite].splice(
+                    siteViewableImpressions[nameSite].length,
+                    1,
+                    viewableimpressionsSite
+                );
             } else {
-                viewableImpressions[nameSite] = new Array();
-                viewableImpressions[nameSite][0] = viewableimpressionsSite;
+                siteViewableImpressions[nameSite] = new Array();
+                siteViewableImpressions[nameSite][0] = viewableimpressionsSite;
             }
         }
 
         // Trie les données de sites
-        if (siteUnique && (SiteUniqueCount.length > 0)) {
+        if (siteUnique && (siteUniqueCount.length > 0)) {
             siteList = new Object();
-            for (var ln = 0; ln < SiteUniqueCount.length; ln++) {
-                sN = SiteUniqueCount[ln];
+            for (var ln = 0; ln < siteUniqueCount.length; ln++) {
+                sN = siteUniqueCount[ln];
                 siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
                 siteClicksSUM = siteClicks[sN].reduce(reducer);
                 siteCompleteSUM = siteComplete[sN].reduce(reducer);
-                siteViewableImpressionsSUM = viewableImpressions[sN].reduce(reducer);
+                siteViewableImpressionsSUM = siteViewableImpressions[sN].reduce(reducer);
 
                 siteCtrSUM = parseFloat((siteClicksSUM / siteImpressionsSUM) * 100).toFixed(2);
                 siteCtrComplete = parseFloat((siteCompleteSUM / siteImpressionsSUM) * 100).toFixed(
@@ -305,7 +309,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                     ctr: siteCtrSUM,
                     complete: siteCompleteSUM,
                     ctrComplete: siteCtrComplete,
-                    viewable_impressions:siteViewableImpressionsSUM
+                    viewable_impressions: siteViewableImpressionsSUM
                 };
                 siteList[ln] = itemSite;
             }
@@ -318,14 +322,14 @@ exports.sortDataReport = function (formatSearch, dataObject) {
     clicksSUM = clicks.reduce(reducer);
     ctrSUM = eval((clicksSUM / impressionsSUM) * 100).toFixed(2);
     completeSUM = complete.reduce(reducer);
-    viewable_impressionsSUM = viewable_impression.reduce(reducer);
+    viewable_impressionsSUM = viewable_impressions.reduce(reducer);
 
     ctrComplete = eval((completeSUM / impressionsSUM) * 100).toFixed(2);
 
     resultDateReport = {
         formatKey: formatSearch,
         // insertions : insertions, sites_rename : sites_rename, sites : sites,
-        // siteUniqueCount : SiteUniqueCount, siteUnique : siteUnique, siteImpressions :
+        // siteUniqueCount : siteUniqueCount, siteUnique : siteUnique, siteImpressions :
         // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
         siteList: siteList,
         // impressions : impressions,

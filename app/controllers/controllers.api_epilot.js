@@ -14,264 +14,206 @@ const axios = require(`axios`);
 
 const fileGetContents = require('file-get-contents');
 
-// Initiliase le module axios
-//const axios = require(`axios`);
+// Initiliase le module axios const axios = require(`axios`);
 
-
-const {
-  Op
-} = require("sequelize");
+const {Op} = require("sequelize");
 
 process.on('unhandledRejection', error => {
-  // Will print "unhandledRejection err is not defined"
-  console.log('unhandledRejection', error.message);
+    // Will print "unhandledRejection err is not defined"
+    console.log('unhandledRejection', error.message);
 });
 
+const {QueryTypes} = require('sequelize');
 
+const {check, query} = require('express-validator');
 
-const {
-  QueryTypes
-} = require('sequelize');
-
-const {
-  check,
-  query
-} = require('express-validator');
-
-
-
-// Charge l'ensemble des functions de l'API
-//const AxiosFunction = require('../functions/functions.axios');
-
-// Initialise les models
-//const ModelSite = require("../models/models.site");
-//const ModelFormat = require("../models/models.format");
-//const ModelCountry = require("../models/models.country")
-const ModelCampaignsEpilot = require("../models/models.campaigns_epilot")
-//const ModelPack = require("../models/models.pack")
-//const ModelPack_Site = require("../models/models.pack_site")
-
-//regex test date
+// Charge l'ensemble des functions de l'API const AxiosFunction =
+// require('../functions/functions.axios'); Initialise les models const
+// ModelSite = require("../models/models.site"); const ModelFormat =
+// require("../models/models.format"); const ModelCountry =
+// require("../models/models.country")
+const ModelCampaignsEpilot = require("../models/models.campaigns_epilots")
+// const ModelPack = require("../models/models.pack") const ModelPack_Site =
+// require("../models/models.pack_site") regex test date
 const REGEX = /(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})/
 
 exports.index = async (req, res) => {
 
+    try {
+        if (req.session.user.user_role === 1 || req.session.user.user_role === 2 || req.session.user.user_role === 3) {
 
+            var confirmer = await ModelCampaignsEpilot.findAll({
+                attributes: [
+                    'campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'
+                ],
 
-  try {
-    if (req.session.user.user_role === 1||req.session.user.user_role === 2||req.session.user.user_role === 3) {
+                where: {
+                    etat: 1
+                },
+                order: [
+                    ['campaign_name', 'ASC']
+                ]
+            })
 
-    var confirmer = await ModelCampaignsEpilot.findAll({
-      attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
+            var reserver = await ModelCampaignsEpilot.findAll({
+                attributes: [
+                    'campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'
+                ],
 
-      where: {
-        etat: 1
-      },
-      order: [
-        ['campaign_name', 'ASC']
-      ],
-    })
+                where: {
+                    etat: 2
+                },
+                order: [
+                    ['campaign_name', 'ASC']
+                ]
+            })
 
-    var reserver = await ModelCampaignsEpilot.findAll({
-      attributes: ['campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'],
+            var reult_confirmer = Object
+                .keys(confirmer)
+                .length;
 
-      where: {
-        etat: 2
-      },
-      order: [
-        ['campaign_name', 'ASC']
-      ],
-    })
+            var reult_reserver = Object
+                .keys(reserver)
+                .length;
 
-    var reult_confirmer = Object.keys(confirmer).length;
+            res.render('forecast/liste_epilot.ejs', {
+                confirmer: confirmer,
+                reserver: reserver,
+                reult_confirmer: reult_confirmer,
+                reult_reserver: reult_reserver
+            });
 
-    var reult_reserver = Object.keys(reserver).length;
+        }
 
+    } catch (error) {
+        console.log(error)
+        var statusCoded = error.response;
 
-    res.render('forecast/liste_epilot.ejs', {
-      confirmer: confirmer,
-      reserver: reserver,
-      reult_confirmer: reult_confirmer,
-      reult_reserver: reult_reserver
-    });
-
-  }
-
-  } catch (error) { 
-    console.log(error)
-    var statusCoded = error.response;
-
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-     
-    })
-  }
-
-
-
-
+        res.render("error.ejs", {statusCoded: statusCoded})
+    }
 
 }
 
-
 exports.csv_import = async (req, res) => {
 
-  const uploadedFile = req.files.file_csv;
+    const uploadedFile = req.files.file_csv;
 
+    try {
 
-  try {
+        //verification de extention du fichier
+        if ((uploadedFile.mimetype === 'application/vnd.ms-excel' || uploadedFile.mimetype === 'application/octet-stream')) {
 
+            // il faut que le dossier upload existe. crée des dossier archive
+            // (ex:upload20210108)
+            await uploadedFile.mv('public/admin/uploads/' + uploadedFile.name, err => {
+                if (err) 
+                    return res
+                        .status(500)
+                        .send(err)
+                });
 
+            //recupère le fichier upload et lecture des donnée
 
+            fs
+                .createReadStream('public/admin/uploads/' + uploadedFile.name)
+                // fs.createReadStream('public/admin/uploads/template_csv.csv')
+                .pipe(csv({
+                    separator: '\;'
+                },))
+                .on('data', (data) => results.push(data))
+                .on('end', () => {
+                    //  console.log(results);
 
+                    for (let i = 0; i < results.length; i++) {
 
-    //verification de extention du fichier
-    if ((uploadedFile.mimetype === 'application/vnd.ms-excel' || uploadedFile.mimetype === 'application/octet-stream')) {
+                        //recupère mes donnée puis assigné à une variabme
+                        var campaign_name = results[i].Campagne;
+                        var format_name = results[i].Formats;
+                        var etat = results[i].Etat;
+                        var campaign_start_date = results[i].Date_de_debut_prevue;
+                        var campaign_end_date = results[i].Date_de_fin_prevue;
+                        var volume_prevue = results[i].Volume_total_prevu;
+                        var annonceurs = results[i].Annonceur;
 
-      //il faut que le dossier upload existe. 
-      //crée des dossier archive (ex:upload20210108)
-      await uploadedFile.mv('public/admin/uploads/' + uploadedFile.name, err => {
-        if (err)
-          return res.status(500).send(err)
-      });
+                        // test tableau exclusion / ajouter test si la campagne n'est pas dans la base
+                        // Test si les valeurs sont vide
+                        if (campaign_name === '' || format_name === '' || etat === '' || campaign_start_date === '' || campaign_end_date === '' || volume_prevue === '' || annonceurs === '') {
 
-      //recupère le fichier upload et lecture des donnée
+                            return res.send("des champs sont vides")
 
-      fs.createReadStream('public/admin/uploads/' + uploadedFile.name)
-        // fs.createReadStream('public/admin/uploads/template_csv.csv')
-
-
-
-        .pipe(csv({
-            separator: '\;'
-          },
-
-        ))
-
-        .on('data', (data) => results.push(data))
-        .on('end', () => {
-          //  console.log(results);
-
-          for (let i = 0; i < results.length; i++) {
-
-
-            //recupère mes donnée puis assigné à une variabme
-            var campaign_name = results[i].Campagne;
-            var format_name = results[i].Formats;
-            var etat = results[i].Etat;
-            var campaign_start_date = results[i].Date_de_debut_prevue;
-            var campaign_end_date = results[i].Date_de_fin_prevue;
-            var volume_prevue = results[i].Volume_total_prevu;
-            var annonceurs = results[i].Annonceur;
-
-            //test tableau exclusion / ajouter
-            //test si la campagne n'est pas dans la base
-
-            //Test si les valeurs sont vide
-            if (campaign_name === '' || format_name === '' || etat === '' ||
-              campaign_start_date === '' || campaign_end_date === '' || volume_prevue === '' || annonceurs === '') {
-
-              return res.send("des champs sont vides")
-
-
-            }
-            /*
+                        }
+                        /*
                          if (campaign_start_date > campaign_end_date || campaign_end_date < campaign_start_date)
                         {return res.send("La date debut et fin est invalide")}
             */
 
+                        //remplace les valeurs
+                        if (etat === "Confirmee") {
+                            etat = "1";
+                        }
+                        if (etat === "Reservee") {
+                            etat = "2";
+                        }
 
-            //remplace les valeurs
-            if (etat === "Confirmee") {
-              etat = "1";
+                        //formate la date start DD/MM/YY -> YYYY-MM-DD
+                        const date_start = REGEX.exec(campaign_start_date)
+                        var DD = date_start[1]
+                        var MM = date_start[2]
+                        var YYYY = date_start[3]
+                        var date_start_format = YYYY + '-' + MM + '-' + DD
+
+                        //formate la date end DD/MM/YY -> YYYY-MM-DD
+                        const date_end = REGEX.exec(campaign_end_date)
+                        var DD = date_end[1]
+                        var MM = date_end[2]
+                        var YYYY = date_end[3]
+                        var date_end_format = YYYY + '-' + MM + '-' + DD
+
+                        campaign_debut = date_start_format + 'T00:00:00.000Z'
+                        campaign_fin = date_end_format + 'T00:00:00.000Z'
+
+                        //apres tout mes test passé add les données
+                        ModelCampaignsEpilot
+                            .create({
+                                campaign_epilot_name: campaign_name,
+                                format_name: format_name,
+                                campaign_epilot_status: etat,
+                                campaign_epilot_start_date: campaign_debut,
+                                campaign_epilot_end_date: campaign_fin,
+                                campaign_epilot_volume: volume_prevue
+
+                            })
+                            .then(async function (campagne_epilot) {
+                                if (campagne_epilot) {
+                                    req.session.message = {
+                                        type: 'success',
+                                        intro: 'Ok',
+                                        message: 'Votre fichier csv est valide'
+                                    }
+                                    return res.redirect('manager/campaigns/epilot/list')
+
+                                }
+
+                            })
+
+                    }
+
+                });
+
+        } else {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Erreur',
+                message: 'Extention du fichier invalide'
             }
-            if (etat === "Reservee") {
-              etat = "2";
-            }
+            return res.redirect('/manager/epilot/list')
 
-            //formate la date start DD/MM/YY -> YYYY-MM-DD
-            const date_start = REGEX.exec(campaign_start_date)
-            var DD = date_start[1]
-            var MM = date_start[2]
-            var YYYY = date_start[3]
-            var date_start_format = YYYY + '-' + MM + '-' + DD
+        }
 
-            //formate la date end DD/MM/YY -> YYYY-MM-DD
-            const date_end = REGEX.exec(campaign_end_date)
-            var DD = date_end[1]
-            var MM = date_end[2]
-            var YYYY = date_end[3]
-            var date_end_format = YYYY + '-' + MM + '-' + DD
-
-            campaign_debut = date_start_format + 'T00:00:00.000Z'
-            campaign_fin = date_end_format + 'T00:00:00.000Z'
-
-
-
-            //apres tout mes test passé add les données
-            ModelCampaignsEpilot.create({
-              campaign_epilot_name: campaign_name,
-              format_name: format_name,
-              campaign_epilot_status: etat,
-              campaign_epilot_start_date: campaign_debut,
-              campaign_epilot_end_date: campaign_fin,
-              campaign_epilot_volume: volume_prevue
-
-            }).then(async function (campagne_epilot) {
-              if (campagne_epilot) {
-                req.session.message = {
-                  type: 'success',
-                  intro: 'Ok',
-                  message: 'Votre fichier csv est valide'
-                }
-                return res.redirect('manager/campaigns/epilot/list')
-
-              }
-
-
-            })
-
-
-
-
-
-
-
-
-
-
-
-
-          }
-
-        });
-
-
-
-
-    } else {
-      req.session.message = {
-        type: 'danger',
-        intro: 'Erreur',
-        message: 'Extention du fichier invalide'
-      }
-      return res.redirect('/manager/epilot/list')
-
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
-
-
-
-
-
-
-  } catch (error) {
-    console.log(error);
-    var statusCoded = error.response.status;
-    res.render("manager/error.ejs", {
-      statusCoded: statusCoded
-    });
-  }
-
-
 
 }
