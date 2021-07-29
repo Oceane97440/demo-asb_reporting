@@ -934,7 +934,7 @@ exports.report = async (req, res) => {
                                                     'campaignID-' + campaignid + '-taskGlobal',
                                                     JSON.stringify(dataLSTaskGlobal)
                                                 );
-                                                //console.log('Creation de dataLSTaskGlobal');
+                                                console.log('Creation de dataLSTaskGlobal');
                                             }
                                         }
                                     }
@@ -948,7 +948,7 @@ exports.report = async (req, res) => {
 
                                         let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
 
-                                        // console.log('fourLink : ', fourLink)
+                                         console.log('fourLink : ', fourLink.data.lastTaskInstance.jobProgress)
 
                                         if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
 
@@ -1009,6 +1009,8 @@ exports.report = async (req, res) => {
                                     const ClickRate = [];
                                     const Clicks = [];
                                     const Complete = [];
+                                    const ViewableImpressions = [];
+
 
                                     const dataList = new Object();
 
@@ -1026,6 +1028,8 @@ exports.report = async (req, res) => {
                                                     Impressions.push(parseInt(line[10]));
                                                     Clicks.push(parseInt(line[12]));
                                                     Complete.push(parseInt(line[13]));
+                                                    ViewableImpressions.push(parseInt(line[14]));
+
 
                                                     dataList[i] = {
                                                         'campaign_start_date': line[0],
@@ -1041,13 +1045,19 @@ exports.report = async (req, res) => {
                                                         'impressions': parseInt(line[10]),
                                                         'click_rate': parseInt(line[11]),
                                                         'clicks': parseInt(line[12]),
-                                                        'complete': parseInt(line[13])
+                                                        'complete': parseInt(line[13]),
+                                                        'viewable_impressions': parseInt(line[14])
+
                                                     }
                                                 }
                                             }
                                         }
                                     }
 
+                                    console.log(ViewableImpressions);
+
+
+                                    console.log(dataList)
                                     //
                                     var formatObjects = new Object();
                                     if (dataList && (Object.keys(dataList).length > 0)) {
@@ -1442,6 +1452,15 @@ exports.report = async (req, res) => {
                                     } else {
                                         campaignComplete = null;
                                     }
+
+                                    if (ViewableImpressions.length > 0) {
+                                        campaignViewableImpressions = ViewableImpressions.reduce(reducer);
+                                    } else {
+                                        campaignViewableImpressions = null;
+                                    }
+
+
+
                                     if (!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions)) {
                                         campaignCtrComplete = parseFloat(
                                             (campaignComplete / campaignImpressions) * 100
@@ -1462,10 +1481,13 @@ exports.report = async (req, res) => {
                                         clicks: campaignClicks,
                                         ctr: campaignCtr,
                                         complete: campaignComplete,
-                                        ctrComplete: campaignCtrComplete
+                                        ctrComplete: campaignCtrComplete,
+                                        viewable_impressions: campaignViewableImpressions
+
                                     }
                                     console.log('formatObjects :', formatObjects.campaign);
 
+                                    console.log('dataLSTaskGlobalVU '+ dataLSTaskGlobalVU)
                                     // Récupére les infos des VU s'il existe
                                     if (!Utilities.empty(dataLSTaskGlobalVU)) {
                                         const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
@@ -1487,6 +1509,11 @@ exports.report = async (req, res) => {
                                                 }
                                             }
                                         }
+                                    }else{
+                                        unique_visitor = 0;
+                                        formatObjects.campaign.vu = parseInt(unique_visitor);
+                                        repetition = 0
+                                        formatObjects.campaign.repetition = repetition;
                                     }
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');

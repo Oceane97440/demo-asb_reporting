@@ -116,6 +116,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
     insertions = new Array();
     impressions = new Array();
+    viewable_impression = new Array();
     clicks = new Array();
     complete = new Array();
     sites = new Array();
@@ -130,6 +131,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         impressions.push(parseInt(dataObject[key].impressions));
         clicks.push(parseInt(dataObject[key].clicks));
         complete.push(parseInt(dataObject[key].complete));
+        viewable_impression.push(parseInt(dataObject[key].viewable_impressions));
         sites_rename.push(site_name);
 
         // Récupére le nom des sites et les classes Créer les tableaux des sites
@@ -222,6 +224,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         var siteUniqueKey = new Array();
         var SiteUniqueCount = new Array();
         var siteImpressions = new Array();
+        var viewableImpressions = new Array();
         var siteClicks = new Array();
         var siteComplete = new Array();
 
@@ -230,6 +233,8 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             impressionsSite = parseInt(dataObject[key].impressions);
             clicksSite = parseInt(dataObject[key].clicks);
             completeSite = parseInt(dataObject[key].complete);
+            viewableimpressionsSite = parseInt(dataObject[key].viewable_impressions);
+
             var nameSite = sites[kn];
 
             // Rentre les impressions
@@ -268,6 +273,14 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 siteComplete[nameSite] = new Array();
                 siteComplete[nameSite][0] = completeSite;
             }
+
+             // Rentre les Viewable Impression
+             if (viewableImpressions[nameSite]) {
+                viewableImpressions[nameSite].splice(viewableImpressions[nameSite].length, 1, viewableimpressionsSite);
+            } else {
+                viewableImpressions[nameSite] = new Array();
+                viewableImpressions[nameSite][0] = viewableimpressionsSite;
+            }
         }
 
         // Trie les données de sites
@@ -278,6 +291,8 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
                 siteClicksSUM = siteClicks[sN].reduce(reducer);
                 siteCompleteSUM = siteComplete[sN].reduce(reducer);
+                siteViewableImpressionsSUM = viewableImpressions[sN].reduce(reducer);
+
                 siteCtrSUM = parseFloat((siteClicksSUM / siteImpressionsSUM) * 100).toFixed(2);
                 siteCtrComplete = parseFloat((siteCompleteSUM / siteImpressionsSUM) * 100).toFixed(
                     2
@@ -289,7 +304,8 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                     clicks: siteClicksSUM,
                     ctr: siteCtrSUM,
                     complete: siteCompleteSUM,
-                    ctrComplete: siteCtrComplete
+                    ctrComplete: siteCtrComplete,
+                    viewable_impressions:siteViewableImpressionsSUM
                 };
                 siteList[ln] = itemSite;
             }
@@ -302,6 +318,8 @@ exports.sortDataReport = function (formatSearch, dataObject) {
     clicksSUM = clicks.reduce(reducer);
     ctrSUM = eval((clicksSUM / impressionsSUM) * 100).toFixed(2);
     completeSUM = complete.reduce(reducer);
+    viewable_impressionsSUM = viewable_impression.reduce(reducer);
+
     ctrComplete = eval((completeSUM / impressionsSUM) * 100).toFixed(2);
 
     resultDateReport = {
@@ -317,7 +335,9 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         ctr: ctrSUM,
         // complete : complete,
         complete: completeSUM,
-        ctrComplete: ctrComplete
+        ctrComplete: ctrComplete,
+        viewable_impressions: viewable_impressionsSUM
+
     };
 
     return resultDateReport;
