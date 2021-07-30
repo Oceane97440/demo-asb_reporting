@@ -158,8 +158,13 @@
                 <tbody class="text-center">
                     <tr>
                         <% if(reporting.slider) { %>
+
+
                         <% if(reporting.campaign.viewable_impressions > 0) { %>
+
                         <td><%= utilities.numStr(reporting.campaign.viewable_impressions) %></td>
+
+                        
                         <% }%>
                         <% } else{%>
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>

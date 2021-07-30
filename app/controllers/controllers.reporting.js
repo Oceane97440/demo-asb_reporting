@@ -498,6 +498,12 @@ exports.generate = async (req, res) => {
             const timestamp_startdate = Date.parse(campaign.campaign_start_date);
             const date_now = Date.now();
 
+            var start_date = new Date(campaign.campaign_start_date);
+            var end_date = new Date(campaign.campaign_end_date);
+            var diff = Utilities.nbr_jours(start_date, end_date);
+
+            const nombre_diff_day = diff.day
+
             res.render("report/generate.ejs", {
                 advertiserid: campaign.advertiser_id,
                 campaignid: campaign.campaign_id,
@@ -505,8 +511,10 @@ exports.generate = async (req, res) => {
                 campaign: campaign,
                 timestamp_startdate: timestamp_startdate,
                 date_now: date_now,
-                moment: moment
+                moment: moment,
+                nombre_diff_day : nombre_diff_day
             });
+
 
         });
 }
@@ -787,6 +795,7 @@ exports.report = async (req, res) => {
                             end_date_time
                         )
 
+
                         var requestVisitor_unique = {
                             "startDate": StartDate_timezone,
                             "endDate": end_date,
@@ -819,6 +828,8 @@ exports.report = async (req, res) => {
                             'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour
                         );
 
+                        if (!firstLinkTaskId && (diff.day < 31)) {
+
                         if (!firstLinkTaskId) {
                             let firstLink = await AxiosFunction.getReportingData(
                                 'POST',
@@ -835,6 +846,9 @@ exports.report = async (req, res) => {
                             }
                         }
 
+                    }else{
+                        firstLinkTaskId = null
+                    }
                         // twoLink - Récupére la taskID de la requête reporting
                         let twoLinkTaskId = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour
@@ -1255,12 +1269,23 @@ exports.report = async (req, res) => {
                                         campaignCtrComplete = null;
                                     }
 
-                                    if (!Utilities.empty(campaignViewableImpressions) && !Utilities.empty(campaignImpressions)) {
+                                    // si il y a le slider et d'autre format on fait la somme des 2 (impression total + viewable impression) et le CTR sur la somme des 2
+                                    if ((!Utilities.empty(formatSlider) && !Utilities.empty(formatHabillage))  || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInterstitiel)) 
+                                    || (!Utilities.empty(formatSlider) && !Utilities.empty(formatGrandAngle)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatMasthead)) 
+                                    || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInstream)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatRectangleVideo))
+                                    ) {
                                         campaignImpressions_Viewable = campaignImpressions + campaignViewableImpressions
                                         console.log('campaignImpressions_Viewable' + campaignImpressions_Viewable)
+
+                                        campaignCtrImpressions_Viewable = parseFloat((campaignClicks / campaignImpressions_Viewable) * 100).toFixed(
+                                            2
+                                        );
                                     } else {
                                         campaignImpressions_Viewable = null;
+                                        campaignCtrImpressions_Viewable = null
                                     }
+
+
                                     console.log('Campaign :', formatObjects.campaign);
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
@@ -1276,7 +1301,8 @@ exports.report = async (req, res) => {
                                         complete: campaignComplete,
                                         ctrComplete: campaignCtrComplete,
                                         viewable_impressions: campaignViewableImpressions,
-                                        viewable_impressions_sum : campaignImpressions_Viewable
+                                        viewable_impressions_sum : campaignImpressions_Viewable,
+                                        ctr_viewable_impressions : campaignCtrImpressions_Viewable
 
                                     }
                                     console.log('formatObjects :', formatObjects.campaign);

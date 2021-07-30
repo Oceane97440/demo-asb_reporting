@@ -90,7 +90,15 @@
                     <h2 class="card-title text-center">Rapport de campagne</h2>
                     <div class="card-body">
                         
-                        <% if(date_now < timestamp_startdate) { %>
+                        <% if(date_now < timestamp_startdate ) { %>
+                            <div
+                                class="alert alert-danger alert-dismissible fade show mb-3"
+                                role="alert">
+                                <i class="fas fa-spinner fa-pulse"></i>
+                                <strong>Attention : La campagne ne débutera que <u><%= moment(campaign.campaign_start_date).fromNow(); %></u>.</strong>
+                            </div>
+                        <% } %>
+                        <% if(nombre_diff_day > 31 ) { %>
                             <div
                                 class="alert alert-danger alert-dismissible fade show mb-3"
                                 role="alert">
@@ -99,7 +107,7 @@
                             </div>
                         <% } %>
 
-
+             
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <strong>Annonceur</strong>
@@ -184,7 +192,7 @@
             <script>
                   $(document).ready(function () {
                     
-                    <% if(date_now > timestamp_startdate) { %>
+                    <% if(date_now > timestamp_startdate || nombre_diff_day >= 31) { %>
                         $.ajax({
                             method: "GET",
                             url: '/rs/report/<%=campaigncrypt%>',
@@ -193,8 +201,13 @@
                                 $('body').html(data);
                             }
                         })
-                    <% } %>
+                    <% }%>
+                      
+         
 
+                 
+
+   
                       //affiche la modal lors du clic du bouton
                       $('.btn').on('shown.bs.modal', function () {
                           $('#myInput').trigger('focus');
