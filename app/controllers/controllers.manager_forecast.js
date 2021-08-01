@@ -39,7 +39,7 @@ const AxiosFunction = require('../functions/functions.axios');
 //const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
-const ModelCampaignsEpilot = require("../models/models.campaigns_epilot")
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns")
 const ModelPacks = require("../models/models.packs")
 const ModelPacksSites = require("../models/models.packs_sites")
 
@@ -581,8 +581,8 @@ exports.forecast = async (req, res, next) => {
 
             //Requête sql campagne epilot
             const requete = await sequelize.query(
-                'SELECT * FROM asb_campaigns_epilot WHERE ((asb_campaigns_epilot.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_campaigns_epilot.campaign_epilot_end_date BETWEEN ? AND ?))', {
-                    /*AND format_name IN(?) ORDER BY asb_campaigns_epilot.format_name ASC*/
+                'SELECT * FROM asb_epilot_campaigns WHERE ((asb_epilot_campaigns.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_epilot_campaigns.campaign_epilot_end_date BETWEEN ? AND ?))', {
+                    /*AND format_name IN(?) ORDER BY asb_epilot_campaigns.format_name ASC*/
                     replacements: [date_start, date_end, date_start, date_end /*, format_filtre*/ ],
                     type: QueryTypes.SELECT
                 }
@@ -952,8 +952,8 @@ exports.forecast = async (req, res, next) => {
                 }
 
                 const requete = await sequelize.query(
-                    'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', {
-                        //  AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC// format_filtre
+                    'SELECT * FROM asb_epilot_campaigns WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', {
+                        //  AND format_name  IN (?) ORDER BY asb_epilot_campaigns.format_name ASC// format_filtre
                         replacements: [date_start, date_end, date_start, date_end],
                         type: QueryTypes.SELECT
                     }

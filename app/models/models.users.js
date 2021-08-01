@@ -20,6 +20,10 @@ const Users = sequelize.define('users', {
         type: Sequelize.STRING(),
         allowNull: false
     },
+    user_initial: {
+        type: Sequelize.STRING(),
+        allowNull: false
+    },
     user_password: {
         type: Sequelize.STRING(),
         allowNull: false
@@ -35,8 +39,7 @@ const Users = sequelize.define('users', {
     created_at: {
         type: Sequelize.DATE(),
         allowNull: true
-    }
-    ,
+    },
     updated_at: {
         type: Sequelize.DATE(),
         allowNull: true

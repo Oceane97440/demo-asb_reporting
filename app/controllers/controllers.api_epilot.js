@@ -32,7 +32,7 @@ const {check, query} = require('express-validator');
 // ModelSite = require("../models/models.site"); const ModelFormat =
 // require("../models/models.format"); const ModelCountry =
 // require("../models/models.country")
-const ModelCampaignsEpilot = require("../models/models.campaigns_epilots")
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns")
 // const ModelPack = require("../models/models.pack") const ModelPack_Site =
 // require("../models/models.pack_site") regex test date
 const REGEX = /(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})/
@@ -42,7 +42,7 @@ exports.index = async (req, res) => {
     try {
         if (req.session.user.user_role === 1 || req.session.user.user_role === 2 || req.session.user.user_role === 3) {
 
-            var confirmer = await ModelCampaignsEpilot.findAll({
+            var confirmer = await ModelEpilotCampaigns.findAll({
                 attributes: [
                     'campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'
                 ],
@@ -55,7 +55,7 @@ exports.index = async (req, res) => {
                 ]
             })
 
-            var reserver = await ModelCampaignsEpilot.findAll({
+            var reserver = await ModelEpilotCampaigns.findAll({
                 attributes: [
                     'campaign_name', 'format_name', 'campaign_start_date', 'campaign_end_date', 'volume_prevue'
                 ],
@@ -173,15 +173,14 @@ exports.csv_import = async (req, res) => {
                         campaign_fin = date_end_format + 'T00:00:00.000Z'
 
                         //apres tout mes test passé add les données
-                        ModelCampaignsEpilot
+                        ModelEpilotCampaigns
                             .create({
-                                campaign_epilot_name: campaign_name,
+                                epilot_campaign_name: campaign_name,
                                 format_name: format_name,
-                                campaign_epilot_status: etat,
-                                campaign_epilot_start_date: campaign_debut,
-                                campaign_epilot_end_date: campaign_fin,
-                                campaign_epilot_volume: volume_prevue
-
+                                epilot_campaign_status: etat,
+                                epilot_campaign_start_date: campaign_debut,
+                                epilot_campaign_end_date: campaign_fin,
+                                epilot_campaign_volume: volume_prevue
                             })
                             .then(async function (campagne_epilot) {
                                 if (campagne_epilot) {

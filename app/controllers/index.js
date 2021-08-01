@@ -9,8 +9,7 @@ var fileUpload = require('express-fileupload');
 
 const db = require("./app/config/_config.database");
 
-const epilot_campaigns = require('./app/models/models.epilot_campaigns');
-const epilot_insertions = require('./app/models/models.epilot_insertions');
+const epilot_campaigns = require('./app/models/models.epilot_campaigns');;
 const countries = require('./app/models/models.countries');
 const sites = require('./app/models/models.sites');
 const packs = require('./app/models/models.packs');
@@ -96,7 +95,6 @@ formats.hasMany(formatstemplates, {
     onDelete: 'cascade',
     hooks: true
 });
-
 templates.hasMany(formatstemplates, {
     foreignKey: 'template_id',
     onDelete: 'cascade',
@@ -108,7 +106,6 @@ campaigns.belongsTo(advertisers, {
   //  onDelete: 'cascade',
     hooks: true
 });
-
 advertisers.hasMany(campaigns, {
     foreignKey: 'advertiser_id',
   //  onDelete: 'cascade',
@@ -125,6 +122,8 @@ agencies.hasMany(campaigns, {
   //  onDelete: 'cascade',
     hooks: true
 });
+
+
 
 insertions.belongsTo(campaigns, {
     foreignKey: 'campaign_id',
@@ -147,6 +146,17 @@ insertions.belongsTo(insertions_status, {
     foreignKey: 'insertion_status_id',
     onDelete: 'cascade',
     hooks: true
+});
+
+// Campaign epilot
+epilot_campaigns.belongsTo(advertisers, {
+    foreignKey: 'advertiser_id',
+    onDelete: 'cascade'
+});
+
+epilot_campaigns.belongsTo(formats, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade'
 });
 
 // la campagne a un format.
@@ -202,25 +212,6 @@ insertions.hasMany(creatives, {
     onDelete: 'cascade',
     hooks: true
 });
-
-epilot_campaigns.belongsTo(campaigns, {
-    foreignKey: 'campaign_id',
-    onDelete: 'cascade',
-    hooks: true
-});
-
-epilot_campaigns.belongsTo(advertisers, {
-    foreignKey: 'advertiser_id',
-    onDelete: 'cascade',
-    hooks: true
-});
-
-epilot_campaigns.belongsTo(users, {
-    foreignKey: 'user_id',
-    onDelete: 'cascade',
-    hooks: true
-});
-
 
 db
     .sequelize
@@ -336,7 +327,7 @@ const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
 
 // Le serveur ecoute sur le port 3022
-app.set("port", process.env.PORT || 3022);
+app.set("port", process.env.PORT || 3001);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

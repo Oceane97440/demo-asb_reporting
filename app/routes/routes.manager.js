@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 
 const manager = require("../controllers/controllers.manager");
 const manager_campaigns = require("../controllers/controllers.manager_campaigns");
+const manager_epilot = require("../controllers/controllers.manager_epilot");
 const manager_insertions = require("../controllers/controllers.manager_insertions");
 const manager_agencies = require("../controllers/controllers.manager_agencies");
 const manager_advertisers = require("../controllers/controllers.manager_advertisers");
@@ -20,13 +21,13 @@ router.use(function (req, res, next) {
     } 
     res.locals.user = req.session.user;  
     next();  
-    console.log('User Login :',req.session.user)
+    // console.log('User Login :',req.session.user)
 });
 
 const ModelFormats = require("../models/models.formats");
 const ModelAgencies = require("../models/models.agencies");
 const ModelAdvertisers = require("../models/models.advertisers");
-const ModelCampaignsEpilot = require("../models/models.campaigns_epilot");
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
 const {body, checkSchema, validationResult} = require('express-validator');
 const ValidateCustom = require("../functions/functions.form.validate");
 const csvParser = require("csv-parser");
@@ -82,19 +83,25 @@ router.get("/", manager.index);
 // router.get("/", manager.error);
 
 router.get("/campaigns", manager_campaigns.index);
+
 router.get("/campaigns/list", manager_campaigns.list);
 router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
 router.get("/campaigns/:id", manager_campaigns.view);
 
-router.get("/campaigns/epilot/list", manager_campaigns.list_epilot);
-router.get('/campaigns/epilot/create', manager_campaigns.epilot_create);
+router.get('/campaigns/epilot/list', manager_epilot.list);
+router.get('/campaigns/epilot/insertions', manager_epilot.insertions);
+router.get('/campaigns/epilot/create', manager_epilot.create);
+router.post('/campaigns/epilot/import', manager_epilot.import);
+router.get('/campaigns/epilot/import', manager_epilot.import);
+
+
 router.get("/campaigns/:campaign_id/insertions/:insertion_id", manager_insertions.view);
 
 router.get("/insertions", manager_insertions.index);
 router.get("/insertions/list", manager_insertions.list);
 
-
+/*
 router.post('/campaigns/epilot/create', checkSchema(ValidateCustom.campaignEpilotSchema), (req, res) => {
     // Validate incoming input
     const errors = validationResult(req);
@@ -110,14 +117,14 @@ router.post('/campaigns/epilot/create', checkSchema(ValidateCustom.campaignEpilo
     var where = req.body;
     console.log(req.body)
 
-    const foundItem =  ModelCampaignsEpilot.findOne(where).count();
+    const foundItem =  ModelEpilotCampaigns.findOne(where).count();
    
     console.log('WHERE : ',where)
 
     console.log('Number : ',foundItem.length)
     if (!foundItem) {
         // Item not found, create a new one
-        const item =  ModelCampaignsEpilot.create(where);
+        const item =  ModelEpilotCampaigns.create(where);
         if(item) {
             req.session.message = {
                 type: 'success', 
@@ -133,9 +140,10 @@ router.post('/campaigns/epilot/create', checkSchema(ValidateCustom.campaignEpilo
         }        
     }
 
- //   ModelCampaignsEpilot.findOne(req.body)  
+ //   ModelEpilotCampaigns.findOne(req.body)  
    res.redirect('/manager/campaigns/epilot/create');
 })
+*/
 
 router.get("/agencies", manager_agencies.index);
 router.get("/agencies/list", manager_agencies.list);

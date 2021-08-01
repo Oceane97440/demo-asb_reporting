@@ -2,53 +2,69 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const CampaingsEpilot = sequelize.define('campaigns_epilot', {
-
-    campaign_epilot_id: {
+const EpilotCampaigns = sequelize.define('epilot_campaigns', {
+    epilot_campaign_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    campaign_epilot_code: {
+    epilot_campaign_code: {
         type: Sequelize.INTEGER,
         allowNull: true
     },
-    campaign_epilot_name: {
+    epilot_campaign_name: {
         type: Sequelize.STRING(255),
         allowNull: false
     },
+    
     advertiser_id: {
         type: Sequelize.INTEGER,
         allowNull: true
     },
-    format_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-    },
-    format_name: {
+    epilot_advertiser_name: {
         type: Sequelize.STRING(255),
         allowNull: false
     },
-    campaign_epilot_status: {
+    campaign_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    epilot_campaign_nature: {
+        type: Sequelize.STRING(255),
+        allowNull: false
+    },
+    epilot_campaign_status: {
         type: Sequelize.TINYINT,
         allowNull: false
     },
-    campaign_epilot_start_date: {
+    epilot_campaign_start_date: {
         type: Sequelize.DATE(),
         allowNull: false
     },
-    campaign_epilot_end_date: {
+    epilot_campaign_end_date: {
         type: Sequelize.DATE(),
         allowNull: false
     },
-    campaign_epilot_volume: {
+    epilot_campaign_volume: {
+        type: Sequelize.FLOAT(),
+        allowNull: false
+    },
+    epilot_campaign_commercial: {
+        type: Sequelize.STRING(255),
+        allowNull: false
+    },
+    epilot_campaign_budget_net: {
+        type: Sequelize.FLOAT(),
+        allowNull: false
+    },
+    epilot_campaign_cpm_net: {
         type: Sequelize.FLOAT(),
         allowNull: false
     }
 }, {
-    tableName: 'asb_campaigns_epilot',
+    tableName: 'asb_epilot_campaigns',
     underscored: true,
     timestamps: false
 });
 
-module.exports = CampaingsEpilot;
+module.exports = EpilotCampaigns;

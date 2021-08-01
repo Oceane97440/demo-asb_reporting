@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const CampaingsEpilot = sequelize.define('campaigns_epilots', {
+const EpilotCampaigns = sequelize.define('campaigns_epilots', {
 
     campaign_epilot_id: {
         type: Sequelize.INTEGER,
@@ -34,9 +34,9 @@ const CampaingsEpilot = sequelize.define('campaigns_epilots', {
         allowNull: false
     }
 }, {
-    tableName: 'asb_campaigns_epilots',
+    tableName: 'asb_epilot_campaigns',
     underscored: true,
     timestamps: false
 });
 
-module.exports = CampaingsEpilot;
+module.exports = EpilotCampaigns;

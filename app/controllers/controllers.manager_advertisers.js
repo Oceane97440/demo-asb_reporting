@@ -30,6 +30,9 @@ const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
+const ModelEpilotInsertions = require("../models/models.epilot_insertions");
+
 const {promiseImpl} = require('ejs');
 
 exports.index = async (req, res) => {
@@ -131,6 +134,21 @@ exports.view = async (req, res) => {
                 });
                 data.breadcrumb = breadcrumb;
 
+
+
+                   // Récupére les données des campagnes epilot  
+                const epilot_campaigns = await ModelEpilotCampaigns.findAll({
+                    attributes: [
+                                'advertiser_id',
+                                [sequelize.fn('sum', sequelize.col('epilot_campaign_budget_net')), 'campaign_budget']
+                            ],
+                            group: 'advertiser_id'
+                });
+                data.epilot_campaigns = epilot_campaigns;
+
+                console.log(epilot_campaigns.length);
+
+               
                 // Récupére les données des campagnes
                 campaigns = await ModelCampaigns.findAll({
                     where: {

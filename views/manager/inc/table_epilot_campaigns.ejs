@@ -1,0 +1,39 @@
+<table class="table table-striped table_sort">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Annonceur</th>
+            <th>Campagne</th>
+           <th>Commercial</th>
+            <th>Nature</th>
+            <th>Status</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Volume</th>
+            <th>Budget</th>
+            <th>CPM</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let i = 0; i < campaigns.length; i++) { %>
+            <tr>
+                <td><%= campaigns[i].epilot_campaign_id %></td>
+                <td><% if(!utilities.empty(campaigns[i].advertiser_id)) { %><a href="/manager/advertisers/<%= campaigns[i].advertiser.advertiser_id %>" title="<%= campaigns[i].advertiser.advertiser_name %>"><%= campaigns[i].advertiser.advertiser_name %></a> <% } else { %> <%= campaigns[i].epilot_advertiser_name %> <% } %></td>
+                <td><% if(!utilities.empty(campaigns[i].campaign_id)) { %><a href="/manager/campaigns/<%= campaigns[i].campaign.campaign_id %>" title="<%= campaigns[i].campaign.campaign_name %>"><%= campaigns[i].campaign.campaign_name %></a> <% } else { %> <%= campaigns[i].epilot_campaign_name %> <% } %></td>
+                <td><% if(!utilities.empty(campaigns[i].user_id)) { %><a href="/manager/users/<%= campaigns[i].user.user_id %>" title=""><%= campaigns[i].user.user_firstname %> <%= campaigns[i].user.user_lastname %></a> <% } else { %> <%= campaigns[i].epilot_campaign_commercial %> <% } %></td>
+               
+                <td><%= campaigns[i].epilot_campaign_nature %></td>
+                <td><%= campaigns[i].epilot_campaign_status %></td>
+                <td><%= campaigns[i].epilot_campaign_start_date %></td>
+                <td><%= campaigns[i].epilot_campaign_end_date %></td>
+                <td><%= campaigns[i].epilot_campaign_volume %></td>
+                <td><%= campaigns[i].epilot_campaign_budget_net %></td>
+                <td><%= campaigns[i].epilot_campaign_cpm_net %></td>
+                <td>
+                    
+                </td>
+        <% } %>
+            </tr>
+        </tbody>
+    </table>

@@ -17,6 +17,8 @@ router.get("/campaign/report", automate.campaignReport);
 router.get("/campaigns/insertions", automate.campaignsInsertions);
 router.get("/campaigns/creatives", automate.campaignsCreatives);
 router.get("/campaigns/days", automate.campaignsDays);
+router.get("/epilot/campaigns", automate.epilotCampaigns);
+router.get("/epilot/insertions", automate.epilotInsertions);
 
 router.get("/formats", automate.formats);
 
