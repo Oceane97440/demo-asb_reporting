@@ -379,7 +379,7 @@
                         <td class="text-left"><%= reporting.interstitiel.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.interstitiel.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.interstitiel.siteList[i].clicks) %></td>
-                        <td class="text-right"><%= reporting.interstitiel.siteList[i].ctr %>%</td>
+                        <td ><%= reporting.interstitiel.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -390,7 +390,7 @@
                         </td>
                         <td><%= utilities.numStr(reporting.interstitiel.impressions) %></td>
                         <td><%= utilities.numStr(reporting.interstitiel.clicks) %></td>
-                        <td class="text-right"><%= reporting.interstitiel.ctr %>%</td>
+                        <td><%= reporting.interstitiel.ctr %>%</td>
                     </tr>
                 </tfoot>
             </table>
