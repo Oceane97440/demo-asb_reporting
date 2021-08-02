@@ -828,7 +828,9 @@ exports.report = async (req, res) => {
                             'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour
                         );
 
-                        if (!firstLinkTaskId && (diff.day < 31)) {
+                      /*  if (!firstLinkTaskId && (diff.day < 31)) {  }else{
+                            firstLinkTaskId = null
+                        }*/
 
                         if (!firstLinkTaskId) {
                             let firstLink = await AxiosFunction.getReportingData(
@@ -837,33 +839,36 @@ exports.report = async (req, res) => {
                                 requestReporting
                             );
 
-                            if (firstLink.status == 201) {
-                                localStorageTasks.setItem(
-                                    'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour,
-                                    firstLink.data.taskId
-                                );
-                                firstLinkTaskId = firstLink.data.taskId;
+                            //si firstLink existe (!= de null) on save la taskId dans le localStorage sinon firstLinkTaskId = vide
+                            if(firstLink){
+                                if (firstLink.status == 201) {
+                                    localStorageTasks.setItem(
+                                        'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour,
+                                        firstLink.data.taskId
+                                    );
+                                    firstLinkTaskId = firstLink.data.taskId;
+                                }
+
+                            }else{
+                                firstLinkTaskId = null
+
                             }
+                        
+
+
+                        }else{
+                            firstLinkTaskId = null
+
+
                         }
 
-                    }else{
-                        firstLinkTaskId = null
-                    }
+                  
                         // twoLink - Récupére la taskID de la requête reporting
                         let twoLinkTaskId = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour
                         );
 
-                        /*   // si la différence de jour est >= à 31 , on excécute pas la requête
-                        if (diff.day >= 31) {
-                            console.log('annule la requête')
-                        } else {
-                            console.log('requête')
-                        }*/
-
-                        // if (!twoLinkTaskId && ((diff.day <= 31) || (diff_start.day <= 31)) ) { si
-                        // entre la date de debut et de fin de campagne est < 31j et twoLinkTaskId
-                        // existe exécute la requête
+                     
 
                         console.log(twoLinkTaskId)
 
@@ -877,15 +882,22 @@ exports.report = async (req, res) => {
                                 '',
                                 requestVisitor_unique
                             );
-                            if (twoLink.status == 201) {
-                                localStorageTasks.setItem(
-                                    'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour,
-                                    twoLink.data.taskId
-                                );
-                                twoLinkTaskId = twoLink.data.taskId;
-                            } else {
-                                console.log("NOOOON OK")
+
+                            //si twoLink existe (!= de null) on save la taskId dans le localStorage sinon twoLinkTaskId = vide
+
+                            if(twoLink){
+                                if (twoLink.status == 201) {
+                                    localStorageTasks.setItem(
+                                        'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour,
+                                        twoLink.data.taskId
+                                    );
+                                    twoLinkTaskId = twoLink.data.taskId;
+                                } 
+
+                            }else{
+                                twoLinkTaskId = null
                             }
+                       
                         }
 
                         console.log(
