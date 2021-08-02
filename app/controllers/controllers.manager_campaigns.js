@@ -253,8 +253,16 @@ exports.view = async (req, res) => {
                         campaign_id: campaign_id
                     }
                 });
-                data.epilot_campaign = epilot_campaign;
 
+
+                //test si epilot_campaign existe
+                if(epilot_campaign){
+                    data.epilot_campaign = epilot_campaign;
+
+                }else{
+                    data.epilot_campaign = 0;
+
+                }
                 // Récupére les données des insertions de la campagne
                 var insertionList = await ModelInsertions
                     .findAll({
