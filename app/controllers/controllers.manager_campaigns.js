@@ -8,23 +8,16 @@ var crypto = require('crypto');
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
-const {
-    Op
-} = require("sequelize");
+const {Op} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {
-    QueryTypes
-} = require('sequelize');
+const {QueryTypes} = require('sequelize');
 
-const {
-    check,
-    query
-} = require('express-validator');
+const {check, query} = require('express-validator');
 
 const moment = require('moment');
 
@@ -53,13 +46,8 @@ const ModelUsers = require("../models/models.users");
 
 const TEXT_REGEX = /^.{1,51}$/
 
-
-const {
-    promiseImpl
-} = require('ejs');
-const {
-    insertions
-} = require('./controllers.automate');
+const {promiseImpl} = require('ejs');
+const {insertions} = require('./controllers.automate');
 
 exports.index = async (req, res) => {
     try {
@@ -70,13 +58,15 @@ exports.index = async (req, res) => {
         breadcrumb = new Array({
             'name': 'Campagnes',
             'link': ''
-        }, );
+        },);
         data.breadcrumb = breadcrumb;
 
         data.campaigns = await ModelCampaigns.findAll({
-            include: [{
-                model: ModelAdvertisers
-            }]
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
         });
 
         // Affiche les campagnes se terminant aujourd'hui
@@ -94,9 +84,11 @@ exports.index = async (req, res) => {
                     [Op.like]: '%' + dateNow + '%'
                 }
             },
-            include: [{
-                model: ModelAdvertisers
-            }]
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
         });
 
         // Affiche les campagnes se terminant demain
@@ -106,33 +98,41 @@ exports.index = async (req, res) => {
                     [Op.like]: '%' + dateTomorrow + '%'
                 }
             },
-            include: [{
-                model: ModelAdvertisers
-            }]
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
         });
 
         // Affiche les campagnes se terminant dans les 5 prochains jours
         data.campaigns_nextdays = await ModelCampaigns.findAll({
             where: {
-                [Op.or]: [{
-                    campaign_start_date: {
-                        [Op.between]: [dateNow, date5Days]
+                [Op.or]: [
+                    {
+                        campaign_start_date: {
+                            [Op.between]: [dateNow, date5Days]
+                        }
                     }
-                }],
-                [Op.or]: [{
-                    campaign_end_date: {
-                        [Op.between]: [dateNow, date5Days]
+                ],
+                [Op.or]: [
+                    {
+                        campaign_end_date: {
+                            [Op.between]: [dateNow, date5Days]
+                        }
                     }
-                }]
+                ]
             },
             order: [
                 // Will escape title and validate DESC against a list of valid direction
                 // parameters
                 ['campaign_start_date', 'ASC']
             ],
-            include: [{
-                model: ModelAdvertisers
-            }]
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
         });
 
         // Affiche les campagnes se terminant dans les 5 prochains jours
@@ -142,9 +142,11 @@ exports.index = async (req, res) => {
                     [Op.gte]: '%' + dateNow + '%'
                 }
             },
-            include: [{
-                model: ModelAdvertisers
-            }]
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
         });
 
         data.moment = moment;
@@ -157,9 +159,7 @@ exports.index = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -180,11 +180,13 @@ exports.list = async (req, res) => {
         data.breadcrumb = breadcrumb;
 
         data.campaigns = await ModelCampaigns.findAll({
-            include: [{
-                model: ModelAdvertisers
-            }, {
-                model: ModelInsertions
-            }]
+            include: [
+                {
+                    model: ModelAdvertisers
+                }, {
+                    model: ModelInsertions
+                }
+            ]
         }, {
             order: [
                 // Will escape title and validate DESC against a list of valid direction
@@ -198,9 +200,7 @@ exports.list = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -218,21 +218,21 @@ exports.view = async (req, res) => {
                 where: {
                     campaign_id: campaign_id
                 },
-                include: [{
-                    model: ModelAdvertisers
-                }, {
-                    model: ModelAgencies
-                }, {
-                    model: ModelInsertions
-                }]
+                include: [
+                    {
+                        model: ModelAdvertisers
+                    }, {
+                        model: ModelAgencies
+                    }, {
+                        model: ModelInsertions
+                    }
+                ]
             })
             .then(async function (campaign) {
                 if (!campaign) {
                     return res
                         .status(404)
-                        .render("manager/error.ejs", {
-                            statusCoded: 404
-                        });
+                        .render("manager/error.ejs", {statusCoded: 404});
                 }
 
                 // Créer le fil d'ariane
@@ -249,7 +249,7 @@ exports.view = async (req, res) => {
                 });
                 data.breadcrumb = breadcrumb;
 
-                // Récupére les données des campagnes epilot  
+                // Récupére les données des campagnes epilot
                 var epilot_campaign = await ModelEpilotCampaigns.findOne({
                     attributes: ['epilot_campaign_volume'],
                     where: {
@@ -257,34 +257,32 @@ exports.view = async (req, res) => {
                     }
                 });
 
-
                 //test si epilot_campaign existe
                 if (epilot_campaign) {
                     data.epilot_campaign = epilot_campaign;
+                } 
 
-                } else {
-                    data.epilot_campaign = 0;
-
-                }
                 // Récupére les données des insertions de la campagne
                 var insertionList = await ModelInsertions
                     .findAll({
                         where: {
                             campaign_id: campaign_id
                         },
-                        include: [{
-                            model: ModelCampaigns,
-                            attributes: ['campaign_id', 'campaign_name']
-                        }, {
-                            model: ModelFormats,
-                            attributes: ['format_id', 'format_name']
-                        }, {
-                            model: ModelInsertionsPriorities,
-                            attributes: ['priority_id', 'priority_name']
-                        }, {
-                            model: ModelInsertionsStatus,
-                            attributes: ['insertion_status_id', 'insertion_status_name']
-                        }]
+                        include: [
+                            {
+                                model: ModelCampaigns,
+                                attributes: ['campaign_id', 'campaign_name']
+                            }, {
+                                model: ModelFormats,
+                                attributes: ['format_id', 'format_name']
+                            }, {
+                                model: ModelInsertionsPriorities,
+                                attributes: ['priority_id', 'priority_name']
+                            }, {
+                                model: ModelInsertionsStatus,
+                                attributes: ['insertion_status_id', 'insertion_status_name']
+                            }
+                        ]
                     })
                     .then(async function (insertionList) {
 
@@ -328,9 +326,7 @@ exports.view = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -361,15 +357,11 @@ exports.create = async (req, res) => {
                 data.advertisers = advertisers;
             });
 
-
-
         res.render('manager/campaigns/create.ejs', data);
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -378,9 +370,12 @@ exports.create_post = async (req, res) => {
         const advertiser = req.body.advertiser_id
         const campaign = req.body.campaign_name
         const start_date = req.body.campaign_start_date
-        const end_date = req.body.campaign_end_date
+        const end_date = req
+            .body
+            .campaign_end_date
 
-        console.log(req.body)
+            console
+            .log(req.body)
 
         if (!TEXT_REGEX.test(campaign)) {
             req.session.message = {
@@ -440,77 +435,74 @@ exports.create_post = async (req, res) => {
 
         }
 
+        await ModelCampaigns
+            .findOne({
+                attributes: ['campaign_name'],
+                where: {
+                    campaign_name: campaign
+                }
+            })
+            .then(async function (campaignFound) {
 
-        await ModelCampaigns.findOne({
-            attributes: ['campaign_name'],
-            where: {
-                campaign_name: campaign
-            }
-        }).then(async function (campaignFound) {
+                //Test si le nom de la campagne exsite
 
-            //Test si le nom de la campagne exsite
+                if (!campaignFound) {
+                    //envoie les éléments de la requête POST
 
-            if (!campaignFound) {
-                //envoie les éléments de la requête POST
+                    let campaign_create = await AxiosFunction.postManage(
+                        'campaigns',
+                        requestCampaign
+                    );
 
+                    //Si url location existe on recupère l'id avec une requête GET
 
-                let campaign_create = await AxiosFunction.postManage('campaigns', requestCampaign);
+                    if (campaign_create.headers.location) {
 
-                //Si url location existe on recupère l'id avec une requête GET
+                        var url_location = campaign_create.headers.location
 
-                if (campaign_create.headers.location) {
+                        var campaign_get = await AxiosFunction.getManage(url_location);
 
-                    var url_location = campaign_create.headers.location
+                        var campaign_id = campaign_get.data.id
 
-                    var campaign_get = await AxiosFunction.getManage(url_location);
+                        // on chiffre la campagne id
+                        const campaign_crypt = crypto
+                            .createHash('md5')
+                            .update(campaign_id.toString())
+                            .digest("hex");
 
-                    var campaign_id = campaign_get.data.id
+                        await ModelCampaigns.create({
+                            campaign_name: campaign,
+                            campaign_crypt: campaign_crypt,
+                            advertiser_id: advertiser,
+                            campaign_start_date: start_date,
+                            campaign_end_date: end_date,
+                            campaign_archived: 0
 
-                    // on chiffre la campagne id
-                    const campaign_crypt = crypto.createHash('md5').update(campaign_id.toString()).digest("hex");
+                        });
 
-
-                    await ModelCampaigns.create({
-                        campaign_name: campaign,
-                        campaign_crypt: campaign_crypt,
-                        advertiser_id: advertiser,
-                        campaign_start_date: start_date,
-                        campaign_end_date: end_date,
-                        campaign_archived: 0
-
-                    });
-
-                    req.session.message = {
-                        type: 'success',
-                        intro: 'Ok',
-                        message: 'La campagne a été crée dans SMARTADSERVEUR',
-
+                        req.session.message = {
+                            type: 'success',
+                            intro: 'Ok',
+                            message: 'La campagne a été crée dans SMARTADSERVEUR'
+                        }
+                        return res.redirect('/manager/campaigns/create');
                     }
-                    return res.redirect('/manager/campaigns/create');
+
+                } else {
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Erreur',
+                        message: 'Campagne est déjà utilisé'
+                    }
+                    return res.redirect('/manager/advertisers/create');
                 }
 
-
-
-            } else {
-                req.session.message = {
-                    type: 'danger',
-                    intro: 'Erreur',
-                    message: 'Campagne est déjà utilisé'
-                }
-                return res.redirect('/manager/advertisers/create');
-            }
-
-
-        })
-
-
+            })
 
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -550,9 +542,7 @@ exports.list_epilot = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response.status;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -599,9 +589,7 @@ exports.epilot_create = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
 
@@ -610,10 +598,11 @@ exports.epilot_import = async (req, res) => {
         var filename = "public/uploads/2021/07/30/AD_INS-JANV-JUILLET.CSV";
 
         var results = new Array();
-        fs.createReadStream(filename)
+        fs
+            .createReadStream(filename)
             .pipe(csv({
                 separator: '\;'
-            }, ))
+            },))
             .on('data', (data) => results.push(data))
             .on('end', () => {
                 console.log(results.length);
@@ -629,17 +618,18 @@ exports.epilot_import = async (req, res) => {
                     commercialIdentity = commercial.split(' ');
                     var user_id = null;
 
-                    ModelUsers.findOne({
-                        where: {
-                            user_firstname: commercialIdentity[1],
-                            user_lastname: commercialIdentity[0],
-                        }
-                    }).then(user => {
-                        if (user.length === 1) {
-                            user_id = user['user_id'];
-                        }
-                    });
-
+                    ModelUsers
+                        .findOne({
+                            where: {
+                                user_firstname: commercialIdentity[1],
+                                user_lastname: commercialIdentity[0]
+                            }
+                        })
+                        .then(user => {
+                            if (user.length === 1) {
+                                user_id = user['user_id'];
+                            }
+                        });
 
                     process.exit(1);
                 }
@@ -654,7 +644,7 @@ exports.epilot_import = async (req, res) => {
                     console.log('INSERTIONS');
                     result = results[0];
                     console.log(result);
-                    var campaign_name = result['Campagne'];                   
+                    var campaign_name = result['Campagne'];
                     var insertion_name = result['Nom'];
 
                     if(result['Etat']) {
@@ -674,13 +664,13 @@ exports.epilot_import = async (req, res) => {
                     }
 
                     var epilot_insertion_volume = result['Volume total prévu'];
-                    
+
                     var commercial = result[0]['Responsable commercial'];
                         console.log('commercial :',commercial);
-                    
+
                     commercialIdentity = commercial.split(' ');
                     var user_id = null;
-                     
+
                     ModelUsers.findOne({
                         where : { user_firstname: commercialIdentity[1], user_lastname: commercialIdentity[0], }
                     }).then(user => {
@@ -688,8 +678,8 @@ exports.epilot_import = async (req, res) => {
                             user_id = user['user_id'];
                         }
                     });
-                  
-                    
+
+
                     ModelAdvertisers.findOne({
                         where : { advertiser_name: advertiser_name }
                     }).then(advertiser => {
@@ -709,16 +699,16 @@ exports.epilot_import = async (req, res) => {
                         'epilot_campaign_name' : campaign_name,
                         'epilot_insertion_name' : insertion_name,
                         'epilot_insertion_status' : epilot_insertion_status,
-                        'epilot_insertion_volume' : epilot_insertion_volume, 
+                        'epilot_insertion_volume' : epilot_insertion_volume,
                         'epilot_insertion_start_date' : epilot_insertion_start_date,
                         'epilot_insertion_end_date' :  epilot_insertion_end_date,
                         'user_id' : user_id
-                        
+
                     }
 
                     console.log(data_insertion);
                     console.log('------------------')
-             
+
 
 
                 } else {
@@ -726,11 +716,11 @@ exports.epilot_import = async (req, res) => {
                     console.log('CAMPAGNES');
 
                     var campaign_name = result['Campagne'];
-                   
+
                     const regexCampaignCode = /([0-9]{5})/g;
                     regexCampaignCodeResult = campaign_name.match(regexCampaignCode);
                     if(regexCampaignCodeResult.length > 0) { var epilot_campaign_code = regexCampaignCodeResult[0]; } else { var epilot_campaign_code = null; }
-                    
+
                     var advertiser_name = result['Annonceur'];
                     var advertiser_id = null;
 
@@ -758,7 +748,7 @@ exports.epilot_import = async (req, res) => {
                         }
                     }
 
-                   
+
                     var epilot_campaign_start_date = moment(result['Début']).format('YYYY-MM-DD 00:00:00');
                     var epilot_campaign_end_date = moment(result['Fin']).format('YYYY-MM-DD 23:59:00');
 
@@ -782,18 +772,17 @@ exports.epilot_import = async (req, res) => {
                     console.log('------------------');
 
                 }
-               
+
                 console.log(results[0]);
                  */
-                    // Sinon 
+                    // Sinon
                     process.exit(1);
                 }
 
             });
 
-
         /*
-      
+
         var fileWords = fs.readFileSync(filename, 'utf8');
         var newFileWords = fileWords.replace('/,/', '.');
         console.log(newFileWords);

@@ -64,7 +64,12 @@ exports.list = async (req, res) => {
             ]
         });
         data.users = userList;
-               
+
+        // Créer le fil d'ariane
+        var breadcrumbLink = 'users'
+        breadcrumb = new Array({'name': 'Utilisateurs', 'link': 'users'});
+        data.breadcrumb = breadcrumb;
+
         data.moment = moment;
         res.render('manager/users/list.ejs', data);
     } catch (error) {
@@ -75,10 +80,7 @@ exports.list = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-    try {
-
-
-    } catch (error) {
+    try {} catch (error) {
         console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
@@ -86,12 +88,11 @@ exports.create = async (req, res) => {
 }
 
 exports.edit = async (req, res) => {
-    try { 
-        
+    try {
+
         res.render("manager/users/create.ejs");
 
-
-} catch (error) {
+    } catch (error) {
         console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
@@ -101,8 +102,7 @@ exports.edit = async (req, res) => {
 exports.view = async (req, res) => {
     try {
 
-       
-       /*
+        /*
         data.breadcrumb = "Liste des utilisateurs";
 
         const data = new Object();
@@ -117,7 +117,7 @@ exports.view = async (req, res) => {
             ]
         });
         data.users = userList;
-               
+
         data.moment = moment;
         */
 
@@ -141,12 +141,16 @@ exports.view = async (req, res) => {
                 }
                 data.user = user;
 
+                 // Créer le fil d'ariane
+        var breadcrumbLink = 'users'
+        breadcrumb = new Array({'name': 'Utilisateurs', 'link': 'users'}, {'name' : user.firstname,'link' : ''});
+        data.breadcrumb = breadcrumb;
+
                 data.campaigns = await ModelCampaigns.findAll({
                     include: [
                         {
                             model: ModelAdvertisers
-                        },
-                        {
+                        }, {
                             model: ModelInsertions
                         }
                     ]
@@ -158,13 +162,12 @@ exports.view = async (req, res) => {
                     ]
                 });
 
-
                 /*
                // Récupére les données des insertions de la campagne
                var insertionList = await ModelInsertions.findAll({
                     where: {
                         user_id: user_id
-                    }, 
+                    },
                     include: [
                         { model: Modelusers, attributes: ['user_id', 'user_name'] },
                         { model: ModelFormats, attributes: ['format_id', 'format_name'] },
@@ -173,18 +176,18 @@ exports.view = async (req, res) => {
                     ]
                 }) .then(async function (insertionList) {
                     if (!Utilities.empty(insertionList) && (insertionList.length > 0)) {
-                       
+
                         data.insertions = insertionList;
                         for(i = 0; i < insertionList.length; i++) {
                            insertionsIds.push(insertionList[i].insertion_id);
                             //  console.log(i,' : ',insertionList[i].insertion_id);
-                        }                       
-                       
+                        }
+
                     }
                 });
-              
+
                 // Attribue les données de la campagne
-              
+
                 data.creatives = false;
                 data.user = user;
                 data.moment = moment;

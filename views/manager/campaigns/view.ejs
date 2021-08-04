@@ -41,6 +41,13 @@
                                 au
                                 <%= moment(campaign.campaign_end_date).format('DD/MM/YYYY') %>
                             </li>
+                           
+                                <li class="list-group-item">
+                                    <span class="labelname"> 
+                                        <i class="material-icons-two-tone">thermostat</i>
+                                    Volume Réservé</span> : <%= utilities.numStr(epilot_campaign.epilot_campaign_volume) %> impressions                                                      
+                                </li>                           
+
                             <li class="list-group-item">
                                 <span class="labelname">
                                     <i class="material-icons-two-tone">visibility</i>
@@ -92,7 +99,7 @@
                                                     </div>
 
                                                     <div class="col-md-4 col-sm-12">
-
+                                                      
                                                         <div class="d-grid gap-2">
                                                             <a
                                                                 href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaign.campaign_id %>&AnnonceurID=<%= campaign.advertiser_id %>"
@@ -117,9 +124,6 @@
                                                                 <i class="fas fa-sync"></i>
                                                                 Mettre à jour la campagne</a>
                                                         </div>
-
-                                                    </div>
-
                                                 </div>
 
                                             </div>
@@ -127,6 +131,7 @@
                                     </div>
 
                                     <div class="col-sm-12" id="campaign-report">
+                                        
                                         <div class="card">
                                             <div class="card-header">
                                                 <h3 class="title">
@@ -135,14 +140,8 @@
                                                 </h3>
                                             </div>
                                             <div class="card-body">
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item">
-                                                        <span class="labelname">Volume Réservé</span> : <%= epilot_campaign.epilot_campaign_volume %>                                                       
-                                                    </li>
-                                                </ul>
-                                                <hr />
-
-
+                                                <div class="row">
+                                                <div class="col-md-8 col-sm-12">
                                                 <% if(reporting) { %>
                                                     <%- include("../inc/table_campaigns_report.ejs") -%>
                                                     <% } else { %>
@@ -162,8 +161,19 @@
                                                             Aucun rapport pour le moment.
                                                         </div>
                                                     <% } %>
+
+                                                </div>
+                                                <div class="col-md-4"><div id="campaign-chart"></div></div>
+                                            </div> 
+                                                   
+                                                     
+                                                   
+                                                </div>
+
                                                 </div>
                                             </div>
+
+                                    
                                         </div>
 
                                         <div class="col-sm-12" id="campaign-insertions">

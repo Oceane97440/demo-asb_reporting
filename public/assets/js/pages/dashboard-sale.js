@@ -222,5 +222,11 @@ function floatchart() {
         var chart = new ApexCharts(document.querySelector("#satisfaction-chart"), options);
         chart.render();
     });
+
+
+
+    
+
+
     // [ satisfaction-chart ] end
 }

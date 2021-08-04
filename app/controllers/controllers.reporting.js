@@ -787,7 +787,8 @@ exports.report = async (req, res) => {
                         var diff = Utilities.nbr_jours(start_date, end_date_time);
 
                         console.log(
-                            'diff_start.day :',
+                           'CampaignID :',campaignid,
+                            ' - diff_start.day :',
                             diff_start.day,
                             ' - diff.day :',
                             diff.day,
