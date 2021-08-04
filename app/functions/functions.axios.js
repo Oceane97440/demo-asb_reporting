@@ -189,28 +189,73 @@ exports.getManageData = async (method) => {
   return format_data
 }
 
-exports.getManage_AdvertiserData = async (method, urlManage, data = null) => {
 
-  if (method == 'GET') {
 
-    var advertiser_data = await axios({
-      method: method,
-      url: urlManage,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
-      auth: {
-        username: dbApi.SMART_login,
-        password: dbApi.SMART_password
-      },
-      data: data
+exports.postManage = async (method, data = null) => {
 
-    }).then(function (response) {
-      console.log(JSON.stringify(response.data));
-    })
+  var test;
+
+  console.log('method' + method)
+  console.log('data' + data)
+
+  switch (method) {
+    case 'agencies':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/agencies';
+      break;
+    case 'advertisers':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers';
+      break;
+    case 'campaigns':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns';
+      break;
+    case 'insertions':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
+      break;
+
+    default:
+
+      break;
   }
-  console.log(advertiser_data)
 
-  return advertiser_data
+  test = await axios({
+    method: 'POST',
+    url: configApiUrl,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    },
+    auth: {
+      username: dbApi.SMART_login,
+      password: dbApi.SMART_password
+    },
+    data
+  })
+
+
+  return test;
+}
+
+
+exports.getManage = async (url_location) => {
+
+  var test;
+
+  console.log('url_location' + url_location)
+
+
+  test = await axios({
+    method: 'GET',
+    url: url_location,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    },
+    auth: {
+      username: dbApi.SMART_login,
+      password: dbApi.SMART_password
+    },
+  })
+
+
+  return test;
 }

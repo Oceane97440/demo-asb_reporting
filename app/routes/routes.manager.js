@@ -151,6 +151,8 @@ router.get("/agencies/:id", manager_agencies.view);
 
 router.get("/advertisers", manager_advertisers.index);
 router.get("/advertisers/list", manager_advertisers.list);
+router.get('/advertisers/create', manager_advertisers.create);
+router.post('/advertisers/create', manager_advertisers.create_post);
 router.get("/advertisers/:id", manager_advertisers.view);
 
 router.get("/sites", manager_sites.index);
