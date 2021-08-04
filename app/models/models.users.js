@@ -14,15 +14,15 @@ const Users = sequelize.define('users', {
     },
     user_firstname: {
         type: Sequelize.STRING(),
-        allowNull: false
+        allowNull: true
     },
     user_lastname: {
         type: Sequelize.STRING(),
-        allowNull: false
+        allowNull: true
     },
     user_initial: {
         type: Sequelize.STRING(),
-        allowNull: false
+        allowNull: true
     },
     user_password: {
         type: Sequelize.STRING(),
@@ -30,11 +30,11 @@ const Users = sequelize.define('users', {
     },
     user_role: {
         type: Sequelize.INTEGER(),
-        allowNull: false
+        allowNull: true
     },
     user_status: {
         type: Sequelize.INTEGER(),
-        allowNull: false
+        allowNull: true
     },
     created_at: {
         type: Sequelize.DATE(),

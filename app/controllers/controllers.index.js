@@ -49,7 +49,6 @@ exports.home_page = async (req, res) => {
   }
 }
 
-/*
 exports.signup = async (req, res) => {
   try {
     var roles = await ModelRole.findAll({
@@ -129,9 +128,11 @@ exports.signup_add = async (req, res) => {
           user_role
         });
 
+        console.log(user.user_id)
+
         await ModelUser_Role.create({
           role_id: user_role,
-          user_id: user.id
+          user_id: user.user_id
         });      
 
         res.redirect('/login');
@@ -157,7 +158,7 @@ exports.signup_add = async (req, res) => {
 
 }
 
-*/
+
 
 
 exports.login = async (req, res) => {
@@ -167,6 +168,7 @@ exports.login = async (req, res) => {
 exports.login_add = async (req, res) => {
   const user_email = req.body.user_email;
   const user_password = req.body.user_password;
+
 
   console.log('Email : ',user_email,' - Password : ',user_password);
   

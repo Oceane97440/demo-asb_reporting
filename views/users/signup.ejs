@@ -67,7 +67,7 @@
 								<div class="col">
 									<div class="md-form">
 										<label for="email"><i class="fas fa-at" id="icon"></i>Email</label>
-										<input type="email" class="form-control" name="email" id="email" value=""
+										<input type="email" class="form-control" name="user_email" id="email" value=""
 											placeholder="email@gmail.com" required>
 									</div>
 								</div>
@@ -79,7 +79,7 @@
 										<label for="mdp"><i class="fas fa-key" id="icon"></i>Mot de passe </label>
 
 
-										<input type="password" class="form-control" name="mdp" id="mdp" value=""
+										<input type="password" class="form-control" name="user_password" id="mdp" value=""
 											placeholder="6 caratères + 1 caratère spécial" required>
 
 									</div>
@@ -91,7 +91,7 @@
 								<div class="col">
 
 									<label for="role"><i class="fas fa-user" id="icon"></i>Votre métier ? : </label>
-									<select class="form-control" name="role" id="role" required="required">
+									<select class="form-control" name="user_role" id="role" required="required">
 
 										<% for(let i=0; i < roles.length; i++) {%>
 
