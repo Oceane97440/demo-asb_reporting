@@ -179,8 +179,26 @@
                                         <div class="col-sm-12" id="campaign-insertions">
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <h3>Insertions</h3>
-                                                </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-9">
+                                                            <h3>Insertions</h3>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <a href="#" target="_blank"
+                                                                class="btn btn-info btn-sm" data-automate-btn="campaign-update"
+                                                                title=" Mettre à jour la campagne">
+                                                                <i class="far fa-plus-square"> </i> Ajouter
+                                                            </a>
+                                                            <a href="#" target="_blank" class="btn btn-warning btn-sm" data-automate-btn="campaign-update"
+                                                                title=" Mettre à jour la campagne">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <a href="#" target="_blank" class="btn btn-danger btn-sm" data-automate-btn="campaign-update"
+                                                                title=" Mettre à jour la campagne">
+                                                                <i class="fas fa-trash-alt"></i> </a>
+                                                        </div>
+                                        
+                                                    </div>                                                </div>
                                                 <div class="card-body">
                                                     <% if(insertions && (insertions.length > 0)) { %>
                                                         <%- include("../inc/table_insertions.ejs") -%>

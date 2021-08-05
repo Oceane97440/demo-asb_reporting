@@ -260,6 +260,9 @@ exports.view = async (req, res) => {
                 //test si epilot_campaign existe
                 if (epilot_campaign) {
                     data.epilot_campaign = epilot_campaign;
+                }else{
+                    data.epilot_campaign = 0;
+
                 } 
 
                 // Récupére les données des insertions de la campagne
