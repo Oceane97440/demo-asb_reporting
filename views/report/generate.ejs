@@ -98,17 +98,16 @@
                                 <strong>Attention : La campagne ne débutera que <u><%= moment(campaign.campaign_start_date).fromNow(); %></u>.</strong>
                             </div>
                         <% } %>
-                        <% if(nombre_diff_day > 31 ) { %>
-                            <div
+                        <%# if(nombre_diff_day > 31 ) { %>
+                            <!-- <div
                                 class="alert alert-danger alert-dismissible fade show mb-3"
                                 role="alert">
                                 <i class="fas fa-spinner fa-pulse"></i>
-                                <strong>Veuillez contacter le service adtraffic
-
-                                    <a href="mailto:adtraffic@antennereunion.fr?subject=Alerte reporting">Contact</a>
+                                <strong>
+                                    <a href="mailto:adtraffic@antennereunion.fr?subject=Alerte reporting" title="">Veuillez contacter le service Adtraffic.</a>
                                 </strong>
-                            </div>
-                        <% } %>
+                            </div>  -->
+                        <%# } %>
 
              
                         <ul class="list-group list-group-flush">

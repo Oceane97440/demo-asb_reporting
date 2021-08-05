@@ -78,10 +78,14 @@ exports.index = async (req, res) => {
             .add(5, 'days')
             .format('YYYY-MM-DD');
 
+          // Affiche les annonceurs
+          const advertiserExclus = new Array(418935,427952,409707,425912,425914,438979,439470,439506,439511,439512,439513,439514,439515,440117,440118,440121,440122,440124,440126,445117,455371,455384,320778,417243,414097,411820,320778);
+      
+
         data.campaigns_today = await ModelCampaigns.findAll({
             where: {
                 campaign_end_date: {
-                    [Op.like]: '%' + dateNow + '%'
+                    [Op.between]:  [dateNow + ' 00:00:00', dateNow + ' 23:59:00']
                 }
             },
             include: [
@@ -95,7 +99,7 @@ exports.index = async (req, res) => {
         data.campaigns_tomorrow = await ModelCampaigns.findAll({
             where: {
                 campaign_end_date: {
-                    [Op.like]: '%' + dateTomorrow + '%'
+                    [Op.between]:  [dateTomorrow + ' 00:00:00', dateTomorrow + ' 23:59:00']
                 }
             },
             include: [
@@ -108,20 +112,23 @@ exports.index = async (req, res) => {
         // Affiche les campagnes se terminant dans les 5 prochains jours
         data.campaigns_nextdays = await ModelCampaigns.findAll({
             where: {
-                [Op.or]: [
+                [Op.and]: [
                     {
-                        campaign_start_date: {
-                            [Op.between]: [dateNow, date5Days]
+                        advertiser_id: {
+                            [Op.notIn]: advertiserExclus
                         }
                     }
                 ],
-                [Op.or]: [
-                    {
-                        campaign_end_date: {
-                            [Op.between]: [dateNow, date5Days]
-                        }
+                [Op.or]: [/*{
+                    campaign_start_date: {
+                        [Op.between]:[dateNow, date5Days]
                     }
-                ]
+                },*/ {
+                    campaign_end_date: {
+                        [Op.between]: [dateNow, date5Days]
+                    }
+                }]
+                
             },
             order: [
                 // Will escape title and validate DESC against a list of valid direction
@@ -135,13 +142,31 @@ exports.index = async (req, res) => {
             ]
         });
 
-        // Affiche les campagnes se terminant dans les 5 prochains jours
+
+      
+        // Affiche les campagnes en ligne
         data.campaigns_online = await ModelCampaigns.findAll({
-            where: {
-                campaign_start_date: {
-                    [Op.gte]: '%' + dateNow + '%'
-                }
+            where: {               
+                [Op.and]: [
+                    {
+                        advertiser_id: {
+                            [Op.notIn]: advertiserExclus
+                        }
+                    }
+                ],
+                [Op.or]: [{
+                    campaign_start_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                    }
+                }, {
+                    campaign_end_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                    }
+                }]
             },
+            
+                order: [['campaign_end_date','ASC']],
+            
             include: [
                 {
                     model: ModelAdvertisers
@@ -154,7 +179,7 @@ exports.index = async (req, res) => {
         console.log('dateNow :', dateNow)
         console.log('dateTomorrow :', dateTomorrow)
         console.log('date5Days :', date5Days, ' - ', data.campaigns_nextdays.length)
-
+       
         res.render('manager/campaigns/index.ejs', data);
     } catch (error) {
         console.log(error);
@@ -301,7 +326,7 @@ exports.view = async (req, res) => {
                                 // Récupére les données des creatives de l'insertion
                                 var creativesList = await ModelCreatives
                                     .findAll({
-                                        attributes:["creative_url"],
+                                        attributes:["creative_url","creative_mime_type","creative_click_url"],
                                         where: {
                                             insertion_id: insertionsIds
                                         },
@@ -507,404 +532,5 @@ exports.create_post = async (req, res) => {
         console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
-    }
-}
-
-exports.list_epilot = async (req, res) => {
-
-    try {
-        // Liste tous les campagnes
-        const data = new Object();
-
-        // Créer le fil d'ariane
-        breadcrumb = new Array({
-            'name': 'Campagnes',
-            'link': 'campaigns'
-        }, {
-            'name': 'Ajouter une campagne EPILOT',
-            'link': ''
-        });
-        data.breadcrumb = breadcrumb;
-
-        data.epilot = await ModelEpilotCampaigns.findAll({});
-        data.formats = await ModelFormats.findAll({
-            attributes: ['format_group'],
-            group: "format_group",
-            where: {
-                format_group: {
-                    [Op.not]: null
-                }
-            },
-            order: [
-                ['format_group', 'ASC']
-            ]
-        })
-        data.moment = moment;
-        data.utilities = Utilities;
-
-        res.render('manager/campaigns/list_epilot.ejs', data);
-    } catch (error) {
-        console.log(error);
-        var statusCoded = error.response.status;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
-    }
-}
-
-exports.epilot_create = async (req, res) => {
-    try {
-        const data = new Object();
-
-        // Créer le fil d'ariane
-        breadcrumb = new Array({
-            'name': 'Campagnes',
-            'link': 'campaigns'
-        }, {
-            'name': 'Liste les campagnes EPILOT',
-            'link': 'campaigns/epilot'
-        }, {
-            'name': 'Ajouter une campagne EPILOT',
-            'link': ''
-        });
-        data.breadcrumb = breadcrumb;
-
-        // Récupére l'ensemble des annonceurs
-        var advertisers = await ModelAdvertisers
-            .findAll({
-                order: [
-                    ['advertiser_name', 'ASC']
-                ]
-            })
-            .then(async function (advertisers) {
-                data.advertisers = advertisers;
-            });
-
-        // Récupére l'ensemble des annonceurs
-        var formats = await ModelFormats
-            .findAll({
-                order: [
-                    ['format_name', 'ASC']
-                ]
-            })
-            .then(async function (formats) {
-                data.formats = formats;
-            });
-
-        res.render('manager/campaigns/epilot_create.ejs', data);
-    } catch (error) {
-        console.log(error);
-        var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
-    }
-}
-
-exports.epilot_import = async (req, res) => {
-    try {
-        var filename = "public/uploads/2021/07/30/AD_INS-JANV-JUILLET.CSV";
-
-        var results = new Array();
-        fs
-            .createReadStream(filename)
-            .pipe(csv({
-                separator: '\;'
-            },))
-            .on('data', (data) => results.push(data))
-            .on('end', () => {
-                console.log(results.length);
-                console.log(results[0]);
-
-                for (i = 0; results.length; i++) {
-                    console.log(results[i]['Campagne']);
-                    // console.log(results[i]);
-
-                    var commercial = results[i]['Responsable commercial'];
-                    console.log('commercial :', commercial);
-
-                    commercialIdentity = commercial.split(' ');
-                    var user_id = null;
-
-                    ModelUsers
-                        .findOne({
-                            where: {
-                                user_firstname: commercialIdentity[1],
-                                user_lastname: commercialIdentity[0]
-                            }
-                        })
-                        .then(user => {
-                            if (user.length === 1) {
-                                user_id = user['user_id'];
-                            }
-                        });
-
-                    process.exit(1);
-                }
-
-                // Récupére l'ensemble des données
-                if (results.length > 0) {
-                    result = results[0];
-
-                    /*
-                // Si les keys : Name & PAD => Campagne insertions
-                if(!Utilities.empty(results[0]['PAD']) && !Utilities.empty(results[0]['Nom'])) {
-                    console.log('INSERTIONS');
-                    result = results[0];
-                    console.log(result);
-                    var campaign_name = result['Campagne'];
-                    var insertion_name = result['Nom'];
-
-                    if(result['Etat']) {
-                        switch(result['Etat']) {
-                            case 'Confirmée':
-                            case 'Confirmee' :
-                                var epilot_insertion_status = 1;
-                            break;
-                            case 'Reservée':
-                            case 'Reservee':
-                                var epilot_insertion_status = 2;
-                            break;
-                            default :
-                              var epilot_insertion_status = 0;
-                            break;
-                        }
-                    }
-
-                    var epilot_insertion_volume = result['Volume total prévu'];
-
-                    var commercial = result[0]['Responsable commercial'];
-                        console.log('commercial :',commercial);
-
-                    commercialIdentity = commercial.split(' ');
-                    var user_id = null;
-
-                    ModelUsers.findOne({
-                        where : { user_firstname: commercialIdentity[1], user_lastname: commercialIdentity[0], }
-                    }).then(user => {
-                        if (user.length === 1) {
-                            user_id = user['user_id'];
-                        }
-                    });
-
-
-                    ModelAdvertisers.findOne({
-                        where : { advertiser_name: advertiser_name }
-                    }).then(advertiser => {
-                        if (advertiser.length === 1) {
-                            advertiser_id = advertiser['advertiser_id'];
-                        }
-                    });
-
-                    // 'Responsable commercial'
-
-                    var epilot_insertion_start_date = moment(result['Date de début prévue']).format('YYYY-MM-DD 00:00:00');
-                    var epilot_insertion_end_date = moment(result['Date de fin prévue']).format('YYYY-MM-DD 23:59:00');
-
-
-                      // Charge les données dans la base de donnée
-                      var data_insertion = {
-                        'epilot_campaign_name' : campaign_name,
-                        'epilot_insertion_name' : insertion_name,
-                        'epilot_insertion_status' : epilot_insertion_status,
-                        'epilot_insertion_volume' : epilot_insertion_volume,
-                        'epilot_insertion_start_date' : epilot_insertion_start_date,
-                        'epilot_insertion_end_date' :  epilot_insertion_end_date,
-                        'user_id' : user_id
-
-                    }
-
-                    console.log(data_insertion);
-                    console.log('------------------')
-
-
-
-                } else {
-                    console.log('PAD : ',results[0]['PAD'], ' - Nom : ',results[0]['Nom']);
-                    console.log('CAMPAGNES');
-
-                    var campaign_name = result['Campagne'];
-
-                    const regexCampaignCode = /([0-9]{5})/g;
-                    regexCampaignCodeResult = campaign_name.match(regexCampaignCode);
-                    if(regexCampaignCodeResult.length > 0) { var epilot_campaign_code = regexCampaignCodeResult[0]; } else { var epilot_campaign_code = null; }
-
-                    var advertiser_name = result['Annonceur'];
-                    var advertiser_id = null;
-
-                    ModelAdvertisers.findOne({
-                        where : { advertiser_name: advertiser_name }
-                    }).then(advertiser => {
-                        if (advertiser.length === 1) {
-                            advertiser_id = advertiser['advertiser_id'];
-                        }
-                    });
-
-                    if(result['Etat planning']) {
-                        switch(result['Etat planning']) {
-                            case 'Confirmée':
-                            case 'Confirmee' :
-                                var epilot_campaign_status = 1;
-                            break;
-                            case 'Reservée':
-                            case 'Reservee':
-                                var epilot_campaign_status = 2;
-                            break;
-                            default :
-                              var epilot_insertion_status = 0;
-                            break;
-                        }
-                    }
-
-
-                    var epilot_campaign_start_date = moment(result['Début']).format('YYYY-MM-DD 00:00:00');
-                    var epilot_campaign_end_date = moment(result['Fin']).format('YYYY-MM-DD 23:59:00');
-
-                    var epilot_campaign_volume = result['Volume total prévu'];
-                    var epilot_campaign_nature = result['Nature'];
-
-                    // Charge les données dans la base de donnée
-                    var data_campaign = {
-                        'epilot_campaign_name' : campaign_name,
-                        'epilot_advertiser_name' : advertiser_name,
-                        'epilot_campaign_code' : epilot_campaign_code,
-                        'advertiser_id' : advertiser_id,
-                        'epilot_campaign_status' : epilot_campaign_status,
-                        'epilot_campaign_start_date' : epilot_campaign_start_date,
-                        'epilot_campaign_end_date' :  epilot_campaign_end_date,
-                        'epilot_campaign_volume' : epilot_campaign_volume,
-                        'epilot_campaign_nature' : epilot_campaign_nature
-                    }
-
-                    console.log(data_campaign);
-                    console.log('------------------');
-
-                }
-
-                console.log(results[0]);
-                 */
-                    // Sinon
-                    process.exit(1);
-                }
-
-            });
-
-        /*
-
-        var fileWords = fs.readFileSync(filename, 'utf8');
-        var newFileWords = fileWords.replace('/,/', '.');
-        console.log(newFileWords);
-
-        var fileWords = 'Pr�te � diffuser';
-        var newFileWords = fileWords.replace('/�/gi', '');
-        console.log(newFileWords);
-
-        process.exit(1);
-*/
-        /*
-        fs
-        .createReadStream('public/uploads/2021/07/30/AD_CAMP.CSV')
-        // fs.createReadStream('public/admin/uploads/template_csv.csv')
-        .pipe(csv({
-            separator: '\;'
-        },))
-        .on('data', (data) => results.push(data))
-        .on('end', () => {
-            console.log(results.length);
-        });
-
-
-    fs
-    .createReadStream('public/uploads/2021/07/30/AD_CAMP-JANV-JUILLET.CSV')
-    // fs.createReadStream('public/admin/uploads/template_csv.csv')
-    .pipe(csv({
-        separator: '\;'
-    },))
-    .on('data', (data) => results.push(data))
-    .on('end', () => {
-        console.log(results.length);
-    });
-
-
-
-
-    var results = new Array();
-    fs.createReadStream('public/uploads/2021/07/30/AD_CAMP-JANV-JUILLET.csv')
-    .pipe(csv(
-        {
-            mapHeaders: ({ header, index }) => header.toLowerCase(),
-            delimiter: '\;',
-            mapValues: ({ header, index, value }) => value.toLowerCase()
-        }
-        ))
-    .on('data', (row) => {
-        //console.log(row);
-        results.push(row)
-    })
-    .on('end', () => {
-      //  console.log(' RESULT LENGTH : ',results.length);
-       // console.log(results[0]);
-        user = results[1];
-        // loop over values
-for (let value of Object.values(user)) {
-    console.log(value);
-
-
- myArr = value.split(";");
- console.log('-----------------');
-
- console.log(myArr);
-
-  }
-
-      console.log('CSV file successfully processed');
-    });
-*/
-
-        /*
-        const file = req.files.epilot_file;
-        console.log(file);
-
-        // Le fichier doit être un fichier excel ou csv
-        if ((file.mimetype === 'application/vnd.ms-excel' || file.mimetype === 'application/octet-stream')) {
-
-            // Créer un dossier s'il n'existe pas (ex: public/uploads/epilot/2021/07/31)  dirDate + '/' +
-            var dirDateNOW = moment().format('YYYY/MM/DD');
-
-             // Créer un dossier si celui-ci n'existe pas
-            fs.mkdir('public/uploads/' + dirDateNOW + '/', { recursive: true }, (err) => {
-            if (err) throw err;
-          })
-
-           // Déplace le fichier de l'upload vers le dossier
-            await file.mv('public/uploads/' + dirDateNOW + '/' + file.name, err => {
-                if (err)
-                return res.status(500).send('ERRORRRRRRRRRRRRRR :' + err);
-            });
-
-            fs
-                .createReadStream('public/uploads/' + dirDateNOW + '/' + file.name)
-                // fs.createReadStream('public/admin/uploads/template_csv.csv')
-                .pipe(csv({
-                    separator: '\;'
-                },))
-                .on('data', (data) => results.push(data))
-                .on('end', () => {
-                    console.log(results);
-
-                });
-
-
-
-        } else {
-            req.session.message = {
-                type: 'danger',
-                intro: 'Erreur',
-                message: 'L\'extension du fichier est invalide. '
-            }
-            return res.redirect('/manager/campaigns/epilot/create');
-        }
-        */
-
-    } catch (error) {
-        console.log(error);
-        var statusCoded = error.response;
-        // res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }

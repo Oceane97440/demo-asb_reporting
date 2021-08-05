@@ -107,7 +107,7 @@ $(document).ready(
      
     // Automatisations des éléments
     function automateAction(automate) {
-
+      
         switch(automate) {
             case "campaign-update":
               // Récupére les insertions
@@ -203,14 +203,14 @@ $(document).ready(
     // Charge les éléments en ajax
     var campaign_id = $('div.card').attr('data-campaign_id');
     var advertiser_id = $('div.card').attr('data-advertiser_id');
-    var automate = $('div.alert').attr('data-automate');
+    var automateData = $('div.alert-automate').attr('data-automate');
    
     if(campaign_id) { 
-       automateAction(automate);
+       automateAction(automateData);
     }
 
     if(advertiser_id) { 
-        automateAction(automate);       
+        automateAction(automateData);       
      }
 
     $('.btn-automate').click(function() { 

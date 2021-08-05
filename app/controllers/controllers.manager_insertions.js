@@ -185,7 +185,28 @@ exports.view = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const data = new Object();
-        data.breadcrumb = "Ajouter une insertions";
+      
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Insertions',
+            'link': 'insertions/list'
+        },
+        {
+            'name': 'Ajouter une insertion',
+            'link': ''
+        }
+        );
+        data.breadcrumb = breadcrumb;
+
+        data.campaigns = await ModelCampaigns.findAll({
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
+        });
+
+
 
         // Récupére l'ensemble les données
         data.campaigns = await ModelCampaigns.findOne({

@@ -796,25 +796,29 @@ exports.report = async (req, res) => {
                             end_date_time
                         )
 
+                        if(diff_start.day < 31) {
+                            var requestVisitor_unique = {
+                                "startDate": StartDate_timezone,
+                                "endDate": end_date,
+                                "fields": [
+                                    {
+                                        "UniqueVisitors": {}
+                                    }
+                                ],
+                                "filter": [
+                                    {
+                                        "CampaignId": [campaignid]
+                                    }
+                                ]
+                            }
 
-                        var requestVisitor_unique = {
-                            "startDate": StartDate_timezone,
-                            "endDate": end_date,
-                            "fields": [
-                                {
-                                    "UniqueVisitors": {}
-                                }
-                            ],
-                            "filter": [
-                                {
-                                    "CampaignId": [campaignid]
-                                }
-                            ]
+                            console.log('requestVisitor_unique.startDate : ',requestVisitor_unique.startDate);
+                            console.log('requestVisitor_unique.endDate :',requestVisitor_unique.endDate);
+    
+                        } else {
+                            var requestVisitor_unique = null;
                         }
-
-                        console.log(requestVisitor_unique.startDate)
-                        console.log(requestVisitor_unique.endDate)
-
+                      
                         // 1) Requête POST
                         var dataLSTaskGlobal = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-taskGlobal'
@@ -839,9 +843,12 @@ exports.report = async (req, res) => {
                                 '',
                                 requestReporting
                             );
+                            console.log('fsdfslmk : ',requestReporting)
+                           
 
                             //si firstLink existe (!= de null) on save la taskId dans le localStorage sinon firstLinkTaskId = vide
                             if(firstLink){
+                                console.log('firstLink.status : ',firstLink.status)
                                 if (firstLink.status == 201) {
                                     localStorageTasks.setItem(
                                         'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour,
@@ -850,39 +857,33 @@ exports.report = async (req, res) => {
                                     firstLinkTaskId = firstLink.data.taskId;
                                 }
 
-                            }else{
-                                firstLinkTaskId = null
-
-                            }
-                        
-
-
-                        }else{
-                            firstLinkTaskId = null
-
-
-                        }
+                            } else{
+                                firstLinkTaskId = null;
+                            }    
+                        }/* else{
+                            firstLinkTaskId = null;
+                            console.log('L860 : Erreur firstLinkTaskId');
+                        }*/
 
                   
                         // twoLink - Récupére la taskID de la requête reporting
                         let twoLinkTaskId = localStorageTasks.getItem(
                             'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour
-                        );
+                        );                     
 
-                     
-
-                        console.log(twoLinkTaskId)
-
-                        if (!twoLinkTaskId && (diff.day < 31)) {
-                            console.log('twoLinkTaskId :', twoLinkTaskId)
-
-                            console.log('requestVisitor_unique :', requestVisitor_unique)
+                        console.log('L871 - Récupére la taskID de la requête reporting VU : ',twoLinkTaskId)
+                      
+                        if ((!twoLinkTaskId) && (!requestVisitor_unique) && (diff_start.day < 31)) {
+                          
+                            console.log('L874 - twoLinkTaskId :', twoLinkTaskId);
+                            console.log('L875 - requestVisitor_unique :', requestVisitor_unique);
 
                             let twoLink = await AxiosFunction.getReportingData(
                                 'POST',
                                 '',
                                 requestVisitor_unique
                             );
+                            
 
                             //si twoLink existe (!= de null) on save la taskId dans le localStorage sinon twoLinkTaskId = vide
 
@@ -894,15 +895,13 @@ exports.report = async (req, res) => {
                                     );
                                     twoLinkTaskId = twoLink.data.taskId;
                                 } 
-
-                            }else{
+                            } else{
                                 twoLinkTaskId = null
-                            }
-                       
-                        }
+                            }                       
+                        } 
 
                         console.log(
-                            'firstLinkTaskId :',
+                            'L899 - firstLinkTaskId :',
                             firstLinkTaskId,
                             ' - twoLinkTaskId: ',
                             twoLinkTaskId
@@ -912,6 +911,7 @@ exports.report = async (req, res) => {
                             var taskId = firstLinkTaskId;
                             var taskId_uu = twoLinkTaskId;
 
+                            console.log('dsfdddddddddddddddddddddddd')
                             /*------------
                            console.log('taskId', taskId);
                             console.log("taskId_uu", taskId_uu);
@@ -921,9 +921,8 @@ exports.report = async (req, res) => {
                             ----------*/
                             // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
                             // commence à 10sec
-                            var time = 5000;
+                            var time = 10000;
                             let timerFile = setInterval(async () => {
-
                                 // console.log('setInterval begin') DATA STORAGE - TASK 1 et 2
                                 var dataLSTaskGlobal = localStorageTasks.getItem(
                                     'campaignID-' + campaignid + '-taskGlobal'
