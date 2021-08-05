@@ -257,7 +257,6 @@ exports.view = async (req, res) => {
                     }
                 });
 
-                console.log(epilot_campaign)
                 //test si epilot_campaign existe
                 if (!Utilities.empty(epilot_campaign)) {
                     data.epilot_campaign = epilot_campaign;

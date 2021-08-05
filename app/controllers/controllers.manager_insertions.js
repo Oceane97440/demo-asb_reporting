@@ -184,16 +184,15 @@ exports.view = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        console.log(req.params.id)
-                const data = new Object();
+        const data = new Object();
         data.breadcrumb = "Ajouter une insertions";
 
         // Récupére l'ensemble les données
         data.campaigns = await ModelCampaigns.findOne({
-            where :{
-                campaign_id : req.params.id
+            where: {
+                campaign_id: req.params.id
             },
-      
+
         });
         data.formats = await ModelFormats.findAll({
             order: [
@@ -231,25 +230,23 @@ exports.create_post = async (req, res) => {
         const start_date = req.body.campaign_start_date
         const end_date = req.body.campaign_end_date
 
-
-        //   console.log(req.body)
-
         if (!TEXT_REGEX.test(insertion)) {
             req.session.message = {
                 type: 'danger',
                 intro: 'Erreur',
                 message: 'Le nombre de caratère est limité à 50'
             }
-            return res.redirect('/manager/insertions/create')
+            return res.redirect(`/manager/insertions/create/${campaign}`)
+
         }
 
-        if (insertion == '' || campaign == '' || start_date == '' || end_date == '' || format == '' || site == '') {
+        if (insertion == '' || campaign == '' || start_date == '' || end_date == '' || format == '') {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
                 message: 'Les champs doivent être complétés'
             }
-            return res.redirect('/manager/insertions/create')
+            return res.redirect(`/manager/insertions/create/${campaign}`)
         }
 
         const timstasp_start = Date.parse(start_date)
@@ -262,7 +259,7 @@ exports.create_post = async (req, res) => {
                 intro: 'Un problème est survenu',
                 message: 'Saisissez une date valide'
             }
-            return res.redirect('/manager/insertions/create')
+            return res.redirect(`/manager/insertions/create/${campaign}`)
         }
 
         var requestInsertion = {
@@ -389,23 +386,19 @@ exports.create_post = async (req, res) => {
                         requestInsertion
                     );
 
-                    console.log(insertion_create)
 
                     if (insertion_create.headers.location) {
 
-            
+
                         var url_location = insertion_create.headers.location
 
-                        console.log(url_location)
 
 
                         var insertion_get = await AxiosFunction.getManage(url_location);
 
-                        console.log(insertion_get)
 
-    
+
                         const insertion_id = insertion_get.data.id
-    
 
 
                         await ModelInsertions.create({
@@ -422,28 +415,28 @@ exports.create_post = async (req, res) => {
                             type: 'success',
                             intro: 'Ok',
                             message: 'L\'inserion a été crée dans SMARTADSERVEUR',
-            
+
                         }
-                        return res.redirect('/manager/insertions/create')
+                        return res.redirect(`/manager/insertions/create/${campaign}`)
                     }
 
 
-                  
-                
+
+
 
                 } else {
                     req.session.message = {
                         type: 'danger',
                         intro: 'Erreur',
-                        message: 'Campagne est déjà utilisé'
+                        message: 'Insertions est déjà utilisé'
                     }
-                    return res.redirect('/manager/advertisers/create');
+                    return res.redirect(`/manager/insertions/create/${campaign}`)
                 }
 
 
             })
 
-     
+
 
 
 

@@ -101,7 +101,7 @@ router.get("/campaigns/:campaign_id/insertions/:insertion_id", manager_insertion
 router.get("/insertions", manager_insertions.index);
 router.get("/insertions/list", manager_insertions.list);
 router.get("/insertions/create/:id", manager_insertions.create);
-router.get("/insertions/create", manager_insertions.create_post);
+router.post("/insertions/create", manager_insertions.create_post);
 
 
 

@@ -10,7 +10,7 @@ const Insertions = sequelize.define('insertions', {
     },
     delivery_regulated: {
         type: Sequelize.BIGINT(),
-        allowNull: false
+        allowNull: true
     },
     used_guaranteed_deal: {
         type: Sequelize.BIGINT(),
