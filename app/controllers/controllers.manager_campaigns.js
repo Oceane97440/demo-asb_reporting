@@ -257,8 +257,9 @@ exports.view = async (req, res) => {
                     }
                 });
 
+                console.log(epilot_campaign)
                 //test si epilot_campaign existe
-                if (epilot_campaign) {
+                if (!Utilities.empty(epilot_campaign)) {
                     data.epilot_campaign = epilot_campaign;
                 }else{
                     data.epilot_campaign = 0;
@@ -301,6 +302,7 @@ exports.view = async (req, res) => {
                                 // Récupére les données des creatives de l'insertion
                                 var creativesList = await ModelCreatives
                                     .findAll({
+                                        attributes:["creative_url"],
                                         where: {
                                             insertion_id: insertionsIds
                                         },
