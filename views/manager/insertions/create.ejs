@@ -21,10 +21,7 @@
                 <% if (message) { %>
                     <div class="alert alert-<%=message.type%>" role="alert">
                         <%=message.intro%>:<%=message.message%>
-                        <% if (message.type === 'success') { %>
-                        <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%=message.id_campaign%>" target="_blank"> 
-                        <img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER"></a>
-                        <% } %>
+                      
                     </div>
         
                     <% } %>
@@ -37,14 +34,11 @@
                         class="form-control"
                         id="campaign"
                         name="campaign"
-                        required="required">
-                        <option value="">Choisir une campagne</option>
-                        <% for (let i=0; i < campaigns.length; i++) { %>
-                            <option value="<%= campaigns[i].campaign_id %>"
-                                <%- (campaigns[i].campaign_id == '1682740') ? 'selected="selected"' : '' -%>>
-                                <%= campaigns[i].campaign_name %>
+                        required="required">                       
+                            <option value="<%= campaigns.campaign_id %>">
+                                <%= campaigns.campaign_name %>
                             </option>
-                        <% } %>
+                      
                     </select>
                 </div>
 
@@ -75,7 +69,7 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label class="form-label" for="site">Sites
                     </label>
                     <select
@@ -88,7 +82,7 @@
                             <option value="<%= sites[i].site_id %>"><%= sites[i].site_name %></option>
                         <% } %>
                     </select>
-                </div>
+                </div> -->
 
                 <div class="form-group">
                     <label class="form-label" for="campaign_start_date">Date de début de la campagne</label>
