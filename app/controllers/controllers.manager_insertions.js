@@ -40,6 +40,9 @@ const ModelInsertionsPriorities = require("../models/models.insertions_prioritie
 const ModelInsertionsStatus = require("../models/models.insertions_status");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
+
+const TEXT_REGEX = /^.{1,51}$/
+
 const {
     promiseImpl
 } = require('ejs');
@@ -181,16 +184,16 @@ exports.view = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        const data = new Object();
+        console.log(req.params.id)
+                const data = new Object();
         data.breadcrumb = "Ajouter une insertions";
 
         // Récupére l'ensemble les données
-        data.campaigns = await ModelCampaigns.findAll({
-            order: [
-                // Will escape title and validate DESC against a list of valid direction
-                // parameters
-                ['campaign_id', 'DESC']
-            ]
+        data.campaigns = await ModelCampaigns.findOne({
+            where :{
+                campaign_id : req.params.id
+            },
+      
         });
         data.formats = await ModelFormats.findAll({
             order: [
@@ -207,12 +210,246 @@ exports.create = async (req, res) => {
             ]
         });
 
-       
 
         res.render('manager/insertions/create.ejs', data);
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
+
+
+exports.create_post = async (req, res) => {
+    try {
+        const campaign = req.body.campaign
+        const insertion = req.body.insertion
+        const format = req.body.format
+        const site = req.body.site
+        const start_date = req.body.campaign_start_date
+        const end_date = req.body.campaign_end_date
+
+
+        //   console.log(req.body)
+
+        if (!TEXT_REGEX.test(insertion)) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Erreur',
+                message: 'Le nombre de caratère est limité à 50'
+            }
+            return res.redirect('/manager/insertions/create')
+        }
+
+        if (insertion == '' || campaign == '' || start_date == '' || end_date == '' || format == '' || site == '') {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'Les champs doivent être complétés'
+            }
+            return res.redirect('/manager/insertions/create')
+        }
+
+        const timstasp_start = Date.parse(start_date)
+        const timstasp_end = Date.parse(end_date)
+
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur
+        if (timstasp_end <= timstasp_start || timstasp_start >= timstasp_end) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'Saisissez une date valide'
+            }
+            return res.redirect('/manager/insertions/create')
+        }
+
+        var requestInsertion = {
+            "isDeliveryRegulated": true,
+
+            "isUsedByGuaranteedDeal": false,
+
+            "isUsedByNonGuaranteedDeal": false,
+
+            "voiceShare": 0,
+
+            "eventId": 0,
+
+            "name": insertion,
+
+            "description": "",
+
+            "isPersonalizedAd": false,
+
+            "siteIds": site,
+
+            "insertionStatusId": 1,
+
+            "startDate": start_date,
+
+            "endDate": end_date,
+
+            "campaignId": campaign,
+
+            "insertionTypeId": 0,
+
+            "deliveryTypeId": 10,
+
+            "timezoneId": 4,
+
+            "priorityId": 62,
+
+            "periodicCappingId": 0,
+
+            "groupCappingId": 0,
+
+            "maxImpressions": 0,
+
+            "weight": 0,
+
+            "maxClicks": 0,
+
+            "maxImpressionsPerDay": 0,
+
+            "maxClicksPerDay": 0,
+
+            "insertionGroupedVolumeId": 452054,
+
+            "eventImpressions": 0,
+
+            "isHolisticYieldEnabled": false,
+
+            "deliverLeftVolumeAfterEndDate": false,
+
+            "globalCapping": 0,
+
+            "cappingPerVisit": 0,
+
+            "cappingPerClick": 0,
+
+            "autoCapping": 0,
+
+            "periodicCappingImpressions": 0,
+
+            "periodicCappingPeriod": 0,
+
+            "isObaIconEnabled": false,
+
+            "formatId": format,
+
+            "externalId": 0,
+
+            "externalDescription": "",
+
+            "updatedAt": "2020-08-07T16:29:00",
+
+            "createdAt": "2020-08-07T13:43:00",
+
+            "isArchived": false,
+
+            "rateTypeId": 0,
+
+            "rate": 0.0,
+
+            "rateNet": 0.0,
+
+            "discount": 0.0,
+
+            "currencyId": 0,
+
+            "insertionLinkId": 0,
+
+            "insertionExclusionIds": [
+
+                111233
+
+            ],
+
+            "customizedScript": "",
+
+            "salesChannelId": 1
+
+        }
+
+        await ModelInsertions
+            .findOne({
+                attributes: ['insertion_name'],
+                where: {
+                    insertion_name: insertion
+                }
+            }).then(async function (insertionFound) {
+
+
+                if (!insertionFound) {
+
+
+                    let insertion_create = await AxiosFunction.postManage(
+                        'insertions',
+                        requestInsertion
+                    );
+
+                    console.log(insertion_create)
+
+                    if (insertion_create.headers.location) {
+
+            
+                        var url_location = insertion_create.headers.location
+
+                        console.log(url_location)
+
+
+                        var insertion_get = await AxiosFunction.getManage(url_location);
+
+                        console.log(insertion_get)
+
+    
+                        const insertion_id = insertion_get.data.id
+    
+
+
+                        await ModelInsertions.create({
+                            insertion_id: insertion_id,
+                            insertion_name: insertion,
+                            campaign_id: campaign,
+                            campaign_start_date: start_date,
+                            campaign_end_date: end_date,
+                            campaign_archived: 0
+
+                        });
+
+                        req.session.message = {
+                            type: 'success',
+                            intro: 'Ok',
+                            message: 'L\'inserion a été crée dans SMARTADSERVEUR',
+            
+                        }
+                        return res.redirect('/manager/insertions/create')
+                    }
+
+
+                  
+                
+
+                } else {
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Erreur',
+                        message: 'Campagne est déjà utilisé'
+                    }
+                    return res.redirect('/manager/advertisers/create');
+                }
+
+
+            })
+
+     
+
+
+
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
         });
