@@ -35,11 +35,11 @@ router.get("/insertions_priorities", automate.insertions_priorities);
 router.get("/creatives", automate.creatives);
 router.get("/countries", automate.countries);
 router.get("/reports", automate.reports);
+router.get("/packs", automate.packs);
 
 /* router.get("/cities", automate.cities);
 router.get("/continents",
  * automate.continents);
-router.get("/packs", automate.packs);
  * router.get("/pages", automate.pages);
  */
 module.exports = router;

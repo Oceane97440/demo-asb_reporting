@@ -150,9 +150,7 @@ exports.create = async (req, res) => {
 exports.create_post = async (req, res) => {
     try {
         const advertiser = req.body.advertiser_name
-        var archived = req.body.archived
 
-        console.log(req.body)
 
         if (!TEXT_REGEX.test(advertiser)) {
             req.session.message = {
@@ -163,7 +161,7 @@ exports.create_post = async (req, res) => {
             return res.redirect('/manager/advertisers/create');
         }
 
-        if (advertiser == '' || archived == '') {
+        if (advertiser == '') {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
@@ -172,12 +170,7 @@ exports.create_post = async (req, res) => {
             return res.redirect('/manager/advertisers/create');
         }
 
-        if (archived === 1) {
-            archived = true
-        } else {
-            archived = false
-        }
-
+    
         var requestAdvertiser = {
             "name": advertiser,
 
@@ -185,7 +178,7 @@ exports.create_post = async (req, res) => {
 
             "isHouseAds": false,
 
-            "isArchived": archived,
+            "isArchived": false,
 
             "userGroupId": 12958
 
@@ -223,7 +216,7 @@ exports.create_post = async (req, res) => {
                     await ModelAdvertisers.create({
                         advertiser_id: advertiser_id,
                         advertiser_name: advertiser,
-                        advertiser_archived: archived
+                        advertiser_archived: 0
                     });
 
                     req.session.message = {

@@ -40,6 +40,9 @@ const ModelInsertionsPriorities = require("../models/models.insertions_prioritie
 const ModelInsertionsStatus = require("../models/models.insertions_status");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
+const ModelDeliverytTypes = require("../models/models.deliverytypes")
+const ModelPacks_Smart = require("../models/models.packs_smart")
+
 
 const TEXT_REGEX = /^.{1,51}$/
 
@@ -104,8 +107,8 @@ exports.list = async (req, res) => {
 exports.view = async (req, res) => {
     try {
         const data = new Object();
-        data.breadcrumb = "Insertions";
-        var insertionsIds = new Array();
+
+        // var insertionsIds = new Array();
 
         var campaign_id = req.params.campaign_id;
         var insertion_id = req.params.insertion_id;
@@ -143,6 +146,19 @@ exports.view = async (req, res) => {
                         });
                 }
 
+                // Créer le fil d'ariane
+                var breadcrumbLink = 'campaigns'
+                breadcrumb = new Array({
+                    'name': 'Insertions',
+                    'link': 'insertions'
+                }, {
+                    'name': insertion.campaign.campaign_name,
+                    'link': breadcrumbLink.concat('/', insertion.campaign_id)
+                }, {
+                    'name': insertion.insertion_name,
+                    'link': ''
+                });
+                data.breadcrumb = breadcrumb;
                 // Récupére l'annonceur lié à cette campagne
                 var campaign = await ModelCampaigns
                     .findOne({
@@ -161,7 +177,7 @@ exports.view = async (req, res) => {
                     }
                 }).then(async function (creativesList) {
                     data.creatives = creativesList;
-                    console.log(creativesList)
+                    //console.log(creativesList)
                 });
 
                 // Attribue les données de la campagne                   
@@ -183,30 +199,25 @@ exports.view = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
+
     try {
         const data = new Object();
-      
+
         // Créer le fil d'ariane
         breadcrumb = new Array({
             'name': 'Insertions',
             'link': 'insertions/list'
-        },
-        {
+        }, {
             'name': 'Ajouter une insertion',
             'link': ''
-        }
-        );
+        });
         data.breadcrumb = breadcrumb;
 
         data.campaigns = await ModelCampaigns.findAll({
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
-
-
 
         // Récupére l'ensemble les données
         data.campaigns = await ModelCampaigns.findOne({
@@ -215,18 +226,51 @@ exports.create = async (req, res) => {
             },
 
         });
+
+
         data.formats = await ModelFormats.findAll({
+            attributes: ['format_id', 'format_name', 'format_group'],
+            where: {
+                format_group: {
+                    [Op.regexp]: '^[GRAND ANGLE|HABILLAGE|INTERSTITIEL|MASTHEAD|VIDEO]'
+                }
+            },
             order: [
-                // Will escape title and validate DESC against a list of valid direction
-                // parameters
-                ['format_id', 'DESC']
-            ]
+                ['format_name', 'ASC']
+            ],
+        })
+
+        // data.sites = await ModelSites.findAll({
+        //     where: {
+        //         site_name: {
+        //             [Op.like]: 'SM' + '%'
+
+        //         },
+        //         site_archived: 0
+        //     },
+        //     order: [
+        //         // Will escape title and validate DESC against a list of valid direction
+        //         // parameters
+        //         ['site_id', 'DESC']
+        //     ]
+        // });
+
+        data.packs = await ModelPacks_Smart.findAll({
+
+      
         });
-        data.sites = await ModelSites.findAll({
+
+        data.deliverytypes = await ModelDeliverytTypes.findAll({
+            where: {
+                deliverytype_id: [0, 10, 22]
+            }
+        });
+
+        data.priorities = await ModelInsertionsPriorities.findAll({
             order: [
                 // Will escape title and validate DESC against a list of valid direction
                 // parameters
-                ['site_id', 'DESC']
+                ['priority_id', 'DESC']
             ]
         });
 
@@ -247,9 +291,11 @@ exports.create_post = async (req, res) => {
         const campaign = req.body.campaign
         const insertion = req.body.insertion
         const format = req.body.format
-        const site = req.body.site
+        const packs = req.body.pack
         const start_date = req.body.campaign_start_date
         const end_date = req.body.campaign_end_date
+        const delivery_type = req.body.delivery_type
+        const priority = req.body.priority
 
         if (!TEXT_REGEX.test(insertion)) {
             req.session.message = {
@@ -283,112 +329,131 @@ exports.create_post = async (req, res) => {
             return res.redirect(`/manager/insertions/create/${campaign}`)
         }
 
+        const dateNow = moment().format('YYYY-MM-DD HH:mm:ss');
+
+
         var requestInsertion = {
+
             "isDeliveryRegulated": true,
-
             "isUsedByGuaranteedDeal": false,
-
             "isUsedByNonGuaranteedDeal": false,
-
+            "impressionTypeId": 0,
             "voiceShare": 0,
-
             "eventId": 0,
-
+            "creativeRotationModeId": 0,
             "name": insertion,
-
             "description": "",
-
             "isPersonalizedAd": false,
-
-            "siteIds": site,
-
+            "insertionStatusId": 0,
+            //"siteIds": site,
+            "packIds": packs,
             "insertionStatusId": 1,
-
             "startDate": start_date,
-
             "endDate": end_date,
-
             "campaignId": campaign,
-
             "insertionTypeId": 0,
-
-            "deliveryTypeId": 10,
-
+            "deliveryTypeId": delivery_type,
             "timezoneId": 4,
-
-            "priorityId": 62,
-
+            "priorityId": priority,
             "periodicCappingId": 0,
-
             "groupCappingId": 0,
-
             "maxImpressions": 0,
-
             "weight": 0,
-
             "maxClicks": 0,
-
             "maxImpressionsPerDay": 0,
-
             "maxClicksPerDay": 0,
-
-            "insertionGroupedVolumeId": 452054,
-
             "eventImpressions": 0,
-
             "isHolisticYieldEnabled": false,
-
             "deliverLeftVolumeAfterEndDate": false,
-
             "globalCapping": 0,
-
             "cappingPerVisit": 0,
-
             "cappingPerClick": 0,
-
             "autoCapping": 0,
-
-            "periodicCappingImpressions": 0,
-
-            "periodicCappingPeriod": 0,
-
+            // "periodicCappingImpressions": 0,
+            // "periodicCappingPeriod": 0,
             "isObaIconEnabled": false,
-
             "formatId": format,
-
             "externalId": 0,
-
             "externalDescription": "",
-
-            "updatedAt": "2020-08-07T16:29:00",
-
-            "createdAt": "2020-08-07T13:43:00",
-
+            "updatedAt": dateNow,
+            "createdAt": dateNow,
             "isArchived": false,
-
             "rateTypeId": 0,
-
             "rate": 0.0,
-
             "rateNet": 0.0,
-
             "discount": 0.0,
-
             "currencyId": 0,
-
             "insertionLinkId": 0,
-
-            "insertionExclusionIds": [
-
-                111233
-
-            ],
-
             "customizedScript": "",
-
-            "salesChannelId": 1
+            "salesChannelId": 1,
+            "inventoryTypeId": 0
 
         }
+
+        //paramètre avec capping si format Interstitiel
+        if (format === '79633' || format === '44152') {
+
+            var requestInsertion = {
+
+                "isDeliveryRegulated": true,
+                "isUsedByGuaranteedDeal": false,
+                "isUsedByNonGuaranteedDeal": false,
+                "impressionTypeId": 0,
+                "voiceShare": 0,
+                "eventId": 0,
+                "creativeRotationModeId": 0,
+                "name": insertion,
+                "description": "",
+                "isPersonalizedAd": false,
+                "insertionStatusId": 0,
+                //"siteIds": site,
+                "packIds": packs,
+                "insertionStatusId": 1,
+                "startDate": start_date,
+                "endDate": end_date,
+                "campaignId": campaign,
+                "insertionTypeId": 0,
+                "deliveryTypeId": delivery_type,
+                "timezoneId": 4,
+                "priorityId": priority,
+                "periodicCappingId": 0,
+                "groupCappingId": 0,
+                "maxImpressions": 0,
+                "weight": 0,
+                "maxClicks": 0,
+                "maxImpressionsPerDay": 0,
+                "maxClicksPerDay": 0,
+                "eventImpressions": 0,
+                "isHolisticYieldEnabled": false,
+                "deliverLeftVolumeAfterEndDate": false,
+                "globalCapping": 0,
+                "cappingPerVisit": 0,
+                "cappingPerClick": 0,
+                "autoCapping": 0,
+                "periodicCappingImpressions": 1,
+                "periodicCappingPeriod": 15,
+                "isObaIconEnabled": false,
+                "formatId": format,
+                "externalId": 0,
+                "externalDescription": "",
+                "updatedAt": dateNow,
+                "createdAt": dateNow,
+                "isArchived": false,
+                "rateTypeId": 0,
+                "rate": 0.0,
+                "rateNet": 0.0,
+                "discount": 0.0,
+                "currencyId": 0,
+                "insertionLinkId": 0,
+                "customizedScript": "",
+                "salesChannelId": 1,
+                "inventoryTypeId": 0
+
+            }
+
+
+        }
+
 
         await ModelInsertions
             .findOne({
@@ -426,8 +491,13 @@ exports.create_post = async (req, res) => {
                             insertion_id: insertion_id,
                             insertion_name: insertion,
                             campaign_id: campaign,
-                            campaign_start_date: start_date,
-                            campaign_end_date: end_date,
+                            insertion_start_date: start_date,
+                            insertion_end_date: end_date,
+                            pack_id:packs,
+                            format_id: format,
+                            delivery_type_id: delivery_type,
+                            timezone_id: 4,
+                            priority_id: priority,
                             campaign_archived: 0
 
                         });

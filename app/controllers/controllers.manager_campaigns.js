@@ -376,6 +376,9 @@ exports.create = async (req, res) => {
         // Récupére l'ensemble des annonceurs
         var advertisers = await ModelAdvertisers
             .findAll({
+                where:{
+                    advertiser_archived : 0
+                },
                 order: [
                     // Will escape title and validate DESC against a list of valid direction
                     // parameters

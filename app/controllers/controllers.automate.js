@@ -49,6 +49,7 @@ const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
 const ModelEpilotInsertions = require("../models/models.epilot_insertions");
 
 const ModelUsers = require("../models/models.users");
+const ModelPacks_Smart  = require("../models/models.packs_smart");
 
 const {resolve} = require('path');
 const {cpuUsage} = require('process');
@@ -1843,6 +1844,56 @@ exports.sites = async (req, res) => {
                                 site_business_model_value,
                                 site_application_id,
                                 site_updated_at
+                            });
+
+                        }
+
+                    });
+                }
+            }
+
+            addItem();
+
+            return false;
+        });
+
+    } catch (error) {
+        console.error('Error : ' + error);
+
+    }
+}
+
+exports.packs = async (req, res) => {
+    try {
+        var config = SmartFunction.config('packs');
+        await axios(config).then(function (res) {
+            var data = res.data;
+            var number_line = data.length;
+            var number_total_count = res.headers['x-pagination-total-count'];
+            var number_pages = Math.round((number_total_count / 100) + 1);
+            console.log(number_total_count);
+            console.log('Number Pages :' + number_pages);
+
+            const addItem = async () => {
+                for (let page = 0; page <= number_pages; page++) {
+                    let offset = page * 100;
+                    var config2 = SmartFunction.config('packs', offset);
+                    await axios(config2).then(function (response) {
+                        var dataValue = response.data;
+                        var number_line_offset = data.length;
+
+                        for (i = 0; i < number_line_offset; i++) {
+
+                            var packs_smart_id = dataValue[i].id;
+                            var packs_smart_name = dataValue[i].name;
+                            var packs_smart_is_archived = dataValue[i].isArchived;
+                            var updated_at = dataValue[i].updatedAt
+
+                            const packs = ModelPacks_Smart.create({
+                                packs_smart_id,
+                                packs_smart_name,
+                                packs_smart_is_archived,
+                                updated_at
                             });
 
                         }

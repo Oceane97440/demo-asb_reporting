@@ -55,6 +55,36 @@
 
 
                 <div class="form-group">
+                    <label class="form-label" for="delivery_type">Categorie
+                    </label>
+                    <select
+                        class="form-control"
+                        id="delivery_type"
+                        name="delivery_type"
+                        required="required">
+                        <option value="">Choisir une categorie</option>
+                        <% for (let i=0; i < deliverytypes.length; i++) { %>
+                            <option value="<%= deliverytypes[i].deliverytype_id %>"><%= deliverytypes[i].deliverytype_name %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="priority">Priorité
+                    </label>
+                    <select
+                        class="form-control"
+                        id="priority"
+                        name="priority"
+                        required="required">
+                        <option value="">Choisir une priorité</option>
+                        <% for (let i=0; i < priorities.length; i++) { %>
+                            <option value="<%= priorities[i].priority_id %>"><%= priorities[i].priority_name %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label class="form-label" for="format">Formats
                     </label>
                     <select
@@ -69,20 +99,20 @@
                     </select>
                 </div>
 
-                <!-- <div class="form-group">
-                    <label class="form-label" for="site">Sites
+                <div class="form-group">
+                    <label class="form-label" for="packs">Packs
                     </label>
                     <select
                         class="form-control"
-                        id="site"
-                        name="site"
-                        multiple
+                        id="packs"
+                        name="packs"
                         required="required">
-                        <% for (let i=0; i < sites.length; i++) { %>
-                            <option value="<%= sites[i].site_id %>"><%= sites[i].site_name %></option>
+                        <option value="">Choisir un pack</option>
+                        <% for (let i=0; i < packs.length; i++) { %>
+                            <option value="<%= packs[i].pack_smart_id %>"><%= packs[i].pack_smart_name %></option>
                         <% } %>
                     </select>
-                </div> -->
+                </div> 
 
                 <div class="form-group">
                     <label class="form-label" for="campaign_start_date">Date de début de la campagne</label>
