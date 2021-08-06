@@ -2707,7 +2707,8 @@ exports.reports = async (req, res) => {
                     return a.expiration - b.expiration;
                 });
 
-                res.redirect('/rs/report/'+campaignsReports[0].campaign_crypt);
+                return res.json(200, campaignsReports); 
+              //  res.redirect('/rs/report/'+campaignsReports[0].campaign_crypt);
             }
         });
 
