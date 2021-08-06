@@ -36,7 +36,7 @@ const AxiosFunction = require('../functions/function.app.axios');
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
 const ModelPack = require("../models/models.packs")
-const ModelPack_Site = require("../models/models.packs_sites")
+const ModelPackSite = require("../models/models.packs_sites")
 const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
 const ModelUser_Role = require("../models/models.roles_users")
@@ -205,7 +205,7 @@ exports.forcast = async (req, res) => {
         const EndDate = await JJ + '/' + MM + '/' + AAAA;
 
         //recupération des site d'un pack
-        const sitesdb = await ModelPack_Site.findAll({
+        const sitesdb = await ModelPackSite.findAll({
             attributes: [
                 'pack_id', 'site_id'
             ],
@@ -637,7 +637,7 @@ exports.countrys_json = async (req, res) => {
 exports.packs_sites_json = async (req, res) => {
     //renvoie du json les info campagnes
     try {
-        await ModelPack_Site
+        await ModelPackSite
             .findAll({
                 attributes: ['pack_id', 'site_id']
             })

@@ -2630,6 +2630,96 @@ exports.insertions_priorities = async (req, res) => {
 
 exports.reports = async (req, res) => {
     try {
+        // 1- Liste les campagnes en lignes
+          
+         // Affiche les campagnes se terminant aujourd'hui
+         var dateNow = moment().format('YYYY-MM-DD');
+         var dateTomorrow = moment()
+             .add(1, 'days')
+             .format('YYYY-MM-DD');
+         var date5Days = moment()
+             .add(5, 'days')
+             .format('YYYY-MM-DD');
+
+             
+        // Affiche les annonceurs à exclure
+          const advertiserExclus = new Array(418935,427952,409707,425912,425914,438979,439470,439506,439511,439512,439513,439514,439515,440117,440118,440121,440122,440124,440126,445117,455371,455384,320778,417243,414097,411820,320778);
+      
+         // Affiche les campagnes en ligne
+         let campaigns = await ModelCampaigns.findAll({
+            where: {               
+                [Op.and]: [
+                    {
+                        advertiser_id: {
+                            [Op.notIn]: advertiserExclus
+                        }
+                    }
+                ],
+                [Op.or]: [{
+                    campaign_start_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                    }
+                }, {
+                    campaign_end_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                    }
+                }]
+            },
+            order: [['campaign_start_date','ASC']],            
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
+        }) .then(async function (campaigns) {
+            if (!campaigns) {
+                return res.json(404, 'Aucune campagne existante'); 
+            }
+
+            campaignsList = new Object();
+            var campaignsReports = [];
+            // 2- Recherche et vérifie si les campagnes ont un rapport
+            var nbCampaigns = campaigns.length;
+            a = 0;
+            for(i = 0; i < nbCampaigns; i++) {
+                campaign_id = campaigns[i].campaign_id;
+                campaign_crypt = campaigns[i].campaign_crypt;
+
+                var reportLocalStorage = localStorage.getItem('campaignID-' + campaign_id)
+                if( reportLocalStorage) {
+                  var reportingData = JSON.parse(reportLocalStorage);
+                  var reporting_end_date = reportingData.reporting_end_date;
+                   // var t = moment.duration(reportingData.reporting_end_date, "minutes");
+                  console.log('CampaignId : ',campaign_id,' - RAPOORT : ',reporting_end_date)
+                 // console.log(reportLocalStorage);
+                 campaignsList  = {'campaign_id' : campaign_id, 'campaign_crypt' : campaign_crypt, 'report' : '1', 'expiration' : moment(reporting_end_date).unix(), 'date_expi' : reporting_end_date}
+                } else {
+                  console.log('CampaignId : ',campaign_id)
+                  campaignsList = {'campaign_id' : campaign_id, 'campaign_crypt' : campaign_crypt, 'report' : '0', 'expiration' : moment().unix(), 'date_expi' : moment().format('YYYY-MM-DD HH:mm:ss')}
+                 
+                }
+                campaignsReports.push(campaignsList);
+            }
+
+            if(campaignsReports.length > 0) {
+                // Trie les campagnes selon la date d'expiration
+                campaignsReports.sort(function (a, b) {
+                    return a.expiration - b.expiration;
+                });
+
+                res.redirect('/rs/report/'+campaignsReports[0].campaign_crypt);
+            }
+        });
+
+    } catch (error) {
+        console.error('Error : ' + error);
+    }
+}
+
+
+//---------- A supprimer ---------------*/
+exports.reportsDELETE = async (req, res) => {
+    try {
         // Récupére les campagnes en lignes qui sont archivé et à l'exception de
         // certaine annonceurs SELECT *  FROM `asb_campaigns` WHERE `campaign_end_date`
         // > '2021-05-15' And campaign_archived = "1" AND advertiser_id NOT

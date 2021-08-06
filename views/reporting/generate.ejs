@@ -180,36 +180,36 @@
             crossorigin="anonymous"></script>
 
             <script>
-                  $(document).ready(function () {
-                      $.ajax({
-                          method: "GET",
-                          url: '/rs/report/<%=campaigncrypt%>',
-                          success: function (data) {
-                              $("#exampleModal").hide();
-                              $('body').html(data);
-                          }
-                      })
-      
-                      //affiche la modal lors du clic du bouton
-                      $('.btn').on('shown.bs.modal', function () {
-                          $('#myInput').trigger('focus');
-                      })
-      
-                      // lors du clic du bouton affectue la requête : GET
-                      $('.btn').click(function () {
-                          $("#exampleModal").modal("show");
-                          $.ajax({
-                              method: "GET",
-                              url: '/rs/report/<%=campaigncrypt%>',
-                              success: function (data) {
-                                  $("#exampleModal").hide();
-                                  $('body').html(data)
-                                  console.log(data)
-                              }
-                          })
-                      })
-                  })
-              </script>
+                $(document).ready(function () {
+                     $.ajax({
+                         method: "GET",
+                         url: '/rs/report/<%=campaigncrypt%>',
+                         success: function (data) {
+                             $("#exampleModal").hide();
+                             $('body').html(data);
+                         }
+                     })
+     
+                     //affiche la modal lors du clic du bouton
+                     $('.btn').on('shown.bs.modal', function () {
+                         $('#myInput').trigger('focus');
+                     })
+     
+                     // lors du clic du bouton affectue la requête : GET
+                     $('.btn').click(function () {
+                         $("#exampleModal").modal("show");
+                         $.ajax({
+                             method: "GET",
+                             url: '/rs/report/<%=campaigncrypt%>',
+                             success: function (data) {
+                                 $("#exampleModal").hide();
+                                 $('body').html(data)
+                                 console.log(data)
+                             }
+                         })
+                     })
+                 })
+             </script>
 
     </body>
 
