@@ -2648,6 +2648,7 @@ exports.reports = async (req, res) => {
          // Affiche les campagnes en ligne
          let campaigns = await ModelCampaigns.findAll({
             where: {               
+               
                 [Op.and]: [
                     {
                         advertiser_id: {
@@ -2658,6 +2659,11 @@ exports.reports = async (req, res) => {
                         campaign_start_date: {
                             [Op.lte]: dateNow
                         }
+                    },
+                    {
+                        campaign_name: {
+                            [Op.notLike]: '% PARR %'
+                        }   
                     }
                 ],               
                 [Op.or]: [{
@@ -2716,7 +2722,7 @@ exports.reports = async (req, res) => {
 
                 console.log(campaignsReports.length)
 
-               return res.json(200, campaignsReports); 
+               return res.status(200).json(campaignsReports); 
                 // res.redirect('/rs/report/'+campaignsReports[0].campaign_crypt);
             }
         });
