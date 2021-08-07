@@ -20,7 +20,7 @@
             <tr>
                 <td><%= campaigns[i].epilot_campaign_id %></td>
                 <td><% if(!utilities.empty(campaigns[i].advertiser_id)) { %><a href="/manager/advertisers/<%= campaigns[i].advertiser.advertiser_id %>" title="<%= campaigns[i].advertiser.advertiser_name %>"><%= campaigns[i].advertiser.advertiser_name %></a> <% } else { %> <%= campaigns[i].epilot_advertiser_name %> <% } %></td>
-                <td><% if(!utilities.empty(campaigns[i].epilot_campaign_id)) { %><a href="/manager/campaigns/<%= campaigns[i].campaign.campaign_id %>" title="<%= campaigns[i].campaign.campaign_name %>"><%= campaigns[i].campaign.campaign_name %></a> <% } else { %> <%= campaigns[i].epilot_campaign_name %> <% } %></td>
+                <td><% if(!utilities.empty(campaigns[i].campaign_id)) { %><a href="/manager/campaigns/<%= campaigns[i].campaign_id %>" title="<%= campaigns[i].epilot_campaign_name %>"><%= campaigns[i].epilot_campaign_name %></a> <% } else { %> <%= campaigns[i].epilot_campaign_name %> <% } %></td>
                 <td><% if(!utilities.empty(campaigns[i].user_id)) { %><a href="/manager/users/<%= campaigns[i].user.user_id %>" title=""><%= campaigns[i].user.user_firstname %> <%= campaigns[i].user.user_lastname %></a> <% } else { %> <%= campaigns[i].epilot_campaign_commercial %> <% } %></td>
                
                 <td><%= campaigns[i].epilot_campaign_nature %></td>

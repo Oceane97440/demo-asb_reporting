@@ -2653,8 +2653,13 @@ exports.reports = async (req, res) => {
                         advertiser_id: {
                             [Op.notIn]: advertiserExclus
                         }
+                    },
+                    {
+                        campaign_start_date: {
+                            [Op.lte]: dateNow
+                        }
                     }
-                ],
+                ],               
                 [Op.or]: [{
                     campaign_start_date: {
                         [Op.between]: [dateNow, '2040-12-31 23:59:00']
@@ -2684,6 +2689,8 @@ exports.reports = async (req, res) => {
             for(i = 0; i < nbCampaigns; i++) {
                 campaign_id = campaigns[i].campaign_id;
                 campaign_crypt = campaigns[i].campaign_crypt;
+                campaign_name = campaigns[i].campaign_name;
+                advertiser_name = campaigns[i].advertiser.advertiser_name;
 
                 var reportLocalStorage = localStorage.getItem('campaignID-' + campaign_id)
                 if( reportLocalStorage) {
@@ -2692,10 +2699,10 @@ exports.reports = async (req, res) => {
                    // var t = moment.duration(reportingData.reporting_end_date, "minutes");
                   console.log('CampaignId : ',campaign_id,' - RAPOORT : ',reporting_end_date)
                  // console.log(reportLocalStorage);
-                 campaignsList  = {'campaign_id' : campaign_id, 'campaign_crypt' : campaign_crypt, 'report' : '1', 'expiration' : moment(reporting_end_date).unix(), 'date_expi' : reporting_end_date}
+                 campaignsList  = {'campaign_id' : campaign_id, 'advertiser_name' : advertiser_name, 'campaign_name' : campaign_name, 'campaign_crypt' : campaign_crypt, 'report' : '1', 'expiration' : moment(reporting_end_date).unix(), 'date_expi' : reporting_end_date}
                 } else {
                   console.log('CampaignId : ',campaign_id)
-                  campaignsList = {'campaign_id' : campaign_id, 'campaign_crypt' : campaign_crypt, 'report' : '0', 'expiration' : moment().unix(), 'date_expi' : moment().format('YYYY-MM-DD HH:mm:ss')}
+                  campaignsList = {'campaign_id' : campaign_id, 'advertiser_name' : advertiser_name, 'campaign_name' : campaign_name, 'campaign_crypt' : campaign_crypt, 'report' : '0', 'expiration' : moment().unix(), 'date_expi' : moment().format('YYYY-MM-DD HH:mm:ss')}
                  
                 }
                 campaignsReports.push(campaignsList);
@@ -2707,8 +2714,10 @@ exports.reports = async (req, res) => {
                     return a.expiration - b.expiration;
                 });
 
-                //return res.json(200, campaignsReports); 
-                res.redirect('/rs/report/'+campaignsReports[0].campaign_crypt);
+                console.log(campaignsReports.length)
+
+               return res.json(200, campaignsReports); 
+                // res.redirect('/rs/report/'+campaignsReports[0].campaign_crypt);
             }
         });
 

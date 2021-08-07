@@ -107,9 +107,7 @@ exports.list = async (req, res) => {
 exports.view = async (req, res) => {
     try {
         const data = new Object();
-
-        // var insertionsIds = new Array();
-
+        
         var campaign_id = req.params.campaign_id;
         var insertion_id = req.params.insertion_id;
         var insertion = await ModelInsertions
@@ -177,7 +175,7 @@ exports.view = async (req, res) => {
                     }
                 }).then(async function (creativesList) {
                     data.creatives = creativesList;
-                    //console.log(creativesList)
+                    console.log(creativesList)
                 });
 
                 // Attribue les données de la campagne                   

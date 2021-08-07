@@ -285,9 +285,8 @@ exports.view = async (req, res) => {
                 //test si epilot_campaign existe
                 if (!Utilities.empty(epilot_campaign)) {
                     data.epilot_campaign = epilot_campaign;
-                }else{
+                } else {
                     data.epilot_campaign = 0;
-
                 } 
 
                 // Récupére les données des insertions de la campagne
@@ -330,7 +329,7 @@ exports.view = async (req, res) => {
                                         where: {
                                             insertion_id: insertionsIds
                                         },
-                                        group: 'creative_url'
+                                        group: ["creative_url","creative_mime_type","creative_click_url"]
                                     })
                                     .then(async function (creativesList) {
                                         data.creatives = creativesList;
