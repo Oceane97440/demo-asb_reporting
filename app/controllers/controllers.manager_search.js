@@ -24,11 +24,12 @@ const moment = require('moment');
 const AxiosFunction = require('../functions/functions.axios');
 
 // For the default version
+/*
 const algoliasearch = require('algoliasearch');
 
 const client = algoliasearch('7L0LDMH42V', 'bf57bd2367126fc4d4a48d8549f48f03');
 const index = client.initIndex('asb_project');
-
+*/
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
