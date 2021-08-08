@@ -335,7 +335,6 @@ exports.view = async (req, res) => {
                                         data.creatives = creativesList;
                                     });
                             }
-
                         }
                     });
 
@@ -535,4 +534,81 @@ exports.create_post = async (req, res) => {
         var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
+}
+
+exports.repartitions = async (req, res) => {
+ // Répartitions instreams
+ try {
+    const data = new Object();
+
+    // Affiche les campagnes se terminant aujourd'hui
+  /*
+    var dateLastMonday = moment().weekday(-7).format('YYYY-MM-DD'); // moment().add(1, 'days').format('YYYY-MM-DD');
+    var dateLastSunday = moment().weekday(-1).format('YYYY-MM-DD');
+
+    console.log('dateLastMonday : ',dateLastMonday);
+    console.log('dateLastSunday : ',dateLastSunday);
+*/
+
+
+var dateLastMonday = "2021-08-01";
+var dateLastSunday = "2021-08-08";
+
+
+
+
+    var campaigns = await ModelCampaigns
+            .findAll({
+                where: {                   
+                    [Op.or]: [{
+                        campaign_start_date: {
+                            [Op.between]: [dateLastMonday, dateLastSunday]
+                        }
+                    }, {
+                        campaign_end_date: {
+                            [Op.between]: [dateLastMonday, dateLastSunday]
+                        }
+                    }]
+                },
+                order: [['campaign_start_date','ASC']],            
+                include: [
+                    {
+                        model: ModelAdvertisers
+                    }
+                ]
+            })
+            .then(async function (campaigns) {
+                if (!campaigns) {
+                    return res
+                        .status(404)
+                        .render("manager/error.ejs", {statusCoded: 404});
+                }
+
+                // Créer le fil d'ariane
+                breadcrumb = new Array({
+                    'name': 'Campagnes',
+                    'link': 'campaigns'
+                }, {
+                    'name': 'Répartitions des instreams',
+                    'link': ''
+                });
+                data.breadcrumb = breadcrumb;
+
+                // Attribue les données de la campagne
+                data.campaigns = campaigns;
+                console.log(campaigns)
+                data.moment = moment;
+                data.utilities = Utilities;
+                
+                res.render('manager/campaigns/repartitions.ejs', data);
+            });
+
+
+} catch (error) {
+    console.log(error);
+    var statusCoded = error.response;
+   // res.render("manager/error.ejs", {statusCoded: statusCoded});
+}
+
+
 }

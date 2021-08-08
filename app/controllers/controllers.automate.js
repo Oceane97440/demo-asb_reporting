@@ -168,7 +168,7 @@ exports.advertisers = async (req, res) => {
 
         });
 
-        res.json('automate advertisers');
+        res.json('La liste des annonceurs a été mise à jour.');
 
     } catch (error) {
         console.error('Error : ' + error);
@@ -2647,8 +2647,7 @@ exports.reports = async (req, res) => {
       
          // Affiche les campagnes en ligne
          let campaigns = await ModelCampaigns.findAll({
-            where: {               
-               
+            where: {
                 [Op.and]: [
                     {
                         advertiser_id: {

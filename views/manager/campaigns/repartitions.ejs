@@ -1,0 +1,18 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+    <div class="col-sm-12" id="campaign-repartitions">
+
+        <div class="card">
+            <div class="card-header">
+                <h1>Répartitions des instreams</h1>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush"> 
+                <% for (let i = 0; i < campaigns.length; i++) { %>
+                    <li class="list-group-item"><%= campaigns[i].campaign_name %></li>
+                <% } %>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <%- include("../../layouts/manager/footer.ejs") -%>

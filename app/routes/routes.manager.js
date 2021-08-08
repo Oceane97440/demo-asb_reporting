@@ -88,6 +88,7 @@ router.get("/campaigns", manager_campaigns.index);
 router.get("/campaigns/list", manager_campaigns.list);
 router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
+router.get('/campaigns/repartitions', manager_campaigns.repartitions);
 router.get("/campaigns/:id", manager_campaigns.view);
 
 router.get('/campaigns/epilot/list', manager_epilot.list);
