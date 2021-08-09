@@ -183,7 +183,7 @@
                 $(document).ready(function () {
                      $.ajax({
                          method: "GET",
-                         url: '/rs/report/<%=campaigncrypt%>',
+                         url: '/r/report/<%=campaigncrypt%>',
                          success: function (data) {
                              $("#exampleModal").hide();
                              $('body').html(data);
@@ -200,7 +200,7 @@
                          $("#exampleModal").modal("show");
                          $.ajax({
                              method: "GET",
-                             url: '/rs/report/<%=campaigncrypt%>',
+                             url: '/r/report/<%=campaigncrypt%>',
                              success: function (data) {
                                  $("#exampleModal").hide();
                                  $('body').html(data)

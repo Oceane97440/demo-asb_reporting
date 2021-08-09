@@ -84,10 +84,7 @@
         <div class="col-12 mb-5">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Les statistiques de campagne sont mises à jour toutes les 2 heures.</strong>
-                <p>
-                    La prochaine mise à jour de cette campagne se fera le
-                    <strong><%= moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') %></strong>
-                </p>
+                <p>La prochaine mise à jour de cette campagne se fera le <strong> <%= moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') %></strong></p> 
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -126,7 +123,7 @@
                         <%= moment(reporting.campaign.campaign_start_date).format('DD/MM/YYYY') %>
                         au
                         <%= moment(reporting.campaign.campaign_end_date).format('DD/MM/YYYY') %></li>
-                    <!-- <li class="list-group-item"> <a href='/rs/<%=
+                    <!-- <li class="list-group-item"> <a href='/r/<%=
                         reporting.campaign.campaigncrypt %>/export' class="btn btn-xs btn-success
                         pull-left"> <i class="fas fa-file-excel"> </i> Télécharger (Excel) </a> </li>
                         -->
@@ -782,6 +779,7 @@
             }
         })
         //attention version en ligne (en tête)
+
     </script>
 
 </body>

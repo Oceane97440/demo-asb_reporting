@@ -301,8 +301,8 @@ const forecast = require('./app/routes/routes.api_forecast');
 app.use('/forecast', forecast);
 
 // action admin reporting
-const reporting = require('./app/routes/routes.api_report');
-app.use('/r/', reporting);
+// const reporting = require('./app/routes/routes.api_report');
+// app.use('/r/', reporting);
 
 
 // action liste campagne epilot
@@ -325,7 +325,7 @@ app.use('/app', application);
 
 // Gestion du reporting
 const reporting_rs = require('./app/routes/routes.reporting');
-app.use('/rs/', reporting_rs);
+app.use('/r/', reporting_rs);
 
 // Gestion du management
 const manager = require('./app/routes/routes.manager');
@@ -336,7 +336,7 @@ const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
 
 // Le serveur ecoute sur le port 3022
-app.set("port", process.env.PORT || 3022);
+app.set("port", process.env.PORT || 3000);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

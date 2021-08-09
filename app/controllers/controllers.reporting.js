@@ -33,436 +33,8 @@ exports.index = async (req, res) => {
     }
 }
 
-exports.test = async (req, res) => {
-    campaigncrypt = req.params.campaigncrypt;
-    // Convertie le fichier localStorage task_global en objet
-    filetasKID = 'campaignID-1914252-taskGlobalVU';
-    var dataLSTaskGlobalVU = localStorageTasks.getItem(filetasKID);
-    const objDefault = JSON.parse(dataLSTaskGlobalVU);
-    var dataSplitGlobalVU = objDefault.datafile;
 
-    var dataSplitGlobalVU = dataSplitGlobalVU.split(/\r?\n/);
-    if (dataSplitGlobalVU) {
-        var numberLine = dataSplitGlobalVU.length;
-        for (i = 1; i < numberLine; i++) {
-            // split push les données dans chaque colone
-            line = dataSplitGlobalVU[i].split(';');
-            if (!Utilities.empty(line[0])) {
-                console.log({vu: line[0]});
-            }
-        }
-    }
-
-    // Permet de faire l'addition
-    const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
-    // res.json(dataList);
-    /*
-        var impressions = new Array();
-        var clicks = new Array();
-        var complete = new Array();
-
-        const CampaignStartDate = [];
-        const CampaignEndtDate = [];
-        const CampaignId = [];
-        const CampaignName = [];
-        const InsertionId = [];
-        const InsertionName = [];
-        const FormatId = [];
-        const FormatName = [];
-        const SiteId = [];
-        const SiteName = [];
-        const Impressions = [];
-        const ClickRate = [];
-        const Clicks = [];
-        const Complete = [];
-
-        const dataList = new Object();
-        const formatObjects = new Object();
-
-        var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
-        if (dataSplitGlobal) {
-            var numberLine = dataSplitGlobal.length;
-            for (i = 1; i < numberLine; i++) {
-                // split push les données dans chaque colone
-                line = dataSplitGlobal[i].split(';');
-                if (!Utilities.empty(line[0])) {
-                    InsertionName.push(line[5]);
-                    dataList[i] = {
-                        'campaign_start_date': line[0],
-                        'campaign_end_date': line[1],
-                        'campaign_id': line[2],
-                        'campaign_name': line[3],
-                        'insertion_id': line[4],
-                        'insertion_name': line[5],
-                        'format_id': line[6],
-                        'format_name': line[7],
-                        'site_id': line[8],
-                        'site_name': line[9],
-                        'impressions': line[10],
-                        'click_rate': line[11],
-                        'clicks': line[12],
-                        'complete': line[13]
-                    }
-                }
-            }
-        }
-
-        //
-        if (dataList) {
-            // console.log('Nombre object : ',Object.keys(dataList).length) Initialise les
-            // formats
-
-            var formatHabillage = new Array();
-            var formatInterstitiel = new Array();
-            var formatGrandAngle = new Array();
-            var formatMasthead = new Array();
-            var formatInstream = new Array();
-            var formatRectangleVideo = new Array();
-            var formatLogo = new Array();
-            var formatNative = new Array();
-            var formatSlider = new Array();
-            var formatMea = new Array();
-            var formatSliderVideo = new Array();
-
-            // initialise les sites
-
-            var siteObjects = new Object();
-
-            var siteLINFO = new Array();
-            var siteLINFO_ANDROID = new Array();
-            var siteLINFO_IOS = new Array();
-            var siteANTENNEREUNION = new Array();
-            var siteDOMTOMJOB = new Array();
-            var siteIMMO974 = new Array();
-            var siteRODZAFER_LP = new Array();
-            var siteRODZAFER_ANDROID = new Array();
-            var siteRODZAFER_IOS = new Array();
-            var siteRODALI = new Array();
-            var siteORANGE_REUNION = new Array();
-            var siteTF1 = new Array();
-            var siteM6 = new Array();
-            var siteDAILYMOTION = new Array();
-
-            for (var index = 1; index <= Object.keys(dataList).length; index++) {
-                var insertion_name = dataList[index].insertion_name;
-                var site_id = dataList[index].site_id;
-                var site_name = dataList[index].site_name;
-
-                // Créer les tableaux des formats
-                if (insertion_name.match(/^\HABILLAGE{1}/igm)) {
-                    formatHabillage.push(index);
-                }
-                if (insertion_name.match(/^\INTERSTITIEL{1}/igm)) {
-                    formatInterstitiel.push(index);
-                }
-                if (insertion_name.match(/^\MASTHEAD{1}/igm)) {
-                    formatMasthead.push(index);
-                }
-                if (insertion_name.match(/^\GRAND ANGLE{1}/igm)) {
-                    formatGrandAngle.push(index);
-                }
-                if (insertion_name.match(/^\PREROLL|MIDROLL{1}/igm)) {
-                    formatInstream.push(index);
-                }
-                if (insertion_name.match(/^\RECTANGLE VIDEO{1}/igm)) {
-                    formatRectangleVideo.push(index);
-                }
-                if (insertion_name.match(/^\LOGO{1}/igm)) {
-                    formatLogo.push(index);
-                }
-                if (insertion_name.match(/^\NATIVE{1}/igm)) {
-                    formatNative.push(index);
-                }
-                if (insertion_name.match(/^\SLIDER{1}/igm)) {
-                    formatSlider.push(index);
-                }
-                if (insertion_name.match(/^\MEA{1}/igm)) {
-                    formatMea.push(index);
-                }
-                if (insertion_name.match(/^\SLIDER VIDEO{1}/igm)) {
-                    formatSliderVideo.push(index);
-                }
-
-                // Créer les tableaux des sites
-                if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-                    siteLINFO.push(index);
-                }
-                if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
-                    siteLINFO_ANDROID.push(index);
-                }
-                if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
-                    siteLINFO_IOS.push(index);
-                }
-                if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-                    siteANTENNEREUNION.push(index);
-                }
-                if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-                    siteDOMTOMJOB.push(index);
-                }
-                if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-                    siteIMMO974.push(index);
-                }
-                if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-                    siteRODZAFER_LP.push(index);
-                }
-                if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-                    siteRODZAFER_ANDROID.push(index);
-                }
-                if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                    siteRODZAFER_IOS.push(index);
-                }
-                if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-                    siteORANGE_REUNION.push(index);
-                }
-                if (site_name.match(/^\SM_TF1{1}/igm)) {
-                    siteTF1.push(index);
-                }
-                if (site_name.match(/^\SM_M6{1}/igm)) {
-                    siteM6.push(index);
-                }
-                if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-                    siteDAILYMOTION.push(index);
-                }
-                if (site_name.match(/^\SM_RODALI{1}/igm)) {
-                    siteRODALI.push(index);
-                }
-            }
-
-            // Function de trie et de récupération de données
-            function sortDataReport(formatSearch, dataObject) {
-                insertions = new Array();
-                impressions = new Array();
-                clicks = new Array();
-                complete = new Array();
-                sites = new Array();
-                sites_rename = new Array();
-
-                for (var jn = 0; jn < formatSearch.length; jn++) {
-                    key = formatSearch[jn];
-                    site_name = dataObject[key].site_name;
-                    insertion_name = dataObject[key].insertion_name;
-
-                    insertions.push(insertion_name);
-                    impressions.push(parseInt(dataObject[key].impressions));
-                    clicks.push(parseInt(dataObject[key].clicks));
-                    complete.push(parseInt(dataObject[key].complete));
-                    sites_rename.push(site_name);
-
-                    // Récupére le nom des sites et les classes Créer les tableaux des sites
-                    if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_TF1{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_M6{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-                        sites.push(site_name);
-                    }
-                    if (site_name.match(/^\SM_RODALI{1}/igm)) {
-                        sites.push(site_name);
-                    }
-
-                    if (site_name.match(/^\N\/A{1}/i)) {
-                        // Si N/A
-                        if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
-                            sites.push('SM_DOMTOMJOB');
-                        }
-                        if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
-                            sites.push('SM_LINFO-ANDROID');
-                        }
-                        if (insertion_name.match(/^\LINFO{1}/igm)) {
-                            sites.push('SM_LINFO.re');
-                        }
-                        if (insertion_name.match(/^\ANTENNE REUNION{1}/igm)) {
-                            sites.push('SM_ANTENNEREUNION');
-                        }
-                        if (insertion_name.match(/^\ORANGE REUNION{1}/igm)) {
-                            sites.push('SM_ANTENNEREUNION');
-                        }
-                        if (insertion_name.match(/^\RODZAFER{1}/igm)) {
-                            sites.push('SM_ANTENNEREUNION');
-                        }
-                        if (insertion_name.match(/^\RODALI{1}/igm)) {
-                            sites.push('SM_ANTENNEREUNION');
-                        }
-                        if (insertion_name.match(/^\IMMO974{1}/igm)) {
-                            sites.push('SM_IMMO974');
-                        }
-                        if (insertion_name.match(/^\TF1{1}/igm)) {
-                            sites.push('SM_TF1');
-                        }
-                        if (insertion_name.match(/^\M6{1}/igm)) {
-                            sites.push('SM_M6');
-                        }
-                        if (insertion_name.match(/^\DAILYMOTION{1}/igm)) {
-                            sites.push('SM_DAILYMOTION');
-                        }
-
-                        sites.push('SM_LINFO.re');
-                    }
-                }
-
-                // Gestion des sites
-                if (sites && (sites.length > 0)) {
-                    var siteUnique = new Array();
-                    var siteUniqueKey = new Array();
-                    var SiteUniqueCount = new Array();
-                    var siteImpressions = new Array();
-                    var siteClicks = new Array();
-                    var siteComplete = new Array();
-
-                    for (var kn = 0; kn < sites.length; kn++) {
-                        key = formatSearch[kn];
-                        impressionsSite = parseInt(dataObject[key].impressions);
-                        clicksSite = parseInt(dataObject[key].clicks);
-                        completeSite = parseInt(dataObject[key].complet);
-                        var nameSite = sites[kn];
-
-                        // Rentre les impressions
-                        if (siteUnique[nameSite]) {
-                            siteUnique[nameSite].splice(siteImpressions[nameSite].length, 1, key);
-                        } else {
-                            siteUnique[nameSite] = new Array();
-                            siteUnique[nameSite][0] = key;
-                            SiteUniqueCount.push(nameSite);
-                        }
-
-                        // Rentre les impressions
-                        if (siteImpressions[nameSite]) {
-                            siteImpressions[nameSite].splice(
-                                siteImpressions[nameSite].length,
-                                1,
-                                impressionsSite
-                            );
-                        } else {
-                            siteImpressions[nameSite] = new Array();
-                            siteImpressions[nameSite][0] = impressionsSite;
-                        }
-
-                        // Rentre les Clicks
-                        if (siteClicks[nameSite]) {
-                            siteClicks[nameSite].splice(siteClicks[nameSite].length, 1, clicksSite);
-                        } else {
-                            siteClicks[nameSite] = new Array();
-                            siteClicks[nameSite][0] = clicksSite;
-                        }
-
-                        // Rentre les Complete
-                        if (siteComplete[nameSite]) {
-                            siteComplete[nameSite].splice(siteComplete[nameSite].length, 1, completeSite);
-                        } else {
-                            siteComplete[nameSite] = new Array();
-                            siteComplete[nameSite][0] = completeSite;
-                        }
-                    }
-
-                    // Trie les données de sites
-                    if (siteUnique && (SiteUniqueCount.length > 0)) {
-                        siteList = new Object();
-                        for (var ln = 0; ln < SiteUniqueCount.length; ln++) {
-                            sN = SiteUniqueCount[ln];
-                            siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
-                            siteClicksSUM = siteClicks[sN].reduce(reducer);
-                            siteCompleteSUM = siteComplete[sN].reduce(reducer);
-                            var itemSite = {
-                                site: sN,
-                                impressions: siteImpressionsSUM,
-                                clicks: siteClicksSUM,
-                                complete: siteCompleteSUM
-                            };
-                            siteList[ln] = itemSite;
-                        }
-
-                    }
-
-                }
-
-                resultDateReport = {
-                    formatKey: formatSearch,
-                    // insertions : insertions, sites_rename : sites_rename, sites : sites,
-                    // siteUniqueCount : SiteUniqueCount, siteUnique : siteUnique, siteImpressions :
-                    // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
-                    siteList: siteList,
-                    // impressions : impressions,
-                    impressionsSUM: impressions.reduce(reducer),
-                    // clicks : clicks,
-                    clicksSUM: clicks.reduce(reducer),
-                    // complete : complete,
-                    completeSUM: complete.reduce(reducer)
-                };
-                return resultDateReport;
-            }
-
-            // Trie les formats et compatibilise les insertions et autres clics
-            if (!Utilities.empty(formatHabillage)) {
-                formatObjects.habillage = SmartFunction.sortDataReport(formatHabillage, dataList);
-            }
-            if (!Utilities.empty(formatInterstitiel)) {
-                formatObjects.interstitiel = SmartFunction.sortDataReport(formatInterstitiel, dataList);
-            }
-            if (!Utilities.empty(formatMasthead)) {
-                formatObjects.masthead = SmartFunction.sortDataReport(formatMasthead, dataList);
-            }
-            if (!Utilities.empty(formatGrandAngle)) {
-                formatObjects.grandangle = SmartFunction.sortDataReport(formatGrandAngle, dataList);
-            }
-            if (!Utilities.empty(formatInstream)) {
-                formatObjects.instream = SmartFunction.sortDataReport(formatInstream, dataList);
-            }
-            if (!Utilities.empty(formatRectangleVideo)) {
-                formatObjects.rectanglevideo = SmartFunction.sortDataReport(formatRectangleVideo, dataList);
-            }
-            if (!Utilities.empty(formatLogo)) {
-                formatObjects.logo = SmartFunction.sortDataReport(formatLogo, dataList);
-            }
-            if (!Utilities.empty(formatNative)) {
-                formatObjects.native = SmartFunction.sortDataReport(formatNative, dataList);
-            }
-            if (!Utilities.empty(formatSlider)) {
-                formatObjects.slider = SmartFunction.sortDataReport(formatSlider, dataList);
-            }
-            if (!Utilities.empty(formatMea)) {
-                formatObjects.mea = SmartFunction.sortDataReport(formatMea, dataList);
-            }
-            if (!Utilities.empty(formatSliderVideo)) {
-                formatObjects.slidervideo = SmartFunction.sortDataReport(formatSliderVideo, dataList);
-            }
-        }
-
-        res.json(formatObjects);
-        */
-}
+/*
 
 exports.generate = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
@@ -505,6 +77,8 @@ exports.generate = async (req, res) => {
             const nombre_diff_day = diff
                 .day
 
+
+                
                 res
                 .render("report/generate.ejs", {
                     advertiserid: campaign.advertiser_id,
@@ -516,6 +90,82 @@ exports.generate = async (req, res) => {
                     moment: moment,
                     nombre_diff_day: nombre_diff_day
                 });
+
+        });
+}
+*/
+
+exports.generate = async (req, res) => {
+    let campaigncrypt = req.params.campaigncrypt;
+
+    await ModelCampaigns
+        .findOne({
+            attributes: [
+                'campaign_id',
+                'campaign_name',
+                'campaign_crypt',
+                'advertiser_id',
+                'campaign_start_date',
+                'campaign_end_date'
+            ],
+            where: {
+                campaign_crypt: campaigncrypt
+            },
+            include: [
+                {
+                    model: ModelAdvertisers
+                }
+            ]
+        })
+        .then(async function (campaign) {
+            if (!campaign) 
+                return res
+                    .status(404)
+                    .render("error.ejs", {
+                        statusCoded: 404,
+                        campaigncrypt: campaigncrypt
+                    });
+            
+            const timestamp_startdate = Date.parse(campaign.campaign_start_date);
+            const date_now = Date.now();
+
+            var start_date = new Date(campaign.campaign_start_date);
+            var end_date = new Date(campaign.campaign_end_date);
+            var diff = Utilities.nbr_jours(start_date, end_date);
+
+            const nombre_diff_day = diff
+                .day
+            
+            var campaignid = campaign.campaign_id;
+
+                // Affiche le dernier rapport existant
+                var reportingDataStorage = localStorage.getItem('campaignID-' + campaignid);
+                
+                if(reportingDataStorage) {
+                   var reportingData = JSON.parse(reportingDataStorage);
+                
+                      res.render('report/template.ejs', {
+                        reporting: reportingData,
+                        moment: moment,
+                        utilities: Utilities,
+                        timestamp_startdate: timestamp_startdate,
+                        date_now: Date.now(),
+                        moment: moment,
+                        nombre_diff_day: nombre_diff_day
+                    }); 
+                } else {
+                    res
+                    .render("report/generate.ejs", {
+                        advertiserid: campaign.advertiser_id,
+                        campaignid: campaignid,
+                        campaigncrypt: campaign.campaign_crypt,
+                        campaign: campaign,
+                        timestamp_startdate: timestamp_startdate,
+                        date_now: date_now,
+                        moment: moment,
+                        nombre_diff_day: nombre_diff_day
+                    });
+                }
 
         });
 }
@@ -574,7 +224,9 @@ exports.report = async (req, res) => {
                     var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
                     // Si le localStorage existe -> affiche la data du localstorage
                     if (data_localStorage) {
-                        // var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
+                        //
+                        
+                        var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
 
                         // Si le localStorage exsite -> affiche la data du localstorage Convertie la
                         // date JSON en objet
@@ -606,14 +258,16 @@ exports.report = async (req, res) => {
                         if ((reporting_requete_date < reporting_end_date) || (campaign_end_date > reporting_start_date)) {
 
                             if (reporting_requete_date > reporting_end_date) {
-                                localStorage.removeItem('campaignID-' + campaignid);
+                               localStorage.removeItem('campaignID-' + campaignid);
+                               console.log('Supprime le localStorage de la task general')
+                                // Supprime les tasks IDs
                                 localStorageTasks.removeItem(
                                     'campaignID-' + campaignid + '-taskGlobal'
                                 );
                                 localStorageTasks.removeItem(
                                     'campaignID-' + campaignid + '-taskGlobalVU'
                                 );
-                                res.redirect('/rs/'+campaign_crypt);
+                                res.redirect('/r/'+campaign_crypt);
                             }
 
                             if (reporting_requete_date < reporting_end_date) {
@@ -640,7 +294,7 @@ exports.report = async (req, res) => {
                                     'campaignID-' + campaignid + '-taskGlobalVU'
                                 );
 
-                                res.redirect('/rs/'+campaign_crypt);
+                                res.redirect('/r/'+campaign_crypt);
                             } else {
                                 res.render('report/template.ejs', {
                                     reporting: reportingData,
@@ -649,19 +303,7 @@ exports.report = async (req, res) => {
                                 });
 
                             }
-
-                            /*
-                            // si le local storage expire; on supprime les precedents cache et les taskid
-                            localStorage.removeItem('campaignID-' + campaignid);
-                            localStorageTasks.removeItem(
-                                'campaignID-' + campaignid + '-taskGlobal'
-                            );
-                            localStorageTasks.removeItem(
-                                'campaignID-' + campaignid + '-taskGlobalVU'
-                            );
-
-                            res.redirect('/rs/${campaigncrypt}');
-                           */
+                          
                         }
 
                     } else {
@@ -709,17 +351,11 @@ exports.report = async (req, res) => {
                         } else {
                             endDate_last = endDate_last
                         }
-                        /*--- console.log(
-                            'insertion_end_date : ',
-                            insertion_end_date,
-                            ' - end_date_timezone :',
-                            endDate_last
-                        );*/
+                       
                         
                         // Mettre la date de début à 00:00:00 - les minutes lancent des erreurs
                         const StartDate_timezone = moment(start_date_timezone).format(
                             'YYYY-MM-DDT00:00:00'
-                            // 'YYYY-MM-DDTHH:mm:ss'
                         );
 
                         // Ajoute un jou en plus et mets les horaires à 00:00:00
@@ -845,12 +481,6 @@ exports.report = async (req, res) => {
 
                         console.log( 'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour)
 
-                        /* 
-                        if (!firstLinkTaskId && (diff.day < 31)) {  }else{
-                            firstLinkTaskId = null
-                        }
-                        */
-
                         if (!firstLinkTaskId) {
                             let firstLink = await AxiosFunction.getReportingData(
                                 'POST',
@@ -897,9 +527,7 @@ exports.report = async (req, res) => {
                                 requestVisitor_unique
                             );
 
-                            // si twoLink existe (!= de null) on save la taskId dans le localStorage sinon
-                            // twoLinkTaskId = vide
-
+                            // si twoLink existe (!= de null) on save la taskId dans le localStorage sinon twoLinkTaskId = vide
                             if (twoLink) {
                                 if (twoLink.status == 201) {
                                     localStorageTasks.setItem(
@@ -908,7 +536,6 @@ exports.report = async (req, res) => {
                                     );
                                     twoLinkTaskId = twoLink.data.taskId;
                                 }
-
                             } else {
                                 twoLinkTaskId = null
                             }
@@ -926,14 +553,6 @@ exports.report = async (req, res) => {
                             var taskId = firstLinkTaskId;
                             var taskId_uu = twoLinkTaskId;
 
-
-                            /*------------
-                           console.log('taskId', taskId);
-                            console.log("taskId_uu", taskId_uu);
-
-                            let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
-                            let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
-                            ----------*/
                             // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
                             // commence à 10sec
                             var time = 5000;
@@ -1019,10 +638,6 @@ exports.report = async (req, res) => {
                                         }
                                     }
 
-                                    /*--- if (dataLSTaskGlobal && dataLSTaskGlobalVU) {
-                                        //console.log('Creation de clearInterval(timerFile)');
-                                    }*/
-
                                 } else {
                                     // Stoppe l'intervalle timerFile
                                     clearInterval(timerFile);
@@ -1095,12 +710,8 @@ exports.report = async (req, res) => {
                                         }
                                     }
 
-                                 //---   console.log(ViewableImpressions);
-                                //---   console.log(dataList)
-                                    
                                     var formatObjects = new Object();
                                     if (dataList && (Object.keys(dataList).length > 0)) {
-                                        //--- console.log('Nombre object : ', Object.keys(dataList).length);
                                         // Initialise les formats
                                         var formatHabillage = new Array();
                                         var formatInterstitiel = new Array();
@@ -1136,8 +747,7 @@ exports.report = async (req, res) => {
                                             var insertion_name = dataList[index].insertion_name;
                                             var site_id = dataList[index].site_id;
                                             var site_name = dataList[index].site_name;
-                                            //--- console.log(insertion_name);
-
+                                            
                                             // Créer les tableaux des formats
                                             if (insertion_name.match(/HABILLAGE{1}/igm)) {
                                                 formatHabillage.push(index);
@@ -1312,8 +922,7 @@ exports.report = async (req, res) => {
                                     if ((!Utilities.empty(formatSlider) && !Utilities.empty(formatHabillage)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInterstitiel)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatGrandAngle)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatMasthead)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInstream)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatRectangleVideo))) {
                                         campaignImpressions_Viewable = campaignImpressions +
                                                 campaignViewableImpressions
-                                        //--- console.log('campaignImpressions_Viewable' + campaignImpressions_Viewable)
-
+                                       
                                         campaignCtrImpressions_Viewable = parseFloat(
                                             (campaignClicks / campaignImpressions_Viewable) * 100
                                         ).toFixed(2);
@@ -1322,7 +931,6 @@ exports.report = async (req, res) => {
                                         campaignCtrImpressions_Viewable = null
                                     }
 
-                                    //--- console.log('Campaign :', formatObjects.campaign);
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
                                         campaign_name: campaign.campaign_name,
@@ -1340,9 +948,7 @@ exports.report = async (req, res) => {
                                         viewable_impressions_sum: campaignImpressions_Viewable,
                                         ctr_viewable_impressions: campaignCtrImpressions_Viewable
                                     }
-                                    //--- console.log('formatObjects :', formatObjects.campaign);
-
-                                    //--- console.log('dataLSTaskGlobalVU ' + dataLSTaskGlobalVU)
+                                  
                                     // Récupére les infos des VU s'il existe
                                     if (!Utilities.empty(dataLSTaskGlobalVU)) {
                                         const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
@@ -1376,8 +982,12 @@ exports.report = async (req, res) => {
                                         .add(2, 'hours')
                                         .format('YYYY-MM-DD HH:m:s');
 
+                                    // Supprimer le localStorage précédent
+                                    if(localStorage.getItem('campaignID-' + campaignid)) { localStorage.removeItem('campaignID-' + campaignid); }
+
+                                    // Créer le localStorage
                                     localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
-                                    res.redirect('/rs/'+campaign_crypt);
+                                    res.redirect('/r/'+campaign_crypt);
                                 }
 
                             }, time);
