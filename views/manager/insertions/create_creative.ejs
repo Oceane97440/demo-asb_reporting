@@ -1,0 +1,113 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+    <!-- support-section start -->
+    <div class="col-xl-12 col-md-12">
+
+        <div class="card">
+            <form method="POST" action="/manager/creatives/create">
+            <div class="card-header">
+                <h5>Créer une insertions</h5>
+            </div>
+            <div class="card-body">
+
+
+                <div class="alert alert-primary">
+                    <div class="media align-items-center">
+                        <i class="feather icon-alert-circle h2"></i>
+                        <div class="media-body ml-3">
+                            Créer une insertion sur SMARTADSERVER en toute simplicité.
+                        </div>
+                    </div>
+                </div>
+                <% if (message) { %>
+                    <div class="alert alert-<%=message.type%>" role="alert">
+                        <%=message.intro%>:<%=message.message%>
+                      
+                    </div>
+        
+                    <% } %>
+
+                 
+                <div class="form-group">
+                    <label class="form-label" for="insertion">Insertion
+                    </label>
+                    <select
+                        class="form-control"
+                        id="insertion"
+                        name="insertion"
+                        required="required">                       
+                            <option value="<%= insertions.insertion_id %>">
+                                <%= insertions.insertion_name %>
+                            </option>
+                      
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="creative">Nom de la créative</label>
+                    <input
+                        type="text"
+                        name="creative"
+                        id="creative"
+                        class="form-control"
+                        placeholder="Saisissez le nom de la creatives"
+                        required="required"/>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label class="form-label" for="type">Type de créative
+                    </label>
+                    <select
+                        class="form-control"
+                        id="type"
+                        name="type"
+                        required="required">
+                        <option>Choisir une categorie</option>
+                            <option value="1">Image</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="url">Url de la créative
+                    </label>
+                    <input
+                        class="form-control"
+                        id="url"
+                        name="url"
+                        required="required"
+                        type="text"
+                        >
+                        
+                    </input>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="url_click">Url click
+                    </label>
+                    <input
+                    class="form-control"
+                    id="url_click"
+                    name="url_click"
+                    required="required"
+                    type="text"
+                    >
+                    
+                </input>
+                </div>
+
+               
+            </div>
+            <div class="card-footer">
+                <input
+                    type="submit"
+                    name="submit"
+                    class="btn btn-primary mr-2 btn-submit"
+                    value="Créer une nouvelle créative"/>
+            </div>
+        </form>
+        </div>
+
+    </div>
+
+    <%- include("../../layouts/manager/footer.ejs") -%>

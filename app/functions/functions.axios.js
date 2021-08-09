@@ -213,6 +213,9 @@ exports.postManage = async (method, data = null) => {
     case 'insertions':
       var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
       break;
+      case 'creatives':
+        var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives';
+        break;
 
     default:
 
@@ -256,6 +259,41 @@ exports.getManage = async (url_location) => {
       username: dbApi.SMART_login,
       password: dbApi.SMART_password
     },
+  })
+
+
+  return test;
+}
+
+exports.putManage = async (method, data = null) => {
+
+  var test;
+
+  console.log('method' + method)
+  console.log('data' + data)
+
+  switch (method) {
+    case 'insertiontargetings':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontargetings';
+      break;
+  
+    default:
+
+      break;
+  }
+
+  test = await axios({
+    method: 'PUT',
+    url: configApiUrl,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    },
+    auth: {
+      username: dbApi.SMART_login,
+      password: dbApi.SMART_password
+    },
+    data
   })
 
 

@@ -105,6 +105,9 @@ router.get("/insertions/list", manager_insertions.list);
 router.get("/insertions/create/:id", manager_insertions.create);
 router.post("/insertions/create", manager_insertions.create_post);
 
+router.get("/creatives/create/:id", manager_insertions.create_creative);
+router.post("/creatives/create", manager_insertions.create_creative_post);
+
 router.get("/search", manager_search.index);
 router.get("/search/import", manager_search.import);
 

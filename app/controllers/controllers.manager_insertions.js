@@ -52,6 +52,9 @@ const {
 const {
     insertions
 } = require('./controllers.automate');
+const {
+    types
+} = require('util');
 
 exports.index = async (req, res) => {
     try {
@@ -107,7 +110,7 @@ exports.list = async (req, res) => {
 exports.view = async (req, res) => {
     try {
         const data = new Object();
-        
+
         var campaign_id = req.params.campaign_id;
         var insertion_id = req.params.insertion_id;
         var insertion = await ModelInsertions
@@ -255,7 +258,7 @@ exports.create = async (req, res) => {
 
         data.packs = await ModelPacks_Smart.findAll({
 
-      
+
         });
 
         data.deliverytypes = await ModelDeliverytTypes.findAll({
@@ -289,11 +292,13 @@ exports.create_post = async (req, res) => {
         const campaign = req.body.campaign
         const insertion = req.body.insertion
         const format = req.body.format
-        const packs = req.body.pack
+        const packs = req.body.packs
         const start_date = req.body.campaign_start_date
         const end_date = req.body.campaign_end_date
         const delivery_type = req.body.delivery_type
         const priority = req.body.priority
+
+        console.log(req.body)
 
         if (!TEXT_REGEX.test(insertion)) {
             req.session.message = {
@@ -344,7 +349,7 @@ exports.create_post = async (req, res) => {
             "isPersonalizedAd": false,
             "insertionStatusId": 0,
             //"siteIds": site,
-            "packIds": packs,
+            "packIds": [packs],
             "insertionStatusId": 1,
             "startDate": start_date,
             "endDate": end_date,
@@ -405,7 +410,7 @@ exports.create_post = async (req, res) => {
                 "isPersonalizedAd": false,
                 "insertionStatusId": 0,
                 //"siteIds": site,
-                "packIds": packs,
+                "packIds": [packs],
                 "insertionStatusId": 1,
                 "startDate": start_date,
                 "endDate": end_date,
@@ -485,13 +490,32 @@ exports.create_post = async (req, res) => {
                         const insertion_id = insertion_get.data.id
 
 
+
+                        //Si le format Interstitiel est choisi et que il n'y a pas exclusion
+                        //on coche la case targeting cookie
+
+                        if (format === '79633' || format === '44152') {
+                            requestInsertionsTarget = {
+
+                                "insertionId": insertion_id,
+    
+                                "targetBrowserWithCookies": true
+    
+                            }
+                           var test = await AxiosFunction.putManage(
+                                'insertiontargetings',
+                                requestInsertionsTarget
+                            );
+                        }
+
+
                         await ModelInsertions.create({
                             insertion_id: insertion_id,
                             insertion_name: insertion,
                             campaign_id: campaign,
                             insertion_start_date: start_date,
                             insertion_end_date: end_date,
-                            pack_id:packs,
+                            pack_id: packs,
                             format_id: format,
                             delivery_type_id: delivery_type,
                             timezone_id: 4,
@@ -520,6 +544,197 @@ exports.create_post = async (req, res) => {
                         message: 'Insertions est déjà utilisé'
                     }
                     return res.redirect(`/manager/insertions/create/${campaign}`)
+                }
+
+
+            })
+
+
+
+
+
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response.status;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
+
+
+exports.create_creative = async (req, res) => {
+
+    try {
+        const data = new Object();
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Creatives',
+            'link': 'creatives/list'
+        }, {
+            'name': 'Ajouter une créative à l\'insertion',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
+
+        // Récupére l'ensemble les données
+
+
+        data.insertions = await ModelInsertions.findOne({
+            where: {
+                insertion_id: req.params.id
+            },
+
+        });
+
+
+
+        res.render('manager/insertions/create_creative.ejs', data);
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
+
+exports.create_creative_post = async (req, res) => {
+    try {
+        const insertion = req.body.insertion
+        const creative = req.body.creative
+        const type = req.body.type
+        const url = req.body.url
+        const url_click = req.body.url_click
+
+        console.log(req.body)
+
+
+        if (!TEXT_REGEX.test(creative)) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Erreur',
+                message: 'Le nombre de caratère est limité à 50'
+            }
+            return res.redirect(`/manager/creatives/create/${insertion}`)
+
+        }
+
+        if (insertion == '' || creative == '' || type == '' || url == '' || url_click == '') {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'Les champs doivent être complétés'
+            }
+            return res.redirect(`/manager/creatives/create/${insertion}`)
+        }
+
+
+
+        var requestCreatives = {
+
+            "InsertionId": insertion,
+
+            "Name": creative,
+
+            "FileName": creative,
+
+            "Url": url,
+
+            "clickUrl": url_click,
+
+            "Width": 350,
+
+            "Height": 250,
+
+            "CreativeTypeId": type,
+
+            "IsActivated": "true"
+
+        }
+
+
+
+        await ModelCreatives
+            .findOne({
+                attributes: ['creative_name'],
+                where: {
+                    creative_name: creative
+                }
+            }).then(async function (creativeFound) {
+
+                console.log(creativeFound)
+
+
+                if (!creativeFound) {
+
+
+                    let creative_create = await AxiosFunction.postManage(
+                        'creatives',
+                        requestCreatives
+                    );
+
+                    console.log(creative_create)
+
+                    if (creative_create.headers.location) {
+
+
+                        var url_location = creative_create.headers.location
+
+                        console.log(url_location)
+
+
+                        var creative_get = await AxiosFunction.getManage(url_location);
+
+
+
+                        const creative_id = creative_get.data.id
+                        const file_name = creative_get.data.fileName
+                        const creative_mime_type = creative_get.data.mimeType
+                        const creative_width = creative_get.data.width
+                        const creative_height = creative_get.data.height
+
+
+
+
+
+                        await ModelCreatives.create({
+                            creative_id: creative_id,
+                            creative_name: creative,
+                            file_name: file_name,
+                            insertion_id: insertion,
+                            creative_url: url,
+                            creative_click_url: url_click,
+                            creative_width: creative_width,
+                            creative_height: creative_height,
+                            creative_mime_type: creative_mime_type,
+                            creative_type_id: type,
+                            creative_activated: 1,
+                            creative_archived: 0
+
+                        });
+
+                        req.session.message = {
+                            type: 'success',
+                            intro: 'Ok',
+                            message: 'La créative a été crée dans SMARTADSERVEUR',
+
+                        }
+                        return res.redirect(`/manager/creative/create/${insertion}`)
+                    }
+
+
+
+
+
+                } else {
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'Erreur',
+                        message: 'Créatives est déjà utilisé'
+                    }
+                    return res.redirect(`/manager/creatives/create/${insertion}`)
                 }
 
 

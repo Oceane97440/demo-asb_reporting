@@ -50,17 +50,17 @@ const Creatives = sequelize.define('creatives', {
         allowNull: true
     },
 
-    creatives_type_id: {
+    creative_type_id: {
         type: Sequelize.INTEGER(),
         allowNull: true
     },
     
-    creatives_activated: {
+    creative_activated: {
         type: Sequelize.TINYINT(),
         allowNull: true
     },
 
-    creatives_archived: {
+    creative_archived: {
         type: Sequelize.TINYINT(),
         allowNull: true
     }

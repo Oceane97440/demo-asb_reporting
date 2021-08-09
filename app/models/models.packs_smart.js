@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/_config.database').sequelize;
 
 const Packs = sequelize.define('packs_smart', {
-    packs_smart_id: {
+    pack_smart_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true

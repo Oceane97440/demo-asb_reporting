@@ -176,7 +176,39 @@
                                     <div class="col-sm-12" id="insertion-creatives">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h3>Créatives</h3>
+                                                <div class="row">
+                                                    <div class="col-sm-9">
+                                                        <h3>Créatives</h3>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <a
+                                                            href="/manager/creatives/create/<%= insertion.insertion_id %>"
+                                                            target="_blank"
+                                                            class="btn btn-info btn-sm"
+                                                            data-automate-btn="campaign-update"
+                                                            title=" Mettre à jour la campagne">
+                                                            <i class="far fa-plus-square"></i>
+                                                            Ajouter
+                                                        </a>
+                                                        <a
+                                                            href="#"
+                                                            target="_blank"
+                                                            class="btn btn-warning btn-sm"
+                                                            data-automate-btn="campaign-update"
+                                                            title=" Mettre à jour la campagne">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a
+                                                            href="#"
+                                                            target="_blank"
+                                                            class="btn btn-danger btn-sm"
+                                                            data-automate-btn="campaign-update"
+                                                            title=" Mettre à jour la campagne">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a>
+                                                    </div>
+
+                                                </div>
                                             </div>
                                             <div class="card-body">
                                                 <% if(creatives && (creatives.length > 0)) { %>
