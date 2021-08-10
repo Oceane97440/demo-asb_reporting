@@ -60,11 +60,20 @@ exports.index = async (req, res) => {
         });
         data.breadcrumb = breadcrumb;
 
-        data.advertisers = await ModelAdvertisers.findAll({
+       advertisers_last = await ModelAdvertisers.findAll({
+        limit: 10,
             include: [{
                 model: ModelCampaigns
             }]
+        },{
+            order: [              
+                ['advertiser_id', 'DESC']
+            ]
         });
+
+        console.log(advertisers_last.length)
+
+
         data.moment = moment;
 
         res.render('manager/advertisers/index.ejs', data);

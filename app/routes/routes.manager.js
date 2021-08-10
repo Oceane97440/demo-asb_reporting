@@ -11,6 +11,7 @@ const manager_sites = require("../controllers/controllers.manager_sites");
 const manager_users = require("../controllers/controllers.manager_users");
 const manager_forecast = require("../controllers/controllers.manager_forecast");
 const manager_search = require("../controllers/controllers.manager_search");
+const manager_charts = require("../controllers/controllers.manager_charts");
 
 /**
 * Middleware to know if user is connected
@@ -110,6 +111,9 @@ router.post("/creatives/create", manager_insertions.create_creative_post);
 
 router.get("/search", manager_search.index);
 router.get("/search/import", manager_search.import);
+
+router.get("/charts", manager_charts.index);
+router.get("/charts/campaigns", manager_charts.campaigns);
 
 
 

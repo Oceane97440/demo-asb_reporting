@@ -172,8 +172,7 @@ exports.generate = async (req, res) => {
 
 exports.report = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
-    //console.log(campaigncrypt)
-
+    
     try {
         // Réinitialise l'objet Format
         let formatObjects = new Object();
@@ -227,6 +226,17 @@ exports.report = async (req, res) => {
                         //
                         
                         var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
+                        /*
+                        // Supprimer le cache si on force la regénération du rapport
+                        let mode = req.query.mode;                       
+                        if(mode) {
+                            console.log('Force le recalcul de la génartion du rapport');
+                            localStorage.removeItem('campaignID-' + campaignid);
+                            // Supprime les tasks IDs
+                            localStorageTasks.removeItem('campaignID-' + campaignid + '-taskGlobal');
+                            localStorageTasks.removeItem('campaignID-' + campaignid + '-taskGlobalVU');
+                        }
+                        */
 
                         // Si le localStorage exsite -> affiche la data du localstorage Convertie la
                         // date JSON en objet
@@ -238,21 +248,6 @@ exports.report = async (req, res) => {
 
                         var campaign_end_date = reportingData.campaign.campaign_end_date;
                         var campaign_start_date = reportingData.campaign.campaign_start_date;
-
-                        /*--- console.log('DateNOW reporting_requete_date :', reporting_requete_date);
-                        console.log('Date reporting_start_date :', reporting_start_date);
-                        console.log('Date reporting_end_date :', reporting_end_date);
-
-                        console.log('campaign_start_date :', campaign_start_date);
-                        console.log('campaign_end_date :', campaign_end_date);
-
-                        console.log('---------------------');
-                        console.log(
-                            'reporting_requete_date < reporting_end_date : ',
-                            reporting_requete_date,
-                            ' < ',
-                            reporting_end_date
-                        );*/
 
                         // si la date d'expiration est < au moment de la requête on garde la cache
                         if ((reporting_requete_date < reporting_end_date) || (campaign_end_date > reporting_start_date)) {

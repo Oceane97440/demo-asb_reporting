@@ -78,14 +78,44 @@ exports.index = async (req, res) => {
             .add(5, 'days')
             .format('YYYY-MM-DD');
 
-          // Affiche les annonceurs
-          const advertiserExclus = new Array(418935,427952,409707,425912,425914,438979,439470,439506,439511,439512,439513,439514,439515,440117,440118,440121,440122,440124,440126,445117,455371,455384,320778,417243,414097,411820,320778);
-      
+        // Affiche les annonceurs
+        const advertiserExclus = new Array(
+            418935,
+            427952,
+            409707,
+            425912,
+            425914,
+            438979,
+            439470,
+            439506,
+            439511,
+            439512,
+            439513,
+            439514,
+            439515,
+            440117,
+            440118,
+            440121,
+            440122,
+            440124,
+            440126,
+            445117,
+            455371,
+            455384,
+            320778,
+            417243,
+            414097,
+            411820,
+            320778
+        );
 
         data.campaigns_today = await ModelCampaigns.findAll({
             where: {
                 campaign_end_date: {
-                    [Op.between]:  [dateNow + ' 00:00:00', dateNow + ' 23:59:00']
+                    [Op.between]: [
+                        dateNow + ' 00:00:00',
+                        dateNow + ' 23:59:00'
+                    ]
                 }
             },
             include: [
@@ -99,7 +129,10 @@ exports.index = async (req, res) => {
         data.campaigns_tomorrow = await ModelCampaigns.findAll({
             where: {
                 campaign_end_date: {
-                    [Op.between]:  [dateTomorrow + ' 00:00:00', dateTomorrow + ' 23:59:00']
+                    [Op.between]: [
+                        dateTomorrow + ' 00:00:00',
+                        dateTomorrow + ' 23:59:00'
+                    ]
                 }
             },
             include: [
@@ -123,12 +156,14 @@ exports.index = async (req, res) => {
                     campaign_start_date: {
                         [Op.between]:[dateNow, date5Days]
                     }
-                },*/ {
-                    campaign_end_date: {
-                        [Op.between]: [dateNow, date5Days]
+                },*/
+                    {
+                        campaign_end_date: {
+                            [Op.between]: [dateNow, date5Days]
+                        }
                     }
-                }]
-                
+                ]
+
             },
             order: [
                 // Will escape title and validate DESC against a list of valid direction
@@ -142,11 +177,9 @@ exports.index = async (req, res) => {
             ]
         });
 
-
-      
         // Affiche les campagnes en ligne
         data.campaigns_online = await ModelCampaigns.findAll({
-            where: {               
+            where: {
                 [Op.and]: [
                     {
                         advertiser_id: {
@@ -154,19 +187,21 @@ exports.index = async (req, res) => {
                         }
                     }
                 ],
-                [Op.or]: [{
-                    campaign_start_date: {
-                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                [Op.or]: [
+                    {
+                        campaign_start_date: {
+                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                        }
+                    }, {
+                        campaign_end_date: {
+                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                        }
                     }
-                }, {
-                    campaign_end_date: {
-                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                    }
-                }]
+                ]
             },
-            
-                order: [['campaign_end_date','ASC']],
-            
+            order: [
+                ['campaign_end_date', 'ASC']
+            ],
             include: [
                 {
                     model: ModelAdvertisers
@@ -179,7 +214,7 @@ exports.index = async (req, res) => {
         console.log('dateNow :', dateNow)
         console.log('dateTomorrow :', dateTomorrow)
         console.log('date5Days :', date5Days, ' - ', data.campaigns_nextdays.length)
-       
+
         res.render('manager/campaigns/index.ejs', data);
     } catch (error) {
         console.log(error);
@@ -287,7 +322,7 @@ exports.view = async (req, res) => {
                     data.epilot_campaign = epilot_campaign;
                 } else {
                     data.epilot_campaign = 0;
-                } 
+                }
 
                 // Récupére les données des insertions de la campagne
                 var insertionList = await ModelInsertions
@@ -325,11 +360,13 @@ exports.view = async (req, res) => {
                                 // Récupére les données des creatives de l'insertion
                                 var creativesList = await ModelCreatives
                                     .findAll({
-                                        attributes:["creative_url","creative_mime_type","creative_click_url"],
+                                        attributes: [
+                                            "creative_url", "creative_mime_type", "creative_click_url"
+                                        ],
                                         where: {
                                             insertion_id: insertionsIds
                                         },
-                                        group: ["creative_url","creative_mime_type","creative_click_url"]
+                                        group: ["creative_url", "creative_mime_type", "creative_click_url"]
                                     })
                                     .then(async function (creativesList) {
                                         data.creatives = creativesList;
@@ -374,8 +411,8 @@ exports.create = async (req, res) => {
         // Récupére l'ensemble des annonceurs
         var advertisers = await ModelAdvertisers
             .findAll({
-                where:{
-                    advertiser_archived : 0
+                where: {
+                    advertiser_archived: 0
                 },
                 order: [
                     // Will escape title and validate DESC against a list of valid direction
@@ -537,12 +574,12 @@ exports.create_post = async (req, res) => {
 }
 
 exports.repartitions = async (req, res) => {
- // Répartitions instreams
- try {
-    const data = new Object();
+    // Répartitions instreams
+    try {
+        const data = new Object();
 
-    // Affiche les campagnes se terminant aujourd'hui
-  /*
+        // Affiche les campagnes se terminant aujourd'hui
+        /*
     var dateLastMonday = moment().weekday(-7).format('YYYY-MM-DD'); // moment().add(1, 'days').format('YYYY-MM-DD');
     var dateLastSunday = moment().weekday(-1).format('YYYY-MM-DD');
 
@@ -550,27 +587,27 @@ exports.repartitions = async (req, res) => {
     console.log('dateLastSunday : ',dateLastSunday);
 */
 
+        var dateLastMonday = "2021-08-01";
+        var dateLastSunday = "2021-08-08";
 
-var dateLastMonday = "2021-08-01";
-var dateLastSunday = "2021-08-08";
-
-
-
-
-    var campaigns = await ModelCampaigns
+        var campaigns = await ModelCampaigns
             .findAll({
-                where: {                   
-                    [Op.or]: [{
-                        campaign_start_date: {
-                            [Op.between]: [dateLastMonday, dateLastSunday]
+                where: {
+                    [Op.or]: [
+                        {
+                            campaign_start_date: {
+                                [Op.between]: [dateLastMonday, dateLastSunday]
+                            }
+                        }, {
+                            campaign_end_date: {
+                                [Op.between]: [dateLastMonday, dateLastSunday]
+                            }
                         }
-                    }, {
-                        campaign_end_date: {
-                            [Op.between]: [dateLastMonday, dateLastSunday]
-                        }
-                    }]
+                    ]
                 },
-                order: [['campaign_start_date','ASC']],            
+                order: [
+                    ['campaign_start_date', 'ASC']
+                ],
                 include: [
                     {
                         model: ModelAdvertisers
@@ -599,16 +636,14 @@ var dateLastSunday = "2021-08-08";
                 console.log(campaigns)
                 data.moment = moment;
                 data.utilities = Utilities;
-                
+
                 res.render('manager/campaigns/repartitions.ejs', data);
             });
 
-
-} catch (error) {
-    console.log(error);
-    var statusCoded = error.response;
-   // res.render("manager/error.ejs", {statusCoded: statusCoded});
-}
-
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        // res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
 
 }
