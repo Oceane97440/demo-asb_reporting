@@ -276,7 +276,9 @@ exports.putManage = async (method, data = null) => {
     case 'insertiontargetings':
       var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontargetings';
       break;
-  
+      case 'insertiontemplates':
+        var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontemplates';
+        break;
     default:
 
       break;

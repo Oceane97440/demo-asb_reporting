@@ -26,6 +26,19 @@
         
                     <% } %>
 
+                    <div class="form-group">
+                        <label class="form-label" for="template">Templates
+                        </label>
+                        <select
+                            class="form-control"
+                            id="template"
+                            name="template"
+                            required="required">   
+                                <option value="<%= formats_templates.template.template_id %>"><%= formats_templates.template.template_name %></option>
+                             
+                          
+                        </select>
+                    </div>
                  
                 <div class="form-group">
                     <label class="form-label" for="insertion">Insertion
@@ -65,6 +78,13 @@
                         required="required">
                         <option>Choisir une categorie</option>
                             <option value="1">Image</option>
+                            <option value="2">Video</option>
+                            <option value="3">Html5</option>
+                            <option value="6">Pixel</option>
+                            <option value="7">EncodedVideo</option>
+                            <option value="5">Autres</option>
+
+
                     </select>
                 </div>
 

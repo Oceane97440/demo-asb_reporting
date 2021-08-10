@@ -42,7 +42,9 @@ const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
 const ModelDeliverytTypes = require("../models/models.deliverytypes")
 const ModelPacks_Smart = require("../models/models.packs_smart")
-
+const ModelFormatsTemplates = require("../models/models.formats_templates")
+const ModelTemplates = require("../models/models.templates")
+const ModelInsertionsTemplates = require("../models/models.insertions_templates")
 
 const TEXT_REGEX = /^.{1,51}$/
 
@@ -498,11 +500,11 @@ exports.create_post = async (req, res) => {
                             requestInsertionsTarget = {
 
                                 "insertionId": insertion_id,
-    
+
                                 "targetBrowserWithCookies": true
-    
+
                             }
-                           var test = await AxiosFunction.putManage(
+                            await AxiosFunction.putManage(
                                 'insertiontargetings',
                                 requestInsertionsTarget
                             );
@@ -588,6 +590,23 @@ exports.create_creative = async (req, res) => {
 
         });
 
+        data.formats_templates = await ModelFormatsTemplates.findOne({
+            where: {
+                format_id: data.insertions.format_id
+            },
+
+            include: [{
+                    model: ModelFormats
+
+                },
+                {
+                    model: ModelTemplates,
+
+                }
+            ]
+
+        });
+
 
 
         res.render('manager/insertions/create_creative.ejs', data);
@@ -604,11 +623,11 @@ exports.create_creative_post = async (req, res) => {
     try {
         const insertion = req.body.insertion
         const creative = req.body.creative
+        const template = req.body.template
         const type = req.body.type
         const url = req.body.url
         const url_click = req.body.url_click
 
-        console.log(req.body)
 
 
         if (!TEXT_REGEX.test(creative)) {
@@ -664,8 +683,6 @@ exports.create_creative_post = async (req, res) => {
                 }
             }).then(async function (creativeFound) {
 
-                console.log(creativeFound)
-
 
                 if (!creativeFound) {
 
@@ -675,28 +692,19 @@ exports.create_creative_post = async (req, res) => {
                         requestCreatives
                     );
 
-                    console.log(creative_create)
-
                     if (creative_create.headers.location) {
 
 
                         var url_location = creative_create.headers.location
 
-                        console.log(url_location)
-
 
                         var creative_get = await AxiosFunction.getManage(url_location);
-
-
 
                         const creative_id = creative_get.data.id
                         const file_name = creative_get.data.fileName
                         const creative_mime_type = creative_get.data.mimeType
                         const creative_width = creative_get.data.width
                         const creative_height = creative_get.data.height
-
-
-
 
 
                         await ModelCreatives.create({
@@ -715,13 +723,40 @@ exports.create_creative_post = async (req, res) => {
 
                         });
 
-                        req.session.message = {
-                            type: 'success',
-                            intro: 'Ok',
-                            message: 'La créative a été crée dans SMARTADSERVEUR',
+                        const templateId = await ModelTemplates.findOne({
+                            where: {
+                                template_id: template
+                            }
+                        })
 
-                        }
-                        return res.redirect(`/manager/creative/create/${insertion}`)
+                            var RequestInsertionTemplate = {
+                                "InsertionId": insertion,
+                                "ParameterValues": templateId.parameter_default_values,
+                                "TemplateId": templateId.template_id
+                            }
+
+                            await AxiosFunction.putManage(
+                                'insertiontemplates',
+                                RequestInsertionTemplate
+                            );
+
+                            await ModelInsertionsTemplates.create({
+                                insertion_id: insertion,
+                                parameter_value: templateId.parameter_default_values,
+                                template_id: templateId.template_id,
+
+
+                            });
+                            req.session.message = {
+                                type: 'success',
+                                intro: 'Ok',
+                                message: 'La créative a été crée dans SMARTADSERVEUR',
+
+                            }
+                            return res.redirect(`/manager/creatives/create/${insertion}`)
+                        
+
+
                     }
 
 

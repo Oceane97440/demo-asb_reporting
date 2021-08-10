@@ -91,8 +91,9 @@ groups_formats.hasMany(groups_formats_types, {
 });
 
 // un format posséde un ou plusieurs templates : un template posséde un à plusieurs formats
-formats.hasMany(formatstemplates, {
-    foreignKey: 'format_id',
+
+formatstemplates.belongsTo(templates, {
+    foreignKey: 'template_id',
     onDelete: 'cascade',
     hooks: true
 });
@@ -102,6 +103,23 @@ templates.hasMany(formatstemplates, {
     onDelete: 'cascade',
     hooks: true
 });
+
+formatstemplates.belongsTo(formats, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+formats.hasMany(formatstemplates, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+
+
+
 
 campaigns.belongsTo(advertisers, {
     foreignKey: 'advertiser_id',
