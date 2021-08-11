@@ -154,22 +154,8 @@
                 </thead>
                 <tbody class="text-center">
                     <tr>
-                        <% if(reporting.slider) { %>
-
-
-                        <% if(reporting.campaign.viewable_impressions > 0) { %>
-
-                        <td><%= utilities.numStr(reporting.campaign.viewable_impressions) %></td>
-
-                        
-                        <% }%>
-                        <% } else{%>
+                      
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
-
-                        <% }%>
-
-
-
                         <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
                         <td><%= reporting.campaign.ctr %>%</td>
                         <% if(reporting.campaign.vu > 0) { %>
@@ -273,7 +259,7 @@
                     <% if(reporting.slider) { %>
                     <tr>
                         <td class="text-left">SLIDER</td>
-                        <td><%= utilities.numStr(reporting.slider.viewable_impressions) %></td>
+                        <td><%= utilities.numStr(reporting.slider.impressions) %></td>
                         <td><%= utilities.numStr(reporting.slider.clicks) %></td>
                         <td class="text-center"><%= reporting.slider.ctr %>%</td>
                     </tr>
@@ -299,16 +285,7 @@
                 <tfoot <stron <tfoot class="text-center table-dark">
                     <tr>
                         <td class="text-left"><strong>Total</strong>
-                        </td>
-
-                        <% if(reporting.slider) { %>
-                        <% if(reporting.campaign.viewable_impressions > 0) { %>
-                        <td><%= utilities.numStr(reporting.campaign.viewable_impressions) %></td>
-                        <% }%>
-                        <% } else{%>
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
-
-                        <% }%>
                         <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
                         <td><%= reporting.campaign.ctr %>%</td>
                     </tr>
@@ -612,7 +589,7 @@
                     <% for(i=0; i < Object.keys(reporting.slider.siteList).length; i++) { %>
                     <tr>
                         <td class="text-left"><%= reporting.slider.siteList[i].site %></td>
-                        <td><%= utilities.numStr(reporting.slider.siteList[i].viewable_impressions) %></td>
+                        <td><%= utilities.numStr(reporting.slider.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.slider.siteList[i].clicks) %></td>
                         <td><%= reporting.slider.siteList[i].ctr %>%</td>
                     </tr>
@@ -623,7 +600,7 @@
                         <td class="text-left">
                             <strong>Total</strong>
                         </td>
-                        <td><%= utilities.numStr(reporting.slider.viewable_impressions) %></td>
+                        <td><%= utilities.numStr(reporting.slider.impressions) %></td>
                         <td><%= utilities.numStr(reporting.slider.clicks) %></td>
                         <td><%= reporting.slider.ctr %>%</td>
                     </tr>

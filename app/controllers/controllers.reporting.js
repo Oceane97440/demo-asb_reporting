@@ -682,6 +682,7 @@ exports.report = async (req, res) => {
                                                     Clicks.push(parseInt(line[12]));
                                                     Complete.push(parseInt(line[13]));
                                                     ViewableImpressions.push(parseInt(line[14]));
+                                                    var insertions_type = line[5]
 
                                                     dataList[i] = {
                                                         'campaign_start_date': line[0],
@@ -698,12 +699,25 @@ exports.report = async (req, res) => {
                                                         'click_rate': parseInt(line[11]),
                                                         'clicks': parseInt(line[12]),
                                                         'complete': parseInt(line[13]),
-                                                        'viewable_impressions': parseInt(line[14])
+                                                       // 'viewable_impressions': parseInt(line[14])
                                                     }
+
+                                                    if (insertions_type.match(/SLIDER{1}/igm)) {
+                                                        dataList[i]['impressions'] = parseInt(line[14]);
+                                                    }else{
+                                                        dataList[i]['impressions'] = parseInt(line[10]);
+
+                                                    }
+
+                                                   console.log(dataList[i])
+
                                                 }
                                             }
                                         }
                                     }
+                                    console.log('ViewableImpressions  '+ViewableImpressions)
+                                    console.log('Impressions  '+Impressions)
+
 
                                     var formatObjects = new Object();
                                     if (dataList && (Object.keys(dataList).length > 0)) {
@@ -877,9 +891,13 @@ exports.report = async (req, res) => {
                                     // Ajoute les infos de la campagne
                                     if (Impressions.length > 0) {
                                         campaignImpressions = Impressions.reduce(reducer);
+                                        console.log("campaignImpressions" + campaignImpressions)
+
                                     } else {
                                         campaignImpressions = null;
                                     }
+
+
                                     if (Clicks.length > 0) {
                                         campaignClicks = Clicks.reduce(reducer);
                                     } else {
@@ -898,11 +916,11 @@ exports.report = async (req, res) => {
                                         campaignComplete = null;
                                     }
 
-                                    if (ViewableImpressions.length > 0) {
+                                  /*  if (ViewableImpressions.length > 0) {
                                         campaignViewableImpressions = ViewableImpressions.reduce(reducer);
                                     } else {
                                         campaignViewableImpressions = null;
-                                    }
+                                    }*/
 
                                     if (!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions)) {
                                         campaignCtrComplete = parseFloat(
@@ -914,7 +932,7 @@ exports.report = async (req, res) => {
 
                                     // si il y a le slider et d'autre format on fait la somme des 2 (impression
                                     // total + viewable impression) et le CTR sur la somme des 2
-                                    if ((!Utilities.empty(formatSlider) && !Utilities.empty(formatHabillage)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInterstitiel)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatGrandAngle)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatMasthead)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInstream)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatRectangleVideo))) {
+                                  /*  if ((!Utilities.empty(formatSlider) && !Utilities.empty(formatHabillage)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInterstitiel)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatGrandAngle)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatMasthead)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInstream)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatRectangleVideo))) {
                                         campaignImpressions_Viewable = campaignImpressions +
                                                 campaignViewableImpressions
                                        
@@ -924,7 +942,7 @@ exports.report = async (req, res) => {
                                     } else {
                                         campaignImpressions_Viewable = null;
                                         campaignCtrImpressions_Viewable = null
-                                    }
+                                    }*/
 
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
@@ -939,11 +957,11 @@ exports.report = async (req, res) => {
                                         ctr: campaignCtr,
                                         complete: campaignComplete,
                                         ctrComplete: campaignCtrComplete,
-                                        viewable_impressions: campaignViewableImpressions,
-                                        viewable_impressions_sum: campaignImpressions_Viewable,
-                                        ctr_viewable_impressions: campaignCtrImpressions_Viewable
+                                        //viewable_impressions: campaignViewableImpressions,
+                                       // viewable_impressions_sum: campaignImpressions_Viewable,
+                                       // ctr_viewable_impressions: campaignCtrImpressions_Viewable
                                     }
-                                  
+
                                     // Récupére les infos des VU s'il existe
                                     if (!Utilities.empty(dataLSTaskGlobalVU)) {
                                         const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
@@ -983,6 +1001,8 @@ exports.report = async (req, res) => {
                                     // Créer le localStorage
                                     localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
                                     res.redirect('/r/'+campaign_crypt);
+
+
                                 }
 
                             }, time);
