@@ -47,8 +47,16 @@
                                     <i class="material-icons-two-tone">thermostat</i>
                                     Volume Réservé</span>
                                 :
-                                <%= utilities.numStr(epilot_campaign.epilot_campaign_volume) %>
+                                <%= utilities.numStr(epilot_campaign.epilot_campaign_volume)  %>
                                 impressions
+                            </li>
+
+                            <li class="list-group-item">
+                                <span class="labelname">
+                                    <i class="material-icons-two-tone">euro_symbol</i>
+                                    Budget réservé</span>
+                                :
+                                <%= epilot_campaign.epilot_campaign_budget_net %> </strong> €
                             </li>
 
                             <li class="list-group-item">
@@ -144,19 +152,18 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <% if(reporting) { %>
-                                                    <div class="row">
-                                                        <div class="col-md-8 col-sm-12">
-                                                          
+                                                        <div class="row">
+                                                            <div class="col-md-8 col-sm-12">
+
                                                                 <%- include("../inc/table_campaigns_report.ejs") -%>
-                                                               
 
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div id="campaign-chart"></div>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-4">
-                                                                <div id="campaign-chart"></div>
-                                                            </div>
+
                                                         </div>
-
-                                                    </div>
                                                     <% } else { %>
                                                         <div class="alert alert-warning" role="alert">
                                                             <svg

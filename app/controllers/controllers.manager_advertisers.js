@@ -3,6 +3,7 @@ const https = require('https');
 const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
+const Utilities = require("../functions/functions.utilities");
 
 // const request = require('request'); const bodyParser =
 // require('body-parser');
@@ -305,19 +306,19 @@ exports.view = async (req, res) => {
                 });
                 data.breadcrumb = breadcrumb;
 
-
-
                 // Récupére les données des campagnes epilot  
-                const epilot_campaigns = await ModelEpilotCampaigns.findAll({
+                const epilot_campaigns = await ModelEpilotCampaigns.findOne({
                     attributes: [
-                        'advertiser_id',
-                        [sequelize.fn('sum', sequelize.col('epilot_campaign_budget_net')), 'campaign_budget']
+                       [sequelize.fn('sum', sequelize.col('epilot_campaign_budget_net')), 'campaign_budget']
                     ],
-                    group: 'advertiser_id'
+                    where: {
+                        advertiser_id: advertiser_id
+                    },
+                    raw : true
                 });
                 data.epilot_campaigns = epilot_campaigns;
 
-                console.log(epilot_campaigns.length);
+                console.log(epilot_campaigns);
 
 
                 // Récupére les données des campagnes
@@ -333,6 +334,7 @@ exports.view = async (req, res) => {
                 // Attribue les données de la campagne
                 data.campaigns = campaigns
                 data.advertiser = advertiser;
+                data.utilities = Utilities;
                 data.moment = moment;
                 res.render('manager/advertisers/view.ejs', data);
             });

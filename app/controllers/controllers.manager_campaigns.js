@@ -311,7 +311,7 @@ exports.view = async (req, res) => {
 
                 // Récupére les données des campagnes epilot
                 var epilot_campaign = await ModelEpilotCampaigns.findOne({
-                    attributes: ['epilot_campaign_volume'],
+                    attributes: ['epilot_campaign_volume','epilot_campaign_budget_net'],
                     where: {
                         campaign_id: campaign_id
                     }

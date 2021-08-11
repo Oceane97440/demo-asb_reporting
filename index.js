@@ -354,7 +354,7 @@ const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
 
 // Le serveur ecoute sur le port 3022
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3001);
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

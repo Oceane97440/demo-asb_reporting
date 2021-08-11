@@ -1,5 +1,59 @@
 'use strict';
 $(document).ready(function() {
+
+var chartCampaignUrl = 'http://localhost:3000/manager/charts/campaigns';
+var chartAdvertiserUrl = 'http://localhost:3000/manager/charts/advertisers';
+
+/*
+* Chart Campaigns - 
+*/
+
+$.getJSON(chartCampaignUrl, function(response) {
+var options = {
+        chart: {
+          type: 'line',
+          animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 800,
+            animateGradually: {
+                enabled: true,
+                delay: 150
+            },
+            dynamicAnimation: {
+                enabled: true,
+                speed: 20
+            }
+        }
+        },
+        stroke: {
+        curve: 'smooth',
+      },
+        series: [{
+          name: response.lastYear.year,
+          data: response.lastYear.result
+        },
+       {
+        name: response.nowYear.year,
+        data: response.nowYear.result
+        }],
+        xaxis: {
+          categories : response.month
+          // ['janvier','février','mars','avril','mai','juin','juillet','aout','septembre','octobre','novembre','décembre']
+        }
+      }
+      
+    var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
+    chart.render();
+
+});
+    
+
+});
+
+
+/*
+$(document).ready(function() {
     setTimeout(function() {
         floatchart()
     }, 700);
@@ -64,10 +118,7 @@ function floatchart() {
         chart.render();
     });
 
-
-
-    
-
-
     // [ satisfaction-chart ] end
 }
+
+*/

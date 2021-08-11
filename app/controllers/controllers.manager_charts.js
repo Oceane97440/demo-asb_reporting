@@ -124,11 +124,10 @@ exports.campaigns = async (req, res) => {
             }
            //  console.log(campaigns);
             if(campaigns.length > 0) {
-                const data = new Object();
-
                 var dataArray = new Array();
                 var lastYear = new Array();
                 var nowYear = new Array();
+                var month = new Array();
 
                  // Trie les campagnes selon la date d'expiration
                 campaigns.sort(function (a, b) {
@@ -140,21 +139,15 @@ exports.campaigns = async (req, res) => {
                     var campaignMonth = campaigns[i].month;
                     var campaignCount = campaigns[i].count;
 
-                  //  console.log(campaigns[i].month,' - ',campaigns[i].year, ' - count : ', campaigns[i].count);
-                   
                     if(dateYearLast == campaignYear) { lastYear.push(campaignCount); }
                     if(dateYearNow == campaignYear) { nowYear.push(campaignCount); }
                 }
+                var month =  new Array('janvier','février','mars','avril','mai','juin','juillet', 'aout','septembre','octobre','novembre','décembre');
 
-                console.log(lastYear);
-                console.log(nowYear);
-
-                return res
-                .status(200)
-                .json(campaigns);
+                var data = { 'lastYear' : { year : dateYearLast, result : lastYear} ,  'nowYear' : { year : dateYearNow, result : nowYear} , month : month}
+               
+                return res.status(200).json(data);
             }
-
-
            
          });
 

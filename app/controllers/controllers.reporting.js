@@ -677,6 +677,8 @@ exports.report = async (req, res) => {
                                                 // split push les données dans chaque colone
                                                 line = dataSplitGlobal[i].split(';');
                                                 if (!Utilities.empty(line[0])) {
+                                                    insertion_type = line[5];
+
                                                     InsertionName.push(line[5]);
                                                     Impressions.push(parseInt(line[10]));
                                                     Clicks.push(parseInt(line[12]));
@@ -694,12 +696,22 @@ exports.report = async (req, res) => {
                                                         'format_name': line[7],
                                                         'site_id': line[8],
                                                         'site_name': line[9],
-                                                        'impressions': parseInt(line[10]),
+                                                       // 'impressions': parseInt(line[10]),
                                                         'click_rate': parseInt(line[11]),
                                                         'clicks': parseInt(line[12]),
                                                         'complete': parseInt(line[13]),
-                                                        'viewable_impressions': parseInt(line[14])
+                                                       // 'viewable_impressions': parseInt(line[14])
                                                     }
+
+                                                    if (insertion_type.match(/SLIDER{1}/igm)) {
+                                                        dataList[i]['impressions'] = parseInt(line[14]);
+                                                    } else {
+                                                        dataList[i]['impressions'] = parseInt(line[10]);
+
+                                                    }
+
+
+
                                                 }
                                             }
                                         }
