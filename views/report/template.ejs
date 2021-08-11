@@ -60,7 +60,7 @@
         }
 
         .list-group-flush li strong {
-            width: 20%;
+            /* width: 100%; */
             display: inline-block;
         }
 
@@ -84,7 +84,8 @@
         <div class="col-12 mb-5">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Les statistiques de campagne sont mises à jour toutes les 2 heures.</strong>
-                <p>La prochaine mise à jour de cette campagne se fera le <strong> <%= moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') %></strong></p> 
+                <p>La prochaine mise à jour de cette campagne se fera le <strong>
+                        <%= moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') %></strong></p>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -97,7 +98,7 @@
                 <a href="https://antennesb.fr/"><img src="/admin/photos/logo.png" alt="logo_antenne" /></a>
             </div>
             <div class="col-md-9">
-                <h2 class="position-absolute top-50 start-50">Rapport de la campagne :
+                <h2 class="top-50 start-50">Rapport de la campagne :
                     <%= reporting.campaign.campaign_name %></h2>
             </div>
         </div>
@@ -136,6 +137,10 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>Bilan global de la campagne</strong>
             </h3>
+        </div>
+
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr class="text-center">
@@ -154,22 +159,8 @@
                 </thead>
                 <tbody class="text-center">
                     <tr>
-                        <% if(reporting.slider) { %>
 
-
-                        <% if(reporting.campaign.viewable_impressions > 0) { %>
-
-                        <td><%= utilities.numStr(reporting.campaign.viewable_impressions) %></td>
-
-                        
-                        <% }%>
-                        <% } else{%>
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
-
-                        <% }%>
-
-
-
                         <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
                         <td><%= reporting.campaign.ctr %>%</td>
                         <% if(reporting.campaign.vu > 0) { %>
@@ -194,6 +185,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>Par format</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -273,7 +267,7 @@
                     <% if(reporting.slider) { %>
                     <tr>
                         <td class="text-left">SLIDER</td>
-                        <td><%= utilities.numStr(reporting.slider.viewable_impressions) %></td>
+                        <td><%= utilities.numStr(reporting.slider.impressions) %></td>
                         <td><%= utilities.numStr(reporting.slider.clicks) %></td>
                         <td class="text-center"><%= reporting.slider.ctr %>%</td>
                     </tr>
@@ -299,16 +293,7 @@
                 <tfoot <stron <tfoot class="text-center table-dark">
                     <tr>
                         <td class="text-left"><strong>Total</strong>
-                        </td>
-
-                        <% if(reporting.slider) { %>
-                        <% if(reporting.campaign.viewable_impressions > 0) { %>
-                        <td><%= utilities.numStr(reporting.campaign.viewable_impressions) %></td>
-                        <% }%>
-                        <% } else{%>
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
-
-                        <% }%>
                         <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
                         <td><%= reporting.campaign.ctr %>%</td>
                     </tr>
@@ -322,6 +307,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>HABILLAGE / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -361,6 +349,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>INTERSTITIEL / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -376,7 +367,7 @@
                         <td class="text-left"><%= reporting.interstitiel.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.interstitiel.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.interstitiel.siteList[i].clicks) %></td>
-                        <td ><%= reporting.interstitiel.siteList[i].ctr %>%</td>
+                        <td><%= reporting.interstitiel.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -400,6 +391,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>INSTREAM / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -442,6 +436,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>MASTHEAD / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -481,6 +478,10 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>GRAND ANGLE / par site</strong>
             </h3>
+        </div>
+
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -520,6 +521,8 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>RECTANGLE VIDEO / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -560,6 +563,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>NATIVE / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -599,6 +605,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>SLIDER / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -612,7 +621,7 @@
                     <% for(i=0; i < Object.keys(reporting.slider.siteList).length; i++) { %>
                     <tr>
                         <td class="text-left"><%= reporting.slider.siteList[i].site %></td>
-                        <td><%= utilities.numStr(reporting.slider.siteList[i].viewable_impressions) %></td>
+                        <td><%= utilities.numStr(reporting.slider.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.slider.siteList[i].clicks) %></td>
                         <td><%= reporting.slider.siteList[i].ctr %>%</td>
                     </tr>
@@ -623,7 +632,7 @@
                         <td class="text-left">
                             <strong>Total</strong>
                         </td>
-                        <td><%= utilities.numStr(reporting.slider.viewable_impressions) %></td>
+                        <td><%= utilities.numStr(reporting.slider.impressions) %></td>
                         <td><%= utilities.numStr(reporting.slider.clicks) %></td>
                         <td><%= reporting.slider.ctr %>%</td>
                     </tr>
@@ -638,6 +647,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>MISE EN AVANT / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -677,6 +689,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>SLIDER VIDEO / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -717,6 +732,9 @@
                 <i class="fas fa-chart-line"></i>
                 <strong>LOGO / par site</strong>
             </h3>
+        </div>
+        <div class="table-responsive-md">
+
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -750,6 +768,48 @@
         </div>
         <% } %>
 
+        <% if(reporting.clickcommand) { %>
+            <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+                <h3 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    <strong>CLICK COMMAND / par site</strong>
+                </h3>
+            </div>
+            <div class="table-responsive-md">
+    
+                <table class="table">
+                    <thead class="text-center thead-dark">
+                        <tr>
+                            <th class="text-left">Sites</th>
+                            <th>Impressions</th>
+                            <th>Clics</th>
+                            <th>Taux de clics</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <% for(i=0; i < Object.keys(reporting.clickcommand.siteList).length; i++) { %>
+                        <tr>
+                            <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
+                            <td class="text-right"><%= reporting.clickcommand.siteList[i].ctr %>%</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                    <tfoot class="text-center table-dark">
+                        <tr>
+                            <td class="text-left">
+                                <strong>Total</strong>
+                            </td>
+                            <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
+                            <td class="text-right"><%= reporting.clickcommand.ctr %>%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <% } %>
+
 
 
     </div>
@@ -779,7 +839,6 @@
             }
         })
         //attention version en ligne (en tête)
-
     </script>
 
 </body>

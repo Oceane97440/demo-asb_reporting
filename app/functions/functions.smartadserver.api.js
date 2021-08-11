@@ -119,7 +119,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
     insertions = new Array();
     impressions = new Array();
-    viewable_impressions = new Array();
+  //  viewable_impressions = new Array();
     clicks = new Array();
     complete = new Array();
     sites = new Array();
@@ -134,7 +134,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         impressions.push(parseInt(dataObject[key].impressions));
         clicks.push(parseInt(dataObject[key].clicks));
         complete.push(parseInt(dataObject[key].complete));
-        viewable_impressions.push(parseInt(dataObject[key].viewable_impressions));
+      //  viewable_impressions.push(parseInt(dataObject[key].viewable_impressions));
         sites_rename.push(site_name);
 
         // Récupére le nom des sites et les classes Créer les tableaux des sites
@@ -236,7 +236,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             impressionsSite = parseInt(dataObject[key].impressions);
             clicksSite = parseInt(dataObject[key].clicks);
             completeSite = parseInt(dataObject[key].complete);
-            viewableimpressionsSite = parseInt(dataObject[key].viewable_impressions);
+          //  viewableimpressionsSite = parseInt(dataObject[key].viewable_impressions);
 
             var nameSite = sites[kn];
 
@@ -278,7 +278,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             }
 
             // Rentre les Viewable Impression
-            if (siteViewableImpressions[nameSite]) {
+           /* if (siteViewableImpressions[nameSite]) {
                 siteViewableImpressions[nameSite].splice(
                     siteViewableImpressions[nameSite].length,
                     1,
@@ -287,7 +287,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             } else {
                 siteViewableImpressions[nameSite] = new Array();
                 siteViewableImpressions[nameSite][0] = viewableimpressionsSite;
-            }
+            }*/
         }
 
         // Trie les données de sites
@@ -298,7 +298,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
                 siteClicksSUM = siteClicks[sN].reduce(reducer);
                 siteCompleteSUM = siteComplete[sN].reduce(reducer);
-                siteViewableImpressionsSUM = siteViewableImpressions[sN].reduce(reducer);
+                //siteViewableImpressionsSUM = siteViewableImpressions[sN].reduce(reducer);
 
                 siteCtrSUM = parseFloat((siteClicksSUM / siteImpressionsSUM) * 100).toFixed(2);
                 siteCtrComplete = parseFloat((siteCompleteSUM / siteImpressionsSUM) * 100).toFixed(
@@ -312,9 +312,10 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                     ctr: siteCtrSUM,
                     complete: siteCompleteSUM,
                     ctrComplete: siteCtrComplete,
-                    viewable_impressions: siteViewableImpressionsSUM
+                   // viewable_impressions: siteViewableImpressionsSUM
                 };
                 siteList[ln] = itemSite;
+
             }
 
         }
@@ -325,7 +326,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
     clicksSUM = clicks.reduce(reducer);
     ctrSUM = eval((clicksSUM / impressionsSUM) * 100).toFixed(2);
     completeSUM = complete.reduce(reducer);
-    viewable_impressionsSUM = viewable_impressions.reduce(reducer);
+  //  viewable_impressionsSUM = viewable_impressions.reduce(reducer);
 
     ctrComplete = eval((completeSUM / impressionsSUM) * 100).toFixed(2);
 
@@ -343,7 +344,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         // complete : complete,
         complete: completeSUM,
         ctrComplete: ctrComplete,
-        viewable_impressions: viewable_impressionsSUM
+      //  viewable_impressions: viewable_impressionsSUM
 
     };
 

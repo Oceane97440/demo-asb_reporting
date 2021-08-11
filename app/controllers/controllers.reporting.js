@@ -276,7 +276,6 @@ exports.report = async (req, res) => {
                             // campaign_end_date > reporting_start_date
 
                         } else {
-                            // console.log('Supprime et relance la génération du rapport') On relance la
                             // génération de rapport si aucune de ses conditions n'est correct
                             // - La campagne n'est pas terminée
                             if (reporting_requete_date < campaign_end_date) {
@@ -302,7 +301,7 @@ exports.report = async (req, res) => {
                         }
 
                     } else {
-                        // console.log('data_localStorage no existe'); Récupére les dates des insertions
+
                         insertion_start_date = await ModelInsertions.max('insertion_start_date', {
                             where: {
                                 campaign_id: campaignid
@@ -313,9 +312,9 @@ exports.report = async (req, res) => {
                                 campaign_id: campaignid
                             }
                         });
-                        console.log('insertion_start_date : ', insertion_start_date);
+                       // console.log('insertion_start_date : ', insertion_start_date);
 
-                        console.log('insertion_end_date : ', insertion_end_date);
+                      //  console.log('insertion_end_date : ', insertion_end_date);
 
                         const now = new Date();
                         const timestamp_datenow = now.getTime();
@@ -413,7 +412,7 @@ exports.report = async (req, res) => {
                             ]
                         }
 
-                        console.log('REQUEST GLOBAL : ', requestReporting)
+                        //console.log('REQUEST GLOBAL : ', requestReporting)
 
                         // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
                         // entre la date de fin campagne et date aujourd'hui  var date_now = Date.now();
@@ -457,8 +456,8 @@ exports.report = async (req, res) => {
                             ]
                         }
 
-                        console.log('requestVisitor_unique.startDate : ',requestVisitor_unique.startDate);
-                        console.log('requestVisitor_unique.endDate : ',requestVisitor_unique.endDate);
+                       // console.log('requestVisitor_unique.startDate : ',requestVisitor_unique.startDate);
+                      //  console.log('requestVisitor_unique.endDate : ',requestVisitor_unique.endDate);
 
                         // 1) Requête POST
                         var dataLSTaskGlobal = localStorageTasks.getItem(
@@ -474,7 +473,7 @@ exports.report = async (req, res) => {
                             'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour
                         );
 
-                        console.log( 'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour)
+                        //console.log( 'campaignID-' + campaignid + '-firstLink-' + cacheStorageIDHour)
 
                         if (!firstLinkTaskId) {
                             let firstLink = await AxiosFunction.getReportingData(
@@ -496,7 +495,7 @@ exports.report = async (req, res) => {
                                         firstLink.data.taskId
                                     );
                                     firstLinkTaskId = firstLink.data.taskId;
-                                    console.log('firstLink.data.taskId : ',firstLink.data.taskId)
+                                    //console.log('firstLink.data.taskId : ',firstLink.data.taskId)
                                 }
                             } else {
                                 firstLinkTaskId = null;
@@ -510,11 +509,11 @@ exports.report = async (req, res) => {
                             'campaignID-' + campaignid + '-twoLink-' + cacheStorageIDHour
                         );
 
-                        console.log('twoLinkTaskId : ',twoLinkTaskId);
+                        //console.log('twoLinkTaskId : ',twoLinkTaskId);
 
                         if ((!twoLinkTaskId) && (NbDayCampaign < 31) && (requestVisitor_unique)) {
-                            console.log('twoLinkTaskId :', twoLinkTaskId)
-                            console.log('requestVisitor_unique :', requestVisitor_unique)
+                            //console.log('twoLinkTaskId :', twoLinkTaskId)
+                           // console.log('requestVisitor_unique :', requestVisitor_unique)
 
                             let twoLink = await AxiosFunction.getReportingData(
                                 'POST',
@@ -592,7 +591,7 @@ exports.report = async (req, res) => {
                                                     'campaignID-' + campaignid + '-taskGlobal',
                                                     JSON.stringify(dataLSTaskGlobal)
                                                 );
-                                                console.log('Creation de dataLSTaskGlobal');
+                                               // console.log('Creation de dataLSTaskGlobal');
                                             }
                                         }
                                     }
@@ -606,7 +605,7 @@ exports.report = async (req, res) => {
 
                                         let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
 
-                                        console.log('fourLink : ', fourLink.data.lastTaskInstance.jobProgress)
+                                       // console.log('fourLink : ', fourLink.data.lastTaskInstance.jobProgress)
 
                                         if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
 
@@ -670,8 +669,8 @@ exports.report = async (req, res) => {
                                     var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
                                     if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
                                         var numberLine = dataSplitGlobal.length;
-                                        console.log('numberLine :', numberLine);
-                                        console.log('dataSplitGlobal :', dataSplitGlobal);
+                                        //console.log('numberLine :', numberLine);
+                                        //console.log('dataSplitGlobal :', dataSplitGlobal);
                                         if (numberLine > 1) {
                                             for (i = 1; i < numberLine; i++) {
                                                 // split push les données dans chaque colone
@@ -684,6 +683,7 @@ exports.report = async (req, res) => {
                                                     Clicks.push(parseInt(line[12]));
                                                     Complete.push(parseInt(line[13]));
                                                     ViewableImpressions.push(parseInt(line[14]));
+                                                    var insertions_type = line[5]
 
                                                     dataList[i] = {
                                                         'campaign_start_date': line[0],
@@ -711,11 +711,11 @@ exports.report = async (req, res) => {
                                                     }
 
 
-
                                                 }
                                             }
                                         }
                                     }
+                        
 
                                     var formatObjects = new Object();
                                     if (dataList && (Object.keys(dataList).length > 0)) {
@@ -731,6 +731,7 @@ exports.report = async (req, res) => {
                                         var formatSlider = new Array();
                                         var formatMea = new Array();
                                         var formatSliderVideo = new Array();
+                                        var formatClickCommand = new Array();
 
                                         // initialise les sites
                                         var siteObjects = new Object();
@@ -789,6 +790,10 @@ exports.report = async (req, res) => {
                                             if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
                                                 formatSliderVideo.push(index);
                                             }
+                                            if (insertion_name.match(/CLICK COMMAND{1}/igm)) {
+                                                formatClickCommand.push(index);
+                                            }
+
 
                                             // Créer les tableaux des sites
                                             if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
@@ -884,14 +889,24 @@ exports.report = async (req, res) => {
                                                 dataList
                                             );
                                         }
+
+                                        if (!Utilities.empty(formatClickCommand)) {
+                                            formatObjects.clickcommand = SmartFunction.sortDataReport(
+                                                formatClickCommand,
+                                                dataList
+                                            );
+                                        }
                                     }
 
                                     // Ajoute les infos de la campagne
                                     if (Impressions.length > 0) {
                                         campaignImpressions = Impressions.reduce(reducer);
+
                                     } else {
                                         campaignImpressions = null;
                                     }
+
+
                                     if (Clicks.length > 0) {
                                         campaignClicks = Clicks.reduce(reducer);
                                     } else {
@@ -910,11 +925,11 @@ exports.report = async (req, res) => {
                                         campaignComplete = null;
                                     }
 
-                                    if (ViewableImpressions.length > 0) {
+                                  /*  if (ViewableImpressions.length > 0) {
                                         campaignViewableImpressions = ViewableImpressions.reduce(reducer);
                                     } else {
                                         campaignViewableImpressions = null;
-                                    }
+                                    }*/
 
                                     if (!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions)) {
                                         campaignCtrComplete = parseFloat(
@@ -926,7 +941,7 @@ exports.report = async (req, res) => {
 
                                     // si il y a le slider et d'autre format on fait la somme des 2 (impression
                                     // total + viewable impression) et le CTR sur la somme des 2
-                                    if ((!Utilities.empty(formatSlider) && !Utilities.empty(formatHabillage)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInterstitiel)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatGrandAngle)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatMasthead)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInstream)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatRectangleVideo))) {
+                                  /*  if ((!Utilities.empty(formatSlider) && !Utilities.empty(formatHabillage)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInterstitiel)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatGrandAngle)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatMasthead)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatInstream)) || (!Utilities.empty(formatSlider) && !Utilities.empty(formatRectangleVideo))) {
                                         campaignImpressions_Viewable = campaignImpressions +
                                                 campaignViewableImpressions
                                        
@@ -936,7 +951,7 @@ exports.report = async (req, res) => {
                                     } else {
                                         campaignImpressions_Viewable = null;
                                         campaignCtrImpressions_Viewable = null
-                                    }
+                                    }*/
 
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
@@ -951,11 +966,11 @@ exports.report = async (req, res) => {
                                         ctr: campaignCtr,
                                         complete: campaignComplete,
                                         ctrComplete: campaignCtrComplete,
-                                        viewable_impressions: campaignViewableImpressions,
-                                        viewable_impressions_sum: campaignImpressions_Viewable,
-                                        ctr_viewable_impressions: campaignCtrImpressions_Viewable
+                                        //viewable_impressions: campaignViewableImpressions,
+                                       // viewable_impressions_sum: campaignImpressions_Viewable,
+                                       // ctr_viewable_impressions: campaignCtrImpressions_Viewable
                                     }
-                                  
+
                                     // Récupére les infos des VU s'il existe
                                     if (!Utilities.empty(dataLSTaskGlobalVU)) {
                                         const objDefaultVU = JSON.parse(dataLSTaskGlobalVU);
@@ -995,6 +1010,8 @@ exports.report = async (req, res) => {
                                     // Créer le localStorage
                                     localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
                                     res.redirect('/r/'+campaign_crypt);
+
+
                                 }
 
                             }, time);
