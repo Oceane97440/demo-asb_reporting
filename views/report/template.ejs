@@ -768,6 +768,48 @@
         </div>
         <% } %>
 
+        <% if(reporting.clickcommand) { %>
+            <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+                <h3 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    <strong>CLICK COMMAND / par site</strong>
+                </h3>
+            </div>
+            <div class="table-responsive-md">
+    
+                <table class="table">
+                    <thead class="text-center thead-dark">
+                        <tr>
+                            <th class="text-left">Sites</th>
+                            <th>Impressions</th>
+                            <th>Clics</th>
+                            <th>Taux de clics</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <% for(i=0; i < Object.keys(reporting.clickcommand.siteList).length; i++) { %>
+                        <tr>
+                            <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
+                            <td class="text-right"><%= reporting.clickcommand.siteList[i].ctr %>%</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                    <tfoot class="text-center table-dark">
+                        <tr>
+                            <td class="text-left">
+                                <strong>Total</strong>
+                            </td>
+                            <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
+                            <td class="text-right"><%= reporting.clickcommand.ctr %>%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <% } %>
+
 
 
     </div>

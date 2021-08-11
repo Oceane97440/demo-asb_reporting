@@ -316,7 +316,6 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 };
                 siteList[ln] = itemSite;
 
-                console.log(siteList[ln])
             }
 
         }
