@@ -2770,7 +2770,7 @@ exports.reports = async (req, res) => {
                             'campaign_start_date': campaign_start_date,
                             'campaign_end_date': campaign_end_date,
                             'report': '1',
-                            //'timestamp_expiration': moment(reporting_end_date).unix(),
+                           'timestamp_expiration': moment(reporting_end_date).unix(),
                             'date_expiration': reporting_end_date
                         }
                     } else {
@@ -2783,7 +2783,7 @@ exports.reports = async (req, res) => {
                             'campaign_start_date': campaign_start_date,
                             'campaign_end_date': campaign_end_date,
                             'report': '0',
-                           // 'timestamp_expiration': moment().unix(),
+                            'timestamp_expiration': moment().unix(),
                             'date_expiration': moment().format('YYYY-MM-DD HH:mm:ss')
                         }
                     }
