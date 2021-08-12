@@ -62,12 +62,26 @@ h1
 
 
 }
+#button{
+    background-color: #4cd7ef;
+    font-weight: bold;
 
+
+}
+#button:hover {
+    box-shadow: 2px 2px 5px black;
+    background-color: #e46e59;
+    font-weight: bold;
+
+
+}
 input.btn.btn-block.btn-default.text-white {
     background-color: #4cd7ef;
 }
 input.btn.btn-block.btn-default.text-white:hover {
     box-shadow: 2px 2px 5px black;
+    background-color: #e46e59;
+
 }
 a {
     color: #2c313c;
@@ -92,6 +106,8 @@ input{
 }
 .form-group {
     padding-top: 10px;
+    margin-bottom: 10px;
+
 /*     padding-bottom: 10px; */
 }
 

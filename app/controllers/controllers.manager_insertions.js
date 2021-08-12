@@ -235,7 +235,7 @@ exports.create = async (req, res) => {
             attributes: ['format_id', 'format_name', 'format_group'],
             where: {
                 format_group: {
-                    [Op.regexp]: '^[GRAND ANGLE|HABILLAGE|INTERSTITIEL|MASTHEAD|VIDEO]'
+                    [Op.regexp]: '^[GRAND ANGLE|HABILLAGE|INTERSTITIEL|MASTHEAD|INSTREAM]'
                 }
             },
             order: [

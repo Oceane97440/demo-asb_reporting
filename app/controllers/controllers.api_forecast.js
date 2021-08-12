@@ -107,14 +107,14 @@ exports.forecast = async (req, res, next) => {
     var format = await req.body.format;
     var packs = await req.body.packs;
     var countries = await req.body.countries;
-    var option = await req.body.case
+   // var option = await req.body.case
 
     //si la case n'est pas coché renvoie false sinon true
-    if (option == undefined) {
+   /* if (option == undefined) {
         var option = false;
     } else {
         var option = true;
-    }
+    }*/
 
     const formatIdsArray = [];
     const sites = [];
@@ -561,7 +561,7 @@ exports.forecast = async (req, res, next) => {
             }
         }
         //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
-        if (option == true && format == "HABILLAGE") {
+        /*if (option == true && format == "HABILLAGE") {
             requestForecast.filter[2] = {
                 "FormatID": [
                     //Masthead / Grand_angle
@@ -571,14 +571,48 @@ exports.forecast = async (req, res, next) => {
                     "44149"
                 ]
             }
-        } else {
+        } */
             // si le format habillage est choisi on ajoute App_man_atf0
             if (format === "HABILLAGE") {
                 requestForecast.filter[2] = {
                     "FormatID": ["79637", "44149"]
                 }
             }
-        }
+
+            //si le format rectange est choisi on ajoute les web_mban/app_mban et web_mpave/app_mpave
+            if (format === "RECTANGLE VIDEO") {
+                requestForecast.filter[2] = {
+                    "formatID": [
+                        "79637",
+                        "79638",
+                        "79642",
+                        "79643",
+                        "79644",
+                        "79645",
+                        "79956",
+                        "79650",
+                        "79651",
+                        "79652",
+                        "79653",
+                        "79654",
+                        "79409",
+                        "84652",
+                        "84653",
+                        "84654",
+                        "84655",
+                        "84656",
+                        "79421",
+                        "79425",
+                        "84657",
+                        "84658",
+                        "84659",
+                        "84660",
+                        "84661",
+                        "79431"
+                    ]
+                }
+            }
+        
 
         if (packs == "4") {
             if (format == "HABILLAGE" || format == "MASTHEAD" || format == "GRAND ANGLE") {
@@ -801,7 +835,7 @@ exports.forecast = async (req, res, next) => {
                     sommeImpressions,
                     sommeOccupied,
                     volumeDispo,
-                    option
+                  //  option
                 }
 
                 var reserver = {
