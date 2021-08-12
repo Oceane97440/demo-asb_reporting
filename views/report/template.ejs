@@ -124,10 +124,9 @@
                         <%= moment(reporting.campaign.campaign_start_date).format('DD/MM/YYYY') %>
                         au
                         <%= moment(reporting.campaign.campaign_end_date).format('DD/MM/YYYY') %></li>
-                    <!-- <li class="list-group-item"> <a href='/r/<%=
-                        reporting.campaign.campaigncrypt %>/export' class="btn btn-xs btn-success
+                    <li class="list-group-item"> <a href='/r/<%=reporting.campaign.campaign_crypt %>/export' class="btn btn-xs btn-success
                         pull-left"> <i class="fas fa-file-excel"> </i> Télécharger (Excel) </a> </li>
-                        -->
+                       
                 </ul>
             </div>
         </div>
@@ -325,7 +324,7 @@
                         <td class="text-left"><%= reporting.habillage.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.habillage.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.habillage.siteList[i].clicks) %></td>
-                        <td class="text-right"><%= reporting.habillage.siteList[i].ctr %>%</td>
+                        <td><%= reporting.habillage.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -336,7 +335,7 @@
                         </td>
                         <td><%= utilities.numStr(reporting.habillage.impressions) %></td>
                         <td><%= utilities.numStr(reporting.habillage.clicks) %></td>
-                        <td class="text-right"><%= reporting.habillage.ctr %>%</td>
+                        <td><%= reporting.habillage.ctr %>%</td>
                     </tr>
                 </tfoot>
             </table>
@@ -410,8 +409,8 @@
                         <td class="text-left"><%= reporting.instream.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.instream.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.instream.siteList[i].clicks) %></td>
-                        <td class="text-right"><%= reporting.instream.siteList[i].ctr %>%</td>
-                        <td class="text-right"><%= reporting.instream.siteList[i].ctrComplete %>%</td>
+                        <td><%= reporting.instream.siteList[i].ctr %>%</td>
+                        <td><%= reporting.instream.siteList[i].ctrComplete %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -422,8 +421,8 @@
                         </td>
                         <td><%= utilities.numStr(reporting.instream.impressions) %></td>
                         <td><%= utilities.numStr(reporting.instream.clicks) %></td>
-                        <td class="text-right"><%= reporting.instream.ctr %>%</td>
-                        <td class="text-right"><%= reporting.instream.ctrComplete %>%</td>
+                        <td><%= reporting.instream.ctr %>%</td>
+                        <td><%= reporting.instream.ctrComplete %>%</td>
                     </tr>
                 </tfoot>
             </table>
@@ -497,7 +496,7 @@
                         <td class="text-left"><%= reporting.grandangle.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.grandangle.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.grandangle.siteList[i].clicks) %></td>
-                        <td class="text-right"><%= reporting.grandangle.siteList[i].ctr %>%</td>
+                        <td><%= reporting.grandangle.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -508,7 +507,7 @@
                         </td>
                         <td><%= utilities.numStr(reporting.grandangle.impressions) %></td>
                         <td><%= utilities.numStr(reporting.grandangle.clicks) %></td>
-                        <td class="text-right"><%= reporting.grandangle.ctr %>%</td>
+                        <td><%= reporting.grandangle.ctr %>%</td>
                     </tr>
                 </tfoot>
             </table>
@@ -538,7 +537,7 @@
                         <td class="text-left"><%= reporting.rectanglevideo.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.rectanglevideo.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.rectanglevideo.siteList[i].clicks) %></td>
-                        <td class="text-right"><%= reporting.rectanglevideo.siteList[i].ctr %>%</td>
+                        <td><%= reporting.rectanglevideo.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -549,7 +548,7 @@
                         </td>
                         <td><%= utilities.numStr(reporting.rectanglevideo.impressions) %></td>
                         <td><%= utilities.numStr(reporting.rectanglevideo.clicks) %></td>
-                        <td class="text-right"><%= reporting.rectanglevideo.ctr %>%</td>
+                        <td><%= reporting.rectanglevideo.ctr %>%</td>
                     </tr>
                 </tfoot>
             </table>
@@ -581,7 +580,7 @@
                         <td class="text-left"><%= reporting.native.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.native.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.native.siteList[i].clicks) %></td>
-                        <td class="text-left"><%= reporting.native.siteList[i].ctr %>%</td>
+                        <td><%= reporting.native.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -592,7 +591,7 @@
                         </td>
                         <td><%= utilities.numStr(reporting.native.impressions) %></td>
                         <td><%= utilities.numStr(reporting.native.clicks) %></td>
-                        <td class="text-left"><%= reporting.native.ctr %>%</td>
+                        <td><%= reporting.native.ctr %>%</td>
                     </tr>
                 </tfoot>
             </table>
@@ -707,7 +706,7 @@
                         <td class="text-left"><%= reporting.slidervideo.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.slidervideo.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.slidervideo.siteList[i].clicks) %></td>
-                        <td class="text-right"><%= reporting.slidervideo.siteList[i].ctr %>%</td>
+                        <td><%= reporting.slidervideo.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -718,7 +717,7 @@
                         </td>
                         <td><%= utilities.numStr(reporting.slidervideo.impressions) %></td>
                         <td><%= utilities.numStr(reporting.slidervideo.clicks) %></td>
-                        <td class="text-right"><%= reporting.slidervideo.ctr %>%</td>
+                        <td><%= reporting.slidervideo.ctr %>%</td>
                     </tr>
                 </tfoot>
             </table>
@@ -750,7 +749,7 @@
                         <td class="text-left"><%= reporting.logo.siteList[i].site %></td>
                         <td><%= utilities.numStr(reporting.logo.siteList[i].impressions) %></td>
                         <td><%= utilities.numStr(reporting.logo.siteList[i].clicks) %></td>
-                        <td class="text-right"><%= reporting.logo.siteList[i].ctr %>%</td>
+                        <td><%= reporting.logo.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
                 </tbody>
@@ -761,7 +760,7 @@
                         </td>
                         <td><%= utilities.numStr(reporting.logo.impressions) %></td>
                         <td><%= utilities.numStr(reporting.logo.clicks) %></td>
-                        <td class="text-right"><%= reporting.logo.ctr %>%</td>
+                        <td><%= reporting.logo.ctr %>%</td>
                     </tr>
                 </tfoot>
             </table>
@@ -792,7 +791,7 @@
                             <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
                             <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
                             <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
-                            <td class="text-right"><%= reporting.clickcommand.siteList[i].ctr %>%</td>
+                            <td>-</td>
                         </tr>
                         <% } %>
                     </tbody>
@@ -803,7 +802,7 @@
                             </td>
                             <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
                             <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
-                            <td class="text-right"><%= reporting.clickcommand.ctr %>%</td>
+                            <td>-</td>
                         </tr>
                     </tfoot>
                 </table>

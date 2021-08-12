@@ -2,6 +2,8 @@
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('data/reporting');
 localStorageTasks = new LocalStorage('data/taskID');
+const excel = require('node-excel-export');
+
 
 const {Op, and} = require("sequelize");
 
@@ -1047,6 +1049,7 @@ exports.export_excel = async (req, res) => {
 
     var campaigncrypt = req.params.campaigncrypt;
 
+    console.log(campaigncrypt)
     try {
 
         await ModelCampaigns
@@ -1083,6 +1086,8 @@ exports.export_excel = async (req, res) => {
                         });
                 
                 let campaignid = campaign.campaign_id;
+                console.log(campaignid)
+
 
                 // crée label avec le date du jour ex : 20210403
                 const date = new Date();
@@ -1101,22 +1106,41 @@ exports.export_excel = async (req, res) => {
 
                 var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
 
-                var data_report_view = JSON.parse(data_localStorage);
+                var reporting = JSON.parse(data_localStorage);
 
-                var dts_table = data_report_view.table;
+                console.log(reporting)
 
-                var campaign_name = dts_table.Campagne_name;
-                var date_now = dts_table.Date_rapport;
-                var StartDate = dts_table.StartDate;
-                var EndDate = dts_table.EndDate;
 
-                var table = data_report_view.table;
-                var data_interstitiel = data_report_view.data_interstitiel;
-                var data_habillage = data_report_view.data_habillage;
-                var data_masthead = data_report_view.data_masthead;
-                var data_grand_angle = data_report_view.data_grand_angle;
-                var data_native = data_report_view.data_native;
-                var data_video = data_report_view.data_video;
+                var reporting_requete_date = moment().format('YYYY-MM-DD HH:mm:ss');
+                var reporting_start_date = reporting.reporting_start_date;
+                var reporting_end_date = reporting.reporting_end_date;
+
+                var campaign_end_date = reporting.campaign.campaign_end_date;
+                var campaign_start_date = reporting.campaign.campaign_start_date;
+                var campaign_name = reporting.campaign.campaign_name;
+                var advertiser_name = reporting.campaign.advertiser_name;
+            
+
+                var impressions = reporting.campaign.impressions;
+                var clicks = reporting.campaign.clicks;
+                var ctr = reporting.campaign.ctr;
+                var vu = reporting.campaign.vu;
+                var repetition = reporting.campaign.repetition;
+                var complete = reporting.campaign.ctrComplete;
+
+                var interstitiel = reporting.interstitiel;
+                var habillage = reporting.habillage;
+                var instream = reporting.instream;
+                var masthead = reporting.masthead;
+                var grandangle = reporting.grandangle;
+                var rectanglevideo = reporting.rectanglevideo;
+                var native = reporting.native;
+                var slider = reporting.slider;
+                var mea = reporting.mea;
+                var slidervideo = reporting.slidervideo;
+                var logo = reporting.logo;
+                var clickcommand = reporting.clickcommand;
+
 
                 // You can define styles as json object
                 const styles = {
@@ -1125,6 +1149,7 @@ exports.export_excel = async (req, res) => {
                             fgColor: {
                                 rgb: 'FF000000'
                             }
+                            
                         },
                         font: {
                             color: {
@@ -1162,14 +1187,16 @@ exports.export_excel = async (req, res) => {
                 const heading = [
                     [
                         {
-                            value: 'Rapport : ' + campaign_name,
+                            value: 'Rapport de la campagne : ' + campaign_name,
                             style: styles.headerDark
                         }
 
                     ],
+                    ['Annonceur : ' + advertiser_name],
+                    ['Campagne  : ' + campaign_name],
 
-                    ['Date de génération : ' + date_now],
-                    ['Période diffusion : Du ' + StartDate + ' au ' + EndDate],
+                    ['Date de génération : ' + reporting_start_date],
+                    ['Période de diffusion : Du ' + campaign_start_date + ' au ' + campaign_end_date],
                     ['                ']
                 ];
 
@@ -1204,7 +1231,9 @@ exports.export_excel = async (req, res) => {
 
                 };
 
-                const bilan_formats = {
+                
+
+              const bilan_formats = {
 
                     Formats: { // <- the key should match the actual data key
                         displayName: 'Format', // <- Here you specify the column header
@@ -1236,7 +1265,7 @@ exports.export_excel = async (req, res) => {
                     }
                 };
 
-                const bilan_sites = {
+              /*  const bilan_sites = {
                     formats: { // <- the key should match the actual data key
                         displayName: 'Formats', // <- Here you specify the column header
                         headerStyle: styles.headerDark, // <- Header style
@@ -1270,62 +1299,62 @@ exports.export_excel = async (req, res) => {
                     }
 
                 };
-
+*/
                 // The data set should have the following shape (Array of Objects) The order of
                 // the keys is irrelevant, it is also irrelevant if the dataset contains more
                 // fields as the report is build based on the specification provided above. But
                 // you should have all the fields that are listed in the report specification
                 const dataset_global = [
                     {
-                        impressions: table.total_impression_format,
-                        clics: table.total_click_format,
-                        ctr_clics: table.CTR,
-                        vu: table.Total_VU,
-                        repetions: table.Repetition
+                        impressions: impressions,
+                        clics: clicks,
+                        ctr_clics: ctr,
+                        vu: vu,
+                        repetions: repetition
 
                     }
                 ];
-                const dataset_format = []
+              const dataset_format = []
 
-                if (table.sommeInterstitielImpression !== '0') {
+              /* if (interstitiel !== '0') {
                     dataset_format[0] = {
                         Formats: 'INTERSTITIEL',
-                        Impressions: table.sommeInterstitielImpression,
-                        Clics: table.sommeInterstitielClicks,
-                        Ctr_clics: table.CTR_interstitiel
+                        Impressions: reporting.interstitiel.impressions,
+                        Clics: reporting.interstitiel.clics,
+                        Ctr_clics: reporting.interstitiel.ctr
                     }
-                }
+                }*/
 
-                if (table.sommeHabillageImpression !== '0') {
+                if (habillage !== '0') {
                     dataset_format[1] = {
 
                         Formats: 'HABILLAGE',
-                        Impressions: table.sommeHabillageImpression,
-                        Clics: table.sommeHabillageClicks,
-                        Ctr_clics: table.CTR_habillage
+                        Impressions: reporting.habillage.impressions,
+                        Clics: reporting.habillage.clicks,
+                        Ctr_clics: reporting.habillage.ctr
                     }
                 }
-                if (table.sommeMastheadImpression !== '0') {
+               /* if (masthead !== '0') {
                     dataset_format[2] = {
 
                         Formats: 'MASTHEAD',
-                        Impressions: table.sommeMastheadImpression,
-                        Clics: table.sommeMastheadClicks,
-                        Ctr_clics: table.CTR_masthead
+                        Impressions: reporting.masthead.impressions,
+                        Clics: reporting.masthead.clicks,
+                        Ctr_clics: reporting.masthead.ctr
                     }
-                }
+                }*/
 
-                if (table.sommeGrand_AngleImpression !== '0') {
+                if (grandangle !== '0') {
                     dataset_format[3] = {
 
                         Formats: 'GRAND ANGLE',
-                        Impressions: table.sommeGrand_AngleImpression,
-                        Clics: table.sommeGrand_AngleClicks,
-                        Ctr_clics: table.CTR_grand_angle
+                        Impressions: reporting.grandangle.impressions,
+                        Clics: reporting.grandangle.clicks,
+                        Ctr_clics: reporting.grandangle.ctr
 
                     }
                 }
-
+/*
                 if (table.sommeNativeImpression !== '0') {
                     dataset_format[4] = {
                         Formats: 'NATIVE',
@@ -1348,8 +1377,9 @@ exports.export_excel = async (req, res) => {
                     Impressions: table.total_impression_format,
                     Clics: table.total_click_format,
                     Ctr_clics: table.CTR
-                }
+                }*/
 
+/*
                 const dataset_site = []
 
                 if (data_interstitiel.interstitielImpressions.length > 0) {
@@ -1764,7 +1794,7 @@ exports.export_excel = async (req, res) => {
 
                     }
 
-                }
+                }*/
                 // Define an array of merges. 1-1 = A:1 The merges are independent of the data.
                 // A merge will overwrite all data _not_ in the top-left cell.
                 const merges = [
@@ -1793,12 +1823,12 @@ exports.export_excel = async (req, res) => {
                         // heading : headingformats,
                         specification: bilan_formats,
                         data: dataset_format
-                    }, {
+                    }, /*{
                         name: 'Sites',
                         // heading : headingsites,
                         specification: bilan_sites, // <- Report specification
                         data: dataset_site // <-- Report data
-                    }
+                    }*/
                 ]);
 
                 // You can then return this straight
