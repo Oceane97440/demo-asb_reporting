@@ -108,7 +108,7 @@ $(document).ready(function () {
     }
 
     var config = {
-        baseurl: "https://reporting.antennesb.fr/"
+        baseurl: "http://localhost:3001/"
     };
 
     $.getJSON(config.baseurl + 'automate/reports', function (data) {

@@ -84,8 +84,10 @@
         <div class="col-12 mb-5">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Les statistiques de campagne sont mises à jour toutes les 2 heures.</strong>
-                <p>La prochaine mise à jour de cette campagne se fera le <strong>
+                <% if(moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') > moment().format('DD/MM/YYYY à HH:mm')) { %>
+                 <p>La prochaine mise à jour de cette campagne se fera le <strong>
                         <%= moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') %></strong></p>
+                <% } %>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -127,6 +129,7 @@
                     <li class="list-group-item"> <a href='/r/<%=reporting.campaign.campaign_crypt %>/export' class="btn btn-xs btn-success
                         pull-left"> <i class="fas fa-file-excel"> </i> Télécharger (Excel) </a> </li>
                        
+
                 </ul>
             </div>
         </div>
@@ -289,7 +292,7 @@
                     </tr>
                     <% } %>
                 </tbody>
-                <tfoot <stron <tfoot class="text-center table-dark">
+                <tfoot class="text-center table-dark">
                     <tr>
                         <td class="text-left"><strong>Total</strong>
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
@@ -690,7 +693,6 @@
             </h3>
         </div>
         <div class="table-responsive-md">
-
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -808,9 +810,6 @@
                 </table>
             </div>
             <% } %>
-
-
-
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -823,8 +822,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
     </script>
+
     <script>
-        $(document).ready(function () {
+        $(document).ready(function () {      
+               
             //appel ajax ici compte le nombre de tr du tableau
             $.fn.rowCount = function () {
                 return $('tr', $(this).find('tbody')).length;
