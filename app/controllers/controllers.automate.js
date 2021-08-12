@@ -136,13 +136,14 @@ exports.advertisers = async (req, res) => {
                             var advertiser_id = dataValue[i].id;
                             var advertiser_name = dataValue[i].name;
                             var advertiser_archived = dataValue[i].isArchived;
+                            var agency_id = dataValue[i].agencyIds
 
-                            //  console.log(dataValue);
+                             // console.log(dataValue);
 
                             Utilities
                                 .updateOrCreate(ModelAdvertisers, {
                                     advertiser_id: advertiser_id
-                                }, {advertiser_id, advertiser_name, advertiser_archived})
+                                }, {advertiser_id, advertiser_name, advertiser_archived,agency_id})
                                 .then(function (result) {
                                     result.item; // the model
                                     result.created; // bool, if a new item was created.

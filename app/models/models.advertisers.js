@@ -16,6 +16,10 @@ const Advertisers = sequelize.define('advertisers', {
         type: Sequelize.TINYINT(),
         allowNull: true
     },
+    agency_id: {
+        type: Sequelize.INTEGER(),
+        allowNull: true
+    },
     created_at: {
         type: Sequelize.DATE(),
         allowNull: true

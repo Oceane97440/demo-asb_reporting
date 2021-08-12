@@ -44,9 +44,7 @@ const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 
 exports.home_page = async (req, res) => {
-  if (req.session.user.user_role === 1) {
-    res.send("Home page");
-  }
+    res.render('landing_page.ejs');
 }
 
 exports.signup = async (req, res) => {
