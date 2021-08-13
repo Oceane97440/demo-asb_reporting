@@ -2666,29 +2666,34 @@ exports.reports = async (req, res) => {
             417243,
             414097,
             411820,
-            320778
+            320778,
+            417716,
+            421871,
+            459132
         );
-
+       
         // Affiche les campagnes en ligne
         let campaigns = await ModelCampaigns
             .findAll({
                 where: {
                     [Op.and]: [
-                        {
+                      {
                             advertiser_id: {
                                 [Op.notIn]: advertiserExclus
                             }
-                        }, {
+                        }, 
+                      {
+                            campaign_name: {
+                                [Op.notLike]: '% PARR %'
+                            }
+                        },                        
+                        {
                             campaign_start_date: {
                                 [Op.lte]: dateNow
                             }
                         }, {
                             campaign_end_date: {
                                 [Op.gte]: dateNow
-                            }
-                        }, {
-                            campaign_name: {
-                                [Op.notLike]: '% PARR %'
                             }
                         }
                     ],
@@ -2717,11 +2722,12 @@ exports.reports = async (req, res) => {
                 if (!campaigns) {
                     return res.json(404, 'Aucune campagne existante');
                 }
-
+               
                 campaignsList = new Object();
                 var campaignsReports = [];
                 // 2- Recherche et vérifie si les campagnes ont un rapport
                 var nbCampaigns = campaigns.length;
+                console.log('nbCampaigns :', nbCampaigns)
                 a = 0;
                 for (i = 0; i < nbCampaigns; i++) {
                     campaign_id = campaigns[i].campaign_id;
@@ -2729,7 +2735,9 @@ exports.reports = async (req, res) => {
                     campaign_name = campaigns[i].campaign_name;
                     campaign_start_date = campaigns[i].campaign_start_date;
                     campaign_end_date = campaigns[i].campaign_end_date;
+                    advertiser_id = campaigns[i].advertiser.advertiser_id;
                     advertiser_name = campaigns[i].advertiser.advertiser_name;
+
                    /*
                     insertion_start_date = await ModelInsertions.max('insertion_start_date', {
                         where: {
@@ -2755,31 +2763,33 @@ exports.reports = async (req, res) => {
                    
                         campaignsList = {
                             'campaign_id': campaign_id,
+                            'advertiser_id' : advertiser_id,
                             'advertiser_name': advertiser_name,
                             'campaign_name': campaign_name,
                             'campaign_crypt': campaign_crypt,
                             'campaign_start_date': campaign_start_date,
                             'campaign_end_date': campaign_end_date,
                             'report': '1',
-                            //'timestamp_expiration': moment(reporting_end_date).unix(),
+                           'timestamp_expiration': moment(reporting_end_date).unix(),
                             'date_expiration': reporting_end_date
                         }
                     } else {
                         campaignsList = {
                             'campaign_id': campaign_id,
+                            'advertiser_id' : advertiser_id,
                             'advertiser_name': advertiser_name,
                             'campaign_name': campaign_name,
                             'campaign_crypt': campaign_crypt,
                             'campaign_start_date': campaign_start_date,
                             'campaign_end_date': campaign_end_date,
                             'report': '0',
-                           // 'timestamp_expiration': moment().unix(),
+                            'timestamp_expiration': moment().unix(),
                             'date_expiration': moment().format('YYYY-MM-DD HH:mm:ss')
                         }
                     }
 
                     // Si la date de fin est sup. à la date du jour
-                    if (moment().format('YYYY-MM-DD HH:mm:ss') > campaign_end_date) {
+                    if (moment().format('YYYY-MM-DD HH:mm:ss') < campaign_end_date) {
                         campaignsReports.push(campaignsList);
                     }
                 }
@@ -2790,14 +2800,24 @@ exports.reports = async (req, res) => {
                         return a.timestamp_expiration - b.timestamp_expiration;
                     });
 
-                    return res
-                        .status(200)
-                        .json(campaignsReports);
+
+                    var format = req.query.format;
+                    if(!Utilities.empty(format) && (format === 'json')) {
+                        return res
+                            .status(200)
+                            .json(campaignsReports);
+                    } else {
+                      campaign_crypt = campaignsReports[0].campaign_crypt;
+                      res.redirect('/r/report/'+campaign_crypt);
+                    }
+
+                } else {
+                    return res.status(200).json('Aucune campagne existante');
                 }
+
             });
 
     } catch (error) {
         console.error('Error : ' + error);
     }
 }
-

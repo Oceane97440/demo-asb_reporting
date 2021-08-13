@@ -84,8 +84,10 @@
         <div class="col-12 mb-5">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Les statistiques de campagne sont mises à jour toutes les 2 heures.</strong>
-                <p>La prochaine mise à jour de cette campagne se fera le <strong>
+                <% if(moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') > moment().format('DD/MM/YYYY à HH:mm')) { %>
+                 <p>La prochaine mise à jour de cette campagne se fera le <strong>
                         <%= moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') %></strong></p>
+                <% } %>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -301,7 +303,7 @@
                     <% } %>
 
                 </tbody>
-                <tfoot <stron <tfoot class="text-center table-dark">
+                <tfoot class="text-center table-dark">
                     <tr>
                         <td class="text-left"><strong>Total</strong>
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
@@ -702,7 +704,6 @@
             </h3>
         </div>
         <div class="table-responsive-md">
-
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -780,49 +781,46 @@
         <% } %>
 
         <% if(reporting.clickcommand) { %>
-        <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
-            <h3 class="title">
-                <i class="fas fa-chart-line"></i>
-                <strong>CLICK COMMAND / par site</strong>
-            </h3>
-        </div>
-        <div class="table-responsive-md">
-
-            <table class="table">
-                <thead class="text-center thead-dark">
-                    <tr>
-                        <th class="text-left">Sites</th>
-                        <th>Impressions</th>
-                        <th>Clics</th>
-                        <th>Taux de clics</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    <% for(i=0; i < Object.keys(reporting.clickcommand.siteList).length; i++) { %>
-                    <tr>
-                        <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
-                        <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
-                        <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
-                        <td>-</td>
-                    </tr>
-                    <% } %>
-                </tbody>
-                <tfoot class="text-center table-dark">
-                    <tr>
-                        <td class="text-left">
-                            <strong>Total</strong>
-                        </td>
-                        <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
-                        <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
-                        <td>-</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        <% } %>
-
-
-
+            <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+                <h3 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    <strong>CLICK COMMAND / par site</strong>
+                </h3>
+            </div>
+            <div class="table-responsive-md">
+    
+                <table class="table">
+                    <thead class="text-center thead-dark">
+                        <tr>
+                            <th class="text-left">Sites</th>
+                            <th>Impressions</th>
+                            <th>Clics</th>
+                            <th>Taux de clics</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <% for(i=0; i < Object.keys(reporting.clickcommand.siteList).length; i++) { %>
+                        <tr>
+                            <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
+                            <td>-</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                    <tfoot class="text-center table-dark">
+                        <tr>
+                            <td class="text-left">
+                                <strong>Total</strong>
+                            </td>
+                            <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
+                            <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
+                            <td>-</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <% } %>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -835,8 +833,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
     </script>
+
     <script>
-        $(document).ready(function () {
+        $(document).ready(function () {      
+               
             //appel ajax ici compte le nombre de tr du tableau
             $.fn.rowCount = function () {
                 return $('tr', $(this).find('tbody')).length;

@@ -502,9 +502,9 @@ exports.report = async (req, res) => {
                             } else {
                                 firstLinkTaskId = null;
                             }
-                        } else {
+                        } /*else {
                             firstLinkTaskId = null;
-                        }
+                        }*/
 
                         // twoLink - Récupére la taskID de la requête reporting
                         let twoLinkTaskId = localStorageTasks.getItem(
@@ -532,9 +532,9 @@ exports.report = async (req, res) => {
                                     );
                                     twoLinkTaskId = twoLink.data.taskId;
                                 }
-                            } else {
+                            } /*else {
                                 twoLinkTaskId = null
-                            }
+                            }*/
 
                         }
 
@@ -709,9 +709,7 @@ exports.report = async (req, res) => {
                                                         dataList[i]['impressions'] = parseInt(line[14]);
                                                     } else {
                                                         dataList[i]['impressions'] = parseInt(line[10]);
-
                                                     }
-
 
                                                 }
                                             }
@@ -903,7 +901,6 @@ exports.report = async (req, res) => {
                                     // Ajoute les infos de la campagne
                                     if (Impressions.length > 0) {
                                         campaignImpressions = Impressions.reduce(reducer);
-
                                     } else {
                                         campaignImpressions = null;
                                     }
