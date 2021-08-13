@@ -126,7 +126,7 @@
                         <%= moment(reporting.campaign.campaign_end_date).format('DD/MM/YYYY') %></li>
                     <li class="list-group-item"> <a href='/r/<%=reporting.campaign.campaign_crypt %>/export' class="btn btn-xs btn-success
                         pull-left"> <i class="fas fa-file-excel"> </i> Télécharger (Excel) </a> </li>
-                       
+
                 </ul>
             </div>
         </div>
@@ -288,6 +288,18 @@
 
                     </tr>
                     <% } %>
+                    
+                    <% if(reporting.clickcommand) { %>
+                    <tr>
+                        <td class="text-left">
+                            <strong>Total</strong>
+                        </td>
+                        <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
+                        <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
+                        <td>-</td>
+                    </tr>
+                    <% } %>
+
                 </tbody>
                 <tfoot <stron <tfoot class="text-center table-dark">
                     <tr>
@@ -768,46 +780,46 @@
         <% } %>
 
         <% if(reporting.clickcommand) { %>
-            <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
-                <h3 class="title">
-                    <i class="fas fa-chart-line"></i>
-                    <strong>CLICK COMMAND / par site</strong>
-                </h3>
-            </div>
-            <div class="table-responsive-md">
-    
-                <table class="table">
-                    <thead class="text-center thead-dark">
-                        <tr>
-                            <th class="text-left">Sites</th>
-                            <th>Impressions</th>
-                            <th>Clics</th>
-                            <th>Taux de clics</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        <% for(i=0; i < Object.keys(reporting.clickcommand.siteList).length; i++) { %>
-                        <tr>
-                            <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
-                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
-                            <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
-                            <td>-</td>
-                        </tr>
-                        <% } %>
-                    </tbody>
-                    <tfoot class="text-center table-dark">
-                        <tr>
-                            <td class="text-left">
-                                <strong>Total</strong>
-                            </td>
-                            <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
-                            <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
-                            <td>-</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <% } %>
+        <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+            <h3 class="title">
+                <i class="fas fa-chart-line"></i>
+                <strong>CLICK COMMAND / par site</strong>
+            </h3>
+        </div>
+        <div class="table-responsive-md">
+
+            <table class="table">
+                <thead class="text-center thead-dark">
+                    <tr>
+                        <th class="text-left">Sites</th>
+                        <th>Impressions</th>
+                        <th>Clics</th>
+                        <th>Taux de clics</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <% for(i=0; i < Object.keys(reporting.clickcommand.siteList).length; i++) { %>
+                    <tr>
+                        <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
+                        <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
+                        <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
+                        <td>-</td>
+                    </tr>
+                    <% } %>
+                </tbody>
+                <tfoot class="text-center table-dark">
+                    <tr>
+                        <td class="text-left">
+                            <strong>Total</strong>
+                        </td>
+                        <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
+                        <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
+                        <td>-</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <% } %>
 
 
 
