@@ -39,13 +39,11 @@ var options = {
         }],
         xaxis: {
           categories : response.month
-          // ['janvier','février','mars','avril','mai','juin','juillet','aout','septembre','octobre','novembre','décembre']
         }
       }
       
     var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
     chart.render();
-
 });
     
 

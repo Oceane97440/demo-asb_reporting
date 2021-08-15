@@ -111,6 +111,8 @@ $(document).ready(function () {
         baseurl: "http://localhost:3001/"
     };
 
+
+    /*
     $.getJSON(config.baseurl + 'automate/reports', function (data) {
 
         $.each(data, function (key, campaign) {
@@ -147,6 +149,7 @@ $(document).ready(function () {
         });
 
     });
+    */
 
     // Automatisations des éléments
     function automateAction(automate) {

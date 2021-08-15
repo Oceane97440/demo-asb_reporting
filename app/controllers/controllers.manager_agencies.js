@@ -33,8 +33,15 @@ const {promiseImpl} = require('ejs');
 exports.index = async (req, res) => {
     try {
         // Liste tous les agences
-        const data = new Object();
-        data.breadcrumb = "Agences";
+        const data = new Object();      
+        
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Agences',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
+
         data.agencies = await ModelAgencies.findAll({
          /*   include: [
                 {
@@ -71,6 +78,16 @@ exports.list = async (req, res) => {
                 ['agency_id', 'DESC']
             ]
         });
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Agences',
+            'link': 'agencies'
+        },{
+            'name': 'Liste des agences',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
 
         data.moment = moment;        
         res.render('manager/agencies/list.ejs', data);
@@ -116,6 +133,19 @@ exports.view = async (req, res) => {
                         }
                     ]
                 });
+
+                // Créer le fil d'ariane
+                breadcrumb = new Array({
+                    'name': 'Agences',
+                    'link': 'agencies'
+                },{
+                    'name': 'Liste des agences',
+                    'link': 'agencies/list'
+                }, {
+                    'name': agency.agency_name,
+                    'link': ''
+                });
+                data.breadcrumb = breadcrumb;
                
                 // Attribue les données de la campagne
                 data.campaigns = campaigns; 

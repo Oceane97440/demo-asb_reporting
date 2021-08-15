@@ -2800,7 +2800,6 @@ exports.reports = async (req, res) => {
                         return a.timestamp_expiration - b.timestamp_expiration;
                     });
 
-
                     var format = req.query.format;
                     if(!Utilities.empty(format) && (format === 'json')) {
                         return res
@@ -2808,7 +2807,8 @@ exports.reports = async (req, res) => {
                             .json(campaignsReports);
                     } else {
                       campaign_crypt = campaignsReports[0].campaign_crypt;
-                      res.redirect('/r/report/'+campaign_crypt);
+                      campaign_id = campaignsReports[0].campaign_id;
+                      res.redirect('/r/automate/'+campaign_id);                 
                     }
 
                 } else {

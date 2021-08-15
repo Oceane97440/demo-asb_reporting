@@ -8,6 +8,6 @@ router.get("/", reporting.index);
 router.get("/report/:campaigncrypt", reporting.report);
 router.get("/:campaigncrypt", reporting.generate);
 router.get("/:campaigncrypt/export", reporting.export_excel);
-router.get("/automatisation/:campaignid/", reporting.automatisation);
+router.get("/automate/:campaignid/", reporting.automate);
 
 module.exports = router;

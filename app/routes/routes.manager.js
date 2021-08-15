@@ -114,8 +114,7 @@ router.get("/search/import", manager_search.import);
 
 router.get("/charts", manager_charts.index);
 router.get("/charts/campaigns", manager_charts.campaigns);
-
-
+router.get("/charts/advertisers/:advertiser_id", manager_charts.advertisers);
 
 /*
 router.post('/campaigns/epilot/create', checkSchema(ValidateCustom.campaignEpilotSchema), (req, res) => {

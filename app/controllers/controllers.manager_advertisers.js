@@ -41,8 +41,6 @@ const ModelCreatives = require("../models/models.creatives");
 const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
 const ModelEpilotInsertions = require("../models/models.epilot_insertions");
 
-
-
 const TEXT_REGEX = /^.{1,51}$/
 
 const {

@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="robots" content="noindex">
         <meta name="googlebot" content="noindex">
-        <title><%=campaign.campaign_name%></title>
+        <title>Rapport de la campagne "<%=campaign.campaign_name%>"</title>
         <link
             rel="icon"
             type="image/png"
@@ -79,8 +79,19 @@
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
 
+        <% if(date_now < timestamp_startdate) { %>
+            <div
+                class="alert alert-danger alert-dismissible fade show"
+                role="alert"
+                style="margin-top: 30px;">
+                <strong>Attention : La campagne demandée n'existe pas pour le moment.</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <% } %>
 
-        <div class="container d-flex justify-content-center">
+        <div class="container  d-flex justify-content-center">
 
             <div class="row">
 
@@ -89,27 +100,6 @@
                 <div class="card m-3 p-3">
                     <h2 class="card-title text-center">Rapport de campagne</h2>
                     <div class="card-body">
-                        
-                        <% if(date_now < timestamp_startdate ) { %>
-                            <div
-                                class="alert alert-danger alert-dismissible fade show mb-3"
-                                role="alert">
-                                <i class="fas fa-spinner fa-pulse"></i>
-                                <strong>Attention : La campagne ne débutera que <u><%= moment(campaign.campaign_start_date).fromNow(); %></u>.</strong>
-                            </div>
-                        <% } %>
-                        <%# if(nombre_diff_day > 31 ) { %>
-                            <!-- <div
-                                class="alert alert-danger alert-dismissible fade show mb-3"
-                                role="alert">
-                                <i class="fas fa-spinner fa-pulse"></i>
-                                <strong>
-                                    <a href="mailto:adtraffic@antennereunion.fr?subject=Alerte reporting" title="">Veuillez contacter le service Adtraffic.</a>
-                                </strong>
-                            </div>  -->
-                        <%# } %>
-
-             
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <strong>Annonceur</strong>
@@ -126,12 +116,10 @@
                                 au
                                 <%= moment(campaign.campaign_end_date).format('DD/MM/YYYY') %></li>
                             <li class="list-group-item">
-                                <% if(date_now > timestamp_startdate) { %>
                                 <a type="button" href="#" class="btn btn-danger btn-lg btn-block">
                                     <i class="fas fa-link"></i>
                                     Générer le rapport de campagne
                                 </a>
-                                <% } %>
                             </li>
                         </ul>
 
@@ -192,40 +180,36 @@
             crossorigin="anonymous"></script>
 
             <script>
-                  $(document).ready(function () {
-                    
-                    <% if(date_now > timestamp_startdate || nombre_diff_day >= 31) { %>
-                        $.ajax({
-                            method: "GET",
-                            url: '/r/report/<%=campaign_crypt%>',
-                            success: function (data) {
-                                $("#exampleModal").hide();
-                                $('body').html(data);
-                            }
-                        })
-                    <% } %>
-                      
-   
-                      //affiche la modal lors du clic du bouton
-                      $('.btn').on('shown.bs.modal', function () {
-                          $('#myInput').trigger('focus');
-                      })
-      
-                      // lors du clic du bouton affectue la requête : GET
-                      $('.btn').click(function () {
-                          $("#exampleModal").modal("show");
-                          $.ajax({
-                              method: "GET",
-                              url: '/r/report/<%=campaign_crypt%>',
-                              success: function (data) {
-                                  $("#exampleModal").hide();
-                                  $('body').html(data)
-                                  console.log(data)
-                              }
-                          })
-                      })
-                  })
-              </script>
+                $(document).ready(function () {
+                     $.ajax({
+                         method: "GET",
+                         url: '/r/report/<%=campaign_crypt%>',
+                         success: function (data) {
+                             $("#exampleModal").hide();
+                             $('body').html(data);
+                         }
+                     })
+     
+                     //affiche la modal lors du clic du bouton
+                     $('.btn').on('shown.bs.modal', function () {
+                         $('#myInput').trigger('focus');
+                     })
+     
+                     // lors du clic du bouton affectue la requête : GET
+                     $('.btn').click(function () {
+                         $("#exampleModal").modal("show");
+                         $.ajax({
+                             method: "GET",
+                             url: '/r/report/<%=campaign_crypt%>',
+                             success: function (data) {
+                                 $("#exampleModal").hide();
+                                 $('body').html(data)
+                                 console.log(data)
+                             }
+                         })
+                     })
+                 })
+             </script>
 
     </body>
 
