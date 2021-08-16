@@ -99,14 +99,37 @@ exports.config = function (method, params = '') {
     };
 
     if (params.limit) {
-        config['params']['limit'] = params.limit;
+        console.log('LIMIT FCT :',params.limit)
+       // config.params.limit = params.limit;
+       config.params = {'limit':params.limit};
+
+      /*config['params'] = {
+            limit:  params.limit,
+         
+        }*/
+    
+
+       // config['params']['limit'] = params.limit;
     }
+
+    
     if (params.offset) {
-        config['params']['offset'] = params.offset;
+        //config['params']['offset'] = params.offset;
+        config.params = {'offset':params.offset};
+
     }
-    if (params.isArchived) {
+    /*if (params.isArchived) {
         config['params']['isArchived'] = params.isArchived;
     }
+*/
+/*
+    config['params'] = {
+        limit:  params.limit,
+        offset: params.offset,
+     
+    }*/
+    
+console.log(config);
 
     return config;
 }

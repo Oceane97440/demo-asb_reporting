@@ -11,5 +11,6 @@ router.get('/campaignday', test.campaignday);
 router.get("/template", test.template);
 
 router.get("/array", test.array_unique);
+router.get("/nodemail",test.nodemail)
 
 module.exports = router;

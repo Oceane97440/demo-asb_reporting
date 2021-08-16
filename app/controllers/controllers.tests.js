@@ -11,6 +11,7 @@ process.on('unhandledRejection', error => {
 const {
     QueryTypes
 } = require('sequelize');
+//var nodemailer = require('nodemailer');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -1191,3 +1192,27 @@ exports.array_unique = async (req, res) => {
 
     console.log(uniqueArray);
 }
+exports.nodemail = async (req, res) => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'sautronoceane98@gmail.com',
+          pass: '52a97909'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'alvine.didier@antennereunion.fr',
+        to: 'oceane.sautron@antennereunion.fr',
+        subject: 'Sending Email using Node.js',
+        text: 'That was easy!'
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+};
