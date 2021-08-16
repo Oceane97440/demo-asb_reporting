@@ -103,6 +103,7 @@ exports.config = function (method, params = '') {
        // config.params.limit = params.limit;
        config.params = {'limit':params.limit};
 
+
       /*config['params'] = {
             limit:  params.limit,
          
