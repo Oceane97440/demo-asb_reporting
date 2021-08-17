@@ -11,7 +11,7 @@ process.on('unhandledRejection', error => {
 const {
     QueryTypes
 } = require('sequelize');
-//var nodemailer = require('nodemailer');
+var nodemailer = require('nodemailer');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -1193,19 +1193,37 @@ exports.array_unique = async (req, res) => {
     console.log(uniqueArray);
 }
 exports.nodemail = async (req, res) => {
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
+
+      let transporter = nodemailer.createTransport({
+      service:'gmail',
         auth: {
-          user: 'sautronoceane98@gmail.com',
-          pass: '52a97909'
+            user: process.env.USER, // generated ethereal user
+            pass: process.env.PASS, // generated ethereal password
+          },
+        tls:{
+          rejectUnauthorized:false
         }
       });
+   /* let transporter = nodemailer.createTransport({
+        service: "hotmail",
+       // host: "smtp-mail.outlook.com", // hostname
+        secureConnection: false, // TLS requires secureConnection to be false
+        port: 587, // port for secure SMTP
+        tls: {
+           ciphers:'SSLv3'
+        },
+        auth: {
+            user: 'sautronoceane98@outlook.fr',
+            pass: 'Osautron1'
+        }
+    
+        });*/
       
       var mailOptions = {
-        from: 'alvine.didier@antennereunion.fr',
-        to: 'oceane.sautron@antennereunion.fr',
-        subject: 'Sending Email using Node.js',
-        text: 'That was easy!'
+        from:  process.env.FROM,
+        to:  process.env.TO,
+        subject: 'TEST MODULE NODEMAIL avec CRON PESK  : Océane',
+        text: `Test push mail avec nodemail tous les 1min`
       };
       
       transporter.sendMail(mailOptions, function(error, info){
@@ -1213,6 +1231,12 @@ exports.nodemail = async (req, res) => {
           console.log(error);
         } else {
           console.log('Email sent: ' + info.response);
+          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+          res.send('test envoie')
+
+
         }
       });
+ 
+
 };
