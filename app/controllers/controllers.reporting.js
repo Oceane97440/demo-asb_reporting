@@ -4,17 +4,25 @@ localStorage = new LocalStorage('data/reporting');
 localStorageTasks = new LocalStorage('data/taskID');
 const excel = require('node-excel-export');
 
-const {Op, and} = require("sequelize");
+const {
+    Op,
+    and
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 const moment = require('moment');
 moment.locale('fr');
-const {check, query} = require('express-validator');
+const {
+    check,
+    query
+} = require('express-validator');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -50,21 +58,19 @@ exports.generate = async (req, res) => {
             where: {
                 campaign_crypt: campaigncrypt
             },
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         })
         .then(async function (campaign) {
-            if (!campaign) 
+            if (!campaign)
                 return res
                     .status(404)
                     .render("error.ejs", {
                         statusCoded: 404,
                         campaigncrypt: campaigncrypt
                     });
-            
+
             const timestamp_startdate = Date.parse(campaign.campaign_start_date);
             const date_now = Date.now();
 
@@ -75,9 +81,9 @@ exports.generate = async (req, res) => {
             const nombre_diff_day = diff.day
 
             var campaign_id = campaign.campaign_id;
-            
-              // Gestion du cache
-              let cacheStorageID = 'campaignID-' + campaign_id;
+
+            // Gestion du cache
+            let cacheStorageID = 'campaignID-' + campaign_id;
             // Affiche le dernier rapport existant
             var reportingDataStorage = localStorage.getItem(
                 cacheStorageID
@@ -131,22 +137,20 @@ exports.report = async (req, res) => {
                 where: {
                     campaign_crypt: campaigncrypt
                 },
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }]
             })
             .then(async function (campaign) {
 
-                if (!campaign) 
+                if (!campaign)
                     return res
                         .status(403)
                         .render("error.ejs", {
                             statusCoded: 403,
                             campaigncrypt: campaigncrypt
                         });
-                
+
                 // fonctionnalité de géneration du rapport
                 let campaign_crypt = campaign.campaign_crypt
                 let advertiser_id = campaign.advertiser_id;
@@ -290,47 +294,43 @@ exports.report = async (req, res) => {
                         var requestReporting = {
                             "startDate": StartDate_timezone,
                             "endDate": end_date,
-                            "fields": [
-                                {
-                                    "CampaignStartDate": {}
-                                }, {
-                                    "CampaignEndDate": {}
-                                }, {
-                                    "CampaignId": {}
-                                }, {
-                                    "CampaignName": {}
-                                }, {
-                                    "InsertionId": {}
-                                }, {
-                                    "InsertionName": {}
-                                }, {
-                                    "FormatId": {}
-                                }, {
-                                    "FormatName": {}
-                                }, {
-                                    "SiteId": {}
-                                }, {
-                                    "SiteName": {}
-                                }, {
-                                    "Impressions": {}
-                                }, {
-                                    "ClickRate": {}
-                                }, {
-                                    "Clicks": {}
-                                }, {
-                                    "VideoCount": {
-                                        "Id": "17",
-                                        "OutputName": "Nbr_complete"
-                                    }
-                                }, {
-                                    "ViewableImpressions": {}
+                            "fields": [{
+                                "CampaignStartDate": {}
+                            }, {
+                                "CampaignEndDate": {}
+                            }, {
+                                "CampaignId": {}
+                            }, {
+                                "CampaignName": {}
+                            }, {
+                                "InsertionId": {}
+                            }, {
+                                "InsertionName": {}
+                            }, {
+                                "FormatId": {}
+                            }, {
+                                "FormatName": {}
+                            }, {
+                                "SiteId": {}
+                            }, {
+                                "SiteName": {}
+                            }, {
+                                "Impressions": {}
+                            }, {
+                                "ClickRate": {}
+                            }, {
+                                "Clicks": {}
+                            }, {
+                                "VideoCount": {
+                                    "Id": "17",
+                                    "OutputName": "Nbr_complete"
                                 }
-                            ],
-                            "filter": [
-                                {
-                                    "CampaignId": [campaign_id]
-                                }
-                            ]
+                            }, {
+                                "ViewableImpressions": {}
+                            }],
+                            "filter": [{
+                                "CampaignId": [campaign_id]
+                            }]
                         }
 
                         // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
@@ -374,16 +374,12 @@ exports.report = async (req, res) => {
                         var requestVisitor_unique = {
                             "startDate": StartDate_timezone,
                             "endDate": end_date,
-                            "fields": [
-                                {
-                                    "UniqueVisitors": {}
-                                }
-                            ],
-                            "filter": [
-                                {
-                                    "CampaignId": [campaign_id]
-                                }
-                            ]
+                            "fields": [{
+                                "UniqueVisitors": {}
+                            }],
+                            "filter": [{
+                                "CampaignId": [campaign_id]
+                            }]
                         }
 
                         // console.log('requestVisitor_unique.startDate :
@@ -480,7 +476,7 @@ exports.report = async (req, res) => {
                                 // Vérifie que dataLSTaskGlobal -> existe OU (dataLSTaskGlobalVU -> existe &&
                                 // taskID_uu -> not null)
                                 if (!dataLSTaskGlobal || (!dataLSTaskGlobalVU && !Utilities.empty(taskId_uu))) {
-                                     if (!dataLSTaskGlobal && !Utilities.empty(taskId)) {
+                                    if (!dataLSTaskGlobal && !Utilities.empty(taskId)) {
                                         time += 10000;
                                         let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
@@ -510,9 +506,9 @@ exports.report = async (req, res) => {
 
                                     // Request task2
                                     if (!dataLSTaskGlobalVU && !Utilities.empty(taskId_uu)) {
-                                       time += 15000;
+                                        time += 15000;
                                         let requete_vu = `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}`;
-                                      
+
                                         let fourLink = await AxiosFunction.getReportingData('GET', requete_vu, '');
                                         // console.log('fourLink : ', fourLink.data.lastTaskInstance.jobProgress)
 
@@ -577,7 +573,7 @@ exports.report = async (req, res) => {
                                     var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
                                     if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
                                         var numberLine = dataSplitGlobal.length;
-                                     
+
                                         // dataSplitGlobal);
                                         if (numberLine > 1) {
                                             for (i = 1; i < numberLine; i++) {
@@ -835,7 +831,7 @@ exports.report = async (req, res) => {
                                         campaignCtrComplete = null;
                                     }
 
-                                  
+
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
                                         campaign_name: campaign.campaign_name,
@@ -901,7 +897,7 @@ exports.report = async (req, res) => {
                     }
 
                 } catch (error) {
-                  var statusCoded = error.response;
+                    var statusCoded = error.response;
 
                     res.render("error.ejs", {
                         statusCoded: statusCoded,
@@ -944,14 +940,12 @@ exports.export_excel = async (req, res) => {
                 where: {
                     campaign_crypt: campaigncrypt
                 },
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }]
             })
             .then(async function (campaign) {
-                if (!campaign) 
+                if (!campaign)
                     return res
                         .status(404)
                         .render("error.ejs", {
@@ -959,7 +953,7 @@ exports.export_excel = async (req, res) => {
                             statusCoded: 404,
                             campaigncrypt: campaigncrypt
                         });
-                
+
                 let campaign_id = campaign.campaign_id;
                 console.log(campaign_id);
                 // Gestion du cache
@@ -1027,6 +1021,7 @@ exports.export_excel = async (req, res) => {
                             }
 
                         },
+
                         font: {
                             color: {
                                 rgb: 'FFFFFFFF'
@@ -1036,24 +1031,14 @@ exports.export_excel = async (req, res) => {
                             underline: false
                         }
                     },
-                    cellTotal: {
+                    cellNone: {
 
-                        font: {
-                            color: {
-                                rgb: 'FF000000'
-                            },
-                            bold: true,
-                            underline: false
-                        }
+                        numFmt: "0",
 
                     },
 
-                    cellNone: {
-                        font: {
-                            color: {
-                                rgb: 'FF000000'
-                            }
-                        }
+                    cellTc: {
+                        numFmt: "0.00%",
                     }
                 };
 
@@ -1061,8 +1046,7 @@ exports.export_excel = async (req, res) => {
 
                 //Array of objects representing heading rows (very top)
                 const heading = [
-                    [
-                        {
+                    [{
                             value: 'Rapport de la campagne : ' + campaign_name,
                             style: styles.headerDark
                         }
@@ -1073,7 +1057,8 @@ exports.export_excel = async (req, res) => {
 
                     ['Date de génération : ' + reporting_start_date],
                     ['Période de diffusion : Du ' + campaign_start_date + ' au ' +
-                            campaign_end_date],
+                        campaign_end_date
+                    ],
                     ['                ']
                 ];
 
@@ -1083,22 +1068,29 @@ exports.export_excel = async (req, res) => {
                     impressions: { // <- the key should match the actual data key
                         displayName: 'Impressions', // <- Here you specify the column header
                         headerStyle: styles.headerDark, // <- Header style
-                        width: 400 // <- width in pixels
+                        width: 400, // <- width in pixels
+                        cellStyle: styles.cellNone,
                     },
                     clics: {
                         displayName: 'Clics',
                         headerStyle: styles.headerDark,
-                        width: 220 // <- width in chars (when the number is passed as string)
+                        width: 220, // <- width in chars (when the number is passed as string)
+                        cellStyle: styles.cellNone,
+
                     },
                     ctr_clics: {
                         displayName: 'Taux de clics',
                         headerStyle: styles.headerDark,
-                        width: 220 // <- width in pixels
+                        width: 220, // <- width in pixels
+                        cellStyle: styles.cellNone,
+
                     },
                     vu: {
                         displayName: 'Visiteurs Uniques',
                         headerStyle: styles.headerDark,
-                        width: 220 // <- width in pixels
+                        width: 220, // <- width in pixels
+                        cellStyle: styles.cellNone,
+
                     },
                     repetions: {
                         displayName: 'Répétition',
@@ -1113,30 +1105,31 @@ exports.export_excel = async (req, res) => {
                     Formats: { // <- the key should match the actual data key
                         displayName: 'Format', // <- Here you specify the column header
                         headerStyle: styles.headerDark, // <- Header style
-                        cellStyle: function (value, row) { // <- style renderer function
-                            // if the status is 1 then color in green else color in red Notice how we use
-                            // another cell value to style the current one
-
-                            return (value === "TOTAL")
-                                ? styles.cellTotal
-                                : styles.cellNone // <- Inline cell style is possible
-                        },
                         width: 220 // <- width in pixels
                     },
                     Impressions: {
                         displayName: 'Impressions',
                         headerStyle: styles.headerDark,
-                        width: 120 // <- width in chars (when the number is passed as string)
+                        width: 120,
+                        cellStyle: styles.cellNone,
+                        // <- width in chars (when the number is passed as string)
+
                     },
                     Clics: {
                         displayName: 'Clics',
                         headerStyle: styles.headerDark,
-                        width: 120 // <- width in chars (when the number is passed as string)
+                        width: 120,
+                        cellStyle: styles.cellNone,
+                        // <- width in chars (when the number is passed as string)
+
                     },
                     Ctr_clics: {
                         displayName: 'Taux de clics',
                         headerStyle: styles.headerDark,
-                        width: 120 // <- width in pixels
+                        width: 120, // <- width in pixels
+                        cellStyle: styles.cellNone,
+
+
                     }
                 };
 
@@ -1155,17 +1148,23 @@ exports.export_excel = async (req, res) => {
                     impressions: {
                         displayName: 'Impressions',
                         headerStyle: styles.headerDark,
-                        width: 120 // <- width in chars (when the number is passed as string)
+                        width: 120, // <- width in chars (when the number is passed as string)
+                        cellStyle: styles.cellNone,
+
                     },
                     clics: {
                         displayName: 'Clics',
                         headerStyle: styles.headerDark,
-                        width: 120 // <- width in chars (when the number is passed as string)
+                        width: 120, // <- width in chars (when the number is passed as string)
+                        cellStyle: styles.cellNone,
+
                     },
                     ctr_clics: {
                         displayName: 'Taux de clics',
                         headerStyle: styles.headerDark,
-                        width: 120 // <- width in pixels
+                        width: 120, // <- width in pixels
+                        cellStyle: styles.cellNone,
+
                     }
                 };
 
@@ -1174,27 +1173,29 @@ exports.export_excel = async (req, res) => {
                         Formats: 'VIDEO',
                         displayName: 'VTR',
                         headerStyle: styles.headerDark,
-                        width: 120 // <- width in pixels
-                    }
-                }
-                const dataset_global = [
-                    {
-                        impressions: impressions,
-                        clics: clicks,
-                        ctr_clics: ctr,
-                        vu: vu,
-                        repetions: repetition
+                        width: 120, // <- width in pixels
+                        cellStyle: styles.cellNone,
+
 
                     }
-                ];
+                }
+                const dataset_global = [{
+                    impressions: impressions,
+                    clics: clicks,
+                    ctr_clics: ctr + '%',
+                    vu: vu,
+                    repetions: repetition
+
+                }];
                 const dataset_format = []
 
                 if (!Utilities.empty(interstitiel)) {
                     dataset_format[0] = {
                         Formats: 'INTERSTITIEL',
                         Impressions: reporting.interstitiel.impressions,
-                        Clics: reporting.interstitiel.clics,
-                        Ctr_clics: reporting.interstitiel.ctr
+                        Clics: reporting.interstitiel.clicks,
+                        Ctr_clics: reporting.interstitiel.ctr,
+
                     }
                 }
 
@@ -1313,8 +1314,8 @@ exports.export_excel = async (req, res) => {
                                 .habillage
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.habillage.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.habillage.siteList[i].clicks),
+                            impressions: reporting.habillage.siteList[i].impressions,
+                            clics: reporting.habillage.siteList[i].clicks,
                             ctr_clics: reporting
                                 .habillage
                                 .siteList[i]
@@ -1333,8 +1334,8 @@ exports.export_excel = async (req, res) => {
                                 .interstitiel
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.interstitiel.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.interstitiel.siteList[i].clicks),
+                            impressions: reporting.interstitiel.siteList[i].impressions,
+                            clics: reporting.interstitiel.siteList[i].clicks,
                             ctr_clics: reporting
                                 .interstitiel
                                 .siteList[i]
@@ -1352,8 +1353,8 @@ exports.export_excel = async (req, res) => {
                                 .masthead
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.masthead.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.masthead.siteList[i].clicks),
+                            impressions: reporting.masthead.siteList[i].impressions,
+                            clics: reporting.masthead.siteList[i].clicks,
                             ctr_clics: reporting
                                 .masthead
                                 .siteList[i]
@@ -1371,8 +1372,8 @@ exports.export_excel = async (req, res) => {
                                 .grandangle
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.grandangle.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.grandangle.siteList[i].clicks),
+                            impressions: reporting.grandangle.siteList[i].impressions,
+                            clics: reporting.grandangle.siteList[i].clicks,
                             ctr_clics: reporting
                                 .grandangle
                                 .siteList[i]
@@ -1390,8 +1391,8 @@ exports.export_excel = async (req, res) => {
                                 .instream
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.instream.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.instream.siteList[i].clicks),
+                            impressions: reporting.instream.siteList[i].impressions,
+                            clics: reporting.instream.siteList[i].clicks,
                             ctr_clics: reporting
                                 .instream
                                 .siteList[i]
@@ -1414,8 +1415,8 @@ exports.export_excel = async (req, res) => {
                                 .native
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.native.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.native.siteList[i].clicks),
+                            impressions: reporting.native.siteList[i].impressions,
+                            clics: reporting.native.siteList[i].clicks,
                             ctr_clics: reporting
                                 .native
                                 .siteList[i]
@@ -1437,8 +1438,8 @@ exports.export_excel = async (req, res) => {
                                 .rectanglevideo
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.rectanglevideo.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.rectanglevideo.siteList[i].clicks),
+                            impressions: reporting.rectanglevideo.siteList[i].impressions,
+                            clics: reporting.rectanglevideo.siteList[i].clicks,
                             ctr_clics: reporting
                                 .rectanglevideo
                                 .siteList[i]
@@ -1460,8 +1461,8 @@ exports.export_excel = async (req, res) => {
                                 .slider
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.slider.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.slider.siteList[i].clicks),
+                            impressions: reporting.slider.siteList[i].impressions,
+                            clics: reporting.slider.siteList[i].clicks,
                             ctr_clics: reporting
                                 .slider
                                 .siteList[i]
@@ -1484,8 +1485,8 @@ exports.export_excel = async (req, res) => {
                                 .slidervideo
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.slidervideo.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.slidervideo.siteList[i].clicks),
+                            impressions: reporting.slidervideo.siteList[i].impressions,
+                            clics: reporting.slidervideo.siteList[i].clicks,
                             ctr_clics: reporting
                                 .slidervideo
                                 .siteList[i]
@@ -1508,8 +1509,8 @@ exports.export_excel = async (req, res) => {
                                 .logo
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.logo.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.logo.siteList[i].clicks),
+                            impressions: reporting.logo.siteList[i].impressions,
+                            clics: reporting.logo.siteList[i].clicks,
                             ctr_clics: reporting
                                 .logo
                                 .siteList[i]
@@ -1532,8 +1533,8 @@ exports.export_excel = async (req, res) => {
                                 .mea
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.mea.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.mea.siteList[i].clicks),
+                            impressions: reporting.mea.siteList[i].impressions,
+                            clics: reporting.mea.siteList[i].clicks,
                             ctr_clics: reporting
                                 .mea
                                 .siteList[i]
@@ -1555,8 +1556,8 @@ exports.export_excel = async (req, res) => {
                                 .clickcommand
                                 .siteList[i]
                                 .site,
-                            impressions: Utilities.numStr(reporting.clickcommand.siteList[i].impressions),
-                            clics: Utilities.numStr(reporting.clickcommand.siteList[i].clicks),
+                            impressions: reporting.clickcommand.siteList[i].impressions,
+                            clics: reporting.clickcommand.siteList[i].clicks,
                             ctr_clics: reporting
                                 .clickcommand
                                 .siteList[i]
@@ -1573,39 +1574,35 @@ exports.export_excel = async (req, res) => {
 
                 // Define an array of merges. 1-1 = A:1 The merges are independent of the data.
                 // A merge will overwrite all data _not_ in the top-left cell.
-                const merges = [
-                    {
-                        start: {
-                            row: 1,
-                            column: 1
-                        },
-                        end: {
-                            row: 1,
-                            column: 5
-                        }
+                const merges = [{
+                    start: {
+                        row: 1,
+                        column: 1
+                    },
+                    end: {
+                        row: 1,
+                        column: 5
                     }
-                ];
+                }];
 
                 // Create the excel report. This function will return Buffer
-                const report = excel.buildExport([
-                    { // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
-                        name: 'Bilan', // <- Specify sheet name (optional)
-                        heading: heading, // <- Raw heading array (optional)
-                        merges: merges, // <- Merge cell ranges
-                        specification: bilan_global, // <- Report specification
-                        data: dataset_global // <-- Report data
-                    }, {
-                        name: 'Formats',
-                        // heading : headingformats,
-                        specification: bilan_formats,
-                        data: dataset_format
-                    }, {
-                        name: 'Sites',
-                        // heading : headingsites,
-                        specification: bilan_sites, // <- Report specification
-                        data: dataset_site // <-- Report data
-                    }
-                ]);
+                const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+                    name: 'Bilan', // <- Specify sheet name (optional)
+                    heading: heading, // <- Raw heading array (optional)
+                    merges: merges, // <- Merge cell ranges
+                    specification: bilan_global, // <- Report specification
+                    data: dataset_global // <-- Report data
+                }, {
+                    name: 'Formats',
+                    // heading : headingformats,
+                    specification: bilan_formats,
+                    data: dataset_format
+                }, {
+                    name: 'Sites',
+                    // heading : headingsites,
+                    specification: bilan_sites, // <- Report specification
+                    data: dataset_site // <-- Report data
+                }]);
 
                 // You can then return this straight
                 // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
@@ -1647,18 +1644,18 @@ exports.automate = async (req, res) => {
                 where: {
                     campaign_id: campaign_id
                 },
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }]
             })
             .then(async function (campaign) {
 
-                if (!campaign) 
+                if (!campaign)
                     return res
-                        .status(403).json({'message': 'Cette campagne n\'existe pas'});
-                
+                        .status(403).json({
+                            'message': 'Cette campagne n\'existe pas'
+                        });
+
                 // fonctionnalité de géneration du rapport
                 let campaign_crypt = campaign.campaign_crypt;
                 let advertiser_id = campaign.advertiser_id;
@@ -1668,7 +1665,7 @@ exports.automate = async (req, res) => {
 
                 // Gestion du cache
                 var cacheStorageID = 'campaignID-' + campaign_id;
-                
+
 
                 // Initialise la date
                 let date = new Date();
@@ -1677,11 +1674,11 @@ exports.automate = async (req, res) => {
                 var localStorageAll = localStorage.getItem(cacheStorageID);
                 let localStorageGlobal = localStorageTasks.getItem(
                     cacheStorageID + '-firstLink-' + cacheStorageIDHour
-                );       
-                
+                );
+
                 // Vérifie si les localstorage de la campagne existe
                 if ((!localStorageAll) || (!localStorageGlobal)) {
-                                           
+
                     insertion_start_date = await ModelInsertions.max('insertion_start_date', {
                         where: {
                             campaign_id: campaign_id
@@ -1692,7 +1689,7 @@ exports.automate = async (req, res) => {
                             campaign_id: campaign_id
                         }
                     });
-                  
+
                     const now = new Date();
                     const timestamp_datenow = now.getTime();
                     // Déclare la date du moment  var timestamp_datenow =
@@ -1747,47 +1744,43 @@ exports.automate = async (req, res) => {
                     var requestReporting = {
                         "startDate": StartDate_timezone,
                         "endDate": end_date,
-                        "fields": [
-                            {
-                                "CampaignStartDate": {}
-                            }, {
-                                "CampaignEndDate": {}
-                            }, {
-                                "CampaignId": {}
-                            }, {
-                                "CampaignName": {}
-                            }, {
-                                "InsertionId": {}
-                            }, {
-                                "InsertionName": {}
-                            }, {
-                                "FormatId": {}
-                            }, {
-                                "FormatName": {}
-                            }, {
-                                "SiteId": {}
-                            }, {
-                                "SiteName": {}
-                            }, {
-                                "Impressions": {}
-                            }, {
-                                "ClickRate": {}
-                            }, {
-                                "Clicks": {}
-                            }, {
-                                "VideoCount": {
-                                    "Id": "17",
-                                    "OutputName": "Nbr_complete"
-                                }
-                            }, {
-                                "ViewableImpressions": {}
+                        "fields": [{
+                            "CampaignStartDate": {}
+                        }, {
+                            "CampaignEndDate": {}
+                        }, {
+                            "CampaignId": {}
+                        }, {
+                            "CampaignName": {}
+                        }, {
+                            "InsertionId": {}
+                        }, {
+                            "InsertionName": {}
+                        }, {
+                            "FormatId": {}
+                        }, {
+                            "FormatName": {}
+                        }, {
+                            "SiteId": {}
+                        }, {
+                            "SiteName": {}
+                        }, {
+                            "Impressions": {}
+                        }, {
+                            "ClickRate": {}
+                        }, {
+                            "Clicks": {}
+                        }, {
+                            "VideoCount": {
+                                "Id": "17",
+                                "OutputName": "Nbr_complete"
                             }
-                        ],
-                        "filter": [
-                            {
-                                "CampaignId": [campaign_id]
-                            }
-                        ]
+                        }, {
+                            "ViewableImpressions": {}
+                        }],
+                        "filter": [{
+                            "CampaignId": [campaign_id]
+                        }]
                     }
 
                     // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
@@ -1806,22 +1799,18 @@ exports.automate = async (req, res) => {
                     var requestVisitor_unique = {
                         "startDate": StartDate_timezone,
                         "endDate": end_date,
-                        "fields": [
-                            {
-                                "UniqueVisitors": {}
-                            }
-                        ],
-                        "filter": [
-                            {
-                                "CampaignId": [campaign_id]
-                            }
-                        ]
+                        "fields": [{
+                            "UniqueVisitors": {}
+                        }],
+                        "filter": [{
+                            "CampaignId": [campaign_id]
+                        }]
                     }
-                       
+
                     var dataLSTaskGlobal = localStorageTasks.getItem(
                         cacheStorageID + '-taskGlobal'
                     );
-                  
+
                     var dataLSTaskGlobalVU = localStorageTasks.getItem(
                         cacheStorageID + '-taskGlobalVU'
                     );
@@ -1842,7 +1831,7 @@ exports.automate = async (req, res) => {
 
                         // si firstLink existe (!= de null) on save la taskId dans le localStorage sinon
                         // firstLinkTaskId = vide
-                        if (firstLink) {                          
+                        if (firstLink) {
                             if (firstLink.status == 201) {
                                 localStorageTasks.setItem(
                                     cacheStorageID + '-firstLink-' + cacheStorageIDHour,
@@ -1861,7 +1850,7 @@ exports.automate = async (req, res) => {
                     );
 
                     if ((!twoLinkTaskId) && (NbDayCampaign < 31) && (requestVisitor_unique)) {
-                       
+
                         let twoLink = await AxiosFunction.getReportingData(
                             'POST',
                             '',
@@ -1919,7 +1908,7 @@ exports.automate = async (req, res) => {
                                         let dataLSTaskGlobal = localStorageTasks.getItem(
                                             cacheStorageID + '-taskGlobal'
                                         );
-                                        console.log('1979 : '+cacheStorageID);
+                                        console.log('1979 : ' + cacheStorageID);
                                         if (!dataLSTaskGlobal) {
                                             dataFile = await AxiosFunction.getReportingData(
                                                 'GET',
@@ -1934,7 +1923,7 @@ exports.automate = async (req, res) => {
                                                 cacheStorageID + '-taskGlobal',
                                                 JSON.stringify(dataLSTaskGlobal)
                                             );
-                                            
+
                                         }
                                     }
                                 }
@@ -1956,7 +1945,7 @@ exports.automate = async (req, res) => {
                                         dataLSTaskGlobalVU = localStorageTasks.getItem(
                                             cacheStorageID + '-taskGlobalVU'
                                         );
-                                        console.log('1957 : '+cacheStorageID);
+                                        console.log('1957 : ' + cacheStorageID);
                                         if (!dataLSTaskGlobalVU) {
                                             dataFile2 = await AxiosFunction.getReportingData(
                                                 'GET',
@@ -1971,7 +1960,7 @@ exports.automate = async (req, res) => {
                                                 cacheStorageID + '-taskGlobalVU',
                                                 JSON.stringify(dataLSTaskGlobalVU)
                                             );
-                                            console.log('2029 : '+cacheStorageID);
+                                            console.log('2029 : ' + cacheStorageID);
                                         }
                                     }
                                 }
@@ -2013,7 +2002,7 @@ exports.automate = async (req, res) => {
                                 var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
                                 if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
                                     var numberLine = dataSplitGlobal.length;
-                                    
+
                                     // dataSplitGlobal);
                                     if (numberLine > 1) {
                                         for (i = 1; i < numberLine; i++) {
@@ -2267,7 +2256,7 @@ exports.automate = async (req, res) => {
                                     ).toFixed(2);
                                 } else {
                                     campaignCtrComplete = null;
-                                }                               
+                                }
 
                                 formatObjects.campaign = {
                                     campaign_id: campaign.campaign_id,
@@ -2315,7 +2304,7 @@ exports.automate = async (req, res) => {
                                 formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                 formatObjects.reporting_end_date = moment()
                                     .add(2, 'hours')
-                                    .format('YYYY-MM-DD HH:m:s');                               
+                                    .format('YYYY-MM-DD HH:m:s');
 
                                 var reportingData = JSON.stringify(formatObjects);
                                 // Créer le localStorage
@@ -2329,9 +2318,9 @@ exports.automate = async (req, res) => {
 
 
                 } else {
-                 //   res.status(404).json({'message': 'La task globale n\'existe pas.'});
-                         // Si le localStorage exsite -> affiche la data du localstorage Convertie la
-                        // date JSON en objet
+                    //   res.status(404).json({'message': 'La task globale n\'existe pas.'});
+                    // Si le localStorage exsite -> affiche la data du localstorage Convertie la
+                    // date JSON en objet
                     var reportingData = JSON.parse(localStorageAll);
                     res.status(200).json(reportingData);
                 }
@@ -2342,7 +2331,7 @@ exports.automate = async (req, res) => {
             });
 
     } catch (error) {
-         var statusCoded = error.response;
+        var statusCoded = error.response;
 
         res.render("error.ejs", {
             statusCoded: statusCoded
