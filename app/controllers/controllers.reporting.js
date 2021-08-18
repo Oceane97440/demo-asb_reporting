@@ -603,7 +603,7 @@ exports.report = async (req, res) => {
                                                         // 'impressions': parseInt(line[10]),
                                                         'click_rate': parseInt(line[11]),
                                                         'clicks': parseInt(line[12]),
-                                                        'complete': parseInt(line[13]),
+                                                        //'complete': parseInt(line[13]),
                                                         // 'viewable_impressions': parseInt(line[14])
                                                     }
 
@@ -611,6 +611,12 @@ exports.report = async (req, res) => {
                                                         dataList[i]['impressions'] = parseInt(line[14]);
                                                     } else {
                                                         dataList[i]['impressions'] = parseInt(line[10]);
+                                                    }
+
+                                                    if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
+                                                        dataList[i]['complete'] =  parseInt(line[13]);
+                                                    } else {
+                                                        dataList[i]['complete'] = 0;
                                                     }
 
                                                 }
@@ -1444,10 +1450,7 @@ exports.export_excel = async (req, res) => {
                                 .rectanglevideo
                                 .siteList[i]
                                 .ctr + '%',
-                            vtr: reporting
-                                .rectanglevideo
-                                .siteList[i]
-                                .ctrComplete + '%'
+
 
                         })
 
