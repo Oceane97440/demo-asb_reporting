@@ -17,7 +17,8 @@ const fileGetContents = require('file-get-contents');
 
 // Initiliase le module axios
 //const axios = require(`axios`);
-
+const moment = require('moment');
+moment.locale('fr');
 const {
   Op
 } = require("sequelize");
@@ -44,7 +45,7 @@ const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 
 exports.home_page = async (req, res) => {
-    res.render('landing_page.ejs');
+  res.render('landing_page.ejs');
 }
 
 exports.signup = async (req, res) => {
@@ -105,7 +106,7 @@ exports.signup_add = async (req, res) => {
         intro: 'Erreur',
         message: 'Le mot de passe doit être compris entre 4 et 12 caratères avec 1 chiffre et un caratère spécial'
       }
-      return res.redirect('/signup');  
+      return res.redirect('/signup');
     }
 
     // search si email exsite déjà dans le bdd
@@ -131,7 +132,7 @@ exports.signup_add = async (req, res) => {
         await ModelUser_Role.create({
           role_id: user_role,
           user_id: user.user_id
-        });      
+        });
 
         res.redirect('/login');
 
@@ -168,8 +169,8 @@ exports.login_add = async (req, res) => {
   const user_password = req.body.user_password;
 
 
-  console.log('Email : ',user_email,' - Password : ',user_password);
-  
+  console.log('Email : ', user_email, ' - Password : ', user_password);
+
   try {
     // verifie si les donnée son correcte et non null 
     if (user_email == '' || user_password == '') {
@@ -197,14 +198,40 @@ exports.login_add = async (req, res) => {
           if (user.user_email !== user_email && user.user_password !== user_password) {
             res.redirect('/login');
           } else {
+
+            //Date et l'heure de la connexion
+            const now = new Date();
+            const date_now = now.getTime();
+            const created_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
+
             // use session for user connected
             req.session.user = user;
-            console.log('Req session user_role :',req.session.user.user_role)
+
+            console.log('Req session user_role :', req.session.user.user_role)
+
             if (req.session.user.user_role === 1) {
+
+              console.log('date heure de la connexion admin' + created_at)
+
               return res.redirect('/manager');
             }
             if (req.session.user.user_role === 2 || req.session.user.user_role === 3) {
-              return res.redirect('/forecast');
+
+              console.log('date heure de la connexion user' + created_at)
+
+
+              ModelUser.update({
+                created_at: created_at,
+
+
+              }, {
+                where: {
+                  user_id: user.user_id
+                }
+              }).then(
+                res.redirect('/forecast')
+              )
+
             }
           }
 
@@ -236,8 +263,30 @@ exports.login_add = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-  req.session = null;
-  res.redirect('/login');
+
+  req.session = null
+
+  //Date et l'heure de la déconnexion
+/*
+  const now = new Date();
+  const date_now = now.getTime();
+  const updated_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
+
+  console.log('date heure de la déconnexion ' + updated_at)
+
+  ModelUser.update({
+    updated_at: updated_at,
+
+
+  }, {
+    where: {
+      user_id: req.session.user.user_id
+    }
+  }).then(
+    res.redirect('/login')
+
+  )
+*/
 }
 
 exports.index = async (req, res) => {
@@ -254,4 +303,3 @@ exports.index = async (req, res) => {
     });
   }
 }
-
