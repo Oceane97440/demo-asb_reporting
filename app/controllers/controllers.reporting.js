@@ -1001,6 +1001,8 @@ exports.export_excel = async (req, res) => {
                 var impressions = reporting.campaign.impressions;
                 var clicks = reporting.campaign.clicks;
                 var ctr = reporting.campaign.ctr;
+
+
                 var vu = reporting.campaign.vu;
                 var repetition = reporting.campaign.repetition;
                 var complete = reporting.campaign.ctrComplete;
@@ -1044,7 +1046,8 @@ exports.export_excel = async (req, res) => {
                     },
 
                     cellTc: {
-                        numFmt: "0.00%",
+                        numFmt: "0",
+
                     }
                 };
 
@@ -1133,7 +1136,7 @@ exports.export_excel = async (req, res) => {
                         displayName: 'Taux de clics',
                         headerStyle: styles.headerDark,
                         width: 120, // <- width in pixels
-                        cellStyle: styles.cellNone,
+                        cellStyle: styles.cellTc,
 
 
                     }
@@ -1169,7 +1172,7 @@ exports.export_excel = async (req, res) => {
                         displayName: 'Taux de clics',
                         headerStyle: styles.headerDark,
                         width: 120, // <- width in pixels
-                        cellStyle: styles.cellNone,
+                        cellStyle: styles.cellTc,
 
                     }
                 };
@@ -1180,7 +1183,7 @@ exports.export_excel = async (req, res) => {
                         displayName: 'VTR',
                         headerStyle: styles.headerDark,
                         width: 120, // <- width in pixels
-                        cellStyle: styles.cellNone,
+                        cellStyle: styles.cellTc,
 
 
                     }
@@ -1188,19 +1191,20 @@ exports.export_excel = async (req, res) => {
                 const dataset_global = [{
                     impressions: impressions,
                     clics: clicks,
-                    ctr_clics: ctr + '%',
+                    ctr_clics: ctr.replace('.', ','),
                     vu: vu,
-                    repetions: repetition
+                    repetions: repetition.replace('.', ',')
 
                 }];
                 const dataset_format = []
+            
 
                 if (!Utilities.empty(interstitiel)) {
                     dataset_format[0] = {
                         Formats: 'INTERSTITIEL',
                         Impressions: reporting.interstitiel.impressions,
                         Clics: reporting.interstitiel.clicks,
-                        Ctr_clics: reporting.interstitiel.ctr,
+                        Ctr_clics: reporting.interstitiel.ctr.replace('.', ','),
 
                     }
                 }
@@ -1211,7 +1215,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'HABILLAGE',
                         Impressions: reporting.habillage.impressions,
                         Clics: reporting.habillage.clicks,
-                        Ctr_clics: reporting.habillage.ctr
+                        Ctr_clics: reporting.habillage.ctr.replace('.', ',')
                     }
                 }
                 if (!Utilities.empty(masthead)) {
@@ -1220,7 +1224,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'MASTHEAD',
                         Impressions: reporting.masthead.impressions,
                         Clics: reporting.masthead.clicks,
-                        Ctr_clics: reporting.masthead.ctr
+                        Ctr_clics: reporting.masthead.ctr.replace('.', ',')
                     }
                 }
 
@@ -1230,7 +1234,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'GRAND ANGLE',
                         Impressions: reporting.grandangle.impressions,
                         Clics: reporting.grandangle.clicks,
-                        Ctr_clics: reporting.grandangle.ctr
+                        Ctr_clics: reporting.grandangle.ctr.replace('.', ',')
 
                     }
                 }
@@ -1240,7 +1244,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'NATIVE',
                         Impressions: reporting.native.impressions,
                         Clics: reporting.native.clicks,
-                        Ctr_clics: reporting.native.ctr
+                        Ctr_clics: reporting.native.ctr.replace('.', ',')
 
                     }
                 }
@@ -1249,7 +1253,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'INSTREAM',
                         Impressions: reporting.instream.impressions,
                         Clics: reporting.instream.clicks,
-                        Ctr_clics: reporting.instream.ctr
+                        Ctr_clics: reporting.instream.ctr.replace('.', ',')
                     }
                 }
                 if (!Utilities.empty(slider)) {
@@ -1258,7 +1262,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'SLIDER',
                         Impressions: reporting.slider.impressions,
                         Clics: reporting.slider.clicks,
-                        Ctr_clics: reporting.slider.ctr
+                        Ctr_clics: reporting.slider.ctr.replace('.', ',')
                     }
                 }
 
@@ -1268,7 +1272,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'RECTANGLE VIDEO',
                         Impressions: reporting.rectanglevideo.impressions,
                         Clics: reporting.rectanglevideo.clicks,
-                        Ctr_clics: reporting.rectanglevideo.ctr
+                        Ctr_clics: reporting.rectanglevideo.ctr.replace('.', ',')
                     }
                 }
 
@@ -1278,7 +1282,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'MISE EN AVANT',
                         Impressions: reporting.mea.impressions,
                         Clics: reporting.mea.clicks,
-                        Ctr_clics: reporting.mea.ctr
+                        Ctr_clics: reporting.mea.ctr.replace('.', ',')
                     }
                 }
                 if (!Utilities.empty(slidervideo)) {
@@ -1287,7 +1291,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'SLIDER VIDEO',
                         Impressions: reporting.slidervideo.impressions,
                         Clics: reporting.slidervideo.clicks,
-                        Ctr_clics: reporting.slidervideo.ctr
+                        Ctr_clics: reporting.slidervideo.ctr.replace('.', ',')
                     }
                 }
                 if (!Utilities.empty(logo)) {
@@ -1296,7 +1300,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'LOGO',
                         Impressions: reporting.logo.impressions,
                         Clics: reporting.logo.clicks,
-                        Ctr_clics: reporting.logo.ctr
+                        Ctr_clics: reporting.logo.ctr.replace('.', ',')
                     }
                 }
                 if (!Utilities.empty(clickcommand)) {
@@ -1325,7 +1329,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .habillage
                                 .siteList[i]
-                                .ctr + '%',
+                                .ctr.replace('.', ','),
                             vtr: ' - '
                         });
 
@@ -1345,7 +1349,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .interstitiel
                                 .siteList[i]
-                                .ctr + '%',
+                                .ctr.replace('.', ','),
                             vtr: ' - '
                         })
 
@@ -1364,7 +1368,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .masthead
                                 .siteList[i]
-                                .ctr + '%',
+                                .ctr.replace('.', ','),
                             vtr: ' - '
                         })
 
@@ -1383,7 +1387,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .grandangle
                                 .siteList[i]
-                                .ctr + '%',
+                                .ctr.replace('.', ','),
                             vtr: ' - '
                         })
 
@@ -1402,12 +1406,11 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .instream
                                 .siteList[i]
-                                .ctr + '%',
+                                .ctr.replace('.', ','),
                             vtr: reporting
                                 .instream
                                 .siteList[i]
-                                .ctrComplete + '%'
-
+                                .ctrComplete.replace('.', ',')
                         })
 
                     }
@@ -1426,11 +1429,9 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .native
                                 .siteList[i]
-                                .ctr + '%',
-                            vtr: reporting
-                                .native
-                                .siteList[i]
-                                .ctrComplete + '%'
+                                .ctr.replace('.', ','),
+                            vtr: ' - '
+
 
                         })
 
@@ -1449,7 +1450,8 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .rectanglevideo
                                 .siteList[i]
-                                .ctr + '%',
+                                .ctr.replace('.', ','),
+                            vtr: ' - '
 
 
                         })
@@ -1469,11 +1471,9 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .slider
                                 .siteList[i]
-                                .ctr + '%',
-                            vtr: reporting
-                                .slider
-                                .siteList[i]
-                                .ctrComplete + '%'
+                                .ctr.replace('.', ','),
+                            vtr: ' - '
+
 
                         })
 
@@ -1493,11 +1493,8 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .slidervideo
                                 .siteList[i]
-                                .ctr + '%',
-                            vtr: reporting
-                                .slidervideo
-                                .siteList[i]
-                                .ctrComplete + '%'
+                                .ctr.replace('.', ','),
+                            vtr: ' - '
 
                         })
 
@@ -1517,11 +1514,8 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .logo
                                 .siteList[i]
-                                .ctr + '%',
-                            vtr: reporting
-                                .logo
-                                .siteList[i]
-                                .ctrComplete + '%'
+                                .ctr.replace('.', ','),
+                            vtr: ' - '
 
                         })
 
@@ -1541,11 +1535,8 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .mea
                                 .siteList[i]
-                                .ctr + '%',
-                            vtr: reporting
-                                .mea
-                                .siteList[i]
-                                .ctrComplete + '%'
+                                .ctr.replace('.', ','),
+                            vtr: ' - '
 
                         })
 
@@ -1564,11 +1555,9 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .clickcommand
                                 .siteList[i]
-                                .ctr + '%',
-                            vtr: reporting
-                                .clickcommand
-                                .siteList[i]
-                                .ctrComplete + '%'
+                                .ctr.replace('.', ','),
+                            vtr: ' - '
+
 
                         })
 
@@ -1610,7 +1599,8 @@ exports.export_excel = async (req, res) => {
                 // You can then return this straight
                 // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
                 res.attachment(
-                    'rapport_antennesb-' + label_now + '-' + campaign_name + '.xlsx'
+                    'rapport_antennesb-' + label_now + '-' + campaign_name + '.xlsx',
+
                 ); // This is sails.js specific (in general you need to set headers)
 
                 return res.send(report);
