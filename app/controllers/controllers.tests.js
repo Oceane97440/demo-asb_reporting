@@ -1173,14 +1173,15 @@ exports.test_exportExcel = async (req, res) => {
 };
 
 exports.array_unique = async (req, res) => {
-    const startingArray = [ 
-    '1906349', '1906349', '1907952',
-    '1907952', '1910250', '1910250',
-    '1910676', '1910676', '1912561',
-    '1913293', '1913826', '1913885',
-    '1913826', '1914459', '1914459',
-    '1914459', '1915190', '1915190',
-    '1915907', '1915907', 'N/A',];
+    const startingArray = [
+        '1906349', '1906349', '1907952',
+        '1907952', '1910250', '1910250',
+        '1910676', '1910676', '1912561',
+        '1913293', '1913826', '1913885',
+        '1913826', '1914459', '1914459',
+        '1914459', '1915190', '1915190',
+        '1915907', '1915907', 'N/A',
+    ];
 
     function unique(array) {
         return array.filter(function (el, index, arr) {
@@ -1194,49 +1195,39 @@ exports.array_unique = async (req, res) => {
 }
 exports.nodemail = async (req, res) => {
 
-      let transporter = nodemailer.createTransport({
-      service:'gmail',
+
+    let transporter = nodemailer.createTransport({
+
+        service: 'gmail',
         auth: {
-            user: process.env.USER, // generated ethereal user
+            type: 'OAuth2',
+            user: process.env.USER_EMAIL, // generated ethereal user
             pass: process.env.PASS, // generated ethereal password
-          },
-        tls:{
-          rejectUnauthorized:false
+            clientId: process.env.CLIENT_ID,
+            clientSecret:  process.env.CLIENT_SECRET,
+            refreshToken: process.env.TOKEN
         }
-      });
-   /* let transporter = nodemailer.createTransport({
-        service: "hotmail",
-       // host: "smtp-mail.outlook.com", // hostname
-        secureConnection: false, // TLS requires secureConnection to be false
-        port: 587, // port for secure SMTP
-        tls: {
-           ciphers:'SSLv3'
-        },
-        auth: {
-            user: 'sautronoceane98@outlook.fr',
-            pass: 'Osautron1'
-        }
-    
-        });*/
-      
-      var mailOptions = {
-        from:  process.env.FROM,
-        to:  process.env.TO,
-        subject: 'TEST MODULE NODEMAIL avec CRON PESK  : Océane',
-        text: `Test push mail avec nodemail tous les 1min`
-      };
-      
-      transporter.sendMail(mailOptions, function(error, info){
+    });
+
+    var mailOptions = {
+        from: process.env.FROM,
+        to: process.env.TO,
+        subject: 'TEST MODULE NODEMAIL avec CRON PESK  : Océane API Oauth REUSSSI :D',
+        text: `Test push mail avec nodemail tous les 1min, creation clès API`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          console.log(error);
+            res.json(error);
         } else {
-          console.log('Email sent: ' + info.response);
-          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-          res.send('test envoie')
+            console.log('Email sent: ' + info.response);
+            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+            res.send('test envoie')
 
 
         }
-      });
- 
+    });
+
+
 
 };
