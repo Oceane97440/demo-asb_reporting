@@ -479,23 +479,37 @@ exports.forecast = async (req, res, next) => {
                 format,
             }
 
-            /* if (reserver_reel === undefined) {
-                 //console.log("aucun requête")
-                 return res.render('forecast/data.ejs', {
-                     table: table,
-                     insertions: insertions,
-                     infos:infos, 
-                 });
-
-             }*/
+          
+            if (req.session.user.user_role == 1) {
 
 
-            return res.render('forecast/data1.ejs', {
-                table: table,
-                insertions: insertions,
-                infos: infos,
-                reserver: reserver
-            });
+
+                return res.render('forecast/data1.ejs', {
+                    table: table,
+                    insertions: insertions,
+                    reserver: reserver,
+                    infos: infos
+                });
+            }
+
+            if (req.session.user.user_role == 2 || req.session.user.user_role == 3) {
+
+
+                var insertions = {
+
+                    StartDate,
+                    EndDate,
+                    format,
+
+                }
+
+                return res.render('forecast/users/data_user.ejs', {
+                    table: table,
+                    insertions: insertions,
+                    reserver: reserver
+                });
+            }
+
         }
 
         // initialise la requête pour les cas hors intertistiel + habillage

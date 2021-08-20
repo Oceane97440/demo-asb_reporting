@@ -265,28 +265,8 @@ exports.login_add = async (req, res) => {
 exports.logout = async (req, res) => {
 
   req.session = null
+  res.redirect('/login')
 
-  //Date et l'heure de la déconnexion
-/*
-  const now = new Date();
-  const date_now = now.getTime();
-  const updated_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
-
-  console.log('date heure de la déconnexion ' + updated_at)
-
-  ModelUser.update({
-    updated_at: updated_at,
-
-
-  }, {
-    where: {
-      user_id: req.session.user.user_id
-    }
-  }).then(
-    res.redirect('/login')
-
-  )
-*/
 }
 
 exports.index = async (req, res) => {
