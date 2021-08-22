@@ -41,6 +41,9 @@ build/Release
 node_modules/
 jspm_packages/
 data/
+data/reporting
+data/taskID
+data/automate
 # TypeScript v1 declaration files
 typings/
 
