@@ -688,15 +688,15 @@ exports.report = async (req, res) => {
                                             if (insertion_name.match(/NATIVE{1}/igm)) {
                                                 formatNative.push(index);
                                             }
+                                            if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                                                formatSliderVideo.push(index);
+                                            }
                                             if (insertion_name.match(/SLIDER{1}/igm)) {
                                                 formatSlider.push(index);
                                             }
                                             if (insertion_name.match(/^\MEA{1}/igm)) {
                                                 formatMea.push(index);
-                                            }
-                                            if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
-                                                formatSliderVideo.push(index);
-                                            }
+                                            }                                           
                                             if (insertion_name.match(/CLICK COMMAND{1}/igm)) {
                                                 formatClickCommand.push(index);
                                             }

@@ -293,10 +293,8 @@
 
                     <% if(reporting.clickcommand) { %>
                     <tr>
-                        <td class="text-left">
-                            <strong>Total</strong>
-                        </td>
-                        <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
+                        <td class="text-left">CLIC COMMAND</td>
+                        <td>-</td>
                         <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
                         <td>-</td>
                     </tr>
@@ -737,7 +735,6 @@
         </div>
         <% } %>
 
-
         <% if(reporting.logo) { %>
         <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
             <h3 class="title">
@@ -788,7 +785,6 @@
             </h3>
         </div>
         <div class="table-responsive-md">
-
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr>
@@ -802,7 +798,7 @@
                     <% for(i=0; i < Object.keys(reporting.clickcommand.siteList).length; i++) { %>
                     <tr>
                         <td class="text-left"><%= reporting.clickcommand.siteList[i].site %></td>
-                        <td><%= utilities.numStr(reporting.clickcommand.siteList[i].impressions) %></td>
+                        <td>-</td>
                         <td><%= utilities.numStr(reporting.clickcommand.siteList[i].clicks) %></td>
                         <td>-</td>
                     </tr>
@@ -813,7 +809,7 @@
                         <td class="text-left">
                             <strong>Total</strong>
                         </td>
-                        <td><%= utilities.numStr(reporting.clickcommand.impressions) %></td>
+                        <td>-</td>
                         <td><%= utilities.numStr(reporting.clickcommand.clicks) %></td>
                         <td>-</td>
                     </tr>
