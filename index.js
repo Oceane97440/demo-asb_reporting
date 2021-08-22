@@ -64,7 +64,6 @@ roles.hasMany(roles_users, {
     hooks: true
 });
 
-
 //un user posséde un ou plusieurs annonceurs,  un role posséde un ou plusieurs users
 users.hasOne(advertisers_users, {
     foreignKey: 'user_id',
@@ -115,11 +114,6 @@ formats.hasMany(formatstemplates, {
     onDelete: 'cascade',
     hooks: true
 });
-
-
-
-
-
 
 campaigns.belongsTo(advertisers, {
     foreignKey: 'advertiser_id',
@@ -215,7 +209,7 @@ creatives.belongsTo(insertions, {
     hooks: true
 });
 insertions.hasMany(creatives, {
-    as: 'Inserion',
+    as: 'insertions',
     foreignKey: 'insertion_id',
     onDelete: 'cascade',
     hooks: true
@@ -235,6 +229,30 @@ epilot_campaigns.belongsTo(advertisers, {
 
 epilot_campaigns.belongsTo(users, {
     foreignKey: 'user_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+epilot_campaigns.hasMany(epilot_insertions, {
+    foreignKey: 'epilot_campaign_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+epilot_insertions.belongsTo(epilot_campaigns, {
+    foreignKey: 'epilot_campaign_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+epilot_insertions.belongsTo(users, {
+    foreignKey: 'user_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+epilot_insertions.belongsTo(groups_formats, {
+    foreignKey: 'group_format_id',
     onDelete: 'cascade',
     hooks: true
 });

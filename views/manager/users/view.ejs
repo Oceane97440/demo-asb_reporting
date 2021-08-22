@@ -9,12 +9,17 @@
             <div class="col-md-8 col-sm-12">
           <ul class="list-group list-group-flush">
             <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">info</i> ID</span>: <a href="/manager/users/<%= user.user_id %>" title="<%= user.user_firstname %> <%= user.user_lastname %>"><%= user.user_id %></a></li>
+            <li class="list-group-item"><span class="labelname"> Nom</span>: <a href="/manager/users/<%= user.user_id %>" title="<%= user.user_firstname %> <%= user.user_lastname %>"><%= user.user_lastname %></a></li>
+            <li class="list-group-item"><span class="labelname"> Prénom</span>: <a href="/manager/users/<%= user.user_id %>" title="<%= user.user_firstname %> <%= user.user_lastname %>"><%= user.user_firstname %></a></li>
+            <li class="list-group-item"><span class="labelname"> Pseudonyme</span>: <%= user.user_initial %></li>
+            <li class="list-group-item"><span class="labelname"> Rôle</span>: <%= user.user_role %></li>           
+            
            </ul>
 
           <hr />
 
           <ul class="list-group list-group-flush">
-            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">history</i> Dernière mise à jour</span>: <abbr title="<%= user.updated_at %>"><%= moment(user.updated_at).fromNow() %></abbr></li>
+            <li class="list-group-item"><span class="labelname"> <i class="material-icons-two-tone">history</i> Dernière connexion</span>: <abbr title="<%= user.updated_at %>"><%= moment(user.updated_at).fromNow() %></abbr></li>
           </ul>
         </div>
 
@@ -35,7 +40,7 @@
         </div>
         <div class="card-body">
             <% if(campaigns) { %>
-                <%- include("../inc/table_campaigns.ejs") -%> 
+                <%- include("../inc/table_epilot_campaigns.ejs") -%> 
             <% } else { %>
                 <div class="alert alert-warning" role="alert">
                    Aucune campagne.

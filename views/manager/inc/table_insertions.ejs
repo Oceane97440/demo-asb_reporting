@@ -3,11 +3,12 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Campagne</th>
+            <th class=)>Campagne</th>
             <th>Nom</th>
             <th class="d-none">Date de début</th>
             <th class="d-none">Date de fin</th>
             <th>Priorité</th>
+            <th>Impressions</th>
             <th>Format</th>
             <th>Status</th>
             <th>Actions</th>
@@ -27,6 +28,7 @@
                 </td> 
                 <td class="d-none"><%= insertions[i].insertion_start_date %></td>
                 <td><% if(insertions[i].priority_id) { %><%= insertions[i].insertions_priority.priority_name %><% } else { %>-<% } %></td>
+                <td><% if(insertions[i].max_impression) { %><%= insertions[i].max_impression %><% } else { %>-<% } %></td>
                 <td class="d-none"><%= insertions[i].insertion_end_date %></td>
                  <td><% if(insertions[i].format) { %><%= insertions[i].format.format_name %><% } else { %>-<% } %></td>
                 <td><% if(insertions[i].insertions_status) { %><span class="badge bg-success"><%= insertions[i].insertions_status.insertion_status_name %></span><% } else { %>-<% } %></td>

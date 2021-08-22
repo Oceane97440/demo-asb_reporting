@@ -44,7 +44,7 @@ const ModelCreatives = require("../models/models.creatives");
 const {resolve} = require('path');
 const {cpuUsage} = require('process');
 
-exports.alerts = async (req, res) => {
+exports.index = async (req, res) => {
 
     try {
 
@@ -211,3 +211,52 @@ exports.alerts = async (req, res) => {
         console.error('Error : ', error);
     }
 }
+
+exports.campaign = async (req, res) => {
+    try {
+        let campaign_id = req.query.campaign_id;
+        if (campaign_id) {
+            campaignObject = {
+                "campaign_id": req.query.campaign_id
+            };
+
+            var campaign = await ModelCampaigns
+                .findOne({
+                    where: {
+                        campaign_id: campaign_id
+                    },
+                    include: [{
+                        model: ModelAdvertisers
+                    }]
+                })
+                .then(async function (campaign) {
+                    if (!campaign) {
+                        return res.json({
+                            type: 'error',
+                            message: 'Cette campagne n\'existe pas.'
+                        });
+                    }
+
+                    // fonctionnalité de géneration du rapport
+                    let campaigncrypt = campaign.campaign_crypt
+                    let advertiserid = campaign.advertiser_id;
+                    let campaignid = campaign.campaign_id;
+                    var campaign_start_date = campaign.campaign_start_date;
+                    var campaign_end_date = campaign.campaign_end_date;
+                });
+                
+            } else {
+                return res.json({
+                    type: 'error',
+                    message: 'Veuillez saisir l\'identifiant de la campagne.'
+                });
+            }     
+
+  } catch (error) {
+        return res.json({
+            type: 'error',
+            message: error
+        });
+    }
+}
+

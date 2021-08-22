@@ -1,54 +1,127 @@
 'use strict';
-$(document).ready(function() {
+$(document).ready(function () {
 
-var chartCampaignUrl = 'http://localhost:3001/manager/charts/campaigns';
-var chartAdvertiserUrl = 'http://localhost:3001/manager/charts/advertisers';
+    var chartCampaignUrl = 'http://localhost:3001/manager/charts/campaigns';
+    var chartAdvertiserUrl = 'http://localhost:3001/manager/charts/advertisers';
+    var chartCampaignReportUrl = 'http://localhost:3001/manager/charts/campaign/report';
 
-/*
-* Chart Campaigns - 
+    /*
+* Chart Campaigns -
 */
 
-$.getJSON(chartCampaignUrl, function(response) {
-var options = {
-        chart: {
-          type: 'line',
-          animations: {
-            enabled: true,
-            easing: 'easeinout',
-            speed: 800,
-            animateGradually: {
-                enabled: true,
-                delay: 150
+    $.getJSON(chartCampaignUrl, function (response) {
+        var options = {
+            chart: {
+                type: 'line',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800,
+                    animateGradually: {
+                        enabled: true,
+                        delay: 150
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 20
+                    }
+                }
             },
-            dynamicAnimation: {
-                enabled: true,
-                speed: 20
+            stroke: {
+                curve: 'smooth'
+            },
+            series: [
+                {
+                    name: response.lastYear.year,
+                    data: response.lastYear.result
+                }, {
+                    name: response.nowYear.year,
+                    data: response.nowYear.result
+                }
+            ],
+            xaxis: {
+                categories: response.month
             }
         }
+
+        var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
+        chart.render();
+    });
+
+    /*
+* Chart Bar Reporting
+*/
+
+    var options = {
+        series: [
+            {
+                name: 'Réservée',
+                data: [(467000), (374268), (289980)]
+            }, {
+                name: 'Restant à diffuser',
+                data: [
+                    (467000 - 475272),
+                    (374268 - 383483),
+                    (289980 - 268365)
+                ]
+            }
+        ],
+        chart: {
+            type: 'bar',
+            height: 250,
+            stacked: true
+        },
+        plotOptions: {
+            bar: {
+                horizontal: true
+            }
         },
         stroke: {
-        curve: 'smooth',
-      },
-        series: [{
-          name: response.lastYear.year,
-          data: response.lastYear.result
+            width: 1,
+            colors: ['#fff']
         },
-       {
-        name: response.nowYear.year,
-        data: response.nowYear.result
-        }],
         xaxis: {
-          categories : response.month
+            categories: [
+                'Habillage', 'Interstitiel', 'Instream'
+            ],
+            labels: {
+                formatter: function (val) {
+                    return val 
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: undefined
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        colors: [
+            '#3f51b5', '#cc0000'
+        ],
+        legend: {
+            position: 'bottom',
+            horizontalAlign: 'left',
+            offsetX: 10
         }
-      }
-      
-    var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
+    };
+
+    var chart = new ApexCharts(
+        document.querySelector("#chart-campaignreport"),
+        options
+    );
     chart.render();
-});
-    
 
 });
-
 
 /*
 $(document).ready(function() {

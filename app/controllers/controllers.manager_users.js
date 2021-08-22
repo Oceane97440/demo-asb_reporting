@@ -19,12 +19,14 @@ const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
+const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
 const ModelUsers = require("../models/models.users");
@@ -140,27 +142,33 @@ exports.view = async (req, res) => {
                         .render("manager/error.ejs", {statusCoded: 404});
                 }
                 data.user = user;
+                console.log(user)
 
                  // Créer le fil d'ariane
-        var breadcrumbLink = 'users'
-        breadcrumb = new Array({'name': 'Utilisateurs', 'link': 'users'}, {'name' : user.firstname,'link' : ''});
-        data.breadcrumb = breadcrumb;
+                var breadcrumbLink = 'users'
+                breadcrumb = new Array({'name': 'Utilisateurs', 'link': 'users'}, {'name' : user.user_firstname+' '+user.user_lastname,'link' : ''});
+                data.breadcrumb = breadcrumb;
 
-                data.campaigns = await ModelCampaigns.findAll({
-                    include: [
-                        {
-                            model: ModelAdvertisers
-                        }, {
-                            model: ModelInsertions
-                        }
-                    ]
-                }, {
-                    order: [
-                        // Will escape title and validate DESC against a list of valid direction
-                        // parameters
-                        ['campaign_id', 'DESC']
-                    ]
-                });
+                data.campaigns = await ModelEpilotCampaigns.findAll(
+                    {
+                        where: {
+                            user_id: user_id
+                        },
+                        include: [
+                            { model: ModelAdvertisers }, 
+                            { model: ModelCampaigns },
+                            { model: ModelUsers }
+                        ]
+                    }, {
+                        order: [
+                            // Will escape title and validate DESC against a list of valid direction
+                            // parameters
+                            ['campaign_id', 'DESC']
+                        ]
+                    }
+                );
+
+                console.log(data.campaigns)
 
                 /*
                // Récupére les données des insertions de la campagne
@@ -192,6 +200,8 @@ exports.view = async (req, res) => {
                 data.user = user;
                 data.moment = moment;
                 */
+                data.utilities = Utilities;
+                data.moment = moment;
                 res.render('manager/users/view.ejs', data);
             });
 
