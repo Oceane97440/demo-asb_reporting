@@ -40,11 +40,23 @@ const AxiosFunction = require('../functions/functions.axios');
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
 const ModelCampaign_epilot = require("../models/models.epilot_campaigns")
+const ModelInsertion_epilot = require("../models/models.epilot_insertions")
+
 const ModelPacks = require("../models/models.packs")
 const ModelPacksSites = require("../models/models.packs_sites")
 
 exports.index = async (req, res) => {
     try {
+
+        const data = new Object();
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Forecast',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
+
         const formats = await ModelFormat.findAll({
             attributes: ['format_group'],
             group: "format_group",
@@ -78,7 +90,8 @@ exports.index = async (req, res) => {
         res.render('manager/forecast/index.ejs', {
             formats: formats,
             packs: packs,
-            countrys: countrys
+            countrys: countrys,
+            data
         });
 
 
@@ -579,7 +592,20 @@ exports.forecast = async (req, res, next) => {
                 }
             }
 
-            const requete = await ModelCampaign_epilot.findAll({
+            
+
+            const requete = await ModelInsertion_epilot.findAll({
+                where: {
+                    epilot_insertion_start_date: {
+                        [Op.between]: [date_start, date_end]
+                    },
+                    epilot_insertion_end_date: {
+                        [Op.between]: [date_start, date_end]
+                    },
+                }
+            })
+
+           /*const requete = await ModelCampaign_epilot.findAll({
                 where: {
                     epilot_campaign_start_date: {
                         [Op.between]: [date_start, date_end]
@@ -588,7 +614,7 @@ exports.forecast = async (req, res, next) => {
                         [Op.between]: [date_start, date_end]
                     },
                 }
-            })
+            })*/
 
             //Initialisation du tableau
             var array_reserver = [];
@@ -602,9 +628,9 @@ exports.forecast = async (req, res, next) => {
             if (requete.length > 0) {
                 for (let i = 0; i < requete.length; i++) {
                     // Calculer l'intervalle de date sur la période
-                    const campaign_start_date = requete[i].epilot_campaign_start_date;
-                    const campaign_end_date = requete[i].epilot_campaign_end_date;
-                    const volumes_prevue = requete[i].epilot_campaign_volume;
+                    const campaign_start_date = requete[i].epilot_insertion_start_date;
+                    const campaign_end_date = requete[i].epilot_insertion_end_date;
+                    const volumes_prevue = requete[i].epilot_insertion_volume;
 
                     const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
                     const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
