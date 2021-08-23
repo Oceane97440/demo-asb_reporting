@@ -44,7 +44,7 @@ const AxiosFunction = require('../functions/functions.axios');
 //const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
-const ModelCampaign_epilot = require("../models/models.epilot_campaigns")
+const ModelCampaign_epilot = require("../models/models.campaigns_epilots")
 const ModelPack = require("../models/models.packs")
 const ModelPack_Site = require("../models/models.packs_sites")
 
@@ -81,8 +81,6 @@ exports.index = async (req, res) => {
                 ],
             })
 
-
-
             res.render('forecast/form.ejs', {
                 formats: formats,
                 packs: packs,
@@ -109,14 +107,14 @@ exports.forecast = async (req, res, next) => {
     var format = await req.body.format;
     var packs = await req.body.packs;
     var countries = await req.body.countries;
-    // var option = await req.body.case
+   // var option = await req.body.case
 
     //si la case n'est pas coché renvoie false sinon true
-    /* if (option == undefined) {
-         var option = false;
-     } else {
-         var option = true;
-     }*/
+   /* if (option == undefined) {
+        var option = false;
+    } else {
+        var option = true;
+    }*/
 
     const formatIdsArray = [];
     const sites = [];
@@ -359,20 +357,7 @@ exports.forecast = async (req, res, next) => {
                     }
                 }
             }
-
-
-            const requete = await ModelCampaign_epilot.findAll({
-                where: {
-                    epilot_campaign_start_date: {
-                        [Op.between]: [date_start, date_end]
-                    },
-                    epilot_campaign_end_date: {
-                        [Op.between]: [date_start, date_end]
-                    },
-                }
-            })
-
-            /* switch (format) {
+            switch (format) {
                 case "INTERSTITIEL":
                     //si interstitiel -> web_interstitiel / app_interstitiel
                     format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
@@ -381,15 +366,13 @@ exports.forecast = async (req, res, next) => {
                     break;
             }
 
-    
             //Requête sql campagne epilot
             const requete = await sequelize.query(
                 'SELECT * FROM asb_campaigns_epilot WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?)) AND format_name  IN (?) ORDER BY asb_campaigns_epilot.format_name ASC', {
                     replacements: [date_start, date_end, date_start, date_end, format_filtre],
                     type: QueryTypes.SELECT
                 }
-            );*/
-
+            );
 
             //Initialisation du tableau
             var array_reserver = [];
@@ -399,19 +382,18 @@ exports.forecast = async (req, res, next) => {
             var Interval_reserver = [];
             var Nbr_cheval_reserver = [];
 
-
             if (requete.length > 0) {
                 for (let i = 0; i < requete.length; i++) {
                     // Calculer l'intervalle de date sur la période
-                    const campaign_start_date = requete[i].epilot_campaign_start_date;
-                    const campaign_end_date = requete[i].epilot_campaign_end_date;
-                    const volumes_prevue = requete[i].epilot_campaign_volume;
+                    const campaign_start_date = requete[i].campaign_start_date;
+                    const campaign_end_date = requete[i].campaign_end_date;
+                    const volumes_prevue = requete[i].volume_prevue;
 
                     const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
                     const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                    var date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
+                    date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
 
-                    const nb_jour_interval = (date_interval / 86400000).toFixed(2);
+                    const nb_jour_interval = (date_interval / 86400000);
 
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
                     const date_start_forecast = date_start;
@@ -444,76 +426,18 @@ exports.forecast = async (req, res, next) => {
                     //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
                     const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
 
-                    if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
-                        array_reserver.push(volumes_prevu_diffuse);
-                        Campagnes_reserver.push(requete[i].epilot_campaign_name);
-                        Campagne_start_reserver.push(campaign_start_date);
-                        Campagne_end_reserver.push(campaign_end_date);
-                        Interval_reserver.push(nb_jour_interval);
-                        Nbr_cheval_reserver.push(nb_jour_cheval);
+                    if (requete[i].etat == "2") {
+                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
+                            array_reserver.push(volumes_prevu_diffuse);
+                            Campagnes_reserver.push(requete[i].campaign_name);
+                            Campagne_start_reserver.push(campaign_start_date);
+                            Campagne_end_reserver.push(campaign_end_date);
+                            Interval_reserver.push(nb_jour_interval);
+                            Nbr_cheval_reserver.push(nb_jour_cheval);
+                        }
                     }
-
                 }
             }
-
-
-
-            /* if (requete.length > 0) {
-                 for (let i = 0; i < requete.length; i++) {
-                     // Calculer l'intervalle de date sur la période
-                     const campaign_start_date = requete[i].campaign_start_date;
-                     const campaign_end_date = requete[i].campaign_end_date;
-                     const volumes_prevue = requete[i].volume_prevue;
-
-                     const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                     const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                     date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
-
-                     const nb_jour_interval = (date_interval / 86400000);
-
-                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                     const date_start_forecast = date_start;
-                     const date_end_forecast = date_end;
-
-                     if ((campaign_date_end > date_start_forecast)) {
-                         //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
-                         if (date_start_forecast < campaign_date_start) {
-                             //alors la date début à cheval = date de début campagne 
-                             var date_start_cheval = campaign_date_start;
-                         } else {
-                             var date_start_cheval = date_start_forecast;
-                         }
-
-                         // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
-                         if (date_end_forecast > campaign_date_end) {
-                             //alors le date de fin a cheval = date de fin campagne 
-                             var date_end_cheval = campaign_date_end;
-                         } else {
-                             var date_end_cheval = date_end_forecast;
-                         }
-                     }
-
-                     //calcul du nombre de jour à cheval
-                     const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
-
-                     //arrondie pour un nombre entier
-                     const nb_jour_cheval = Math.round(periode_a_cheval / 86400000);
-
-                     //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
-                     const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
-
-                     if (requete[i].etat == "2") {
-                         if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
-                             array_reserver.push(volumes_prevu_diffuse);
-                             Campagnes_reserver.push(requete[i].campaign_name);
-                             Campagne_start_reserver.push(campaign_start_date);
-                             Campagne_end_reserver.push(campaign_end_date);
-                             Interval_reserver.push(nb_jour_interval);
-                             Nbr_cheval_reserver.push(nb_jour_cheval);
-                         }
-                     }
-                 }
-             }*/
 
             var sommeReserver = 0;
 
@@ -555,7 +479,7 @@ exports.forecast = async (req, res, next) => {
                 format,
             }
 
-
+          
             if (req.session.user.user_role == 1) {
 
 
@@ -662,47 +586,47 @@ exports.forecast = async (req, res, next) => {
                 ]
             }
         } */
-        // si le format habillage est choisi on ajoute App_man_atf0
-        if (format === "HABILLAGE") {
-            requestForecast.filter[2] = {
-                "FormatID": ["79637", "44149"]
+            // si le format habillage est choisi on ajoute App_man_atf0
+            if (format === "HABILLAGE") {
+                requestForecast.filter[2] = {
+                    "FormatID": ["79637", "44149"]
+                }
             }
-        }
 
-        //si le format rectange est choisi on ajoute les web_mban/app_mban et web_mpave/app_mpave
-        if (format === "RECTANGLE VIDEO") {
-            requestForecast.filter[2] = {
-                "formatID": [
-                    "79637",
-                    "79638",
-                    "79642",
-                    "79643",
-                    "79644",
-                    "79645",
-                    "79956",
-                    "79650",
-                    "79651",
-                    "79652",
-                    "79653",
-                    "79654",
-                    "79409",
-                    "84652",
-                    "84653",
-                    "84654",
-                    "84655",
-                    "84656",
-                    "79421",
-                    "79425",
-                    "84657",
-                    "84658",
-                    "84659",
-                    "84660",
-                    "84661",
-                    "79431"
-                ]
+            //si le format rectange est choisi on ajoute les web_mban/app_mban et web_mpave/app_mpave
+            if (format === "RECTANGLE VIDEO") {
+                requestForecast.filter[2] = {
+                    "formatID": [
+                        "79637",
+                        "79638",
+                        "79642",
+                        "79643",
+                        "79644",
+                        "79645",
+                        "79956",
+                        "79650",
+                        "79651",
+                        "79652",
+                        "79653",
+                        "79654",
+                        "79409",
+                        "84652",
+                        "84653",
+                        "84654",
+                        "84655",
+                        "84656",
+                        "79421",
+                        "79425",
+                        "84657",
+                        "84658",
+                        "84659",
+                        "84660",
+                        "84661",
+                        "79431"
+                    ]
+                }
             }
-        }
-
+        
 
         if (packs == "4") {
             if (format == "HABILLAGE" || format == "MASTHEAD" || format == "GRAND ANGLE") {
@@ -787,7 +711,7 @@ exports.forecast = async (req, res, next) => {
                 //         type: QueryTypes.SELECT
                 //     }
                 // );
-                /*
+
                 switch (format) {
                     case "HABILLAGE":
                         //si c habillage -> web_habillage / app_mban_atf
@@ -829,20 +753,6 @@ exports.forecast = async (req, res, next) => {
                     }
                 );
                 //  console.log(requete)
-*/
-
-                const requete = await ModelCampaign_epilot.findAll({
-                    where: {
-                        epilot_campaign_start_date: {
-                            [Op.between]: [date_start, date_end]
-                        },
-                        epilot_campaign_end_date: {
-                            [Op.between]: [date_start, date_end]
-                        },
-                    }
-                })
-
-
 
                 //Initialisation du tableau
                 var array_reserver = [];
@@ -852,119 +762,61 @@ exports.forecast = async (req, res, next) => {
                 var Interval_reserver = [];
                 var Nbr_cheval_reserver = [];
 
-                if (requete.length > 0) {
-                    for (let i = 0; i < requete.length; i++) {
-                        // Calculer l'intervalle de date sur la période
-                        const campaign_start_date = requete[i].epilot_campaign_start_date;
-                        const campaign_end_date = requete[i].epilot_campaign_end_date;
-                        const volumes_prevue = requete[i].epilot_campaign_volume;
+                for (let i = 0; i < requete.length; i++) {
 
-                        const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                        const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                        var date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
+                    // Calculer l'intervalle de date sur la période
+                    const campaign_start_date = requete[i].campaign_start_date;
+                    const campaign_end_date = requete[i].campaign_end_date;
+                    const volumes_prevue = requete[i].volume_prevue;
+                    const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
+                    const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
+                    date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
 
-                        const nb_jour_interval = (date_interval / 86400000).toFixed(2);
+                    const nb_jour_interval = (date_interval / 86400000);
 
-                        // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                        const date_start_forecast = date_start;
-                        const date_end_forecast = date_end;
+                    // Calculer le nombre de jour à cheval en fonction des dates du forecast
+                    const date_start_forecast = date_start;
+                    const date_end_forecast = date_end;
 
-                        if ((campaign_date_end > date_start_forecast)) {
-                            //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
-                            if (date_start_forecast < campaign_date_start) {
-                                //alors la date début à cheval = date de début campagne 
-                                var date_start_cheval = campaign_date_start;
-                            } else {
-                                var date_start_cheval = date_start_forecast;
-                            }
-
-                            // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
-                            if (date_end_forecast > campaign_date_end) {
-                                //alors le date de fin a cheval = date de fin campagne 
-                                var date_end_cheval = campaign_date_end;
-                            } else {
-                                var date_end_cheval = date_end_forecast;
-                            }
+                    if ((campaign_date_end > date_start_forecast)) {
+                        //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
+                        if (date_start_forecast < campaign_date_start) {
+                            //alors la date début à cheval = date de début campagne 
+                            var date_start_cheval = campaign_date_start;
+                        } else {
+                            var date_start_cheval = date_start_forecast;
                         }
 
-                        //calcul du nombre de jour à cheval
-                        const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
+                        // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
+                        if (date_end_forecast > campaign_date_end) {
+                            //alors le date de fin a cheval = date de fin campagne 
+                            var date_end_cheval = campaign_date_end;
+                        } else {
+                            var date_end_cheval = date_end_forecast;
+                        }
+                    }
 
-                        //arrondie pour un nombre entier
-                        const nb_jour_cheval = Math.round(periode_a_cheval / 86400000);
+                    const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
+                    const nb_jour_cheval = Math.round(periode_a_cheval / 86400000);
+                    const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval);
 
-                        //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
-                        const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
+                    //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
+                    //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
 
-                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
+                    if (requete[i].etat == "2") {
+                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
+
+                        } else {
                             array_reserver.push(volumes_prevu_diffuse);
-                            Campagnes_reserver.push(requete[i].epilot_campaign_name);
+                            Campagnes_reserver.push(requete[i].campaign_name);
                             Campagne_start_reserver.push(campaign_start_date);
-                            Campagne_end_reserver.push(campaign_end_date);
+                            Campagne_end_reserver.push(campaign_date_end);
                             Interval_reserver.push(nb_jour_interval);
                             Nbr_cheval_reserver.push(nb_jour_cheval);
                         }
-
                     }
+
                 }
-
-                /*
-                    for (let i = 0; i < requete.length; i++) {
-
-                        // Calculer l'intervalle de date sur la période
-                        const campaign_start_date = requete[i].campaign_start_date;
-                        const campaign_end_date = requete[i].campaign_end_date;
-                        const volumes_prevue = requete[i].volume_prevue;
-                        const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                        const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                        date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
-
-                        const nb_jour_interval = (date_interval / 86400000);
-
-                        // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                        const date_start_forecast = date_start;
-                        const date_end_forecast = date_end;
-
-                        if ((campaign_date_end > date_start_forecast)) {
-                            //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
-                            if (date_start_forecast < campaign_date_start) {
-                                //alors la date début à cheval = date de début campagne 
-                                var date_start_cheval = campaign_date_start;
-                            } else {
-                                var date_start_cheval = date_start_forecast;
-                            }
-
-                            // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
-                            if (date_end_forecast > campaign_date_end) {
-                                //alors le date de fin a cheval = date de fin campagne 
-                                var date_end_cheval = campaign_date_end;
-                            } else {
-                                var date_end_cheval = date_end_forecast;
-                            }
-                        }
-
-                        const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
-                        const nb_jour_cheval = Math.round(periode_a_cheval / 86400000);
-                        const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval);
-
-                        //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
-                        //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
-
-                        if (requete[i].etat == "2") {
-                            if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
-
-                            } else {
-                                array_reserver.push(volumes_prevu_diffuse);
-                                Campagnes_reserver.push(requete[i].campaign_name);
-                                Campagne_start_reserver.push(campaign_start_date);
-                                Campagne_end_reserver.push(campaign_date_end);
-                                Interval_reserver.push(nb_jour_interval);
-                                Nbr_cheval_reserver.push(nb_jour_cheval);
-                            }
-                        }
-
-                    }
-                */
 
                 var sommeReserver = 0;
 
@@ -997,7 +849,7 @@ exports.forecast = async (req, res, next) => {
                     sommeImpressions,
                     sommeOccupied,
                     volumeDispo,
-                    //  option
+                  //  option
                 }
 
                 var reserver = {
@@ -1018,7 +870,15 @@ exports.forecast = async (req, res, next) => {
                     format
                 }
 
-    
+                /* if (reserver_reel === undefined) {
+                     console.log("aucun requête")
+                     return res.render('forecast/data.ejs', {
+                         table: table,
+                         insertions: insertions,
+                         infos:infos, 
+                     });
+
+                 }*/
 
 
                 if (req.session.user.user_role == 1) {

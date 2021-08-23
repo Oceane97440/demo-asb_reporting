@@ -39,7 +39,7 @@ const AxiosFunction = require('../functions/functions.axios');
 //const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
-const ModelEpilotCampaigns = require("../models/models.epilot_campaigns")
+const ModelCampaign_epilot = require("../models/models.epilot_campaigns")
 const ModelPacks = require("../models/models.packs")
 const ModelPacksSites = require("../models/models.packs_sites")
 
@@ -269,187 +269,187 @@ exports.forecast = async (req, res, next) => {
             ]
         };
 
-        // si le packs choisi "Rotation Générale" / "Rotation Générale-DESKTOP"
-        if (packs == "1" || packs == "2" || packs == "7") {
+        /*        // si le packs choisi "Rotation Générale" / "Rotation Générale-DESKTOP"
+             if (packs == "1" || packs == "2" || packs == "7") {
 
-        }
-        if (format == "VIDEOS" || SiteID == 322433 || SiteID == 299263) {
+             }
+             if (format == "VIDEOS" || SiteID == 322433 || SiteID == 299263) {
 
-            //liste des campagne_id video Linfo.re / antenne
-            var requestCampaign_video = {
-                "startDate": date_start,
-                "endDate": date_end,
-                "timeZoneId": "Arabian Standard Time",
-                "filter": [{
-                        "CountryID": [countries]
-                    },
-                    {
-                        "SiteID": ["322433", "299263"]
-                    },
-                    {
-                        "FormatID": formatIdsArray // new Array(79633,44152) //formats
-                    }
-                ],
-                "fields": [
-                    "CampaignID",
-                    //  "CampaignName",
-                ]
-            };
+                 //liste des campagne_id video Linfo.re / antenne
+                 var requestCampaign_video = {
+                     "startDate": date_start,
+                     "endDate": date_end,
+                     "timeZoneId": "Arabian Standard Time",
+                     "filter": [{
+                             "CountryID": [countries]
+                         },
+                         {
+                             "SiteID": ["322433", "299263"]
+                         },
+                         {
+                             "FormatID": formatIdsArray // new Array(79633,44152) //formats
+                         }
+                     ],
+                     "fields": [
+                         "CampaignID",
+                         //  "CampaignName",
+                     ]
+                 };
 
-            //liste des insertion video adbreak 1 Linfo.re / antenne
+                 //liste des insertion video adbreak 1 Linfo.re / antenne
 
-            var requestForecast_video = {
+                 var requestForecast_video = {
 
-                "startDate": date_start,
-                "endDate": date_end,
-                "timeZoneId": "Arabian Standard Time",
-                "filter": [
+                     "startDate": date_start,
+                     "endDate": date_end,
+                     "timeZoneId": "Arabian Standard Time",
+                     "filter": [
 
-                    {
-                        "formatID": formatIdsArray
-                    },
-                    {
-                        "SiteID": ["322433", "299263"]
+                         {
+                             "formatID": formatIdsArray
+                         },
+                         {
+                             "SiteID": ["322433", "299263"]
 
-                    },
-                    {
-                        "countryID": [countries]
-                    },
-                    {
-                        "adBreakID": ["1"]
+                         },
+                         {
+                             "countryID": [countries]
+                         },
+                         {
+                             "adBreakID": ["1"]
 
-                    }
+                         }
 
-                ],
+                     ],
 
-                "fields": [
+                     "fields": [
 
-                    "InsertionID",
+                         "InsertionID",
 
-                    "InsertionName",
+                         "InsertionName",
 
-                    "TotalImpressions",
+                         "TotalImpressions",
 
-                    "OccupiedImpressions",
+                         "OccupiedImpressions",
 
-                    "InsertionBookedVolume",
+                         "InsertionBookedVolume",
 
-                    "InsertionForecastedDeliveredVolume",
-
-
-                ],
+                         "InsertionForecastedDeliveredVolume",
 
 
-
-            }
-
-            // traitement et envoie des 2 requêtes video
-            let LinkCampaign_adbreak = await AxiosFunction.getForecastData('POST', '', requestCampaign_video);
-            let LinkForecast_adbreak = await AxiosFunction.getForecastData('POST', '', requestForecast_video);
-
-            if (LinkCampaign_adbreak.headers.location || LinkForecast_adbreak.headers.location) {
-
-                headerlocationVideo_campaign = LinkCampaign_adbreak.headers.location;
-                headerlocationVideo_forecast = LinkForecast_adbreak.headers.location;
-
-                let campaignLink = await AxiosFunction.getForecastData('GET', headerlocationVideo_campaign);
-                let forecastLink = await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
-
-                if (campaignLink.data.progress == '100') {
-                    headerlocationVideo_campaign = campaignLink.headers.location;
-                    headerlocationVideo_forecast = forecastLink.headers.location;
-
-
-                    let csvLink_campaign = await AxiosFunction.getForecastData('GET', headerlocationVideo_campaign);
-                    let csvLink_forecast = await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
-
-
-                    //  console.log(csvLink_campaign.data)
-                    //  console.log( csvLink_forecast.data)
-
-
-                    const campaigns = [];
-
-                    var data_campaignid = await csvLink_campaign.data;
-                    var data_split = await data_campaignid.split(/\r?\n/);
-                    var number_line = await data_split.length;
-
-                    for (i = 1; i < number_line; i++) {
-                        line = await data_split[i].split(';');
-                        campaigns.push(line[0]);
-
-                    }
-                    //exclure les doublon campagne_id
-                    const campaignUnique = Utilities.array_unique(campaigns);
-                    console.log('number_line', number_line)
-                    console.log('all campaign_id ', campaigns)
-                    console.log('all campaign_unique ', campaignUnique)
-
-
-                    console.log('-----------------------------------')
-
-                    var InsertionId = [];
-                    var InsertionName = [];
-                    var InsertionImpression = [];
-                    var InsertionOccupied = [];
-                    var InsertionVolume = [];
-                    var InsertionDeliveredVolume = [];
+                     ],
 
 
 
+                 }
 
-                    var data_insertions = await csvLink_forecast.data;
-                    var data_split = await data_insertions.split(/\r?\n/);
-                    var number_line = await data_split.length;
+                 // traitement et envoie des 2 requêtes video
+                 let LinkCampaign_adbreak = await AxiosFunction.getForecastData('POST', '', requestCampaign_video);
+                 let LinkForecast_adbreak = await AxiosFunction.getForecastData('POST', '', requestForecast_video);
 
-                    for (i = 1; i < number_line; i++) {
-                        line = await data_split[i].split(';');
-                        InsertionId.push(line[0]);
-                        InsertionName.push(line[1]);
-                        InsertionImpression.push(line[2]);
-                        InsertionOccupied.push(line[3]);
-                        InsertionVolume.push(line[4]);
-                        InsertionDeliveredVolume.push(line[5]);
+                 if (LinkCampaign_adbreak.headers.location || LinkForecast_adbreak.headers.location) {
 
+                     headerlocationVideo_campaign = LinkCampaign_adbreak.headers.location;
+                     headerlocationVideo_forecast = LinkForecast_adbreak.headers.location;
 
+                     let campaignLink = await AxiosFunction.getForecastData('GET', headerlocationVideo_campaign);
+                     let forecastLink = await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
 
-                    }
-                    console.log('number_line', number_line)
-                    console.log(InsertionVolume)
-
-                    console.log('-----------------------------------')
+                     if (campaignLink.data.progress == '100') {
+                         headerlocationVideo_campaign = campaignLink.headers.location;
+                         headerlocationVideo_forecast = forecastLink.headers.location;
 
 
-                    var insertionId = new Array();
-                    var sommeVolumeCampaign = new Array();
+                         let csvLink_campaign = await AxiosFunction.getForecastData('GET', headerlocationVideo_campaign);
+                         let csvLink_forecast = await AxiosFunction.getForecastData('GET', headerlocationVideo_forecast);
 
 
-                    for (i = 0; i < campaignUnique.length; i++) {
-                        for (j = 0; j < campaigns.length; j++) {
-                            if (campaignUnique[i] === campaigns[j]) {
-                                sommeVolumeCampaign[i] = InsertionVolume[j]
-                                insertionId[i] = InsertionId[j]
+                         //  console.log(csvLink_campaign.data)
+                         //  console.log( csvLink_forecast.data)
 
 
-                            }
-                        }
-                    }
+                      const campaigns = [];
 
-                    for (i = 0; i < campaignUnique.length; i++) {
-                        sommeVolumeCampaign[i] = sommeVolumeCampaign[i]
-                    }
+                         var data_campaignid = await csvLink_campaign.data;
+                         var data_split = await data_campaignid.split(/\r?\n/);
+                         var number_line = await data_split.length;
+
+                         for (i = 1; i < number_line; i++) {
+                             line = await data_split[i].split(';');
+                             campaigns.push(line[0]);
+
+                         }
+                         //exclure les doublon campagne_id
+                         const campaignUnique = Utilities.array_unique(campaigns);
+                         console.log('number_line', number_line)
+                         console.log('all campaign_id ', campaigns)
+                         console.log('all campaign_unique ', campaignUnique)
 
 
-                    console.log("---------------------")
-                    console.log(insertionId)
-                    console.log(sommeVolumeCampaign)
+                         console.log('-----------------------------------')
+
+                         var InsertionId = [];
+                         var InsertionName = [];
+                         var InsertionImpression = [];
+                         var InsertionOccupied = [];
+                         var InsertionVolume = [];
+                         var InsertionDeliveredVolume = [];
 
 
-                }
 
-            }
 
-        }
+                         var data_insertions = await csvLink_forecast.data;
+                         var data_split = await data_insertions.split(/\r?\n/);
+                         var number_line = await data_split.length;
+
+                         for (i = 1; i < number_line; i++) {
+                             line = await data_split[i].split(';');
+                             InsertionId.push(line[0]);
+                             InsertionName.push(line[1]);
+                             InsertionImpression.push(line[2]);
+                             InsertionOccupied.push(line[3]);
+                             InsertionVolume.push(line[4]);
+                             InsertionDeliveredVolume.push(line[5]);
+
+
+
+                         }
+                         console.log('number_line', number_line)
+                         console.log(InsertionVolume)
+
+                         console.log('-----------------------------------')
+
+
+                         var insertionId = new Array();
+                         var sommeVolumeCampaign = new Array();
+
+
+                         for (i = 0; i < campaignUnique.length; i++) {
+                             for (j = 0; j < campaigns.length; j++) {
+                                 if (campaignUnique[i] === campaigns[j]) {
+                                     sommeVolumeCampaign[i] = InsertionVolume[j]
+                                     insertionId[i] = InsertionId[j]
+
+
+                                 }
+                             }
+                         }
+
+                         for (i = 0; i < campaignUnique.length; i++) {
+                             sommeVolumeCampaign[i] = sommeVolumeCampaign[i]
+                         }
+
+
+                         console.log("---------------------")
+                         console.log(insertionId)
+                         console.log(sommeVolumeCampaign)
+
+
+                     }
+
+                 }
+
+             }*/
 
         let threeLink = await AxiosFunction.getForecastData('POST', '', requestInsertions);
 
@@ -570,23 +570,16 @@ exports.forecast = async (req, res, next) => {
                 }
             }
 
-            switch (format) {
-                case "INTERSTITIEL":
-                    //si interstitiel -> web_interstitiel / app_interstitiel
-                    format_filtre = new Array("WEB_INTERSTITIEL", "APP_INTERSTITIEL", "INTERSTITIEL")
-                    break;
-                default:
-                    break;
-            }
-
-            //Requête sql campagne epilot
-            const requete = await sequelize.query(
-                'SELECT * FROM asb_epilot_campaigns WHERE ((asb_epilot_campaigns.campaign_epilot_start_date BETWEEN ? AND ?) OR (asb_epilot_campaigns.campaign_epilot_end_date BETWEEN ? AND ?))', {
-                    /*AND format_name IN(?) ORDER BY asb_epilot_campaigns.format_name ASC*/
-                    replacements: [date_start, date_end, date_start, date_end /*, format_filtre*/ ],
-                    type: QueryTypes.SELECT
+            const requete = await ModelCampaign_epilot.findAll({
+                where: {
+                    epilot_campaign_start_date: {
+                        [Op.between]: [date_start, date_end]
+                    },
+                    epilot_campaign_end_date: {
+                        [Op.between]: [date_start, date_end]
+                    },
                 }
-            );
+            })
 
             //Initialisation du tableau
             var array_reserver = [];
@@ -596,18 +589,19 @@ exports.forecast = async (req, res, next) => {
             var Interval_reserver = [];
             var Nbr_cheval_reserver = [];
 
+
             if (requete.length > 0) {
                 for (let i = 0; i < requete.length; i++) {
                     // Calculer l'intervalle de date sur la période
-                    const campaign_epilot_start_date = requete[i].campaign_epilot_start_date;
-                    const campaign_epilot_end_date = requete[i].campaign_epilot_end_date;
-                    const volumes_prevue = requete[i].volume_prevue;
+                    const campaign_start_date = requete[i].epilot_campaign_start_date;
+                    const campaign_end_date = requete[i].epilot_campaign_end_date;
+                    const volumes_prevue = requete[i].epilot_campaign_volume;
 
-                    const campaign_date_start = await campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                    const campaign_date_end = await campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                    date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
+                    const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
+                    const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
+                    var date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
 
-                    const nb_jour_interval = (date_interval / 86400000);
+                    const nb_jour_interval = (date_interval / 86400000).toFixed(2);
 
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
                     const date_start_forecast = date_start;
@@ -640,18 +634,18 @@ exports.forecast = async (req, res, next) => {
                     //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
                     const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
 
-                    if (requete[i].etat == "2") {
-                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
-                            array_reserver.push(volumes_prevu_diffuse);
-                            Campagnes_reserver.push(requete[i].campaign_name);
-                            Campagne_start_reserver.push(campaign_epilot_start_date);
-                            Campagne_end_reserver.push(campaign_epilot_end_date);
-                            Interval_reserver.push(nb_jour_interval);
-                            Nbr_cheval_reserver.push(nb_jour_cheval);
-                        }
+                    if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
+                        array_reserver.push(volumes_prevu_diffuse);
+                        Campagnes_reserver.push(requete[i].epilot_campaign_name);
+                        Campagne_start_reserver.push(campaign_start_date);
+                        Campagne_end_reserver.push(campaign_end_date);
+                        Interval_reserver.push(nb_jour_interval);
+                        Nbr_cheval_reserver.push(nb_jour_cheval);
                     }
+
                 }
             }
+
 
             var sommeReserver = 0;
 
@@ -729,7 +723,58 @@ exports.forecast = async (req, res, next) => {
 
 
 
-        //si la case "élargir la propo" est coché les web et ap mban son add de la requête
+
+        //si le format choisi est Linear
+        /*   if (format == "VIDEOS") {
+
+               //site m6 et tf1
+
+               // tous les preroll et midroll de tf1 /m6
+               requestForecast.filter[3] = {
+                   "pageID": [
+                       //midroll m6
+                       "1108384",
+                       "1108386",
+                       "1108389",
+                       "1108390",
+                       "1108392",
+                       "1108393",
+                       "1108394",
+                       //preroll m6
+                       "1108371",
+                       "1108373",
+                       "1108375",
+                       "1108377",
+                       // midroll tf1 ici
+                       "1108365",
+                       "1108366",
+                       "1108367",
+                       "1108368",
+                       "1108369",
+                       "1108370",
+                       // preroll tf1 ici
+                       "1108360",
+                       "1108361",
+                       "1108362",
+                       "1108363",
+                       //midroll tf1 mytf1
+                       "1107007",
+                       "1107008",
+                       "1107009",
+                       "1108354",
+                       "1108355",
+                       "1108356",
+                       "1108357",
+                       // preroll tf1 mytf1    
+                       "1107003",
+                       "1107004",
+                       "1107005",
+                       "1107006"
+                   ]
+               }
+
+           }*/
+
         if (format == "GRAND ANGLE") {
             requestForecast.filter[2] = {
                 "FormatID": [
@@ -766,62 +811,8 @@ exports.forecast = async (req, res, next) => {
                 ]
             }
         }
-
-        //si le format choisi est Linear
-        if (format == "VIDEOS") {
-
-            //site m6 et tf1
-
-            // tous les preroll et midroll de tf1 /m6
-            requestForecast.filter[3] = {
-                "pageID": [
-                    //midroll m6
-                    "1108384",
-                    "1108386",
-                    "1108389",
-                    "1108390",
-                    "1108392",
-                    "1108393",
-                    "1108394",
-                    //preroll m6
-                    "1108371",
-                    "1108373",
-                    "1108375",
-                    "1108377",
-                    // midroll tf1 ici
-                    "1108365",
-                    "1108366",
-                    "1108367",
-                    "1108368",
-                    "1108369",
-                    "1108370",
-                    // preroll tf1 ici
-                    "1108360",
-                    "1108361",
-                    "1108362",
-                    "1108363",
-                    //midroll tf1 mytf1
-                    "1107007",
-                    "1107008",
-                    "1107009",
-                    "1108354",
-                    "1108355",
-                    "1108356",
-                    "1108357",
-                    // preroll tf1 mytf1    
-                    "1107003",
-                    "1107004",
-                    "1107005",
-                    "1107006"
-                ]
-            }
-
-        }
-
-
-
         //si la case "élargir la propo" est coché les web et ap mban et pave son add de la requête
-        if (option == true && format == "HABILLAGE") {
+        /*if (option == true && format == "HABILLAGE") {
             requestForecast.filter[2] = {
                 "FormatID": [
                     //Masthead / Grand_angle
@@ -831,14 +822,48 @@ exports.forecast = async (req, res, next) => {
                     "44149"
                 ]
             }
-        } else {
-            // si le format habillage est choisi on ajoute App_man_atf0
-            if (format === "HABILLAGE") {
-                requestForecast.filter[2] = {
-                    "FormatID": ["79637", "44149"]
-                }
+        } */
+        // si le format habillage est choisi on ajoute App_man_atf0
+        if (format === "HABILLAGE") {
+            requestForecast.filter[2] = {
+                "FormatID": ["79637", "44149"]
             }
         }
+
+        //si le format rectange est choisi on ajoute les web_mban/app_mban et web_mpave/app_mpave
+        if (format === "RECTANGLE VIDEO") {
+            requestForecast.filter[2] = {
+                "formatID": [
+                    "79637",
+                    "79638",
+                    "79642",
+                    "79643",
+                    "79644",
+                    "79645",
+                    "79956",
+                    "79650",
+                    "79651",
+                    "79652",
+                    "79653",
+                    "79654",
+                    "79409",
+                    "84652",
+                    "84653",
+                    "84654",
+                    "84655",
+                    "84656",
+                    "79421",
+                    "79425",
+                    "84657",
+                    "84658",
+                    "84659",
+                    "84660",
+                    "84661",
+                    "79431"
+                ]
+            }
+        }
+
 
         if (packs == "4") {
             if (format == "HABILLAGE" || format == "MASTHEAD" || format == "GRAND ANGLE") {
@@ -921,43 +946,54 @@ exports.forecast = async (req, res, next) => {
 
                 var volumeDispo = sommeImpressions - sommeOccupied;
 
-                switch (format) {
-                    case "HABILLAGE":
-                        //si c habillage -> web_habillage / app_mban_atf
-                        format_filtre = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0", "HABILLAGE")
-                        break;
-                    case "GRAND ANGLE":
-                        //si grand angle ->web_mban  app_mpave_atf0 
-                        format_filtre = new Array("WEB_MPAVE_ATF0", "APP_MPAVE_ATF0", "GRAND ANGLE")
-                        break;
-                    case "MASTHEAD":
-                        //si masthead -> web_mban / app_mban
-                        format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0", "MASTHEAD")
-                        break;
-                    case "VIDEOS":
-                        //si instream -> linear 
-                        format_filtre = new Array("VIDEOS", "Linear")
-                        break;
-                    case "LOGO":
-                        format_filtre = new Array("LOGO", "WEB_LOGO")
-                        break;
-                    case "NATIVE":
-                        format_filtre = new Array("NATIVE", "WEB_NATIVE", "WEB_NATIVE_MBAN_ATF")
-                        break;
-                    case "SLIDE":
-                        format_filtre = new Array("SLIDE", "APP_SLIDE")
-                        break;
-                    default:
-                        break;
-                }
+                /*  switch (format) {
+                      case "HABILLAGE":
+                          //si c habillage -> web_habillage / app_mban_atf
+                          format_filtre = new Array("WEB_HABILLAGE", "APP_MBAN_ATF0", "HABILLAGE")
+                          break;
+                      case "GRAND ANGLE":
+                          //si grand angle ->web_mban  app_mpave_atf0 
+                          format_filtre = new Array("WEB_MPAVE_ATF0", "APP_MPAVE_ATF0", "GRAND ANGLE")
+                          break;
+                      case "MASTHEAD":
+                          //si masthead -> web_mban / app_mban
+                          format_filtre = new Array("WEB_MBAN_ATF0", "APP_MBAN_ATF0", "MASTHEAD")
+                          break;
+                      case "VIDEOS":
+                          //si instream -> linear 
+                          format_filtre = new Array("VIDEOS", "Linear")
+                          break;
+                      case "LOGO":
+                          format_filtre = new Array("LOGO", "WEB_LOGO")
+                          break;
+                      case "NATIVE":
+                          format_filtre = new Array("NATIVE", "WEB_NATIVE", "WEB_NATIVE_MBAN_ATF")
+                          break;
+                      case "SLIDE":
+                          format_filtre = new Array("SLIDE", "APP_SLIDE")
+                          break;
+                      default:
+                          break;
+                  }
 
-                const requete = await sequelize.query(
-                    'SELECT * FROM asb_epilot_campaigns WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', {
-                        //  AND format_name  IN (?) ORDER BY asb_epilot_campaigns.format_name ASC// format_filtre
-                        replacements: [date_start, date_end, date_start, date_end],
-                        type: QueryTypes.SELECT
+                  const requete = await sequelize.query(
+                      'SELECT * FROM asb_epilot_campaigns WHERE ((campaign_epilot_start_date BETWEEN ? AND ?) OR (campaign_epilot_end_date BETWEEN ? AND ?))', {
+                          //  AND format_name  IN (?) ORDER BY asb_epilot_campaigns.format_name ASC// format_filtre
+                          replacements: [date_start, date_end, date_start, date_end],
+                          type: QueryTypes.SELECT
+                      }
+                  );*/
+
+                const requete = await ModelCampaign_epilot.findAll({
+                    where: {
+                        epilot_campaign_start_date: {
+                            [Op.between]: [date_start, date_end]
+                        },
+                        epilot_campaign_end_date: {
+                            [Op.between]: [date_start, date_end]
+                        },
                     }
-                );
+                })
 
                 //Initialisation du tableau
                 var array_reserver = [];
@@ -967,60 +1003,62 @@ exports.forecast = async (req, res, next) => {
                 var Interval_reserver = [];
                 var Nbr_cheval_reserver = [];
 
-                for (let i = 0; i < requete.length; i++) {
-                    // Calculer l'intervalle de date sur la période
-                    const campaign_epilot_start_date = requete[i].campaign_epilot_start_date;
-                    const campaign_epilot_end_date = requete[i].campaign_epilot_end_date;
-                    const volumes_prevue = requete[i].volume_prevue;
-                    const campaign_date_start = await campaign_epilot_start_date.split(' ')[0] + 'T00:00:00.000Z';
-                    const campaign_date_end = await campaign_epilot_end_date.split(' ')[0] + 'T23:59:00.000Z';
-                    date_interval = new Date(campaign_epilot_end_date) - new Date(campaign_epilot_start_date);
+                if (requete.length > 0) {
+                    for (let i = 0; i < requete.length; i++) {
+                        // Calculer l'intervalle de date sur la période
+                        const campaign_start_date = requete[i].epilot_campaign_start_date;
+                        const campaign_end_date = requete[i].epilot_campaign_end_date;
+                        const volumes_prevue = requete[i].epilot_campaign_volume;
 
-                    const nb_jour_interval = (date_interval / 86400000);
+                        const campaign_date_start = await campaign_start_date.split(' ')[0] + 'T00:00:00.000Z';
+                        const campaign_date_end = await campaign_end_date.split(' ')[0] + 'T23:59:00.000Z';
+                        var date_interval = new Date(campaign_end_date) - new Date(campaign_start_date);
 
-                    // Calculer le nombre de jour à cheval en fonction des dates du forecast
-                    const date_start_forecast = date_start;
-                    const date_end_forecast = date_end;
+                        const nb_jour_interval = (date_interval / 86400000).toFixed(2);
 
-                    if ((campaign_date_end > date_start_forecast)) {
-                        //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
-                        if (date_start_forecast < campaign_date_start) {
-                            //alors la date début à cheval = date de début campagne 
-                            var date_start_cheval = campaign_date_start;
-                        } else {
-                            var date_start_cheval = date_start_forecast;
+                        // Calculer le nombre de jour à cheval en fonction des dates du forecast
+                        const date_start_forecast = date_start;
+                        const date_end_forecast = date_end;
+
+                        if ((campaign_date_end > date_start_forecast)) {
+                            //si le date début forecast (09/10/2020)< date début campagne (12/10/2020)
+                            if (date_start_forecast < campaign_date_start) {
+                                //alors la date début à cheval = date de début campagne 
+                                var date_start_cheval = campaign_date_start;
+                            } else {
+                                var date_start_cheval = date_start_forecast;
+                            }
+
+                            // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
+                            if (date_end_forecast > campaign_date_end) {
+                                //alors le date de fin a cheval = date de fin campagne 
+                                var date_end_cheval = campaign_date_end;
+                            } else {
+                                var date_end_cheval = date_end_forecast;
+                            }
                         }
 
-                        // si la date fin forecats (19/10/2020)> date de fin de la campagne (12/10/2020)
-                        if (date_end_forecast > campaign_date_end) {
-                            //alors le date de fin a cheval = date de fin campagne 
-                            var date_end_cheval = campaign_date_end;
-                        } else {
-                            var date_end_cheval = date_end_forecast;
-                        }
-                    }
+                        //calcul du nombre de jour à cheval
+                        const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
 
-                    const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
-                    const nb_jour_cheval = Math.round(periode_a_cheval / 86400000);
-                    const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval);
+                        //arrondie pour un nombre entier
+                        const nb_jour_cheval = Math.round(periode_a_cheval / 86400000);
 
-                    //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
-                    //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
+                        //   Calcul le volume prévu diffusé : Valeur du ( volume prevu / nombre de jour de diff de la campagne ) * nombre de jour a cheval = volume
+                        const volumes_prevu_diffuse = Math.round((volumes_prevue / nb_jour_interval) * nb_jour_cheval)
 
-                    if (requete[i].etat == "2") {
-                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {
-
-                        } else {
+                        if ((campaign_date_start < date_start_forecast) || (campaign_date_end > date_end_forecast)) {} else {
                             array_reserver.push(volumes_prevu_diffuse);
-                            Campagnes_reserver.push(requete[i].campaign_name);
-                            Campagne_start_reserver.push(campaign_epilot_start_date);
-                            Campagne_end_reserver.push(campaign_date_end);
+                            Campagnes_reserver.push(requete[i].epilot_campaign_name);
+                            Campagne_start_reserver.push(campaign_start_date);
+                            Campagne_end_reserver.push(campaign_end_date);
                             Interval_reserver.push(nb_jour_interval);
                             Nbr_cheval_reserver.push(nb_jour_cheval);
                         }
-                    }
 
+                    }
                 }
+
 
                 var sommeReserver = 0;
 
