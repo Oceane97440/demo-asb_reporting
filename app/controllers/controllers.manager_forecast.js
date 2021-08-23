@@ -94,6 +94,15 @@ exports.index = async (req, res) => {
 
 exports.forecast = async (req, res, next) => {
 
+    const data = new Object();
+
+    // Créer le fil d'ariane
+    breadcrumb = new Array({
+        'name': 'Forecast',
+        'link': ''
+    });
+    data.breadcrumb = breadcrumb;
+
 
     const formats = await ModelFormat.findAll({
         attributes: ['format_group'],
@@ -690,7 +699,8 @@ exports.forecast = async (req, res, next) => {
                 table: table,
                 insertions: insertions,
                 infos: infos,
-                reserver: reserver
+                reserver: reserver,
+                data
             });
         }
 
@@ -1126,7 +1136,8 @@ exports.forecast = async (req, res, next) => {
                         infos: infos,
                         formats: formats,
                         packs: packsDB,
-                        countrys: countrys
+                        countrys: countrys,
+                        data
                     });
                 }
 
