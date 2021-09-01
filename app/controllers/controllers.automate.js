@@ -56,17 +56,9 @@ const {cpuUsage} = require('process');
 
 // Initialise le module
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('data/reporting');
-localStorage_tasks = new LocalStorage('data/taskID');
-localStorageAutomate = new LocalStorage('data/automate');
-
-exports.json = async (req, res) => {
-    try {
-        return res.json({'lol': 'lol'});
-    } catch (error) {
-        return res.json({'error': 'lol'});
-    }
-}
+localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
+localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
+localStorageAutomate = new LocalStorage('data/automate/'+moment().format('YYYY/MM/DD'));
 
 exports.agencies = async (req, res) => {
     try {

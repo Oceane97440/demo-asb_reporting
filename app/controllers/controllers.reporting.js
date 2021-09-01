@@ -1,7 +1,4 @@
 // Initialise le module
-var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('data/reporting');
-localStorageTasks = new LocalStorage('data/taskID');
 const excel = require('node-excel-export');
 
 const {
@@ -35,6 +32,11 @@ const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
 const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
+
+var LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
+localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
+
 
 exports.index = async (req, res) => {
     if (req.session.user.user_role == 1) {
@@ -1624,6 +1626,30 @@ exports.automate = async (req, res) => {
         // Réinitialise l'objet Format
         let formatObjects = new Object();
 
+
+        let mode = req.query.mode;
+        console.log('MOOOOOOOOOOOOODE : ',mode)
+        if (!Utilities.empty(mode) && (mode === 'delete')) {
+            console.log('MOOOOOOOOOOOOODE 2 : ',mode)
+             // si le local storage expire; on supprime les precedents cache et les taskid                           
+             localStorage.removeItem('campaignID-' + campaign_id);
+             localStorageTasks.removeItem(
+                 'campaignID-' + campaign_id + '-taskGlobal'
+             );
+             localStorageTasks.removeItem(
+                 'campaignID-' + campaign_id + '-taskGlobalVU'
+             );               
+            
+            console.log('mode = delete');
+            return res
+            .status(200).json({
+                'message': 'Les caches de cette campagne <strong>' + campaign_id + '</strong> sont supprimés.'
+            });
+
+        }
+
+
+
         var campaign = await ModelCampaigns
             .findOne({
                 attributes: [
@@ -1643,6 +1669,7 @@ exports.automate = async (req, res) => {
             })
             .then(async function (campaign) {
 
+               
                 if (!campaign)
                     return res
                         .status(403).json({
@@ -2317,8 +2344,6 @@ exports.automate = async (req, res) => {
                     var reportingData = JSON.parse(localStorageAll);
                     res.status(200).json(reportingData);
                 }
-
-
 
 
             });
