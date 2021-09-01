@@ -202,7 +202,7 @@ exports.login_add = async (req, res) => {
             //Date et l'heure de la connexion
             const now = new Date();
             const date_now = now.getTime();
-            const created_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
+            const updated_at	 = moment(date_now).format('YYYY-MM-DDTHH:m:00');
 
             // use session for user connected
             req.session.user = user;
@@ -211,17 +211,17 @@ exports.login_add = async (req, res) => {
 
             if (req.session.user.user_role === 1) {
 
-              console.log('date heure de la connexion admin' + created_at)
+              console.log('date heure de la connexion admin' + updated_at	)
 
               return res.redirect('/manager');
             }
             if (req.session.user.user_role === 2 || req.session.user.user_role === 3) {
 
-              console.log('date heure de la connexion user' + created_at)
+              console.log('date heure de la connexion user' + updated_at	)
 
 
               ModelUser.update({
-                created_at: created_at,
+                updated_at: updated_at,
 
 
               }, {

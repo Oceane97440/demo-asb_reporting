@@ -697,7 +697,7 @@ exports.report = async (req, res) => {
                                             if (insertion_name.match(/^\MEA{1}/igm)) {
                                                 formatMea.push(index);
                                             }                                           
-                                            if (insertion_name.match(/CLICK COMMAND{1}/igm)) {
+                                            if (insertion_name.match(/CLICK COMMAND{1}|CC/igm)) {
                                                 formatClickCommand.push(index);
                                             }
 
