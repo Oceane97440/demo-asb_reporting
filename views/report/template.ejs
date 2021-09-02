@@ -163,13 +163,8 @@
 
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
                         <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
-                        <% if(reporting.campaign.impressions < 0) { %>
                         <td><%= reporting.campaign.ctr %>%</td>
-                        <% } else{%>
-                            <td> - </td>
-                            <% }%>
                         <% if(reporting.campaign.vu > 0) { %>
-
                         <td><%= utilities.numStr(reporting.campaign.vu) %></td>
                         <td><%= reporting.campaign.repetition %></td>
                         <% } else{%>
@@ -266,11 +261,8 @@
                         <td class="text-left">NATIVE</td>
                         <td><%= utilities.numStr(reporting.native.impressions) %></td>
                         <td><%= utilities.numStr(reporting.native.clicks) %></td>
-                        <% if(reporting.native.impressions < 0) { %>
-                            <td class="text-center"><%= reporting.native.ctr %>%</td>
-                            <% } else{%>
-                                <td> - </td>
-                                <% }%>
+                        <td class="text-center"><%= reporting.native.ctr %>%</td>
+                        
                     </tr>
                     <% } %>
                     <% if(reporting.slider) { %>
@@ -314,11 +306,8 @@
                         <td class="text-left"><strong>Total</strong>
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
                         <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
-                        <% if(reporting.campaign.impressions < 0) { %>
-                            <td><%= reporting.campaign.ctr %>%</td>
-                            <% } else{%>
-                                <td> - </td>
-                                <% }%>
+                        <td><%= reporting.campaign.ctr %>%</td>
+
                     </tr>
                 </tfoot>
             </table>
