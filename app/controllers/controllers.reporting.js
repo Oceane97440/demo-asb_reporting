@@ -1626,11 +1626,8 @@ exports.automate = async (req, res) => {
         // Réinitialise l'objet Format
         let formatObjects = new Object();
 
-
-        let mode = req.query.mode;
-        console.log('MOOOOOOOOOOOOODE : ',mode)
+        let mode = req.query.mode;      
         if (!Utilities.empty(mode) && (mode === 'delete')) {
-            console.log('MOOOOOOOOOOOOODE 2 : ',mode)
              // si le local storage expire; on supprime les precedents cache et les taskid                           
              localStorage.removeItem('campaignID-' + campaign_id);
              localStorageTasks.removeItem(
@@ -1645,10 +1642,7 @@ exports.automate = async (req, res) => {
             .status(200).json({
                 'message': 'Les caches de cette campagne <strong>' + campaign_id + '</strong> sont supprimés.'
             });
-
         }
-
-
 
         var campaign = await ModelCampaigns
             .findOne({

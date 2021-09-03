@@ -1,8 +1,3 @@
-// Initialise le module
-var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('data/reporting');
-localStorage_tasks = new LocalStorage('data/taskID');
-
 const {Op} = require("sequelize");
 // const excel = require('node-excel-export');
 
@@ -22,6 +17,12 @@ const Utilities = require('../functions/functions.utilities');
 // Initialise les models
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
+
+
+// Initialise le module
+var LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
+localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
 
 exports.index = async (req, res) => {
     if (req.session.user.user_role == 1) {

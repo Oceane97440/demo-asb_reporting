@@ -374,6 +374,8 @@ app.use('/automate', automate);
 // Le serveur ecoute sur le port 3022
 app.set("port", process.env.PORT || 3001);
 
+console.log('ENVIRONNEMENT : ',process.env.MY_VARIABLE)
+
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);
 });
