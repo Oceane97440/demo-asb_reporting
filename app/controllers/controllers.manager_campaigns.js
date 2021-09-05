@@ -311,15 +311,21 @@ exports.view = async (req, res) => {
 
                 // Récupére les données des campagnes epilot
                 var epilot_campaign = await ModelEpilotCampaigns.findOne({
-                    attributes: ['epilot_campaign_volume','epilot_campaign_budget_net'],
+                    attributes: ['epilot_campaign_volume','epilot_campaign_budget_net','user_id'],
                     where: {
                         campaign_id: campaign_id
-                    }
+                    },
+                    include: [
+                        {
+                            model: ModelUsers
+                        }
+                    ]
                 });
 
                 //test si epilot_campaign existe
                 if (!Utilities.empty(epilot_campaign)) {
                     data.epilot_campaign = epilot_campaign;
+                    console.log(epilot_campaign)
                 } else {
                     data.epilot_campaign = 0;
                 }

@@ -33,6 +33,15 @@
                         </li>
                         <li class="list-group-item">
                             <span class="labelname">
+                                <i class="material-icons-two-tone">perm_identity</i>
+                                Commercial(e)</span>:
+                            <% if(epilot_campaign.user_id && (epilot_campaign.user_id != 0)) { %>
+                            <a href="/manager/users/<%= epilot_campaign.user_id %>"
+                                title="<%= epilot_campaign.user.user_firstname %> <%= epilot_campaign.user.user_lastname %>"><%= epilot_campaign.user.user_firstname %> <%= epilot_campaign.user.user_lastname %></a>
+                            <% } else { %>-<% } %>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="labelname">
                                 <i class="material-icons-two-tone">date_range</i>
                                 Période du</span>: Du
                             <%= moment(campaign.campaign_start_date).format('DD/MM/YYYY') %>
@@ -115,7 +124,6 @@
                             <i class="material-icons-two-tone">send</i>
                             Accéder à SMARTADSERVER</a>
 
-
                         <div class="btn-group" role="group">
                             <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle"
                                 data-toggle="dropdown">
@@ -124,10 +132,14 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/r/<%= campaign.campaign_crypt %>" target="_blank">
-                                        Générer le rapport</a></li>
-                                <li><a class="dropdown-item"
-                                        href="/r/automate/<%= campaign.campaign_id %>?mode=delete"target="_blank">Supprimer le
-                                        raport</a></li>
+                                    <i class="fas fa-cloud-upload-alt"></i> Générer le rapport</a></li>
+                                <li><a class="dropdown-item<% if(utilities.empty(epilot_campaign.user_id)) { %> disabled<% } %>" href="manager/campaigns/<%= campaign.campaign_id %>/report/mail" target="_blank">
+                                    <i class="fas fa-reply"></i> Envoyer le permalien</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item bg-danger text-white"
+                                        href="/r/automate/<%= campaign.campaign_id %>?mode=delete"target="_blank">
+                                        <i class="fas fa-trash"></i> Supprimer le
+                                        rapport</a></li>
                             </ul>
                         </div>
 
