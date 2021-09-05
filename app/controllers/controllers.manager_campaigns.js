@@ -694,8 +694,8 @@ exports.permalink = async (req, res) => {
         
             nodeoutlook.sendEmail({
                 auth: {
-                    user: "alvine.didier@antennereunion.fr",
-                    pass: "atlantis29A"
+                    user: process.env.OUTLOOK_EMAIL,
+                    pass: process.env.OUTLOOK_PASSWORD,
                 },
                 from:  "adtraffic@antennereunion.fr",
                 to: '"alvine.didier@antennereunion.fr',
