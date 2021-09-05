@@ -106,3 +106,4 @@ dist
 # TernJS port file
 .tern-port
 
+app/config/_config.database.local.js
