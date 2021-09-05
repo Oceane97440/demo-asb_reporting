@@ -107,3 +107,4 @@ dist
 .tern-port
 
 app/config/_config.database.local.js
+app/config/_config.database.js
