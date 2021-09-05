@@ -1200,8 +1200,8 @@ exports.nodemail = async (req, res) => {
 
     nodeoutlook.sendEmail({
         auth: {
-            user: "alvine.didier@antennereunion.fr",
-            pass: "************************"
+            user: "",
+            pass: ""
         },
         from:  "alvine.didier@antennereunion.fr",
         to: 'alvinedidier@gmail.com',
