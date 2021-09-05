@@ -110,7 +110,7 @@
                                 <%= moment(campaign.campaign_end_date).format('DD/MM/YYYY') %></li>
                             <li class="list-group-item">
                                 <% if(date_now > timestamp_startdate) { %>
-                                <a type="button" href="#" class="btn btn-danger btn-lg btn-block">
+                                <a type="button" id="button-generate-report" href="#" class="btn btn-danger btn-lg btn-block">
                                     <i class="fas fa-link"></i>
                                     Générer le rapport de campagne
                                 </a>
@@ -120,7 +120,7 @@
 
                     </div>
                     <div class="d-flex justify-content-center">
-                        <img src="/admin/photos/data_fiscal.jpg" class="card-img" style="width: 445px;">
+                        <img loading="lazy" src="/admin/photos/data_fiscal.jpg" class="card-img" style="width: 445px;">
                     </div>
 
                 </div>
