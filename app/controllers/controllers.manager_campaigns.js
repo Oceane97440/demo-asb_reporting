@@ -17,6 +17,9 @@ process.on('unhandledRejection', error => {
 
 const {QueryTypes} = require('sequelize');
 
+var nodemailer = require('nodemailer');
+var nodeoutlook = require('nodejs-nodemailer-outlook');
+
 const {check, query} = require('express-validator');
 
 const moment = require('moment');
@@ -651,5 +654,71 @@ exports.repartitions = async (req, res) => {
         var statusCoded = error.response;
         // res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
+}
+
+exports.permalink = async (req, res) => {
+
+ try {    
+    const data = new Object();
+
+    var campaign_id = req.params.id;
+    var campaign = await ModelEpilotCampaigns
+        .findOne({
+            where: {
+                campaign_id: campaign_id
+            },
+            include: [
+                {
+                    model: ModelCampaigns
+                }, 
+                {
+                    model: ModelUsers
+                }
+            ]
+        })
+        .then(async function (campaign) {
+            if (!campaign) {
+                return res
+                    .status(404)
+                    .render("manager/error.ejs", {statusCoded: 404});
+            }
+
+          //  console.log(campaign)
+
+          var user_email = campaign.user.user_email;
+          var campaign_name = campaign.campaign_name;
+          var campaign_crypt = campaign.campaign_crypt;
+          var user_firstname =  campaign.user.user_firstname;
+          var user_lastname =  campaign.user.user_lastname;
+
+        
+            nodeoutlook.sendEmail({
+                auth: {
+                    user: "alvine.didier@antennereunion.fr",
+                    pass: "atlantis29A"
+                },
+                from:  "adtraffic@antennereunion.fr",
+                to: '"alvine.didier@antennereunion.fr',
+                subject: 'Permalien de la campagne "'+campaign_name+'"',
+                html: 'Hello '+user_firstname+', <br /> <p>Voici le permalien de la campagne "<strong>'+campaign_name+'</strong>" : <a href="https://reporting.antennesb.fr/r/'+campaign_crypt+'" target="_blank">https://reporting.antennesb.fr/r/'+campaign_crypt+'</a>.</p> <br /> A dispo',
+            // text: 'This is text version!',
+                replyTo: "alvine.didier@antennereunion.fr",
+                onError: (e) => console.log(e),
+                onSuccess: (i) => console.log(i)
+            });
+    
+            
+        });
+
+
+
+
+    
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
+
 
 }

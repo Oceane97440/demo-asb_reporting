@@ -91,6 +91,7 @@ router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
 router.get('/campaigns/repartitions', manager_campaigns.repartitions);
 router.get("/campaigns/:id", manager_campaigns.view);
+router.get("/campaigns/:id/permalink", manager_campaigns.permalink);
 
 router.get('/campaigns/epilot/list', manager_epilot.list);
 router.get('/campaigns/epilot/insertions', manager_epilot.insertions);
