@@ -1358,9 +1358,19 @@ exports.read_excel = async (req, res) => {
     var workbook = new ExcelJS.Workbook(); 
     workbook.xlsx.readFile('Campagne_Auto_Relais-Liste_des_spots-132748937898316291.xlsx')
         .then(function() {
-            var worksheet = workbook.getWorksheet();
+          
+            // Note: workbook.worksheets.forEach will still work but this is better
+workbook.eachSheet(function(worksheet, sheetId) {
+    console.log(worksheet.name)
+  });
+
+            /* var worksheet = workbook.getWorksheet();
+            console.log(worksheet)
             worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
-              console.log(JSON.stringify(row.values));
+                 console.log(row)
+
+              // console.log(JSON.stringify(row.values));
             });
+            */
         });
 };
