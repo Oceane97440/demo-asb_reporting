@@ -1006,6 +1006,8 @@ exports.export_excel = async (req, res) => {
 
 
                 var vu = reporting.campaign.vu;
+       
+
                 var repetition = reporting.campaign.repetition;
                 var complete = reporting.campaign.ctrComplete;
 
@@ -1195,7 +1197,7 @@ exports.export_excel = async (req, res) => {
                     clics: clicks,
                     ctr_clics: ctr.replace('.', ',')+'%',
                     vu: vu,
-                    repetions: repetition.replace('.', ',')
+                    repetions: repetition
 
                 }];
                 const dataset_format = []

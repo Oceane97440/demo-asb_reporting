@@ -219,7 +219,9 @@
                               url: '/r/report/<%=campaign_crypt%>',
                               success: function (data) {
                                   $("#exampleModal").hide();
-                                  $('body').html(data)
+                                  //$('body').html(data)
+                                  window.location.href = url;
+
                                   console.log(data)
                               }
                           })
