@@ -13,6 +13,7 @@ const {
 } = require('sequelize');
 var nodemailer = require('nodemailer');
 var nodeoutlook = require('nodejs-nodemailer-outlook');
+const ExcelJS = require('exceljs');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -1349,4 +1350,17 @@ transporter.sendMail(mailOptions, function(error, info){
    */ 
 
 
+};
+
+exports.read_excel = async (req, res) => {
+
+  
+    var workbook = new ExcelJS.Workbook(); 
+    workbook.xlsx.readFile('Campagne_Auto_Relais-Liste_des_spots-132748937898316291.xlsx')
+        .then(function() {
+            var worksheet = workbook.getWorksheet();
+            worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
+              console.log(JSON.stringify(row.values));
+            });
+        });
 };
