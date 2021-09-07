@@ -1356,7 +1356,7 @@ exports.read_excel = async (req, res) => {
 
 
     var workbook = new ExcelJS.Workbook();
-    workbook.xlsx.readFile('test.xlsx')
+    workbook.xlsx.readFile('Campagne_Auto_Relais-Liste_des_spots-132748937898316291.xlsx')
         .then(function () {
 
             // Note: workbook.worksheets.forEach will still work but this is better
@@ -1369,7 +1369,7 @@ exports.read_excel = async (req, res) => {
                     includeEmpty: true
                 }, async (row, rowNumber) => {
 
-                    console.log("row " + row.values);
+                    console.log(row.values);
 
                 })
             });
