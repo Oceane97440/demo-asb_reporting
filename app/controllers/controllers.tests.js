@@ -1355,32 +1355,75 @@ exports.nodemail = async (req, res) => {
 exports.read_excel = async (req, res) => {
 
 
+
     var workbook = new ExcelJS.Workbook();
-    workbook.xlsx.readFile('Campagne_Auto_Relais-Liste_des_spots-132748937898316291.xlsx')
+    workbook.xlsx.readFile('Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
+
         .then(function () {
+            const dataList = []
+            const dataList1 = []
+
 
             // Note: workbook.worksheets.forEach will still work but this is better
             workbook.eachSheet(function (worksheet, sheetId) {
                 console.log(worksheet.name)
                 console.log(sheetId)
-                let worksheet2 = workbook.getWorksheet(worksheet.name);
 
-                worksheet2.eachRow({
+                worksheet.eachRow({
                     includeEmpty: true
                 }, async (row, rowNumber) => {
 
-                    console.log(row.values);
+                     //console.log(row.values);
+
+                    data = row.values
+                    numberLine = data.length
+                    console.log(numberLine)
+
+                    for (i = 1; i < numberLine; i++) {
+                        dataList.push(row.values[i])
+
+                        if (dataList.match(/(?='Montée en charge)(.*)(?<='Total')/igm)) {
+                            dataList1.push(row.values[i])
+
+                        }
+
+
+
+                    }
+
+
 
                 })
+
+                const campagne = worksheet.getCell('C3').value;
+                const periode = worksheet.getCell('C4').value;
+                const monnaie = worksheet.getCell('C7').value;
+                const budget = worksheet.getCell('C8').value;
+                const effectif = worksheet.getCell('C9').value;
+                const annonceur = worksheet.getCell('H3').value;
+                const version = worksheet.getCell('H6').value;
+
+
+
+
+                console.log('campagne', campagne)
+                console.log('periode', periode)
+                console.log('monnaie', monnaie)
+                console.log('budget', budget)
+                console.log('effectif', effectif)
+                console.log('annonceur', annonceur)
+                console.log('version', version)
+                console.log('------------------------------------------')
+
+
+
+
             });
 
-            /* var worksheet = workbook.getWorksheet();
-            console.log(worksheet)
-            worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
-                 console.log(row)
+            console.log(dataList)
+            console.log(dataList1)
 
-              // console.log(JSON.stringify(row.values));
-            });
-            */
+
         });
+
 };
