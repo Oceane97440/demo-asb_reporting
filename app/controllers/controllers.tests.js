@@ -1200,169 +1200,179 @@ exports.array_unique = async (req, res) => {
 exports.nodemail = async (req, res) => {
 
     nodeoutlook.sendEmail({
-        auth: {
-            user: "alvine.didier@antennereunion.fr",
-            pass: "************************"
-        },
-        from:  "alvine.didier@antennereunion.fr",
-        to: 'alvinedidier@gmail.com',
-        subject: 'test 2 !',
-        html: '<b>This is bold text</b>',
-        text: 'This is text version!',
-        replyTo: "alvine.didier@antennereunion.fr",
-        /*
-        attachments: [
-                            {
-                                filename: 'text1.txt',
-                                content: 'hello world!'
-                            },
-                            {   // binary buffer as an attachment
-                                filename: 'text2.txt',
-                                content: new Buffer('hello world!','utf-8')
-                            },
-                            {   // file on disk as an attachment
-                                filename: 'text3.txt',
-                                path: '/path/to/file.txt' // stream this file
-                            },
-                            {   // filename and content type is derived from path
-                                path: '/path/to/file.txt'
-                            },
-                            {   // stream as an attachment
-                                filename: 'text4.txt',
-                                content: fs.createReadStream('file.txt')
-                            },
-                            {   // define custom content type for the attachment
-                                filename: 'text.bin',
-                                content: 'hello world!',
-                                contentType: 'text/plain'
-                            },
-                            {   // use URL as an attachment
-                                filename: 'license.txt',
-                                path: 'https://raw.github.com/nodemailer/nodemailer/master/LICENSE'
-                            },
-                            {   // encoded string as an attachment
-                                filename: 'text1.txt',
-                                content: 'aGVsbG8gd29ybGQh',
-                                encoding: 'base64'
-                            },
-                            {   // data uri as an attachment
-                                path: 'data:text/plain;base64,aGVsbG8gd29ybGQ='
-                            },
-                            {
-                                // use pregenerated MIME node
-                                raw: 'Content-Type: text/plain\r\n' +
-                                     'Content-Disposition: attachment;\r\n' +
-                                     '\r\n' +
-                                     'Hello world!'
-                            }
-                        ],
-        */
-        onError: (e) => console.log(e),
-        onSuccess: (i) => console.log(i)
-    }
-    
-    
+            auth: {
+                user: "alvine.didier@antennereunion.fr",
+                pass: "************************"
+            },
+            from: "alvine.didier@antennereunion.fr",
+            to: 'alvinedidier@gmail.com',
+            subject: 'test 2 !',
+            html: '<b>This is bold text</b>',
+            text: 'This is text version!',
+            replyTo: "alvine.didier@antennereunion.fr",
+            /*
+            attachments: [
+                                {
+                                    filename: 'text1.txt',
+                                    content: 'hello world!'
+                                },
+                                {   // binary buffer as an attachment
+                                    filename: 'text2.txt',
+                                    content: new Buffer('hello world!','utf-8')
+                                },
+                                {   // file on disk as an attachment
+                                    filename: 'text3.txt',
+                                    path: '/path/to/file.txt' // stream this file
+                                },
+                                {   // filename and content type is derived from path
+                                    path: '/path/to/file.txt'
+                                },
+                                {   // stream as an attachment
+                                    filename: 'text4.txt',
+                                    content: fs.createReadStream('file.txt')
+                                },
+                                {   // define custom content type for the attachment
+                                    filename: 'text.bin',
+                                    content: 'hello world!',
+                                    contentType: 'text/plain'
+                                },
+                                {   // use URL as an attachment
+                                    filename: 'license.txt',
+                                    path: 'https://raw.github.com/nodemailer/nodemailer/master/LICENSE'
+                                },
+                                {   // encoded string as an attachment
+                                    filename: 'text1.txt',
+                                    content: 'aGVsbG8gd29ybGQh',
+                                    encoding: 'base64'
+                                },
+                                {   // data uri as an attachment
+                                    path: 'data:text/plain;base64,aGVsbG8gd29ybGQ='
+                                },
+                                {
+                                    // use pregenerated MIME node
+                                    raw: 'Content-Type: text/plain\r\n' +
+                                         'Content-Disposition: attachment;\r\n' +
+                                         '\r\n' +
+                                         'Hello world!'
+                                }
+                            ],
+            */
+            onError: (e) => console.log(e),
+            onSuccess: (i) => console.log(i)
+        }
+
+
     );
 
 
 
-// Create the transporter with the required configuration for Outlook
-// change the user and pass !
-/*
-var transporter = nodemailer.createTransport({
-    host: "smtp-mail.outlook.com", // hostname
-    secureConnection: true, // TLS requires secureConnection to be false
-    port: 587, // port for secure SMTP
-    tls: {
-       ciphers:'SSLv3'
-    },
-    auth: {
-        user: 'alvine.didier@antennereunion.fr',
-        pass: 'atlantis29A'
-    }
-});
-*/
-
-
-/* 
-var transport = nodemailer.createTransport("SMTP", {
-    service: "outlook",
-    auth: {
-        user: 'alvine.didier@antennereunion.fr',
-        pass: 'atlantis29A'
-    }
-});
-// setup e-mail data, even with unicode symbols
-var mailOptions = {
-    from: '"Our Code World " <mymail@outlook.com>', // sender address (who sends)
-    to: 'alvine.didier@antennereunion.fr', // list of receivers (who receives)
-    subject: 'Hello ', // Subject line
-    text: 'Hello world ', // plaintext body
-    html: '<b>Hello world </b><br> This is the first email sent with Nodemailer in Node.js' // html body
-};
-
-// send mail with defined transport object
-transporter.sendMail(mailOptions, function(error, info){
-    if(error){
-        return console.log(error);
-    }
-
-    console.log('Message sent: ' + info.response);
-});
-
-
-
-    let transporter = nodemailer.createTransport({
-
-        service: 'gmail',
+    // Create the transporter with the required configuration for Outlook
+    // change the user and pass !
+    /*
+    var transporter = nodemailer.createTransport({
+        host: "smtp-mail.outlook.com", // hostname
+        secureConnection: true, // TLS requires secureConnection to be false
+        port: 587, // port for secure SMTP
+        tls: {
+           ciphers:'SSLv3'
+        },
         auth: {
-            type: 'OAuth2',
-            user: process.env.USER_EMAIL, // generated ethereal user
-            pass: process.env.PASS, // generated ethereal password
-            clientId: process.env.CLIENT_ID,
-            clientSecret:  process.env.CLIENT_SECRET,
-            refreshToken: process.env.TOKEN
+            user: 'alvine.didier@antennereunion.fr',
+            pass: 'atlantis29A'
         }
     });
+    */
 
 
-
-
-
-
+    /* 
+    var transport = nodemailer.createTransport("SMTP", {
+        service: "outlook",
+        auth: {
+            user: 'alvine.didier@antennereunion.fr',
+            pass: 'atlantis29A'
+        }
+    });
+    // setup e-mail data, even with unicode symbols
     var mailOptions = {
-        from: process.env.FROM,
-        to: process.env.TO,
-        subject: 'TEST MODULE NODEMAIL avec CRON PESK  : Océane API Oauth REUSSSI :D',
-        text: `Test push mail avec nodemail tous les 1min, creation clès API`
+        from: '"Our Code World " <mymail@outlook.com>', // sender address (who sends)
+        to: 'alvine.didier@antennereunion.fr', // list of receivers (who receives)
+        subject: 'Hello ', // Subject line
+        text: 'Hello world ', // plaintext body
+        html: '<b>Hello world </b><br> This is the first email sent with Nodemailer in Node.js' // html body
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            res.json(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            res.send('test envoie')
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            return console.log(error);
         }
+
+        console.log('Message sent: ' + info.response);
     });
 
-   */ 
+
+
+        let transporter = nodemailer.createTransport({
+
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: process.env.USER_EMAIL, // generated ethereal user
+                pass: process.env.PASS, // generated ethereal password
+                clientId: process.env.CLIENT_ID,
+                clientSecret:  process.env.CLIENT_SECRET,
+                refreshToken: process.env.TOKEN
+            }
+        });
+
+
+
+
+
+
+        var mailOptions = {
+            from: process.env.FROM,
+            to: process.env.TO,
+            subject: 'TEST MODULE NODEMAIL avec CRON PESK  : Océane API Oauth REUSSSI :D',
+            text: `Test push mail avec nodemail tous les 1min, creation clès API`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                res.json(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+                console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                res.send('test envoie')
+            }
+        });
+
+       */
 
 
 };
 
 exports.read_excel = async (req, res) => {
 
-  
-    var workbook = new ExcelJS.Workbook(); 
-    workbook.xlsx.readFile('Campagne_Auto_Relais-Liste_des_spots-132748937898316291.xlsx')
-        .then(function() {
-          
+
+    var workbook = new ExcelJS.Workbook();
+    workbook.xlsx.readFile('test.xlsx')
+        .then(function () {
+
             // Note: workbook.worksheets.forEach will still work but this is better
-workbook.eachSheet(function(worksheet, sheetId) {
-    console.log(worksheet.name)
-  });
+            workbook.eachSheet(function (worksheet, sheetId) {
+                console.log(worksheet.name)
+                console.log(sheetId)
+                let worksheet2 = workbook.getWorksheet(worksheet.name);
+
+                worksheet2.eachRow({
+                    includeEmpty: true
+                }, async (row, rowNumber) => {
+
+                    console.log("row " + row.values);
+
+                })
+            });
 
             /* var worksheet = workbook.getWorksheet();
             console.log(worksheet)
