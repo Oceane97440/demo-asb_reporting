@@ -1360,15 +1360,15 @@ exports.read_excel = async (req, res) => {
     workbook.xlsx.readFile('Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
 
         .then(function () {
-            const dataList = []
+          /*  const dataList = []
             const dataList1 = []
-
+*/
 
             // Note: workbook.worksheets.forEach will still work but this is better
             workbook.eachSheet(function (worksheet, sheetId) {
-                console.log(worksheet.name)
-                console.log(sheetId)
+              
 
+                /*
                 worksheet.eachRow({
                     includeEmpty: true
                 }, async (row, rowNumber) => {
@@ -1386,43 +1386,105 @@ exports.read_excel = async (req, res) => {
                             dataList1.push(row.values[i])
 
                         }
-
-
-
                     }
-
-
-
                 })
+                */
+            
+                if(sheetId === 1) { 
+                    console.log(worksheet.name)
+                    console.log(sheetId);
 
-                const campagne = worksheet.getCell('C3').value;
-                const periode = worksheet.getCell('C4').value;
-                const monnaie = worksheet.getCell('C7').value;
-                const budget = worksheet.getCell('C8').value;
-                const effectif = worksheet.getCell('C9').value;
-                const annonceur = worksheet.getCell('H3').value;
-                const version = worksheet.getCell('H6').value;
+                   
+                    console.log()
 
+                    const campagne = worksheet.getCell('C3').value;
+                    const periode = worksheet.getCell('C4').value;
+                    const monnaie = worksheet.getCell('C7').value;
+                    const budget = worksheet.getCell('C8').value;
+                    const effectif = worksheet.getCell('C9').value;
+                    const annonceur = worksheet.getCell('H3').value;
+                    const version = worksheet.getCell('H6').value;
 
+                    console.log('campagne', campagne)
+                    console.log('periode', periode)
+                    console.log('monnaie', monnaie)
+                    console.log('budget', budget)
+                    console.log('effectif', effectif)
+                    console.log('annonceur', annonceur)
+                    console.log('version', version)
+                    console.log('------------------------------------------')
 
+                    const vT = worksheet.getCell('A20').value;
+                    const vT1 = worksheet.getCell('A30').value;
 
-                console.log('campagne', campagne)
-                console.log('periode', periode)
-                console.log('monnaie', monnaie)
-                console.log('budget', budget)
-                console.log('effectif', effectif)
-                console.log('annonceur', annonceur)
-                console.log('version', version)
-                console.log('------------------------------------------')
+                    console.log(' A20 : ', vT);
+                    console.log(' A30 : ', vT1);
 
+                    console.log('------------------------------------------')
 
+                    dataLines = new Array();
+                    dataLinesName = new Object();
+                    dataItems = new Array();
+
+                    // Iterate over all rows that have values in a worksheet
+                    worksheet.eachRow(function(row, rowNumber) {
+                        value = row.values;
+                        dataLines.push(row.values);
+                        numberCols = value.length; 
+
+                        if(value[1] === "Chaîne") { var chaine_begin = rowNumber; dataItems['chaine_begin'] = rowNumber; console.log('[x] Chaîne - Begin :'+ chaine_begin); }
+                        // if(value[1] === "Total") { var chaine_end = rowNumber;  console.log('[x] Chaîne - End : ' + chaine_end) }
+
+                        if(value[1] === "Montée en charge / Jour") { var montee_en_charge_begin = rowNumber; dataItems['montee_en_charge_begin'] = rowNumber; console.log('[x] Montée en charge / Jour - Begin :'+ montee_en_charge_begin); }
+                        // if(value[1] === "Total") { var montee_en_charge_end = rowNumber;  console.log('[x] Montée en charge / Jour - End : ' + montee_en_charge_end) }
+
+                        if(value[1] === "Journal tranches horaires") { var tranches_horaires_begin = rowNumber; dataItems['tranches_horaires_begin'] = rowNumber; console.log('[x] Journal tranches horaires - End : ' + tranches_horaires_begin); }
+                        // if(value[1] === "Total") { var tranches_horaires_end = rowNumber;  console.log('[x] Journal tranches horaires / Jour - End : ' + tranches_horaires_end) }
+
+                        if(value[1] === "Jour nommé") { var jour_nomme_begin = rowNumber; dataItems['jour_nomme_begin'] = rowNumber; console.log('[x] Jour nommé - Begin : ' + jour_nomme_begin); }
+                        // if(value[1] === "Total") { var jour_nomme_end = rowNumber;  console.log('[x] Jour nommé - End : ' + jour_nomme_end) }
+
+                        // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                    })
+
+                    console.log('dataItems :',dataItems);
+
+                    worksheet.eachRow(function(row, rowNumber) {
+                        value = row.values;
+                        dataLines.push(row.values);
+                        numberCols = value.length; 
+                        
+                        if((rowNumber > dataItems['chaine_begin']) && (rowNumber < dataItems['montee_en_charge_begin'])) {
+                            console.log('chaine_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                            if(rowNumber === dataItems['montee_en_charge_begin']) {
+                               // rowNumber.push();
+                               console.log('chaine_begin : ------------------------------');
+                            }
+                        }      
+                        
+                        if((rowNumber > dataItems['montee_en_charge_begin']) && (rowNumber < dataItems['tranches_horaires_begin'])) {
+                            console.log('tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                            if(rowNumber === dataItems['jour_nomme_begin']) {
+                               console.log('tranches_horaires_begin : ------------------------------');
+                            }
+                        }  
+
+                        
+
+                        // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                    })
+
+                    console.log('Total lignes :'+dataLines.length);
+                    console.log('numberCols :'+dataLinesName);
+                }
 
 
             });
 
+            /*
             console.log(dataList)
             console.log(dataList1)
-
+            */
 
         });
 
