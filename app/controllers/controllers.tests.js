@@ -1354,15 +1354,11 @@ exports.nodemail = async (req, res) => {
 
 exports.read_excel = async (req, res) => {
 
-
-
     var workbook = new ExcelJS.Workbook();
-    workbook.xlsx.readFile('Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
+    workbook.xlsx.readFile('data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
 
         .then(function () {
-          /*  const dataList = []
-            const dataList1 = []
-*/
+        
 
             // Note: workbook.worksheets.forEach will still work but this is better
             workbook.eachSheet(function (worksheet, sheetId) {
@@ -1453,24 +1449,29 @@ exports.read_excel = async (req, res) => {
                         value = row.values;
                         dataLines.push(row.values);
                         numberCols = value.length; 
-                        
-                        if((rowNumber > dataItems['chaine_begin']) && (rowNumber < dataItems['montee_en_charge_begin'])) {
+                        naming = value[1];
+                        const regexDateMonteeEnCharge = /([0-9]{2}\/[0-9]{2}\/[0-9]{2})/gi;
+                        const regexTranchesHoraires = /([0-9]{2}h[0-9]{2} [0-9]{2}h[0-9]{2})/gi;
+                        const regexChaine = /Antenne Réunion/gi;
+                        const regexJourSemaine = /(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)/gi;
+                     
+                        if((rowNumber > dataItems['chaine_begin']) && naming.match(regexChaine) && (numberCols > 2)) {
                             console.log('chaine_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
-                            if(rowNumber === dataItems['montee_en_charge_begin']) {
-                               // rowNumber.push();
-                               console.log('chaine_begin : ------------------------------');
-                            }
                         }      
-                        
-                        if((rowNumber > dataItems['montee_en_charge_begin']) && (rowNumber < dataItems['tranches_horaires_begin'])) {
+
+                        if((rowNumber > dataItems['montee_en_charge_begin']) && naming.match(regexDateMonteeEnCharge) && (numberCols > 2)) {
+                            console.log('montee_en_charge_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                        }   
+
+                        if((rowNumber > dataItems['tranches_horaires_begin']) && naming.match(regexTranchesHoraires) && (numberCols > 2)) {
                             console.log('tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
-                            if(rowNumber === dataItems['jour_nomme_begin']) {
-                               console.log('tranches_horaires_begin : ------------------------------');
-                            }
+                        }  
+                        
+                        if((rowNumber > dataItems['jour_nomme_begin']) && naming.match(regexJourSemaine) && (numberCols > 2)) {
+                            console.log('jour_nomme_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
                         }  
 
-                        
-
+                       
                         // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
                     })
 
@@ -1481,11 +1482,7 @@ exports.read_excel = async (req, res) => {
 
             });
 
-            /*
-            console.log(dataList)
-            console.log(dataList1)
-            */
-
+           
         });
 
 };

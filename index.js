@@ -359,9 +359,14 @@ app.use('/test', tests);
 const application = require('./app/routes/routes.application');
 app.use('/app', application);
 
-// Gestion du reporting
+// Gestion du reporting DIGITAL
 const reporting_rs = require('./app/routes/routes.reporting');
 app.use('/r/', reporting_rs);
+
+
+// Gestion du reporting TV
+const reportingTV = require('./app/routes/routes.tv.reporting');
+app.use('/t/', reportingTV);
 
 // Gestion du management
 const manager = require('./app/routes/routes.manager');
