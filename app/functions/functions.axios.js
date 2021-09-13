@@ -301,3 +301,25 @@ exports.putManage = async (method, data = null) => {
 
   return test;
 }
+
+
+exports.getAdManager = async (campaign_id) => {
+
+  var test;
+
+  console.log('campaign_id' + campaign_id)
+
+
+  test = await axios({
+    method: 'GET',
+    url: 'http://localhost/api_google-manager/taskId/json/campaignID-'+campaign_id,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    }
+ 
+  })
+
+
+  return test;
+}
