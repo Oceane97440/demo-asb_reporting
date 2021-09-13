@@ -26,9 +26,7 @@ const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
 
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorageTV = new LocalStorage(
-    'data/tv/' + moment().format('YYYY/MM/DD')
-);
+localStorageTV = new LocalStorage('data/tv/reporting');
 
 exports.index = async (req, res) => {
     //
@@ -45,6 +43,7 @@ console.log(alphabet);
         .xlsx
         .readFile('data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
         .then(function () {
+            cacheStorageID = 'Campagne_Leclerc-Plan_Campagne-132748939578174030';
            
             var campaignObjects = new Object();
 
@@ -135,7 +134,9 @@ console.log(alphabet);
                     })
                   
                     // Etape 2 : Parcours le tableau 
-                    IncreaseILPDAArray = timeSlotDiaryArray = nameDayArray = new Array();
+                    IncreaseILPDAArray = new Array();
+                    timeSlotDiaryArray = new Array();
+                    nameDayArray = new Array();
                     worksheet.eachRow(function (row, rowNumber) {
                         // Récupére la ligne
                         dataRow = row.values;
@@ -168,20 +169,39 @@ console.log(alphabet);
 
                                 var label = worksheet.getCell(cellKey).value;
                                 var value = worksheet.getCell(cellValue).value;
-                              //  console.log('col : ', i ,' -> ',cellValue, ' = ' , worksheet.getCell(cellKey).value, ' => ' , worksheet.getCell(cellValue).value); 
-                                
-                                ChannelArray[label] = value;
+
+
+                                if (label === 'GRP') {
+                                    var grp = worksheet.getCell(cellValue).value;
+                                    var value = grp.toFixed(2);
+                                }
+
+                                if (label === 'Répétition') {
+                                    var repetition = worksheet
+                                        .getCell(cellValue)
+                                        .value;
+                                    var value = repetition.toFixed(2);
+                                }
+
+                                if (label === 'Ct GRP') {
+                                    var ct_GRP = worksheet
+                                        .getCell(cellValue)
+                                        .value;
+                                    var value = ct_GRP.toFixed(2);
+                                }
+
+                                if (label === 'CPM contacts Brut') {
+                                    var CPM_contacts_Brut = worksheet
+                                        .getCell(cellValue)
+                                        .value;
+                                    var value = CPM_contacts_Brut.toFixed(2);
+                                }
+
+                                 ChannelArray[label] = value;
                             }
 
                             // Mets la chaine dans l'object campagne
                             campaignObjects[worksheetName].campaignChannel = ChannelArray;
-
-                            console.log(
-                                'chaine_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' +
-                                JSON.stringify(row.dataRowOnes) + ' - | - '
-                            );
-                            console.log(ChannelArray);
-                            console.log('--------------------');                          
                         }
                        
 
@@ -197,21 +217,12 @@ console.log(alphabet);
                                  var value = worksheet.getCell(cellValue).value;
                                  console.log('col : ', i1 ,' -> ',cellValue, ' = ' , worksheet.getCell(cellKey).value, ' => ' , worksheet.getCell(cellValue).value); 
                                  IncreaseInLoadPerDayObject[label] = value;
-                             } 
-                                                      
-                            console.log(
-                                'montee_en_charge_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols +
-                                ') = ' + JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
-                            );
-                            //console.log(IncreaseInLoadPerDayObject);
+                             }                                                       
+                          
                             IncreaseILPDAArray.push(IncreaseInLoadPerDayObject);
 
                             // Mets des données de la Montée en charge l'object campagne
                              campaignObjects[worksheetName].campaignIncreaseInLoadPerDay = IncreaseILPDAArray;
-
-                            console.log('--------++++++++++++++++++++++++------------')
-                            console.log(IncreaseILPDAArray);
-                            console.log('--------++++++++++++++++++++++++------------')
                         }
                         
 
@@ -272,8 +283,7 @@ console.log(alphabet);
 
                              console.log('--------++++++++++++++++++++++++------------')
                              console.log(nameDayArray);
-                             console.log('--------++++++++++++++++++++++++------------')
-                                
+                             console.log('--------++++++++++++++++++++++++------------')                              
 
 
                             console.log(
@@ -281,18 +291,15 @@ console.log(alphabet);
                                 JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
                             );
                         }
-                       
-                        // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' +
-                        // JSON.stringify(row.values) + ' - | - '+value[1]);3
-
-                          /**/
-
-                        
-                  
+                      
                     })
 
                     console.log('Total lignes :' + dataLines.length);
                     console.log(campaignObjects);
+
+                    localStorageTV.removeItem(cacheStorageID);
+                    localStorageTV.setItem(cacheStorageID, JSON.stringify(campaignObjects));
+
                 }
 
             });
@@ -301,6 +308,199 @@ console.log(alphabet);
 
 }
 
-exports.generate = async (req, res) => {}
 
-exports.report = async (req, res) => {}
+exports.generate = async (req, res) => {
+    let cacheStorageID = "Campagne_Leclerc-Plan_Campagne-132748939578174030";
+    LocalStorageTVDATA = localStorageTV.getItem(cacheStorageID);
+
+    var reportingData = JSON.parse(LocalStorageTVDATA);
+
+    console.log(reportingData)
+
+    res.render('report-tv/template.ejs', {
+        reporting: reportingData,
+        moment: moment,
+        utilities: Utilities
+    });
+}
+
+exports.charts = async (req, res) => {
+
+    try {
+
+        let cacheStorageID = "Campagne_Leclerc-Plan_Campagne-132748939578174030";
+        LocalStorageTVDATA = localStorageTV.getItem(cacheStorageID);
+    
+        var reportingData = JSON.parse(LocalStorageTVDATA);
+        
+        if(reportingData['a-Ensemble'].campaigntimeSlotDiary) {
+            var campaigntimeSlotDiaryHourArray = new Array();
+            var campaigntimeSlotDiaryGRPArray = new Array();
+            timeSlotDiary = reportingData['a-Ensemble'].campaigntimeSlotDiary;
+            
+            for(i = 0; i < timeSlotDiary.length; i++) {
+                campaigntimeSlotDiaryHourArray.push(timeSlotDiary[i]['Journal tranches horaires']);
+                campaigntimeSlotDiaryGRPArray.push(timeSlotDiary[i]['GRP']);
+            }
+            console.log(campaigntimeSlotDiaryHourArray);
+
+            var data = {
+                xaxis: {
+                    name: 'GRP',
+                    data: campaigntimeSlotDiaryGRPArray
+                },
+                yaxis: {
+                    name : "Tranche horaires",
+                    data: campaigntimeSlotDiaryHourArray
+                }
+            }
+    
+            return res
+                .status(200)
+                .json(data);
+        }
+
+
+
+
+/*
+        var data = {
+            'lastYear': {
+                year: dateYearLast,
+                result: lastYear
+            },
+            'nowYear': {
+                year: dateYearNow,
+                result: nowYear
+            },
+            month: month
+        }
+
+        return res
+            .status(200)
+            .json(data);
+*/
+        /*
+            // Graph de suivi des campagnes L'année derniére
+            var dateYearLast = moment()
+                .subtract(1, 'year')
+                .format('YYYY');
+            // Cette année
+            var dateYearNow = moment().format('YYYY');
+
+
+            campaigns = await ModelCampaigns
+                .findAll({
+                    attributes: [
+                        [
+                            sequelize.fn('COUNT', sequelize.col('campaign_id')),
+                            'count'
+                        ],
+                        [
+                            sequelize.fn('MONTH', sequelize.col('campaign_start_date')),
+                            'month'
+                        ],
+                        [
+                            sequelize.fn('YEAR', sequelize.col('campaign_start_date')),
+                            'year'
+                        ]
+                    ],
+                    group: [
+                        'month', 'year'
+                    ],
+                    raw: true
+                }, {
+                    where: {
+                        [Op.and]: [
+                            {
+                                [sequelize.fn('YEAR', sequelize.col('campaign_start_date'))]: {
+                                    [Op.between]: [dateYearLast, dateYearNow]
+                                },
+                                [sequelize.fn('MONTH', sequelize.col('campaign_start_date'))]: {
+                                    [Op.between]: [1, 12]
+                                }
+                            }
+                        ]
+                    },
+                    order: [
+                        [
+                            'year', 'ASC'
+                        ],
+                        [
+                            'month', 'ASC'
+                        ]
+                    ]
+                })
+                .then(async function (campaigns) {
+                    if (!campaigns) {
+                        return res
+                            .status(404)
+                            .json({statusCoded: '404'});
+                    }
+                    //  console.log(campaigns);
+                    if (campaigns.length > 0) {
+                        var dataArray = new Array();
+                        var lastYear = new Array();
+                        var nowYear = new Array();
+                        var month = new Array();
+
+                        // Trie les campagnes selon la date d'expiration
+                        campaigns.sort(function (a, b) {
+                            return a.year - b.year;
+                        });
+
+                        for (i = 0; i < campaigns.length; i++) {
+                            var campaignYear = campaigns[i].year;
+                            var campaignMonth = campaigns[i].month;
+                            var campaignCount = campaigns[i].count;
+
+                            if (dateYearLast == campaignYear) {
+                                lastYear.push(campaignCount);
+                            }
+                            if (dateYearNow == campaignYear) {
+                                nowYear.push(campaignCount);
+                            }
+                        }
+                        var month = new Array(
+                            'janvier',
+                            'février',
+                            'mars',
+                            'avril',
+                            'mai',
+                            'juin',
+                            'juillet',
+                            'aout',
+                            'septembre',
+                            'octobre',
+                            'novembre',
+                            'décembre'
+                        );
+
+                        var data = {
+                            'lastYear': {
+                                year: dateYearLast,
+                                result: lastYear
+                            },
+                            'nowYear': {
+                                year: dateYearNow,
+                                result: nowYear
+                            },
+                            month: month
+                        }
+
+                        return res
+                            .status(200)
+                            .json(data);
+                    }
+
+                });
+                */
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res
+            .status(404)
+            .json({statusCoded: statusCoded});
+    }
+
+}

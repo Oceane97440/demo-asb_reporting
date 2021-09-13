@@ -1,0 +1,301 @@
+'use strict';
+$(document).ready(function () {
+ 
+ /*
+    var options = {
+     series: [{
+        name: 'GRP',      
+        data: [182.79,8.53,76.16,79.87]
+      }],
+        chart: {
+        type: 'bar',
+        height: 300
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false
+        },
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 0,
+        colors: ['transparent']
+      },
+      xaxis: {
+        title: {
+            text: 'Tranche horaires'
+          },
+        categories: ['12h00 14h00', '14h00 18h00', '18h00 20h00', '20h00 24h00'],
+      },
+      yaxis: {
+        title: {
+          text: 'GRP'
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val 
+          }
+        }
+      }
+      };
+
+      var chart = new ApexCharts(document.querySelector("#chart-ventilations"), options);
+      chart.render();
+*/
+var chartCampaignUrl = 'http://localhost:3001/t/charts';
+      $.getJSON(chartCampaignUrl, function (response) {      
+        
+        var options = {
+            series: [{
+               name: response.xaxis.name,      
+               data:  response.xaxis.data
+             }],
+               chart: {
+               type: 'bar',
+               height: 300
+             },
+             plotOptions: {
+               bar: {
+                 horizontal: false
+               },
+             },
+             dataLabels: {
+               enabled: false
+             },
+             stroke: {
+               show: true,
+               width: 0,
+               colors: ['transparent']
+             },
+             xaxis: {
+               title: {
+                   text: 'Tranche horaires'
+                 },
+               categories: response.yaxis.data,
+             },
+             yaxis: {
+               title: {
+                 text: 'GRP'
+               }
+             },
+             fill: {
+               opacity: 1
+             },
+             tooltip: {
+               y: {
+                 formatter: function (val) {
+                   return val 
+                 }
+               }
+             }
+             };
+       
+
+        var chart = new ApexCharts(document.querySelector("#chart-ventilations"), options);
+        chart.render();
+    });
+
+
+
+
+
+
+/*
+
+
+    var chartCampaignUrl = 'http://localhost:3001/manager/charts/campaigns';
+    var chartAdvertiserUrl = 'http://localhost:3001/manager/charts/advertisers';
+    var chartCampaignReportUrl = 'http://localhost:3001/manager/charts/campaign/report';
+
+
+    $.getJSON(chartCampaignUrl, function (response) {
+        var options = {
+            chart: {
+                type: 'line',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800,
+                    animateGradually: {
+                        enabled: true,
+                        delay: 150
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 20
+                    }
+                }
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            series: [
+                {
+                    name: response.lastYear.year,
+                    data: response.lastYear.result
+                }, {
+                    name: response.nowYear.year,
+                    data: response.nowYear.result
+                }
+            ],
+            xaxis: {
+                categories: response.month
+            }
+        }
+
+        var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
+        chart.render();
+    });
+
+//Chart Bar Reporting
+
+    var options = {
+        series: [
+            {
+                name: 'Réservée',
+                data: [(467000), (374268), (289980)]
+            }, {
+                name: 'Restant à diffuser',
+                data: [
+                    (467000 - 475272),
+                    (374268 - 383483),
+                    (289980 - 268365)
+                ]
+            }
+        ],
+        chart: {
+            type: 'bar',
+            height: 250,
+            stacked: true
+        },
+        plotOptions: {
+            bar: {
+                horizontal: true
+            }
+        },
+        stroke: {
+            width: 1,
+            colors: ['#fff']
+        },
+        xaxis: {
+            categories: [
+                'Habillage', 'Interstitiel', 'Instream'
+            ],
+            labels: {
+                formatter: function (val) {
+                    return val 
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: undefined
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        colors: [
+            '#3f51b5', '#cc0000'
+        ],
+        legend: {
+            position: 'bottom',
+            horizontalAlign: 'left',
+            offsetX: 10
+        }
+    };
+
+    var chart = new ApexCharts(
+        document.querySelector("#chart-campaignreport"),
+        options
+    );
+    chart.render();
+*/
+
+});
+
+/*
+$(document).ready(function() {
+    setTimeout(function() {
+        floatchart()
+    }, 700);
+    // [ campaign-scroll ] start
+    var px = new PerfectScrollbar('.feed-scroll', {
+        wheelSpeed: .5,
+        swipeEasing: 0,
+        wheelPropagation: 1,
+        minScrollbarLength: 40,
+    });
+    var px = new PerfectScrollbar('.pro-scroll', {
+        wheelSpeed: .5,
+        swipeEasing: 0,
+        wheelPropagation: 1,
+        minScrollbarLength: 40,
+    });
+    // [ campaign-scroll ] end
+});
+
+function floatchart() {
+
+    // [ satisfaction-chart ] start
+    $(function() {
+        var options = {
+            chart: {
+                height: 200,
+                type: 'pie',
+            },
+            series: [47408,867523],
+            labels: ["Diffusé", "Restant"],
+            legend: {
+                show: false,
+                offsetY: 50,
+            },
+            dataLabels: {
+                enabled: true,
+                dropShadow: {
+                    enabled: false,
+                }
+            },
+            theme: {
+                monochrome: {
+                    enabled: true,
+                    color: '#7267EF',
+                }
+            },
+            responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        height: 320,
+
+                    },
+                    legend: {
+                        position: 'bottom',
+                        offsetY: 0,
+                    }
+                }
+            }]
+        }
+        var chart = new ApexCharts(document.querySelector("#campaign-chart"), options);
+        chart.render();
+    });
+
+    // [ satisfaction-chart ] end
+}
+
+*/
