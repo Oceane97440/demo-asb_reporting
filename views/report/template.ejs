@@ -382,6 +382,14 @@
                         <td><%= reporting.interstitiel.siteList[i].ctr %>%</td>
                     </tr>
                     <% } %>
+                    <% if(reporting.campaign.admanager_impression > 0) { %>
+                    <td class="text-left">APP_ANTENNEREUNION</td>
+                    <td><%= utilities.numStr(reporting.campaign.admanager_impression) %></td>
+                    <td><%= utilities.numStr(reporting.campaign.admanager_clicks) %></td>
+                    <td><%= reporting.campaign.admanager_ctr %>%</td>
+                   
+                    <% }%>
+
                 </tbody>
                 <tfoot class="text-center table-dark">
                     <tr>
@@ -818,6 +826,7 @@
             </table>
         </div>
         <% } %>
+        
 
      <div class="pt-5 pb-5 text-right"> <a href="/r/<%=reporting.campaign.campaign_crypt %>/export" class="btn btn-xs btn-success"> <i class="fas fa-file-excel"> </i> Télécharger le rapport <span class="small">(Format : Excel)</span></a> </div>
     </div>
