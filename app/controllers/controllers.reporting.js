@@ -225,7 +225,6 @@ exports.report = async (req, res) => {
                                     moment: moment,
                                     utilities: Utilities
                                 });
-
                             }
 
                         }
@@ -889,9 +888,7 @@ exports.report = async (req, res) => {
                                         .format('YYYY-MM-DD HH:m:s');
 
                                     // Supprimer le localStorage précédent
-                                    if (localStorage.getItem(cacheStorageID)) {
-                                        localStorage.removeItem(cacheStorageID);
-                                    }
+                                    // if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
 
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));

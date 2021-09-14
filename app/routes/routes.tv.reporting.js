@@ -8,5 +8,4 @@ router.get("/", reportingTV.index);
 router.get("/charts/", reportingTV.charts);
 router.get("/generate/", reportingTV.generate);
 
-
 module.exports = router;

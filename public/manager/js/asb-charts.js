@@ -5,7 +5,7 @@ $(document).ready(function () {
     var chartAdvertiserUrl = 'http://localhost:3001/manager/charts/advertisers';
     var chartCampaignReportUrl = 'http://localhost:3001/manager/charts/campaign/report';
 
-    /*
+/*
 * Chart Campaigns -
 */
 
