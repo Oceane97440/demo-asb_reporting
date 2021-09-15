@@ -171,85 +171,88 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
         // Récupére le nom des sites et les classes Créer les tableaux des sites
         if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-            sites.push(site_name);
+            sites.push('LINFO.re (SITE)');
         }
         if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
-            sites.push(site_name);
+            sites.push('LINFO-ANDROID(APP)');
         }
         if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
-            sites.push(site_name);
+            sites.push('LINFO-IOS (APP)');
         }
         if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-            sites.push(site_name);
+            sites.push('ANTENNEREUNION (SITE)');
         }
         if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-            sites.push(site_name);
+            sites.push('DOMTOMJOB (SITE)');
         }
         if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-            sites.push(site_name);
+            sites.push('IMMO974 (SITE)');
         }
         if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-            sites.push(site_name);
+            sites.push('RODZAFER_LP (SITE)');
         }
         if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-            sites.push(site_name);
+            sites.push('RODZAFER_ANDROID (APP)');
         }
         if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-            sites.push(site_name);
+            sites.push('RODZAFER_IOS (APP)');
         }
         if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-            sites.push(site_name);
+            sites.push('ORANGE_REUNION (SITE)');
         }
         if (site_name.match(/^\SM_TF1{1}/igm)) {
-            sites.push(site_name);
+            sites.push('TF1 (SITE)');
         }
         if (site_name.match(/^\SM_M6{1}/igm)) {
-            sites.push(site_name);
+            sites.push('M6 (SITE)');
         }
         if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-            sites.push(site_name);
+            sites.push('DAILYMOTION (SITE)');
         }
         if (site_name.match(/^\SM_RODALI{1}/igm)) {
-            sites.push(site_name);
+            sites.push('RODALI (SITE)');
         }
+
+
 
         if (site_name.match(/^\N\/A{1}/i)) {
             // Si N/A
             if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
-                sites.push('SM_DOMTOMJOB');
+                sites.push('DOMTOMJOB (SITE)');
             }
             if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
-                sites.push('SM_LINFO-ANDROID');
+                sites.push('LINFO-ANDROID (APP)');
             }
             if (insertion_name.match(/^\LINFO{1}/igm)) {
-                sites.push('SM_LINFO.re');
+                sites.push('LINFO.re (SITE)');
             }
             if (insertion_name.match(/^\ANTENNE REUNION{1}/igm)) {
-                sites.push('SM_ANTENNEREUNION');
+                sites.push('ANTENNEREUNION (SITE)');
             }
             if (insertion_name.match(/^\ORANGE REUNION{1}/igm)) {
-                sites.push('SM_ANTENNEREUNION');
+                sites.push('ANTENNEREUNION (SITE)');
             }
             if (insertion_name.match(/^\RODZAFER{1}/igm)) {
-                sites.push('SM_ANTENNEREUNION');
+                sites.push('ANTENNEREUNION (SITE)');
             }
             if (insertion_name.match(/^\RODALI{1}/igm)) {
-                sites.push('SM_ANTENNEREUNION');
+                sites.push('ANTENNEREUNION (SITE)');
             }
             if (insertion_name.match(/^\IMMO974{1}/igm)) {
-                sites.push('SM_IMMO974');
+                sites.push('IMMO974 (SITE)');
             }
             if (insertion_name.match(/^\TF1{1}/igm)) {
-                sites.push('SM_TF1');
+                sites.push('TF1 (SITE)');
             }
             if (insertion_name.match(/^\M6{1}/igm)) {
-                sites.push('SM_M6');
+                sites.push('M6 (SITE)');
             }
             if (insertion_name.match(/^\DAILYMOTION{1}/igm)) {
-                sites.push('SM_DAILYMOTION');
+                sites.push('DAILYMOTION (SITE)');
             }
 
-            sites.push('SM_LINFO.re');
+
+            sites.push('LINFO.re (SITE)');
         }
     }
 
