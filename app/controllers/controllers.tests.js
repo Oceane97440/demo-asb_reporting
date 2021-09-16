@@ -1322,7 +1322,7 @@ exports.nodemail = async (req, res) => {
 exports.admanager = async (req, res) => {
 
 
-  var campaign_id = 1909682
+  var campaign_id = 1921947
    
   var admanager = await AxiosFunction.getAdManager(campaign_id);
 

@@ -246,13 +246,11 @@ exports.report = async (req, res) => {
                         insertion_format = await ModelInsertions.findOne({
                             where: {
                                 campaign_id: campaign_id,
-                                format_id: {
-                                    [Op.in]: [79409, 79633, 44152]
+                                format_id:{
+                                    [Op.in]:[79633,79637]
                                 }
                             }
                         });
-                        console.log('insertion_format : ', insertion_format);
-
 
                         // console.log('insertion_start_date : ', insertion_start_date);
                         // console.log('insertion_end_date : ', insertion_end_date);
@@ -911,20 +909,46 @@ exports.report = async (req, res) => {
 
                                         const data_admanager = admanager.data
 
-                                        console.log(data_admanager)
-                                        var data_impression = data_admanager.impressions
-                                        var data_clicks = data_admanager.clicks
-                                        var data_ctr = data_admanager.ctr
+                                       // console.log(data_admanager)
 
-                                        formatObjects.campaign.admanager_impression = parseInt(data_impression);
-                                        formatObjects.campaign.admanager_clicks = parseInt(data_clicks);
-                                        formatObjects.campaign.admanager_ctr = parseFloat(data_ctr).toFixed(2);
+                                        if (!Utilities.empty(formatObjects.interstitiel)) {
 
+                                            var key_i = Object.keys(formatObjects.interstitiel.siteList).length 
+
+                                            formatObjects.interstitiel.siteList[key_i] = data_admanager.interstitiel.siteList
+    
+                                           var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
+    
+                                           formatObjects.interstitiel.impressions = sommeInterstitiel
+                                        }
+
+                                        if (!Utilities.empty(formatObjects.masthead)) {
+
+                                            var key_m = Object.keys(formatObjects.masthead.siteList).length 
+
+                                            formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
+    
+                                           var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
+    
+                                           formatObjects.masthead.impressions = sommemasthead
+
+                                        }
+
+                           
+                                        var impression = formatObjects.campaign.impressions + data_admanager.campaign.impressions
+                                        var clicks = formatObjects.campaign.clicks + data_admanager.campaign.clicks
+
+                                        formatObjects.campaign.impressions = impression
+                                        formatObjects.campaign.clicks = clicks
+
+                                        ctr = parseFloat((clicks / impression) * 100).toFixed(
+                                            2
+                                        );
+                                        formatObjects.campaign.ctr = ctr
 
 
                                     }
 
-                                    console.log(formatObjects.campaign)
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()

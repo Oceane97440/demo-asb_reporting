@@ -312,7 +312,7 @@ exports.getAdManager = async (campaign_id) => {
 
   test = await axios({
     method: 'GET',
-    url: 'http://localhost/api_google-manager/taskId/json/campaignID-'+campaign_id,
+    url: 'http://localhost/api_google-manager/taskId/json/campaignID-'+campaign_id+'.json',
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "Application/json"
