@@ -246,8 +246,8 @@ exports.report = async (req, res) => {
                         insertion_format = await ModelInsertions.findOne({
                             where: {
                                 campaign_id: campaign_id,
-                                format_id:{
-                                    [Op.in]:[79633,79637]
+                                format_id: {
+                                    [Op.in]: [79633, 79637]
                                 }
                             }
                         });
@@ -905,47 +905,54 @@ exports.report = async (req, res) => {
 
                                     //Si la campagne possède un masthead ou interstitiel , on recupère le localstorage de GAM
                                     if (!Utilities.empty(insertion_format)) {
+
+
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
 
                                         const data_admanager = admanager.data
 
-                                       // console.log(data_admanager)
+                                        // test si le localstorage admanager existe 
+                                        if (!Utilities.empty(data_admanager)) {
 
-                                        if (!Utilities.empty(formatObjects.interstitiel)) {
+                                            // console.log(data_admanager)
 
-                                            var key_i = Object.keys(formatObjects.interstitiel.siteList).length 
+                                            if (!Utilities.empty(formatObjects.interstitiel)) {
 
-                                            formatObjects.interstitiel.siteList[key_i] = data_admanager.interstitiel.siteList
-    
-                                           var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
-    
-                                           formatObjects.interstitiel.impressions = sommeInterstitiel
+                                                var key_i = Object.keys(formatObjects.interstitiel.siteList).length
+
+                                                formatObjects.interstitiel.siteList[key_i] = data_admanager.interstitiel.siteList
+
+                                                var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
+
+                                                formatObjects.interstitiel.impressions = sommeInterstitiel
+                                            }
+
+                                            if (!Utilities.empty(formatObjects.masthead)) {
+
+                                                var key_m = Object.keys(formatObjects.masthead.siteList).length
+
+                                                formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
+
+                                                var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
+
+                                                formatObjects.masthead.impressions = sommemasthead
+
+                                            }
+
+
+                                            //Push les impression,click,ctr total (admanager + smart)
+                                            var impression = formatObjects.campaign.impressions + data_admanager.campaign.impressions
+                                            var clicks = formatObjects.campaign.clicks + data_admanager.campaign.clicks
+
+                                            formatObjects.campaign.impressions = impression
+                                            formatObjects.campaign.clicks = clicks
+
+                                            ctr = parseFloat((clicks / impression) * 100).toFixed(
+                                                2
+                                            );
+                                            formatObjects.campaign.ctr = ctr
+
                                         }
-
-                                        if (!Utilities.empty(formatObjects.masthead)) {
-
-                                            var key_m = Object.keys(formatObjects.masthead.siteList).length 
-
-                                            formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
-    
-                                           var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
-    
-                                           formatObjects.masthead.impressions = sommemasthead
-
-                                        }
-
-                           
-                                        var impression = formatObjects.campaign.impressions + data_admanager.campaign.impressions
-                                        var clicks = formatObjects.campaign.clicks + data_admanager.campaign.clicks
-
-                                        formatObjects.campaign.impressions = impression
-                                        formatObjects.campaign.clicks = clicks
-
-                                        ctr = parseFloat((clicks / impression) * 100).toFixed(
-                                            2
-                                        );
-                                        formatObjects.campaign.ctr = ctr
-
 
                                     }
 
