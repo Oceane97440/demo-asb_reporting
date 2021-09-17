@@ -1,8 +1,8 @@
 //BDD LOCALHOST
 
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(process.env.DB,process.env.USER,process.env.PASSWORD, { 
-    host: "localhost",
+const sequelize = new Sequelize(process.env.DB,process.env.USER,process.env.PASSWORD, { // nom de la BDD, username, password
+    host: process.env.HOST,
     dialect: "mysql",
     operatorsAliases: true,
     logging: false,

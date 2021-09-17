@@ -14,6 +14,7 @@ const {
 var nodemailer = require('nodemailer');
 var nodeoutlook = require('nodejs-nodemailer-outlook');
 var axios = require('axios');
+const ExcelJS = require('exceljs');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -1201,6 +1202,7 @@ exports.nodemail = async (req, res) => {
 
     nodeoutlook.sendEmail({
             /*auth: {
+            auth: {
                 user: "alvine.didier@antennereunion.fr",
                 pass: "************************"
             },
@@ -1223,6 +1225,54 @@ exports.nodemail = async (req, res) => {
             replyTo: "oceane.sautron@antennereunion.fr",
        
             
+            replyTo: "alvine.didier@antennereunion.fr",
+            /*
+            attachments: [
+                                {
+                                    filename: 'text1.txt',
+                                    content: 'hello world!'
+                                },
+                                {   // binary buffer as an attachment
+                                    filename: 'text2.txt',
+                                    content: new Buffer('hello world!','utf-8')
+                                },
+                                {   // file on disk as an attachment
+                                    filename: 'text3.txt',
+                                    path: '/path/to/file.txt' // stream this file
+                                },
+                                {   // filename and content type is derived from path
+                                    path: '/path/to/file.txt'
+                                },
+                                {   // stream as an attachment
+                                    filename: 'text4.txt',
+                                    content: fs.createReadStream('file.txt')
+                                },
+                                {   // define custom content type for the attachment
+                                    filename: 'text.bin',
+                                    content: 'hello world!',
+                                    contentType: 'text/plain'
+                                },
+                                {   // use URL as an attachment
+                                    filename: 'license.txt',
+                                    path: 'https://raw.github.com/nodemailer/nodemailer/master/LICENSE'
+                                },
+                                {   // encoded string as an attachment
+                                    filename: 'text1.txt',
+                                    content: 'aGVsbG8gd29ybGQh',
+                                    encoding: 'base64'
+                                },
+                                {   // data uri as an attachment
+                                    path: 'data:text/plain;base64,aGVsbG8gd29ybGQ='
+                                },
+                                {
+                                    // use pregenerated MIME node
+                                    raw: 'Content-Type: text/plain\r\n' +
+                                         'Content-Disposition: attachment;\r\n' +
+                                         '\r\n' +
+                                         'Hello world!'
+                                }
+                            ],
+            */
             onError: (e) => console.log(e),
             onSuccess: (i) => console.log(i)
         }
@@ -1329,6 +1379,138 @@ exports.admanager = async (req, res) => {
   const data_admanager = admanager.data
 
   console.log(data_admanager)
+}
+exports.read_excel = async (req, res) => {
 
+    var workbook = new ExcelJS.Workbook();
+    workbook.xlsx.readFile('data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
+
+        .then(function () {
+        
+
+            // Note: workbook.worksheets.forEach will still work but this is better
+            workbook.eachSheet(function (worksheet, sheetId) {
+              
+
+                /*
+                worksheet.eachRow({
+                    includeEmpty: true
+                }, async (row, rowNumber) => {
+
+                     //console.log(row.values);
+
+                    data = row.values
+                    numberLine = data.length
+                    console.log(numberLine)
+
+                    for (i = 1; i < numberLine; i++) {
+                        dataList.push(row.values[i])
+
+                        if (dataList.match(/(?='Montée en charge)(.*)(?<='Total')/igm)) {
+                            dataList1.push(row.values[i])
+
+                        }
+                    }
+                })
+                */
+            
+                if(sheetId === 1) { 
+                    console.log(worksheet.name)
+                    console.log(sheetId);
+
+                   
+                    console.log()
+
+                    const campagne = worksheet.getCell('C3').value;
+                    const periode = worksheet.getCell('C4').value;
+                    const monnaie = worksheet.getCell('C7').value;
+                    const budget = worksheet.getCell('C8').value;
+                    const effectif = worksheet.getCell('C9').value;
+                    const annonceur = worksheet.getCell('H3').value;
+                    const version = worksheet.getCell('H6').value;
+
+                    console.log('campagne', campagne)
+                    console.log('periode', periode)
+                    console.log('monnaie', monnaie)
+                    console.log('budget', budget)
+                    console.log('effectif', effectif)
+                    console.log('annonceur', annonceur)
+                    console.log('version', version)
+                    console.log('------------------------------------------')
+
+                    const vT = worksheet.getCell('A20').value;
+                    const vT1 = worksheet.getCell('A30').value;
+
+                    console.log(' A20 : ', vT);
+                    console.log(' A30 : ', vT1);
+
+                    console.log('------------------------------------------')
+
+                    dataLines = new Array();
+                    dataLinesName = new Object();
+                    dataItems = new Array();
+
+                    // Iterate over all rows that have values in a worksheet
+                    worksheet.eachRow(function(row, rowNumber) {
+                        value = row.values;
+                        dataLines.push(row.values);
+                        numberCols = value.length; 
+
+                        if(value[1] === "Chaîne") { var chaine_begin = rowNumber; dataItems['chaine_begin'] = rowNumber; console.log('[x] Chaîne - Begin :'+ chaine_begin); }
+                        // if(value[1] === "Total") { var chaine_end = rowNumber;  console.log('[x] Chaîne - End : ' + chaine_end) }
+
+                        if(value[1] === "Montée en charge / Jour") { var montee_en_charge_begin = rowNumber; dataItems['montee_en_charge_begin'] = rowNumber; console.log('[x] Montée en charge / Jour - Begin :'+ montee_en_charge_begin); }
+                        // if(value[1] === "Total") { var montee_en_charge_end = rowNumber;  console.log('[x] Montée en charge / Jour - End : ' + montee_en_charge_end) }
+
+                        if(value[1] === "Journal tranches horaires") { var tranches_horaires_begin = rowNumber; dataItems['tranches_horaires_begin'] = rowNumber; console.log('[x] Journal tranches horaires - End : ' + tranches_horaires_begin); }
+                        // if(value[1] === "Total") { var tranches_horaires_end = rowNumber;  console.log('[x] Journal tranches horaires / Jour - End : ' + tranches_horaires_end) }
+
+                        if(value[1] === "Jour nommé") { var jour_nomme_begin = rowNumber; dataItems['jour_nomme_begin'] = rowNumber; console.log('[x] Jour nommé - Begin : ' + jour_nomme_begin); }
+                        // if(value[1] === "Total") { var jour_nomme_end = rowNumber;  console.log('[x] Jour nommé - End : ' + jour_nomme_end) }
+
+                        // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                    })
+
+                    console.log('dataItems :',dataItems);
+
+                    worksheet.eachRow(function(row, rowNumber) {
+                        value = row.values;
+                        dataLines.push(row.values);
+                        numberCols = value.length; 
+                        naming = value[1];
+                        const regexDateMonteeEnCharge = /([0-9]{2}\/[0-9]{2}\/[0-9]{2})/gi;
+                        const regexTranchesHoraires = /([0-9]{2}h[0-9]{2} [0-9]{2}h[0-9]{2})/gi;
+                        const regexChaine = /Antenne Réunion/gi;
+                        const regexJourSemaine = /(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)/gi;
+                     
+                        if((rowNumber > dataItems['chaine_begin']) && naming.match(regexChaine) && (numberCols > 2)) {
+                            console.log('chaine_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                        }      
+
+                        if((rowNumber > dataItems['montee_en_charge_begin']) && naming.match(regexDateMonteeEnCharge) && (numberCols > 2)) {
+                            console.log('montee_en_charge_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                        }   
+
+                        if((rowNumber > dataItems['tranches_horaires_begin']) && naming.match(regexTranchesHoraires) && (numberCols > 2)) {
+                            console.log('tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                        }  
+                        
+                        if((rowNumber > dataItems['jour_nomme_begin']) && naming.match(regexJourSemaine) && (numberCols > 2)) {
+                            console.log('jour_nomme_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                        }  
+
+                       
+                        // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
+                    })
+
+                    console.log('Total lignes :'+dataLines.length);
+                    console.log('numberCols :'+dataLinesName);
+                }
+
+
+            });
+
+           
+        });
 
 }

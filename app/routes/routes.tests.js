@@ -13,6 +13,7 @@ router.get("/template", test.template);
 router.get("/array", test.array_unique);
 router.get("/nodemail",test.nodemail)
 router.get("/admanager",test.admanager)
+router.get("/read",test.read_excel)
 
 
 module.exports = router;

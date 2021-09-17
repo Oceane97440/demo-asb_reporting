@@ -133,7 +133,7 @@
             </div>
         </div>
 
-        <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+        <div class="row p-3 mt-5 ml-2 mr-2" id="table_global">
             <h3 class="title">
                 <i class="fas fa-chart-line"></i>
                 <strong>Bilan global de la campagne</strong>
@@ -145,8 +145,6 @@
             <table class="table">
                 <thead class="text-center thead-dark">
                     <tr class="text-center">
-
-
                         <th>Impressions</th>
                         <th>Clics</th>
                         <th>Taux de clics</th>
@@ -155,12 +153,10 @@
                         <% if(utilities.empty(reporting.campaign.ctrComplete)) { %>
                         <th>VTR</th>
                         <% } %>
-
                     </tr>
                 </thead>
                 <tbody class="text-center">
                     <tr>
-
                         <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
                         <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
                         <td><%= reporting.campaign.ctr %>%</td>
