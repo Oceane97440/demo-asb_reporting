@@ -34,8 +34,8 @@ const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
 
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
-localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
+localStorage = new LocalStorage('data/reporting/' + moment().format('YYYY/MM/DD'));
+localStorageTasks = new LocalStorage('data/taskID/' + moment().format('YYYY/MM/DD/H'));
 
 
 exports.index = async (req, res) => {
@@ -241,6 +241,16 @@ exports.report = async (req, res) => {
                                 campaign_id: campaign_id
                             }
                         });
+
+                        insertion_format = await ModelInsertions.findOne({
+                            where: {
+                                campaign_id: campaign_id,
+                                format_id: {
+                                    [Op.in]: [79633, 79637]
+                                }
+                            }
+                        });
+
                         // console.log('insertion_start_date : ', insertion_start_date);
                         // console.log('insertion_end_date : ', insertion_end_date);
 
@@ -615,7 +625,7 @@ exports.report = async (req, res) => {
                                                     }
 
                                                     if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
-                                                        dataList[i]['complete'] =  parseInt(line[13]);
+                                                        dataList[i]['complete'] = parseInt(line[13]);
                                                     } else {
                                                         dataList[i]['complete'] = 0;
                                                     }
@@ -648,6 +658,9 @@ exports.report = async (req, res) => {
                                         var siteLINFO_ANDROID = new Array();
                                         var siteLINFO_IOS = new Array();
                                         var siteANTENNEREUNION = new Array();
+                                        //admanager App AR
+                                        var siteAPP_ANTENNEREUNION = new Array();
+
                                         var siteDOMTOMJOB = new Array();
                                         var siteIMMO974 = new Array();
                                         var siteRODZAFER_LP = new Array();
@@ -697,7 +710,7 @@ exports.report = async (req, res) => {
                                             }
                                             if (insertion_name.match(/^\MEA{1}/igm)) {
                                                 formatMea.push(index);
-                                            }                                           
+                                            }
                                             if (insertion_name.match(/CLICK COMMAND{1}|CC/igm)) {
                                                 formatClickCommand.push(index);
                                             }
@@ -745,7 +758,13 @@ exports.report = async (req, res) => {
                                             if (site_name.match(/^\SM_RODALI{1}/igm)) {
                                                 siteRODALI.push(index);
                                             }
+
+
+
                                         }
+
+
+
 
                                         // Trie les formats et compatibilise les insertions et autres clics
                                         if (!Utilities.empty(formatHabillage)) {
@@ -882,6 +901,61 @@ exports.report = async (req, res) => {
                                         formatObjects.campaign.repetition = repetition;
                                     }
 
+
+                                    //Si la campagne possède un masthead ou interstitiel , on recupère le localstorage de GAM
+                                    if (!Utilities.empty(insertion_format)) {
+
+
+                                        var admanager = await AxiosFunction.getAdManager(campaign_id);
+
+                                        const data_admanager = admanager.data
+
+                                        // test si le localstorage admanager existe 
+                                        if (!Utilities.empty(data_admanager)) {
+
+                                            // console.log(data_admanager)
+
+                                            if (!Utilities.empty(formatObjects.interstitiel)) {
+
+                                                var key_i = Object.keys(formatObjects.interstitiel.siteList).length
+
+                                                formatObjects.interstitiel.siteList[key_i] = data_admanager.interstitiel.siteList
+
+                                                var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
+
+                                                formatObjects.interstitiel.impressions = sommeInterstitiel
+                                            }
+
+                                            if (!Utilities.empty(formatObjects.masthead)) {
+
+                                                var key_m = Object.keys(formatObjects.masthead.siteList).length
+
+                                                formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
+
+                                                var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
+
+                                                formatObjects.masthead.impressions = sommemasthead
+
+                                            }
+
+
+                                            //Push les impression,click,ctr total (admanager + smart)
+                                            var impression = formatObjects.campaign.impressions + data_admanager.campaign.impressions
+                                            var clicks = formatObjects.campaign.clicks + data_admanager.campaign.clicks
+
+                                            formatObjects.campaign.impressions = impression
+                                            formatObjects.campaign.clicks = clicks
+
+                                            ctr = parseFloat((clicks / impression) * 100).toFixed(
+                                                2
+                                            );
+                                            formatObjects.campaign.ctr = ctr
+
+                                        }
+
+                                    }
+
+
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
                                         .add(2, 'hours')
@@ -1003,7 +1077,7 @@ exports.export_excel = async (req, res) => {
 
 
                 var vu = reporting.campaign.vu;
-       
+
 
                 var repetition = reporting.campaign.repetition;
                 var complete = reporting.campaign.ctrComplete;
@@ -1192,20 +1266,20 @@ exports.export_excel = async (req, res) => {
                 const dataset_global = [{
                     impressions: impressions,
                     clics: clicks,
-                    ctr_clics: ctr.replace('.', ',')+'%',
+                    ctr_clics: ctr.replace('.', ',') + '%',
                     vu: vu,
                     repetions: repetition
 
                 }];
                 const dataset_format = []
-            
+
 
                 if (!Utilities.empty(interstitiel)) {
                     dataset_format[0] = {
                         Formats: 'INTERSTITIEL',
                         Impressions: reporting.interstitiel.impressions,
                         Clics: reporting.interstitiel.clicks,
-                        Ctr_clics: reporting.interstitiel.ctr.replace('.', ',')+'%',
+                        Ctr_clics: reporting.interstitiel.ctr.replace('.', ',') + '%',
 
                     }
                 }
@@ -1216,7 +1290,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'HABILLAGE',
                         Impressions: reporting.habillage.impressions,
                         Clics: reporting.habillage.clicks,
-                        Ctr_clics: reporting.habillage.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.habillage.ctr.replace('.', ',') + '%'
                     }
                 }
                 if (!Utilities.empty(masthead)) {
@@ -1225,7 +1299,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'MASTHEAD',
                         Impressions: reporting.masthead.impressions,
                         Clics: reporting.masthead.clicks,
-                        Ctr_clics: reporting.masthead.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.masthead.ctr.replace('.', ',') + '%'
                     }
                 }
 
@@ -1235,7 +1309,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'GRAND ANGLE',
                         Impressions: reporting.grandangle.impressions,
                         Clics: reporting.grandangle.clicks,
-                        Ctr_clics: reporting.grandangle.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.grandangle.ctr.replace('.', ',') + '%'
 
                     }
                 }
@@ -1245,7 +1319,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'NATIVE',
                         Impressions: reporting.native.impressions,
                         Clics: reporting.native.clicks,
-                        Ctr_clics: reporting.native.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.native.ctr.replace('.', ',') + '%'
 
                     }
                 }
@@ -1254,7 +1328,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'INSTREAM',
                         Impressions: reporting.instream.impressions,
                         Clics: reporting.instream.clicks,
-                        Ctr_clics: reporting.instream.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.instream.ctr.replace('.', ',') + '%'
                     }
                 }
                 if (!Utilities.empty(slider)) {
@@ -1263,7 +1337,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'SLIDER',
                         Impressions: reporting.slider.impressions,
                         Clics: reporting.slider.clicks,
-                        Ctr_clics: reporting.slider.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.slider.ctr.replace('.', ',') + '%'
                     }
                 }
 
@@ -1273,7 +1347,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'RECTANGLE VIDEO',
                         Impressions: reporting.rectanglevideo.impressions,
                         Clics: reporting.rectanglevideo.clicks,
-                        Ctr_clics: reporting.rectanglevideo.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.rectanglevideo.ctr.replace('.', ',') + '%'
                     }
                 }
 
@@ -1283,7 +1357,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'MISE EN AVANT',
                         Impressions: reporting.mea.impressions,
                         Clics: reporting.mea.clicks,
-                        Ctr_clics: reporting.mea.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.mea.ctr.replace('.', ',') + '%'
                     }
                 }
                 if (!Utilities.empty(slidervideo)) {
@@ -1292,7 +1366,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'SLIDER VIDEO',
                         Impressions: reporting.slidervideo.impressions,
                         Clics: reporting.slidervideo.clicks,
-                        Ctr_clics: reporting.slidervideo.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.slidervideo.ctr.replace('.', ',') + '%'
                     }
                 }
                 if (!Utilities.empty(logo)) {
@@ -1301,7 +1375,7 @@ exports.export_excel = async (req, res) => {
                         Formats: 'LOGO',
                         Impressions: reporting.logo.impressions,
                         Clics: reporting.logo.clicks,
-                        Ctr_clics: reporting.logo.ctr.replace('.', ',')+'%'
+                        Ctr_clics: reporting.logo.ctr.replace('.', ',') + '%'
                     }
                 }
                 if (!Utilities.empty(clickcommand)) {
@@ -1330,7 +1404,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .habillage
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
                         });
 
@@ -1350,7 +1424,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .interstitiel
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
                         })
 
@@ -1369,7 +1443,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .masthead
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
                         })
 
@@ -1388,7 +1462,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .grandangle
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
                         })
 
@@ -1407,11 +1481,11 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .instream
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: reporting
                                 .instream
                                 .siteList[i]
-                                .ctrComplete.replace('.', ',')+'%'
+                                .ctrComplete.replace('.', ',') + '%'
                         })
 
                     }
@@ -1430,7 +1504,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .native
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
 
 
@@ -1451,7 +1525,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .rectanglevideo
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
 
 
@@ -1472,7 +1546,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .slider
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
 
 
@@ -1494,7 +1568,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .slidervideo
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
 
                         })
@@ -1515,7 +1589,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .logo
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
 
                         })
@@ -1536,7 +1610,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .mea
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
 
                         })
@@ -1556,7 +1630,7 @@ exports.export_excel = async (req, res) => {
                             ctr_clics: reporting
                                 .clickcommand
                                 .siteList[i]
-                                .ctr.replace('.', ',')+'%',
+                                .ctr.replace('.', ',') + '%',
                             vtr: ' - '
 
 
@@ -1625,22 +1699,22 @@ exports.automate = async (req, res) => {
         // Réinitialise l'objet Format
         let formatObjects = new Object();
 
-        let mode = req.query.mode;      
+        let mode = req.query.mode;
         if (!Utilities.empty(mode) && (mode === 'delete')) {
-             // si le local storage expire; on supprime les precedents cache et les taskid                           
-             localStorage.removeItem('campaignID-' + campaign_id);
-             localStorageTasks.removeItem(
-                 'campaignID-' + campaign_id + '-taskGlobal'
-             );
-             localStorageTasks.removeItem(
-                 'campaignID-' + campaign_id + '-taskGlobalVU'
-             );               
-            
+            // si le local storage expire; on supprime les precedents cache et les taskid                           
+            localStorage.removeItem('campaignID-' + campaign_id);
+            localStorageTasks.removeItem(
+                'campaignID-' + campaign_id + '-taskGlobal'
+            );
+            localStorageTasks.removeItem(
+                'campaignID-' + campaign_id + '-taskGlobalVU'
+            );
+
             console.log('mode = delete');
             return res
-            .status(200).json({
-                'message': 'Les caches de cette campagne <strong>' + campaign_id + '</strong> sont supprimés.'
-            });
+                .status(200).json({
+                    'message': 'Les caches de cette campagne <strong>' + campaign_id + '</strong> sont supprimés.'
+                });
         }
 
         var campaign = await ModelCampaigns
@@ -1662,7 +1736,7 @@ exports.automate = async (req, res) => {
             })
             .then(async function (campaign) {
 
-               
+
                 if (!campaign)
                     return res
                         .status(403).json({
