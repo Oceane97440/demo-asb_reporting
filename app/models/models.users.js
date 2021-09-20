@@ -43,6 +43,11 @@ const Users = sequelize.define('users', {
     updated_at: {
         type: Sequelize.DATE(),
         allowNull: true
+    },
+
+    user_log: {
+        type: Sequelize.DOUBLE(),
+        allowNull: true
     }
 }, {
     tableName: 'asb_users',

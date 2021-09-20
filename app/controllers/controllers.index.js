@@ -77,6 +77,8 @@ exports.signup_add = async (req, res) => {
   const user_password = req.body.user_password;
   const user_role = req.body.user_role;
 
+
+
   try {
     // verifier si les champs ne son pas vide
     if (user_email === '' || user_password === '' || user_role === '') {
@@ -202,7 +204,7 @@ exports.login_add = async (req, res) => {
             //Date et l'heure de la connexion
             const now = new Date();
             const date_now = now.getTime();
-            const updated_at	 = moment(date_now).format('YYYY-MM-DDTHH:m:00');
+            const updated_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
 
             // use session for user connected
             req.session.user = user;
@@ -211,17 +213,32 @@ exports.login_add = async (req, res) => {
 
             if (req.session.user.user_role === 1) {
 
-              console.log('date heure de la connexion admin' + updated_at	)
+              console.log('date heure de la connexion admin' + updated_at)
+              var nbr_log = req.session.user.user_log + 1
 
-              return res.redirect('/manager');
+              ModelUser.update({
+                updated_at: updated_at,
+                user_log: nbr_log
+              }, {
+                where: {
+                  user_id: user.user_id
+                }
+              }).then(
+                res.redirect('/manager')
+              )
+
             }
             if (req.session.user.user_role === 2 || req.session.user.user_role === 3) {
 
-              console.log('date heure de la connexion user' + updated_at	)
+              var nbr_log = req.session.user.user_log + 1
+
+              console.log('date heure de la connexion user' + updated_at)
 
 
               ModelUser.update({
                 updated_at: updated_at,
+                user_log: nbr_log
+
 
 
               }, {
@@ -261,6 +278,8 @@ exports.login_add = async (req, res) => {
   }
 
 }
+
+
 
 exports.logout = async (req, res) => {
 
