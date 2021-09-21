@@ -14,6 +14,9 @@ const {
 var nodemailer = require('nodemailer');
 var nodeoutlook = require('nodejs-nodemailer-outlook');
 const ExcelJS = require('exceljs');
+var axios = require('axios');
+const fs = require('fs')
+const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -1358,11 +1361,11 @@ exports.read_excel = async (req, res) => {
     workbook.xlsx.readFile('data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
 
         .then(function () {
-        
+
 
             // Note: workbook.worksheets.forEach will still work but this is better
             workbook.eachSheet(function (worksheet, sheetId) {
-              
+
 
                 /*
                 worksheet.eachRow({
@@ -1385,12 +1388,12 @@ exports.read_excel = async (req, res) => {
                     }
                 })
                 */
-            
-                if(sheetId === 1) { 
+
+                if (sheetId === 1) {
                     console.log(worksheet.name)
                     console.log(sheetId);
 
-                   
+
                     console.log()
 
                     const campagne = worksheet.getCell('C3').value;
@@ -1423,66 +1426,118 @@ exports.read_excel = async (req, res) => {
                     dataItems = new Array();
 
                     // Iterate over all rows that have values in a worksheet
-                    worksheet.eachRow(function(row, rowNumber) {
+                    worksheet.eachRow(function (row, rowNumber) {
                         value = row.values;
                         dataLines.push(row.values);
-                        numberCols = value.length; 
+                        numberCols = value.length;
 
-                        if(value[1] === "Chaîne") { var chaine_begin = rowNumber; dataItems['chaine_begin'] = rowNumber; console.log('[x] Chaîne - Begin :'+ chaine_begin); }
+                        if (value[1] === "Chaîne") {
+                            var chaine_begin = rowNumber;
+                            dataItems['chaine_begin'] = rowNumber;
+                            console.log('[x] Chaîne - Begin :' + chaine_begin);
+                        }
                         // if(value[1] === "Total") { var chaine_end = rowNumber;  console.log('[x] Chaîne - End : ' + chaine_end) }
 
-                        if(value[1] === "Montée en charge / Jour") { var montee_en_charge_begin = rowNumber; dataItems['montee_en_charge_begin'] = rowNumber; console.log('[x] Montée en charge / Jour - Begin :'+ montee_en_charge_begin); }
+                        if (value[1] === "Montée en charge / Jour") {
+                            var montee_en_charge_begin = rowNumber;
+                            dataItems['montee_en_charge_begin'] = rowNumber;
+                            console.log('[x] Montée en charge / Jour - Begin :' + montee_en_charge_begin);
+                        }
                         // if(value[1] === "Total") { var montee_en_charge_end = rowNumber;  console.log('[x] Montée en charge / Jour - End : ' + montee_en_charge_end) }
 
-                        if(value[1] === "Journal tranches horaires") { var tranches_horaires_begin = rowNumber; dataItems['tranches_horaires_begin'] = rowNumber; console.log('[x] Journal tranches horaires - End : ' + tranches_horaires_begin); }
+                        if (value[1] === "Journal tranches horaires") {
+                            var tranches_horaires_begin = rowNumber;
+                            dataItems['tranches_horaires_begin'] = rowNumber;
+                            console.log('[x] Journal tranches horaires - End : ' + tranches_horaires_begin);
+                        }
                         // if(value[1] === "Total") { var tranches_horaires_end = rowNumber;  console.log('[x] Journal tranches horaires / Jour - End : ' + tranches_horaires_end) }
 
-                        if(value[1] === "Jour nommé") { var jour_nomme_begin = rowNumber; dataItems['jour_nomme_begin'] = rowNumber; console.log('[x] Jour nommé - Begin : ' + jour_nomme_begin); }
+                        if (value[1] === "Jour nommé") {
+                            var jour_nomme_begin = rowNumber;
+                            dataItems['jour_nomme_begin'] = rowNumber;
+                            console.log('[x] Jour nommé - Begin : ' + jour_nomme_begin);
+                        }
                         // if(value[1] === "Total") { var jour_nomme_end = rowNumber;  console.log('[x] Jour nommé - End : ' + jour_nomme_end) }
 
                         // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
                     })
 
-                    console.log('dataItems :',dataItems);
+                    console.log('dataItems :', dataItems);
 
-                    worksheet.eachRow(function(row, rowNumber) {
+                    worksheet.eachRow(function (row, rowNumber) {
                         value = row.values;
                         dataLines.push(row.values);
-                        numberCols = value.length; 
+                        numberCols = value.length;
                         naming = value[1];
                         const regexDateMonteeEnCharge = /([0-9]{2}\/[0-9]{2}\/[0-9]{2})/gi;
                         const regexTranchesHoraires = /([0-9]{2}h[0-9]{2} [0-9]{2}h[0-9]{2})/gi;
                         const regexChaine = /Antenne Réunion/gi;
                         const regexJourSemaine = /(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)/gi;
-                     
-                        if((rowNumber > dataItems['chaine_begin']) && naming.match(regexChaine) && (numberCols > 2)) {
-                            console.log('chaine_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
-                        }      
 
-                        if((rowNumber > dataItems['montee_en_charge_begin']) && naming.match(regexDateMonteeEnCharge) && (numberCols > 2)) {
-                            console.log('montee_en_charge_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
-                        }   
+                        if ((rowNumber > dataItems['chaine_begin']) && naming.match(regexChaine) && (numberCols > 2)) {
+                            console.log('chaine_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' + JSON.stringify(row.values) + ' - | - ' + value[1]);
+                        }
 
-                        if((rowNumber > dataItems['tranches_horaires_begin']) && naming.match(regexTranchesHoraires) && (numberCols > 2)) {
-                            console.log('tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
-                        }  
-                        
-                        if((rowNumber > dataItems['jour_nomme_begin']) && naming.match(regexJourSemaine) && (numberCols > 2)) {
-                            console.log('jour_nomme_begin : Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
-                        }  
+                        if ((rowNumber > dataItems['montee_en_charge_begin']) && naming.match(regexDateMonteeEnCharge) && (numberCols > 2)) {
+                            console.log('montee_en_charge_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' + JSON.stringify(row.values) + ' - | - ' + value[1]);
+                        }
 
-                       
+                        if ((rowNumber > dataItems['tranches_horaires_begin']) && naming.match(regexTranchesHoraires) && (numberCols > 2)) {
+                            console.log('tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' + JSON.stringify(row.values) + ' - | - ' + value[1]);
+                        }
+
+                        if ((rowNumber > dataItems['jour_nomme_begin']) && naming.match(regexJourSemaine) && (numberCols > 2)) {
+                            console.log('jour_nomme_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' + JSON.stringify(row.values) + ' - | - ' + value[1]);
+                        }
+
+
                         // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
                     })
 
-                    console.log('Total lignes :'+dataLines.length);
-                    console.log('numberCols :'+dataLinesName);
+                    console.log('Total lignes :' + dataLines.length);
+                    console.log('numberCols :' + dataLinesName);
                 }
 
 
             });
 
-           
+
         });
 
 };
+
+
+exports.log_error = async (req, res) => {
+
+
+
+
+    var path = "proxy_error_log"
+    var contents = fs.readFileSync(path).toString();
+    console.log(contents)
+    res.send(contents)
+
+
+/*
+    var data = contents.match('(.*)')
+    console.log(data)
+    console.log('data.length ' + data.length)
+
+
+   var dataArray = new Array()
+
+    function logArrayElements(element, index, array) {
+        console.log("a[" + index + "] = " + element);
+
+        dataArray.push(element.split(","));
+
+
+    }
+    data.forEach(logArrayElements);
+
+    console.log(dataArray)
+
+    res.send('test')
+*/
+
+}

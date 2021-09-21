@@ -1,9 +1,9 @@
 'use strict';
 $(document).ready(function () {
 
-    var chartCampaignUrl = 'http://localhost:3001/manager/charts/campaigns';
-    var chartAdvertiserUrl = 'http://localhost:3001/manager/charts/advertisers';
-    var chartCampaignReportUrl = 'http://localhost:3001/manager/charts/campaign/report';
+    var chartCampaignUrl = 'https://reporting.antennesb.fr/manager/charts/campaigns';
+    var chartAdvertiserUrl = 'https://reporting.antennesb.fr/manager/charts/advertisers';
+    var chartCampaignReportUrl = 'https://reporting.antennesb.fr/manager/charts/campaign/report';
 
 /*
 * Chart Campaigns -
