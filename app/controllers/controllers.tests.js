@@ -11,8 +11,6 @@ process.on('unhandledRejection', error => {
 const {
     QueryTypes
 } = require('sequelize');
-var nodemailer = require('nodemailer');
-var nodeoutlook = require('nodejs-nodemailer-outlook');
 const ExcelJS = require('exceljs');
 var axios = require('axios');
 const fs = require('fs')
@@ -1201,71 +1199,6 @@ exports.array_unique = async (req, res) => {
 
 
 exports.nodemail = async (req, res) => {
-
-    nodeoutlook.sendEmail({
-            auth: {
-                user: "alvine.didier@antennereunion.fr",
-                pass: "************************"
-            },
-            from: "alvine.didier@antennereunion.fr",
-            to: 'alvinedidier@gmail.com',
-            subject: 'test 2 !',
-            html: '<b>This is bold text</b>',
-            text: 'This is text version!',
-            replyTo: "alvine.didier@antennereunion.fr",
-            /*
-            attachments: [
-                                {
-                                    filename: 'text1.txt',
-                                    content: 'hello world!'
-                                },
-                                {   // binary buffer as an attachment
-                                    filename: 'text2.txt',
-                                    content: new Buffer('hello world!','utf-8')
-                                },
-                                {   // file on disk as an attachment
-                                    filename: 'text3.txt',
-                                    path: '/path/to/file.txt' // stream this file
-                                },
-                                {   // filename and content type is derived from path
-                                    path: '/path/to/file.txt'
-                                },
-                                {   // stream as an attachment
-                                    filename: 'text4.txt',
-                                    content: fs.createReadStream('file.txt')
-                                },
-                                {   // define custom content type for the attachment
-                                    filename: 'text.bin',
-                                    content: 'hello world!',
-                                    contentType: 'text/plain'
-                                },
-                                {   // use URL as an attachment
-                                    filename: 'license.txt',
-                                    path: 'https://raw.github.com/nodemailer/nodemailer/master/LICENSE'
-                                },
-                                {   // encoded string as an attachment
-                                    filename: 'text1.txt',
-                                    content: 'aGVsbG8gd29ybGQh',
-                                    encoding: 'base64'
-                                },
-                                {   // data uri as an attachment
-                                    path: 'data:text/plain;base64,aGVsbG8gd29ybGQ='
-                                },
-                                {
-                                    // use pregenerated MIME node
-                                    raw: 'Content-Type: text/plain\r\n' +
-                                         'Content-Disposition: attachment;\r\n' +
-                                         '\r\n' +
-                                         'Hello world!'
-                                }
-                            ],
-            */
-            onError: (e) => console.log(e),
-            onSuccess: (i) => console.log(i)
-        }
-
-
-    );
 
 
 
