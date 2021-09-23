@@ -34,8 +34,10 @@ const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
 
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('data/reporting/' + moment().format('YYYY/MM/DD'));
-localStorageTasks = new LocalStorage('data/taskID/' + moment().format('YYYY/MM/DD/H'));
+// localStorage = new LocalStorage('data/reporting/' + moment().format('YYYY/MM/DD'));
+// localStorageTasks = new LocalStorage('data/taskID/' + moment().format('YYYY/MM/DD/H'));
+localStorage = new LocalStorage('data/reporting/');
+localStorageTasks = new LocalStorage('data/taskID/');
 
 
 exports.index = async (req, res) => {
@@ -952,7 +954,7 @@ exports.report = async (req, res) => {
                                         .format('YYYY-MM-DD HH:m:s');
 
                                     // Supprimer le localStorage précédent
-                                    // if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
+                                    if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
 
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
