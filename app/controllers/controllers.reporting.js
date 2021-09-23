@@ -34,8 +34,10 @@ const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
 
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('data/reporting/' + moment().format('YYYY/MM/DD'));
-localStorageTasks = new LocalStorage('data/taskID/' + moment().format('YYYY/MM/DD/H'));
+// localStorage = new LocalStorage('data/reporting/' + moment().format('YYYY/MM/DD'));
+// localStorageTasks = new LocalStorage('data/taskID/' + moment().format('YYYY/MM/DD/H'));
+localStorage = new LocalStorage('data/reporting/');
+localStorageTasks = new LocalStorage('data/taskID/');
 
 
 exports.index = async (req, res) => {
@@ -164,7 +166,7 @@ exports.report = async (req, res) => {
                 let cacheStorageID = 'campaignID-' + campaign_id;
                 // Initialise la date
                 let date = new Date();
-                let cacheStorageIDHour = moment().format('YYYYMMDD-H');
+                let cacheStorageIDHour = moment().format('YYYYMM');
 
                 try {
                     var data_localStorage = localStorage.getItem(cacheStorageID);
@@ -550,7 +552,7 @@ exports.report = async (req, res) => {
                                 } else {
                                     // Stoppe l'intervalle timerFile
                                     clearInterval(timerFile);
-                                    console.log('Stop clearInterval timerFile');
+                                    console.log('Stop clearInterval timerFile - else');
 
                                     // On récupére le dataLSTaskGlobal
                                     const objDefault = JSON.parse(dataLSTaskGlobal);
@@ -758,13 +760,7 @@ exports.report = async (req, res) => {
                                             if (site_name.match(/^\SM_RODALI{1}/igm)) {
                                                 siteRODALI.push(index);
                                             }
-
-
-
                                         }
-
-
-
 
                                         // Trie les formats et compatibilise les insertions et autres clics
                                         if (!Utilities.empty(formatHabillage)) {
@@ -857,7 +853,6 @@ exports.report = async (req, res) => {
                                         campaignCtrComplete = null;
                                     }
 
-
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
                                         campaign_name: campaign.campaign_name,
@@ -901,57 +896,73 @@ exports.report = async (req, res) => {
                                         formatObjects.campaign.repetition = repetition;
                                     }
 
-
                                     //Si la campagne possède un masthead ou interstitiel , on recupère le localstorage de GAM
                                     if (!Utilities.empty(insertion_format)) {
 
 
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
 
-                                        const data_admanager = admanager.data
+                                        if (admanager) {
 
-                                        // test si le localstorage admanager existe 
-                                        if (!Utilities.empty(data_admanager)) {
+                                            console.log(admanager)
 
-                                            // console.log(data_admanager)
+                                            if (admanager.status == 201) {
 
-                                            if (!Utilities.empty(formatObjects.interstitiel)) {
+                                                const data_admanager = admanager.data
 
-                                                var key_i = Object.keys(formatObjects.interstitiel.siteList).length
+                                                // test si le localstorage admanager existe 
+                                                if (!Utilities.empty(data_admanager)) {
 
-                                                formatObjects.interstitiel.siteList[key_i] = data_admanager.interstitiel.siteList
+                                                    // console.log(data_admanager)
 
-                                                var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
+                                                    if (!Utilities.empty(formatObjects.interstitiel)) {
 
-                                                formatObjects.interstitiel.impressions = sommeInterstitiel
+                                                        var key_i = Object.keys(formatObjects.interstitiel.siteList).length
+
+                                                        formatObjects.interstitiel.siteList[key_i] = data_admanager.interstitiel.siteList
+
+                                                        var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
+
+                                                        formatObjects.interstitiel.impressions = sommeInterstitiel
+                                                    }
+
+                                                    if (!Utilities.empty(formatObjects.masthead)) {
+
+                                                        var key_m = Object.keys(formatObjects.masthead.siteList).length
+
+                                                        formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
+
+                                                        var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
+
+                                                        formatObjects.masthead.impressions = sommemasthead
+
+                                                    }
+
+
+                                                    //Push les impression,click,ctr total (admanager + smart)
+                                                    var impression = formatObjects.campaign.impressions + data_admanager.campaign.impressions
+                                                    var clicks = formatObjects.campaign.clicks + data_admanager.campaign.clicks
+
+                                                    formatObjects.campaign.impressions = impression
+                                                    formatObjects.campaign.clicks = clicks
+
+                                                    ctr = parseFloat((clicks / impression) * 100).toFixed(
+                                                        2
+                                                    );
+                                                    formatObjects.campaign.ctr = ctr
+
+                                                }
+                                            } else {
+                                                admanager = null;
                                             }
 
-                                            if (!Utilities.empty(formatObjects.masthead)) {
 
-                                                var key_m = Object.keys(formatObjects.masthead.siteList).length
-
-                                                formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
-
-                                                var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
-
-                                                formatObjects.masthead.impressions = sommemasthead
-
-                                            }
-
-
-                                            //Push les impression,click,ctr total (admanager + smart)
-                                            var impression = formatObjects.campaign.impressions + data_admanager.campaign.impressions
-                                            var clicks = formatObjects.campaign.clicks + data_admanager.campaign.clicks
-
-                                            formatObjects.campaign.impressions = impression
-                                            formatObjects.campaign.clicks = clicks
-
-                                            ctr = parseFloat((clicks / impression) * 100).toFixed(
-                                                2
-                                            );
-                                            formatObjects.campaign.ctr = ctr
-
+                                        } else {
+                                            admanager = null;
                                         }
+
+
+
 
                                     }
 
@@ -962,7 +973,9 @@ exports.report = async (req, res) => {
                                         .format('YYYY-MM-DD HH:m:s');
 
                                     // Supprimer le localStorage précédent
-                                    // if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
+                                    if (localStorage.getItem(cacheStorageID)) {
+                                        localStorage.removeItem(cacheStorageID);
+                                    }
 
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
@@ -1756,7 +1769,7 @@ exports.automate = async (req, res) => {
 
                 // Initialise la date
                 let date = new Date();
-                let cacheStorageIDHour = moment().format('YYYYMMDD-H');
+                let cacheStorageIDHour = moment().format('YYYYMM');
 
                 var localStorageAll = localStorage.getItem(cacheStorageID);
                 let localStorageGlobal = localStorageTasks.getItem(
