@@ -11,6 +11,8 @@ process.on('unhandledRejection', error => {
 const {
     QueryTypes
 } = require('sequelize');
+//var nodemailer = require('nodemailer');
+//var nodeoutlook = require('nodejs-nodemailer-outlook');
 const ExcelJS = require('exceljs');
 var axios = require('axios');
 const fs = require('fs')
@@ -1203,6 +1205,7 @@ exports.nodemail = async (req, res) => {
 
 
 
+  
 
 };
 
