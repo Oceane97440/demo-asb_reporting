@@ -550,7 +550,7 @@ exports.report = async (req, res) => {
                                 } else {
                                     // Stoppe l'intervalle timerFile
                                     clearInterval(timerFile);
-                                    console.log('Stop clearInterval timerFile');
+                                    console.log('Stop clearInterval timerFile - else');
 
                                     // On récupére le dataLSTaskGlobal
                                     const objDefault = JSON.parse(dataLSTaskGlobal);
@@ -758,13 +758,7 @@ exports.report = async (req, res) => {
                                             if (site_name.match(/^\SM_RODALI{1}/igm)) {
                                                 siteRODALI.push(index);
                                             }
-
-
-
                                         }
-
-
-
 
                                         // Trie les formats et compatibilise les insertions et autres clics
                                         if (!Utilities.empty(formatHabillage)) {
@@ -857,7 +851,6 @@ exports.report = async (req, res) => {
                                         campaignCtrComplete = null;
                                     }
 
-
                                     formatObjects.campaign = {
                                         campaign_id: campaign.campaign_id,
                                         campaign_name: campaign.campaign_name,
@@ -900,14 +893,11 @@ exports.report = async (req, res) => {
                                         repetition = 0
                                         formatObjects.campaign.repetition = repetition;
                                     }
-
-
+                                   
+                                    /*
                                     //Si la campagne possède un masthead ou interstitiel , on recupère le localstorage de GAM
                                     if (!Utilities.empty(insertion_format)) {
-
-
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
-
                                         const data_admanager = admanager.data
 
                                         // test si le localstorage admanager existe 
@@ -954,7 +944,7 @@ exports.report = async (req, res) => {
                                         }
 
                                     }
-
+                                    */
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
