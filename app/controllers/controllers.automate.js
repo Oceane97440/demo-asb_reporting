@@ -56,9 +56,13 @@ const {cpuUsage} = require('process');
 
 // Initialise le module
 var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
-localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
-localStorageAutomate = new LocalStorage('data/automate/'+moment().format('YYYY/MM/DD'));
+// localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
+// localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
+// localStorageAutomate = new LocalStorage('data/automate/'+moment().format('YYYY/MM/DD'));
+localStorage = new LocalStorage('data/reporting/');
+localStorageTasks = new LocalStorage('data/taskID/');
+localStorageAutomate = new LocalStorage('data/automate/');
+
 
 exports.agencies = async (req, res) => {
     try {
@@ -513,7 +517,7 @@ exports.campaignReport = async (req, res) => {
                     let cacheStorageID = 'campaignID-' + campaignid;
                     // Initialise la date
                     let date = new Date();
-                    let cacheStorageIDHour = moment().format('YYYYMMDD-H');
+                    let cacheStorageIDHour = moment().format('YYYYMM');
 
                     try {
                         var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
