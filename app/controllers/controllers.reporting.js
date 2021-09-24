@@ -92,9 +92,11 @@ exports.generate = async (req, res) => {
             var reportingDataStorage = localStorage.getItem(
                 cacheStorageID
             );
+            var reportingData = JSON.parse(reportingDataStorage);
 
-            if (reportingDataStorage) {
-                var reportingData = JSON.parse(reportingDataStorage);
+            console.log(reportingData);
+            if (reportingDataStorage && (reportingData.reporting_end_date < date_now)) {
+               
 
                 res.render('report/template.ejs', {
                     reporting: reportingData,
@@ -106,6 +108,14 @@ exports.generate = async (req, res) => {
                     nombre_diff_day: nombre_diff_day
                 });
             } else {
+
+                localStorageTasks.removeItem(
+                    cacheStorageID + '-taskGlobal'
+                );
+                localStorageTasks.removeItem(
+                    cacheStorageID + '-taskGlobalVU'
+                );
+
                 res.render("report/generate.ejs", {
                     advertiser_id: campaign.advertiser_id,
                     campaign_id: campaign_id,
@@ -118,6 +128,7 @@ exports.generate = async (req, res) => {
                 });
             }
 
+            
         });
 }
 
@@ -895,11 +906,8 @@ exports.report = async (req, res) => {
                                         repetition = 0
                                         formatObjects.campaign.repetition = repetition;
                                     }
-
                                     //Si la campagne possède un masthead ou interstitiel , on recupère le localstorage de GAM
                                     if (!Utilities.empty(insertion_format)) {
-
-
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
 
                                         if (admanager) {
@@ -965,7 +973,7 @@ exports.report = async (req, res) => {
 
 
                                     }
-
+                                    
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
@@ -976,6 +984,7 @@ exports.report = async (req, res) => {
                                     if (localStorage.getItem(cacheStorageID)) {
                                         localStorage.removeItem(cacheStorageID);
                                     }
+                                    if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
 
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
