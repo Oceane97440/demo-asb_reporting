@@ -197,7 +197,7 @@
                     <% if(date_now > timestamp_startdate || nombre_diff_day >= 31) { %>
                         $.ajax({
                             method: "GET",
-                            url: '/r/report/<%=campaign_crypt%>',
+                            url: '/d/report/<%=campaign_crypt%>',
                             success: function (data) {
                                 $("#exampleModal").hide();
                                 $('body').html(data);

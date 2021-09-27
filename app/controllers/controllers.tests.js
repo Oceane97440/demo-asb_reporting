@@ -1202,7 +1202,7 @@ exports.array_unique = async (req, res) => {
 
 exports.nodemail = async (req, res) => {
 
-  
+
 
 };
 
@@ -1369,26 +1369,75 @@ exports.log_error = async (req, res) => {
     res.send(contents)
 
 
-/*
-    var data = contents.match('(.*)')
-    console.log(data)
-    console.log('data.length ' + data.length)
+    /*
+        var data = contents.match('(.*)')
+        console.log(data)
+        console.log('data.length ' + data.length)
 
 
-   var dataArray = new Array()
+       var dataArray = new Array()
 
-    function logArrayElements(element, index, array) {
-        console.log("a[" + index + "] = " + element);
+        function logArrayElements(element, index, array) {
+            console.log("a[" + index + "] = " + element);
 
-        dataArray.push(element.split(","));
+            dataArray.push(element.split(","));
 
 
+        }
+        data.forEach(logArrayElements);
+
+        console.log(dataArray)
+
+        res.send('test')
+    */
+
+}
+
+exports.taskid = async (req, res) => {
+
+    const AxiosFunction = require('../functions/functions.axios');
+
+    var array = ['08E9AA08-0BE4-4939-8A3E-CC4272D8BF55',
+        '0EE005AB-F8ED-483C-A889-7E45B7102550',
+        'C72A3B91-42B0-4398-94EE-DA5B04E8EDC9'
+    ]
+
+    for (let index = 0; index < array.length; index++) {
+        const taskId = array[index];
+
+        var time = 5000;
+
+        let timerFile = setInterval(async () => {
+
+            time += 10000;
+
+            let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+
+            console.log('requete_global' + requete_global)
+
+
+            let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+
+           // console.log('threeLink' + threeLink)
+
+
+            if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+
+                dataFile = await AxiosFunction.getReportingData(
+                    'GET',
+                    `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                    ''
+                );
+
+
+                clearInterval(timerFile);
+                console.log('Stop clearInterval timerFile - else');
+                console.log(dataFile);
+
+            }
+
+
+        }, time)
     }
-    data.forEach(logArrayElements);
-
-    console.log(dataArray)
-
-    res.send('test')
-*/
 
 }

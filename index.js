@@ -360,9 +360,12 @@ const application = require('./app/routes/routes.application');
 app.use('/app', application);
 
 // Gestion du reporting DIGITAL
-const reporting_rs = require('./app/routes/routes.reporting');
-app.use('/r/', reporting_rs);
+/*const reporting_rs = require('./app/routes/routes.reporting');
+app.use('/r/', reporting_rs);*/
 
+// Gestion du reporting DIGITAL 30j
+const reporting_30 = require('./app/routes/routes.reporting_30');
+app.use('/d/', reporting_30);
 
 // Gestion du reporting TV
 const reportingTV = require('./app/routes/routes.tv.reporting');

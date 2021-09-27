@@ -132,3 +132,50 @@ exports.DateToTimestamps = function toTimestamp(strDate){
     var datum = Date.parse(strDate);
     return datum/1000;
  }
+
+ exports.RequestReport = function RequestReport(startDate , endDate , campaignId){
+
+    var requestReporting = {
+        "startDate": startDate,
+        "endDate": endDate,
+        "fields": [{
+            "CampaignStartDate": {}
+        }, {
+            "CampaignEndDate": {}
+        }, {
+            "CampaignId": {}
+        }, {
+            "CampaignName": {}
+        }, {
+            "InsertionId": {}
+        }, {
+            "InsertionName": {}
+        }, {
+            "FormatId": {}
+        }, {
+            "FormatName": {}
+        }, {
+            "SiteId": {}
+        }, {
+            "SiteName": {}
+        }, {
+            "Impressions": {}
+        }, {
+            "ClickRate": {}
+        }, {
+            "Clicks": {}
+        }, {
+            "VideoCount": {
+                "Id": "17",
+                "OutputName": "Nbr_complete"
+            }
+        }, {
+            "ViewableImpressions": {}
+        }],
+        "filter": [{
+            "CampaignId": [campaignId]
+        }]
+    }
+
+    return requestReporting;
+ }
