@@ -177,7 +177,7 @@ exports.report = async (req, res) => {
                 let cacheStorageID = 'campaignID-' + campaign_id;
                 // Initialise la date
                 let date = new Date();
-                let cacheStorageIDHour = moment().format('YYYYMM');
+                let cacheStorageIDHour = moment().format('YYYYMMDD-HH');
 
                 try {
                     var data_localStorage = localStorage.getItem(cacheStorageID);
@@ -1778,7 +1778,7 @@ exports.automate = async (req, res) => {
 
                 // Initialise la date
                 let date = new Date();
-                let cacheStorageIDHour = moment().format('YYYYMM');
+                let cacheStorageIDHour = moment().format('YYYYMMDD-HH');
 
                 var localStorageAll = localStorage.getItem(cacheStorageID);
                 let localStorageGlobal = localStorageTasks.getItem(
