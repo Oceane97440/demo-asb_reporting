@@ -133,7 +133,7 @@ exports.DateToTimestamps = function toTimestamp(strDate){
     return datum/1000;
  }
 
- exports.RequestReport = function RequestReport(startDate , endDate , campaignId){
+ exports.RequestReportDate = function RequestReport(startDate , endDate , campaignId){
 
     var requestReporting = {
         "startDate": startDate,

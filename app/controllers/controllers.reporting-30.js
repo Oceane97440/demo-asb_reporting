@@ -379,7 +379,6 @@ exports.report = async (req, res) => {
                         } else {
 
                             // initialisation des requêtes
-                            Utilities.RequestReport()
                         }
 
 

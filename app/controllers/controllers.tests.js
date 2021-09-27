@@ -20,6 +20,8 @@ const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
+const Utilities = require('../functions/functions.utilities');
+
 
 // Initialise les models
 //const ModelSite = require("../models/models.site");
@@ -1395,14 +1397,49 @@ exports.log_error = async (req, res) => {
 
 exports.taskid = async (req, res) => {
 
-    const AxiosFunction = require('../functions/functions.axios');
+    var StartDate_timezone = '2021-11-01T00:00:00'
+    var endDate = 'CURRENT_DAY+1'
+    var campaign_id = 1922883
+   var diff_day = 174
 
-    var array = ['08E9AA08-0BE4-4939-8A3E-CC4272D8BF55',
+    /*var array = ['08E9AA08-0BE4-4939-8A3E-CC4272D8BF55',
         '0EE005AB-F8ED-483C-A889-7E45B7102550',
         'C72A3B91-42B0-4398-94EE-DA5B04E8EDC9'
-    ]
+    ]*/
 
-    for (let index = 0; index < array.length; index++) {
+    var NbrTask = Math.round( diff_day / 30)
+
+    console.log('NbrTask' + NbrTask)
+
+  
+
+
+    for (let index = 0; index < NbrTask; index++) {
+
+        
+  
+        const start = new Date(StartDate_timezone);
+    
+        var start_30 = start.setDate(start.getDate() + 30);
+        const StartDate_t30 = moment(start_30).format(
+            'YYYY-MM-DDT00:00:00'
+        );
+    
+        console.log(StartDate_t30)
+
+        arrayDate = ['2021-08-03T00:00:00','2021-09-02T00:00:00','2021-09-27T00:00:00']
+
+        arrayDate.forEach(element => {
+
+
+            console.log(element)
+            var reporting = Utilities.RequestReportDate(element, endDate , campaign_id)
+
+            console.log(reporting)
+            
+        });
+
+        process.exit(1)
         const taskId = array[index];
 
         var time = 5000;
