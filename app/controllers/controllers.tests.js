@@ -7,7 +7,9 @@ process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
-
+var LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('data/reporting/');
+localStorageTasks = new LocalStorage('data/taskID/');
 const {
     QueryTypes
 } = require('sequelize');
@@ -1401,110 +1403,157 @@ exports.taskid = async (req, res) => {
     var endDate = 'CURRENT_DAY+1'
     var campaign_id = "1922883";
     var campaign_name = "GAMM VERT - 68873";
-    // var campaign_date_start = moment("2021-07-05 00:00:00");
-    //var campaign_date_end = moment("2021-07-26 23:59:00");
     var campaign_date_start = moment("2021-07-05 00:00:00");
     var campaign_date_end = moment("2021-09-26 23:59:00");
-  
-    var diff_day = campaign_date_end.diff(campaign_date_start,'d');
 
-    /*
-    var array = ['08E9AA08-0BE4-4939-8A3E-CC4272D8BF55',
-        '0EE005AB-F8ED-483C-A889-7E45B7102550',
-        'C72A3B91-42B0-4398-94EE-DA5B04E8EDC9'
-    ]
-    */
+    var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
+
+
+    const arrayTaskId = new Array('4102F030-866B-40FC-A082-9A1A77919DE9',
+        'F2BEC438-2DDB-4E81-93BD-82EC7D16049A',
+        '566C85BD-5497-4FED-B77E-7AD8C83A16B6')
+
 
     var NbrTask = Math.round(diff_day / 30);
-    console.log('NbrTask : ' + NbrTask);  
-    console.log('---------------------');  
-
-    /*
-  //  var t = campaign_task_date_start.add("YYYY-MM-DD", 5);
-
-
-    var u = campaign_task_date_start.add(30, 'days'); 
-
-    
-    console.log('campaign_task_date_start  : ' + u);  
-     console.log('---------------------');  
-     //var yt = moment(u, "DD/MM/YYYY");
-     console.log('yt : ', u);  
-      console.log('---------------------');  
-*/
-
-
-    for (var index = 0; index < NbrTask; index++) {      
-       
-        if(index === 0) {  
-          console.log('NbrTask : ' + index); 
-       
-          campaign_date_startOne = moment(campaign_date_start, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-           var campaign_task_date_end = campaign_date_start.add(30, 'days'); 
-           campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-           var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
-
-
-           taskOne= await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne , campaign_id)
-
-
-        }
-  
-        if((index >= 1) && (index < (NbrTask-1)) && campaign_task_date_tomorrow) {
-            console.log('NbrTask : ' + index); 
-
-            var  campaign_start_date_tomorrow = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-            var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days'); 
-            var campaign_start_end_tomorrow = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-            var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
-
-           taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow , campaign_id)
-
-
-
-        }
-
-        if(index === (NbrTask-1) && (index > 1) &&  campaign_task_date_tomorrow) {
-            console.log('NbrTask : ' + index); 
-            var campaign_start_last =  moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-            var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-
-            taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last , campaign_id)
+    console.log('NbrTask : ' + NbrTask);
+    console.log('---------------------');
 
 
 
 
-           
-        }
+    /*  for (var index = 0; index < NbrTask; index++) {
+
+          if (index === 0) {
+              console.log('NbrTask : ' + index);
+
+              campaign_date_startOne = moment(campaign_date_start, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+              var campaign_task_date_end = campaign_date_start.add(30, 'days');
+              campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+              var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
 
-        console.log('---------------------');  
+              taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
+              arrayTaskId.push(taskOne)
+
+     
+
+          }
+
+          if ((index >= 1) && (index < (NbrTask - 1)) && campaign_task_date_tomorrow) {
+              console.log('NbrTask : ' + index);
+
+              var campaign_start_date_tomorrow = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+              var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days');
+              var campaign_start_end_tomorrow = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+              var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
+
+              taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
+              arrayTaskId.push(taskTwo)
+
+
+          }
+
+          if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
+              console.log('NbrTask : ' + index);
+              var campaign_start_last = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+              var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+
+              taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
+              arrayTaskId.push(taskThree)
+
+
+
+          }
+
+
+          console.log('---------------------');
+
+      }*/
+
+    console.log(arrayTaskId)
+    let cacheStorageID = 'campaignID-' + campaign_id;
+    localStorageTasks.setItem(cacheStorageID + '-TaskIDG', arrayTaskId);
+
+    dataLSTaskGlobal = new Object()
+    for (let index = 0; index < arrayTaskId.length; index++) {
+
+
+
+
+        const taskId = arrayTaskId[index];
+
+        var time = 5000;
+
+        let timerFile = setInterval(async () => {
+
+            time += 10000;
+
+            let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+
+            console.log('requete_global' + requete_global)
+
+
+            let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+
+            // console.log('threeLink' + threeLink)
+
+
+            if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+
+                dataFile = await AxiosFunction.getReportingData(
+                    'GET',
+                    `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                    ''
+                );
+
+
+                console.log('Stop clearInterval timerFile - else');
+
+                var itemData = {
+                    'dataFile':dataFile.data
+
+                };
+                dataLSTaskGlobal[taskId] = itemData;
+
+        
+               localStorageTasks.setItem(
+                    cacheStorageID + '-taskGlobalAll',
+                    JSON.stringify(dataLSTaskGlobal)
+                );
+                console.log(dataLSTaskGlobal)
+
+                clearInterval(timerFile);
+
+            }
+
+
+        }, time)
+
 
     }
 
 
-process.exit()
 
 
 
-    for (let index = 0; index < NbrTask; index++) { 
-        const start = new Date(StartDate_timezone);    
+
+    /*for (let index = 0; index < NbrTask; index++) {
+        const start = new Date(StartDate_timezone);
         var start_30 = start.setDate(start.getDate() + 30);
         const StartDate_t30 = moment(start_30).format(
             'YYYY-MM-DDT00:00:00'
         );
-    
+
         console.log(StartDate_t30);
 
-        arrayDate = ['2021-08-03T00:00:00','2021-09-02T00:00:00','2021-09-27T00:00:00']
+        arrayDate = ['2021-08-03T00:00:00', '2021-09-02T00:00:00', '2021-09-27T00:00:00']
 
         arrayDate.forEach(element => {
             console.log(element);
-            var reporting = Utilities.RequestReportDate(element, endDate , campaign_id);
-            console.log(reporting);            
+            var reporting = Utilities.RequestReportDate(element, endDate, campaign_id);
+            console.log(reporting);
         });
 
-        process.exit(1);
         const taskId = array[index];
 
         var time = 5000;
@@ -1520,7 +1569,7 @@ process.exit()
 
             let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
 
-           // console.log('threeLink' + threeLink)
+            // console.log('threeLink' + threeLink)
 
 
             if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
@@ -1541,5 +1590,5 @@ process.exit()
 
         }, time)
     }
-
+*/
 }

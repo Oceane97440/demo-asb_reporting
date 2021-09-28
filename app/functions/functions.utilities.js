@@ -187,7 +187,17 @@ exports.RequestReportDate =  async function RequestReport(startDate , endDate , 
         requestReporting
     );
 
-    return firstLink.data.taskId
+   
+        if (firstLink) {
+            if (firstLink.status == 201) {
+                return firstLink.data.taskId
+
+            }
+        } else {
+            return firstLink = null;
+        }
+    
+
   
    // r
 }
