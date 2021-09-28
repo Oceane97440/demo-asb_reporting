@@ -1365,10 +1365,10 @@ exports.log_error = async (req, res) => {
 
 
 
-    var path = "proxy_error_log"
+    /*var path = "proxy_error_log"
     var contents = fs.readFileSync(path).toString();
     console.log(contents)
-    res.send(contents)
+    res.send(contents)*/
 
 
     /*
@@ -1401,8 +1401,10 @@ exports.taskid = async (req, res) => {
     var endDate = 'CURRENT_DAY+1'
     var campaign_id = "1922883";
     var campaign_name = "GAMM VERT - 68873";
+    // var campaign_date_start = moment("2021-07-05 00:00:00");
+    //var campaign_date_end = moment("2021-07-26 23:59:00");
     var campaign_date_start = moment("2021-07-05 00:00:00");
-    var campaign_date_end = moment("2021-07-26 23:59:00");
+    var campaign_date_end = moment("2021-09-26 23:59:00");
   
     var diff_day = campaign_date_end.diff(campaign_date_start,'d');
 
@@ -1432,30 +1434,47 @@ exports.taskid = async (req, res) => {
 */
 
 
-    for (let index = 0; index < NbrTask; index++) {      
+    for (var index = 0; index < NbrTask; index++) {      
        
         if(index === 0) {  
-            console.log('NbrTask : ' + index); 
-            console.log('campaign_task_date_start  : ' + campaign_date_start,' -- ',moment(campaign_date_start, "DD/MM/YYYY")); 
-            var campaign_task_date_end = campaign_date_start.add(30, 'days'); 
-            console.log('campaign_task_date_end  : ' +  campaign_task_date_end,' -- ',moment(campaign_task_date_end, "DD/MM/YYYY")); 
-            var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
+          console.log('NbrTask : ' + index); 
+       
+          campaign_date_startOne = moment(campaign_date_start, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+           var campaign_task_date_end = campaign_date_start.add(30, 'days'); 
+           campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+           var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
+
+
+           taskOne= await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne , campaign_id)
+
+
         }
-        
-        if((index => 1) && (index < (NbrTask-1)) && campaign_task_date_tomorrow) {
+  
+        if((index >= 1) && (index < (NbrTask-1)) && campaign_task_date_tomorrow) {
             console.log('NbrTask : ' + index); 
-            console.log('campaign_task_date_start  : ' + campaign_task_date_tomorrow,' -- ',moment(campaign_task_date_tomorrow, "DD/MM/YYYY")); 
+
+            var  campaign_start_date_tomorrow = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
             var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days'); 
-            console.log('campaign_task_date_end  : ' +  campaign_task_date_end,' -- ',moment(campaign_task_date_end, "DD/MM/YYYY")); 
+            var campaign_start_end_tomorrow = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
             var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
+
+           taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow , campaign_id)
+
+
+
         }
 
         if(index === (NbrTask-1) && (index > 1) &&  campaign_task_date_tomorrow) {
             console.log('NbrTask : ' + index); 
-            console.log('campaign_task_date_start  : ' + campaign_task_date_tomorrow,' -- ',moment(campaign_task_date_tomorrow, "DD/MM/YYYY")); 
-           // var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days'); 
-            console.log('campaign_task_date_end  : ' +  campaign_date_end,' -- ',moment(campaign_date_end, "DD/MM/YYYY")); 
-           // var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
+            var campaign_start_last =  moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+            var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+
+            taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last , campaign_id)
+
+
+
+
+           
         }
 
 
@@ -1463,9 +1482,8 @@ exports.taskid = async (req, res) => {
 
     }
 
-    process.exit();
 
-
+process.exit()
 
 
 

@@ -1,6 +1,9 @@
+const Utilities = require('../functions/functions.utilities');
+const AxiosFunction = require('../functions/functions.axios');
 /*
 * Teste si la valeur est vide
 */
+
 exports.empty = function (data) {
     if (typeof(data) == 'number' || typeof(data) == 'boolean') {
         return false;
@@ -133,8 +136,10 @@ exports.DateToTimestamps = function toTimestamp(strDate){
     return datum/1000;
  }
 
- exports.RequestReportDate = function RequestReport(startDate , endDate , campaignId){
-
+ 
+exports.RequestReportDate =  async function RequestReport(startDate , endDate , campaignId){
+    console.log('startDate  '+startDate + '  -  '+'endDate'  +endDate +'  -  '+ 'campaignId  '+campaignId)
+  
     var requestReporting = {
         "startDate": startDate,
         "endDate": endDate,
@@ -176,6 +181,13 @@ exports.DateToTimestamps = function toTimestamp(strDate){
             "CampaignId": [campaignId]
         }]
     }
+    let firstLink = await AxiosFunction.getReportingData(
+        'POST',
+        '',
+        requestReporting
+    );
 
-    return requestReporting;
- }
+    return firstLink.data.taskId
+  
+   // r
+}
