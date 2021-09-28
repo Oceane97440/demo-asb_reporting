@@ -1399,47 +1399,94 @@ exports.taskid = async (req, res) => {
 
     var StartDate_timezone = '2021-11-01T00:00:00'
     var endDate = 'CURRENT_DAY+1'
-    var campaign_id = 1922883
-   var diff_day = 174
+    var campaign_id = "1922883";
+    var campaign_name = "GAMM VERT - 68873";
+    var campaign_date_start = moment("2021-07-05 00:00:00");
+    var campaign_date_end = moment("2021-07-26 23:59:00");
+  
+    var diff_day = campaign_date_end.diff(campaign_date_start,'d');
 
-    /*var array = ['08E9AA08-0BE4-4939-8A3E-CC4272D8BF55',
+    /*
+    var array = ['08E9AA08-0BE4-4939-8A3E-CC4272D8BF55',
         '0EE005AB-F8ED-483C-A889-7E45B7102550',
         'C72A3B91-42B0-4398-94EE-DA5B04E8EDC9'
-    ]*/
+    ]
+    */
 
-    var NbrTask = Math.round( diff_day / 30)
+    var NbrTask = Math.round(diff_day / 30);
+    console.log('NbrTask : ' + NbrTask);  
+    console.log('---------------------');  
 
-    console.log('NbrTask' + NbrTask)
+    /*
+  //  var t = campaign_task_date_start.add("YYYY-MM-DD", 5);
 
-  
 
+    var u = campaign_task_date_start.add(30, 'days'); 
 
-    for (let index = 0; index < NbrTask; index++) {
-
-        
-  
-        const start = new Date(StartDate_timezone);
     
+    console.log('campaign_task_date_start  : ' + u);  
+     console.log('---------------------');  
+     //var yt = moment(u, "DD/MM/YYYY");
+     console.log('yt : ', u);  
+      console.log('---------------------');  
+*/
+
+
+    for (let index = 0; index < NbrTask; index++) {      
+       
+        if(index === 0) {  
+            console.log('NbrTask : ' + index); 
+            console.log('campaign_task_date_start  : ' + campaign_date_start,' -- ',moment(campaign_date_start, "DD/MM/YYYY")); 
+            var campaign_task_date_end = campaign_date_start.add(30, 'days'); 
+            console.log('campaign_task_date_end  : ' +  campaign_task_date_end,' -- ',moment(campaign_task_date_end, "DD/MM/YYYY")); 
+            var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
+        }
+        
+        if((index => 1) && (index < (NbrTask-1)) && campaign_task_date_tomorrow) {
+            console.log('NbrTask : ' + index); 
+            console.log('campaign_task_date_start  : ' + campaign_task_date_tomorrow,' -- ',moment(campaign_task_date_tomorrow, "DD/MM/YYYY")); 
+            var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days'); 
+            console.log('campaign_task_date_end  : ' +  campaign_task_date_end,' -- ',moment(campaign_task_date_end, "DD/MM/YYYY")); 
+            var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
+        }
+
+        if(index === (NbrTask-1) && (index > 1) &&  campaign_task_date_tomorrow) {
+            console.log('NbrTask : ' + index); 
+            console.log('campaign_task_date_start  : ' + campaign_task_date_tomorrow,' -- ',moment(campaign_task_date_tomorrow, "DD/MM/YYYY")); 
+           // var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days'); 
+            console.log('campaign_task_date_end  : ' +  campaign_date_end,' -- ',moment(campaign_date_end, "DD/MM/YYYY")); 
+           // var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days'); 
+        }
+
+
+        console.log('---------------------');  
+
+    }
+
+    process.exit();
+
+
+
+
+
+    for (let index = 0; index < NbrTask; index++) { 
+        const start = new Date(StartDate_timezone);    
         var start_30 = start.setDate(start.getDate() + 30);
         const StartDate_t30 = moment(start_30).format(
             'YYYY-MM-DDT00:00:00'
         );
     
-        console.log(StartDate_t30)
+        console.log(StartDate_t30);
 
         arrayDate = ['2021-08-03T00:00:00','2021-09-02T00:00:00','2021-09-27T00:00:00']
 
         arrayDate.forEach(element => {
-
-
-            console.log(element)
-            var reporting = Utilities.RequestReportDate(element, endDate , campaign_id)
-
-            console.log(reporting)
-            
+            console.log(element);
+            var reporting = Utilities.RequestReportDate(element, endDate , campaign_id);
+            console.log(reporting);            
         });
 
-        process.exit(1)
+        process.exit(1);
         const taskId = array[index];
 
         var time = 5000;
