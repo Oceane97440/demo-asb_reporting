@@ -1485,6 +1485,7 @@ exports.taskid = async (req, res) => {
         var time = 5000;
 
         let timerFile = setInterval(async () => {
+  
 
             time += 10000;
 
@@ -1507,7 +1508,6 @@ exports.taskid = async (req, res) => {
                 );
 
 
-                console.log('Stop clearInterval timerFile - else');
 
                 var itemData = {
                     'dataFile':dataFile.data
@@ -1522,19 +1522,27 @@ exports.taskid = async (req, res) => {
                 );
                 console.log(dataLSTaskGlobal)
 
-                clearInterval(timerFile);
 
             }
 
 
         }, time)
+        clearInterval(timerFile);
+        console.log('Stop clearInterval timerFile - else');
 
+        var dataLSTaskGlobal = localStorageTasks.getItem(
+            cacheStorageID + '-taskGlobalAll'
+        );
+        const objDefault = JSON.parse(dataLSTaskGlobal);
+        var dataSplitGlobal = objDefault[taskId].dataFile;
+        var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
 
+        
+        console.log(dataSplitGlobal)
+    
     }
 
-
-
-
+    
 
 
     /*for (let index = 0; index < NbrTask; index++) {
