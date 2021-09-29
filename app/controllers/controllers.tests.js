@@ -1399,150 +1399,163 @@ exports.log_error = async (req, res) => {
 
 exports.taskid = async (req, res) => {
 
-    var StartDate_timezone = '2021-11-01T00:00:00'
-    var endDate = 'CURRENT_DAY+1'
-    var campaign_id = "1922883";
-    var campaign_name = "GAMM VERT - 68873";
-    var campaign_date_start = moment("2021-07-05 00:00:00");
-    var campaign_date_end = moment("2021-09-26 23:59:00");
 
+    var campaign_id = "1912601";
+    var campaign_name = "AIR AUSTRAL MISS REUNION - 70521";
+    var campaign_date_start = moment("2021-06-18 00:00:00");
+    var campaign_date_end = moment("2021-09-18 23:59:00");
     var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
 
-
-    const arrayTaskId = new Array('4102F030-866B-40FC-A082-9A1A77919DE9',
-        'F2BEC438-2DDB-4E81-93BD-82EC7D16049A',
-        '566C85BD-5497-4FED-B77E-7AD8C83A16B6')
-
+    let cacheStorageID = 'campaignID-' + campaign_id;
 
     var NbrTask = Math.round(diff_day / 30);
     console.log('NbrTask : ' + NbrTask);
     console.log('---------------------');
 
 
+    let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIDG');
+
+    if (!TaskIDG) {
+
+        const arrayTaskId = new Array()
+
+        for (var index = 0; index < NbrTask; index++) {
+
+            if (index === 0) {
+                console.log('NbrTask : ' + index);
+
+                campaign_date_startOne = moment(campaign_date_start, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+                var campaign_task_date_end = campaign_date_start.add(30, 'days');
+                campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+                var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
 
-    /*  for (var index = 0; index < NbrTask; index++) {
+                taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
+                arrayTaskId.push(taskOne)
 
-          if (index === 0) {
-              console.log('NbrTask : ' + index);
-
-              campaign_date_startOne = moment(campaign_date_start, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-              var campaign_task_date_end = campaign_date_start.add(30, 'days');
-              campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-              var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
-
-
-              taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
-              arrayTaskId.push(taskOne)
-
-     
-
-          }
-
-          if ((index >= 1) && (index < (NbrTask - 1)) && campaign_task_date_tomorrow) {
-              console.log('NbrTask : ' + index);
-
-              var campaign_start_date_tomorrow = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-              var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days');
-              var campaign_start_end_tomorrow = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-              var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
-
-              taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
-              arrayTaskId.push(taskTwo)
-
-
-          }
-
-          if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
-              console.log('NbrTask : ' + index);
-              var campaign_start_last = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-              var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-
-              taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
-              arrayTaskId.push(taskThree)
-
-
-
-          }
-
-
-          console.log('---------------------');
-
-      }*/
-
-    console.log(arrayTaskId)
-    let cacheStorageID = 'campaignID-' + campaign_id;
-    localStorageTasks.setItem(cacheStorageID + '-TaskIDG', arrayTaskId);
-
-    dataLSTaskGlobal = new Object()
-    for (let index = 0; index < arrayTaskId.length; index++) {
-
-
-
-
-        const taskId = arrayTaskId[index];
-
-        var time = 5000;
-
-        let timerFile = setInterval(async () => {
-  
-
-            time += 10000;
-
-            let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
-
-            console.log('requete_global' + requete_global)
-
-
-            let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-
-            // console.log('threeLink' + threeLink)
-
-
-            if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-
-                dataFile = await AxiosFunction.getReportingData(
-                    'GET',
-                    `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
-                    ''
-                );
-
-
-
-                var itemData = {
-                    'dataFile':dataFile.data
-
-                };
-                dataLSTaskGlobal[taskId] = itemData;
-
-        
-               localStorageTasks.setItem(
-                    cacheStorageID + '-taskGlobalAll',
-                    JSON.stringify(dataLSTaskGlobal)
-                );
-                console.log(dataLSTaskGlobal)
 
 
             }
 
+            if ((index >= 1) && (index < (NbrTask - 1)) && campaign_task_date_tomorrow) {
+                console.log('NbrTask : ' + index);
 
-        }, time)
-        clearInterval(timerFile);
-        console.log('Stop clearInterval timerFile - else');
+                var campaign_start_date_tomorrow = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+                var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days');
+                var campaign_start_end_tomorrow = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+                var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
-        var dataLSTaskGlobal = localStorageTasks.getItem(
-            cacheStorageID + '-taskGlobalAll'
-        );
-        const objDefault = JSON.parse(dataLSTaskGlobal);
-        var dataSplitGlobal = objDefault[taskId].dataFile;
-        var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
+                taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
+                arrayTaskId.push(taskTwo)
 
+
+            }
+
+            if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
+                console.log('NbrTask : ' + index);
+                var campaign_start_last = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+                var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+
+                taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
+                arrayTaskId.push(taskThree)
+
+
+
+            }
+
+        }
+        localStorageTasks.setItem(cacheStorageID + '-TaskIDG', arrayTaskId);
+        console.log('Create localStorage taskIDAll')
+
+    } else {
         
-        console.log(dataSplitGlobal)
-    
+        const taskLength = TaskIDG.split(',')
+        var dataObjTaskGlobal = new Object()
+
+        for (let index = 0; index < taskLength.length; index++) {
+
+            var time = 5000;
+            let timerFile = setInterval(async () => {
+
+                var dataLSTaskGlobal = localStorageTasks.getItem(
+                    cacheStorageID + '-taskGlobalAll'
+                );
+
+                const taskId = taskLength[index];
+
+                if (!dataLSTaskGlobal && !Utilities.empty(taskId)) {
+
+
+                    time += 10000;
+
+                    let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+
+                    console.log('requete_global' + requete_global)
+
+
+                    let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+
+                    // console.log('threeLink' + threeLink)
+
+
+                    if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+
+                        dataFile = await AxiosFunction.getReportingData(
+                            'GET',
+                            `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                            ''
+                        );
+
+
+
+                        var itemData = {
+                            'dataFile': dataFile.data
+
+                        };
+                        dataObjTaskGlobal[taskId] = itemData;
+
+
+                        localStorageTasks.setItem(
+                            cacheStorageID + '-taskGlobalAll',
+                            JSON.stringify(dataObjTaskGlobal)
+                        );
+                        console.log(dataObjTaskGlobal)
+
+                        console.log('No clear setTimeOut');
+
+                    }
+
+
+
+
+
+                } else {
+
+                    clearInterval(timerFile);
+
+                    console.log('Stop clearInterval timerFile - else');
+
+
+                    /*  const objDefault = JSON.parse(dataLSTaskGlobal);
+                      var dataSplitGlobal = objDefault[taskId].dataFile;
+                      var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
+
+                      
+                      console.log(dataSplitGlobal)*/
+                }
+            }, time)
+
+
+
+
+        }
+
+
     }
 
-    
+
+
+
 
 
     /*for (let index = 0; index < NbrTask; index++) {
