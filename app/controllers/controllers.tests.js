@@ -1408,13 +1408,15 @@ exports.taskid = async (req, res) => {
 
     let cacheStorageID = 'campaignID-' + campaign_id;
 
+    /*----------- Si la campagne > 30j ------------*/
+
+
     var NbrTask = Math.round(diff_day / 30);
     console.log('NbrTask : ' + NbrTask);
-    console.log('---------------------');
-
 
     let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIDG');
 
+    //Si localStorage avec tous les taskId n'existe pas on lance la génération des taskId
     if (!TaskIDG) {
 
         const arrayTaskId = new Array()
@@ -1468,22 +1470,22 @@ exports.taskid = async (req, res) => {
         console.log('Create localStorage taskIDAll')
 
     } else {
-        
+
         const taskLength = TaskIDG.split(',')
-        var dataObjTaskGlobal = new Object()
+        var dataObjTaskGlobalAll = new Object()
 
         for (let index = 0; index < taskLength.length; index++) {
 
             var time = 5000;
             let timerFile = setInterval(async () => {
 
-                var dataLSTaskGlobal = localStorageTasks.getItem(
+                var dataLSTaskGlobalAll = localStorageTasks.getItem(
                     cacheStorageID + '-taskGlobalAll'
                 );
 
                 const taskId = taskLength[index];
 
-                if (!dataLSTaskGlobal && !Utilities.empty(taskId)) {
+                if (!dataLSTaskGlobalAll && !Utilities.empty(taskId)) {
 
 
                     time += 10000;
@@ -1494,8 +1496,6 @@ exports.taskid = async (req, res) => {
 
 
                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-
-                    // console.log('threeLink' + threeLink)
 
 
                     if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
@@ -1512,14 +1512,14 @@ exports.taskid = async (req, res) => {
                             'dataFile': dataFile.data
 
                         };
-                        dataObjTaskGlobal[taskId] = itemData;
+                        dataObjTaskGlobalAll[taskId] = itemData;
 
 
                         localStorageTasks.setItem(
                             cacheStorageID + '-taskGlobalAll',
-                            JSON.stringify(dataObjTaskGlobal)
+                            JSON.stringify(dataObjTaskGlobalAll)
                         );
-                        console.log(dataObjTaskGlobal)
+                        console.log(dataObjTaskGlobalAll)
 
                         console.log('No clear setTimeOut');
 
@@ -1536,12 +1536,78 @@ exports.taskid = async (req, res) => {
                     console.log('Stop clearInterval timerFile - else');
 
 
-                    /*  const objDefault = JSON.parse(dataLSTaskGlobal);
-                      var dataSplitGlobal = objDefault[taskId].dataFile;
-                      var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
+                     const objGlobalAllDefault = JSON.parse(dataLSTaskGlobalAll);
+                      var dataSplitGlobalAll = objGlobalAllDefault[taskId].dataFile;
+                      var dataSplitGlobalAll = dataSplitGlobalAll.split(/\r?\n/);
 
-                      
-                      console.log(dataSplitGlobal)*/
+
+
+                      const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+                      var impressions = new Array();
+                      var clicks = new Array();
+                      var complete = new Array();
+
+                    
+                      const CampaignStartDate = [];
+                      const CampaignEndtDate = [];
+                      const CampaignId = [];
+                      const CampaignName = [];
+                      const InsertionId = [];
+                      const InsertionName = [];
+                      const FormatId = [];
+                      const FormatName = [];
+                      const SiteId = [];
+                      const SiteName = [];
+                      const Impressions = [];
+                      const ClickRate = [];
+                      const Clicks = [];
+                      const Complete = [];
+                      const ViewableImpressions = [];
+
+                      const dataList = new Object();
+
+
+                      if (dataSplitGlobalAll && (dataSplitGlobalAll.length > 0)) {
+                        var numberLine = dataSplitGlobalAll.length;
+
+                        // dataSplitGlobalAll);
+                        if (numberLine > 1) {
+                            for (i = 1; i < numberLine; i++) {
+                                // split push les données dans chaque colone
+                                line = dataSplitGlobalAll[i].split(';');
+                                
+                                if (!Utilities.empty(line[0])) {
+                                    insertion_type = line[5];
+
+                                    CampaignStartDate.push(line[0]);
+                                    CampaignEndtDate.push(line[1]);
+                                    CampaignId.push(line[2]);
+                                    InsertionId.push(line[3]);
+                                    CampaignName.push(line[4]);
+                                    InsertionName.push(line[5]);
+                                    FormatId.push(line[6]);
+                                    FormatName.push(line[7]);
+                                    SiteId.push(line[8]);
+                                    SiteName.push(line[9]);
+                                    Impressions.push(parseInt(line[10]));
+                                    ClickRate.push(parseInt(line[11]));
+                                    Clicks.push(parseInt(line[12]));
+                                    Complete.push(parseInt(line[13]));
+                                    ViewableImpressions.push(parseInt(line[14]));
+
+             
+
+                             
+                                }   
+                            }
+                        }
+                    }  
+
+              
+                    console.log(dataList);
+              
+
                 }
             }, time)
 
