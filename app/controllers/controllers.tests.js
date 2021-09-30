@@ -1414,7 +1414,7 @@ exports.taskid = async (req, res) => {
     var NbrTask = Math.round(diff_day / 30);
     console.log('NbrTask : ' + NbrTask);
 
-    let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIDG');
+    let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIdAll');
 
     //Si localStorage avec tous les taskId n'existe pas on lance la génération des taskId
     if (!TaskIDG) {
@@ -1466,8 +1466,8 @@ exports.taskid = async (req, res) => {
             }
 
         }
-        localStorageTasks.setItem(cacheStorageID + '-TaskIDG', arrayTaskId);
-        console.log('Create localStorage taskIDAll')
+        localStorageTasks.setItem(cacheStorageID + '-TaskIdAll', arrayTaskId);
+        console.log('Create localStorage TaskIdAll')
 
     } else {
 
@@ -1492,7 +1492,7 @@ exports.taskid = async (req, res) => {
 
                     let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
-                    console.log('requete_global' + requete_global)
+                    // console.log('requete_global' + requete_global)
 
 
                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
@@ -1536,39 +1536,39 @@ exports.taskid = async (req, res) => {
                     console.log('Stop clearInterval timerFile - else');
 
 
-                     const objGlobalAllDefault = JSON.parse(dataLSTaskGlobalAll);
-                      var dataSplitGlobalAll = objGlobalAllDefault[taskId].dataFile;
-                      var dataSplitGlobalAll = dataSplitGlobalAll.split(/\r?\n/);
+                    const objGlobalAllDefault = JSON.parse(dataLSTaskGlobalAll);
+                    var dataSplitGlobalAll = objGlobalAllDefault[taskId].dataFile;
+                    var dataSplitGlobalAll = dataSplitGlobalAll.split(/\r?\n/);
 
 
 
-                      const reducer = (accumulator, currentValue) => accumulator + currentValue;
+                    const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
-                      var impressions = new Array();
-                      var clicks = new Array();
-                      var complete = new Array();
-
-                    
-                      const CampaignStartDate = [];
-                      const CampaignEndtDate = [];
-                      const CampaignId = [];
-                      const CampaignName = [];
-                      const InsertionId = [];
-                      const InsertionName = [];
-                      const FormatId = [];
-                      const FormatName = [];
-                      const SiteId = [];
-                      const SiteName = [];
-                      const Impressions = [];
-                      const ClickRate = [];
-                      const Clicks = [];
-                      const Complete = [];
-                      const ViewableImpressions = [];
-
-                      const dataList = new Object();
+                    var impressions = new Array();
+                    var clicks = new Array();
+                    var complete = new Array();
 
 
-                      if (dataSplitGlobalAll && (dataSplitGlobalAll.length > 0)) {
+                    const CampaignStartDate = [];
+                    const CampaignEndtDate = [];
+                    const CampaignId = [];
+                    const CampaignName = [];
+                    const InsertionId = [];
+                    const InsertionName = [];
+                    const FormatId = [];
+                    const FormatName = [];
+                    const SiteId = [];
+                    const SiteName = [];
+                    const Impressions = [];
+                    const ClickRate = [];
+                    const Clicks = [];
+                    const Complete = [];
+                    const ViewableImpressions = [];
+
+                    const dataList = new Object();
+
+
+                    if (dataSplitGlobalAll && (dataSplitGlobalAll.length > 0)) {
                         var numberLine = dataSplitGlobalAll.length;
 
                         // dataSplitGlobalAll);
@@ -1576,9 +1576,9 @@ exports.taskid = async (req, res) => {
                             for (i = 1; i < numberLine; i++) {
                                 // split push les données dans chaque colone
                                 line = dataSplitGlobalAll[i].split(';');
-                                
+
                                 if (!Utilities.empty(line[0])) {
-                                    insertion_type = line[5];
+                                    var insertion_type = line[5];
 
                                     CampaignStartDate.push(line[0]);
                                     CampaignEndtDate.push(line[1]);
@@ -1596,18 +1596,43 @@ exports.taskid = async (req, res) => {
                                     Complete.push(parseInt(line[13]));
                                     ViewableImpressions.push(parseInt(line[14]));
 
-             
 
-                             
-                                }   
+                                    dataList[i] = {
+                                        'campaign_start_date': line[0],
+                                        'campaign_end_date': line[1],
+                                        'campaign_id': line[2],
+                                        'campaign_name': line[3],
+                                        'insertion_id': line[4],
+                                        'insertion_name': line[5],
+                                        'format_id': line[6],
+                                        'format_name': line[7],
+                                        'site_id': line[8],
+                                        'site_name': line[9],
+                                        // 'impressions': parseInt(line[10]),
+                                        'click_rate': parseInt(line[11]),
+                                        'clicks': parseInt(line[12]),
+                                        //'complete': parseInt(line[13]),
+                                        // 'viewable_impressions': parseInt(line[14])
+                                    }
+
+                                    if (insertion_type.match(/SLIDER{1}/igm)) {
+                                        dataList[i]['impressions'] = parseInt(line[14]);
+                                    } else {
+                                        dataList[i]['impressions'] = parseInt(line[10]);
+                                    }
+
+                                    if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
+                                        dataList[i]['complete'] = parseInt(line[13]);
+                                    } else {
+                                        dataList[i]['complete'] = 0;
+                                    }
+
+                                }
                             }
                         }
-                    }  
-
-              
-                    console.log(dataList);
-              
-
+                    }
+                    console.log(dataList)
+                   
                 }
             }, time)
 
