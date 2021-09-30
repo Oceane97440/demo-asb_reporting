@@ -23,6 +23,7 @@ const moment = require('moment');
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 const Utilities = require('../functions/functions.utilities');
+const SmartFunction = require("../functions/functions.smartadserver.api");
 
 
 // Initialise les models
@@ -30,6 +31,8 @@ const Utilities = require('../functions/functions.utilities');
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
 const ModelPack = require("../models/models.packs")
+const ModelCampaigns = require("../models/models.campaigns");
+const ModelInsertions = require("../models/models.insertions");
 
 exports.index = async (req, res) => {
 
@@ -1630,9 +1633,251 @@ exports.taskid = async (req, res) => {
                                 }
                             }
                         }
+                    
                     }
+
                     console.log(dataList)
-                   
+
+                    process.exit()
+
+                    var formatObjects = new Object();
+                    if (dataList && (Object.keys(dataList).length > 0)) {
+                        console.log(dataList)
+
+                        // Initialise les formats
+                        var formatHabillage = new Array();
+                        var formatInterstitiel = new Array();
+                        var formatGrandAngle = new Array();
+                        var formatMasthead = new Array();
+                        var formatInstream = new Array();
+                        var formatRectangleVideo = new Array();
+                        var formatLogo = new Array();
+                        var formatNative = new Array();
+                        var formatSlider = new Array();
+                        var formatMea = new Array();
+                        var formatSliderVideo = new Array();
+                        var formatClickCommand = new Array();
+
+                        // initialise les sites
+                        var siteObjects = new Object();
+
+                        var siteLINFO = new Array();
+                        var siteLINFO_ANDROID = new Array();
+                        var siteLINFO_IOS = new Array();
+                        var siteANTENNEREUNION = new Array();
+                        //admanager App AR
+                        var siteAPP_ANTENNEREUNION = new Array();
+
+                        var siteDOMTOMJOB = new Array();
+                        var siteIMMO974 = new Array();
+                        var siteRODZAFER_LP = new Array();
+                        var siteRODZAFER_ANDROID = new Array();
+                        var siteRODZAFER_IOS = new Array();
+                        var siteRODALI = new Array();
+                        var siteORANGE_REUNION = new Array();
+                        var siteTF1 = new Array();
+                        var siteM6 = new Array();
+                        var siteDAILYMOTION = new Array();
+
+
+                        var insertion_name = dataList[index].insertion_name;
+                        var site_id = dataList[index].site_id;
+                        var site_name = dataList[index].site_name;
+
+                        // Créer les tableaux des formats
+                        if (insertion_name.match(/HABILLAGE{1}/igm)) {
+                            formatHabillage.push(index);
+                        }
+                        if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
+                            formatInterstitiel.push(index);
+                        }
+                        if (insertion_name.match(/MASTHEAD{1}/igm)) {
+                            formatMasthead.push(index);
+                        }
+                        if (insertion_name.match(/GRAND ANGLE{1}/igm)) {
+                            formatGrandAngle.push(index);
+                        }
+                        if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
+                            formatInstream.push(index);
+                        }
+                        if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                            formatRectangleVideo.push(index);
+                        }
+                        if (insertion_name.match(/LOGO{1}/igm)) {
+                            formatLogo.push(index);
+                        }
+                        if (insertion_name.match(/NATIVE{1}/igm)) {
+                            formatNative.push(index);
+                        }
+                        if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                            formatSliderVideo.push(index);
+                        }
+                        if (insertion_name.match(/SLIDER{1}/igm)) {
+                            formatSlider.push(index);
+                        }
+                        if (insertion_name.match(/^\MEA{1}/igm)) {
+                            formatMea.push(index);
+                        }
+                        if (insertion_name.match(/CLICK COMMAND{1}|CC/igm)) {
+                            formatClickCommand.push(index);
+                        }
+
+                        // Créer les tableaux des sites
+                        if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
+                            siteLINFO.push(index);
+                        }
+                        if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
+                            siteLINFO_ANDROID.push(index);
+                        }
+                        if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
+                            siteLINFO_IOS.push(index);
+                        }
+                        if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
+                            siteANTENNEREUNION.push(index);
+                        }
+                        if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
+                            siteDOMTOMJOB.push(index);
+                        }
+                        if (site_name.match(/^\SM_IMMO974{1}/igm)) {
+                            siteIMMO974.push(index);
+                        }
+                        if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
+                            siteRODZAFER_LP.push(index);
+                        }
+                        if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
+                            siteRODZAFER_ANDROID.push(index);
+                        }
+                        if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
+                            siteRODZAFER_IOS.push(index);
+                        }
+                        if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
+                            siteORANGE_REUNION.push(index);
+                        }
+                        if (site_name.match(/^\SM_TF1{1}/igm)) {
+                            siteTF1.push(index);
+                        }
+                        if (site_name.match(/^\SM_M6{1}/igm)) {
+                            siteM6.push(index);
+                        }
+                        if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
+                            siteDAILYMOTION.push(index);
+                        }
+                        if (site_name.match(/^\SM_RODALI{1}/igm)) {
+                            siteRODALI.push(index);
+                        }
+
+
+                        // Trie les formats et compatibilise les insertions et autres clics
+                        if (!Utilities.empty(formatHabillage)) {
+                            formatObjects.habillage = SmartFunction.sortDataReport(
+                                formatHabillage,
+                                dataList
+                            );
+                        }
+                        if (!Utilities.empty(formatInterstitiel)) {
+                            formatObjects.interstitiel = SmartFunction.sortDataReport(
+                                formatInterstitiel,
+                                dataList
+                            );
+                        }
+                        if (!Utilities.empty(formatMasthead)) {
+                            formatObjects.masthead = SmartFunction.sortDataReport(formatMasthead, dataList);
+                        }
+                        if (!Utilities.empty(formatGrandAngle)) {
+                            formatObjects.grandangle = SmartFunction.sortDataReport(
+                                formatGrandAngle,
+                                dataList
+                            );
+                        }
+                        if (!Utilities.empty(formatInstream)) {
+                            formatObjects.instream = SmartFunction.sortDataReport(formatInstream, dataList);
+                        }
+                        if (!Utilities.empty(formatRectangleVideo)) {
+                            formatObjects.rectanglevideo = SmartFunction.sortDataReport(
+                                formatRectangleVideo,
+                                dataList
+                            );
+                        }
+                        if (!Utilities.empty(formatLogo)) {
+                            formatObjects.logo = SmartFunction.sortDataReport(formatLogo, dataList);
+                        }
+                        if (!Utilities.empty(formatNative)) {
+                            formatObjects.native = SmartFunction.sortDataReport(formatNative, dataList);
+                        }
+                        if (!Utilities.empty(formatSlider)) {
+                            formatObjects.slider = SmartFunction.sortDataReport(formatSlider, dataList);
+                        }
+                        if (!Utilities.empty(formatMea)) {
+                            formatObjects.mea = SmartFunction.sortDataReport(formatMea, dataList);
+                        }
+                        if (!Utilities.empty(formatSliderVideo)) {
+                            formatObjects.slidervideo = SmartFunction.sortDataReport(
+                                formatSliderVideo,
+                                dataList
+                            );
+                        }
+
+                        if (!Utilities.empty(formatClickCommand)) {
+                            formatObjects.clickcommand = SmartFunction.sortDataReport(
+                                formatClickCommand,
+                                dataList
+                            );
+                        }
+
+
+                        // Ajoute les infos de la campagne
+                        if (Impressions.length > 0) {
+                            campaignImpressions = Impressions.reduce(reducer);
+                        } else {
+                            campaignImpressions = null;
+                        }
+
+                        if (Clicks.length > 0) {
+                            campaignClicks = Clicks.reduce(reducer);
+                        } else {
+                            campaignClicks = null;
+                        }
+                        if (!Utilities.empty(campaignClicks) && !Utilities.empty(campaignImpressions)) {
+                            campaignCtr = parseFloat((campaignClicks / campaignImpressions) * 100).toFixed(
+                                2
+                            );
+                        } else {
+                            campaignCtr = null;
+                        }
+                        if (Complete.length > 0) {
+                            campaignComplete = Complete.reduce(reducer);
+                        } else {
+                            campaignComplete = null;
+                        }
+
+                        if (!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions)) {
+                            campaignCtrComplete = parseFloat(
+                                (campaignComplete / campaignImpressions) * 100
+                            ).toFixed(2);
+                        } else {
+                            campaignCtrComplete = null;
+                        }
+
+                        formatObjects = {
+                            campaign_id: '1912601',                            
+                            campaign_name: 'AIR AUSTRAL MISS REUNION - 70521',
+                            campaign_start_date: 'campaign.campaign_start_date',
+                            campaign_end_date: 'campaign.campaign_end_date',
+                            campaign_crypt: 'campaign.campaign_crypt',
+                            advertiser_id:' campaign.advertiser.advertiser_id',
+                            advertiser_name: 'campaign.advertiser.advertiser_name',
+                            impressions: campaignImpressions,
+                            clicks: campaignClicks,
+                            ctr: campaignCtr,
+                            complete: campaignComplete,
+                            ctrComplete: campaignCtrComplete
+                        }
+
+                        console.log(formatObjects)
+                        localStorage.setItem(cacheStorageID , JSON.stringify(formatObjects));
+
+
+                    }
                 }
             }, time)
 
