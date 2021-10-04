@@ -1509,7 +1509,7 @@ exports.taskid = async (req, res) => {
             );
 
 
-            if (!dataLSTaskGlobalAll && !Utilities.empty(taskId)) {
+            if (!dataLSTaskGlobalAll && !Utilities.empty(TaskIDG)) {
 
                 for (let index = 0; index < taskLength.length; index++) {
                     const taskId = taskLength[index];
@@ -1518,7 +1518,7 @@ exports.taskid = async (req, res) => {
 
                     let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
-                    // console.log('requete_global' + requete_global)
+                     console.log('requete_global' + requete_global)
 
 
                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
@@ -1575,7 +1575,19 @@ exports.taskid = async (req, res) => {
 }
 
 exports.test_taskid = async (req, res) => {
-    var campaign_id = "1912601";
+    campaign = {
+        campaign_id: '1922883',
+        campaign_name: 'GAMM VERT - 68873',
+        campaign_crypt: '00641bb74c0a9ee8f67a6300e8909ea4',
+        campaign_start_date: '2021-07-05 00:00:00',
+        campaign_end_date: '2021-12-26 23:59:00',
+        advertiser: {
+            advertiser_id: '445116',
+            advertiser_name: 'AGRI DEV'
+
+        }
+
+    }
 
     let cacheStorageID = 'campaignID-' + campaign_id;
 
@@ -1583,27 +1595,13 @@ exports.test_taskid = async (req, res) => {
     // Permet de faire l'addition
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
-    var impressions = new Array();
-    var clicks = new Array();
-    var complete = new Array();
-
-    const CampaignStartDate = [];
-    const CampaignEndtDate = [];
-    const CampaignId = [];
-    const CampaignName = [];
-    const InsertionId = [];
+    
     const InsertionName = [];
-    const FormatId = [];
-    const FormatName = [];
-    const SiteId = [];
-    const SiteName = [];
     const Impressions = [];
-    const ClickRate = [];
     const Clicks = [];
     const Complete = [];
     const ViewableImpressions = [];
 
-    //const dataList = new Object();
     const dataList = [];
 
     let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-taskGlobalAll');
@@ -1706,15 +1704,13 @@ exports.test_taskid = async (req, res) => {
         var formatSliderVideo = new Array();
         var formatClickCommand = new Array();
 
-        // initialise les sites
-        var siteObjects = new Object();
+    
 
         var siteLINFO = new Array();
         var siteLINFO_ANDROID = new Array();
         var siteLINFO_IOS = new Array();
         var siteANTENNEREUNION = new Array();
-        //admanager App AR
-        var siteAPP_ANTENNEREUNION = new Array();
+     
 
         var siteDOMTOMJOB = new Array();
         var siteIMMO974 = new Array();
@@ -1912,20 +1908,7 @@ exports.test_taskid = async (req, res) => {
     } else {
         campaignCtrComplete = null;
     }
-    campaign = {
-        campaign_id: '1912601',
-        campaign_name: 'AIR AUSTRAL MISS REUNION - 70521',
-        campaign_crypt: 'c65011bcae3fcbcdbe157e8ba09f4c05',
-        campaign_start_date: '2021-06-18 23:00:00',
-        campaign_end_date: '2021-09-30 23:59:00',
-        advertiser: {
-            advertiser_id: '443674',
-            advertiser_name: 'AIR AUSTRAL'
-
-        }
-
-
-    }
+ 
 
 
     formatObjects.campaign = {
