@@ -6,6 +6,7 @@ const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session')
 var fileUpload = require('express-fileupload');
+var runner = require("child_process");
 
 const db = require("./app/config/_config.database");
 
@@ -286,6 +287,14 @@ app.use(cookieSession({
 app.use(fileUpload());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static('files'));
+
+/*var phpScriptPath = "./api_google-manager/GetAllOrder.php";
+runner.exec("php " + phpScriptPath + " " , function(err, phpResponse, stderr) {
+ if(err) console.log(err); 
+console.log( phpResponse );
+});*/
+
 
 /**
  * @MidleWare
@@ -360,8 +369,8 @@ const application = require('./app/routes/routes.application');
 app.use('/app', application);
 
 // Gestion du reporting DIGITAL
-/*const reporting_rs = require('./app/routes/routes.reporting');
-app.use('/r/', reporting_rs);*/
+const reporting_rs = require('./app/routes/routes.reporting');
+app.use('/r/', reporting_rs);
 
 // Gestion du reporting DIGITAL 30j
 const reporting_30 = require('./app/routes/routes.reporting_30');
@@ -378,6 +387,8 @@ app.use('/manager', manager);
 // Automatise la récupération de donnée
 const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
+
+
 
 // Le serveur ecoute sur le port 3022
 app.set("port", process.env.PORT || 3001);

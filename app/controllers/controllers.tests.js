@@ -1403,11 +1403,15 @@ exports.log_error = async (req, res) => {
 exports.taskid = async (req, res) => {
 
     campaign = {
-        campaign_id: '1922883',
+        //campaign_id: '1922883',
+        campaign_id: '1941309',
+
         campaign_name: 'GAMM VERT - 68873',
         campaign_crypt: '00641bb74c0a9ee8f67a6300e8909ea4',
-        campaign_start_date: '2021-07-05 00:00:00',
-        campaign_end_date: '2021-12-26 23:59:00',
+        // campaign_start_date: '2021-07-05 00:00:00',
+        // campaign_end_date: '2021-12-26 23:59:00',
+        campaign_start_date: '2021-08-25 00:00:00',
+        campaign_end_date: '2021-11-24 23:59:00',
         advertiser: {
             advertiser_id: '445116',
             advertiser_name: 'AGRI DEV'
@@ -1425,9 +1429,9 @@ exports.taskid = async (req, res) => {
 
     const now = new Date();
     const timestamp_datenow = now.getTime();
-    
-    if (endDate_last > timestamp_datenow ) {
-        campaign_date_end =  moment(timestamp_datenow);
+
+    if (endDate_last > timestamp_datenow) {
+        campaign_date_end = moment(timestamp_datenow);
         console.log(campaign_date_end)
     }
 
@@ -1461,6 +1465,11 @@ exports.taskid = async (req, res) => {
                 taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
                 arrayTaskId.push(taskOne)
 
+                if (typeof taskOne === 'string') {
+                    console.log(typeof taskOne)
+
+                }
+
 
 
             }
@@ -1474,9 +1483,12 @@ exports.taskid = async (req, res) => {
                 var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
                 taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
-                arrayTaskId.push(taskTwo)
+                console.log(typeof taskTwo)
 
+                if (typeof taskTwo === 'string') {
+                    arrayTaskId.push(taskTwo)
 
+                }
             }
 
             if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
@@ -1485,9 +1497,12 @@ exports.taskid = async (req, res) => {
                 var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
 
                 taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
-                arrayTaskId.push(taskThree)
+                console.log(typeof taskThree)
 
+                if (typeof taskThree === 'string') {
+                    arrayTaskId.push(taskThree)
 
+                }
 
             }
 
@@ -1518,7 +1533,7 @@ exports.taskid = async (req, res) => {
 
                     let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
-                     console.log('requete_global' + requete_global)
+                    console.log('requete_global' + requete_global)
 
 
                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
@@ -1564,7 +1579,7 @@ exports.taskid = async (req, res) => {
 
 
                 process.exit()
-        
+
             }
         }, time)
 
@@ -1595,7 +1610,7 @@ exports.test_taskid = async (req, res) => {
     // Permet de faire l'addition
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
-    
+
     const InsertionName = [];
     const Impressions = [];
     const Clicks = [];
@@ -1606,7 +1621,7 @@ exports.test_taskid = async (req, res) => {
 
     let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-taskGlobalAll');
     const dataSplitGlobalALL = JSON.parse(TaskIDG);
-    
+
 
     const keyTaskID = Object.keys(dataSplitGlobalALL);
 
@@ -1704,13 +1719,13 @@ exports.test_taskid = async (req, res) => {
         var formatSliderVideo = new Array();
         var formatClickCommand = new Array();
 
-    
+
 
         var siteLINFO = new Array();
         var siteLINFO_ANDROID = new Array();
         var siteLINFO_IOS = new Array();
         var siteANTENNEREUNION = new Array();
-     
+
 
         var siteDOMTOMJOB = new Array();
         var siteIMMO974 = new Array();
@@ -1908,7 +1923,7 @@ exports.test_taskid = async (req, res) => {
     } else {
         campaignCtrComplete = null;
     }
- 
+
 
 
     formatObjects.campaign = {
