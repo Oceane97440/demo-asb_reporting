@@ -243,18 +243,18 @@ exports.report = async (req, res) => {
 
                     } else {
 
-                        insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                        var insertion_start_date = await ModelInsertions.max('insertion_start_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
-                        insertion_end_date = await ModelInsertions.max('insertion_end_date', {
+                        var insertion_end_date = await ModelInsertions.max('insertion_end_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
 
-                        insertion_format = await ModelInsertions.findOne({
+                        var insertion_format = await ModelInsertions.findOne({
                             where: {
                                 campaign_id: campaign_id,
                                 format_id: {
@@ -304,8 +304,13 @@ exports.report = async (req, res) => {
                             .add('1', 'd')
                             .format('YYYY-MM-DDT00:00:00'); // 'YYYY-MM-DDTHH:mm:ss'
 
-                        var campaign_date_start = moment(campaign_start_date);
-                        var campaign_date_end = moment(campaign_end_date);
+
+
+                      
+                        var campaign_date_start = moment(campaign.campaign_start_date);
+                        var campaign_date_end = moment(campaign.campaign_end_date);
+
+
 
 
                         // si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour 
@@ -316,13 +321,20 @@ exports.report = async (req, res) => {
 
                         }
 
+
+                        console.log('campaign_date_start   ' + campaign_date_start)
+                        console.log('campaign_date_end  ' + campaign_date_end)
+
+
                         var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
 
                         /*----------- Si la campagne > 30j ------------*/
                         if (diff_day >= 31) {
 
                             if (endDate_last > timestamp_datenow) {
-                                campaign_date_end = moment(timestamp_datenow);
+                                var date_nowLast = (now.setDate(now.getDate() + 1))
+
+                                campaign_date_end = moment(date_nowLast);
                                 console.log(campaign_date_end)
                             }
 
@@ -330,7 +342,7 @@ exports.report = async (req, res) => {
 
 
                             var NbrTask = Math.round(diff_day / 30);
-                            console.log('NbrTask : ' + NbrTask);
+                            console.log('NbrTask Total: ' + NbrTask);
 
                             let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIdAll');
 

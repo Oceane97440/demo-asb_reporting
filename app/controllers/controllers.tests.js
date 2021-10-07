@@ -1403,15 +1403,14 @@ exports.log_error = async (req, res) => {
 exports.taskid = async (req, res) => {
 
     campaign = {
-        //campaign_id: '1922883',
-        campaign_id: '1941309',
+        campaign_id: '1922883',
+
 
         campaign_name: 'GAMM VERT - 68873',
         campaign_crypt: '00641bb74c0a9ee8f67a6300e8909ea4',
-        // campaign_start_date: '2021-07-05 00:00:00',
-        // campaign_end_date: '2021-12-26 23:59:00',
-        campaign_start_date: '2021-08-25 00:00:00',
-        campaign_end_date: '2021-11-24 23:59:00',
+        campaign_start_date: '2021-07-05 00:00:00',
+        campaign_end_date: '2021-12-26 23:59:00',
+
         advertiser: {
             advertiser_id: '445116',
             advertiser_name: 'AGRI DEV'
@@ -1424,6 +1423,10 @@ exports.taskid = async (req, res) => {
     var campaign_date_start = moment(campaign.campaign_start_date);
     var campaign_date_end = moment(campaign.campaign_end_date);
 
+    console.log(campaign_date_start)
+    console.log(campaign_date_end)
+
+
     var endDate_day = new Date(campaign_date_end);
     var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
 
@@ -1431,18 +1434,25 @@ exports.taskid = async (req, res) => {
     const timestamp_datenow = now.getTime();
 
     if (endDate_last > timestamp_datenow) {
-        campaign_date_end = moment(timestamp_datenow);
+
+        var date_nowLast = (now.setDate(now.getDate() + 1))
+
+        campaign_date_end = moment(date_nowLast);
         console.log(campaign_date_end)
     }
 
     var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
     let cacheStorageID = 'campaignID-' + campaign_id;
 
+    console.log("Nbr de jours  " + diff_day)
     /*----------- Si la campagne > 30j ------------*/
 
 
-    var NbrTask = Math.round(diff_day / 30);
-    console.log('NbrTask : ' + NbrTask);
+    // var NbrTask = Math.round(diff_day / 30);
+    var NbrTask = Math.ceil(diff_day / 30);
+
+
+    console.log('NbrTask Total: ' + NbrTask);
 
     let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIdAll');
 
@@ -1511,7 +1521,6 @@ exports.taskid = async (req, res) => {
         console.log('Create localStorage TaskIdAll')
 
     } else {
-
         const taskLength = TaskIDG.split(',')
         var dataObjTaskGlobalAll = new Object()
 
@@ -1578,14 +1587,17 @@ exports.taskid = async (req, res) => {
 
 
 
-                process.exit()
+                // process.exit()
 
             }
         }, time)
 
 
-
     }
+
+
+
+
 
 }
 
