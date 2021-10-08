@@ -1404,13 +1404,10 @@ exports.taskid = async (req, res) => {
 
     campaign = {
         campaign_id: '1922883',
-
-
         campaign_name: 'GAMM VERT - 68873',
         campaign_crypt: '00641bb74c0a9ee8f67a6300e8909ea4',
         campaign_start_date: '2021-07-05 00:00:00',
         campaign_end_date: '2021-12-26 23:59:00',
-
         advertiser: {
             advertiser_id: '445116',
             advertiser_name: 'AGRI DEV'
@@ -1423,10 +1420,6 @@ exports.taskid = async (req, res) => {
     var campaign_date_start = moment(campaign.campaign_start_date);
     var campaign_date_end = moment(campaign.campaign_end_date);
 
-    console.log(campaign_date_start)
-    console.log(campaign_date_end)
-
-
     var endDate_day = new Date(campaign_date_end);
     var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
 
@@ -1434,25 +1427,18 @@ exports.taskid = async (req, res) => {
     const timestamp_datenow = now.getTime();
 
     if (endDate_last > timestamp_datenow) {
-
-        var date_nowLast = (now.setDate(now.getDate() + 1))
-
-        campaign_date_end = moment(date_nowLast);
+        campaign_date_end = moment(timestamp_datenow);
         console.log(campaign_date_end)
     }
 
     var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
     let cacheStorageID = 'campaignID-' + campaign_id;
 
-    console.log("Nbr de jours  " + diff_day)
     /*----------- Si la campagne > 30j ------------*/
 
 
-    // var NbrTask = Math.round(diff_day / 30);
     var NbrTask = Math.ceil(diff_day / 30);
-
-
-    console.log('NbrTask Total: ' + NbrTask);
+    console.log('NbrTask : ' + NbrTask);
 
     let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIdAll');
 
@@ -1475,11 +1461,6 @@ exports.taskid = async (req, res) => {
                 taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
                 arrayTaskId.push(taskOne)
 
-                if (typeof taskOne === 'string') {
-                    console.log(typeof taskOne)
-
-                }
-
 
 
             }
@@ -1493,12 +1474,9 @@ exports.taskid = async (req, res) => {
                 var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
                 taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
-                console.log(typeof taskTwo)
+                arrayTaskId.push(taskTwo)
 
-                if (typeof taskTwo === 'string') {
-                    arrayTaskId.push(taskTwo)
 
-                }
             }
 
             if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
@@ -1507,12 +1485,9 @@ exports.taskid = async (req, res) => {
                 var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
 
                 taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
-                console.log(typeof taskThree)
+                arrayTaskId.push(taskThree)
 
-                if (typeof taskThree === 'string') {
-                    arrayTaskId.push(taskThree)
 
-                }
 
             }
 
@@ -1521,6 +1496,7 @@ exports.taskid = async (req, res) => {
         console.log('Create localStorage TaskIdAll')
 
     } else {
+
         const taskLength = TaskIDG.split(',')
         var dataObjTaskGlobalAll = new Object()
 
@@ -1548,6 +1524,8 @@ exports.taskid = async (req, res) => {
                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
 
 
+                    console.log('jobprogress ' + threeLink.data.lastTaskInstance.jobProgress)
+                    
                     if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
 
                         dataFile = await AxiosFunction.getReportingData(
@@ -1573,7 +1551,6 @@ exports.taskid = async (req, res) => {
 
                         console.log('No clear setTimeOut');
 
-
                     }
 
                 }
@@ -1588,17 +1565,14 @@ exports.taskid = async (req, res) => {
 
 
 
-                // process.exit()
+                process.exit()
 
             }
         }, time)
 
 
+
     }
-
-
-
-
 
 }
 
