@@ -1510,6 +1510,7 @@ exports.taskid = async (req, res) => {
 
 
             if (!dataLSTaskGlobalAll && !Utilities.empty(TaskIDG)) {
+                var ObjTaskProgress = new Array()
 
                 for (let index = 0; index < taskLength.length; index++) {
                     const taskId = taskLength[index];
@@ -1524,38 +1525,64 @@ exports.taskid = async (req, res) => {
                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
 
 
-                    console.log('jobprogress ' + threeLink.data.lastTaskInstance.jobProgress)
-                    
-                    if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                    var jobProgress = threeLink.data.lastTaskInstance.jobProgress
+                    var instanceStatus = threeLink.data.lastTaskInstance.instanceStatus
 
-                        dataFile = await AxiosFunction.getReportingData(
-                            'GET',
-                            `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
-                            ''
-                        );
-
-
-
-                        var itemData = {
-                            'dataFile': dataFile.data
-
-                        };
-                        dataObjTaskGlobalAll[taskId] = itemData;
-
-
-                        localStorageTasks.setItem(
-                            cacheStorageID + '-taskGlobalAll',
-                            JSON.stringify(dataObjTaskGlobalAll)
-                        );
-                        console.log(dataObjTaskGlobalAll)
-
-                        console.log('No clear setTimeOut');
+                    var itemProgress = {
+                        'task': taskId,
+                        'jobProgress': jobProgress,
+                        'instanceStatus': instanceStatus
 
                     }
 
+                    if (jobProgress == '1.0' && instanceStatus == 'SUCCESS') {
+
+
+                        ObjTaskProgress.push(itemProgress)
+
+                        
+                    }
+
+                    console.log('ObjTaskProgress  ' +ObjTaskProgress)
+                    console.log('ObjTaskProgress  '+ObjTaskProgress.length)
+                    if (index >= 4) {
+                      
+                        break;
+
+                    }                      
+
+
+                    /* if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+
+                         dataFile = await AxiosFunction.getReportingData(
+                             'GET',
+                             `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                             ''
+                         );
+
+
+
+                         var itemData = {
+                             'dataFile': dataFile.data
+
+                         };
+                         dataObjTaskGlobalAll[taskId] = itemData;
+
+
+                         localStorageTasks.setItem(
+                             cacheStorageID + '-taskGlobalAll',
+                             JSON.stringify(dataObjTaskGlobalAll)
+                         );
+                         console.log(dataObjTaskGlobalAll)
+
+                         console.log('No clear setTimeOut');
+
+                     }*/
+
                 }
 
-
+                
+              
 
             } else {
 
