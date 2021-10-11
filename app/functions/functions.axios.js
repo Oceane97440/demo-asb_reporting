@@ -306,37 +306,18 @@ exports.getAdManager = async (campaign_id) => {
 
   var test;
 
-  console.log('campaign_id' + campaign_id)
-
-
+ console.log('campaign_id' + campaign_id)
   test = await axios({
     method: 'GET',
-    url: 'http://localhost/api_google-manager/taskId/json/campaignID-'+campaign_id+'.json',
+    url: 'https://reporting.antennesb.fr/api_google-manager/data/json/campaignID-'+campaign_id+ '.json',
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "Application/json"
     }
  
-  }).catch(function (error) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.log('------------');
-    //  console.log('data : ', data);
-      console.log('response.status : ', error.response.status);
-      console.log('------------');
-      return test = null;
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-      // http.ClientRequest in node.js
-      console.log('request', error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
-    }
-    console.log(error.config);
-  });
+  })
+  return test
+
 
 
 

@@ -1535,54 +1535,44 @@ exports.taskid = async (req, res) => {
 
                     }
 
-                    if (jobProgress == '1.0' && instanceStatus == 'SUCCESS') {
+                    ObjTaskProgress.push(itemProgress)
 
 
-                        ObjTaskProgress.push(itemProgress)
+                    console.log()
 
-                        
+                    console.log('ObjTaskProgress  ' + ObjTaskProgress.length)
+
+                    if ((itemProgress.jobProgress == '1.0') && (itemProgress.instanceStatus == 'SUCCESS')) {
+
+                        dataFile = await AxiosFunction.getReportingData(
+                            'GET',
+                            `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                            ''
+                        );
+
+
+
+                        var itemData = {
+                            'dataFile': dataFile.data
+
+                        };
+                        dataObjTaskGlobalAll[taskId] = itemData;
+
+
+                        localStorageTasks.setItem(
+                            cacheStorageID + '-taskGlobalAll',
+                            JSON.stringify(dataObjTaskGlobalAll)
+                        );
+                        console.log(dataObjTaskGlobalAll)
+
+                        console.log('No clear setTimeOut');
+
                     }
-
-                    console.log('ObjTaskProgress  ' +ObjTaskProgress)
-                    console.log('ObjTaskProgress  '+ObjTaskProgress.length)
-                    if (index >= 4) {
-                      
-                        break;
-
-                    }                      
-
-
-                    /* if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-
-                         dataFile = await AxiosFunction.getReportingData(
-                             'GET',
-                             `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
-                             ''
-                         );
-
-
-
-                         var itemData = {
-                             'dataFile': dataFile.data
-
-                         };
-                         dataObjTaskGlobalAll[taskId] = itemData;
-
-
-                         localStorageTasks.setItem(
-                             cacheStorageID + '-taskGlobalAll',
-                             JSON.stringify(dataObjTaskGlobalAll)
-                         );
-                         console.log(dataObjTaskGlobalAll)
-
-                         console.log('No clear setTimeOut');
-
-                     }*/
 
                 }
 
-                
-              
+
+
 
             } else {
 

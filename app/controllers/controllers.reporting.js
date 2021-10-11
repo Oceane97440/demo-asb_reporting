@@ -96,7 +96,7 @@ exports.generate = async (req, res) => {
 
             console.log(reportingData);
             if (reportingDataStorage && (reportingData.reporting_end_date < date_now)) {
-               
+
 
                 res.render('report/template.ejs', {
                     reporting: reportingData,
@@ -128,7 +128,7 @@ exports.generate = async (req, res) => {
                 });
             }
 
-            
+
         });
 }
 
@@ -244,18 +244,18 @@ exports.report = async (req, res) => {
 
                     } else {
 
-                        insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                        var insertion_start_date = await ModelInsertions.max('insertion_start_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
-                        insertion_end_date = await ModelInsertions.max('insertion_end_date', {
+                        var insertion_end_date = await ModelInsertions.max('insertion_end_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
 
-                        insertion_format = await ModelInsertions.findOne({
+                        var insertion_format = await ModelInsertions.findOne({
                             where: {
                                 campaign_id: campaign_id,
                                 format_id: {
@@ -910,18 +910,19 @@ exports.report = async (req, res) => {
                                     if (!Utilities.empty(insertion_format)) {
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
 
+
                                         if (admanager) {
 
-                                            console.log(admanager)
 
-                                            if (admanager.status == 201) {
+                                            if (admanager.status == 200 || admanager.status == 201) {
+
 
                                                 const data_admanager = admanager.data
+
 
                                                 // test si le localstorage admanager existe 
                                                 if (!Utilities.empty(data_admanager)) {
 
-                                                    // console.log(data_admanager)
 
                                                     if (!Utilities.empty(formatObjects.interstitiel)) {
 
@@ -973,7 +974,7 @@ exports.report = async (req, res) => {
 
 
                                     }
-                                    
+
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
@@ -984,7 +985,9 @@ exports.report = async (req, res) => {
                                     if (localStorage.getItem(cacheStorageID)) {
                                         localStorage.removeItem(cacheStorageID);
                                     }
-                                    if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
+                                    if (localStorage.getItem(cacheStorageID)) {
+                                        localStorage.removeItem(cacheStorageID);
+                                    }
 
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
