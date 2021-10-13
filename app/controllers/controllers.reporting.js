@@ -736,7 +736,7 @@ exports.report = async (req, res) => {
                                                 siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
-                                                siteLINFO_IOS.push(index);
+                                                siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
                                                 siteANTENNEREUNION.push(index);
@@ -754,7 +754,7 @@ exports.report = async (req, res) => {
                                                 siteRODZAFER_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                                                siteRODZAFER_IOS.push(index);
+                                                siteRODZAFER_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
                                                 siteORANGE_REUNION.push(index);
@@ -912,7 +912,6 @@ exports.report = async (req, res) => {
 
                                         if (admanager) {
 
-                                            console.log(admanager)
 
                                             if (admanager.status == 201 || admanager.status == 200 ) {
 

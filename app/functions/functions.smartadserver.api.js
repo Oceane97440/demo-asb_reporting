@@ -174,10 +174,10 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             sites.push('LINFO.RE (site)');
         }
         if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
-            sites.push('LINFO.RE (app android)');
+            sites.push('LINFO.RE (app)');
         }
         if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
-            sites.push('LINFO.RE (app ios)');
+            sites.push('LINFO.RE (app)');
         }
         if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
             sites.push('ANTENNEREUNION.FR (site)');
@@ -192,10 +192,10 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             sites.push('RODZAFER (site)');
         }
         if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-            sites.push('RODZAFER (app android');
+            sites.push('RODZAFER (app)');
         }
         if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-            sites.push('RODZAFER (app ios');
+            sites.push('RODZAFER (app)');
         }
         if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
             sites.push('ORANGE.RE (site)');
@@ -219,7 +219,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 sites.push('DOMTOMJOB.COM');
             }
             if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
-                sites.push('LINFO.RE (app android)');
+                sites.push('LINFO.RE (app)');
             }
             if (insertion_name.match(/^\LINFO{1}/igm)) {
                 sites.push('LINFO.RE (site)');
