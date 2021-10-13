@@ -183,10 +183,10 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             sites.push('ANTENNEREUNION.FR (site)');
         }
         if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-            sites.push('DOMTOMJOB.COM');
+            sites.push('DOMTOMJOB.COM (site)');
         }
         if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-            sites.push('IMMO974.COM');
+            sites.push('IMMO974.COM (site)');
         }
         if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
             sites.push('RODZAFER (site)');
@@ -216,7 +216,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         if (site_name.match(/^\N\/A{1}/i)) {
             // Si N/A
             if (insertion_name.match(/^\DOMTOMJOB{1}/igm)) {
-                sites.push('DOMTOMJOB.COM');
+                sites.push('DOMTOMJOB.COM (site)');
             }
             if (insertion_name.match(/^\APPLI LINFO{1}/igm)) {
                 sites.push('LINFO.RE (app)');
@@ -237,7 +237,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 sites.push('ANTENNEREUNION.FR (site)');
             }
             if (insertion_name.match(/^\IMMO974{1}/igm)) {
-                sites.push('IMMO974.COM');
+                sites.push('IMMO974.COM (site)');
             }
             if (insertion_name.match(/^\TF1{1}/igm)) {
                 sites.push('TF1 (site)');
