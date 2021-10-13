@@ -173,13 +173,12 @@ exports.report = async (req, res) => {
                 var campaign_start_date = campaign.campaign_start_date;
                 var campaign_end_date = campaign.campaign_end_date;
 
-
-
                 // Gestion du cache
                 let cacheStorageID = 'campaignID-' + campaign_id;
                 // Initialise la date
                 let date = new Date();
                 let cacheStorageIDHour = moment().format('YYYYMMDD-HH');
+
                 try {
                     var data_localStorage = localStorage.getItem(cacheStorageID);
                     // Si le localStorage existe -> affiche la data du localstorage
@@ -245,18 +244,18 @@ exports.report = async (req, res) => {
 
                     } else {
 
-                        insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                        var insertion_start_date = await ModelInsertions.max('insertion_start_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
-                        insertion_end_date = await ModelInsertions.max('insertion_end_date', {
+                        var insertion_end_date = await ModelInsertions.max('insertion_end_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
 
-                        insertion_format = await ModelInsertions.findOne({
+                        var insertion_format = await ModelInsertions.findOne({
                             where: {
                                 campaign_id: campaign_id,
                                 format_id: {
@@ -265,8 +264,11 @@ exports.report = async (req, res) => {
                             }
                         });
 
-                        // console.log('insertion_start_date : ', insertion_start_date);
-                        // console.log('insertion_end_date : ', insertion_end_date);
+                       
+                        var campaign_date_start = moment(campaign.campaign_start_date);
+                        var campaign_date_end = moment(campaign.campaign_end_date);
+                        var endDate_day = new Date(campaign_date_end);
+                        var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
 
                         const now = new Date();
                         const timestamp_datenow = now.getTime();
@@ -313,8 +315,64 @@ exports.report = async (req, res) => {
                             var end_date = EndDate;
                         } else {
                             var end_date = "CURRENT_DAY+1";
+                            campaign_date_end = moment(timestamp_datenow);
+                            console.log(campaign_date_end)
                         }
 
+                        var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
+                        /*----------- Si la campagne > 30j ------------*/
+
+
+                        var NbrTask = Math.ceil(diff_day / 30);
+                        console.log('NbrTask : ' + NbrTask);
+
+                        if (diff_day >= 30) {
+                            console.log("----CONDITION START---")
+                        }
+
+
+                        // initialisation des requêtes
+                        var requestReporting = {
+                            "startDate": StartDate_timezone,
+                            "endDate": end_date,
+                            "fields": [{
+                                "CampaignStartDate": {}
+                            }, {
+                                "CampaignEndDate": {}
+                            }, {
+                                "CampaignId": {}
+                            }, {
+                                "CampaignName": {}
+                            }, {
+                                "InsertionId": {}
+                            }, {
+                                "InsertionName": {}
+                            }, {
+                                "FormatId": {}
+                            }, {
+                                "FormatName": {}
+                            }, {
+                                "SiteId": {}
+                            }, {
+                                "SiteName": {}
+                            }, {
+                                "Impressions": {}
+                            }, {
+                                "ClickRate": {}
+                            }, {
+                                "Clicks": {}
+                            }, {
+                                "VideoCount": {
+                                    "Id": "17",
+                                    "OutputName": "Nbr_complete"
+                                }
+                            }, {
+                                "ViewableImpressions": {}
+                            }],
+                            "filter": [{
+                                "CampaignId": [campaign_id]
+                            }]
+                        }
 
                         // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
                         // entre la date de fin campagne et date aujourd'hui  var date_now = Date.now();
@@ -343,48 +401,7 @@ exports.report = async (req, res) => {
                             NbDayCampaign
                         )
 
-                        console.log(
-                            'campaign_id : ',
-                            campaign_id,
-                            ' - ',
-                            "startDate : ",
-                            StartDate_timezone,
-                            ' - ',
-                            "endDate : ",
-                            end_date,
-                        )
-
-                        if (( diff.day > 31)) {
-
-                            var NbrTask = Math.round( diff.day / 30)
-
-                            console.log('NbrTask' + NbrTask)
-
-                            var RequestDay =  diff.day - 30
-                            console.log(RequestDay)
-
-
-
-                            
-                            const start = new Date('2021-09-27T00:00:00');
-
-                            var start_30 = start.setDate(now.getDate() + 30);
-                            const StartDate_t30 = moment(start_30).format(
-                                'YYYY-MM-DDT00:00:00'
-                            );
-
-                            console.log(StartDate_t30)
-
-
-                        } else {
-
-                            // initialisation des requêtes
-                        }
-
-
-
-
-                        process.exit(1)
+                   
 
                         var requestVisitor_unique = {
                             "startDate": StartDate_timezone,
@@ -413,8 +430,6 @@ exports.report = async (req, res) => {
                         let firstLinkTaskId = localStorageTasks.getItem(
                             cacheStorageID + '-firstLink-' + cacheStorageIDHour
                         );
-
-
 
                         if (!firstLinkTaskId) {
                             let firstLink = await AxiosFunction.getReportingData(
@@ -903,18 +918,19 @@ exports.report = async (req, res) => {
                                     if (!Utilities.empty(insertion_format)) {
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
 
+
                                         if (admanager) {
 
-                                            console.log(admanager)
 
-                                            if (admanager.status == 201) {
+                                            if (admanager.status == 200 || admanager.status == 201) {
+
 
                                                 const data_admanager = admanager.data
+
 
                                                 // test si le localstorage admanager existe 
                                                 if (!Utilities.empty(data_admanager)) {
 
-                                                    // console.log(data_admanager)
 
                                                     if (!Utilities.empty(formatObjects.interstitiel)) {
 
@@ -1774,6 +1790,7 @@ exports.automate = async (req, res) => {
                 // Initialise la date
                 let date = new Date();
                 let cacheStorageIDHour = moment().format('YYYYMMDD-HH');
+
                 var localStorageAll = localStorage.getItem(cacheStorageID);
                 let localStorageGlobal = localStorageTasks.getItem(
                     cacheStorageID + '-firstLink-' + cacheStorageIDHour
