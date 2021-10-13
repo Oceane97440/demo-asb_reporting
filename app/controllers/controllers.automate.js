@@ -518,7 +518,6 @@ exports.campaignReport = async (req, res) => {
                     // Initialise la date
                     let date = new Date();
                     let cacheStorageIDHour = moment().format('YYYYMMDD-HH');
-
                     try {
                         var data_localStorage = localStorage.getItem('campaignID-' + campaignid);
                         // Si le localStorage existe -> affiche la data du localstorage

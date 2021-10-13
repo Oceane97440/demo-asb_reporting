@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "installme": "npm i --unsafe-perms"
+    "installme": "npm i --unsafe-perms",
+    "serve": "nodemon index.js"
+
   },
   "repository": {
     "type": "git",

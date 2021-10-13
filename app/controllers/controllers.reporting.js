@@ -736,7 +736,7 @@ exports.report = async (req, res) => {
                                                 siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
-                                                siteLINFO_IOS.push(index);
+                                                siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
                                                 siteANTENNEREUNION.push(index);
@@ -754,7 +754,7 @@ exports.report = async (req, res) => {
                                                 siteRODZAFER_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                                                siteRODZAFER_IOS.push(index);
+                                                siteRODZAFER_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
                                                 siteORANGE_REUNION.push(index);
@@ -912,7 +912,6 @@ exports.report = async (req, res) => {
 
                                         if (admanager) {
 
-                                            console.log(admanager)
 
                                             if (admanager.status == 201 || admanager.status == 200) {
 
@@ -931,7 +930,12 @@ exports.report = async (req, res) => {
 
                                                         var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
 
+                                                        var sommeclicksInterstitiel = formatObjects.interstitiel.clicks + data_admanager.interstitiel.clicks
+
+
                                                         formatObjects.interstitiel.impressions = sommeInterstitiel
+                                                        formatObjects.interstitiel.clicks = sommeclicksInterstitiel
+
                                                     }
 
                                                     if (!Utilities.empty(formatObjects.masthead)) {
@@ -941,8 +945,11 @@ exports.report = async (req, res) => {
                                                         formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
 
                                                         var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
+                                                        var sommeclicksmasthead = formatObjects.masthead.clicks + data_admanager.masthead.clicks
 
                                                         formatObjects.masthead.impressions = sommemasthead
+                                                        formatObjects.masthead.clicks = sommeclicksmasthead
+
 
                                                     }
 
@@ -990,6 +997,7 @@ exports.report = async (req, res) => {
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
                                     res.redirect('/r/' + campaign_crypt);
 
+                                    console.log(formatObjects)
                                 }
 
                             }, time);
