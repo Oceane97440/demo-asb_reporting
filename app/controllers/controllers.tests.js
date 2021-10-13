@@ -1538,11 +1538,13 @@ exports.taskid = async (req, res) => {
                     ObjTaskProgress.push(itemProgress)
 
 
-                    console.log()
+             
 
-                    console.log('ObjTaskProgress  ' + ObjTaskProgress.length)
+            
 
-                    if ((itemProgress.jobProgress == '1.0') && (itemProgress.instanceStatus == 'SUCCESS')) {
+
+
+                    if ((ObjTaskProgress[index].jobProgress == '1.0') && (ObjTaskProgress[index].instanceStatus == 'SUCCESS')) {
 
                         dataFile = await AxiosFunction.getReportingData(
                             'GET',
@@ -1568,7 +1570,6 @@ exports.taskid = async (req, res) => {
                         console.log('No clear setTimeOut');
 
                     }
-
                 }
 
 
@@ -1576,7 +1577,8 @@ exports.taskid = async (req, res) => {
 
             } else {
 
-                clearInterval(timerFile);
+                    clearInterval(timerFile);
+
 
                 console.log('Stop clearInterval timerFile - else');
 
