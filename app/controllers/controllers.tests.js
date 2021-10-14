@@ -1539,11 +1539,6 @@ exports.taskid = async (req, res) => {
 
 
              
-
-            
-
-
-
                     if ((ObjTaskProgress[index].jobProgress == '1.0') && (ObjTaskProgress[index].instanceStatus == 'SUCCESS')) {
 
                         dataFile = await AxiosFunction.getReportingData(
@@ -1573,6 +1568,7 @@ exports.taskid = async (req, res) => {
                 }
 
 
+                console.log(ObjTaskProgress);
 
 
             } else {

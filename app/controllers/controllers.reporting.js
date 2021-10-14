@@ -177,7 +177,7 @@ exports.report = async (req, res) => {
                 let cacheStorageID = 'campaignID-' + campaign_id;
                 // Initialise la date
                 let date = new Date();
-                let cacheStorageIDHour = moment().format('YYYYMMDD-HH');
+                let cacheStorageIDHour = moment().format('YYYYMMDD');
 
                 try {
                     var data_localStorage = localStorage.getItem(cacheStorageID);
@@ -255,7 +255,7 @@ exports.report = async (req, res) => {
                             }
                         });
 
-                        var insertion_format = await ModelInsertions.findOne({
+                       var insertion_format = await ModelInsertions.findOne({
                             where: {
                                 campaign_id: campaign_id,
                                 format_id: {
@@ -307,181 +307,54 @@ exports.report = async (req, res) => {
                             .add('1', 'd')
                             .format('YYYY-MM-DDT00:00:00'); // 'YYYY-MM-DDTHH:mm:ss'
 
-
-                        var campaign_date_start = moment(campaign.campaign_start_date);
-                        var campaign_date_end = moment(campaign.campaign_end_date);
-
                         // si la date du jour est > à la date de fin on prend la date de fin sinon la date du jour 
                         if (endDate_last < timestamp_datenow) {
                             var end_date = EndDate;
                         } else {
                             var end_date = "CURRENT_DAY+1";
-                            campaign_date_end = moment(timestamp_datenow);
-                            console.log(campaign_date_end)
                         }
 
-
-
-                        var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
-                        /*----------- Si la campagne > 30j ------------*/
-
-
-                        var NbrTask = Math.ceil(diff_day / 30);
-                        console.log('NbrTask : ' + NbrTask);
-
-                        if (diff_day >= 31) {
-                            console.log("----CONDITION EN COURS-----")
-
-                            let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIdAll');
-
-                            if (!TaskIDG) {
-
-                                const arrayTaskId = new Array()
-
-                                for (var index = 0; index < NbrTask; index++) {
-
-                                    if (index === 0) {
-                                        console.log('NbrTask : ' + index);
-
-                                        campaign_date_startOne = moment(campaign_date_start, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-                                        var campaign_task_date_end = campaign_date_start.add(30, 'days');
-                                        campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-                                        var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
-
-
-                                        taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
-                                        arrayTaskId.push(taskOne)
-
-
-
-                                    }
-
-                                    if ((index >= 1) && (index < (NbrTask - 1)) && campaign_task_date_tomorrow) {
-                                        console.log('NbrTask : ' + index);
-
-                                        var campaign_start_date_tomorrow = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-                                        var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days');
-                                        var campaign_start_end_tomorrow = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-                                        var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
-
-                                        taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
-                                        arrayTaskId.push(taskTwo)
-
-
-                                    }
-
-                                    if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
-                                        console.log('NbrTask : ' + index);
-                                        var campaign_start_last = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
-                                        var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
-
-                                        taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
-                                        arrayTaskId.push(taskThree)
-
-
-
-                                    }
-
+                        // initialisation des requêtes
+                        var requestReporting = {
+                            "startDate": StartDate_timezone,
+                            "endDate": end_date,
+                            "fields": [{
+                                "CampaignStartDate": {}
+                            }, {
+                                "CampaignEndDate": {}
+                            }, {
+                                "CampaignId": {}
+                            }, {
+                                "CampaignName": {}
+                            }, {
+                                "InsertionId": {}
+                            }, {
+                                "InsertionName": {}
+                            }, {
+                                "FormatId": {}
+                            }, {
+                                "FormatName": {}
+                            }, {
+                                "SiteId": {}
+                            }, {
+                                "SiteName": {}
+                            }, {
+                                "Impressions": {}
+                            }, {
+                                "ClickRate": {}
+                            }, {
+                                "Clicks": {}
+                            }, {
+                                "VideoCount": {
+                                    "Id": "17",
+                                    "OutputName": "Nbr_complete"
                                 }
-                                localStorageTasks.setItem(cacheStorageID + '-TaskIdAll', arrayTaskId);
-                                console.log('Create localStorage TaskIdAll')
-
-                            }else {
-
-                                const taskLength = TaskIDG.split(',')
-                                var dataObjTaskGlobalAll = new Object()
-                        
-                        
-                                var time = 5000;
-                                let timerFile = setInterval(async () => {
-                        
-                                    var dataLSTaskGlobalAll = localStorageTasks.getItem(
-                                        cacheStorageID + '-taskGlobalAll'
-                                    );
-                        
-                        
-                                    if (!dataLSTaskGlobalAll && !Utilities.empty(TaskIDG)) {
-                                        var ObjTaskProgress = new Array()
-                        
-                                        for (let index = 0; index < taskLength.length; index++) {
-                                            const taskId = taskLength[index];
-                        
-                                            time += 10000;
-                        
-                                            let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
-                        
-                                            console.log('requete_global' + requete_global)
-                        
-                        
-                                            let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-                        
-                        
-                                            var jobProgress = threeLink.data.lastTaskInstance.jobProgress
-                                            var instanceStatus = threeLink.data.lastTaskInstance.instanceStatus
-                        
-                                            var itemProgress = {
-                                                'task': taskId,
-                                                'jobProgress': jobProgress,
-                                                'instanceStatus': instanceStatus
-                        
-                                            }
-                        
-                                            ObjTaskProgress.push(itemProgress)
-                        
-                        
-                                            console.log()
-                        
-                                            console.log('ObjTaskProgress  ' + ObjTaskProgress.length)
-                        
-                                            if ((itemProgress.jobProgress == '1.0') && (itemProgress.instanceStatus == 'SUCCESS')) {
-                        
-                                                dataFile = await AxiosFunction.getReportingData(
-                                                    'GET',
-                                                    `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
-                                                    ''
-                                                );
-                        
-                        
-                        
-                                                var itemData = {
-                                                    'dataFile': dataFile.data
-                        
-                                                };
-                                                dataObjTaskGlobalAll[taskId] = itemData;
-                        
-                        
-                                                localStorageTasks.setItem(
-                                                    cacheStorageID + '-taskGlobalAll',
-                                                    JSON.stringify(dataObjTaskGlobalAll)
-                                                );
-                                                console.log(dataObjTaskGlobalAll)
-                        
-                                                console.log('No clear setTimeOut');
-                        
-                                            }
-                        
-                                        }
-                        
-                        
-                        
-                        
-                                    } else {
-                        
-                                        clearInterval(timerFile);
-                        
-                                        console.log('Stop clearInterval timerFile - else');
-                        
-                        
-                        
-                                        process.exit()
-                        
-                                    }
-                                }, time)
-                        
-                        
-                        
-                            }
-
+                            }, {
+                                "ViewableImpressions": {}
+                            }],
+                            "filter": [{
+                                "CampaignId": [campaign_id]
+                            }]
                         }
 
                         // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
@@ -863,7 +736,7 @@ exports.report = async (req, res) => {
                                                 siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
-                                                siteLINFO_IOS.push(index);
+                                                siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
                                                 siteANTENNEREUNION.push(index);
@@ -881,7 +754,7 @@ exports.report = async (req, res) => {
                                                 siteRODZAFER_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                                                siteRODZAFER_IOS.push(index);
+                                                siteRODZAFER_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
                                                 siteORANGE_REUNION.push(index);
@@ -1034,22 +907,24 @@ exports.report = async (req, res) => {
                                         formatObjects.campaign.repetition = repetition;
                                     }
                                     //Si la campagne possède un masthead ou interstitiel , on recupère le localstorage de GAM
+
                                     if (!Utilities.empty(insertion_format)) {
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
+                                        console.log("-------------")
 
+                                        console.log(admanager)
 
                                         if (admanager) {
 
 
-                                            if (admanager.status == 200 || admanager.status == 201) {
-
+                                            if (admanager.status == 201 || admanager.status == 200) {
 
                                                 const data_admanager = admanager.data
-
 
                                                 // test si le localstorage admanager existe 
                                                 if (!Utilities.empty(data_admanager)) {
 
+                                                    // console.log(data_admanager)
 
                                                     if (!Utilities.empty(formatObjects.interstitiel)) {
 
@@ -1059,7 +934,12 @@ exports.report = async (req, res) => {
 
                                                         var sommeInterstitiel = formatObjects.interstitiel.impressions + data_admanager.interstitiel.impressions
 
+                                                        var sommeclicksInterstitiel = formatObjects.interstitiel.clicks + data_admanager.interstitiel.clicks
+
+
                                                         formatObjects.interstitiel.impressions = sommeInterstitiel
+                                                        formatObjects.interstitiel.clicks = sommeclicksInterstitiel
+
                                                     }
 
                                                     if (!Utilities.empty(formatObjects.masthead)) {
@@ -1069,8 +949,11 @@ exports.report = async (req, res) => {
                                                         formatObjects.masthead.siteList[key_m] = data_admanager.masthead.siteList
 
                                                         var sommemasthead = formatObjects.masthead.impressions + data_admanager.masthead.impressions
+                                                        var sommeclicksmasthead = formatObjects.masthead.clicks + data_admanager.masthead.clicks
 
                                                         formatObjects.masthead.impressions = sommemasthead
+                                                        formatObjects.masthead.clicks = sommeclicksmasthead
+
 
                                                     }
 
@@ -1102,6 +985,7 @@ exports.report = async (req, res) => {
 
                                     }
 
+                                    console.log(admanager)
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
@@ -1120,6 +1004,7 @@ exports.report = async (req, res) => {
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
                                     res.redirect('/r/' + campaign_crypt);
 
+                                    console.log(formatObjects)
                                 }
 
                             }, time);
@@ -1908,7 +1793,7 @@ exports.automate = async (req, res) => {
 
                 // Initialise la date
                 let date = new Date();
-                let cacheStorageIDHour = moment().format('YYYYMMDD-HH');
+                let cacheStorageIDHour = moment().format('YYYYMMDD');
 
                 var localStorageAll = localStorage.getItem(cacheStorageID);
                 let localStorageGlobal = localStorageTasks.getItem(
