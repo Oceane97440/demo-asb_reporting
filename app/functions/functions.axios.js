@@ -303,11 +303,29 @@ exports.putManage = async (method, data = null) => {
 }
 
 exports.getAdManager = async (campaign_id) => {
+  console.log('campaign_id' + campaign_id)
 
   var test;
 
- console.log('campaign_id' + campaign_id)
-  test = await axios({
+  try {
+    test = await axios({
+      method: 'GET',
+      url: 'https://reporting.antennesb.fr/api_google-manager/data/json/campaignID-'+campaign_id+ '.json',
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json"
+      }
+   
+    })
+    return test
+
+  } catch (error) {
+    console.log(error.response)
+
+  }
+
+  
+ /*test = await axios({
     method: 'GET',
     url: 'https://reporting.antennesb.fr/api_google-manager/data/json/campaignID-'+campaign_id+ '.json',
     headers: {
@@ -315,9 +333,11 @@ exports.getAdManager = async (campaign_id) => {
       "Content-type": "Application/json"
     }
  
-  })
-  return test
+  }).catch(error => {
+      console.log(error.response)
+  });
 
+  return test*/
 
 
 
