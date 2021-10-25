@@ -1,20 +1,16 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-  
-    <div class="col-xl-12 col-md-12">
-        <div class="card table-card">
-            <div class="card-header">
-                <h1>Agences</h1>
-            </div>
-            <div class="pro-scroll">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        
-                        <%- include("../inc/table_agencies.ejs") -%> 
 
-                    </div>
-                </div>
+<div class="col-xl-12 col-md-12">
+    <div class="card table-card">
+        <div class="card-header">
+            <h1>Agences</h1>
+        </div>
+        <div class="pro-scroll">
+            <div class="card-body p-0">
+                <%- include("../inc/table_agencies.ejs") -%>
             </div>
         </div>
     </div>
+</div>
 
 <%- include("../../layouts/manager/footer.ejs") -%>

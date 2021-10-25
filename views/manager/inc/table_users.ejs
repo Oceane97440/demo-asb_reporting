@@ -1,27 +1,35 @@
-<table class="table table-striped table_sort">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Prénom Nom</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i=0; i < users.length; i++) { %>           
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
             <tr>
-                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_id %>"><%= users[i].user_id %></a></td> 
-                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_firstname %> <%= users[i].user_lastname %>"><%= users[i].user_firstname %> <%= users[i].user_lastname %></a></td> 
-                <td><a href="/manager/users/<%= users[i].user_id %>" title="<%= users[i].user_email %>"><%= users[i].user_email %></a></td> 
+                <th>#</th>
+                <th>Prénom Nom</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < users.length; i++) { %>
+            <tr>
+                <td><a href="/manager/users/<%= users[i].user_id %>"
+                        title="<%= users[i].user_id %>"><%= users[i].user_id %></a></td>
+                <td><a href="/manager/users/<%= users[i].user_id %>"
+                        title="<%= users[i].user_firstname %> <%= users[i].user_lastname %>"><%= users[i].user_firstname %>
+                        <%= users[i].user_lastname %></a></td>
+                <td><a href="/manager/users/<%= users[i].user_id %>"
+                        title="<%= users[i].user_email %>"><%= users[i].user_email %></a></td>
                 <td><%= users[i].roles_user.role_id%> - <%= users[i].roles_user.user_id %></td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a href="/manager/users/<%= users[i].user_id %>" title="Visualiser" class="btn btn-sm"><i class="icon feather icon-eye f-16 text-info"></i></a>
-                        <a href="/manager/users/<%= users[i].user_id %>/edit" title="Modifier" class="btn btn-sm"><i class="icon feather icon-edit f-16 text-success"></i></a>       
+                        <a href="/manager/users/<%= users[i].user_id %>" title="Visualiser" class="btn btn-sm"><i
+                                class="icon feather icon-eye f-16 text-info"></i></a>
+                        <a href="/manager/users/<%= users[i].user_id %>/edit" title="Modifier" class="btn btn-sm"><i
+                                class="icon feather icon-edit f-16 text-success"></i></a>
                     </div>
                 </td>
             </tr>
-        <% } %>
+            <% } %>
         </tbody>
     </table>
+</div>

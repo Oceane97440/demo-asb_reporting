@@ -1,26 +1,33 @@
-<table class="table table-striped table_sort">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Description</th>
-            <th>Officiel</th>
-            <th>Archive</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i=0; i < templates.length; i++) { %>           
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
             <tr>
-                <td><a href="/manager/templates/<%= templates[i].template_id %>" title="<%= templates[i].template_name %>"><%= templates[i].template_id %></a></td> 
-                <td><a href="/manager/templates/<%= templates[i].template_id %>" title="<%= templates[i].template_name %>"><%= templates[i].template_name %></a></td> 
+                <th>#</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Officiel</th>
+                <th>Archive</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < templates.length; i++) { %>
+            <tr>
+                <td><a href="/manager/templates/<%= templates[i].template_id %>"
+                        title="<%= templates[i].template_name %>"><%= templates[i].template_id %></a></td>
+                <td><a href="/manager/templates/<%= templates[i].template_id %>"
+                        title="<%= templates[i].template_name %>"><%= templates[i].template_name %></a></td>
                 <td><%= templates[i].template_description %></td>
-                <td><% switch(templates[i].template_official) { case 0: %> <span class="badge bg-success">Officiel</span> <% break; default: %> - <% break; }  %></td>
-               <td><% switch(templates[i].template_archived) { case 0: %> <span class="badge bg-warning">Archiv&eacute;</span> <% break; default: %> - <% break; }  %></td>
-                <td>                    
-                   <a href="/manager/templates/<%= templates[i].template_id %>/edit" title="Modifier ce rôle"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                <td><% switch(templates[i].template_official) { case 0: %> <span
+                        class="badge bg-success">Officiel</span> <% break; default: %> - <% break; }  %></td>
+                <td><% switch(templates[i].template_archived) { case 0: %> <span
+                        class="badge bg-warning">Archiv&eacute;</span> <% break; default: %> - <% break; }  %></td>
+                <td>
+                    <a href="/manager/templates/<%= templates[i].template_id %>/edit" title="Modifier ce rôle"><i
+                            class="icon feather icon-edit f-16 text-success"></i></a>
                 </td>
             </tr>
-        <% } %>
+            <% } %>
         </tbody>
     </table>
+</div>

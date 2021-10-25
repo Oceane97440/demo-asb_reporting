@@ -1,22 +1,27 @@
-<table class="table table-striped table_sort">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Archive</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i=0; i < packs.length; i++) { %>           
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
             <tr>
-                <td><a href="/manager/packs/<%= packs[i].pack_id %>" title="<%= packs[i].pack_name %>"><%= packs[i].pack_id %></a></td> 
-                <td><a href="/manager/packs/<%= packs[i].pack_id %>" title="<%= packs[i].pack_name %>"><%= packs[i].pack_name %></a></td> 
-                <td><%= packs[i].pack_is_archived %></td> 
-                <td>                    
-                   <a href="/manager/packs/<%= packs[i].pack_id %>/edit" title="Modifier ce pack"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Archive</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < packs.length; i++) { %>
+            <tr>
+                <td><a href="/manager/packs/<%= packs[i].pack_id %>"
+                        title="<%= packs[i].pack_name %>"><%= packs[i].pack_id %></a></td>
+                <td><a href="/manager/packs/<%= packs[i].pack_id %>"
+                        title="<%= packs[i].pack_name %>"><%= packs[i].pack_name %></a></td>
+                <td><%= packs[i].pack_is_archived %></td>
+                <td>
+                    <a href="/manager/packs/<%= packs[i].pack_id %>/edit" title="Modifier ce pack"><i
+                            class="icon feather icon-edit f-16 text-success"></i></a>
                 </td>
             </tr>
-        <% } %>
+            <% } %>
         </tbody>
     </table>
+</div>

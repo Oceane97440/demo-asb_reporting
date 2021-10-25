@@ -62,7 +62,13 @@ exports.index = async (req, res) => {
     try {
         // Liste toutes les insertions
         const data = new Object();
-        data.breadcrumb = "Insertions";
+         // Créer le fil d'ariane
+         breadcrumb = new Array({
+            'name': 'Insertions',
+            'link': ''
+        },);
+        data.breadcrumb = breadcrumb;
+
         data.insertions = await ModelInsertions.findAll({
             include: [{
                 model: ModelCampaigns
@@ -70,6 +76,7 @@ exports.index = async (req, res) => {
         });
 
         data.moment = moment;
+
         res.render('manager/insertions/index.ejs', data);
     } catch (error) {
         console.log(error);
@@ -83,13 +90,37 @@ exports.index = async (req, res) => {
 exports.list = async (req, res) => {
     try {
         // Liste toutes les insertions
-        const data = new Object();
-        data.breadcrumb = "Liste des insertions";
+        const data = new Object();       
+        
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Insertions',
+            'link': 'insertions'
+        }, {
+            'name': 'Liste des insertions',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
 
         data.insertions = await ModelInsertions.findAll({
             include: [{
-                model: ModelCampaigns
-            }]
+                model: ModelCampaigns,
+                attributes: ['campaign_id', 'campaign_name']
+            },
+            // { model: ModelAdvertisers, attributes: ['advertiser_id', 'advertiser_name'] },
+            {
+                model: ModelFormats,
+                attributes: ['format_id', 'format_name']
+            },
+            {
+                model: ModelInsertionsPriorities,
+                attributes: ['priority_id', 'priority_name']
+            },
+            {
+                model: ModelInsertionsStatus,
+                attributes: ['insertion_status_id', 'insertion_status_name']
+            },
+        ]
         }, {
             order: [
                 // Will escape title and validate DESC against a list of valid direction
@@ -98,6 +129,7 @@ exports.list = async (req, res) => {
             ]
         });
 
+        data.utilities = Utilities;
         data.moment = moment;
         res.render('manager/insertions/list.ejs', data);
     } catch (error) {
@@ -202,65 +234,23 @@ exports.view = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-
     try {
         const data = new Object();
 
         // Créer le fil d'ariane
         breadcrumb = new Array({
             'name': 'Insertions',
-            'link': 'insertions/list'
+            'link': 'insertions'
         }, {
             'name': 'Ajouter une insertion',
             'link': ''
         });
         data.breadcrumb = breadcrumb;
-
+     
         data.campaigns = await ModelCampaigns.findAll({
             include: [{
                 model: ModelAdvertisers
             }]
-        });
-
-        // Récupére l'ensemble les données
-        data.campaigns = await ModelCampaigns.findOne({
-            where: {
-                campaign_id: req.params.id
-            },
-
-        });
-
-
-        data.formats = await ModelFormats.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
-            where: {
-                format_group: {
-                    [Op.regexp]: '^[GRAND ANGLE|HABILLAGE|INTERSTITIEL|MASTHEAD|INSTREAM]'
-                }
-            },
-            order: [
-                ['format_name', 'ASC']
-            ],
-        })
-
-        // data.sites = await ModelSites.findAll({
-        //     where: {
-        //         site_name: {
-        //             [Op.like]: 'SM' + '%'
-
-        //         },
-        //         site_archived: 0
-        //     },
-        //     order: [
-        //         // Will escape title and validate DESC against a list of valid direction
-        //         // parameters
-        //         ['site_id', 'DESC']
-        //     ]
-        // });
-
-        data.packs = await ModelPacks_Smart.findAll({
-
-
         });
 
         data.deliverytypes = await ModelDeliverytTypes.findAll({
@@ -277,6 +267,56 @@ exports.create = async (req, res) => {
             ]
         });
 
+        data.formats = await ModelFormats.findAll({
+            attributes: ['format_id', 'format_name', 'format_group'],
+            where: {
+                format_group: {
+                    [Op.regexp]: '^[GRAND ANGLE|HABILLAGE|INTERSTITIEL|MASTHEAD|INSTREAM]'
+                }
+            },
+            order: [
+                ['format_name', 'ASC']
+            ],
+        })
+
+        data.packs = await ModelPacks_Smart.findAll({
+
+
+        });
+
+  /*
+        // Récupére l'ensemble les données
+        data.campaigns = await ModelCampaigns.findOne({
+            where: {
+                campaign_id: req.params.id
+            },
+
+        });
+
+
+       
+
+        // data.sites = await ModelSites.findAll({
+        //     where: {
+        //         site_name: {
+        //             [Op.like]: 'SM' + '%'
+
+        //         },
+        //         site_archived: 0
+        //     },
+        //     order: [
+        //         // Will escape title and validate DESC against a list of valid direction
+        //         // parameters
+        //         ['site_id', 'DESC']
+        //     ]
+        // });
+
+        
+
+      
+
+      
+        */
 
         res.render('manager/insertions/create.ejs', data);
     } catch (error) {

@@ -45,7 +45,7 @@
                                 <i class="material-icons-two-tone">thermostat</i>
                                 Volume Réservé</span>
                             :
-                            <%= utilities.numStr(epilot_campaign.epilot_campaign_volume)  %>
+                            <%= utilities.numStr(epilot_campaign.epilot_campaign_volume) %>
                             impressions
                         </li>
 
@@ -54,7 +54,7 @@
                                 <i class="material-icons-two-tone">euro_symbol</i>
                                 Budget réservé</span>
                             :
-                            <%= epilot_campaign.epilot_campaign_budget_net %> </strong> €
+                            <%= utilities.numStr(epilot_campaign.epilot_campaign_budget_net) %> </strong> €
                         </li>
 
                         <li class="list-group-item">

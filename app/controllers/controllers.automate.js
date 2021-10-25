@@ -26,7 +26,7 @@ const ModelFormats = require("../models/models.formats");
 const ModelFormatsGroupsTypes = require(
     "../models/models.formats_groups_types"
 );
-const ModelGroupsFormats = require("../models/models.groups_formats");
+const ModelFormatsGroups = require("../models/models.formats_groups");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelSites = require("../models/models.sites");
@@ -1785,7 +1785,7 @@ exports.epilotInsertions = async (req, res) => {
          });
 */
         // Mettre à jour les formats
-        const groupFormats = await ModelGroupsFormats
+        const groupFormats = await ModelFormatsGroups
             .findAll()
             .then(async function (groupFormats) {
                 groupFormats.forEach(function (item) {
