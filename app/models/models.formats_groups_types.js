@@ -8,7 +8,7 @@ const FormatsGroupsTypes = sequelize.define('formats_groups_types', {
         autoIncrement: true,
         primaryKey: true
     },
-    group_format_id: {
+    format_group_id: {
         type: Sequelize.INTEGER(),
         allowNull: false
     },

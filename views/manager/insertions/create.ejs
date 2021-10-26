@@ -1,45 +1,149 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-    <!-- support-section start -->
-    <div class="col-xl-12 col-md-12">
-       <div class="table_sort"></div>
-      
+<!-- support-section start -->
+<div class="col-xl-12 col-md-12">
 
-        <div id="wizard">
-            <h2>First Step</h2>
-            <section>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut nulla nunc. Maecenas arcu sem, hendrerit a tempor quis, 
-                    sagittis accumsan tellus. In hac habitasse platea dictumst. Donec a semper dui. Nunc eget quam libero. Nam at felis metus. 
-                    Nam tellus dolor, tristique ac tempus nec, iaculis quis nisi.</p>
-            </section>
+    <div class="card">
+        <form method="POST" action="/manager/insertions/create">
+            <div class="card-header">
+                <h5>Ajouter une insertion</h5>
+            </div>
+            <div class="card-body">
 
-            <h2>Second Step</h2>
-            <section>
-                <p>Donec mi sapien, hendrerit nec egestas a, rutrum vitae dolor. Nullam venenatis diam ac ligula elementum pellentesque. 
-                    In lobortis sollicitudin felis non eleifend. Morbi tristique tellus est, sed tempor elit. Morbi varius, nulla quis condimentum 
-                    dictum, nisi elit condimentum magna, nec venenatis urna quam in nisi. Integer hendrerit sapien a diam adipiscing consectetur. 
-                    In euismod augue ullamcorper leo dignissim quis elementum arcu porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Vestibulum leo velit, blandit ac tempor nec, ultrices id diam. Donec metus lacus, rhoncus sagittis iaculis nec, malesuada a diam. 
-                    Donec non pulvinar urna. Aliquam id velit lacus.</p>
-            </section>
+                <div class="alert alert-primary">
+                    <div class="media align-items-center">
+                        <i class="feather icon-alert-circle h2"></i>
+                        <div class="media-body ml-3">
+                            Créer une insertion sur SMARTADSERVER en toute simplicité.
+                        </div>
+                    </div>
+                </div>
+                <% if (message) { %>
+                <div class="alert alert-<%=message.type%>" role="alert">
+                    <%=message.intro%>:<%=message.message%>
+                </div>
+                <% } %>
 
-            <h2>Third Step</h2>
-            <section>
-                <p>Morbi ornare tellus at elit ultrices id dignissim lorem elementum. Sed eget nisl at justo condimentum dapibus. Fusce eros justo, 
-                    pellentesque non euismod ac, rutrum sed quam. Ut non mi tortor. Vestibulum eleifend varius ullamcorper. Aliquam erat volutpat. 
-                    Donec diam massa, porta vel dictum sit amet, iaculis ac massa. Sed elementum dui commodo lectus sollicitudin in auctor mauris 
-                    venenatis.</p>
-            </section>
+                <fieldset>
+                    <legend>CAMPAGNE</legend>
 
-            <h2>Forth Step</h2>
-            <section>
-                <p>Quisque at sem turpis, id sagittis diam. Suspendisse malesuada eros posuere mauris vehicula vulputate. Aliquam sed sem tortor. 
-                    Quisque sed felis ut mauris feugiat iaculis nec ac lectus. Sed consequat vestibulum purus, imperdiet varius est pellentesque vitae. 
-                    Suspendisse consequat cursus eros, vitae tempus enim euismod non. Nullam ut commodo tortor.</p>
-            </section>
-        </div>
-       
+                    <div class="form-group">
+                        <label class="form-label" for="campaign_id">Campagne
+                        </label>
+                        <select class="form-control" id="campaign_id" name="campaign_id" required="required">
+                           
+                            <option value="1764641">
+                                TEST > Api manager
+                            </option>
+                           <option value="">-----------------------------</option>
+                            <option value="">Choisir une campagne</option>
+                            <% for (let i=0; i < campaigns.length; i++) { %>
+                            <option value="<%= campaigns[i].campaign_id %>">
+                                <%= campaigns[i].advertiser.advertiser_name %> > <%= campaigns[i].campaign_name %>
+                            </option>
+                            <% } %>
+                        </select>
+                    </div>
 
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label" for="format_group_id">Format
+                            </label>
+                            <select class="form-control" id="format_group_id" name="format_group_id"
+                                required="required">
+                                <option value="">Choisir un format</option>
+                                <% for (let i=0; i < group_formats.length; i++) { %>
+                                <option value="<%= group_formats[i].format_group_id %>">
+                                    <%= group_formats[i].format_group_name %>
+                                </option>
+                                <% } %>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label" for="pack_id">Pack
+                            </label>
+                            <select class="form-control" id="pack_id" name="pack_id" required="required">
+                                <option value="">Choisir un pack</option>
+                                <% for (let i=0; i < packs.length; i++) { %>
+                                <option value="<%= packs[i].pack_id %>"><%= packs[i].pack_name %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>DISPLAY</legend>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label" for="display_mobile_file">Fichier Mobile</label>
+                            <input type="url" name="display_mobile_file" id="display_mobile_file" class="form-control"
+                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG"
+                                 />
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label" for="display_mobile_url">Url Mobile</label>
+                            <input type="url" name="display_mobile_url" id="display_mobile_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le mobile"  />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label" for="display_tablet_file">Fichier Tablette</label>
+                            <input type="url" name="display_tablet_file" id="display_tablet_file" class="form-control"
+                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG"
+                                 />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label" for="display_tablet_url">Url Tablette</label>
+                            <input type="url" name="display_tablet_url" id="display_tablet_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour la tablette"  />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label" for="display_desktop_file">Fichier Desktop</label>
+                            <input type="url" name="display_desktop_file" id="display_desktop_file" class="form-control"
+                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG"
+                                 />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label" for="display_desktop_url">Url Desktop</label>
+                            <input type="url" name="display_desktop_url" id="display_desktop_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le desktop"  />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>VIDEO</legend>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label" for="video_file">Fichier Vidéo</label>
+                            <input type="url" name="video_file" id="video_file" class="form-control"
+                                placeholder="Saisissez l'url du fichier au format MP4"  />
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label" for="video_url">Url Vidéo</label>
+                            <input type="url" name="video_url" id="video_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection"  />
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+            <div class="card-footer">
+                <input type="submit" name="submit" class="btn btn-primary mr-2 btn-submit"
+                    value="Créer une nouvelle insertion" />
+            </div>
+        </form>
     </div>
 
+</div>
 
-    <%- include("../../layouts/manager/footer.ejs") -%>
+<%- include("../../layouts/manager/footer.ejs") -%>

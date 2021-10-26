@@ -377,14 +377,14 @@ exports.campaignReport = async (req, res) => {
                             {
                                 model: ModelEpilotInsertions,
                                 attributes: [
-                                   'group_format_id',
+                                   'format_group_id',
                                     [sequelize.fn('sum', sequelize.col('epilot_insertion_volume')), 'insertion_volume']
                                 ],
                                 where : {
                                     epilot_campaign_id : Sequelize.col('epilot_campaigns.epilot_campaign_id'),
-                                    'group_format_id' : '9'
+                                    'format_group_id' : '9'
                                 },
-                                group:['group_format_id','user_id']
+                                group:['format_group_id','user_id']
                             }
                         ]
                     })

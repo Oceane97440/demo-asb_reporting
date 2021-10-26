@@ -84,7 +84,7 @@ formats.hasMany(formats_groups_types, {
     hooks: true
 });
 formats_groups.hasMany(formats_groups_types, {
-    foreignKey: 'group_format_id',
+    foreignKey: 'format_group_id',
     onDelete: 'cascade',
     hooks: true
 });

@@ -2,20 +2,20 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const GroupsFormats = sequelize.define('groups_formats', {
-    group_format_id: {
+const FormatsGroups = sequelize.define('formats_groups', {
+    format_group_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    group_format_name: {
+    format_group_name: {
         type: Sequelize.STRING(),
         allowNull: false
     }
 }, {
-    tableName: 'asb_groups_formats',
+    tableName: 'asb_formats_groups',
     underscored: true,
     timestamps: false
 });
 
-module.exports = GroupsFormats;
+module.exports = FormatsGroups;

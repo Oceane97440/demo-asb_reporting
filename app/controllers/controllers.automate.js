@@ -1789,16 +1789,16 @@ exports.epilotInsertions = async (req, res) => {
             .findAll()
             .then(async function (groupFormats) {
                 groupFormats.forEach(function (item) {
-                    const group_format_id = item.group_format_id;
-                    const group_format_name = item.group_format_name;
-                    console.log('group_forZmat_name : ', group_format_name);
+                    const format_group_id = item.format_group_id;
+                    const format_group_name = item.format_group_name;
+                    console.log('group_forZmat_name : ', format_group_name);
 
                     ModelEpilotInsertions.update({
-                        group_format_id: group_format_id
+                        format_group_id: format_group_id
                     }, {
                         where: {
                             epilot_insertion_name: {
-                                [Op.like]: "%" + group_format_name + "%"
+                                [Op.like]: "%" + format_group_name + "%"
                             }
                         }
                     });

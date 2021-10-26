@@ -85,18 +85,20 @@ formats.hasMany(formats_groups_types, {
     hooks: true
 });
 formats_groups.hasMany(formats_groups_types, {
-    foreignKey: 'group_format_id',
+    foreignKey: 'format_group_id',
     onDelete: 'cascade',
     hooks: true
 });
+
+formats_groups_types.belongsTo(formats, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
 
 // un format posséde un ou plusieurs templates : un template posséde un à plusieurs formats
-
-formatstemplates.belongsTo(templates, {
-    foreignKey: 'template_id',
-    onDelete: 'cascade',
-    hooks: true
-});
 
 templates.hasMany(formatstemplates, {
     foreignKey: 'template_id',
@@ -182,6 +184,9 @@ formats.hasMany(insertions, {
     hooks: true
 });
 
+
+
+
 insertions_templates.belongsTo(insertions, {
     foreignKey: 'insertion_id',
     onDelete: 'cascade',
@@ -253,7 +258,7 @@ epilot_insertions.belongsTo(users, {
 });
 
 epilot_insertions.belongsTo(formats_groups, {
-    foreignKey: 'group_format_id',
+    foreignKey: 'format_group_id',
     onDelete: 'cascade',
     hooks: true
 });

@@ -271,7 +271,7 @@ exports.groups = async (req, res) => {
 
         data.formats_groups = await ModelFormatsGroups.findAll({
             order: [
-                ['group_format_id', 'ASC']
+                ['format_group_id', 'ASC']
             ]
         });
 
