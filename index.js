@@ -96,6 +96,11 @@ formats_groups_types.belongsTo(formats, {
     hooks: true
 });
 
+formats_groups_types.belongsTo(formats_groups, {
+    foreignKey: 'format_group_id',
+    onDelete: 'cascade',
+    hooks: true
+});
 
 
 // un format posséde un ou plusieurs templates : un template posséde un à plusieurs formats

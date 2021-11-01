@@ -43,6 +43,7 @@ const ModelCreatives = require("../models/models.creatives");
 const ModelDeliverytTypes = require("../models/models.deliverytypes")
 const ModelPacksSmart = require("../models/models.packs_smart")
 const ModelPacks = require("../models/models.packs")
+const ModelPacksSites = require("../models/models.packs_sites")
 const ModelFormatsGroupsTypes = require(
     "../models/models.formats_groups_types"
 );
@@ -304,40 +305,6 @@ exports.create = async (req, res) => {
 
         });
 
-        /*
-              // Récupére l'ensemble les données
-              data.campaigns = await ModelCampaigns.findOne({
-                  where: {
-                      campaign_id: req.params.id
-                  },
-
-              });
-
-
-             
-
-              // data.sites = await ModelSites.findAll({
-              //     where: {
-              //         site_name: {
-              //             [Op.like]: 'SM' + '%'
-
-              //         },
-              //         site_archived: 0
-              //     },
-              //     order: [
-              //         // Will escape title and validate DESC against a list of valid direction
-              //         // parameters
-              //         ['site_id', 'DESC']
-              //     ]
-              // });
-
-              
-
-            
-
-            
-              */
-
         res.render('manager/insertions/create.ejs', data);
     } catch (error) {
         console.log(error);
@@ -351,7 +318,6 @@ exports.create = async (req, res) => {
 exports.create_post = async (req, res) => {
 
     try {
-
         var body = {
             campaign_id: '1764641',
             format_group_id: '4',
@@ -383,6 +349,8 @@ exports.create_post = async (req, res) => {
         const video_file = body.video_file;
         const video_url = body.video_url;
 
+        // Affichage du tableau
+        var requestValues = new Array();
 
         // ------ 
 
@@ -394,30 +362,142 @@ exports.create_post = async (req, res) => {
         // 
         console.log('format_group_id :', format_group_id);
 
-        const formatsF = await ModelFormatsGroupsTypes.findAll({
+        const formats = await ModelFormatsGroupsTypes.findAll({
             where: {
                 format_group_id: format_group_id
             },
             include: [{
                 model: ModelFormats,
-                attributes: ['format_id', 'format_name','format_type_id']
+                attributes: ['format_id', 'format_name', 'format_type_id']
+            }, {
+                model: ModelFormatsGroups,
+                attributes: ['format_group_id', 'format_group_name']
             }]
         });
 
-        console.log('Formats :',formatsF.length)
-        for(i = 0; i < formatsF.length; i++) {
-            console.log(formatsF[i].format_id,' ',formatsF[i].format.format_name,' - ',formatsF[i].format.format_type_id);
-        }
+       // if(!utilities.empty(formats)) {
+            console.log('Formats :', formats.length)
+            for (i = 0; i < formats.length; i++) {
+                var value = new Array();
+                // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
+                value['format_group_name'] = formats[i].formats_group.format_group_name;
+                value['format_id'] = formats[i].format_id;
+                value['format_name'] = formats[i].format.format_name;
+                value['format_type_id'] = formats[i].format.format_type_id;
 
+                requestValues.push(value);
+            }
+
+            console.log(requestValues);
+       // }
+
+       
+        /*
+       
+        process.exit();
+        console.log(formats[0])
+        */
         // 3. Sélectionner le pack 
         // 
 
+        const packs = await ModelPacks.findAll({
+            where: {
+                pack_id: pack_id
+            },
+            include: [{
+                model: ModelPackSites,
+                attributes: ['pack_site_id', 'pack_id', 'site_id']
+            }/* {
+                model: ModelFormatsGroups,
+                attributes: ['format_group_id', 'format_group_name']
+            }*/]
+        });
+
+        
+        if (utilities.empty(packs)) {
+            console.log('Packs :', packs.length,' - pack_id :', pack_id);
+
+            for (i = 0; i < packs.length; i++) {
+                var value = new Array();
+                console.log(packs[i].pack_site_id, ' ',packs[i].pack_id, ' ', packs[i].site_id);
+                // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
+               /* value['format_group_name'] = formats[i].formats_group.format_group_name;
+                value['format_id'] = formats[i].format_id;
+                value['format_name'] = formats[i].format.format_name;
+                value['format_type_id'] = formats[i].format.format_type_id;
+
+                requestValues.push(value);*/
+            }
+
+
+
+
+
+            switch (pack_id) {
+                case '1':
+
+                    break;
+                case '2':
+                    break;
+                case '3':
+                    break;
+                case '4':
+                    break;
+                case '5':
+                    break;
+                case '6':
+                    break;
+                default:
+                    console.log(`Sorry, we are out of ${expr}.`);
+            }
+        }
+
+
+
         // 4. Sélectionner le format et les afficher
         // 
-        
+
 
         // 5. 
         // 
+
+
+        // 6. Requête de l'insertion
+        var requestInsertion = {
+            "isDeliveryRegulated": true,
+            "isUsedByGuaranteedDeal": false,
+            "isUsedByNonGuaranteedDeal": false,
+            "name": "27102021 - MPAVE AD - ",
+            "description": "",
+            "isPersonalizedAd": false,
+            "siteIds": [
+                299248,
+                299249
+            ],
+            "insertionStatusId": 1,
+            "startDate": "2021-10-27T00:00:00",
+            "endDate": "2021-10-27T23:59:00",
+            "campaignId": 1764641,
+            "insertionTypeId": 0,
+            "deliveryTypeId": 10,
+            "timezoneId": 4,
+            "priorityId": 62,
+            "insertionGroupedVolumeId": 452054,
+            "globalCapping": 0,
+            "cappingPerVisit": 0,
+            "cappingPerClick": 0,
+            "autoCapping": 0,
+            "isObaIconEnabled": false,
+            "formatId": 79654,
+            "isArchived": false,
+            "insertionExclusionIds": [
+                111233
+            ],
+            "customizedScript": "",
+            "salesChannelId": 1
+        }
+
+        console.log('REQUEST : ', requestInsertion);
 
 
         process.exit();
@@ -631,30 +711,16 @@ exports.create_post = async (req, res) => {
 
 
                            if (insertion_create.headers.location) {
-
-
                                var url_location = insertion_create.headers.location
-
-
-
                                var insertion_get = await AxiosFunction.getManage(url_location);
-
-
-
                                const insertion_id = insertion_get.data.id
-
-
 
                                //Si le format Interstitiel est choisi et que il n'y a pas exclusion
                                //on coche la case targeting cookie
-
                                if (format === '79633' || format === '44152') {
                                    requestInsertionsTarget = {
-
                                        "insertionId": insertion_id,
-
                                        "targetBrowserWithCookies": true
-
                                    }
                                    await AxiosFunction.putManage(
                                        'insertiontargetings',

@@ -1791,7 +1791,7 @@ exports.epilotInsertions = async (req, res) => {
                 groupFormats.forEach(function (item) {
                     const format_group_id = item.format_group_id;
                     const format_group_name = item.format_group_name;
-                    console.log('group_forZmat_name : ', format_group_name);
+                    console.log('group_format_name : ', format_group_name);
 
                     ModelEpilotInsertions.update({
                         format_group_id: format_group_id

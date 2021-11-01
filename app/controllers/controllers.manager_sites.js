@@ -57,9 +57,15 @@ exports.index = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        // Liste tous les campagnes
+         // Liste toutes les sites & applis
         const data = new Object();
-        data.breadcrumb = "Liste des sites";
+      
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Liste des sites',
+            'link': ''
+        } );
+        data.breadcrumb = breadcrumb;
 
         data.sites = await ModelSites.findAll({
             include: [
@@ -88,8 +94,7 @@ exports.view = async (req, res) => {
     
     try {
         const data = new Object();
-        data.breadcrumb = "Site";
-
+       
         var site_id = req.params.id;
         var site = await ModelSites
             .findOne({
@@ -108,6 +113,18 @@ exports.view = async (req, res) => {
                         .status(404)
                         .render("manager/error.ejs", {statusCoded: 404});
                
+                 // Créer le fil d'ariane
+                breadcrumb = new Array({
+                    'name': 'Liste des sites',
+                    'link': ''
+                }, {
+                    'name': site.site_name,
+                    'link': ''
+                } );
+                data.breadcrumb = breadcrumb;
+
+
+
                 data.site = site;
                 data.moment = moment;
                 res.render('manager/sites/view.ejs', data);

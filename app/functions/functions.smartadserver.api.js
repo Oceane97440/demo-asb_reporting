@@ -12,7 +12,6 @@ exports.config = function (method, params = '') {
             break;
         case 'advertiser':
             advertiser_id = params.advertiser_id;
-
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
                 advertiser_id;
             break;

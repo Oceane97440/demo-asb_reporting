@@ -108,7 +108,8 @@ router.get("/formats/:id", manager_formats.view);
 
 router.get("/insertions", manager_insertions.index);
 router.get("/insertions/list", manager_insertions.list);
-router.get("/insertions/create", manager_insertions.create_post);
+router.get("/insertions/create", manager_insertions.create);
+router.get("/insertions/create_post", manager_insertions.create_post);
 /*
 router.get("/insertions/create/", manager_insertions.create);
 router.post("/insertions/create", manager_insertions.create_post);
