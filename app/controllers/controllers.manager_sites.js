@@ -25,8 +25,9 @@ const AxiosFunction = require('../functions/functions.axios');
 
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
+const ModelFormatsSites = require("../models/models.formats_sites");
 const ModelAdvertisers = require("../models/models.advertisers");
-const ModelCampaigns = require("../models/models.sites");
+const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
 const ModelSites = require("../models/models.sites");
 const ModelPacksSites = require('../models/models.packs_sites');
@@ -116,17 +117,35 @@ exports.view = async (req, res) => {
                  // Créer le fil d'ariane
                 breadcrumb = new Array({
                     'name': 'Liste des sites',
-                    'link': ''
+                    'link': 'sites/list'
                 }, {
                     'name': site.site_name,
                     'link': ''
                 } );
                 data.breadcrumb = breadcrumb;
 
-
-
                 data.site = site;
                 data.moment = moment;
+
+                 // Affiche les campagnes se terminant demain
+                data.formats_sites = await ModelFormatsSites.findAll({
+                    where: {
+                        site_id: site.site_id
+                    },
+                    include: [
+                        {
+                            model: ModelFormats
+                        },
+                        {
+                            model: ModelSites
+                        }
+                    ]
+                });
+
+                console.log(data.formats_sites)
+
+
+
                 res.render('manager/sites/view.ejs', data);
             });
 

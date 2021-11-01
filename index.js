@@ -29,7 +29,8 @@ const formats_groups = require('./app/models/models.formats_groups');
 const formats_groups_types = require(
     './app/models/models.formats_groups_types'
 )
-const formatstemplates = require("./app/models/models.formats_templates")
+const formatstemplates = require("./app/models/models.formats_templates");
+const formatssites = require("./app/models/models.formats_sites");
 const insertions = require('./app/models/models.insertions');
 const templates = require('./app/models/models.templates');
 const insertions_templates = require('./app/models/models.insertions_templates');
@@ -118,6 +119,33 @@ formatstemplates.belongsTo(formats, {
 });
 
 formats.hasMany(formatstemplates, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+// un format posséde un ou plusieurs sites : un site posséde un à plusieurs formats
+
+sites.hasMany(formatssites, {
+    foreignKey: 'site_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+formatssites.belongsTo(formats, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+formatssites.belongsTo(sites, {
+    foreignKey: 'site_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+formats.hasMany(formatssites, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true

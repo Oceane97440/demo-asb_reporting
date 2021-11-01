@@ -405,7 +405,7 @@ exports.create_post = async (req, res) => {
                 pack_id: pack_id
             },
             include: [{
-                model: ModelPackSites,
+                model: ModelPacksSites,
                 attributes: ['pack_site_id', 'pack_id', 'site_id']
             }/* {
                 model: ModelFormatsGroups,
@@ -414,7 +414,7 @@ exports.create_post = async (req, res) => {
         });
 
         
-        if (utilities.empty(packs)) {
+        if (Utilities.empty(packs)) {
             console.log('Packs :', packs.length,' - pack_id :', pack_id);
 
             for (i = 0; i < packs.length; i++) {
@@ -428,10 +428,6 @@ exports.create_post = async (req, res) => {
 
                 requestValues.push(value);*/
             }
-
-
-
-
 
             switch (pack_id) {
                 case '1':
@@ -467,38 +463,40 @@ exports.create_post = async (req, res) => {
             "isDeliveryRegulated": true,
             "isUsedByGuaranteedDeal": false,
             "isUsedByNonGuaranteedDeal": false,
-            "name": "27102021 - MPAVE AD - ",
+            "name": "20211101 - MPAVE AD - ",
             "description": "",
             "isPersonalizedAd": false,
-            "siteIds": [
+           /* "siteIds": [
                 299248,
                 299249
-            ],
+            ],*/
             "insertionStatusId": 1,
             "startDate": "2021-10-27T00:00:00",
             "endDate": "2021-10-27T23:59:00",
             "campaignId": 1764641,
             "insertionTypeId": 0,
             "deliveryTypeId": 10,
-            "timezoneId": 4,
-            "priorityId": 62,
+            "timezoneId": 4, // Insertion TimezoneId
+            "priorityId": 62, // Insertion PriorityId
             "insertionGroupedVolumeId": 452054,
-            "globalCapping": 0,
-            "cappingPerVisit": 0,
-            "cappingPerClick": 0,
-            "autoCapping": 0,
+            "globalCapping": 0, // Insertion CappingGlobal
+            "cappingPerVisit": 0, // Insertion CappingVisite
+         //   "cappingPerClick": 0,
+         //   "autoCapping": 0,
+            "PeriodicCappingImpressions": 0,
+            "PeriodicCappingPeriod": 0,
             "isObaIconEnabled": false,
-            "formatId": 79654,
+           // "formatId": 79654,
             "isArchived": false,
-            "insertionExclusionIds": [
+           /* "insertionExclusionIds": [
                 111233
-            ],
+            ],*/
             "customizedScript": "",
             "salesChannelId": 1
         }
 
         console.log('REQUEST : ', requestInsertion);
-
+        
 
         process.exit();
 
