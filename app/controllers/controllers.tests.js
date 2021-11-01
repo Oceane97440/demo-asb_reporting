@@ -27,6 +27,30 @@ const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
 const ModelPack = require("../models/models.packs")
 
+const { download } = require('wetransfert');
+
+exports.wetransfer = async (req, res) => {
+
+myUrl = 'https://wetransfer.com/downloads/87c92862e9b7b98a3d4f2609371c96f620211101091309/54c63d2c2ecb224f63cb9a5311b5301c20211101091340/611cf2';
+myDestinationFolder = 'public/uploads/';
+
+download(myUrl, myDestinationFolder)
+  .onProgress(progress => {
+    console.log('progress', progress);
+  })
+  .then((res) => {
+    console.log(res); // success
+  })
+  .catch((err) => {
+    console.error('error  ', err);
+  });
+
+
+
+}
+
+
+
 exports.index = async (req, res) => {
 
     try {

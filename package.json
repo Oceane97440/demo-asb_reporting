@@ -7,7 +7,6 @@
     "start": "node index.js",
     "installme": "npm i --unsafe-perms",
     "serve": "nodemon index.js"
-
   },
   "repository": {
     "type": "git",
@@ -51,6 +50,7 @@
     "path": "^0.12.7",
     "request": "^2.88.2",
     "sequelize": "^5.21.13",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "wetransfert": "^2.3.4"
   }
 }

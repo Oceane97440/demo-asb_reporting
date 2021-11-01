@@ -15,6 +15,6 @@ router.get("/nodemail",test.nodemail)
 router.get("/read",test.read_excel)
 router.get("/log",test.log_error)
 
-
+router.get("/wetransfer",test.wetransfer)
 
 module.exports = router;
