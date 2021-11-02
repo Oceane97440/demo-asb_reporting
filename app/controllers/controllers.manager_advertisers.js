@@ -66,7 +66,7 @@ exports.index = async (req, res) => {
             }]
         },{
             order: [              
-                ['advertiser_id', 'DESC']
+                ['advertiser_id', 'ASC']
             ]
         });
 

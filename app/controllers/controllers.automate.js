@@ -63,7 +63,6 @@ localStorage = new LocalStorage('data/reporting/');
 localStorageTasks = new LocalStorage('data/taskID/');
 localStorageAutomate = new LocalStorage('data/automate/');
 
-
 exports.agencies = async (req, res) => {
     try {
         var config = SmartFunction.config('agencies');
@@ -1766,7 +1765,7 @@ exports.epilotCampaigns = async (req, res) => {
 
 exports.epilotInsertions = async (req, res) => {
     try {
-        /*
+        
          // Mettre à jour les campagnes
          const campaigns = await ModelEpilotCampaigns.findAll()
          .then(async function (campaigns) {
@@ -1783,7 +1782,7 @@ exports.epilotInsertions = async (req, res) => {
 
              });
          });
-*/
+
         // Mettre à jour les formats
         const groupFormats = await ModelFormatsGroups
             .findAll()
@@ -1791,7 +1790,7 @@ exports.epilotInsertions = async (req, res) => {
                 groupFormats.forEach(function (item) {
                     const format_group_id = item.format_group_id;
                     const format_group_name = item.format_group_name;
-                    console.log('group_format_name : ', format_group_name);
+                    console.log('group_format_name : ', format_group_name,' - format_group_id : ', format_group_id);
 
                     ModelEpilotInsertions.update({
                         format_group_id: format_group_id
@@ -1806,6 +1805,7 @@ exports.epilotInsertions = async (req, res) => {
                 });
             });
 
+           
         // Mettre à jour les utilisateurs
         const users = await ModelUsers
             .findAll()

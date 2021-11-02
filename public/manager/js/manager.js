@@ -67,13 +67,6 @@ $(document).ready(function () {
 
 
 
-    $("#wizard").steps({
-        headerTag: "h2",
-        bodyTag: "section",
-        transitionEffect: "slideLeft",
-        stepsOrientation: "vertical"
-    });
-
     // Créer un toast
     function toastWidget(title, time, message, url = false, target = false) {
 

@@ -1,6 +1,8 @@
 .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate  {padding:10px 20px}
 
-
+table.dataTable thead .sorting{
+    background-repeat:no-repeat!important
+}
 
 
 #campaign-insertions .table-responsive table .campaign_name {display:none}

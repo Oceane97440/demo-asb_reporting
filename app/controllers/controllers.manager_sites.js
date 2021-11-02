@@ -127,7 +127,7 @@ exports.view = async (req, res) => {
                 data.site = site;
                 data.moment = moment;
 
-                 // Affiche les campagnes se terminant demain
+                 // Affiche les sites en fonction du format
                 data.formats_sites = await ModelFormatsSites.findAll({
                     where: {
                         site_id: site.site_id
@@ -141,10 +141,6 @@ exports.view = async (req, res) => {
                         }
                     ]
                 });
-
-                console.log(data.formats_sites)
-
-
 
                 res.render('manager/sites/view.ejs', data);
             });

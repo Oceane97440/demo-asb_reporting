@@ -51,6 +51,7 @@ const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
 const ModelEpilotInsertions = require("../models/models.epilot_insertions");
 const ModelUsers = require("../models/models.users");
 const ModelFormatsGroups = require("../models/models.formats_groups");
+const ModelFormatsSites = require("../models/models.formats_sites");
 
 const {
     promiseImpl
@@ -131,67 +132,67 @@ exports.view = async (req, res) => {
         data.insertions = new Array();
         data.creatives = new Array();
 
-        var campaign_id = req.params.id;
-        var campaign = await ModelCampaigns
+        var format_id = req.params.id;
+        var format = await ModelFormats
             .findOne({
                 where: {
-                    campaign_id: campaign_id
-                },
-                include: [{
-                    model: ModelAdvertisers
-                }, {
-                    model: ModelAgencies
-                }, {
-                    model: ModelInsertions
-                }]
+                    format_id: format_id
+                }                
             })
-            .then(async function (campaign) {
-                if (!campaign) {
+            .then(async function (format) {
+                if (!format) {
                     return res
                         .status(404)
                         .render("manager/error.ejs", {
                             statusCoded: 404
                         });
                 }
+                
 
                 // Créer le fil d'ariane
-                var breadcrumbLink = 'advertisers'
+                var breadcrumbLink = 'formats'
                 breadcrumb = new Array({
-                    'name': 'Campagnes',
-                    'link': 'campaigns'
+                    'name': 'Formats',
+                    'link': 'formats'
                 }, {
-                    'name': campaign.advertiser.advertiser_name,
-                    'link': breadcrumbLink.concat('/', campaign.advertiser_id)
-                }, {
-                    'name': campaign.campaign_name,
+                    'name': format.format_name,
                     'link': ''
                 });
                 data.breadcrumb = breadcrumb;
 
-                // Récupére les données des campagnes epilot
-                var epilot_campaign = await ModelEpilotCampaigns.findOne({
-                    attributes: ['epilot_campaign_volume', 'epilot_campaign_budget_net'],
+                // Récupére les sites pour ce format
+                data.formats_sites = await ModelFormatsSites.findAll({
                     where: {
-                        campaign_id: campaign_id
-                    }
+                        format_id: format_id
+                    },
+                    include: [
+                        {
+                            model: ModelFormats
+                        },
+                        {
+                            model: ModelSites
+                        }
+                    ]
                 });
 
-                //test si epilot_campaign existe
-                if (!Utilities.empty(epilot_campaign)) {
-                    data.epilot_campaign = epilot_campaign;
-                } else {
-                    data.epilot_campaign = 0;
-                }
+
+
+
+
+
+
+
+              /*
 
                 // Récupére les données des insertions de la campagne
                 var insertionList = await ModelInsertions
                     .findAll({
                         where: {
-                            campaign_id: campaign_id
+                            format_id: format_id
                         },
                         include: [{
-                            model: ModelCampaigns,
-                            attributes: ['campaign_id', 'campaign_name']
+                            model: Modelformats,
+                            attributes: ['format_id', 'format_name']
                         }, {
                             model: ModelFormats,
                             attributes: ['format_id', 'format_name']
@@ -231,17 +232,13 @@ exports.view = async (req, res) => {
                             }
                         }
                     });
-
-                // Attribue les données de la campagne
-                data.campaign = campaign;
+                    */
+                // Attribue les données du format
+                data.format = format;
                 data.moment = moment;
                 data.utilities = Utilities;
-
-                // Récupére l'ensemble des données du rapport
-                data_localStorage = localStorage.getItem('campaignID-' + campaign.campaign_id);
-                data.reporting = JSON.parse(data_localStorage);
-
-                res.render('manager/campaigns/view.ejs', data);
+                 
+                res.render('manager/formats/view.ejs', data);
             });
 
     } catch (error) {
