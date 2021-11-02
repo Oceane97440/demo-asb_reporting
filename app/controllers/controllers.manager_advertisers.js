@@ -4,6 +4,7 @@ const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
 const Utilities = require("../functions/functions.utilities");
+const excel = require('node-excel-export');
 
 // const request = require('request'); const bodyParser =
 // require('body-parser');
@@ -59,13 +60,13 @@ exports.index = async (req, res) => {
         });
         data.breadcrumb = breadcrumb;
 
-       advertisers_last = await ModelAdvertisers.findAll({
-        limit: 10,
+        advertisers_last = await ModelAdvertisers.findAll({
+            limit: 10,
             include: [{
                 model: ModelCampaigns
             }]
-        },{
-            order: [              
+        }, {
+            order: [
                 ['advertiser_id', 'DESC']
             ]
         });
@@ -114,6 +115,182 @@ exports.list = async (req, res) => {
 
         data.moment = moment;
         res.render('manager/advertisers/list.ejs', data);
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
+
+exports.export = async (req, res) => {
+    try {
+
+        var type = 'advertisers'
+        // crée label avec le date du jour ex : 20210403
+        const date = new Date();
+        const JJ = ('0' + (
+            date.getDate()
+        )).slice(-2);
+
+        const MM = ('0' + (
+            date.getMonth()
+        )).slice(-2);
+        const AAAA = date.getFullYear();
+
+        const label_now = AAAA + MM + JJ;
+        // Liste tous les campagnes
+        const data = new Object();
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Annonceurs',
+            'link': 'advertisers'
+        }, {
+            'name': 'Liste des annonceurs',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
+
+        data.advertisers = await ModelAdvertisers.findAll({
+            include: [{
+                model: ModelCampaigns
+            }]
+        }, {
+            order: [
+                // Will escape title and validate DESC against a list of valid direction
+                // parameters
+                ['advertiser_id', 'DESC']
+            ]
+        });
+
+        data.moment = moment;
+
+        const styles = {
+            headerDark: {
+                fill: {
+                    fgColor: {
+                        rgb: 'FF000000'
+                    }
+
+                },
+
+                font: {
+                    color: {
+                        rgb: 'FFFFFFFF'
+                    },
+                    sz: 14,
+                    bold: false,
+                    underline: false
+                }
+            },
+            cellNone: {
+
+                numFmt: "0",
+
+            },
+
+            cellTc: {
+                numFmt: "0",
+
+            }
+        };
+
+        const heading = [
+            [],
+        ];
+
+        const bilan_global = {
+
+            id: { // <- the key should match the actual data key
+                displayName: '#', // <- Here you specify the column header
+                headerStyle: styles.headerDark, // <- Header style
+                width: 100, // <- width in pixels
+                cellStyle: styles.cellNone,
+            },
+            noms: {
+                displayName: 'NOMS',
+                headerStyle: styles.headerDark,
+                width: 300, // <- width in chars (when the number is passed as string)
+                cellStyle: styles.cellNone,
+
+            },
+            archives: {
+                displayName: 'ARCHIVES',
+                headerStyle: styles.headerDark,
+                cellFormat: function(value, row) { // <- Renderer function, you can access also any row.property
+                    return (value == 1) ? 'Archivé' : '-';
+                  },
+                width: 100, // <- width in pixels
+                cellStyle: styles.cellNone,
+
+            },
+            maj: {
+                displayName: 'DERNIERE MAJ',
+                headerStyle: styles.headerDark,
+                width: 200, // <- width in pixels
+                cellStyle: styles.cellNone,
+
+            },
+
+
+        };
+
+        /*const dataset_global = [{
+            id: '459140	',
+            noms: 'TEST 3 API 20210804	',
+            archives: 'Archivé',
+            maj: 'il y a 3 mois	',
+
+        }];*/
+
+        const dataset_global = []
+
+        if (!Utilities.empty(data)) {
+            for (i = 0; i < data.advertisers.length; i++) {
+
+                dataset_global.push({
+                    id: data.advertisers[i].advertiser_id,
+                    noms:data.advertisers[i].advertiser_name,
+                    archives: data.advertisers[i].advertiser_archived,
+                    maj: data.advertisers[i].updated_at,
+                });
+
+            }
+        }
+
+        const merges = [{
+            start: {
+                row: 1,
+                column: 1
+            },
+            end: {
+                row: 1,
+                column: 5
+            }
+        }];
+
+        // Create the excel report. This function will return Buffer
+        const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+            name: 'Listes', // <- Specify sheet name (optional)
+            heading: heading, // <- Raw heading array (optional)
+            merges: merges, // <- Merge cell ranges
+            specification: bilan_global, // <- Report specification
+            data: dataset_global // <-- Report data
+        }]);
+
+        // You can then return this straight
+        // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
+        res.attachment(
+            'exports-' + type +'-'+ label_now + '.xlsx',
+
+        ); // This is sails.js specific (in general you need to set headers)
+
+        return res.send(report);
+
+        /* console.log(data.advertisers.advertiser_name)
+         res.render('manager/advertisers/list.ejs', data);*/
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
@@ -178,7 +355,7 @@ exports.create_post = async (req, res) => {
             return res.redirect('/manager/advertisers/create');
         }
 
-    
+
         var requestAdvertiser = {
             "name": advertiser,
 
@@ -307,12 +484,12 @@ exports.view = async (req, res) => {
                 // Récupére les données des campagnes epilot  
                 const epilot_campaigns = await ModelEpilotCampaigns.findOne({
                     attributes: [
-                       [sequelize.fn('sum', sequelize.col('epilot_campaign_budget_net')), 'campaign_budget']
+                        [sequelize.fn('sum', sequelize.col('epilot_campaign_budget_net')), 'campaign_budget']
                     ],
                     where: {
                         advertiser_id: advertiser_id
                     },
-                    raw : true
+                    raw: true
                 });
                 data.epilot_campaigns = epilot_campaigns;
 
