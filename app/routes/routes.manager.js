@@ -4,6 +4,8 @@ const Sequelize = require('sequelize');
 const manager = require("../controllers/controllers.manager");
 const manager_campaigns = require("../controllers/controllers.manager_campaigns");
 const manager_epilot = require("../controllers/controllers.manager_epilot");
+const manager_gam = require("../controllers/controllers.manager_gam");
+
 const manager_insertions = require("../controllers/controllers.manager_insertions");
 const manager_agencies = require("../controllers/controllers.manager_agencies");
 const manager_advertisers = require("../controllers/controllers.manager_advertisers");
@@ -96,6 +98,8 @@ router.get("/campaigns/:id", manager_campaigns.view);
 router.get('/campaigns/epilot/list', manager_epilot.list);
 router.get('/campaigns/epilot/export', manager_epilot.export);
 
+router.get('/campaigns/gam/list', manager_gam.list);
+router.get('/campaigns/gam/export', manager_gam.export);
 
 router.get('/campaigns/epilot/insertions', manager_epilot.insertions);
 router.get('/campaigns/epilot/create', manager_epilot.create);
