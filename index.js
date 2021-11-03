@@ -20,6 +20,8 @@ const roles = require('./app/models/models.roles');
 const roles_users = require('./app/models/models.roles_users');
 const campaigns = require('./app/models/models.campaigns');
 const advertisers = require('./app/models/models.advertisers');
+const campaigns_gam = require('./app/models/models.campaigns_gam');
+
 const advertisers_users = require('./app/models/models.advertisers_users');
 const agencies = require('./app/models/models.agencies');
 const formats = require('./app/models/models.formats');
@@ -126,6 +128,19 @@ advertisers.hasMany(campaigns, {
   //  onDelete: 'cascade',
     hooks: true
 });
+
+campaigns_gam.belongsTo(campaigns, {
+    foreignKey: 'campaign_id',
+  //  onDelete: 'cascade',
+    hooks: true
+});
+
+campaigns.hasMany(campaigns_gam, {
+    foreignKey: 'campaign_id',
+  //  onDelete: 'cascade',
+    hooks: true
+});
+
 
 campaigns.belongsTo(agencies, {
     foreignKey: 'agency_id',
@@ -374,6 +389,7 @@ app.use('/manager', manager);
 
 // Automatise la récupération de donnée
 const automate = require('./app/routes/routes.automate');
+const { campaign } = require('./app/controllers/controllers.automate');
 app.use('/automate', automate);
 
 // Le serveur ecoute sur le port 3022

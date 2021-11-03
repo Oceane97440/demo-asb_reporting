@@ -7,5 +7,7 @@ const reportingTV = require("../controllers/controllers.tv.reporting");
 router.get("/", reportingTV.index);
 router.get("/charts/", reportingTV.charts);
 router.get("/generate/", reportingTV.generate);
+router.get("/export/", reportingTV.export);
+
 
 module.exports = router;

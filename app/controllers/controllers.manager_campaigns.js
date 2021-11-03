@@ -4,20 +4,28 @@ const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require('axios');
 var crypto = require('crypto');
+const excel = require('node-excel-export');
 
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
-const {Op} = require("sequelize");
+const {
+    Op
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 
-const {check, query} = require('express-validator');
+const {
+    check,
+    query
+} = require('express-validator');
 
 const moment = require('moment');
 
@@ -46,8 +54,12 @@ const ModelUsers = require("../models/models.users");
 
 const TEXT_REGEX = /^.{1,51}$/
 
-const {promiseImpl} = require('ejs');
-const {insertions} = require('./controllers.automate');
+const {
+    promiseImpl
+} = require('ejs');
+const {
+    insertions
+} = require('./controllers.automate');
 
 exports.index = async (req, res) => {
     try {
@@ -58,15 +70,13 @@ exports.index = async (req, res) => {
         breadcrumb = new Array({
             'name': 'Campagnes',
             'link': ''
-        },);
+        }, );
         data.breadcrumb = breadcrumb;
 
         data.campaigns = await ModelCampaigns.findAll({
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
 
         // Affiche les campagnes se terminant aujourd'hui
@@ -118,11 +128,9 @@ exports.index = async (req, res) => {
                     ]
                 }
             },
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
 
         // Affiche les campagnes se terminant demain
@@ -135,28 +143,25 @@ exports.index = async (req, res) => {
                     ]
                 }
             },
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
 
         // Affiche les campagnes se terminant dans les 5 prochains jours
         data.campaigns_nextdays = await ModelCampaigns.findAll({
             where: {
-                [Op.and]: [
-                    {
-                        advertiser_id: {
-                            [Op.notIn]: advertiserExclus
-                        }
+                [Op.and]: [{
+                    advertiser_id: {
+                        [Op.notIn]: advertiserExclus
                     }
-                ],
-                [Op.or]: [/*{
-                    campaign_start_date: {
-                        [Op.between]:[dateNow, date5Days]
-                    }
-                },*/
+                }],
+                [Op.or]: [
+                    /*{
+                                        campaign_start_date: {
+                                            [Op.between]:[dateNow, date5Days]
+                                        }
+                                    },*/
                     {
                         campaign_end_date: {
                             [Op.between]: [dateNow, date5Days]
@@ -170,43 +175,35 @@ exports.index = async (req, res) => {
                 // parameters
                 ['campaign_start_date', 'ASC']
             ],
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
 
         // Affiche les campagnes en ligne
         data.campaigns_online = await ModelCampaigns.findAll({
             where: {
-                [Op.and]: [
-                    {
-                        advertiser_id: {
-                            [Op.notIn]: advertiserExclus
-                        }
+                [Op.and]: [{
+                    advertiser_id: {
+                        [Op.notIn]: advertiserExclus
                     }
-                ],
-                [Op.or]: [
-                    {
-                        campaign_start_date: {
-                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                        }
-                    }, {
-                        campaign_end_date: {
-                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                        }
+                }],
+                [Op.or]: [{
+                    campaign_start_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
                     }
-                ]
+                }, {
+                    campaign_end_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                    }
+                }]
             },
             order: [
                 ['campaign_end_date', 'ASC']
             ],
-            include: [
-                {
-                    model: ModelAdvertisers
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }]
         });
 
         data.moment = moment;
@@ -219,7 +216,9 @@ exports.index = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
@@ -240,13 +239,11 @@ exports.list = async (req, res) => {
         data.breadcrumb = breadcrumb;
 
         data.campaigns = await ModelCampaigns.findAll({
-            include: [
-                {
-                    model: ModelAdvertisers
-                }, {
-                    model: ModelInsertions
-                }
-            ]
+            include: [{
+                model: ModelAdvertisers
+            }, {
+                model: ModelInsertions
+            }]
         }, {
             order: [
                 // Will escape title and validate DESC against a list of valid direction
@@ -260,7 +257,188 @@ exports.list = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
+
+exports.export = async (req, res) => {
+    try {
+
+        var type = 'campaigns'
+        // crée label avec le date du jour ex : 20210403
+        const date = new Date();
+        const JJ = ('0' + (
+            date.getDate()
+        )).slice(-2);
+
+        const MM = ('0' + (
+            date.getMonth()
+        )).slice(-2);
+        const AAAA = date.getFullYear();
+
+        const label_now = AAAA + MM + JJ;
+        // Liste tous les campagnes
+        const data = new Object();
+
+        // Créer le fil d'ariane
+        const breadcrumbLink = 'campaigns';
+        breadcrumb = new Array({
+            'name': 'Campagnes',
+            'link': 'campaigns'
+        }, {
+            'name': 'Liste des campagnes',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
+
+        data.campaigns = await ModelCampaigns.findAll({
+            include: [{
+                model: ModelAdvertisers
+            }, {
+                model: ModelInsertions
+            }]
+        }, {
+            order: [
+                // Will escape title and validate DESC against a list of valid direction
+                // parameters
+                ['campaign_id', 'DESC']
+            ]
+        });
+        data.moment = moment;
+
+        const styles = {
+            headerDark: {
+                fill: {
+                    fgColor: {
+                        rgb: 'FF000000'
+                    }
+
+                },
+
+                font: {
+                    color: {
+                        rgb: 'FFFFFFFF'
+                    },
+                    sz: 14,
+                    bold: false,
+                    underline: false
+                }
+            },
+            cellNone: {
+
+                numFmt: "0",
+
+            },
+
+            cellTc: {
+                numFmt: "0",
+
+            }
+        };
+
+        const heading = [
+            [],
+        ];
+
+        const bilan_global = {
+
+            id: { // <- the key should match the actual data key
+                displayName: '#', // <- Here you specify the column header
+                headerStyle: styles.headerDark, // <- Header style
+                width: 100, // <- width in pixels
+                cellStyle: styles.cellNone,
+            },
+            annonceurs: {
+                displayName: 'ANNONCEURS',
+                headerStyle: styles.headerDark,
+                width: 300, // <- width in chars (when the number is passed as string)
+                cellStyle: styles.cellNone,
+
+            },
+            noms: {
+                displayName: 'NOMS',
+                headerStyle: styles.headerDark,
+                width: 450, // <- width in chars (when the number is passed as string)
+                cellStyle: styles.cellNone,
+
+            },
+            archives: {
+                displayName: 'ARCHIVES',
+                headerStyle: styles.headerDark,
+                cellFormat: function (value, row) { // <- Renderer function, you can access also any row.property
+                    return (value == 1) ? 'Archivé' : '-';
+                },
+                width: 100, // <- width in pixels
+                cellStyle: styles.cellNone,
+
+            },
+            maj: {
+                displayName: 'DERNIERE MAJ',
+                headerStyle: styles.headerDark,
+                width: 200, // <- width in pixels
+                cellStyle: styles.cellNone,
+
+            },
+
+
+        };
+
+
+
+        const dataset_global = []
+
+        if (!Utilities.empty(data)) {
+            for (i = 0; i < data.campaigns.length; i++) {
+
+                dataset_global.push({
+                    id: data.campaigns[i].campaign_id,
+                    annonceurs:data.campaigns[i].advertiser.advertiser_name,
+                    noms: data.campaigns[i].campaign_name,
+                    archives: data.campaigns[i].campaign_archived,
+                    maj: data.campaigns[i].updated_at,
+                });
+
+            }
+        }
+
+        const merges = [{
+            start: {
+                row: 1,
+                column: 1
+            },
+            end: {
+                row: 1,
+                column: 5
+            }
+        }];
+
+        // Create the excel report. This function will return Buffer
+        const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+            name: 'Listes', // <- Specify sheet name (optional)
+            heading: heading, // <- Raw heading array (optional)
+            merges: merges, // <- Merge cell ranges
+            specification: bilan_global, // <- Report specification
+            data: dataset_global // <-- Report data
+        }]);
+
+        // You can then return this straight
+        // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
+        res.attachment(
+            'exports-' + type + '-' + label_now + '.xlsx',
+
+        ); // This is sails.js specific (in general you need to set headers)
+
+        return res.send(report);
+
+   
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
@@ -278,21 +456,21 @@ exports.view = async (req, res) => {
                 where: {
                     campaign_id: campaign_id
                 },
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }, {
-                        model: ModelAgencies
-                    }, {
-                        model: ModelInsertions
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }, {
+                    model: ModelAgencies
+                }, {
+                    model: ModelInsertions
+                }]
             })
             .then(async function (campaign) {
                 if (!campaign) {
                     return res
                         .status(404)
-                        .render("manager/error.ejs", {statusCoded: 404});
+                        .render("manager/error.ejs", {
+                            statusCoded: 404
+                        });
                 }
 
                 // Créer le fil d'ariane
@@ -311,7 +489,7 @@ exports.view = async (req, res) => {
 
                 // Récupére les données des campagnes epilot
                 var epilot_campaign = await ModelEpilotCampaigns.findOne({
-                    attributes: ['epilot_campaign_volume','epilot_campaign_budget_net'],
+                    attributes: ['epilot_campaign_volume', 'epilot_campaign_budget_net'],
                     where: {
                         campaign_id: campaign_id
                     }
@@ -330,21 +508,19 @@ exports.view = async (req, res) => {
                         where: {
                             campaign_id: campaign_id
                         },
-                        include: [
-                            {
-                                model: ModelCampaigns,
-                                attributes: ['campaign_id', 'campaign_name']
-                            }, {
-                                model: ModelFormats,
-                                attributes: ['format_id', 'format_name']
-                            }, {
-                                model: ModelInsertionsPriorities,
-                                attributes: ['priority_id', 'priority_name']
-                            }, {
-                                model: ModelInsertionsStatus,
-                                attributes: ['insertion_status_id', 'insertion_status_name']
-                            }
-                        ]
+                        include: [{
+                            model: ModelCampaigns,
+                            attributes: ['campaign_id', 'campaign_name']
+                        }, {
+                            model: ModelFormats,
+                            attributes: ['format_id', 'format_name']
+                        }, {
+                            model: ModelInsertionsPriorities,
+                            attributes: ['priority_id', 'priority_name']
+                        }, {
+                            model: ModelInsertionsStatus,
+                            attributes: ['insertion_status_id', 'insertion_status_name']
+                        }]
                     })
                     .then(async function (insertionList) {
 
@@ -390,7 +566,9 @@ exports.view = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
@@ -428,7 +606,9 @@ exports.create = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
@@ -441,7 +621,7 @@ exports.create_post = async (req, res) => {
             .body
             .campaign_end_date
 
-            console
+        console
             .log(req.body)
 
         if (!TEXT_REGEX.test(campaign)) {
@@ -569,7 +749,9 @@ exports.create_post = async (req, res) => {
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 
@@ -593,32 +775,30 @@ exports.repartitions = async (req, res) => {
         var campaigns = await ModelCampaigns
             .findAll({
                 where: {
-                    [Op.or]: [
-                        {
-                            campaign_start_date: {
-                                [Op.between]: [dateLastMonday, dateLastSunday]
-                            }
-                        }, {
-                            campaign_end_date: {
-                                [Op.between]: [dateLastMonday, dateLastSunday]
-                            }
+                    [Op.or]: [{
+                        campaign_start_date: {
+                            [Op.between]: [dateLastMonday, dateLastSunday]
                         }
-                    ]
+                    }, {
+                        campaign_end_date: {
+                            [Op.between]: [dateLastMonday, dateLastSunday]
+                        }
+                    }]
                 },
                 order: [
                     ['campaign_start_date', 'ASC']
                 ],
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }]
             })
             .then(async function (campaigns) {
                 if (!campaigns) {
                     return res
                         .status(404)
-                        .render("manager/error.ejs", {statusCoded: 404});
+                        .render("manager/error.ejs", {
+                            statusCoded: 404
+                        });
                 }
 
                 // Créer le fil d'ariane
