@@ -301,6 +301,19 @@ exports.create = async (req, res) => {
             ],
         })
 
+        data.formats = await ModelFormats.findAll({
+            attributes: ['format_group'],
+            group: "format_group",
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
+
         data.packs = await ModelPacks.findAll({
 
         });
@@ -320,7 +333,9 @@ exports.create_post = async (req, res) => {
     try {
         var body = {
             campaign_id: '1764641',
-            format_group_id: '4',
+            // format_group_id: '4',
+            format_group_id: 'GRAND ANGLE',
+
             pack_id: '1',
             display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
             display_mobile_url: 'https://www.bmw.re/',
@@ -332,6 +347,9 @@ exports.create_post = async (req, res) => {
             video_url: '',
             submit: 'Créer une nouvelle insertion'
         }
+
+
+  
 
         const campaign_id = body.campaign_id;
         const format_group_id = body.format_group_id;
@@ -348,6 +366,55 @@ exports.create_post = async (req, res) => {
 
         const video_file = body.video_file;
         const video_url = body.video_url;
+
+        const formatIdsArray = []
+        const sites = []
+        // si format site countrie ne sont pas vide selectionne le groupe format
+        if (format_group_id.length != 0 && pack_id.length != 0 && campaign_id.length != 0) {
+            // select groupe format + format id
+            const formatIds = await ModelFormats.findAll({
+                attributes: ['format_id'],
+                where: {
+                    format_group: {
+                        [Op.eq]: format_group_id
+                    }
+                }
+            });
+
+            // Create formatIdsArray's variable to handler more later
+            for (let l = 0; l < formatIds.length; l++) {
+                formatIdsArray.push(formatIds[l].format_id);
+            }
+        }
+
+
+        // recupération des site d'un pack
+        const sitesdb = await ModelPacksSites.findAll({
+            attributes: ['pack_id', 'site_id'],
+            where: {
+                pack_id: {
+                    [Op.eq]: pack_id
+                }
+            }
+        });
+
+        if (sitesdb.length > 0) {
+            for (let l = 0; l < sitesdb.length; l++) {
+                sites.push(sitesdb[l].site_id);
+            }
+
+            // Si c'est un string on met en tableau pour respecter l'api
+            if (typeof sites == 'string') {
+                sites = [sites];
+            }
+        }
+
+        console.log('GRANG ANGLE '+ formatIdsArray)
+        console.log('Pack GR '+sites)
+
+
+
+        process.exit()
 
         // Affichage du tableau
         var requestValues = new Array();
@@ -375,23 +442,23 @@ exports.create_post = async (req, res) => {
             }]
         });
 
-       // if(!utilities.empty(formats)) {
-            console.log('Formats :', formats.length)
-            for (i = 0; i < formats.length; i++) {
-                var value = new Array();
-                // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
-                value['format_group_name'] = formats[i].formats_group.format_group_name;
-                value['format_id'] = formats[i].format_id;
-                value['format_name'] = formats[i].format.format_name;
-                value['format_type_id'] = formats[i].format.format_type_id;
+        // if(!utilities.empty(formats)) {
+        console.log('Formats :', formats.length)
+        for (i = 0; i < formats.length; i++) {
+            var value = new Array();
+            // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
+            value['format_group_name'] = formats[i].formats_group.format_group_name;
+            value['format_id'] = formats[i].format_id;
+            value['format_name'] = formats[i].format.format_name;
+            value['format_type_id'] = formats[i].format.format_type_id;
 
-                requestValues.push(value);
-            }
+            requestValues.push(value);
+        }
 
-            console.log(requestValues);
-       // }
+        console.log(requestValues);
+        // }
 
-       
+
         /*
        
         process.exit();
@@ -405,28 +472,30 @@ exports.create_post = async (req, res) => {
                 pack_id: pack_id
             },
             include: [{
-                model: ModelPacksSites,
-                attributes: ['pack_site_id', 'pack_id', 'site_id']
-            }/* {
-                model: ModelFormatsGroups,
-                attributes: ['format_group_id', 'format_group_name']
-            }*/]
+                    model: ModelPacksSites,
+                    attributes: ['pack_site_id', 'pack_id', 'site_id']
+                }
+                /* {
+                                model: ModelFormatsGroups,
+                                attributes: ['format_group_id', 'format_group_name']
+                            }*/
+            ]
         });
 
-        
+
         if (Utilities.empty(packs)) {
-            console.log('Packs :', packs.length,' - pack_id :', pack_id);
+            console.log('Packs :', packs.length, ' - pack_id :', pack_id);
 
             for (i = 0; i < packs.length; i++) {
                 var value = new Array();
-                console.log(packs[i].pack_site_id, ' ',packs[i].pack_id, ' ', packs[i].site_id);
+                console.log(packs[i].pack_site_id, ' ', packs[i].pack_id, ' ', packs[i].site_id);
                 // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
-               /* value['format_group_name'] = formats[i].formats_group.format_group_name;
-                value['format_id'] = formats[i].format_id;
-                value['format_name'] = formats[i].format.format_name;
-                value['format_type_id'] = formats[i].format.format_type_id;
+                /* value['format_group_name'] = formats[i].formats_group.format_group_name;
+                 value['format_id'] = formats[i].format_id;
+                 value['format_name'] = formats[i].format.format_name;
+                 value['format_type_id'] = formats[i].format.format_type_id;
 
-                requestValues.push(value);*/
+                 requestValues.push(value);*/
             }
 
             switch (pack_id) {
@@ -466,10 +535,10 @@ exports.create_post = async (req, res) => {
             "name": "20211101 - MPAVE AD - ",
             "description": "",
             "isPersonalizedAd": false,
-           /* "siteIds": [
-                299248,
-                299249
-            ],*/
+            /* "siteIds": [
+                 299248,
+                 299249
+             ],*/
             "insertionStatusId": 1,
             "startDate": "2021-10-27T00:00:00",
             "endDate": "2021-10-27T23:59:00",
@@ -481,22 +550,22 @@ exports.create_post = async (req, res) => {
             "insertionGroupedVolumeId": 452054,
             "globalCapping": 0, // Insertion CappingGlobal
             "cappingPerVisit": 0, // Insertion CappingVisite
-         //   "cappingPerClick": 0,
-         //   "autoCapping": 0,
+            //   "cappingPerClick": 0,
+            //   "autoCapping": 0,
             "PeriodicCappingImpressions": 0,
             "PeriodicCappingPeriod": 0,
             "isObaIconEnabled": false,
-           // "formatId": 79654,
+            // "formatId": 79654,
             "isArchived": false,
-           /* "insertionExclusionIds": [
-                111233
-            ],*/
+            /* "insertionExclusionIds": [
+                 111233
+             ],*/
             "customizedScript": "",
             "salesChannelId": 1
         }
 
         console.log('REQUEST : ', requestInsertion);
-        
+
 
         process.exit();
 
