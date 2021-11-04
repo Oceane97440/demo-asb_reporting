@@ -327,7 +327,6 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             siteList = new Object();
             for (var ln = 0; ln < siteUniqueCount.length; ln++) {
                 sN = siteUniqueCount[ln];
-                console.log(sN)
                 siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
                 siteClicksSUM = siteClicks[sN].reduce(reducer);
                 siteCompleteSUM = siteComplete[sN].reduce(reducer);

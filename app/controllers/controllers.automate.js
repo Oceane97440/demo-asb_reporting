@@ -2923,6 +2923,9 @@ exports.reports = async (req, res) => {
                     advertiser_id = campaigns[i].advertiser.advertiser_id;
                     advertiser_name = campaigns[i].advertiser.advertiser_name;
 
+
+
+
                     var start_date = new Date(campaign_start_date);
                     var end_date_time = new Date(campaign_end_date);
                     var date_now = Date.now();
@@ -2934,90 +2937,100 @@ exports.reports = async (req, res) => {
                         var NbDayCampaign = diff.day;
                     }
 
-                    console.log(
-                        'campaign_id : ',
-                        campaign_id,
-                        ' - ',
-                        'diff_start.day : ',
-                        diff_start.day,
-                        ' - diff.day : ',
-                        diff.day,
-                        ' - endate : ',
-                        end_date_time,
-                        'NbDayCampaign : ',
-                        NbDayCampaign
-                    )
 
 
+
+                    /** Recupère les campagne en ligne uniquement < 31j */
                     if (NbDayCampaign < 31) {
-
-
-                        var reportLocalStorage = localStorage.getItem(
-                            'campaignID-' + campaign_id
+                        console.log(
+                            'campaign_id : ',
+                            campaign_id,
+                            ' - ',
+                            'diff_start.day : ',
+                            diff_start.day,
+                            ' - diff.day : ',
+                            diff.day,
+                            ' - endate : ',
+                            end_date_time,
+                            'NbDayCampaign : ',
+                            NbDayCampaign
                         )
-                        if (reportLocalStorage) {
-                            var reportingData = JSON.parse(reportLocalStorage);
-                            var reporting_end_date = reportingData.reporting_end_date;
-                            // var t = moment.duration(reportingData.reporting_end_date, "minutes");
 
-                            campaignsList = {
-                                'campaign_id': campaign_id,
-                                'advertiser_id': advertiser_id,
-                                'advertiser_name': advertiser_name,
-                                'campaign_name': campaign_name,
-                                'campaign_crypt': campaign_crypt,
-                                'campaign_start_date': campaign_start_date,
-                                'campaign_end_date': campaign_end_date,
-                                'report': '1',
-                                'timestamp_expiration': moment(reporting_end_date).unix(),
-                                'date_expiration': reporting_end_date
-                            }
-                        } else {
-                            campaignsList = {
-                                'campaign_id': campaign_id,
-                                'advertiser_id': advertiser_id,
-                                'advertiser_name': advertiser_name,
-                                'campaign_name': campaign_name,
-                                'campaign_crypt': campaign_crypt,
-                                'campaign_start_date': campaign_start_date,
-                                'campaign_end_date': campaign_end_date,
-                                'report': '0',
-                                'timestamp_expiration': moment().unix(),
-                                'date_expiration': moment().format('YYYY-MM-DD HH:mm:ss')
-                            }
-                        }
+                     
 
-                        // Si la date de fin est sup. à la date du jour
-                        if (moment().format('YYYY-MM-DD HH:mm:ss') < campaign_end_date) {
-                            campaignsReports.push(campaignsList);
-                        }
+                    }
+
+                    /*
+
+                     var reportLocalStorage = localStorage.getItem(
+                         'campaignID-' + campaign_id
+                     )
+                     if (reportLocalStorage) {
+                         var reportingData = JSON.parse(reportLocalStorage);
+                         var reporting_end_date = reportingData.reporting_end_date;
+                         // var t = moment.duration(reportingData.reporting_end_date, "minutes");
+
+                         campaignsList = {
+                             'campaign_id': campaign_id,
+                             'advertiser_id': advertiser_id,
+                             'advertiser_name': advertiser_name,
+                             'campaign_name': campaign_name,
+                             'campaign_crypt': campaign_crypt,
+                             'campaign_start_date': campaign_start_date,
+                             'campaign_end_date': campaign_end_date,
+                             'report': '1',
+                             'timestamp_expiration': moment(reporting_end_date).unix(),
+                             'date_expiration': reporting_end_date
+                         }
+                     } else {
+                         campaignsList = {
+                             'campaign_id': campaign_id,
+                             'advertiser_id': advertiser_id,
+                             'advertiser_name': advertiser_name,
+                             'campaign_name': campaign_name,
+                             'campaign_crypt': campaign_crypt,
+                             'campaign_start_date': campaign_start_date,
+                             'campaign_end_date': campaign_end_date,
+                             'report': '0',
+                             'timestamp_expiration': moment().unix(),
+                             'date_expiration': moment().format('YYYY-MM-DD HH:mm:ss')
+                         }
+                     }
+
+                     // Si la date de fin est sup. à la date du jour
+                     if (moment().format('YYYY-MM-DD HH:mm:ss') < campaign_end_date) {
+                         campaignsReports.push(campaignsList);
+                     }
 
 
-                        if (campaignsReports.length > 0) {
-                            // Trie les campagnes selon la date d'expiration
-                            campaignsReports.sort(function (a, b) {
-                                return a.timestamp_expiration - b.timestamp_expiration;
-                            });
+                     if (campaignsReports.length > 0) {
+                         // Trie les campagnes selon la date d'expiration
+                         campaignsReports.sort(function (a, b) {
+                             return a.timestamp_expiration - b.timestamp_expiration;
+                         });
 
-                            var format = req.query.format;
-                            if (!Utilities.empty(format) && (format === 'json')) {
-                                return res
-                                    .status(200)
-                                    .json(campaignsReports);
-                            } else {
-                                campaign_crypt = campaignsReports[0].campaign_crypt;
-                                campaign_id = campaignsReports[0].campaign_id;
-                                res.redirect('/r/automate/' + campaign_id);
-                            }
+                         var format = req.query.format;
+                         if (!Utilities.empty(format) && (format === 'json')) {
+                             return res
+                                 .status(200)
+                                 .json(campaignsReports);
+                         } else {
+                             campaign_crypt = campaignsReports[0].campaign_crypt;
+                             campaign_id = campaignsReports[0].campaign_id;
+                             res.redirect('/r/automate/' + campaign_id);
+                         }
 
-                        } else {
-                            return res
-                                .status(200)
-                                .json('Aucune campagne existante');
-                        }
-                    } 
+                     } else {
+                         return res
+                             .status(200)
+                             .json('Aucune campagne existante');
+                     }
 
+
+                     */
                 }
+             //   console.log(campaignsReports)
+
 
             });
 
