@@ -2949,7 +2949,7 @@ exports.reports = async (req, res) => {
                     )
 
 
-                    if (NbDayCampaign <= 31) {
+                    if (NbDayCampaign < 31) {
 
 
                         var reportLocalStorage = localStorage.getItem(
