@@ -153,7 +153,7 @@ exports.advertisers = async (req, res) => {
                             var dataValue = response.data;
                             var number_line_offset = dataValue.length;
 
-                          
+
 
                             for (i = 0; i < number_line_offset; i++) {
                                 var advertiser_id = dataValue[i].id;
@@ -2923,83 +2923,100 @@ exports.reports = async (req, res) => {
                     advertiser_id = campaigns[i].advertiser.advertiser_id;
                     advertiser_name = campaigns[i].advertiser.advertiser_name;
 
-                    /*
-                    insertion_start_date = await ModelInsertions.max('insertion_start_date', {
-                        where: {
-                            campaign_id: campaign_id
-                        }
-                    });
-                    insertion_end_date = await ModelInsertions.max('insertion_end_date', {
-                        where: {
-                            campaign_id: campaign_id
-                        }
-                    });
+                    var start_date = new Date(campaign_start_date);
+                    var end_date_time = new Date(campaign_end_date);
+                    var date_now = Date.now();
+                    var diff_start = Utilities.nbr_jours(start_date, date_now);
+                    var diff = Utilities.nbr_jours(start_date, end_date_time);
+                    if (diff_start.day < diff.day) {
+                        var NbDayCampaign = diff_start.day;
+                    } else {
+                        var NbDayCampaign = diff.day;
+                    }
 
-                    if(insertion_start_date > campaign_start_date) { campaign_start_date = campaign_start_date; } else { campaign_start_date = insertion_start_date; }
-                    if(insertion_end_date > campaign_end_date) { campaign_end_date = campaign_end_date; } else { campaign_end_date = insertion_end_date; }
-*/
-                    var reportLocalStorage = localStorage.getItem(
-                        'campaignID-' + campaign_id
+                    console.log(
+                        'campaign_id : ',
+                        campaign_id,
+                        ' - ',
+                        'diff_start.day : ',
+                        diff_start.day,
+                        ' - diff.day : ',
+                        diff.day,
+                        ' - endate : ',
+                        end_date_time,
+                        'NbDayCampaign : ',
+                        NbDayCampaign
                     )
-                    if (reportLocalStorage) {
-                        var reportingData = JSON.parse(reportLocalStorage);
-                        var reporting_end_date = reportingData.reporting_end_date;
-                        // var t = moment.duration(reportingData.reporting_end_date, "minutes");
 
-                        campaignsList = {
-                            'campaign_id': campaign_id,
-                            'advertiser_id': advertiser_id,
-                            'advertiser_name': advertiser_name,
-                            'campaign_name': campaign_name,
-                            'campaign_crypt': campaign_crypt,
-                            'campaign_start_date': campaign_start_date,
-                            'campaign_end_date': campaign_end_date,
-                            'report': '1',
-                            'timestamp_expiration': moment(reporting_end_date).unix(),
-                            'date_expiration': reporting_end_date
+
+                    if (NbDayCampaign <= 31) {
+
+
+                        var reportLocalStorage = localStorage.getItem(
+                            'campaignID-' + campaign_id
+                        )
+                        if (reportLocalStorage) {
+                            var reportingData = JSON.parse(reportLocalStorage);
+                            var reporting_end_date = reportingData.reporting_end_date;
+                            // var t = moment.duration(reportingData.reporting_end_date, "minutes");
+
+                            campaignsList = {
+                                'campaign_id': campaign_id,
+                                'advertiser_id': advertiser_id,
+                                'advertiser_name': advertiser_name,
+                                'campaign_name': campaign_name,
+                                'campaign_crypt': campaign_crypt,
+                                'campaign_start_date': campaign_start_date,
+                                'campaign_end_date': campaign_end_date,
+                                'report': '1',
+                                'timestamp_expiration': moment(reporting_end_date).unix(),
+                                'date_expiration': reporting_end_date
+                            }
+                        } else {
+                            campaignsList = {
+                                'campaign_id': campaign_id,
+                                'advertiser_id': advertiser_id,
+                                'advertiser_name': advertiser_name,
+                                'campaign_name': campaign_name,
+                                'campaign_crypt': campaign_crypt,
+                                'campaign_start_date': campaign_start_date,
+                                'campaign_end_date': campaign_end_date,
+                                'report': '0',
+                                'timestamp_expiration': moment().unix(),
+                                'date_expiration': moment().format('YYYY-MM-DD HH:mm:ss')
+                            }
                         }
-                    } else {
-                        campaignsList = {
-                            'campaign_id': campaign_id,
-                            'advertiser_id': advertiser_id,
-                            'advertiser_name': advertiser_name,
-                            'campaign_name': campaign_name,
-                            'campaign_crypt': campaign_crypt,
-                            'campaign_start_date': campaign_start_date,
-                            'campaign_end_date': campaign_end_date,
-                            'report': '0',
-                            'timestamp_expiration': moment().unix(),
-                            'date_expiration': moment().format('YYYY-MM-DD HH:mm:ss')
+
+                        // Si la date de fin est sup. à la date du jour
+                        if (moment().format('YYYY-MM-DD HH:mm:ss') < campaign_end_date) {
+                            campaignsReports.push(campaignsList);
                         }
-                    }
 
-                    // Si la date de fin est sup. à la date du jour
-                    if (moment().format('YYYY-MM-DD HH:mm:ss') < campaign_end_date) {
-                        campaignsReports.push(campaignsList);
-                    }
-                }
 
-                if (campaignsReports.length > 0) {
-                    // Trie les campagnes selon la date d'expiration
-                    campaignsReports.sort(function (a, b) {
-                        return a.timestamp_expiration - b.timestamp_expiration;
-                    });
+                        if (campaignsReports.length > 0) {
+                            // Trie les campagnes selon la date d'expiration
+                            campaignsReports.sort(function (a, b) {
+                                return a.timestamp_expiration - b.timestamp_expiration;
+                            });
 
-                    var format = req.query.format;
-                    if (!Utilities.empty(format) && (format === 'json')) {
-                        return res
-                            .status(200)
-                            .json(campaignsReports);
-                    } else {
-                        campaign_crypt = campaignsReports[0].campaign_crypt;
-                        campaign_id = campaignsReports[0].campaign_id;
-                        res.redirect('/r/automate/' + campaign_id);
-                    }
+                            var format = req.query.format;
+                            if (!Utilities.empty(format) && (format === 'json')) {
+                                return res
+                                    .status(200)
+                                    .json(campaignsReports);
+                            } else {
+                                campaign_crypt = campaignsReports[0].campaign_crypt;
+                                campaign_id = campaignsReports[0].campaign_id;
+                                res.redirect('/r/automate/' + campaign_id);
+                            }
 
-                } else {
-                    return res
-                        .status(200)
-                        .json('Aucune campagne existante');
+                        } else {
+                            return res
+                                .status(200)
+                                .json('Aucune campagne existante');
+                        }
+                    } 
+
                 }
 
             });
