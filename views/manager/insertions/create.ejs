@@ -51,11 +51,10 @@
                             <select class="form-control" id="format_group_id" name="format_group_id"
                                 required="required">
                                 <option value="">Choisir un format</option>
-                                <% for (let i=0; i < group_formats.length; i++) { %>
-                                <option value="<%= group_formats[i].format_group_id %>">
-                                    <%= group_formats[i].format_group_name %>
-                                </option>
-                                <% } %>
+                                <% for(let i=1; i < formats.length; i++) {%>
+                                    <option value="<%= formats[i].format_group %>">
+                                        <%= formats[i].format_group %></option>
+                                    <% } %>
                             </select>
                         </div>
 
