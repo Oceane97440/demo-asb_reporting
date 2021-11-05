@@ -4,6 +4,7 @@
             <tr>
                 <th>#</th>
                 <th>Nom</th>
+                <th>Groupe site</th>
                 <th>Url</th>
                 <th>Actions</th>
             </tr>
@@ -15,7 +16,10 @@
                         title="<%= sites[i].site_name %>"><%= sites[i].site_id %></a></td>
                 <td><a href="/manager/sites/<%= sites[i].site_id %>"
                         title="<%= sites[i].site_name %>"><%= sites[i].site_name %></a></td>
-                <td><a href="<%= sites[i].site_url %>" target="_blank" title="<%= sites[i].site_url %>"><%= sites[i].site_url %></a>
+                <td><a href="/manager/sites/<%= sites[i].site_id %>"
+                        title="<%= sites[i].site_group %>"><%= sites[i].site_group %></a></td>
+                <td><a href="<%= sites[i].site_url %>" target="_blank"
+                        title="<%= sites[i].site_url %>"><%= sites[i].site_url %></a>
                 </td>
                 <td>
                     <a href="/manager/sites/<%= sites[i].site_id %>/edit" title="Modifier ce site"><i

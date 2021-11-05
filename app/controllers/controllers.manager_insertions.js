@@ -350,7 +350,7 @@ exports.create_post = async (req, res) => {
         }
 
 
-  
+
 
         const campaign_id = body.campaign_id;
         const format_group_id = body.format_group_id;
@@ -369,7 +369,7 @@ exports.create_post = async (req, res) => {
         const video_url = body.video_url;
 
 
-        
+
         const formatIdsArray = []
         const sites = []
         // si format site countrie ne sont pas vide selectionne le groupe format
@@ -412,16 +412,15 @@ exports.create_post = async (req, res) => {
             }
         }
 
-        console.log('GRANG ANGLE '+ formatIdsArray)
-        console.log('Pack GR '+sites)
+       // console.log('GRANG ANGLE ' + formatIdsArray)
+     //   console.log('Pack GR ' + sites)
 
 
         formats_sites = await ModelFormatsSites.findAll({
             where: {
-                format_id : formatIdsArray
+                format_id: formatIdsArray
             },
-            include: [
-                {
+            include: [{
                     model: ModelFormats
                 },
                 {
@@ -433,30 +432,36 @@ exports.create_post = async (req, res) => {
 
         for (let index = 0; index < formats_sites.length; index++) {
             if (!Utilities.empty(formats_sites)) {
-               const siteName = formats_sites[index].site.site_name
-               const siteIds = formats_sites[index].site.site_id
+                const siteName = formats_sites[index].site.site_group
+                const siteIds = formats_sites[index].site.site_id
 
                 const formatName = formats_sites[index].format.format_name
-                const formatIds = formats_sites[index].format.format_name
+                const formatIds = formats_sites[index].format.format_id
 
+               
 
+                // Regex libélé position remplace btf -> position 5
+                const regex = /BTF/igm;
+                var label = formatName.replace(regex, '5');
+                const found = label.match(/[0-9]/igm);
+                const libélé = format_group_id + " - " + siteName + ' - ' + 'POSITION ' + found
 
                 var requestInsertion = {
                     "isDeliveryRegulated": true,
                     "isUsedByGuaranteedDeal": false,
                     "isUsedByNonGuaranteedDeal": false,
-                    "name": format_group_id +" - " + siteName,
+                    "name": libélé,
                     "description": "",
                     "isPersonalizedAd": false,
-                     "siteIds": [siteIds],
+                    "siteIds": [siteIds],
                     "insertionStatusId": 1,
                     "startDate": "2021-10-27T00:00:00",
                     "endDate": "2021-10-27T23:59:00",
                     "campaignId": 1764641,
                     "insertionTypeId": 0,
-                    "deliveryTypeId": 10,
+                    "deliveryTypeId": 1, //Categorie WEB
                     "timezoneId": 4, // Insertion TimezoneId
-                    "priorityId": 62, // Insertion PriorityId
+                    "priorityId": 62, // Insertion PriorityId Normal 3
                     "insertionGroupedVolumeId": 452054,
                     "globalCapping": 0, // Insertion CappingGlobal
                     "cappingPerVisit": 0, // Insertion CappingVisite
@@ -465,7 +470,7 @@ exports.create_post = async (req, res) => {
                     "PeriodicCappingImpressions": 0,
                     "PeriodicCappingPeriod": 0,
                     "isObaIconEnabled": false,
-                     "formatId": formatIds,
+                    "formatId": formatIds,
                     "isArchived": false,
                     /* "insertionExclusionIds": [
                          111233
@@ -473,13 +478,50 @@ exports.create_post = async (req, res) => {
                     "customizedScript": "",
                     "salesChannelId": 1
                 }
-        
+
+
+
+                /**     PARAMETRE REQUETE   */
+
+                //Condition si c du mobile
+                if (siteName.match(/APPLI/igm)) {
+
+                    requestInsertion['deliveryTypeId'] = 10
+
+                }
+                console.log(libélé)
                 console.log('REQUEST : ', requestInsertion);
+
+
+
+
+
+
+                let insertion_create = await AxiosFunction.postManage(
+                    'insertions',
+                    requestInsertion
+                );
+
+                if (insertion_create.headers.location) {
+                    var url_location = insertion_create.headers.location
+                  //  var insertion_get = await AxiosFunction.getManage(url_location);
+                    //const insertion_id = insertion_get.data.id
+
+
+
+
+                    res.json({
+                        type: 'success',
+                        intro: 'Ok',
+                        message: 'L\'inserion a été crée dans SMARTADSERVEUR',
+
+                    })  
+                }
 
                 console.log("------------------------")
 
             }
-            
+
         }
 
         process.exit()
