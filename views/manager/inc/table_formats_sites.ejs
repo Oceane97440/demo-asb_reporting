@@ -17,12 +17,15 @@
                 <td class="site_name"><a href="/manager/sites/<%= formats_sites[i].site.site_id %>"
                         title="<%= formats_sites[i].site.site_name %>"><%= formats_sites[i].site.site_name %></a>
                 </td>
+                <% if(!utilities.empty(formats_sites[i].format)) { %>
+
                 <td class="format_name">
-                    <% if(formats_sites[i].format.format_id) { %>
-                    <a href="/manager/formats/<%= formats_sites[i].format.format_id %>"
-                        title="<%= formats_sites[i].format.format_id %>"><%= formats_sites[i].format.format_name %></a>
-                        <% } %>
+                    <a href="/manager/formats/<%= formats_sites[i].format_id %>"
+                        title="<%= formats_sites[i].format_id %>"><%= formats_sites[i].format.format_name %></a>
                 </td>
+                <% }else { %>
+                    <td class="format_name">-</td>
+                    <% } %>
                 <td>
                     <a href="/manager/sites/<%= formats_sites[i].site_id %>" title="Visualiser" class="btn btn-sm"><i
                             class="icon feather icon-eye f-16 text-info"></i></a>

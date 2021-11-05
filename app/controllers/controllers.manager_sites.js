@@ -22,6 +22,8 @@ const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
+const Utilities = require('../functions/functions.utilities');
+
 
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
@@ -141,6 +143,12 @@ exports.view = async (req, res) => {
                         }
                     ]
                 });
+
+                
+
+                data.utilities = Utilities
+                
+
 
                 res.render('manager/sites/view.ejs', data);
             });
