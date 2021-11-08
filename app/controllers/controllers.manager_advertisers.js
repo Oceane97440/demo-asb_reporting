@@ -59,13 +59,13 @@ exports.index = async (req, res) => {
         });
         data.breadcrumb = breadcrumb;
 
-       advertisers_last = await ModelAdvertisers.findAll({
-        limit: 10,
+        advertisers_last = await ModelAdvertisers.findAll({
+            limit: 10,
             include: [{
                 model: ModelCampaigns
             }]
-        },{
-            order: [              
+        }, {
+            order: [
                 ['advertiser_id', 'ASC']
             ]
         });
@@ -178,7 +178,7 @@ exports.create_post = async (req, res) => {
             return res.redirect('/manager/advertisers/create');
         }
 
-    
+
         var requestAdvertiser = {
             "name": advertiser,
 
@@ -271,9 +271,12 @@ exports.create_post = async (req, res) => {
 
 exports.view = async (req, res) => {
     try {
+
         const data = new Object();
 
         var advertiser_id = req.params.id;
+
+
         var advertiser = await ModelAdvertisers
             .findOne({
                 where: {
@@ -284,12 +287,20 @@ exports.view = async (req, res) => {
                 }]
             })
             .then(async function (advertiser) {
-                if (!advertiser)
-                    return res
+              
+
+
+
+                if (!advertiser) {
+                    console.log("Annonceur")
+                    //res.redirect(`/automate/advertiser/?advertiser_id=${advertiser_id}`)
+                   /* return res
                         .status(404)
                         .render("manager/error.ejs", {
                             statusCoded: 404
-                        });
+                        });*/
+
+                }
 
                 // Créer le fil d'ariane
                 breadcrumb = new Array({
@@ -307,12 +318,12 @@ exports.view = async (req, res) => {
                 // Récupére les données des campagnes epilot  
                 const epilot_campaigns = await ModelEpilotCampaigns.findOne({
                     attributes: [
-                       [sequelize.fn('sum', sequelize.col('epilot_campaign_budget_net')), 'campaign_budget']
+                        [sequelize.fn('sum', sequelize.col('epilot_campaign_budget_net')), 'campaign_budget']
                     ],
                     where: {
                         advertiser_id: advertiser_id
                     },
-                    raw : true
+                    raw: true
                 });
                 data.epilot_campaigns = epilot_campaigns;
 

@@ -290,11 +290,13 @@ exports.view = async (req, res) => {
             })
             .then(async function (campaign) {
                 if (!campaign) {
-                    return res
+                    console.log("redirection campagne")
+                    res.redirect(`/automate/campaign?campaign_id=${campaign_id}`)
+                  /*  return res
                         .status(404)
-                        .render("manager/error.ejs", {statusCoded: 404});
+                        .render("manager/error.ejs", {statusCoded: 404});*/
                 }
-
+            
                 // Créer le fil d'ariane
                 var breadcrumbLink = 'advertisers'
                 breadcrumb = new Array({

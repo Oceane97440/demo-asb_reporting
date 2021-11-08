@@ -4,16 +4,23 @@ const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
 var crypto = require('crypto');
-const {Op} = require("sequelize");
+const {
+    Op
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 const moment = require('moment');
-const {check, query} = require('express-validator');
+const {
+    check,
+    query
+} = require('express-validator');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -51,8 +58,12 @@ const ModelEpilotInsertions = require("../models/models.epilot_insertions");
 const ModelUsers = require("../models/models.users");
 const ModelPacks_Smart = require("../models/models.packs_smart");
 
-const {resolve} = require('path');
-const {cpuUsage} = require('process');
+const {
+    resolve
+} = require('path');
+const {
+    cpuUsage
+} = require('process');
 
 // Initialise le module
 var LocalStorage = require('node-localstorage').LocalStorage;
@@ -89,9 +100,11 @@ exports.agencies = async (req, res) => {
                             var agency_name = dataValue[i].name;
                             var agency_archived = dataValue[i].isArchived;
 
-                            const agencies = ModelAgencies.create(
-                                {agency_id, agency_name, agency_archived}
-                            );
+                            const agencies = ModelAgencies.create({
+                                agency_id,
+                                agency_name,
+                                agency_archived
+                            });
                         }
 
                     });
@@ -140,7 +153,12 @@ exports.advertisers = async (req, res) => {
                             Utilities
                                 .updateOrCreate(ModelAdvertisers, {
                                     advertiser_id: advertiser_id
-                                }, {advertiser_id, advertiser_name, advertiser_archived, agency_id})
+                                }, {
+                                    advertiser_id,
+                                    advertiser_name,
+                                    advertiser_archived,
+                                    agency_id
+                                })
                                 .then(function (result) {
                                     //  console.log(result['created']='true')
 
@@ -178,7 +196,6 @@ exports.advertisers = async (req, res) => {
 exports.advertiser = async (req, res) => {
     try {
         let advertiser_id = req.query.advertiser_id;
-        //console.log(advertiser_id)
 
         if (advertiser_id) {
             advertiserObject = {
@@ -197,26 +214,35 @@ exports.advertiser = async (req, res) => {
                     Utilities
                         .updateOrCreate(ModelAdvertisers, {
                             advertiser_id: advertiser_id
-                        }, {advertiser_id, advertiser_name, advertiser_archived})
+                        }, {
+                            advertiser_id,
+                            advertiser_name,
+                            advertiser_archived
+                        })
                         .then(function (result) {
                             result.item; // the model
                             result.created; // bool, if a new item was created.
-                            return res.json({
+                            res.redirect(`/manager/advertisers/${advertiser_id}`)
+                            /*return res.json({
                                 type: 'success',
                                 message: 'L\'annonceur <strong>' + advertiser_id + '</strong> a bien été ajouté.'
-                            });
+                            });*/
                         });
                 }
 
             });
 
         } else {
-            return res.json(
-                {type: 'error', message: 'Veuillez saisir l\'identifiant de l\'annonceur.'}
-            );
+            return res.json({
+                type: 'error',
+                message: 'Veuillez saisir l\'identifiant de l\'annonceur.'
+            });
         }
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 }
 
@@ -279,22 +305,29 @@ exports.advertisersCampaigns = async (req, res) => {
                         return res.json({
                             type: 'success',
                             message: 'Les <strong>' + number_line_offset + '</strong> campagnes de l\'annonceur <str' +
-                                    'ong>' + advertiser_id + '</strong> ont bien été ajoutées.'
+                                'ong>' + advertiser_id + '</strong> ont bien été ajoutées.'
                         });
 
                     }
                 } else {
-                    return res.json({type: 'error', message: 'Error : Aucune donnée disponible'});
+                    return res.json({
+                        type: 'error',
+                        message: 'Error : Aucune donnée disponible'
+                    });
                 }
             });
 
         } else {
-            return res.json(
-                {type: 'error', message: 'Veuillez saisir l\'identifiant de l\'annonceur.'}
-            );
+            return res.json({
+                type: 'error',
+                message: 'Veuillez saisir l\'identifiant de l\'annonceur.'
+            });
         }
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 
 }
@@ -419,16 +452,20 @@ exports.campaign = async (req, res) => {
     try {
         let campaign_id = req.query.campaign_id;
 
+
         if (campaign_id) {
             campaignObject = {
                 "campaign_id": req.query.campaign_id
             };
+            console.log("campaign_id  " + campaign_id)
+
             var config = SmartFunction.config('campaign', campaignObject);
 
-            await axios(config).then(function (result) {
+            await axios(config).then( async function (result) {
 
                 if (!Utilities.empty(result.data)) {
                     var dataValue = result.data;
+
 
                     var campaign_id = dataValue.id;
                     var campaign_name = dataValue.name;
@@ -439,45 +476,96 @@ exports.campaign = async (req, res) => {
                     var campaign_status_id = dataValue.campaignStatusId;
                     var campaign_archived = dataValue.isArchived;
 
-                    var campaign_crypt = crypto
-                        .createHash('md5')
-                        .update(campaign_id.toString())
-                        .digest("hex");
+                    //Cherche si l'annonceur liée à la campagne exsite
+                    const advertiser = await ModelAdvertisers.findOne({
+                        where: {
+                            advertiser_id: advertiser_id
+                        }
+                    })
 
-                    Utilities
-                        .updateOrCreate(ModelCampaigns, {
-                            campaign_id: campaign_id
-                        }, {
-                            campaign_id,
-                            campaign_name,
-                            campaign_crypt,
-                            advertiser_id,
-                            agency_id,
-                            campaign_start_date,
-                            campaign_end_date,
-                            campaign_status_id,
-                            campaign_archived
-                        })
-                        .then(function (result) {
-                            result.item; // the model
-                            result.created; // bool, if a new item was created.
-                            return res.json({
-                                type: 'success',
-                                message: 'La campagne <strong>' + campaign_id + '</strong> a bien été ajouté.'
+                    //Si il n'existe pas on ajoute l'annonceur dans le BI puis on redirige vers celui-ci
+                    if (!advertiser) {
+
+                        console.log("redirection annonceur")
+
+                         advertiserObject = {
+                              "advertiser_id": advertiser_id
+                          };
+                          var config = SmartFunction.config('advertiser', advertiserObject);
+              
+                          await axios(config).then(function (result) {
+              
+                              if (!Utilities.empty(result.data)) {
+                                  var dataValue = result.data;
+                                  var advertiser_id = dataValue.id;
+                                  var advertiser_name = dataValue.name;
+                                  var advertiser_archived = dataValue.isArchived;
+                                  
+                                  Utilities
+                                      .updateOrCreate(ModelAdvertisers, {
+                                          advertiser_id: advertiser_id
+                                      }, {advertiser_id, advertiser_name, advertiser_archived})
+                                      .then(function (result) {
+                                          result.item; // the model
+                                          result.created; // bool, if a new item was created.
+                                          res.redirect(`/manager/advertisers/${advertiser_id}`)
+                                   
+                                      });
+                              }
+              
+                          });
+
+                    } else {
+
+                        //si l'annonceur existe on ajoute la campagne dans le BI
+
+                        var campaign_crypt = crypto
+                            .createHash('md5')
+                            .update(campaign_id.toString())
+                            .digest("hex");
+
+                        Utilities
+                            .updateOrCreate(ModelCampaigns, {
+                                campaign_id: campaign_id
+                            }, {
+                                campaign_id,
+                                campaign_name,
+                                campaign_crypt,
+                                advertiser_id,
+                                agency_id,
+                                campaign_start_date,
+                                campaign_end_date,
+                                campaign_status_id,
+                                campaign_archived
+                            })
+                            .then(function (result) {
+                                result.item; // the model
+                                result.created; // bool, if a new item was created.
+
+                                res.redirect(`/manager/campaigns/${campaign_id}`)
+                                console.log("redirection campagne")
                             });
-                        });
+
+                    }
+
+
+
 
                 }
 
             });
 
         } else {
-            return res.json(
-                {type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.'}
-            );
+            return res.json({
+                type: 'error',
+                message: 'Veuillez saisir l\'identifiant de la campagne.'
+            });
         }
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 }
 
@@ -494,15 +582,16 @@ exports.campaignReport = async (req, res) => {
                     where: {
                         campaign_id: campaign_id
                     },
-                    include: [
-                        {
-                            model: ModelAdvertisers
-                        }
-                    ]
+                    include: [{
+                        model: ModelAdvertisers
+                    }]
                 })
                 .then(async function (campaign) {
                     if (!campaign) {
-                        return res.json({type: 'error', message: 'Cette campagne n\'existe pas.'});
+                        return res.json({
+                            type: 'error',
+                            message: 'Cette campagne n\'existe pas.'
+                        });
                     }
 
                     // fonctionnalité de géneration du rapport
@@ -549,9 +638,10 @@ exports.campaignReport = async (req, res) => {
                                 }
 
                                 if (reporting_requete_date < reporting_end_date) {
-                                    return res.json(
-                                        {type: 'success', message: 'Le rapport de campagne a été généré'}
-                                    );
+                                    return res.json({
+                                        type: 'success',
+                                        message: 'Le rapport de campagne a été généré'
+                                    });
 
                                 }
 
@@ -574,9 +664,10 @@ exports.campaignReport = async (req, res) => {
                                     // res.redirect('/r/${campaigncrypt}');
                                 } else {
 
-                                    return res.json(
-                                        {type: 'success', message: 'Le rapport de campagne a été généré'}
-                                    );
+                                    return res.json({
+                                        type: 'success',
+                                        message: 'Le rapport de campagne a été généré'
+                                    });
 
                                 }
 
@@ -635,45 +726,41 @@ exports.campaignReport = async (req, res) => {
                             var requestReporting = {
                                 "startDate": StartDate_timezone,
                                 "endDate": end_date,
-                                "fields": [
-                                    {
-                                        "CampaignStartDate": {}
-                                    }, {
-                                        "CampaignEndDate": {}
-                                    }, {
-                                        "CampaignId": {}
-                                    }, {
-                                        "CampaignName": {}
-                                    }, {
-                                        "InsertionId": {}
-                                    }, {
-                                        "InsertionName": {}
-                                    }, {
-                                        "FormatId": {}
-                                    }, {
-                                        "FormatName": {}
-                                    }, {
-                                        "SiteId": {}
-                                    }, {
-                                        "SiteName": {}
-                                    }, {
-                                        "Impressions": {}
-                                    }, {
-                                        "ClickRate": {}
-                                    }, {
-                                        "Clicks": {}
-                                    }, {
-                                        "VideoCount": {
-                                            "Id": "17",
-                                            "OutputName": "Nbr_complete"
-                                        }
+                                "fields": [{
+                                    "CampaignStartDate": {}
+                                }, {
+                                    "CampaignEndDate": {}
+                                }, {
+                                    "CampaignId": {}
+                                }, {
+                                    "CampaignName": {}
+                                }, {
+                                    "InsertionId": {}
+                                }, {
+                                    "InsertionName": {}
+                                }, {
+                                    "FormatId": {}
+                                }, {
+                                    "FormatName": {}
+                                }, {
+                                    "SiteId": {}
+                                }, {
+                                    "SiteName": {}
+                                }, {
+                                    "Impressions": {}
+                                }, {
+                                    "ClickRate": {}
+                                }, {
+                                    "Clicks": {}
+                                }, {
+                                    "VideoCount": {
+                                        "Id": "17",
+                                        "OutputName": "Nbr_complete"
                                     }
-                                ],
-                                "filter": [
-                                    {
-                                        "CampaignId": [campaignid]
-                                    }
-                                ]
+                                }],
+                                "filter": [{
+                                    "CampaignId": [campaignid]
+                                }]
                             }
 
                             // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
@@ -696,16 +783,12 @@ exports.campaignReport = async (req, res) => {
                             var requestVisitor_unique = {
                                 "startDate": StartDate_timezone,
                                 "endDate": end_date,
-                                "fields": [
-                                    {
-                                        "UniqueVisitors": {}
-                                    }
-                                ],
-                                "filter": [
-                                    {
-                                        "CampaignId": [campaignid]
-                                    }
-                                ]
+                                "fields": [{
+                                    "UniqueVisitors": {}
+                                }],
+                                "filter": [{
+                                    "CampaignId": [campaignid]
+                                }]
                             }
 
                             console.log(requestVisitor_unique.startDate)
@@ -1185,9 +1268,10 @@ exports.campaignReport = async (req, res) => {
 
                                         localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
 
-                                        return res.json(
-                                            {type: 'success', message: 'Le rapport de campagne a été généré'}
-                                        );
+                                        return res.json({
+                                            type: 'success',
+                                            message: 'Le rapport de campagne a été généré'
+                                        });
 
                                     }
 
@@ -1196,19 +1280,24 @@ exports.campaignReport = async (req, res) => {
                         }
 
                     } catch (error) {
-                        return res.json(
-                            {type: 'error', message: 'Un probléme est survenu sur cette campagne'}
-                        );
+                        return res.json({
+                            type: 'error',
+                            message: 'Un probléme est survenu sur cette campagne'
+                        });
                     }
                 });
 
         } else {
-            return res.json(
-                {type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.'}
-            );
+            return res.json({
+                type: 'error',
+                message: 'Veuillez saisir l\'identifiant de la campagne.'
+            });
         }
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 }
 
@@ -1231,9 +1320,9 @@ exports.campaignsDays = async (req, res) => {
     var advertisersIdsBdd = new Array();
 
     // Récupére l'ensemble des annonceurs dans la bdd
-    var advertisersList = await ModelAdvertisers.findAll(
-        {attributes: ['advertiser_id']}
-    );
+    var advertisersList = await ModelAdvertisers.findAll({
+        attributes: ['advertiser_id']
+    });
     if (advertisersList) {
         var linesAdvertisers = advertisersList.length;
         // Boucle sur les lignes
@@ -1243,7 +1332,9 @@ exports.campaignsDays = async (req, res) => {
     }
 
     // Récupére l'ensemble des campagnes dans la bdd
-    var campaignsList = await ModelCampaigns.findAll({attributes: ['campaign_id']});
+    var campaignsList = await ModelCampaigns.findAll({
+        attributes: ['campaign_id']
+    });
     if (campaignsList) {
         var linescampaigns = campaignsList.length;
         // Boucle sur les lignes
@@ -1260,23 +1351,21 @@ exports.campaignsDays = async (req, res) => {
         var requestCampaignToday = {
             "startDate": dateYesterday,
             "endDate": dateToday,
-            "fields": [
-                {
-                    "AdvertiserId": {}
-                }, {
-                    "AdvertiserName": {}
-                }, {
-                    "CampaignId": {}
-                }, {
-                    "CampaignName": {}
-                }, {
-                    "CampaignStartDate": {}
-                }, {
-                    "CampaignEndDate": {}
-                }, {
-                    "Impressions": {}
-                }
-            ]
+            "fields": [{
+                "AdvertiserId": {}
+            }, {
+                "AdvertiserName": {}
+            }, {
+                "CampaignId": {}
+            }, {
+                "CampaignName": {}
+            }, {
+                "CampaignStartDate": {}
+            }, {
+                "CampaignEndDate": {}
+            }, {
+                "Impressions": {}
+            }]
         }
         console.log('Request :', requestCampaignToday);
         let link = await AxiosFunction
@@ -1294,7 +1383,7 @@ exports.campaignsDays = async (req, res) => {
             .then(async function (linkTaskId) {
                 console.log('linkTaskId :', linkTaskId);
                 var file = 'https://reporting.smartadserverapis.com/2044/reports/' +
-                        linkTaskId;
+                    linkTaskId;
                 console.log('file :', file)
 
                 var time = 10000;
@@ -1304,7 +1393,7 @@ exports.campaignsDays = async (req, res) => {
 
                     if ((dataTask.data.lastTaskInstance.jobProgress == '1.0') && (dataTask.data.lastTaskInstance.instanceStatus == 'SUCCESS') && (dataTask.data.lastTaskInstance.nbOutputLines > 0)) {
                         var linkTaskFile = 'https://reporting.smartadserverapis.com/2044/reports/' +
-                                linkTaskId + '/file';
+                            linkTaskId + '/file';
                         clearInterval(timerFile);
                     }
 
@@ -1515,13 +1604,16 @@ exports.campaignsInsertions = async (req, res) => {
                                                     return res.json({
                                                         type: 'success',
                                                         message: 'Les insertions de la campagne <strong>' + campaignObject.campaign_id + '</stro' +
-                                                                'ng> ont bien été ajoutées.'
+                                                            'ng> ont bien été ajoutées.'
                                                     });
                                                 });
                                         }
                                     }
                                 } else {
-                                    return res.json({type: 'error', message: 'Error : Aucune donnée disponible'});
+                                    return res.json({
+                                        type: 'error',
+                                        message: 'Error : Aucune donnée disponible'
+                                    });
                                 }
                             });
                         }
@@ -1537,12 +1629,16 @@ exports.campaignsInsertions = async (req, res) => {
 
             });
         } else {
-            return res.json(
-                {type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.'}
-            );
+            return res.json({
+                type: 'error',
+                message: 'Veuillez saisir l\'identifiant de la campagne.'
+            });
         }
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 }
 
@@ -1621,7 +1717,7 @@ exports.campaignsCreatives = async (req, res) => {
                                     return res.json({
                                         type: 'success',
                                         message: 'Les créatives de la campagne <strong>' + campaignID + '</strong> ont bien été ' +
-                                                'ajoutées.'
+                                            'ajoutées.'
                                     });
                                 }
 
@@ -1639,12 +1735,16 @@ exports.campaignsCreatives = async (req, res) => {
             }
 
         } else {
-            return res.json(
-                {type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.'}
-            );
+            return res.json({
+                type: 'error',
+                message: 'Veuillez saisir l\'identifiant de la campagne.'
+            });
         }
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 }
 
@@ -1738,9 +1838,10 @@ exports.epilotCampaigns = async (req, res) => {
                 });
             });
 
-        return res.json(
-            {type: 'success', message: "Les annonceurs, les campagnes et les utilisateurs sont MAJ"}
-        );
+        return res.json({
+            type: 'success',
+            message: "Les annonceurs, les campagnes et les utilisateurs sont MAJ"
+        });
 
         /*// Campagnes
         const campaigns = await ModelEpilotCampaigns
@@ -1759,29 +1860,34 @@ exports.epilotCampaigns = async (req, res) => {
             });
       */
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 }
 
 exports.epilotInsertions = async (req, res) => {
     try {
-        
-         // Mettre à jour les campagnes
-         const campaigns = await ModelEpilotCampaigns.findAll()
-         .then(async function (campaigns) {
-             campaigns.forEach(function(item){
-                const epilot_campaign_id = item.epilot_campaign_id;
-                const epilot_campaign_name = item.epilot_campaign_name;
 
-                 ModelEpilotInsertions
-                 .update({ epilot_campaign_id: epilot_campaign_id}, {
-                     where: {
-                         epilot_campaign_name : epilot_campaign_name
-                     }
-                 });
+        // Mettre à jour les campagnes
+        const campaigns = await ModelEpilotCampaigns.findAll()
+            .then(async function (campaigns) {
+                campaigns.forEach(function (item) {
+                    const epilot_campaign_id = item.epilot_campaign_id;
+                    const epilot_campaign_name = item.epilot_campaign_name;
 
-             });
-         });
+                    ModelEpilotInsertions
+                        .update({
+                            epilot_campaign_id: epilot_campaign_id
+                        }, {
+                            where: {
+                                epilot_campaign_name: epilot_campaign_name
+                            }
+                        });
+
+                });
+            });
 
         // Mettre à jour les formats
         const groupFormats = await ModelFormatsGroups
@@ -1790,7 +1896,7 @@ exports.epilotInsertions = async (req, res) => {
                 groupFormats.forEach(function (item) {
                     const format_group_id = item.format_group_id;
                     const format_group_name = item.format_group_name;
-                    console.log('group_format_name : ', format_group_name,' - format_group_id : ', format_group_id);
+                    console.log('group_format_name : ', format_group_name, ' - format_group_id : ', format_group_id);
 
                     ModelEpilotInsertions.update({
                         format_group_id: format_group_id
@@ -1805,7 +1911,7 @@ exports.epilotInsertions = async (req, res) => {
                 });
             });
 
-           
+
         // Mettre à jour les utilisateurs
         const users = await ModelUsers
             .findAll()
@@ -1826,12 +1932,16 @@ exports.epilotInsertions = async (req, res) => {
                 });
             });
 
-        return res.json(
-            {type: 'success', message: "Les insertions, les campagnes et les utilisateurs sont MAJ"}
-        );
+        return res.json({
+            type: 'success',
+            message: "Les insertions, les campagnes et les utilisateurs sont MAJ"
+        });
 
     } catch (error) {
-        return res.json({type: 'error', message: error});
+        return res.json({
+            type: 'error',
+            message: error
+        });
     }
 }
 
@@ -1986,9 +2096,12 @@ exports.packs = async (req, res) => {
                             var packs_smart_is_archived = dataValue[i].isArchived;
                             var updated_at = dataValue[i].updatedAt
 
-                            const packs = ModelPacks_Smart.create(
-                                {packs_smart_id, packs_smart_name, packs_smart_is_archived, updated_at}
-                            );
+                            const packs = ModelPacks_Smart.create({
+                                packs_smart_id,
+                                packs_smart_name,
+                                packs_smart_is_archived,
+                                updated_at
+                            });
 
                         }
 
@@ -2142,7 +2255,10 @@ exports.platforms = async (req, res) => {
                             var platform_name = dataValue[i].name;
 
                             console.log(dataValue);
-                            ModelPlatforms.create({platform_id, platform_name});
+                            ModelPlatforms.create({
+                                platform_id,
+                                platform_name
+                            });
 
                         }
 
@@ -2189,7 +2305,10 @@ exports.deliverytypes = async (req, res) => {
                             var priority_name = dataValue[i].name;
 
                             //  console.log(dataValue);
-                            ModelDeliverytypes.create({priority_id, priority_name});
+                            ModelDeliverytypes.create({
+                                priority_id,
+                                priority_name
+                            });
 
                         }
 
@@ -2233,7 +2352,10 @@ exports.insertions_status = async (req, res) => {
                         for (i = 0; i < number_line_offset; i++) {
                             var insertion_status_id = dataValue[i].id;
                             var insertion_status_name = dataValue[i].name;
-                            ModelInsertionsStatus.create({insertion_status_id, insertion_status_name});
+                            ModelInsertionsStatus.create({
+                                insertion_status_id,
+                                insertion_status_name
+                            });
                         }
 
                     });
@@ -2242,7 +2364,9 @@ exports.insertions_status = async (req, res) => {
 
             addItem();
 
-            return res.json({status: 'lol'});
+            return res.json({
+                status: 'lol'
+            });
         });
 
     } catch (error) {
@@ -2320,9 +2444,9 @@ exports.insertions_templates = async (req, res) => {
 
     try {
         // Listes toutes les données de insertions_templates
-        var insertionTemplatesDB = await ModelInsertionsTemplates.findAll(
-            {attributes: ['insertion_id']}
-        );
+        var insertionTemplatesDB = await ModelInsertionsTemplates.findAll({
+            attributes: ['insertion_id']
+        });
         insertionTemplatesDBIds = new Array();
         for (o = 0; o < insertionTemplatesDB.length; o++) {
             insertionTemplatesDBIds[o] = insertionTemplatesDB[o].insertion_id;
@@ -2378,7 +2502,11 @@ exports.insertions_templates = async (req, res) => {
                         Utilities
                             .updateOrCreate(ModelInsertionsTemplates, {
                                 insertion_id: insertion_id
-                            }, {insertion_id, parameter_value, template_id})
+                            }, {
+                                insertion_id,
+                                parameter_value,
+                                template_id
+                            })
                             .then(function (result) {
                                 result.item; // the model
                                 result.created; // bool, if a new item was created.
@@ -2401,9 +2529,9 @@ exports.creatives = async (req, res) => {
 
     try {
         // Listes toutes les données de insertions_templates
-        var insertionCreativesDB = await ModelCreatives.findAll(
-            {attributes: ['insertion_id']}
-        );
+        var insertionCreativesDB = await ModelCreatives.findAll({
+            attributes: ['insertion_id']
+        });
 
         insertionCreativesDBIds = new Array();
         for (o = 0; o < insertionCreativesDB.length; o++) {
@@ -2705,7 +2833,10 @@ exports.insertions_priorities = async (req, res) => {
                             var priority_id = dataValue[i].id;
                             var priority_name = dataValue[i].name;
 
-                            ModelInsertionsPriorities.create({priority_id, priority_name});
+                            ModelInsertionsPriorities.create({
+                                priority_id,
+                                priority_name
+                            });
                         }
                     });
                 }
@@ -2771,45 +2902,39 @@ exports.reports = async (req, res) => {
         let campaigns = await ModelCampaigns
             .findAll({
                 where: {
-                    [Op.and]: [
-                        {
-                            advertiser_id: {
-                                [Op.notIn]: advertiserExclus
-                            }
-                        }, {
-                            campaign_name: {
-                                [Op.notLike]: '% PARR %'
-                            }
-                        }, {
-                            campaign_start_date: {
-                                [Op.lte]: dateNow
-                            }
-                        }, {
-                            campaign_end_date: {
-                                [Op.gte]: dateNow
-                            }
+                    [Op.and]: [{
+                        advertiser_id: {
+                            [Op.notIn]: advertiserExclus
                         }
-                    ],
-                    [Op.or]: [
-                        {
-                            campaign_start_date: {
-                                [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                            }
-                        }, {
-                            campaign_end_date: {
-                                [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                            }
+                    }, {
+                        campaign_name: {
+                            [Op.notLike]: '% PARR %'
                         }
-                    ]
+                    }, {
+                        campaign_start_date: {
+                            [Op.lte]: dateNow
+                        }
+                    }, {
+                        campaign_end_date: {
+                            [Op.gte]: dateNow
+                        }
+                    }],
+                    [Op.or]: [{
+                        campaign_start_date: {
+                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                        }
+                    }, {
+                        campaign_end_date: {
+                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                        }
+                    }]
                 },
                 order: [
                     ['campaign_start_date', 'ASC']
                 ],
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    }
-                ]
+                include: [{
+                    model: ModelAdvertisers
+                }]
             })
             .then(async function (campaigns) {
                 if (!campaigns) {
