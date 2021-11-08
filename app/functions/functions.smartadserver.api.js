@@ -57,6 +57,10 @@ exports.config = function (method, params = '') {
         case 'insertions':
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
             break;
+        case 'insertion':
+            insertion_id = params.insertion_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + insertion_id;
+            break;
         case 'insertions_templates':
             insertion_id = params.insertion_id;
             var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +

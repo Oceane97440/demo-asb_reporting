@@ -461,7 +461,7 @@ exports.campaign = async (req, res) => {
 
             var config = SmartFunction.config('campaign', campaignObject);
 
-            await axios(config).then( async function (result) {
+            await axios(config).then(async function (result) {
 
                 if (!Utilities.empty(result.data)) {
                     var dataValue = result.data;
@@ -476,77 +476,33 @@ exports.campaign = async (req, res) => {
                     var campaign_status_id = dataValue.campaignStatusId;
                     var campaign_archived = dataValue.isArchived;
 
-                    //Cherche si l'annonceur liée à la campagne exsite
-                    const advertiser = await ModelAdvertisers.findOne({
-                        where: {
-                            advertiser_id: advertiser_id
-                        }
-                    })
+                    var campaign_crypt = crypto
+                        .createHash('md5')
+                        .update(campaign_id.toString())
+                        .digest("hex");
 
-                    //Si il n'existe pas on ajoute l'annonceur dans le BI puis on redirige vers celui-ci
-                    if (!advertiser) {
+                    Utilities
+                        .updateOrCreate(ModelCampaigns, {
+                            campaign_id: campaign_id
+                        }, {
+                            campaign_id,
+                            campaign_name,
+                            campaign_crypt,
+                            advertiser_id,
+                            agency_id,
+                            campaign_start_date,
+                            campaign_end_date,
+                            campaign_status_id,
+                            campaign_archived
+                        })
+                        .then(function (result) {
+                            result.item; // the model
+                            result.created; // bool, if a new item was created.
 
-                        console.log("redirection annonceur")
+                            res.redirect(`/manager/campaigns/${campaign_id}`)
+                        });
 
-                         advertiserObject = {
-                              "advertiser_id": advertiser_id
-                          };
-                          var config = SmartFunction.config('advertiser', advertiserObject);
-              
-                          await axios(config).then(function (result) {
-              
-                              if (!Utilities.empty(result.data)) {
-                                  var dataValue = result.data;
-                                  var advertiser_id = dataValue.id;
-                                  var advertiser_name = dataValue.name;
-                                  var advertiser_archived = dataValue.isArchived;
-                                  
-                                  Utilities
-                                      .updateOrCreate(ModelAdvertisers, {
-                                          advertiser_id: advertiser_id
-                                      }, {advertiser_id, advertiser_name, advertiser_archived})
-                                      .then(function (result) {
-                                          result.item; // the model
-                                          result.created; // bool, if a new item was created.
-                                          res.redirect(`/manager/advertisers/${advertiser_id}`)
-                                   
-                                      });
-                              }
-              
-                          });
 
-                    } else {
-
-                        //si l'annonceur existe on ajoute la campagne dans le BI
-
-                        var campaign_crypt = crypto
-                            .createHash('md5')
-                            .update(campaign_id.toString())
-                            .digest("hex");
-
-                        Utilities
-                            .updateOrCreate(ModelCampaigns, {
-                                campaign_id: campaign_id
-                            }, {
-                                campaign_id,
-                                campaign_name,
-                                campaign_crypt,
-                                advertiser_id,
-                                agency_id,
-                                campaign_start_date,
-                                campaign_end_date,
-                                campaign_status_id,
-                                campaign_archived
-                            })
-                            .then(function (result) {
-                                result.item; // the model
-                                result.created; // bool, if a new item was created.
-
-                                res.redirect(`/manager/campaigns/${campaign_id}`)
-                                console.log("redirection campagne")
-                            });
-
-                    }
 
 
 
@@ -2635,6 +2591,7 @@ exports.creatives = async (req, res) => {
         console.error('Error : ', error);
     }
 }
+
 
 exports.insertions = async (req, res) => {
     try {

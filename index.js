@@ -426,6 +426,8 @@ app.use('/manager', manager);
 const automate = require('./app/routes/routes.automate');
 app.use('/automate', automate);
 
+const extention_chrome = require('./app/routes/routes.plugin_chrome');
+app.use('/extension-chrome', extention_chrome);
 
 
 // Le serveur ecoute sur le port 3022

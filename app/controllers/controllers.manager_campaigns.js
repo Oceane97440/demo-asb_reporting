@@ -289,9 +289,9 @@ exports.view = async (req, res) => {
                 ]
             })
             .then(async function (campaign) {
+                console.log(campaign)
                 if (!campaign) {
-                    console.log("redirection campagne")
-                    res.redirect(`/automate/campaign?campaign_id=${campaign_id}`)
+                    return res.redirect(`/extension-chrome/campaign?campaign_id=${campaign_id}`)
                   /*  return res
                         .status(404)
                         .render("manager/error.ejs", {statusCoded: 404});*/

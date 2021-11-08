@@ -292,8 +292,7 @@ exports.view = async (req, res) => {
 
 
                 if (!advertiser) {
-                    console.log("Annonceur")
-                    //res.redirect(`/automate/advertiser/?advertiser_id=${advertiser_id}`)
+                    return res.redirect(`/extension-chrome/advertiser/?advertiser_id=${advertiser_id}`)
                    /* return res
                         .status(404)
                         .render("manager/error.ejs", {

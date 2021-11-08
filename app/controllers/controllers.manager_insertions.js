@@ -182,11 +182,12 @@ exports.view = async (req, res) => {
             })
             .then(async function (insertion) {
                 if (!insertion) {
-                    return res
+                    res.redirect(`/extension-chrome/insertion/${insertion_id}`)
+                    /*return res
                         .status(404)
                         .render("manager/error.ejs", {
                             statusCoded: 404
-                        });
+                        });*/
                 }
 
                 // Créer le fil d'ariane
