@@ -1,0 +1,151 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+    <!-- support-section start -->
+    <div class="col-xl-12 col-md-12">
+
+        <div class="card">
+            <form method="POST" action="/manager/insertions/create">
+            <div class="card-header">
+                <h5>Ajouter une insertion</h5>
+            </div>
+            <div class="card-body">
+
+                <div class="alert alert-primary">
+                    <div class="media align-items-center">
+                        <i class="feather icon-alert-circle h2"></i>
+                        <div class="media-body ml-3">
+                            Créer une insertion sur SMARTADSERVER en toute simplicité.
+                        </div>
+                    </div>
+                </div>
+                <% if (message) { %>
+                    <div class="alert alert-<%=message.type%>" role="alert">
+                        <%=message.intro%>:<%=message.message%>
+                      
+                    </div>
+        
+                    <% } %>
+
+                 
+                <div class="form-group">
+                    <label class="form-label" for="campaign">Campagne
+                    </label>
+                    <select
+                        class="form-control"
+                        id="campaign"
+                        name="campaign"
+                        required="required">                       
+                            <option value="<%= campaigns.campaign_id %>">
+                                <%= campaigns.campaign_name %>
+                            </option>
+                      
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="insertion">Nom de l'insertion</label>
+                    <input
+                        type="text"
+                        name="insertion"
+                        id="insertion"
+                        class="form-control"
+                        placeholder="Saisissez le nom de l'insertion"
+                        required="required"/>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="form-label" for="delivery_type">Categorie
+                    </label>
+                    <select
+                        class="form-control"
+                        id="delivery_type"
+                        name="delivery_type"
+                        required="required">
+                        <option value="">Choisir une categorie</option>
+                        <% for (let i=0; i < deliverytypes.length; i++) { %>
+                            <option value="<%= deliverytypes[i].deliverytype_id %>"><%= deliverytypes[i].deliverytype_name %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="priority">Priorité
+                    </label>
+                    <select
+                        class="form-control"
+                        id="priority"
+                        name="priority"
+                        required="required">
+                        <option value="">Choisir une priorité</option>
+                        <% for (let i=0; i < priorities.length; i++) { %>
+                            <option value="<%= priorities[i].priority_id %>"><%= priorities[i].priority_name %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="format">Formats
+                    </label>
+                    <select
+                        class="form-control"
+                        id="format"
+                        name="format"
+                        required="required">
+                        <option value="">Choisir un format</option>
+                        <% for (let i=0; i < formats.length; i++) { %>
+                            <option value="<%= formats[i].format_id %>"><%= formats[i].format_name %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="packs">Packs
+                    </label>
+                    <select
+                        class="form-control"
+                        id="packs"
+                        name="packs"
+                        required="required">
+                        <option value="">Choisir un pack</option>
+                        <% for (let i=0; i < packs.length; i++) { %>
+                            <option value="<%= packs[i].pack_smart_id %>"><%= packs[i].pack_smart_name %></option>
+                        <% } %>
+                    </select>
+                </div> 
+
+                <div class="form-group">
+                    <label class="form-label" for="campaign_start_date">Date de début de la campagne</label>
+                    <input
+                        type="datetime-local"
+                        name="campaign_start_date"
+                        id="campaign_start_date"
+                        class="form-control"
+                        placeholder="Saisissez la date de début de la campagne"
+                        required="required"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="campaign_end_date">Date de fin de la campagne</label>
+                    <input
+                        type="datetime-local"
+                        name="campaign_end_date"
+                        id="campaign_end_date"
+                        class="form-control"
+                        placeholder="Saisissez la date de fin de la campagne"
+                        required="required">
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <input
+                    type="submit"
+                    name="submit"
+                    class="btn btn-primary mr-2 btn-submit"
+                    value="Créer une nouvelle insertion"/>
+            </div>
+        </form>
+        </div>
+
+    </div>
+
+    <%- include("../../layouts/manager/footer.ejs") -%>

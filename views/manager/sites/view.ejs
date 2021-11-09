@@ -1,0 +1,80 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+<div class="col-sm-12" id="site-main">
+
+    <div class="card" data-site_id="<%= site.site_id %>">
+        <div class="card-header">
+            <h1><%= site.site_name %></h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8 col-sm-12">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">info</i>
+                                ID</span>:
+                            <strong><%= site.site_id %></strong>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">public</i>
+                                Url</span>:
+                            <a href="<%= site.site_url %>"
+                                title="<%= site.site_url %>"><%= site.site_url %></a>
+                        </li>
+                    </ul>
+
+                    <hr />
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">history</i>
+                                Dernière MAJ</span>:
+                            <abbr title="<%= site.updated_at %>"><%= moment(site.site_updated_at).fromNow() %></abbr>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+
+                    <div class="d-grid gap-2">
+                        <a href="<%= site.site_url %>"
+                            target="_blank" class="btn btn-info" title="Accéder au site">
+                            <i class="material-icons-two-tone">link</i>
+                            Accéder au site</a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="col-sm-12" id="sites-formats">
+    <div class="card">
+        <div class="card-header">
+            <h3>Formats</h3>
+        </div>
+        <div class="card-body">
+            <% if(formats_sites && (formats_sites.length > 0)) { %>
+            <%- include("../inc/table_formats_sites.ejs") -%>
+            <% } else { %>
+            <div class="alert alert-warning alert-automate" role="alert" data-automate="format-sites">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-info-circle" viewbox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path
+                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg>
+                Aucun format pour ce site.
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include("../../layouts/manager/footer.ejs") -%>

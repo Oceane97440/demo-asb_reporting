@@ -1,21 +1,26 @@
-<table class="table table-striped table_sort">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i=0; i < platforms.length; i++) { %>           
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
             <tr>
-                <td><a href="/manager/platforms/<%= platforms[i].platform_id %>" title="<%= platforms[i].platform_name %>"><%= platforms[i].platform_id %></a></td> 
-                <td><a href="/manager/platforms/<%= platforms[i].platform_id %>" title="<%= platforms[i].platform_name %>"><%= platforms[i].platform_name %></a></td> 
-                <td><%= platforms[i].platform_is_archived %></td> 
-                <td>                    
-                   <a href="/manager/platforms/<%= platforms[i].platform_id %>/edit" title="Modifier ce platform"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < platforms.length; i++) { %>
+            <tr>
+                <td><a href="/manager/platforms/<%= platforms[i].platform_id %>"
+                        title="<%= platforms[i].platform_name %>"><%= platforms[i].platform_id %></a></td>
+                <td><a href="/manager/platforms/<%= platforms[i].platform_id %>"
+                        title="<%= platforms[i].platform_name %>"><%= platforms[i].platform_name %></a></td>
+                <td><%= platforms[i].platform_is_archived %></td>
+                <td>
+                    <a href="/manager/platforms/<%= platforms[i].platform_id %>/edit" title="Modifier ce platform"><i
+                            class="icon feather icon-edit f-16 text-success"></i></a>
                 </td>
             </tr>
-        <% } %>
+            <% } %>
         </tbody>
     </table>
+</div>

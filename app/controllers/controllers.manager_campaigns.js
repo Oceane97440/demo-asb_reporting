@@ -465,14 +465,16 @@ exports.view = async (req, res) => {
                 }]
             })
             .then(async function (campaign) {
+                console.log(campaign)
                 if (!campaign) {
-                    return res
+                    return res.redirect(`/extension-chrome/campaign?campaign_id=${campaign_id}`)
+                  /*  return res
                         .status(404)
                         .render("manager/error.ejs", {
                             statusCoded: 404
-                        });
+                        });*/
                 }
-
+            
                 // Créer le fil d'ariane
                 var breadcrumbLink = 'advertisers'
                 breadcrumb = new Array({

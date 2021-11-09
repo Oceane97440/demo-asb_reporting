@@ -1,0 +1,39 @@
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
+            <tr>
+                <th class="format_site_id">#</th>
+                <th class="format_site_name">Nom</th>
+                <th class="format_name">Formats</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < formats_sites.length; i++) { %>
+            <tr>
+                <td class="format_site_id"><a href="/manager/sites/<%= formats_sites[i].format_site_id %>"
+                        title="<%= formats_sites[i].format_site_id %>"><%= formats_sites[i].format_site_id %></a>
+                </td>
+                <td class="site_name"><a href="/manager/sites/<%= formats_sites[i].site.site_id %>"
+                        title="<%= formats_sites[i].site.site_name %>"><%= formats_sites[i].site.site_name %></a>
+                </td>
+                <% if(!utilities.empty(formats_sites[i].format)) { %>
+
+                <td class="format_name">
+                    <a href="/manager/formats/<%= formats_sites[i].format_id %>"
+                        title="<%= formats_sites[i].format_id %>"><%= formats_sites[i].format.format_name %></a>
+                </td>
+                <% }else { %>
+                    <td class="format_name">-</td>
+                    <% } %>
+                <td>
+                    <a href="/manager/sites/<%= formats_sites[i].site_id %>" title="Visualiser" class="btn btn-sm"><i
+                            class="icon feather icon-eye f-16 text-info"></i></a>
+                    <a href="/manager/sites/<%= formats_sites[i].site_id %>/edit" title="Modifier ce site"><i
+                            class="icon feather icon-edit f-16 text-success"></i></a>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

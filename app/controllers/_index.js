@@ -23,8 +23,8 @@ const advertisers_users = require('./app/models/models.advertisers_users');
 const agencies = require('./app/models/models.agencies');
 const formats = require('./app/models/models.formats');
 
-const groups_formats = require('./app/models/models.groups_formats');
-const groups_formats_types = require(
+const formats_groups = require('./app/models/models.formats_groups');
+const formats_groups_types = require(
     './app/models/models.formats_groups_types'
 )
 const formatstemplates = require("./app/models/models.formats_templates")
@@ -78,13 +78,13 @@ advertisers.hasMany(advertisers_users, {
 });
 
 //un format posséde un ou plusieur group un group posséde un à plusieur format
-formats.hasMany(groups_formats_types, {
+formats.hasMany(formats_groups_types, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true
 });
-groups_formats.hasMany(groups_formats_types, {
-    foreignKey: 'group_format_id',
+formats_groups.hasMany(formats_groups_types, {
+    foreignKey: 'format_group_id',
     onDelete: 'cascade',
     hooks: true
 });

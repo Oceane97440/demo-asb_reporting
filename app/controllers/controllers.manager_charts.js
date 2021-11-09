@@ -196,9 +196,8 @@ exports.campaigns = async (req, res) => {
 
 exports.advertisers = async (req, res) => {
     try {
-
-        // Graph de suivi des campagnes
-        var advertiser_id = req.params.advertiser_id;
+       // Graph de suivi des annonceurs
+       // var advertiser_id = req.params.advertiser_id;
 
         // L'année derniére
         var dateYearLast = moment()
@@ -207,17 +206,6 @@ exports.advertisers = async (req, res) => {
         // Cette année
         var dateYearNow = moment().format('YYYY');
 
-        /*
-        SELECT
-        // COUNT('campaign_id') AS COUNT,
-        // MONTH(campaign_start_date) AS mois,
-        // YEAR(campaign_start_date) AS year
-        // FROM `asb_campaigns`
-        WHERE YEAR(campaign_start_date)
-        BETWEEN "2020" AND '2021'
-        AND MONTH(campaign_start_date) BETWEEN "1" AND '12'
-        GROUP BY YEAR(campaign_start_date), MONTH(campaign_start_date) ORDER BY `campaign_start_date` ASC
-        */
         campaigns = await ModelCampaigns
             .findAll({
                 attributes: [
@@ -235,7 +223,7 @@ exports.advertisers = async (req, res) => {
                     ]
                 ],
                 group: [
-                    'month', 'year'
+                   'month', 'year'
                 ],
                 raw: true
             }, {
@@ -247,8 +235,7 @@ exports.advertisers = async (req, res) => {
                             },
                             [sequelize.fn('MONTH', sequelize.col('campaign_start_date'))]: {
                                 [Op.between]: [1, 12]
-                            },
-                            'advertiser_id': advertiser_id
+                            }
                         }
                     ]
                 },
@@ -267,7 +254,7 @@ exports.advertisers = async (req, res) => {
                         .status(404)
                         .json({statusCoded: '404'});
                 }
-                //  console.log(campaigns);
+              
                 if (campaigns.length > 0) {
                     var dataArray = new Array();
                     var lastYear = new Array();
@@ -324,7 +311,7 @@ exports.advertisers = async (req, res) => {
                 }
 
             });
-
+          
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
@@ -332,7 +319,6 @@ exports.advertisers = async (req, res) => {
             .status(404)
             .json({statusCoded: statusCoded});
     }
-
 }
 
 exports.campaignReport = async (req, res) => {
@@ -367,6 +353,7 @@ exports.campaignReport = async (req, res) => {
                     var campaign_start_date = campaign.campaign_start_date;
                     var campaign_end_date = campaign.campaign_end_date;
                    
+                    /*
                     // Récupére l'ensemble des insertions de la campagne
                     var epilotCampaign = await ModelEpilotCampaigns
                     .findOne({
@@ -377,29 +364,26 @@ exports.campaignReport = async (req, res) => {
                             {
                                 model: ModelEpilotInsertions,
                                 attributes: [
-                                   'group_format_id',
+                                   'format_group_id',
                                     [sequelize.fn('sum', sequelize.col('epilot_insertion_volume')), 'insertion_volume']
                                 ],
                                 where : {
                                     epilot_campaign_id : Sequelize.col('epilot_campaigns.epilot_campaign_id'),
-                                    'group_format_id' : '9'
+                                    'format_group_id' : '9'
                                 },
-                                group:['group_format_id','user_id']
+                                group:['format_group_id','user_id']
                             }
                         ]
                     })
                     .then(async function (epilotCampaign) {
                        console.log(epilotCampaign.epilot_insertions)
-                    });
-
-
-
+                    });  
+                    */
 
                     // Récupére l'ensemble des données du rapport
                     datalocalStorage = localStorage.getItem('campaignID-' + campaign.campaign_id);
                     if (reporting = JSON.parse(datalocalStorage)) {
-                       // console.log('REPORTING : ', reporting);
-                       console.log('REPORTING : ');
+                        console.log('REPORTING : ', reporting);
 
                         var formats = new Array();
                         var booking = new Array(); 
@@ -408,7 +392,6 @@ exports.campaignReport = async (req, res) => {
                         if (reporting.habillage) {
                             formats.push('habillage');
                             delivery.push(reporting.habillage.impressions);
-
                         }
 
                         if (reporting.instream) {
@@ -420,20 +403,19 @@ exports.campaignReport = async (req, res) => {
                             formats.push('interstitiel');
                             delivery.push(reporting.interstitiel.impressions);
                         }
-
-                        var data = { 'values' : { delivery : delivery, booking : booking}, formats : formats}
+                        
+                        var data = { 'values' : {delivery : delivery, booking : booking}, formats : formats}
 
                         return res
                             .status(200)
                             .json(data);
                     }
 
-                    /* var month =  new Array('janvier','février','mars','avril','mai','juin','juillet', 'aout','septembre','octobre','novembre','décembre');
-
+                    /* 
+                    var month =  new Array('janvier','février','mars','avril','mai','juin','juillet', 'aout','septembre','octobre','novembre','décembre');
                     var data = { 'lastYear' : { year : dateYearLast, result : lastYear} ,  'nowYear' : { year : dateYearNow, result : nowYear} , month : month}
-
                     return res.status(200).json(data);
-                */
+                    */
 
                 });
 

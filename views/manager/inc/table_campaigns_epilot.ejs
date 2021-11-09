@@ -1,48 +1,45 @@
-<table class="table table-striped table_sort">
-    <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Format</th>
-            <th class="d-none">Date de début</th>
-            <th class="d-none">Date de fin</th>
-            <th>Etats</th>
-            <th>Volumes</th>
-            <th>Actions</th>
-
-
-
-
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i=0; i < epilot.length; i++) { %>
-        <tr>
-            <td><a href="/manager/campaigns/<%= epilot[i].campaign_epilot_id %>"
-                    title="<%= epilot[i].campaign_epilot_name %>"><%= epilot[i].campaign_epilot_name %></a><br>
-                <span class="small">(Du <%= moment(epilot[i].campaign_epilot_start_date).format('DD/MM/YYYY') %> au
-                    <%= moment(epilot[i].campaign_epilot_end_date).format('DD/MM/YYYY') %>)</span>
-            </td>
-            <td><%= epilot[i].format_name %></td>
-            <td class="d-none"><%= epilot[i].campaign_epilot_start_date %></td>
-            <td class="d-none"><%= epilot[i].campaign_epilot_end_date %></td>
-            <td>
-                <% switch(epilot[i].campaign_epilot_status) { 
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Format</th>
+                <th class="d-none">Date de début</th>
+                <th class="d-none">Date de fin</th>
+                <th>Etats</th>
+                <th>Volumes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < epilot.length; i++) { %>
+            <tr>
+                <td><a href="/manager/campaigns/<%= epilot[i].campaign_epilot_id %>"
+                        title="<%= epilot[i].campaign_epilot_name %>"><%= epilot[i].campaign_epilot_name %></a><br>
+                    <span class="small">(Du <%= moment(epilot[i].campaign_epilot_start_date).format('DD/MM/YYYY') %> au
+                        <%= moment(epilot[i].campaign_epilot_end_date).format('DD/MM/YYYY') %>)</span>
+                </td>
+                <td><%= epilot[i].format_name %></td>
+                <td class="d-none"><%= epilot[i].campaign_epilot_start_date %></td>
+                <td class="d-none"><%= epilot[i].campaign_epilot_end_date %></td>
+                <td>
+                    <% switch(epilot[i].campaign_epilot_status) { 
                  case 1: %> <span class="badge bg-success">Confirmé</span> <% break; 
                  case 2: %> <span class="badge bg-warning">Réservé</span> <% break; 
                 
                  default: %> - <% 
                     }  %>
-            </td>
-            <td><%= epilot[i].campaign_epilot_volume %></td>
-            <td>
-                <a href="/utilisateur/campagne_epilot/edit/<%= epilot[i].campaign_epilot_id %>"
-                  ><i class="icon feather icon-edit f-16 text-success"></i></a>
-                <a 
-                    href="/utilisateur/campagne_epilot/delete/<%= epilot[i].campaign_epilot_id %>" >                                        
-                    <i class="feather icon-trash-2 ml-3 f-16 text-danger"></i>
-                </a>
-            </td>
-        </tr>
-        <% } %>
-    </tbody>
-</table>
+                </td>
+                <td><%= epilot[i].campaign_epilot_volume %></td>
+                <td>
+                    <a href="/utilisateur/campagne_epilot/edit/<%= epilot[i].campaign_epilot_id %>"><i
+                            class="icon feather icon-edit f-16 text-success"></i></a>
+                    <a href="/utilisateur/campagne_epilot/delete/<%= epilot[i].campaign_epilot_id %>">
+                        <i class="feather icon-trash-2 ml-3 f-16 text-danger"></i>
+                    </a>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

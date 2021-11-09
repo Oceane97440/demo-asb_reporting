@@ -24,7 +24,7 @@ const EpilotInsertions = sequelize.define('epilot_insertions', {
         type: Sequelize.INTEGER,
         allowNull: true
     },  
-    group_format_id: {
+    format_group_id: {
         type: Sequelize.INTEGER,
         allowNull: true
     },   

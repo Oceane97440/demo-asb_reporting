@@ -22,11 +22,14 @@ const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
+const Utilities = require('../functions/functions.utilities');
+
 
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
+const ModelFormatsSites = require("../models/models.formats_sites");
 const ModelAdvertisers = require("../models/models.advertisers");
-const ModelCampaigns = require("../models/models.sites");
+const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
 const ModelSites = require("../models/models.sites");
 const ModelPacksSites = require('../models/models.packs_sites');
@@ -57,9 +60,15 @@ exports.index = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        // Liste tous les campagnes
+         // Liste toutes les sites & applis
         const data = new Object();
-        data.breadcrumb = "Liste des sites";
+      
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Liste des sites',
+            'link': ''
+        } );
+        data.breadcrumb = breadcrumb;
 
         data.sites = await ModelSites.findAll({
             include: [
@@ -88,8 +97,7 @@ exports.view = async (req, res) => {
     
     try {
         const data = new Object();
-        data.breadcrumb = "Site";
-
+       
         var site_id = req.params.id;
         var site = await ModelSites
             .findOne({
@@ -108,8 +116,40 @@ exports.view = async (req, res) => {
                         .status(404)
                         .render("manager/error.ejs", {statusCoded: 404});
                
+                 // Créer le fil d'ariane
+                breadcrumb = new Array({
+                    'name': 'Liste des sites',
+                    'link': 'sites/list'
+                }, {
+                    'name': site.site_name,
+                    'link': ''
+                } );
+                data.breadcrumb = breadcrumb;
+
                 data.site = site;
                 data.moment = moment;
+
+                 // Affiche les sites en fonction du format
+                data.formats_sites = await ModelFormatsSites.findAll({
+                    where: {
+                        site_id: site.site_id
+                    },
+                    include: [
+                        {
+                            model: ModelFormats
+                        },
+                        {
+                            model: ModelSites
+                        }
+                    ]
+                });
+
+                
+
+                data.utilities = Utilities
+                
+
+
                 res.render('manager/sites/view.ejs', data);
             });
 

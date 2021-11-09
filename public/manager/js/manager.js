@@ -1,3 +1,7 @@
+var config = {
+    baseurl: "http://localhost:3001/"
+};
+
 $(document).ready(function () {
 
     var dt = new Date();
@@ -61,6 +65,8 @@ $(document).ready(function () {
         return false;
     })
 
+
+
     // Créer un toast
     function toastWidget(title, time, message, url = false, target = false) {
 
@@ -107,11 +113,7 @@ $(document).ready(function () {
         $(".toast").toast('show');
     }
 
-    var config = {
-        baseurl: "https://reporting.antennesb.fr/"
-    };
-
-
+   
     /*
     $.getJSON(config.baseurl + 'automate/reports', function (data) {
 

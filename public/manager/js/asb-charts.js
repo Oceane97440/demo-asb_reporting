@@ -1,9 +1,9 @@
 'use strict';
 $(document).ready(function () {
 
-    var chartCampaignUrl = 'https://reporting.antennesb.fr/manager/charts/campaigns';
-    var chartAdvertiserUrl = 'https://reporting.antennesb.fr/manager/charts/advertisers';
-    var chartCampaignReportUrl = 'https://reporting.antennesb.fr/manager/charts/campaign/report';
+    var chartCampaignUrl = config.baseurl+'manager/charts/campaigns';
+    var chartAdvertiserUrl = config.baseurl+'manager/charts/advertisers';
+    var chartCampaignReportUrl = config.baseurl+'manager/charts/campaign/report';
 
 /*
 * Chart Campaigns -
@@ -47,6 +47,52 @@ $(document).ready(function () {
         var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
         chart.render();
     });
+
+/*
+* Annonceurs 
+*/
+
+$.getJSON(chartAdvertiserUrl, function (response) {
+    var options = {
+        chart: {
+            type: 'line',
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 20
+                }
+            }
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        series: [
+            {
+                name: response.lastYear.year,
+                data: response.lastYear.result
+            }, {
+                name: response.nowYear.year,
+                data: response.nowYear.result
+            }
+        ],
+        xaxis: {
+            categories: response.month
+        }
+    }
+
+    var chart = new ApexCharts(document.querySelector("#chart-advertisers"), options);
+    chart.render();
+});
+
+
+
 
     /*
 * Chart Bar Reporting

@@ -41,10 +41,18 @@ const ModelInsertionsStatus = require("../models/models.insertions_status");
 const ModelSites = require("../models/models.sites");
 const ModelCreatives = require("../models/models.creatives");
 const ModelDeliverytTypes = require("../models/models.deliverytypes")
-const ModelPacks_Smart = require("../models/models.packs_smart")
+const ModelPacksSmart = require("../models/models.packs_smart")
+const ModelPacks = require("../models/models.packs")
+const ModelPacksSites = require("../models/models.packs_sites")
+const ModelFormatsGroupsTypes = require(
+    "../models/models.formats_groups_types"
+);
 const ModelFormatsTemplates = require("../models/models.formats_templates")
+const ModelFormatsGroups = require("../models/models.formats_groups");
+const ModelGroupFormats = require("../models/models.formats_groups")
 const ModelTemplates = require("../models/models.templates")
 const ModelInsertionsTemplates = require("../models/models.insertions_templates")
+const ModelFormatsSites = require("../models/models.formats_sites");
 
 const TEXT_REGEX = /^.{1,51}$/
 
@@ -62,7 +70,13 @@ exports.index = async (req, res) => {
     try {
         // Liste toutes les insertions
         const data = new Object();
-        data.breadcrumb = "Insertions";
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Insertions',
+            'link': ''
+        }, );
+        data.breadcrumb = breadcrumb;
+
         data.insertions = await ModelInsertions.findAll({
             include: [{
                 model: ModelCampaigns
@@ -70,6 +84,7 @@ exports.index = async (req, res) => {
         });
 
         data.moment = moment;
+
         res.render('manager/insertions/index.ejs', data);
     } catch (error) {
         console.log(error);
@@ -84,12 +99,36 @@ exports.list = async (req, res) => {
     try {
         // Liste toutes les insertions
         const data = new Object();
-        data.breadcrumb = "Liste des insertions";
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Insertions',
+            'link': 'insertions'
+        }, {
+            'name': 'Liste des insertions',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
 
         data.insertions = await ModelInsertions.findAll({
             include: [{
-                model: ModelCampaigns
-            }]
+                    model: ModelCampaigns,
+                    attributes: ['campaign_id', 'campaign_name']
+                },
+                // { model: ModelAdvertisers, attributes: ['advertiser_id', 'advertiser_name'] },
+                {
+                    model: ModelFormats,
+                    attributes: ['format_id', 'format_name']
+                },
+                {
+                    model: ModelInsertionsPriorities,
+                    attributes: ['priority_id', 'priority_name']
+                },
+                {
+                    model: ModelInsertionsStatus,
+                    attributes: ['insertion_status_id', 'insertion_status_name']
+                },
+            ]
         }, {
             order: [
                 // Will escape title and validate DESC against a list of valid direction
@@ -98,6 +137,7 @@ exports.list = async (req, res) => {
             ]
         });
 
+        data.utilities = Utilities;
         data.moment = moment;
         res.render('manager/insertions/list.ejs', data);
     } catch (error) {
@@ -142,11 +182,12 @@ exports.view = async (req, res) => {
             })
             .then(async function (insertion) {
                 if (!insertion) {
-                    return res
+                    res.redirect(`/extension-chrome/insertion?insertion_id=${insertion_id}`)
+                    /*return res
                         .status(404)
                         .render("manager/error.ejs", {
                             statusCoded: 404
-                        });
+                        });*/
                 }
 
                 // Créer le fil d'ariane
@@ -202,14 +243,13 @@ exports.view = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
-
     try {
         const data = new Object();
 
         // Créer le fil d'ariane
         breadcrumb = new Array({
             'name': 'Insertions',
-            'link': 'insertions/list'
+            'link': 'insertions'
         }, {
             'name': 'Ajouter une insertion',
             'link': ''
@@ -220,47 +260,26 @@ exports.create = async (req, res) => {
             include: [{
                 model: ModelAdvertisers
             }]
-        });
-
-        // Récupére l'ensemble les données
-        data.campaigns = await ModelCampaigns.findOne({
-            where: {
-                campaign_id: req.params.id
-            },
-
-        });
-
-
-        data.formats = await ModelFormats.findAll({
-            attributes: ['format_id', 'format_name', 'format_group'],
-            where: {
-                format_group: {
-                    [Op.regexp]: '^[GRAND ANGLE|HABILLAGE|INTERSTITIEL|MASTHEAD|INSTREAM]'
-                }
-            },
+        }, {
             order: [
-                ['format_name', 'ASC']
-            ],
-        })
+                // Will escape title and validate DESC against a list of valid direction
+                // parameters
+                // ['advertiser_id', 'ASC'],
+                [{
+                    model: ModelAdvertisers,
+                    as: 'ModelAdvertisers'
+                }, 'advertiser_name', 'ASC'],
+                ['campaign_name', 'ASC']
+            ]
+        });
 
-        // data.sites = await ModelSites.findAll({
-        //     where: {
-        //         site_name: {
-        //             [Op.like]: 'SM' + '%'
-
-        //         },
-        //         site_archived: 0
-        //     },
-        //     order: [
-        //         // Will escape title and validate DESC against a list of valid direction
-        //         // parameters
-        //         ['site_id', 'DESC']
-        //     ]
-        // });
-
-        data.packs = await ModelPacks_Smart.findAll({
-
-
+        data.advertisers = await ModelAdvertisers.findAll({
+            order: [
+                // Will escape title and validate DESC against a list of valid direction
+                // parameters
+                ['advertiser_name', 'ASC'],
+                // ['campaign_name', 'ASC']
+            ]
         });
 
         data.deliverytypes = await ModelDeliverytTypes.findAll({
@@ -277,6 +296,29 @@ exports.create = async (req, res) => {
             ]
         });
 
+        data.group_formats = await ModelGroupFormats.findAll({
+            attributes: ['format_group_id', 'format_group_name'],
+            order: [
+                ['format_group_name', 'ASC']
+            ],
+        })
+
+        data.formats = await ModelFormats.findAll({
+            attributes: ['format_group'],
+            group: "format_group",
+            where: {
+                format_group: {
+                    [Op.not]: null
+                }
+            },
+            order: [
+                ['format_group', 'ASC']
+            ],
+        })
+
+        data.packs = await ModelPacks.findAll({
+
+        });
 
         res.render('manager/insertions/create.ejs', data);
     } catch (error) {
@@ -288,272 +330,623 @@ exports.create = async (req, res) => {
     }
 }
 
-
 exports.create_post = async (req, res) => {
+
     try {
-        const campaign = req.body.campaign
-        const insertion = req.body.insertion
-        const format = req.body.format
-        const packs = req.body.packs
-        const start_date = req.body.campaign_start_date
-        const end_date = req.body.campaign_end_date
-        const delivery_type = req.body.delivery_type
-        const priority = req.body.priority
+        var body = {
+            campaign_id: '1764641',
+            // format_group_id: '4',
+            format_group_id: 'GRAND ANGLE',
 
-        console.log(req.body)
+            pack_id: '1',
+            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+            display_mobile_url: 'https://www.bmw.re/',
+            display_tablet_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+            display_tablet_url: 'https://www.bmw.re/',
+            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
+            display_desktop_url: 'https://www.bmw.re/',
+            video_file: '',
+            video_url: '',
+            submit: 'Créer une nouvelle insertion'
+        }
 
-        if (!TEXT_REGEX.test(insertion)) {
-            req.session.message = {
-                type: 'danger',
-                intro: 'Erreur',
-                message: 'Le nombre de caratère est limité à 50'
+
+
+
+        const campaign_id = body.campaign_id;
+        const format_group_id = body.format_group_id;
+        const pack_id = body.pack_id;
+
+        const display_mobile_file = body.display_mobile_file;
+        const display_mobile_url = body.display_mobile_url;
+
+        const display_tablet_file = body.display_tablet_file;
+        const display_tablet_url = body.display_tablet_url;
+
+        const display_desktop_file = body.display_desktop_file;
+        const display_desktop_url = body.display_desktop_url;
+
+        const video_file = body.video_file;
+        const video_url = body.video_url;
+
+
+
+        const formatIdsArray = []
+        const sites = []
+        // si format site countrie ne sont pas vide selectionne le groupe format
+        if (format_group_id.length != 0 && pack_id.length != 0 && campaign_id.length != 0) {
+            // select groupe format + format id
+            const formatIds = await ModelFormats.findAll({
+                attributes: ['format_id'],
+                where: {
+                    format_group: {
+                        [Op.eq]: format_group_id
+                    }
+                }
+            });
+
+            // Create formatIdsArray's variable to handler more later
+            for (let l = 0; l < formatIds.length; l++) {
+                formatIdsArray.push(formatIds[l].format_id);
             }
-            return res.redirect(`/manager/insertions/create/${campaign}`)
+        }
+
+
+        // recupération des site d'un pack
+        const sitesdb = await ModelPacksSites.findAll({
+            attributes: ['pack_id', 'site_id'],
+            where: {
+                pack_id: {
+                    [Op.eq]: pack_id
+                }
+            }
+        });
+
+        if (sitesdb.length > 0) {
+            for (let l = 0; l < sitesdb.length; l++) {
+                sites.push(sitesdb[l].site_id);
+            }
+
+            // Si c'est un string on met en tableau pour respecter l'api
+            if (typeof sites == 'string') {
+                sites = [sites];
+            }
+        }
+
+       // console.log('GRANG ANGLE ' + formatIdsArray)
+     //   console.log('Pack GR ' + sites)
+
+
+        formats_sites = await ModelFormatsSites.findAll({
+            where: {
+                format_id: formatIdsArray
+            },
+            include: [{
+                    model: ModelFormats
+                },
+                {
+                    model: ModelSites
+                }
+            ]
+        });
+
+
+        for (let index = 0; index < formats_sites.length; index++) {
+            if (!Utilities.empty(formats_sites)) {
+                const siteName = formats_sites[index].site.site_group
+                const siteIds = formats_sites[index].site.site_id
+
+                const formatName = formats_sites[index].format.format_name
+                const formatIds = formats_sites[index].format.format_id
+
+               
+
+                // Regex libélé position remplace btf -> position 5
+                const regex = /BTF/igm;
+                var label = formatName.replace(regex, '5');
+                const found = label.match(/[0-9]/igm);
+                const libélé = format_group_id + " - " + siteName + ' - ' + 'POSITION ' + found
+
+                var requestInsertion = {
+                    "isDeliveryRegulated": true,
+                    "isUsedByGuaranteedDeal": false,
+                    "isUsedByNonGuaranteedDeal": false,
+                    "name": libélé,
+                    "description": "",
+                    "isPersonalizedAd": false,
+                    "siteIds": [siteIds],
+                    "insertionStatusId": 1,
+                    "startDate": "2021-10-27T00:00:00",
+                    "endDate": "2021-10-27T23:59:00",
+                    "campaignId": 1764641,
+                    "insertionTypeId": 0,
+                    "deliveryTypeId": 1, //Categorie WEB
+                    "timezoneId": 4, // Insertion TimezoneId
+                    "priorityId": 62, // Insertion PriorityId Normal 3
+                    "insertionGroupedVolumeId": 452054,
+                    "globalCapping": 0, // Insertion CappingGlobal
+                    "cappingPerVisit": 0, // Insertion CappingVisite
+                    //   "cappingPerClick": 0,
+                    //   "autoCapping": 0,
+                    "PeriodicCappingImpressions": 0,
+                    "PeriodicCappingPeriod": 0,
+                    "isObaIconEnabled": false,
+                    "formatId": formatIds,
+                    "isArchived": false,
+                    /* "insertionExclusionIds": [
+                         111233
+                     ],*/
+                    "customizedScript": "",
+                    "salesChannelId": 1
+                }
+
+
+
+                /**     PARAMETRE REQUETE   */
+
+                //Condition si c du mobile
+                if (siteName.match(/APPLI/igm)) {
+
+                    requestInsertion['deliveryTypeId'] = 10
+
+                }
+                console.log(libélé)
+                console.log('REQUEST : ', requestInsertion);
+
+
+
+
+
+
+                let insertion_create = await AxiosFunction.postManage(
+                    'insertions',
+                    requestInsertion
+                );
+
+                if (insertion_create.headers.location) {
+                    var url_location = insertion_create.headers.location
+                  //  var insertion_get = await AxiosFunction.getManage(url_location);
+                    //const insertion_id = insertion_get.data.id
+
+
+
+
+                    res.json({
+                        type: 'success',
+                        intro: 'Ok',
+                        message: 'L\'inserion a été crée dans SMARTADSERVEUR',
+
+                    })  
+                }
+
+                console.log("------------------------")
+
+            }
 
         }
 
-        if (insertion == '' || campaign == '' || start_date == '' || end_date == '' || format == '') {
-            req.session.message = {
-                type: 'danger',
-                intro: 'Un problème est survenu',
-                message: 'Les champs doivent être complétés'
-            }
-            return res.redirect(`/manager/insertions/create/${campaign}`)
+        process.exit()
+
+        // Affichage du tableau
+        var requestValues = new Array();
+
+        // ------ 
+
+        // 1. Sélectionner la campagne
+        // 
+        console.log('campaign_id :', campaign_id);
+
+        // 2. Sélectionner le format 
+        // 
+        console.log('format_group_id :', format_group_id);
+
+        const formats = await ModelFormatsGroupsTypes.findAll({
+            where: {
+                format_group_id: format_group_id
+            },
+            include: [{
+                model: ModelFormats,
+                attributes: ['format_id', 'format_name', 'format_type_id']
+            }, {
+                model: ModelFormatsGroups,
+                attributes: ['format_group_id', 'format_group_name']
+            }]
+        });
+
+        // if(!utilities.empty(formats)) {
+        console.log('Formats :', formats.length)
+        for (i = 0; i < formats.length; i++) {
+            var value = new Array();
+            // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
+            value['format_group_name'] = formats[i].formats_group.format_group_name;
+            value['format_id'] = formats[i].format_id;
+            value['format_name'] = formats[i].format.format_name;
+            value['format_type_id'] = formats[i].format.format_type_id;
+
+            requestValues.push(value);
         }
 
-        const timstasp_start = Date.parse(start_date)
-        const timstasp_end = Date.parse(end_date)
+        console.log(requestValues);
+        // }
 
-        // si date aujourd'hui est >= à la date selectionné envoie une erreur
-        if (timstasp_end <= timstasp_start || timstasp_start >= timstasp_end) {
-            req.session.message = {
-                type: 'danger',
-                intro: 'Un problème est survenu',
-                message: 'Saisissez une date valide'
+
+        /*
+       
+        process.exit();
+        console.log(formats[0])
+        */
+        // 3. Sélectionner le pack 
+        // 
+
+        const packs = await ModelPacks.findAll({
+            where: {
+                pack_id: pack_id
+            },
+            include: [{
+                    model: ModelPacksSites,
+                    attributes: ['pack_site_id', 'pack_id', 'site_id']
+                }
+                /* {
+                                model: ModelFormatsGroups,
+                                attributes: ['format_group_id', 'format_group_name']
+                            }*/
+            ]
+        });
+
+
+        if (Utilities.empty(packs)) {
+            console.log('Packs :', packs.length, ' - pack_id :', pack_id);
+
+            for (i = 0; i < packs.length; i++) {
+                var value = new Array();
+                console.log(packs[i].pack_site_id, ' ', packs[i].pack_id, ' ', packs[i].site_id);
+                // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
+                /* value['format_group_name'] = formats[i].formats_group.format_group_name;
+                 value['format_id'] = formats[i].format_id;
+                 value['format_name'] = formats[i].format.format_name;
+                 value['format_type_id'] = formats[i].format.format_type_id;
+
+                 requestValues.push(value);*/
             }
-            return res.redirect(`/manager/insertions/create/${campaign}`)
+
+            switch (pack_id) {
+                case '1':
+
+                    break;
+                case '2':
+                    break;
+                case '3':
+                    break;
+                case '4':
+                    break;
+                case '5':
+                    break;
+                case '6':
+                    break;
+                default:
+                    console.log(`Sorry, we are out of ${expr}.`);
+            }
         }
 
-        const dateNow = moment().format('YYYY-MM-DD HH:mm:ss');
 
 
+        // 4. Sélectionner le format et les afficher
+        // 
+
+
+        // 5. 
+        // 
+
+
+        // 6. Requête de l'insertion
         var requestInsertion = {
-
             "isDeliveryRegulated": true,
             "isUsedByGuaranteedDeal": false,
             "isUsedByNonGuaranteedDeal": false,
-            "impressionTypeId": 0,
-            "voiceShare": 0,
-            "eventId": 0,
-            "creativeRotationModeId": 0,
-            "name": insertion,
+            "name": "20211101 - MPAVE AD - ",
             "description": "",
             "isPersonalizedAd": false,
-            "insertionStatusId": 0,
-            //"siteIds": site,
-            "packIds": [packs],
+            /* "siteIds": [
+                 299248,
+                 299249
+             ],*/
             "insertionStatusId": 1,
-            "startDate": start_date,
-            "endDate": end_date,
-            "campaignId": campaign,
+            "startDate": "2021-10-27T00:00:00",
+            "endDate": "2021-10-27T23:59:00",
+            "campaignId": 1764641,
             "insertionTypeId": 0,
-            "deliveryTypeId": delivery_type,
-            "timezoneId": 4,
-            "priorityId": priority,
-            "periodicCappingId": 0,
-            "groupCappingId": 0,
-            "maxImpressions": 0,
-            "weight": 0,
-            "maxClicks": 0,
-            "maxImpressionsPerDay": 0,
-            "maxClicksPerDay": 0,
-            "eventImpressions": 0,
-            "isHolisticYieldEnabled": false,
-            "deliverLeftVolumeAfterEndDate": false,
-            "globalCapping": 0,
-            "cappingPerVisit": 0,
-            "cappingPerClick": 0,
-            "autoCapping": 0,
-            // "periodicCappingImpressions": 0,
-            // "periodicCappingPeriod": 0,
+            "deliveryTypeId": 10,
+            "timezoneId": 4, // Insertion TimezoneId
+            "priorityId": 62, // Insertion PriorityId
+            "insertionGroupedVolumeId": 452054,
+            "globalCapping": 0, // Insertion CappingGlobal
+            "cappingPerVisit": 0, // Insertion CappingVisite
+            //   "cappingPerClick": 0,
+            //   "autoCapping": 0,
+            "PeriodicCappingImpressions": 0,
+            "PeriodicCappingPeriod": 0,
             "isObaIconEnabled": false,
-            "formatId": format,
-            "externalId": 0,
-            "externalDescription": "",
-            "updatedAt": dateNow,
-            "createdAt": dateNow,
+            // "formatId": 79654,
             "isArchived": false,
-            "rateTypeId": 0,
-            "rate": 0.0,
-            "rateNet": 0.0,
-            "discount": 0.0,
-            "currencyId": 0,
-            "insertionLinkId": 0,
+            /* "insertionExclusionIds": [
+                 111233
+             ],*/
             "customizedScript": "",
-            "salesChannelId": 1,
-            "inventoryTypeId": 0
-
+            "salesChannelId": 1
         }
 
-        //paramètre avec capping si format Interstitiel
-        if (format === '79633' || format === '44152') {
-
-            var requestInsertion = {
-
-                "isDeliveryRegulated": true,
-                "isUsedByGuaranteedDeal": false,
-                "isUsedByNonGuaranteedDeal": false,
-                "impressionTypeId": 0,
-                "voiceShare": 0,
-                "eventId": 0,
-                "creativeRotationModeId": 0,
-                "name": insertion,
-                "description": "",
-                "isPersonalizedAd": false,
-                "insertionStatusId": 0,
-                //"siteIds": site,
-                "packIds": [packs],
-                "insertionStatusId": 1,
-                "startDate": start_date,
-                "endDate": end_date,
-                "campaignId": campaign,
-                "insertionTypeId": 0,
-                "deliveryTypeId": delivery_type,
-                "timezoneId": 4,
-                "priorityId": priority,
-                "periodicCappingId": 0,
-                "groupCappingId": 0,
-                "maxImpressions": 0,
-                "weight": 0,
-                "maxClicks": 0,
-                "maxImpressionsPerDay": 0,
-                "maxClicksPerDay": 0,
-                "eventImpressions": 0,
-                "isHolisticYieldEnabled": false,
-                "deliverLeftVolumeAfterEndDate": false,
-                "globalCapping": 0,
-                "cappingPerVisit": 0,
-                "cappingPerClick": 0,
-                "autoCapping": 0,
-                "periodicCappingImpressions": 1,
-                "periodicCappingPeriod": 15,
-                "isObaIconEnabled": false,
-                "formatId": format,
-                "externalId": 0,
-                "externalDescription": "",
-                "updatedAt": dateNow,
-                "createdAt": dateNow,
-                "isArchived": false,
-                "rateTypeId": 0,
-                "rate": 0.0,
-                "rateNet": 0.0,
-                "discount": 0.0,
-                "currencyId": 0,
-                "insertionLinkId": 0,
-                "customizedScript": "",
-                "salesChannelId": 1,
-                "inventoryTypeId": 0
-
-            }
+        console.log('REQUEST : ', requestInsertion);
 
 
-        }
+        process.exit();
+
+        /*
+               const campaign_id = req.body.campaign_id;
+               const format_group_id = req.body.format_group_id;        
+               const pack_id = req.body.pack_id;
+
+               const display_mobile_file = req.body.display_mobile_file;
+               const display_mobile_url = req.body.display_mobile_url;
+               
+               const display_tablet_file = req.body.display_tablet_file;
+               const display_tablet_url = req.body.display_tablet_url;
+               
+               const display_desktop_file = req.body.display_desktop_file;
+               const display_desktop_url = req.body.display_desktop_url;
+               
+               const video_file = req.body.video_file;
+               const video_url = req.body.video_url;
+                   
+               console.log(req.body)
+
+              
+
+               const campaign_id = req.body.campaign_id;
+               const insertion = req.body.insertion
+               const format = req.body.format
+               const packs = req.body.packs
+               const start_date = req.body.campaign_start_date
+               const end_date = req.body.campaign_end_date
+               const delivery_type = req.body.delivery_type
+               const priority = req.body.priority
+
+               console.log(req.body)
+
+               if (!TEXT_REGEX.test(insertion)) {
+                   req.session.message = {
+                       type: 'danger',
+                       intro: 'Erreur',
+                       message: 'Le nombre de caratère est limité à 50'
+                   }
+                   return res.redirect(`/manager/insertions/create/${campaign}`)
+
+               }
+
+               if (insertion == '' || campaign == '' || start_date == '' || end_date == '' || format == '') {
+                   req.session.message = {
+                       type: 'danger',
+                       intro: 'Un problème est survenu',
+                       message: 'Les champs doivent être complétés'
+                   }
+                   return res.redirect(`/manager/insertions/create/${campaign}`)
+               }
+
+               const timstasp_start = Date.parse(start_date)
+               const timstasp_end = Date.parse(end_date)
+
+               // si date aujourd'hui est >= à la date selectionné envoie une erreur
+               if (timstasp_end <= timstasp_start || timstasp_start >= timstasp_end) {
+                   req.session.message = {
+                       type: 'danger',
+                       intro: 'Un problème est survenu',
+                       message: 'Saisissez une date valide'
+                   }
+                   return res.redirect(`/manager/insertions/create/${campaign}`)
+               }
+
+               const dateNow = moment().format('YYYY-MM-DD HH:mm:ss');
 
 
-        await ModelInsertions
-            .findOne({
-                attributes: ['insertion_name'],
-                where: {
-                    insertion_name: insertion
-                }
-            }).then(async function (insertionFound) {
+               var requestInsertion = {
+
+                   "isDeliveryRegulated": true,
+                   "isUsedByGuaranteedDeal": false,
+                   "isUsedByNonGuaranteedDeal": false,
+                   "impressionTypeId": 0,
+                   "voiceShare": 0,
+                   "eventId": 0,
+                   "creativeRotationModeId": 0,
+                   "name": insertion,
+                   "description": "",
+                   "isPersonalizedAd": false,
+                   "insertionStatusId": 0,
+                   //"siteIds": site,
+                   "packIds": [packs],
+                   "insertionStatusId": 1,
+                   "startDate": start_date,
+                   "endDate": end_date,
+                   "campaignId": campaign,
+                   "insertionTypeId": 0,
+                   "deliveryTypeId": delivery_type,
+                   "timezoneId": 4,
+                   "priorityId": priority,
+                   "periodicCappingId": 0,
+                   "groupCappingId": 0,
+                   "maxImpressions": 0,
+                   "weight": 0,
+                   "maxClicks": 0,
+                   "maxImpressionsPerDay": 0,
+                   "maxClicksPerDay": 0,
+                   "eventImpressions": 0,
+                   "isHolisticYieldEnabled": false,
+                   "deliverLeftVolumeAfterEndDate": false,
+                   "globalCapping": 0,
+                   "cappingPerVisit": 0,
+                   "cappingPerClick": 0,
+                   "autoCapping": 0,
+                   // "periodicCappingImpressions": 0,
+                   // "periodicCappingPeriod": 0,
+                   "isObaIconEnabled": false,
+                   "formatId": format,
+                   "externalId": 0,
+                   "externalDescription": "",
+                   "updatedAt": dateNow,
+                   "createdAt": dateNow,
+                   "isArchived": false,
+                   "rateTypeId": 0,
+                   "rate": 0.0,
+                   "rateNet": 0.0,
+                   "discount": 0.0,
+                   "currencyId": 0,
+                   "insertionLinkId": 0,
+                   "customizedScript": "",
+                   "salesChannelId": 1,
+                   "inventoryTypeId": 0
+
+               }
+
+               //paramètre avec capping si format Interstitiel
+               if (format === '79633' || format === '44152') {
+
+                   var requestInsertion = {
+
+                       "isDeliveryRegulated": true,
+                       "isUsedByGuaranteedDeal": false,
+                       "isUsedByNonGuaranteedDeal": false,
+                       "impressionTypeId": 0,
+                       "voiceShare": 0,
+                       "eventId": 0,
+                       "creativeRotationModeId": 0,
+                       "name": insertion,
+                       "description": "",
+                       "isPersonalizedAd": false,
+                       "insertionStatusId": 0,
+                       //"siteIds": site,
+                       "packIds": [packs],
+                       "insertionStatusId": 1,
+                       "startDate": start_date,
+                       "endDate": end_date,
+                       "campaignId": campaign,
+                       "insertionTypeId": 0,
+                       "deliveryTypeId": delivery_type,
+                       "timezoneId": 4,
+                       "priorityId": priority,
+                       "periodicCappingId": 0,
+                       "groupCappingId": 0,
+                       "maxImpressions": 0,
+                       "weight": 0,
+                       "maxClicks": 0,
+                       "maxImpressionsPerDay": 0,
+                       "maxClicksPerDay": 0,
+                       "eventImpressions": 0,
+                       "isHolisticYieldEnabled": false,
+                       "deliverLeftVolumeAfterEndDate": false,
+                       "globalCapping": 0,
+                       "cappingPerVisit": 0,
+                       "cappingPerClick": 0,
+                       "autoCapping": 0,
+                       "periodicCappingImpressions": 1,
+                       "periodicCappingPeriod": 15,
+                       "isObaIconEnabled": false,
+                       "formatId": format,
+                       "externalId": 0,
+                       "externalDescription": "",
+                       "updatedAt": dateNow,
+                       "createdAt": dateNow,
+                       "isArchived": false,
+                       "rateTypeId": 0,
+                       "rate": 0.0,
+                       "rateNet": 0.0,
+                       "discount": 0.0,
+                       "currencyId": 0,
+                       "insertionLinkId": 0,
+                       "customizedScript": "",
+                       "salesChannelId": 1,
+                       "inventoryTypeId": 0
+
+                   }
 
 
-                if (!insertionFound) {
+               }
 
 
-                    let insertion_create = await AxiosFunction.postManage(
-                        'insertions',
-                        requestInsertion
-                    );
+               await ModelInsertions
+                   .findOne({
+                       attributes: ['insertion_name'],
+                       where: {
+                           insertion_name: insertion
+                       }
+                   }).then(async function (insertionFound) {
 
 
-                    if (insertion_create.headers.location) {
+                       if (!insertionFound) {
 
 
-                        var url_location = insertion_create.headers.location
+                           let insertion_create = await AxiosFunction.postManage(
+                               'insertions',
+                               requestInsertion
+                           );
 
 
+                           if (insertion_create.headers.location) {
+                               var url_location = insertion_create.headers.location
+                               var insertion_get = await AxiosFunction.getManage(url_location);
+                               const insertion_id = insertion_get.data.id
 
-                        var insertion_get = await AxiosFunction.getManage(url_location);
-
-
-
-                        const insertion_id = insertion_get.data.id
-
-
-
-                        //Si le format Interstitiel est choisi et que il n'y a pas exclusion
-                        //on coche la case targeting cookie
-
-                        if (format === '79633' || format === '44152') {
-                            requestInsertionsTarget = {
-
-                                "insertionId": insertion_id,
-
-                                "targetBrowserWithCookies": true
-
-                            }
-                            await AxiosFunction.putManage(
-                                'insertiontargetings',
-                                requestInsertionsTarget
-                            );
-                        }
+                               //Si le format Interstitiel est choisi et que il n'y a pas exclusion
+                               //on coche la case targeting cookie
+                               if (format === '79633' || format === '44152') {
+                                   requestInsertionsTarget = {
+                                       "insertionId": insertion_id,
+                                       "targetBrowserWithCookies": true
+                                   }
+                                   await AxiosFunction.putManage(
+                                       'insertiontargetings',
+                                       requestInsertionsTarget
+                                   );
+                               }
 
 
-                        await ModelInsertions.create({
-                            insertion_id: insertion_id,
-                            insertion_name: insertion,
-                            campaign_id: campaign,
-                            insertion_start_date: start_date,
-                            insertion_end_date: end_date,
-                            pack_id: packs,
-                            format_id: format,
-                            delivery_type_id: delivery_type,
-                            timezone_id: 4,
-                            priority_id: priority,
-                            campaign_archived: 0
+                               await ModelInsertions.create({
+                                   insertion_id: insertion_id,
+                                   insertion_name: insertion,
+                                   campaign_id: campaign,
+                                   insertion_start_date: start_date,
+                                   insertion_end_date: end_date,
+                                   pack_id: packs,
+                                   format_id: format,
+                                   delivery_type_id: delivery_type,
+                                   timezone_id: 4,
+                                   priority_id: priority,
+                                   campaign_archived: 0
 
-                        });
+                               });
 
-                        req.session.message = {
-                            type: 'success',
-                            intro: 'Ok',
-                            message: 'L\'inserion a été crée dans SMARTADSERVEUR',
+                               req.session.message = {
+                                   type: 'success',
+                                   intro: 'Ok',
+                                   message: 'L\'inserion a été crée dans SMARTADSERVEUR',
 
-                        }
-                        return res.redirect(`/manager/insertions/create/${campaign}`)
-                    }
+                               }
+                               return res.redirect(`/manager/insertions/create/${campaign}`)
+                           }
 
 
 
 
 
-                } else {
-                    req.session.message = {
-                        type: 'danger',
-                        intro: 'Erreur',
-                        message: 'Insertions est déjà utilisé'
-                    }
-                    return res.redirect(`/manager/insertions/create/${campaign}`)
-                }
+                       } else {
+                           req.session.message = {
+                               type: 'danger',
+                               intro: 'Erreur',
+                               message: 'Insertions est déjà utilisé'
+                           }
+                           return res.redirect(`/manager/insertions/create/${campaign}`)
+                       }
 
 
-            })
-
-
-
-
+                   })
+         */
 
     } catch (error) {
         console.log(error);
@@ -562,6 +955,7 @@ exports.create_post = async (req, res) => {
             statusCoded: statusCoded
         });
     }
+
 }
 
 
@@ -729,32 +1123,32 @@ exports.create_creative_post = async (req, res) => {
                             }
                         })
 
-                            var RequestInsertionTemplate = {
-                                "InsertionId": insertion,
-                                "ParameterValues": templateId.parameter_default_values,
-                                "TemplateId": templateId.template_id
-                            }
+                        var RequestInsertionTemplate = {
+                            "InsertionId": insertion,
+                            "ParameterValues": templateId.parameter_default_values,
+                            "TemplateId": templateId.template_id
+                        }
 
-                            await AxiosFunction.putManage(
-                                'insertiontemplates',
-                                RequestInsertionTemplate
-                            );
+                        await AxiosFunction.putManage(
+                            'insertiontemplates',
+                            RequestInsertionTemplate
+                        );
 
-                            await ModelInsertionsTemplates.create({
-                                insertion_id: insertion,
-                                parameter_value: templateId.parameter_default_values,
-                                template_id: templateId.template_id,
+                        await ModelInsertionsTemplates.create({
+                            insertion_id: insertion,
+                            parameter_value: templateId.parameter_default_values,
+                            template_id: templateId.template_id,
 
 
-                            });
-                            req.session.message = {
-                                type: 'success',
-                                intro: 'Ok',
-                                message: 'La créative a été crée dans SMARTADSERVEUR',
+                        });
+                        req.session.message = {
+                            type: 'success',
+                            intro: 'Ok',
+                            message: 'La créative a été crée dans SMARTADSERVEUR',
 
-                            }
-                            return res.redirect(`/manager/creatives/create/${insertion}`)
-                        
+                        }
+                        return res.redirect(`/manager/creatives/create/${insertion}`)
+
 
 
                     }

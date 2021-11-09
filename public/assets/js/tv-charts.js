@@ -1,7 +1,7 @@
 'use strict';
 $(document).ready(function () {
  
-var chartCampaignUrl = 'https://reporting.antennesb.fr/t/charts';
+var chartCampaignUrl = config.baseurl+'/t/charts';
      
 $.getJSON(chartCampaignUrl, function (response) {   
 
