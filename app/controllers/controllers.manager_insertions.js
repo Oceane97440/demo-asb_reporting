@@ -182,7 +182,7 @@ exports.view = async (req, res) => {
             })
             .then(async function (insertion) {
                 if (!insertion) {
-                    res.redirect(`/extension-chrome/insertion/${insertion_id}`)
+                    res.redirect(`/extension-chrome/insertion?insertion_id=${insertion_id}`)
                     /*return res
                         .status(404)
                         .render("manager/error.ejs", {

@@ -72,8 +72,13 @@ const {
 exports.advertiser = async (req, res) => {
     try {
         let advertiser_id = req.query.advertiser_id;
+        const advertiser = await ModelAdvertisers.findOne({
+            where: {
+                advertiser_id: advertiser_id
+            }
+        })
 
-        if (advertiser_id) {
+        if (!advertiser) {
             advertiserObject = {
                 "advertiser_id": req.query.advertiser_id
             };
@@ -106,10 +111,8 @@ exports.advertiser = async (req, res) => {
             });
 
         } else {
-            return res.json({
-                type: 'error',
-                message: 'Veuillez saisir l\'identifiant de l\'annonceur.'
-            });
+            res.redirect(`/manager/advertisers/${advertiser_id}`)
+
         }
     } catch (error) {
         return res.json({
@@ -123,7 +126,16 @@ exports.campaign = async (req, res) => {
         let campaign_id = req.query.campaign_id;
 
 
-        if (campaign_id) {
+        var campaign = await ModelCampaigns.findOne({
+            where: {
+                campaign_id: campaign_id
+            }
+        })
+
+        //Si il n'existe pas on ajoute l'annonceur dans le BI puis on redirige vers celui-ci
+
+
+        if (!campaign) {
             campaignObject = {
                 "campaign_id": req.query.campaign_id
             };
@@ -145,6 +157,10 @@ exports.campaign = async (req, res) => {
                     var campaign_end_date = dataValue.endDate;
                     var campaign_status_id = dataValue.campaignStatusId;
                     var campaign_archived = dataValue.isArchived;
+                    var campaign_crypt = crypto
+                    .createHash('md5')
+                    .update(campaign_id.toString())
+                    .digest("hex");
 
                     //Cherche si l'annonceur liée à la campagne exsite
                     const advertiser = await ModelAdvertisers.findOne({
@@ -157,43 +173,12 @@ exports.campaign = async (req, res) => {
                     if (!advertiser) {
 
                         console.log("redirection annonceur")
+                        res.redirect(`/manager/advertisers/${advertiser_id}`)
 
-                         advertiserObject = {
-                              "advertiser_id": advertiser_id
-                          };
-                          var config = SmartFunction.config('advertiser', advertiserObject);
-              
-                          await axios(config).then(function (result) {
-              
-                              if (!Utilities.empty(result.data)) {
-                                  var dataValue = result.data;
-                                  var advertiser_id = dataValue.id;
-                                  var advertiser_name = dataValue.name;
-                                  var advertiser_archived = dataValue.isArchived;
-                                  
-                                  Utilities
-                                      .updateOrCreate(ModelAdvertisers, {
-                                          advertiser_id: advertiser_id
-                                      }, {advertiser_id, advertiser_name, advertiser_archived})
-                                      .then(function (result) {
-                                          result.item; // the model
-                                          result.created; // bool, if a new item was created.
-                                          res.redirect(`/manager/advertisers/${advertiser_id}`)
-                                   
-                                      });
-                              }
-              
-                          });
 
                     } else {
 
                         //si l'annonceur existe on ajoute la campagne dans le BI
-
-                        var campaign_crypt = crypto
-                            .createHash('md5')
-                            .update(campaign_id.toString())
-                            .digest("hex");
-
                         Utilities
                             .updateOrCreate(ModelCampaigns, {
                                 campaign_id: campaign_id
@@ -226,10 +211,8 @@ exports.campaign = async (req, res) => {
             });
 
         } else {
-            return res.json({
-                type: 'error',
-                message: 'Veuillez saisir l\'identifiant de la campagne.'
-            });
+            res.redirect(`/manager/campaigns/${campaign_id}`)
+
         }
     } catch (error) {
         return res.json({
@@ -243,10 +226,19 @@ exports.insertion = async (req, res) => {
     try {
         let insertion_id = req.query.insertion_id;
 
+        console.log(insertion_id)
 
-        if (insertion_id) {
+        const insertion = await ModelInsertions.findOne({
+            where: {
+                insertion_id: insertion_id
+            }
+        })
+
+        if (!insertion) {
+         
+            
             insertionObject = {
-                "insertion_id": req.query.insertion_id
+                "insertion_id": insertion_id
             };
             console.log("insertion_id  " + insertion_id)
 
@@ -323,7 +315,7 @@ exports.insertion = async (req, res) => {
                     if (!campaign) {
 
                         console.log("redirection campaign")
-                        res.redirect(`/automate/campaign?campaign_id=${campaign_id}`)
+                        res.redirect(`/extension-chrome/campaign?campaign_id=${campaign_id}`)
 
 
                     } else {
@@ -388,7 +380,7 @@ exports.insertion = async (req, res) => {
                             .then(function (result) {
                                 result.item; // the model
                                 result.created; // bool, if a new item was created.
-                                res.redirect(`manager/campaigns/${campaign_id}/insertions/${insertion_id}`)
+                                res.redirect(`/manager/campaigns/${campaign_id}/insertions/${insertion_id}`)
                                 console.log("redirection insertion campagne")
                             });
 
@@ -404,10 +396,12 @@ exports.insertion = async (req, res) => {
             });
 
         } else {
-            return res.json({
+            res.redirect(`/manager/campaigns/${insertion.campaign_id}/insertions/${insertion_id}`)
+
+           /* return res.json({
                 type: 'error',
                 message: 'Veuillez saisir l\'identifiant de la campagne.'
-            });
+            });*/
         }
     } catch (error) {
         return res.json({
