@@ -40,12 +40,14 @@ exports.index = async (req, res) => {
        const test = await ModelCampaigns.findAll({
 
             attributes: ['campaign_id','campaign_name','campaign_end_date','campaign_crypt'],
+            group : "campaign_id",
             campaign_end_date:{
                 [Op.between]:['2021-11-08  04:00:00', '2021-11-14 04:00:00']
             },
             include: [
                 {
                     model: ModelInsertions,
+                    attributes:["format_id","insertion_id","insertion_end_date","campaign_id"],
                     where: {
                         format_id: 43791,
                         insertion_end_date: {

@@ -334,7 +334,10 @@ exports.create_post = async (req, res) => {
 
     try {
         var body = {
-            campaign_id: '1764641',
+           // campaign_id: '1764641',
+            campaign_id: '1985799',
+
+            
             // format_group_id: '4',
             format_group_id: 'GRAND ANGLE',
 
@@ -434,7 +437,7 @@ exports.create_post = async (req, res) => {
         for (let index = 0; index < formats_sites.length; index++) {
             if (!Utilities.empty(formats_sites)) {
                 const siteName = formats_sites[index].site.site_group
-                const siteIds = formats_sites[index].site.site_id
+                var siteIds = formats_sites[index].site.site_id
 
                 const formatName = formats_sites[index].format.format_name
                 const formatIds = formats_sites[index].format.format_id
@@ -446,6 +449,9 @@ exports.create_post = async (req, res) => {
                 var label = formatName.replace(regex, '5');
                 const found = label.match(/[0-9]/igm);
                 const libélé = format_group_id + " - " + siteName + ' - ' + 'POSITION ' + found
+
+    
+
 
                 var requestInsertion = {
                     "isDeliveryRegulated": true,
@@ -489,7 +495,18 @@ exports.create_post = async (req, res) => {
 
                     requestInsertion['deliveryTypeId'] = 10
 
+
                 }
+                 if (siteName.match(/APPLI LINFO/igm)) {
+                     //Attention j'ai delate SM-ANDROID LINFO
+                    requestInsertion['siteIds'] = [299248 ,299249]
+
+
+                     
+
+
+                }
+              
                 console.log(libélé)
                 console.log('REQUEST : ', requestInsertion);
 
@@ -505,18 +522,19 @@ exports.create_post = async (req, res) => {
 
                 if (insertion_create.headers.location) {
                     var url_location = insertion_create.headers.location
+                    console.log(url_location)
                   //  var insertion_get = await AxiosFunction.getManage(url_location);
                     //const insertion_id = insertion_get.data.id
 
 
 
 
-                    res.json({
+                    /*res.json({
                         type: 'success',
                         intro: 'Ok',
                         message: 'L\'inserion a été crée dans SMARTADSERVEUR',
 
-                    })  
+                    })  */
                 }
 
                 console.log("------------------------")
