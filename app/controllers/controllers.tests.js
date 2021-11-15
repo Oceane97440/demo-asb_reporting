@@ -37,7 +37,31 @@ const ModelInsertions = require("../models/models.insertions");
 exports.index = async (req, res) => {
 
     try {
-        // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
+       const test = await ModelCampaigns.findAll({
+
+            attributes: ['campaign_id','campaign_name','campaign_end_date','campaign_crypt'],
+            campaign_end_date:{
+                [Op.between]:['2021-11-08  04:00:00', '2021-11-14 04:00:00']
+            },
+            include: [
+                {
+                    model: ModelInsertions,
+                    where: {
+                        format_id: 43791,
+                        insertion_end_date: {
+                            [Op.between]:['2021-11-08  04:00:00', '2021-11-14 04:00:00']
+                        }
+                    }
+
+                }
+            ]
+            
+
+        })
+
+       res.json(test)        
+
+       /* // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
         const formats = await ModelFormat.findAll({
             attributes: ['format_group'],
             group: "format_group",
@@ -72,7 +96,7 @@ exports.index = async (req, res) => {
             formats: formats,
             packs: packs,
             countrys: countrys
-        });
+        });*/
     } catch (error) {
         console.log(error);
     }
