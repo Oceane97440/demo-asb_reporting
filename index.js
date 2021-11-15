@@ -295,7 +295,7 @@ app.use(cookieParser());
 app.use(cookieSession({
     name: 'BI_antennesb',
     keys: ['asq4b4PR'],
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 2592000000 // 30 jour
 }))
 /**L'image à une limite min=50px max=2000px */
 app.use(fileUpload());
