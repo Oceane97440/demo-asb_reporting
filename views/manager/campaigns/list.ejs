@@ -1,22 +1,18 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-  
-    <div class="col-xl-12 col-md-12">
-        <div class="card table-card">
-            <div class="card-header">
-                <h1>Campagnes</h1>
-            </div>
-            <div class="pro-scroll">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        
-                        <%- include("../inc/table_campaigns.ejs") -%> 
 
-                    </div>
-                </div>
-                <div class="pt-5 pb-5 text-right"> <a href="/manager/campaigns/export" class="btn btn-xs btn-success"> <i class="fas fa-file-excel"> </i> Télécharger <span class="small">(Format : Excel)</span></a> </div>
-
+<div class="col-xl-12 col-md-12">
+    <div class="card table-card">
+        <div class="card-header">
+            <h1>Campagnes</h1>
+        </div>
+        <div class="pro-scroll">
+            <div class="card-body p-0">
+                <%- include("../inc/table_campaigns.ejs") -%>
             </div>
+            <div class="pt-5 pb-5 text-right"> <a href="/manager/campaigns/export" class="btn btn-xs btn-success"> <i class="fas fa-file-excel"> </i> Télécharger <span class="small">(Format : Excel)</span></a> </div>
+
         </div>
     </div>
+</div>
 
 <%- include("../../layouts/manager/footer.ejs") -%>

@@ -30,11 +30,11 @@ const ModelPlatforms = require("../models/models.platforms");
 const ModelDeliverytypes = require("../models/models.deliverytypes");
 const ModelCountries = require("../models/models.countries");
 
-const ModelGroupsFormatsTypes = require(
+const ModelFormatsGroupsTypes = require(
     "../models/models.formats_groups_types"
 );
 const ModelFormatsTemplates = require("../models/models.formats_templates")
-const ModelGroupsFormats = require("../models/models.groups_formats");
+const ModelFormatsGroups = require("../models/models.formats_groups");
 const ModelInsertions = require("../models/models.insertions");
 const ModelInsertionsTemplates = require(
     "../models/models.insertions_templates"

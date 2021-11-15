@@ -16,6 +16,10 @@ const Sites = sequelize.define('sites', {
         type: Sequelize.STRING(255),
         allowNull: false
     },
+    site_group: {
+        type: Sequelize.STRING(255),
+        allowNull: false
+    },
     site_archived: {
         type: Sequelize.INTEGER(),
         allowNull: true

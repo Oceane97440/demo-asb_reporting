@@ -1,46 +1,47 @@
-<table class="table table-striped">
-    <thead class="text-center thead-dark">
-        <tr>
-            <th>Format</th>
-            <th>Impressions</th>
-            <th>Clics</th>
-            <th>Taux de clics</th>
-        </tr>
-    </thead>
-    <tbody class="text-center">
-        <% if(reporting.habillage) { %>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="text-center thead-dark">
+            <tr>
+                <th>Format</th>
+                <th>Impressions</th>
+                <th>Clics</th>
+                <th>Taux de clics</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            <% if(reporting.habillage) { %>
             <tr>
                 <td class="text-left">HABILLAGE</td>
                 <td><%= utilities.numStr(reporting.habillage.impressions) %></td>
                 <td><%= utilities.numStr(reporting.habillage.clicks) %></td>
                 <td class="text-center"><%= reporting.habillage.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.interstitiel) { %>
+            <% } %>
+            <% if(reporting.interstitiel) { %>
             <tr>
                 <td class="text-left">INTERSTITIEL</td>
                 <td><%= utilities.numStr(reporting.interstitiel.impressions) %></td>
                 <td><%= utilities.numStr(reporting.interstitiel.clicks) %></td>
                 <td class="text-center"><%= reporting.interstitiel.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.instream) { %>
+            <% } %>
+            <% if(reporting.instream) { %>
             <tr>
                 <td class="text-left">INSTREAM</td>
                 <td><%= utilities.numStr(reporting.instream.impressions) %></td>
                 <td><%= utilities.numStr(reporting.instream.clicks) %></td>
                 <td class="text-center"><%= reporting.instream.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.masthead) { %>
+            <% } %>
+            <% if(reporting.masthead) { %>
             <tr>
                 <td class="text-left">MASTHEAD</td>
                 <td><%= utilities.numStr(reporting.masthead.impressions) %></td>
                 <td><%= utilities.numStr(reporting.masthead.clicks) %></td>
                 <td class="text-center"><%= reporting.masthead.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.grandangle) { %>
+            <% } %>
+            <% if(reporting.grandangle) { %>
             <tr>
                 <td class="text-left">GRAND ANGLE</td>
                 <td><%= utilities.numStr(reporting.grandangle.impressions) %></td>
@@ -48,8 +49,8 @@
                 <td class="text-center"><%= reporting.grandangle.ctr %>%</td>
 
             </tr>
-        <% } %>
-        <% if(reporting.rectanglevideo) { %>
+            <% } %>
+            <% if(reporting.rectanglevideo) { %>
             <tr>
                 <td class="text-left">RECTANGLE VIDEO</td>
                 <td><%= utilities.numStr(reporting.rectanglevideo.impressions) %></td>
@@ -57,40 +58,40 @@
                 <td class="text-center"><%= reporting.rectanglevideo.ctr %>%</td>
 
             </tr>
-        <% } %>
-        <% if(reporting.logo) { %>
+            <% } %>
+            <% if(reporting.logo) { %>
             <tr>
                 <td class="text-left">LOGO</td>
                 <td><%= utilities.numStr(reporting.logo.impressions) %></td>
                 <td><%= utilities.numStr(reporting.logo.clicks) %></td>
                 <td class="text-center"><%= reporting.logo.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.native) { %>
+            <% } %>
+            <% if(reporting.native) { %>
             <tr>
                 <td class="text-left">NATIVE</td>
                 <td><%= utilities.numStr(reporting.native.impressions) %></td>
                 <td><%= utilities.numStr(reporting.native.clicks) %></td>
                 <td class="text-center"><%= reporting.native.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.slider) { %>
+            <% } %>
+            <% if(reporting.slider) { %>
             <tr>
                 <td class="text-left">SLIDER</td>
                 <td><%= utilities.numStr(reporting.slider.impressions) %></td>
                 <td><%= utilities.numStr(reporting.slider.clicks) %></td>
                 <td class="text-center"><%= reporting.slider.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.mea) { %>
+            <% } %>
+            <% if(reporting.mea) { %>
             <tr>
                 <td class="text-left">MEA</td>
                 <td><%= utilities.numStr(reporting.mea.impressions) %></td>
                 <td><%= utilities.numStr(reporting.mea.clicks) %></td>
                 <td class="text-center"><%= reporting.mea.ctr %>%</td>
             </tr>
-        <% } %>
-        <% if(reporting.slidervideo) { %>
+            <% } %>
+            <% if(reporting.slidervideo) { %>
             <tr>
                 <td class="text-left">SLIDER VIDEO</td>
                 <td><%= utilities.numStr(reporting.slidervideo.impressions) %></td>
@@ -98,13 +99,16 @@
                 <td class="text-center"><%= reporting.slidervideo.ctr %>%</td>
 
             </tr>
-        <% } %>
-    </tbody>
-    <tfoot class="text-center table-dark"> <tr> <td class="text-left"><strong>Total</strong>
-</td>
-<td><%= utilities.numStr(reporting.campaign.impressions) %></td>
-<td><%= utilities.numStr(reporting.campaign.clicks) %></td>
-<td><%= reporting.campaign.ctr %>%</td>
-</tr>
-</tfoot>
-</table>
+            <% } %>
+        </tbody>
+        <tfoot class="text-center table-dark">
+            <tr>
+                <td class="text-left"><strong>Total</strong>
+                </td>
+                <td><%= utilities.numStr(reporting.campaign.impressions) %></td>
+                <td><%= utilities.numStr(reporting.campaign.clicks) %></td>
+                <td><%= reporting.campaign.ctr %>%</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

@@ -1,114 +1,137 @@
 <%- include("../../layouts/manager/head.ejs") -%>
 
 <!-- support-section start -->
-    <div class="col-md-12">
-       
+<div class="row">
+
+    <div class="col-md-7">
         <div class="card table-card">
             <div class="card-header">
                 <h5>Campagnes</h5>
             </div>
             <div class="pro-scroll">
                 <div class="card-body p-3">
-                   
-                    
+
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item mr-1" role="presentation">
-                            <a class="nav-link active" id="campaign_end_today-tab" data-toggle="tab" href="#campaign_end_today" role="tab" aria-controls="home"
-                                aria-selected="true">Aujourd'hui <span class="badge bg-secondary"><%= campaigns_today.length %></span></a>
+                            <a class="nav-link active" id="campaign_end_today-tab" data-toggle="tab"
+                                href="#campaign_end_today" role="tab" aria-controls="home"
+                                aria-selected="true">Aujourd'hui <span
+                                    class="badge bg-secondary"><%= campaigns_today.length %></span></a>
                         </li>
                         <li class="nav-item mr-1" role="presentation">
-                            <a class="nav-link" id="campaign_end_tomorrow-tab" data-toggle="tab" href="#campaign_end_tomorrow" role="tab" aria-controls="profile"
-                                aria-selected="false">Demain <span class="badge bg-secondary"><%= campaigns_tomorrow.length %></span></a>
+                            <a class="nav-link" id="campaign_end_tomorrow-tab" data-toggle="tab"
+                                href="#campaign_end_tomorrow" role="tab" aria-controls="profile"
+                                aria-selected="false">Demain <span
+                                    class="badge bg-secondary"><%= campaigns_tomorrow.length %></span></a>
                         </li>
                         <li class="nav-item mr-1" role="presentation">
-                            <a class="nav-link" id="campaign_end_5nextdays-tab" data-toggle="tab" href="#campaign_end_5nextdays" role="tab" aria-controls="contact"
-                                aria-selected="false">Dans les 5 prochains jours <span class="badge bg-secondary"><%= campaigns_nextdays.length %></span></a>
+                            <a class="nav-link" id="campaign_end_5nextdays-tab" data-toggle="tab"
+                                href="#campaign_end_5nextdays" role="tab" aria-controls="contact"
+                                aria-selected="false">Les 5 proch. jours <span
+                                    class="badge bg-secondary"><%= campaigns_nextdays.length %></span></a>
                         </li>
                         <li class="nav-item mr-1" role="presentation">
-                            <a class="nav-link" id="campaigns_online-tab" data-toggle="tab" href="#campaigns_online" role="tab" aria-controls="contact"
-                                aria-selected="false">En cours <span class="badge bg-secondary"><%= campaigns_online.length %></span></a>
+                            <a class="nav-link" id="campaigns_online-tab" data-toggle="tab" href="#campaigns_online"
+                                role="tab" aria-controls="contact" aria-selected="false">En cours <span
+                                    class="badge bg-secondary"><%= campaigns_online.length %></span></a>
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="campaign_end_today" role="tabpanel" aria-labelledby="campaign_end_today-tab">
+                        <div class="tab-pane fade show active" id="campaign_end_today" role="tabpanel"
+                            aria-labelledby="campaign_end_today-tab">
                             <ul class="list-group list-group-flush">
                                 <% for (let i=0; i < campaigns_today.length; i++) { %>
-                                 <li class="list-group-item">
-                                     <a href="/manager/campaigns/<%= campaigns_today[i].campaign_id %>" title="<%= campaigns_today[i].campaign_name %>"><%= campaigns_today[i].campaign_name %>
-                                         <br />
-                                         <span class="small">(Du <%= moment(campaigns_today[i].campaign_start_date).format('DD/MM/YYYY') %> au 
-                                         <%= moment(campaigns_today[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
-                                         </a>
-                                     </li>
-                              <% } %>
-                             </ul>
+                                <li class="list-group-item">
+                                    <a href="/manager/campaigns/<%= campaigns_today[i].campaign_id %>"
+                                        title="<%= campaigns_today[i].campaign_name %>"><%= campaigns_today[i].campaign_name %>
+                                        <br />
+                                        <span class="small">(Du
+                                            <%= moment(campaigns_today[i].campaign_start_date).format('DD/MM/YYYY') %>
+                                            au
+                                            <%= moment(campaigns_today[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
+                                    </a>
+                                </li>
+                                <% } %>
+                            </ul>
                         </div>
-                        <div class="tab-pane fade" id="campaign_end_tomorrow" role="tabpanel" aria-labelledby="campaign_end_tomorrow-tab">
+                        <div class="tab-pane fade" id="campaign_end_tomorrow" role="tabpanel"
+                            aria-labelledby="campaign_end_tomorrow-tab">
                             <ul class="list-group list-group-flush">
                                 <% for (let i=0; i < campaigns_tomorrow.length; i++) { %>
-                                 <li class="list-group-item">
-                                     <a href="/manager/campaigns/<%= campaigns_tomorrow[i].campaign_id %>" title="<%= campaigns_tomorrow[i].campaign_name %>"><%= campaigns_tomorrow[i].campaign_name %>
-                                         <br />
-                                         <span class="small">(Du <%= moment(campaigns_tomorrow[i].campaign_start_date).format('DD/MM/YYYY') %> au 
-                                         <%= moment(campaigns_tomorrow[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
-                                         </a>
-                                     </li>
-                              <% } %>
-                             </ul>
-                            
+                                <li class="list-group-item">
+                                    <a href="/manager/campaigns/<%= campaigns_tomorrow[i].campaign_id %>"
+                                        title="<%= campaigns_tomorrow[i].campaign_name %>"><%= campaigns_tomorrow[i].campaign_name %>
+                                        <br />
+                                        <span class="small">(Du
+                                            <%= moment(campaigns_tomorrow[i].campaign_start_date).format('DD/MM/YYYY') %>
+                                            au
+                                            <%= moment(campaigns_tomorrow[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
+                                    </a>
+                                </li>
+                                <% } %>
+                            </ul>
+
                         </div>
-                        <div class="tab-pane fade" id="campaign_end_5nextdays" role="tabpanel" aria-labelledby="campaign_end_5nextdays-tab">
-                           <ul class="list-group list-group-flush">
+                        <div class="tab-pane fade" id="campaign_end_5nextdays" role="tabpanel"
+                            aria-labelledby="campaign_end_5nextdays-tab">
+                            <ul class="list-group list-group-flush">
                                 <% for (let i=0; i < campaigns_nextdays.length; i++) { %>
-                                 <li class="list-group-item">
-                                     <a href="/manager/campaigns/<%= campaigns_nextdays[i].campaign_id %>" title="<%= campaigns_nextdays[i].campaign_name %>"><%= campaigns_nextdays[i].campaign_name %>
-                                         <br />
-                                         <span class="small">(Du <%= moment(campaigns_nextdays[i].campaign_start_date).format('DD/MM/YYYY') %> au 
-                                         <%= moment(campaigns_nextdays[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
-                                         </a>
-                                     </li>
-                              <% } %>
-                             </ul>   
+                                <li class="list-group-item">
+                                    <a href="/manager/campaigns/<%= campaigns_nextdays[i].campaign_id %>"
+                                        title="<%= campaigns_nextdays[i].campaign_name %>"><%= campaigns_nextdays[i].campaign_name %>
+                                        <br />
+                                        <span class="small">(Du
+                                            <%= moment(campaigns_nextdays[i].campaign_start_date).format('DD/MM/YYYY') %>
+                                            au
+                                            <%= moment(campaigns_nextdays[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
+                                    </a>
+                                </li>
+                                <% } %>
+                            </ul>
                         </div>
-                        <div class="tab-pane fade" id="campaigns_online" role="tabpanel" aria-labelledby="campaigns_online-tab">
-                            <ul class="list-group list-group-flush"> 
-                                 <% for (let i=0; i < campaigns_online.length; i++) { %>
-                                  <li class="list-group-item">
-                                      <a href="/manager/campaigns/<%= campaigns_online[i].campaign_id %>" title="<%= campaigns_online[i].campaign_name %>"><%= campaigns_online[i].campaign_name %>
-                                          <br />
-                                          <span class="small">(Du <%= moment(campaigns_online[i].campaign_start_date).format('DD/MM/YYYY') %> au 
-                                          <%= moment(campaigns_online[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
-                                          </a>
-                                      </li>
-                               <% } %>
-                              </ul>   
-                         </div>
-                         
+                        <div class="tab-pane fade" id="campaigns_online" role="tabpanel"
+                            aria-labelledby="campaigns_online-tab">
+                            <ul class="list-group list-group-flush">
+                                <% for (let i=0; i < campaigns_online.length; i++) { %>
+                                <li class="list-group-item">
+                                    <a href="/manager/campaigns/<%= campaigns_online[i].campaign_id %>"
+                                        title="<%= campaigns_online[i].campaign_name %>"><%= campaigns_online[i].campaign_name %>
+                                        <br />
+                                        <span class="small">(Du
+                                            <%= moment(campaigns_online[i].campaign_start_date).format('DD/MM/YYYY') %>
+                                            au
+                                            <%= moment(campaigns_online[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
+                                    </a>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+
                     </div>
 
-                    
-                </div>
-            </div>
-    </div>
-
-    <div class="col-md-12">
-       
-        <div class="card table-card">
-            <div class="card-header">
-                <h5>Répartitions des campagnes</h5>
-            </div>
-            <div class="pro-scroll">
-                <div class="card-body p-3">
-                   <div class="col-md-6">
-                        <div id="chart-campaigns"></div>
-                    </div>
 
                 </div>
             </div>
         </div>
-
     </div>
 
+    <div class="col-md-5">
+        <div class="card table-card">
+            <div class="card-header">
+                <h5>Répartition des campagnes</h5>
+            </div>
+            <div class="pro-scroll">
+                <div class="card-body p-3">
+
+                    <div id="chart-campaigns"></div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 

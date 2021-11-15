@@ -1,22 +1,32 @@
-<table class="table table-striped table_sort">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Url</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i=0; i < sites.length; i++) { %>           
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
             <tr>
-                <td><a href="/manager/sites/<%= sites[i].site_id %>" title="<%= sites[i].site_name %>"><%= sites[i].site_id %></a></td> 
-                <td><a href="/manager/sites/<%= sites[i].site_id %>" title="<%= sites[i].site_name %>"><%= sites[i].site_name %></a></td> 
-                <td><a href="<%= sites[i].site_url %>" title="<%= sites[i].site_url %>"><%= sites[i].site_url %></a></td> 
-                <td>                    
-                   <a href="/manager/sites/<%= sites[i].site_id %>/edit" title="Modifier ce site"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Groupe site</th>
+                <th>Url</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < sites.length; i++) { %>
+            <tr>
+                <td><a href="/manager/sites/<%= sites[i].site_id %>"
+                        title="<%= sites[i].site_name %>"><%= sites[i].site_id %></a></td>
+                <td><a href="/manager/sites/<%= sites[i].site_id %>"
+                        title="<%= sites[i].site_name %>"><%= sites[i].site_name %></a></td>
+                <td><a href="/manager/sites/<%= sites[i].site_id %>"
+                        title="<%= sites[i].site_group %>"><%= sites[i].site_group %></a></td>
+                <td><a href="<%= sites[i].site_url %>" target="_blank"
+                        title="<%= sites[i].site_url %>"><%= sites[i].site_url %></a>
+                </td>
+                <td>
+                    <a href="/manager/sites/<%= sites[i].site_id %>/edit" title="Modifier ce site"><i
+                            class="icon feather icon-edit f-16 text-success"></i></a>
                 </td>
             </tr>
-        <% } %>
+            <% } %>
         </tbody>
     </table>
+</div>

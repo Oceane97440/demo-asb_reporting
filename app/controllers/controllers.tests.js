@@ -7,7 +7,9 @@ process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
-
+var LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('data/reporting/');
+localStorageTasks = new LocalStorage('data/taskID/');
 const {
     QueryTypes
 } = require('sequelize');
@@ -20,12 +22,17 @@ const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
+const Utilities = require('../functions/functions.utilities');
+const SmartFunction = require("../functions/functions.smartadserver.api");
+
 
 // Initialise les models
 //const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
 const ModelPack = require("../models/models.packs")
+const ModelCampaigns = require("../models/models.campaigns");
+const ModelInsertions = require("../models/models.insertions");
 
 exports.index = async (req, res) => {
 
@@ -1202,7 +1209,7 @@ exports.array_unique = async (req, res) => {
 
 exports.nodemail = async (req, res) => {
 
-  
+
 
 };
 
@@ -1363,32 +1370,592 @@ exports.log_error = async (req, res) => {
 
 
 
-    var path = "proxy_error_log"
+    /*var path = "proxy_error_log"
     var contents = fs.readFileSync(path).toString();
     console.log(contents)
-    res.send(contents)
+    res.send(contents)*/
 
 
-/*
-    var data = contents.match('(.*)')
-    console.log(data)
-    console.log('data.length ' + data.length)
+    /*
+        var data = contents.match('(.*)')
+        console.log(data)
+        console.log('data.length ' + data.length)
 
 
-   var dataArray = new Array()
+       var dataArray = new Array()
 
-    function logArrayElements(element, index, array) {
-        console.log("a[" + index + "] = " + element);
+        function logArrayElements(element, index, array) {
+            console.log("a[" + index + "] = " + element);
 
-        dataArray.push(element.split(","));
+            dataArray.push(element.split(","));
+
+
+        }
+        data.forEach(logArrayElements);
+
+        console.log(dataArray)
+
+        res.send('test')
+    */
+
+}
+
+exports.taskid = async (req, res) => {
+
+    campaign = {
+        campaign_id: '1922883',
+        campaign_name: 'GAMM VERT - 68873',
+        campaign_crypt: '00641bb74c0a9ee8f67a6300e8909ea4',
+        campaign_start_date: '2021-07-05 00:00:00',
+        campaign_end_date: '2021-12-26 23:59:00',
+        advertiser: {
+            advertiser_id: '445116',
+            advertiser_name: 'AGRI DEV'
+
+        }
+
+    }
+
+    var campaign_id = campaign.campaign_id;
+    var campaign_date_start = moment(campaign.campaign_start_date);
+    var campaign_date_end = moment(campaign.campaign_end_date);
+
+    var endDate_day = new Date(campaign_date_end);
+    var endDate_last = endDate_day.setDate(endDate_day.getDate() + 1);
+
+    const now = new Date();
+    const timestamp_datenow = now.getTime();
+
+    if (endDate_last > timestamp_datenow) {
+        campaign_date_end = moment(timestamp_datenow);
+        console.log(campaign_date_end)
+    }
+
+    var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
+    let cacheStorageID = 'campaignID-' + campaign_id;
+
+    /*----------- Si la campagne > 30j ------------*/
+
+
+    var NbrTask = Math.ceil(diff_day / 30);
+    console.log('NbrTask : ' + NbrTask);
+
+    let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-TaskIdAll');
+
+    //Si localStorage avec tous les taskId n'existe pas on lance la génération des taskId
+    if (!TaskIDG) {
+
+        const arrayTaskId = new Array()
+
+        for (var index = 0; index < NbrTask; index++) {
+
+            if (index === 0) {
+                console.log('NbrTask : ' + index);
+
+                campaign_date_startOne = moment(campaign_date_start, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+                var campaign_task_date_end = campaign_date_start.add(30, 'days');
+                campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+                var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
+
+
+                taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
+                arrayTaskId.push(taskOne)
+
+
+
+            }
+
+            if ((index >= 1) && (index < (NbrTask - 1)) && campaign_task_date_tomorrow) {
+                console.log('NbrTask : ' + index);
+
+                var campaign_start_date_tomorrow = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+                var campaign_task_date_end = campaign_task_date_tomorrow.add(30, 'days');
+                var campaign_start_end_tomorrow = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+                var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
+
+                taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
+                arrayTaskId.push(taskTwo)
+
+
+            }
+
+            if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
+                console.log('NbrTask : ' + index);
+                var campaign_start_last = moment(campaign_task_date_tomorrow, "DD/MM/YYYY").format('YYYY-MM-DDT00:00:00')
+                var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
+
+                taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
+                arrayTaskId.push(taskThree)
+
+
+
+            }
+
+        }
+        localStorageTasks.setItem(cacheStorageID + '-TaskIdAll', arrayTaskId);
+        console.log('Create localStorage TaskIdAll')
+
+    } else {
+
+        const taskLength = TaskIDG.split(',')
+        var dataObjTaskGlobalAll = new Object()
+
+
+        var time = 5000;
+        let timerFile = setInterval(async () => {
+
+            var dataLSTaskGlobalAll = localStorageTasks.getItem(
+                cacheStorageID + '-taskGlobalAll'
+            );
+
+
+            if (!dataLSTaskGlobalAll && !Utilities.empty(TaskIDG)) {
+                var ObjTaskProgress = new Array()
+
+                for (let index = 0; index < taskLength.length; index++) {
+                    const taskId = taskLength[index];
+
+                    time += 10000;
+
+                    let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+
+                    console.log('requete_global' + requete_global)
+
+
+                    let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+
+
+                    var jobProgress = threeLink.data.lastTaskInstance.jobProgress
+                    var instanceStatus = threeLink.data.lastTaskInstance.instanceStatus
+
+                    var itemProgress = {
+                        'task': taskId,
+                        'jobProgress': jobProgress,
+                        'instanceStatus': instanceStatus
+
+                    }
+
+                    ObjTaskProgress.push(itemProgress)
+
+
+             
+                    if ((ObjTaskProgress[index].jobProgress == '1.0') && (ObjTaskProgress[index].instanceStatus == 'SUCCESS')) {
+
+                        dataFile = await AxiosFunction.getReportingData(
+                            'GET',
+                            `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                            ''
+                        );
+
+
+
+                        var itemData = {
+                            'dataFile': dataFile.data
+
+                        };
+                        dataObjTaskGlobalAll[taskId] = itemData;
+
+
+                        localStorageTasks.setItem(
+                            cacheStorageID + '-taskGlobalAll',
+                            JSON.stringify(dataObjTaskGlobalAll)
+                        );
+                        console.log(dataObjTaskGlobalAll)
+
+                        console.log('No clear setTimeOut');
+
+                    }
+                }
+
+
+                console.log(ObjTaskProgress);
+
+
+            } else {
+
+                    clearInterval(timerFile);
+
+
+                console.log('Stop clearInterval timerFile - else');
+
+
+
+                process.exit()
+
+            }
+        }, time)
+
 
 
     }
-    data.forEach(logArrayElements);
 
-    console.log(dataArray)
+}
 
-    res.send('test')
-*/
+exports.test_taskid = async (req, res) => {
+    campaign = {
+        campaign_id: '1922883',
+        campaign_name: 'GAMM VERT - 68873',
+        campaign_crypt: '00641bb74c0a9ee8f67a6300e8909ea4',
+        campaign_start_date: '2021-07-05 00:00:00',
+        campaign_end_date: '2021-12-26 23:59:00',
+        advertiser: {
+            advertiser_id: '445116',
+            advertiser_name: 'AGRI DEV'
+
+        }
+
+    }
+
+    let cacheStorageID = 'campaignID-' + campaign_id;
+
+
+    // Permet de faire l'addition
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+
+    const InsertionName = [];
+    const Impressions = [];
+    const Clicks = [];
+    const Complete = [];
+    const ViewableImpressions = [];
+
+    const dataList = [];
+
+    let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-taskGlobalAll');
+    const dataSplitGlobalALL = JSON.parse(TaskIDG);
+
+
+    const keyTaskID = Object.keys(dataSplitGlobalALL);
+
+
+
+
+    for (let index = 0; index < Object.keys(dataSplitGlobalALL).length; index++) {
+        const element = keyTaskID[index];
+        dataSplitGlobalOne = dataSplitGlobalALL[element].dataFile;
+
+        var dataSplitGlobal = dataSplitGlobalOne.split(/\r?\n/);
+        var numberLine = dataSplitGlobal.length;
+
+        if (numberLine > 1) {
+            console.log('----------------');
+            console.log('TASKID : ', element, ' - ', numberLine);
+            for (i = 1; i < numberLine; i++) {
+
+                console.log('TASKID : ', element, ' - INDEX : ', i);
+                line = dataSplitGlobal[i].split(';');
+                // console.log(line[0])
+
+                if (!Utilities.empty(line[0])) {
+
+                    insertion_type = line[5];
+
+                    InsertionName.push(line[5]);
+                    Impressions.push(parseInt(line[10]));
+                    Clicks.push(parseInt(line[12]));
+                    Complete.push(parseInt(line[13]));
+                    ViewableImpressions.push(parseInt(line[14]));
+
+                    var itemData = {
+                        'i': element + ' - ' + i,
+                        'campaign_start_date': line[0],
+                        'campaign_end_date': line[1],
+                        'campaign_id': line[2],
+                        'campaign_name': line[3],
+                        'insertion_id': line[4],
+                        'insertion_name': line[5],
+                        'format_id': line[6],
+                        'format_name': line[7],
+                        'site_id': line[8],
+                        'site_name': line[9],
+                        // 'impressions': parseInt(line[10]),
+                        'click_rate': parseInt(line[11]),
+                        'clicks': parseInt(line[12]),
+                        //'complete': parseInt(line[13]),
+                        // 'viewable_impressions': parseInt(line[14])
+                    }
+
+                    if (insertion_type.match(/SLIDER{1}/igm)) {
+                        itemData['impressions'] = parseInt(line[14]);
+                    } else {
+                        itemData['impressions'] = parseInt(line[10]);
+                    }
+
+                    if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
+                        itemData['complete'] = parseInt(line[13]);
+                    } else {
+                        itemData['complete'] = 0;
+                    }
+
+                    // console.log(itemData)
+
+                    //  dataList[i] = itemData;
+                    dataList.push(itemData)
+
+
+
+                }
+
+            }
+        }
+
+
+    }
+
+    // console.log(dataList)
+
+    var formatObjects = new Object();
+    if (dataList && dataList.length > 0) {
+
+        // Initialise les formats
+        var formatHabillage = new Array();
+        var formatInterstitiel = new Array();
+        var formatGrandAngle = new Array();
+        var formatMasthead = new Array();
+        var formatInstream = new Array();
+        var formatRectangleVideo = new Array();
+        var formatLogo = new Array();
+        var formatNative = new Array();
+        var formatSlider = new Array();
+        var formatMea = new Array();
+        var formatSliderVideo = new Array();
+        var formatClickCommand = new Array();
+
+
+
+        var siteLINFO = new Array();
+        var siteLINFO_ANDROID = new Array();
+        var siteLINFO_IOS = new Array();
+        var siteANTENNEREUNION = new Array();
+
+
+        var siteDOMTOMJOB = new Array();
+        var siteIMMO974 = new Array();
+        var siteRODZAFER_LP = new Array();
+        var siteRODZAFER_ANDROID = new Array();
+        var siteRODZAFER_IOS = new Array();
+        var siteRODALI = new Array();
+        var siteORANGE_REUNION = new Array();
+        var siteTF1 = new Array();
+        var siteM6 = new Array();
+        var siteDAILYMOTION = new Array();
+
+        for (var index = 0; index < dataList.length; index++) {
+            var insertion_name = dataList[index].insertion_name;
+            var site_id = dataList[index].site_id;
+            var site_name = dataList[index].site_name;
+
+            // console.log(site_name + ' - ' + index)
+            // console.log(insertion_name + ' - ' + index)
+
+
+
+            // Créer les tableaux des formats
+            if (insertion_name.match(/HABILLAGE{1}/igm)) {
+                formatHabillage.push(index);
+            }
+            if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
+                formatInterstitiel.push(index);
+            }
+            if (insertion_name.match(/MASTHEAD{1}/igm)) {
+                formatMasthead.push(index);
+            }
+            if (insertion_name.match(/GRAND ANGLE{1}/igm)) {
+                formatGrandAngle.push(index);
+            }
+            if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
+                formatInstream.push(index);
+            }
+            if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                formatRectangleVideo.push(index);
+            }
+            if (insertion_name.match(/LOGO{1}/igm)) {
+                formatLogo.push(index);
+            }
+            if (insertion_name.match(/NATIVE{1}/igm)) {
+                formatNative.push(index);
+            }
+            if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                formatSliderVideo.push(index);
+            }
+            if (insertion_name.match(/SLIDER{1}/igm)) {
+                formatSlider.push(index);
+            }
+            if (insertion_name.match(/^\MEA{1}/igm)) {
+                formatMea.push(index);
+            }
+            if (insertion_name.match(/CLICK COMMAND{1}|CC/igm)) {
+                formatClickCommand.push(index);
+            }
+
+            // Créer les tableaux des sites
+            if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
+                siteLINFO.push(index);
+            }
+            if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
+                siteLINFO_ANDROID.push(index);
+            }
+            if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
+                siteLINFO_IOS.push(index);
+            }
+            if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
+                siteANTENNEREUNION.push(index);
+            }
+            if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
+                siteDOMTOMJOB.push(index);
+            }
+            if (site_name.match(/^\SM_IMMO974{1}/igm)) {
+                siteIMMO974.push(index);
+            }
+            if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
+                siteRODZAFER_LP.push(index);
+            }
+            if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
+                siteRODZAFER_ANDROID.push(index);
+            }
+            if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
+                siteRODZAFER_IOS.push(index);
+            }
+            if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
+                siteORANGE_REUNION.push(index);
+            }
+            if (site_name.match(/^\SM_TF1{1}/igm)) {
+                siteTF1.push(index);
+            }
+            if (site_name.match(/^\SM_M6{1}/igm)) {
+                siteM6.push(index);
+            }
+            if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
+                siteDAILYMOTION.push(index);
+            }
+            if (site_name.match(/^\SM_RODALI{1}/igm)) {
+                siteRODALI.push(index);
+            }
+
+        }
+        // Trie les formats et compatibilise les insertions et autres clics
+        if (!Utilities.empty(formatHabillage)) {
+            formatObjects.habillage = SmartFunction.sortDataReport(
+                formatHabillage,
+                dataList
+            );
+        }
+        if (!Utilities.empty(formatInterstitiel)) {
+            formatObjects.interstitiel = SmartFunction.sortDataReport(
+                formatInterstitiel,
+                dataList
+            );
+        }
+        if (!Utilities.empty(formatMasthead)) {
+            formatObjects.masthead = SmartFunction.sortDataReport(formatMasthead, dataList);
+        }
+        if (!Utilities.empty(formatGrandAngle)) {
+            formatObjects.grandangle = SmartFunction.sortDataReport(
+                formatGrandAngle,
+                dataList
+            );
+        }
+        if (!Utilities.empty(formatInstream)) {
+            formatObjects.instream = SmartFunction.sortDataReport(formatInstream, dataList);
+        }
+        if (!Utilities.empty(formatRectangleVideo)) {
+            formatObjects.rectanglevideo = SmartFunction.sortDataReport(
+                formatRectangleVideo,
+                dataList
+            );
+        }
+        if (!Utilities.empty(formatLogo)) {
+            formatObjects.logo = SmartFunction.sortDataReport(formatLogo, dataList);
+        }
+        if (!Utilities.empty(formatNative)) {
+            formatObjects.native = SmartFunction.sortDataReport(formatNative, dataList);
+        }
+        if (!Utilities.empty(formatSlider)) {
+            formatObjects.slider = SmartFunction.sortDataReport(formatSlider, dataList);
+        }
+        if (!Utilities.empty(formatMea)) {
+            formatObjects.mea = SmartFunction.sortDataReport(formatMea, dataList);
+        }
+        if (!Utilities.empty(formatSliderVideo)) {
+            formatObjects.slidervideo = SmartFunction.sortDataReport(
+                formatSliderVideo,
+                dataList
+            );
+        }
+
+        if (!Utilities.empty(formatClickCommand)) {
+            formatObjects.clickcommand = SmartFunction.sortDataReport(
+                formatClickCommand,
+                dataList
+            );
+        }
+
+    }
+
+
+    // Ajoute les infos de la campagne
+    if (Impressions.length > 0) {
+        campaignImpressions = Impressions.reduce(reducer);
+    } else {
+        campaignImpressions = null;
+    }
+
+    if (Clicks.length > 0) {
+        campaignClicks = Clicks.reduce(reducer);
+    } else {
+        campaignClicks = null;
+    }
+    if (!Utilities.empty(campaignClicks) && !Utilities.empty(campaignImpressions)) {
+        campaignCtr = parseFloat((campaignClicks / campaignImpressions) * 100).toFixed(
+            2
+        );
+    } else {
+        campaignCtr = null;
+    }
+    if (Complete.length > 0) {
+        campaignComplete = Complete.reduce(reducer);
+    } else {
+        campaignComplete = null;
+    }
+
+    if (!Utilities.empty(campaignComplete) && !Utilities.empty(campaignImpressions)) {
+        campaignCtrComplete = parseFloat(
+            (campaignComplete / campaignImpressions) * 100
+        ).toFixed(2);
+    } else {
+        campaignCtrComplete = null;
+    }
+
+
+
+    formatObjects.campaign = {
+        campaign_id: campaign.campaign_id,
+        campaign_name: campaign.campaign_name,
+        campaign_start_date: campaign.campaign_start_date,
+        campaign_end_date: campaign.campaign_end_date,
+        campaign_crypt: campaign.campaign_crypt,
+        advertiser_id: campaign.advertiser.advertiser_id,
+        advertiser_name: campaign.advertiser.advertiser_name,
+        impressions: campaignImpressions,
+        clicks: campaignClicks,
+        ctr: campaignCtr,
+        complete: campaignComplete,
+        ctrComplete: campaignCtrComplete
+    }
+
+
+    formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
+    formatObjects.reporting_end_date = moment()
+        .add(2, 'hours')
+        .format('YYYY-MM-DD HH:m:s');
+
+
+
+    // Créer le localStorage
+    console.log(formatObjects)
+    localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
+
+
+    process.exit();
 
 }

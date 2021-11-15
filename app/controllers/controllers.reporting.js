@@ -913,7 +913,7 @@ exports.report = async (req, res) => {
                                         if (admanager) {
 
 
-                                            if (admanager.status == 201 || admanager.status == 200 ) {
+                                            if (admanager.status == 201 || admanager.status == 200) {
 
                                                 const data_admanager = admanager.data
 

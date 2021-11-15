@@ -6,6 +6,7 @@ const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session')
 var fileUpload = require('express-fileupload');
+var runner = require("child_process");
 
 const db = require("./app/config/_config.database");
 
@@ -26,11 +27,12 @@ const advertisers_users = require('./app/models/models.advertisers_users');
 const agencies = require('./app/models/models.agencies');
 const formats = require('./app/models/models.formats');
 
-const groups_formats = require('./app/models/models.groups_formats');
-const groups_formats_types = require(
+const formats_groups = require('./app/models/models.formats_groups');
+const formats_groups_types = require(
     './app/models/models.formats_groups_types'
 )
-const formatstemplates = require("./app/models/models.formats_templates")
+const formatstemplates = require("./app/models/models.formats_templates");
+const formatssites = require("./app/models/models.formats_sites");
 const insertions = require('./app/models/models.insertions');
 const templates = require('./app/models/models.templates');
 const insertions_templates = require('./app/models/models.insertions_templates');
@@ -80,24 +82,31 @@ advertisers.hasMany(advertisers_users, {
 });
 
 //un format posséde un ou plusieur group un group posséde un à plusieur format
-formats.hasMany(groups_formats_types, {
+formats.hasMany(formats_groups_types, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true
 });
-groups_formats.hasMany(groups_formats_types, {
-    foreignKey: 'group_format_id',
+formats_groups.hasMany(formats_groups_types, {
+    foreignKey: 'format_group_id',
     onDelete: 'cascade',
     hooks: true
 });
+
+formats_groups_types.belongsTo(formats, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+formats_groups_types.belongsTo(formats_groups, {
+    foreignKey: 'format_group_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
 
 // un format posséde un ou plusieurs templates : un template posséde un à plusieurs formats
-
-formatstemplates.belongsTo(templates, {
-    foreignKey: 'template_id',
-    onDelete: 'cascade',
-    hooks: true
-});
 
 templates.hasMany(formatstemplates, {
     foreignKey: 'template_id',
@@ -112,6 +121,33 @@ formatstemplates.belongsTo(formats, {
 });
 
 formats.hasMany(formatstemplates, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+// un format posséde un ou plusieurs sites : un site posséde un à plusieurs formats
+
+sites.hasMany(formatssites, {
+    foreignKey: 'site_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+formatssites.belongsTo(formats, {
+    foreignKey: 'format_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+formatssites.belongsTo(sites, {
+    foreignKey: 'site_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+formats.hasMany(formatssites, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
     hooks: true
@@ -196,6 +232,9 @@ formats.hasMany(insertions, {
     hooks: true
 });
 
+
+
+
 insertions_templates.belongsTo(insertions, {
     foreignKey: 'insertion_id',
     onDelete: 'cascade',
@@ -266,8 +305,8 @@ epilot_insertions.belongsTo(users, {
     hooks: true
 });
 
-epilot_insertions.belongsTo(groups_formats, {
-    foreignKey: 'group_format_id',
+epilot_insertions.belongsTo(formats_groups, {
+    foreignKey: 'format_group_id',
     onDelete: 'cascade',
     hooks: true
 });
@@ -301,6 +340,14 @@ app.use(cookieSession({
 app.use(fileUpload());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static('files'));
+
+/*var phpScriptPath = "./api_google-manager/GetAllOrder.php";
+runner.exec("php " + phpScriptPath + " " , function(err, phpResponse, stderr) {
+ if(err) console.log(err); 
+console.log( phpResponse );
+});*/
+
 
 /**
  * @MidleWare
@@ -378,6 +425,9 @@ app.use('/app', application);
 const reporting_rs = require('./app/routes/routes.reporting');
 app.use('/r/', reporting_rs);
 
+// Gestion du reporting DIGITAL 30j
+const reporting_30 = require('./app/routes/routes.reporting_30');
+app.use('/d/', reporting_30);
 
 // Gestion du reporting TV
 const reportingTV = require('./app/routes/routes.tv.reporting');
@@ -391,6 +441,10 @@ app.use('/manager', manager);
 const automate = require('./app/routes/routes.automate');
 const { campaign } = require('./app/controllers/controllers.automate');
 app.use('/automate', automate);
+
+const extention_chrome = require('./app/routes/routes.plugin_chrome');
+app.use('/extension-chrome', extention_chrome);
+
 
 // Le serveur ecoute sur le port 3022
 app.set("port", process.env.PORT || 3001);

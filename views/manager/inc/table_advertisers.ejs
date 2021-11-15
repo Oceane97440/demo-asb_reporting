@@ -1,48 +1,47 @@
-<table class="table table-striped table_sort">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Archive</th>
-            <th>Dernière MAJ</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i=0; i < advertisers.length; i++) { %>
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th class="advertiser_name">Nom</th>
+                <th class="campaign_count">Nb. campagnes</th>
+                <th>Archive</th>
+                <th>Dernière MAJ</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < advertisers.length; i++) { %>
             <tr>
                 <td>
-                    <a
-                        href="/manager/advertisers/<%= advertisers[i].advertiser_id %>"
+                    <a href="/manager/advertisers/<%= advertisers[i].advertiser_id %>"
                         title="<%= advertisers[i].advertiser_name %>"><%= advertisers[i].advertiser_id %></td>
-                    <td>
-                        <a
-                            href="/manager/advertisers/<%= advertisers[i].advertiser_id %>"
-                            title="<%= advertisers[i].advertiser_name %>"><%= advertisers[i].advertiser_name %>
-                        </td>
-                        <td>
-                            <% switch(advertisers[i].advertiser_archived) { case 0: %>
-                                <span class="badge bg-warning">Archiv&eacute;</span>
-                                <% break; default: %>
-                                    -
-                                    <% break; }  %>
-                                    </td>
-                                   <td><%= moment(advertisers[i].updated_at).fromNow() %></td>
-                                    <td>
+                <td>
+                    <a href="/manager/advertisers/<%= advertisers[i].advertiser_id %>"
+                        title="<%= advertisers[i].advertiser_name %>"><%= advertisers[i].advertiser_name %>
+                </td>
+                <td class="text-center"><span class="badge bg-primary">0</span></td>
+                <td>
+                    <% switch(advertisers[i].advertiser_archived) { case 0: %>
+                    <span class="badge bg-warning">Archiv&eacute;</span>
+                    <% break; default: %>
+                    -
+                    <% break; }  %>
+                </td>
+                <td class="small"><%= moment(advertisers[i].updated_at).fromNow() %></td>
+                <td>
 
-                                        <a
-                                            href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= advertisers[i].advertiser_id %>&AnnonceurID=<%= advertisers[i].advertiser_id %>"
-                                            target="_blank"
-                                            title="Accéder à la campagne sur SMARTADSERVER"><img src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER"/></a>
-                                        &nbsp;
-                                        <a
-                                            href="/manager/advertisers/<%= advertisers[i].advertiser_id %>/edit"
-                                            title="Modifier cette campagne">
-                                            <i class="icon feather icon-edit f-16 text-success"></i>
-                                        </a>
-
-                                    </td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
+                    <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= advertisers[i].advertiser_id %>&AnnonceurID=<%= advertisers[i].advertiser_id %>"
+                        target="_blank" title="Accéder à la campagne sur SMARTADSERVER"><img
+                            src="/assets/images/smartadserver.png" alt="Icône SMARTADSERVER" /></a>
+                    &nbsp;
+                    <a href="/manager/advertisers/<%= advertisers[i].advertiser_id %>/edit"
+                        title="Modifier cette campagne">
+                        <i class="icon feather icon-edit f-16 text-success"></i>
+                    </a>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

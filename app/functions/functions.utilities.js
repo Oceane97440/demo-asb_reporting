@@ -1,6 +1,9 @@
+const Utilities = require('../functions/functions.utilities');
+const AxiosFunction = require('../functions/functions.axios');
 /*
 * Teste si la valeur est vide
 */
+
 exports.empty = function (data) {
     if (typeof(data) == 'number' || typeof(data) == 'boolean') {
         return false;
@@ -63,20 +66,20 @@ exports.getDateTimeTimestamp = function (refrechTimeStamp) {
 
 // Séparateur de millier universel
 exports.numStr = function (a, b) {
-    a = '' + a;
-    b = b || ' ';
-    var c = '',
-        d = 0;
-    while (a.match(/^0[0-9]/)) {
-        a = a.substr(1);
-    }
-    for (var i = a.length - 1; i >= 0; i--) {
-        c = (d != 0 && d % 3 == 0)
-            ? a[i] + b + c
-            : a[i] + c;
-        d++;
-    }
-    return c;
+        a = '' + a;
+        b = b || ' ';
+        var c = '',
+            d = 0;
+        while (a.match(/^0[0-9]/)) {
+            a = a.substr(1);
+        }
+        for (var i = a.length - 1; i >= 0; i--) {
+            c = (d != 0 && d % 3 == 0)
+                ? a[i] + b + c
+                : a[i] + c;
+            d++;
+        }
+        return c;   
 }
 
 // Convertie les Timestamp campagne startdate et enddate / date du jour
@@ -132,3 +135,69 @@ exports.DateToTimestamps = function toTimestamp(strDate){
     var datum = Date.parse(strDate);
     return datum/1000;
  }
+
+ 
+exports.RequestReportDate =  async function RequestReport(startDate , endDate , campaignId){
+    console.log('startDate  '+startDate + '  -  '+'endDate'  +endDate +'  -  '+ 'campaignId  '+campaignId)
+  
+    var requestReporting = {
+        "startDate": startDate,
+        "endDate": endDate,
+        "fields": [{
+            "CampaignStartDate": {}
+        }, {
+            "CampaignEndDate": {}
+        }, {
+            "CampaignId": {}
+        }, {
+            "CampaignName": {}
+        }, {
+            "InsertionId": {}
+        }, {
+            "InsertionName": {}
+        }, {
+            "FormatId": {}
+        }, {
+            "FormatName": {}
+        }, {
+            "SiteId": {}
+        }, {
+            "SiteName": {}
+        }, {
+            "Impressions": {}
+        }, {
+            "ClickRate": {}
+        }, {
+            "Clicks": {}
+        }, {
+            "VideoCount": {
+                "Id": "17",
+                "OutputName": "Nbr_complete"
+            }
+        }, {
+            "ViewableImpressions": {}
+        }],
+        "filter": [{
+            "CampaignId": [campaignId]
+        }]
+    }
+    let firstLink = await AxiosFunction.getReportingData(
+        'POST',
+        '',
+        requestReporting
+    );
+
+   
+        if (firstLink) {
+            if (firstLink.status == 201) {
+                return firstLink.data.taskId
+
+            }
+        } else {
+            return firstLink = null;
+        }
+    
+
+  
+   // r
+}

@@ -67,7 +67,7 @@ exports.index = async (req, res) => {
             }]
         }, {
             order: [
-                ['advertiser_id', 'DESC']
+                ['advertiser_id', 'ASC']
             ]
         });
 
@@ -448,9 +448,12 @@ exports.create_post = async (req, res) => {
 
 exports.view = async (req, res) => {
     try {
+
         const data = new Object();
 
         var advertiser_id = req.params.id;
+
+
         var advertiser = await ModelAdvertisers
             .findOne({
                 where: {
@@ -461,12 +464,19 @@ exports.view = async (req, res) => {
                 }]
             })
             .then(async function (advertiser) {
-                if (!advertiser)
-                    return res
+              
+
+
+
+                if (!advertiser) {
+                    return res.redirect(`/extension-chrome/advertiser/?advertiser_id=${advertiser_id}`)
+                   /* return res
                         .status(404)
                         .render("manager/error.ejs", {
                             statusCoded: 404
-                        });
+                        });*/
+
+                }
 
                 // Créer le fil d'ariane
                 breadcrumb = new Array({

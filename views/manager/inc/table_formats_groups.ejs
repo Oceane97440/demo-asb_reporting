@@ -1,0 +1,31 @@
+<div class="table-responsive">
+    <table class="table table-striped table_sort">
+        <thead>
+            <tr>
+                <th class="group_format_group_id">#</th>
+                <th class="group_format_group_name">Nom</th>
+                <th class="format_count">Nb. formats</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i=0; i < formats_groups.length; i++) { %>
+            <tr>
+                <td class="group_format_group_id"><a
+                        href="/manager/formats/groups/<%= formats_groups[i].format_group_id %>"
+                        title="<%= formats_groups[i].format_group_name %>"><%= formats_groups[i].format_group_id %></a>
+                </td>
+                <td class="group_format_group_name"><a
+                        href="/manager/formats/groups/<%= formats_groups[i].format_group_id %>"
+                        title="<%= formats_groups[i].format_group_name %>"><%= formats_groups[i].format_group_name %></a>
+                </td>
+                <td>-</td>
+                <td>
+                    <a href="/manager/formats/groups/<%= formats_groups[i].format_group_id %>/edit"
+                        title="Modifier ce format"><i class="icon feather icon-edit f-16 text-success"></i></a>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
