@@ -53,6 +53,9 @@ const ModelGroupFormats = require("../models/models.formats_groups")
 const ModelTemplates = require("../models/models.templates")
 const ModelInsertionsTemplates = require("../models/models.insertions_templates")
 const ModelFormatsSites = require("../models/models.formats_sites");
+const ModelCreativesTypes = require("../models/models.creatives_types");
+const ModelCreativesTypesFormats = require("../models/models.creatives_types_formats");
+
 
 const TEXT_REGEX = /^.{1,51}$/
 
@@ -334,10 +337,10 @@ exports.create_post = async (req, res) => {
 
     try {
         var body = {
-           // campaign_id: '1764641',
+            // campaign_id: '1764641',
             campaign_id: '1985799',
 
-            
+
             // format_group_id: '4',
             format_group_id: 'GRAND ANGLE',
 
@@ -416,8 +419,8 @@ exports.create_post = async (req, res) => {
             }
         }
 
-       // console.log('GRANG ANGLE ' + formatIdsArray)
-     //   console.log('Pack GR ' + sites)
+        // console.log('GRANG ANGLE ' + formatIdsArray)
+        //   console.log('Pack GR ' + sites)
 
 
         formats_sites = await ModelFormatsSites.findAll({
@@ -442,7 +445,7 @@ exports.create_post = async (req, res) => {
                 const formatName = formats_sites[index].format.format_name
                 const formatIds = formats_sites[index].format.format_id
 
-               
+
 
                 // Regex libélé position remplace btf -> position 5
                 const regex = /BTF/igm;
@@ -450,7 +453,7 @@ exports.create_post = async (req, res) => {
                 const found = label.match(/[0-9]/igm);
                 const libélé = format_group_id + " - " + siteName + ' - ' + 'POSITION ' + found
 
-    
+
 
 
                 var requestInsertion = {
@@ -497,25 +500,37 @@ exports.create_post = async (req, res) => {
 
 
                 }
-                 if (siteName.match(/APPLI LINFO/igm)) {
-                     //Attention j'ai delate SM-ANDROID LINFO
-                    requestInsertion['siteIds'] = [299248 ,299249]
+                if (siteName.match(/APPLI LINFO/igm)) {
+                    //Attention j'ai delate SM-ANDROID LINFO
+                    requestInsertion['siteIds'] = [299248, 299249]
 
 
-                     
+
 
 
                 }
-              
-                console.log(libélé)
-                console.log('REQUEST : ', requestInsertion);
+
+                //console.log(libélé)
+                //console.log('REQUEST : ', requestInsertion);
+
+              const type_creative=await  ModelFormatsGroups.findOne({
+                where: {
+                    format_group_name : format_group_id
+                },
+                    include: [{
+                        model: ModelCreativesTypesFormats,
+                        
+                      
+                    }]
+                })
+
+                console.log(type_creative.format_group_name)
+                console.log(type_creative.creatives_types_formats)
 
 
 
 
-
-
-                let insertion_create = await AxiosFunction.postManage(
+                /*let insertion_create = await AxiosFunction.postManage(
                     'insertions',
                     requestInsertion
                 );
@@ -529,13 +544,13 @@ exports.create_post = async (req, res) => {
 
 
 
-                    /*res.json({
+                  res.json({
                         type: 'success',
                         intro: 'Ok',
                         message: 'L\'inserion a été crée dans SMARTADSERVEUR',
 
-                    })  */
-                }
+                    })  
+                }*/
 
                 console.log("------------------------")
 

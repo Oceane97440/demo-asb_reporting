@@ -39,6 +39,8 @@ const insertions_templates = require('./app/models/models.insertions_templates')
 const creatives = require('./app/models/models.creatives');
 const insertions_status = require('./app/models/models.insertions_status');
 const insertions_priorities = require('./app/models/models.insertions_priorities');
+const creatives_types_formats = require('./app/models/models.creatives_types_formats');
+const creatives_types = require('./app/models/models.creatives_types');
 
 /* Mettre les relation ici */
 /*sites.belongsTo(countries);
@@ -152,6 +154,34 @@ formats.hasMany(formatssites, {
     onDelete: 'cascade',
     hooks: true
 });
+
+// un format_groups posséde un ou plusieurs creatives_types : un creatives_types posséde un à plusieurs format_groups
+formats_groups.hasMany(creatives_types_formats, {
+    foreignKey: 'format_group_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+creatives_types_formats.belongsTo(formats_groups, {
+    foreignKey: 'format_group_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+creatives_types_formats.belongsTo(creatives_types, {
+    foreignKey: 'creative_type_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+creatives_types.hasMany(creatives_types_formats, {
+    foreignKey: 'creative_type_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+
+
 
 campaigns.belongsTo(advertisers, {
     foreignKey: 'advertiser_id',
