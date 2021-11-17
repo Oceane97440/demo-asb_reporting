@@ -33,72 +33,80 @@ const ModelCountry = require("../models/models.countries")
 const ModelPack = require("../models/models.packs")
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
+const ModelTemplates = require("../models/models.templates");
 
 exports.index = async (req, res) => {
 
     try {
-       const test = await ModelCampaigns.findAll({
+        const test = await ModelCampaigns.findAll({
 
-            attributes: ['campaign_id','campaign_name','campaign_end_date','campaign_crypt'],
-            group : "campaign_id",
-            campaign_end_date:{
-                [Op.between]:['2021-11-08  04:00:00', '2021-11-14 04:00:00']
-            },
-            include: [
-                {
-                    model: ModelInsertions,
-                    attributes:["format_id","insertion_id","insertion_end_date","campaign_id"],
-                    where: {
-                        format_id: 43791,
-                        insertion_end_date: {
-                            [Op.between]:['2021-11-08  04:00:00', '2021-11-14 04:00:00']
-                        }
-                    }
-
-                }
-            ]
-            
-
-        })
-
-       res.json(test)        
-
-       /* // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
-        const formats = await ModelFormat.findAll({
-            attributes: ['format_group'],
-            group: "format_group",
+            attributes: ['campaign_id'],
+            group: "campaign_id",
             where: {
-                format_group: {
+                campaign_id: {
                     [Op.not]: null
                 }
             },
-            order: [
-                ['format_group', 'ASC']
-            ],
-        })
-
-        const packs = await ModelPack.findAll({
-            attributes: ['pack_id', 'pack_name'],
-            order: [
-                ['pack_name', 'ASC']
-            ],
-        })
-
-        const countrys = await ModelCountry.findAll({
-            attributes: ['country_id', 'country_name'],
-            where: {
-                country_id: [61, 125, 184]
+            campaign_end_date: {
+                [Op.between]: ['2021-11-08  04:00:00', '2021-11-14 04:00:00']
             },
+
             order: [
-                ['country_name', 'DESC']
+                ['campaign_id', 'ASC']
             ],
+            include: [{
+                model: ModelInsertions,
+                attributes: ["format_id", "insertion_id", "insertion_end_date", "campaign_id"],
+                where: {
+                    format_id: 43791,
+                    insertion_end_date: {
+                        [Op.between]: ['2021-11-08  04:00:00', '2021-11-14 04:00:00']
+                    }
+                }
+
+            }]
+
+
         })
 
-        res.render('forecast/form.ejs', {
-            formats: formats,
-            packs: packs,
-            countrys: countrys
-        });*/
+        res.json(test)
+
+        /* // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
+         const formats = await ModelFormat.findAll({
+             attributes: ['format_group'],
+             group: "format_group",
+             where: {
+                 format_group: {
+                     [Op.not]: null
+                 }
+             },
+             order: [
+                 ['format_group', 'ASC']
+             ],
+         })
+
+         const packs = await ModelPack.findAll({
+             attributes: ['pack_id', 'pack_name'],
+             order: [
+                 ['pack_name', 'ASC']
+             ],
+         })
+
+         const countrys = await ModelCountry.findAll({
+             attributes: ['country_id', 'country_name'],
+             where: {
+                 country_id: [61, 125, 184]
+             },
+             order: [
+                 ['country_name', 'DESC']
+             ],
+         })
+
+         res.render('forecast/form.ejs', {
+             formats: formats,
+             packs: packs,
+             countrys: countrys
+         });*/
     } catch (error) {
         console.log(error);
     }
@@ -1391,39 +1399,78 @@ exports.read_excel = async (req, res) => {
 };
 
 
-exports.log_error = async (req, res) => {
+exports.creative = async (req, res) => {
+
+    var body = {
+        insertion_id: '10524742',
+        format_group_id: 'GRAND ANGLE',
+        pack_id: '1',
+        display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+        display_mobile_url: 'https://www.bmw.re/',
+        display_tablet_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+        display_tablet_url: 'https://www.bmw.re/',
+        display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
+        display_desktop_url: 'https://www.bmw.re/',
+        video_file: '',
+        video_url: '',
+        submit: 'Créer une nouvelle insertion'
+    }
 
 
+    requestCreatives = {
 
+        "InsertionId": body.insertion_id,
 
-    /*var path = "proxy_error_log"
-    var contents = fs.readFileSync(path).toString();
-    console.log(contents)
-    res.send(contents)*/
+        "Name": "Creative test",
 
+        "FileName": "File desktop bmw",
 
-    /*
-        var data = contents.match('(.*)')
-        console.log(data)
-        console.log('data.length ' + data.length)
+        "Url": body.display_desktop_file,
 
+        "clickUrl": body.display_desktop_url,
 
-       var dataArray = new Array()
+        "Width": 300,
 
-        function logArrayElements(element, index, array) {
-            console.log("a[" + index + "] = " + element);
+        "Height": 600,
 
-            dataArray.push(element.split(","));
+        "CreativeTypeId": 1,//creative type image (jpeg,gif)
 
+        "IsActivated": "true"
 
+    }
+
+    let creative_create = await AxiosFunction.postManage(
+        'creatives',
+        requestCreatives
+    );
+
+    if (creative_create.headers.location) {
+        console.log(creative_create.headers.location)
+
+        const templateId = await ModelTemplates.findOne({
+            where: {
+                template_id: 84585 //Default Banner
+            }
+        })
+
+        var RequestInsertionTemplate = {
+            "InsertionId": body.insertion_id,
+            "ParameterValues": templateId.parameter_default_values,
+            "TemplateId": templateId.template_id
         }
-        data.forEach(logArrayElements);
 
-        console.log(dataArray)
+        await AxiosFunction.putManage(
+            'insertiontemplates',
+            RequestInsertionTemplate
+        );
 
-        res.send('test')
-    */
+       return res.json({
+            type: 'success',
+            intro: 'Ok',
+            message: 'La créative a été crée dans SMARTADSERVEUR',
 
+        })
+    }
 }
 
 exports.taskid = async (req, res) => {
@@ -1564,7 +1611,7 @@ exports.taskid = async (req, res) => {
                     ObjTaskProgress.push(itemProgress)
 
 
-             
+
                     if ((ObjTaskProgress[index].jobProgress == '1.0') && (ObjTaskProgress[index].instanceStatus == 'SUCCESS')) {
 
                         dataFile = await AxiosFunction.getReportingData(
@@ -1599,7 +1646,7 @@ exports.taskid = async (req, res) => {
 
             } else {
 
-                    clearInterval(timerFile);
+                clearInterval(timerFile);
 
 
                 console.log('Stop clearInterval timerFile - else');

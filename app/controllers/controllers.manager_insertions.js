@@ -513,14 +513,14 @@ exports.create_post = async (req, res) => {
                 //console.log(libélé)
                 //console.log('REQUEST : ', requestInsertion);
 
-              const type_creative=await  ModelFormatsGroups.findOne({
-                where: {
-                    format_group_name : format_group_id
-                },
+                const type_creative = await ModelFormatsGroups.findOne({
+                    where: {
+                        format_group_name: format_group_id
+                    },
                     include: [{
                         model: ModelCreativesTypesFormats,
-                        
-                      
+
+
                     }]
                 })
 
@@ -530,7 +530,7 @@ exports.create_post = async (req, res) => {
 
 
 
-                /*let insertion_create = await AxiosFunction.postManage(
+                let insertion_create = await AxiosFunction.postManage(
                     'insertions',
                     requestInsertion
                 );
@@ -538,19 +538,30 @@ exports.create_post = async (req, res) => {
                 if (insertion_create.headers.location) {
                     var url_location = insertion_create.headers.location
                     console.log(url_location)
-                  //  var insertion_get = await AxiosFunction.getManage(url_location);
-                    //const insertion_id = insertion_get.data.id
+                    var insertion_get = await AxiosFunction.getManage(url_location);
+                    const insertion_id = insertion_get.data.id
 
 
+                    //Ciblage reunion
+                   var requestInsertionsTarget = {
+                        "countryIds":[61],
+                        "insertionId": insertion_id,
+                        "isExactMatch": true,
+                        "targetBrowserWithCookies": false
+                    }
 
+                    await AxiosFunction.putManage(
+                        'insertiontargetings',
+                        requestInsertionsTarget
+                    );
 
-                  res.json({
+                    res.json({
                         type: 'success',
                         intro: 'Ok',
                         message: 'L\'inserion a été crée dans SMARTADSERVEUR',
 
-                    })  
-                }*/
+                    })
+                }
 
                 console.log("------------------------")
 
