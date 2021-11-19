@@ -1433,7 +1433,7 @@ exports.creative = async (req, res) => {
 
         "Height": 600,
 
-        "CreativeTypeId": 1,//creative type image (jpeg,gif)
+        "CreativeTypeId": 1, //creative type image (jpeg,gif)
 
         "IsActivated": "true"
 
@@ -1464,7 +1464,7 @@ exports.creative = async (req, res) => {
             RequestInsertionTemplate
         );
 
-       return res.json({
+        return res.json({
             type: 'success',
             intro: 'Ok',
             message: 'La créative a été crée dans SMARTADSERVEUR',
@@ -2031,4 +2031,198 @@ exports.test_taskid = async (req, res) => {
 
     process.exit();
 
+}
+
+exports.duplication = async (req, res) => {
+
+    try {
+
+        const body = {
+            campaign_id: 1987679, //campagne selectionnée
+            //insertion_id_model: 10535965,
+            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+            display_mobile_url: 'https://www.bmw.re/',
+            display_tablet_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+            display_tablet_url: 'https://www.bmw.re/',
+            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
+            display_desktop_url: 'https://www.bmw.re/',
+
+           url_clic: 'https://www.distripc.com/',
+           url_cdn : 'https://cdn.antennepublicite.re/linfo/IMG/pub/video/DISTRI_PC/20211119/DISTRI_PC_VU_SUR_ANTENNE-73641/1280x720_DISTRIPC_v3_15s.mp4'
+        }
+
+
+
+        await ModelInsertions.findAll({
+            where: {
+                campaign_id: 1988414, //campagne_id model
+                insertion_id: {
+                    [Op.in]: [
+                       
+                        10536724,
+                        10536725,
+                        10536726,
+                        10536727,
+                        10536728,
+                        10536729,
+                        10536730,
+                        10536731,
+                        10536732,
+                        10536733,
+                        10536734,
+                        10536735,
+                        10536736
+                
+                        /* 79431,
+                        84660,
+                        84658,
+                        84658,
+                        84657,
+                        79425,
+                        79425,
+                        79956,
+                        79650,
+                        79651,
+                        79652,
+                        79653,
+                        79655*/
+                    ]
+                }
+            }
+        }).then(async function (insertion_model) {
+
+            for (let i = 0; i < insertion_model.length; i++) {
+                if (!Utilities.empty(insertion_model)) {
+
+                    var insertion_id_model = insertion_model[i].insertion_id
+                    var insertion_name_model = insertion_model[i].insertion_name
+
+                    requestInsertionsCopy = {
+
+                        "name": insertion_name_model, //recupération du nom de l'insertion GET
+                        "campaignId": body.campaign_id,
+                        "ignorePlacements": "false",
+                        "ignoreCreatives": "false"
+
+                    }
+
+                    let insertion_copy = await AxiosFunction.copyManage(
+                        'insertions',
+                        requestInsertionsCopy,
+                        insertion_id_model
+                    );
+
+                    console.log(requestInsertionsCopy)
+
+         
+                  if (insertion_copy.headers.location) {
+
+                        var url_location = insertion_copy.headers.location
+                        var insertion_get = await AxiosFunction.getManage(url_location);
+                        const insertion_id = insertion_get.data.id
+                        console.log('insertion_id dupliqués '+ insertion_id)
+ 
+                        var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
+                        var dataValue = insertions_creatives_get.data;
+                        var number_line_offset = insertions_creatives_get.data.length;
+
+                        for (let d = 0; d < number_line_offset; d++) {
+                            if (!Utilities.empty(dataValue)) {
+
+
+                                console.log(number_line_offset)
+                                var creatives_id = dataValue[d].id
+                                var creatives_name = dataValue[d].name
+                                var creatives_fileName = dataValue[d].fileName
+                                var creatives_width = dataValue[d].width
+                                var creatives_height = dataValue[d].height
+
+                                console.log({
+                                    'creatives_id': creatives_id,
+                                    'creatives_name': creatives_name,
+                                    'creatives_fileName': creatives_fileName,
+                                    'creatives_width': creatives_width,
+                                    'creatives_height': creatives_height
+                                })
+
+                              /* requestImageCreatives = {
+                                    "fileSize": 0,
+                                    "id": creatives_id,
+                                    "insertionId": insertion_id,
+                                   // "url": body.display_desktop_file,
+                                    //"clickUrl": body.display_desktop_url,
+                                    "url": body.url_cdn,
+                                    "clickUrl": body.url_clic,
+
+                                    "name": creatives_name,
+                                    "fileName": "test", //creatives_fileName
+                                    "width": creatives_width,
+                                    "height": creatives_height,
+                                    "isActivated": true,
+                                    //"creativeTypeId": 1,
+                                    "creativeTypeId": 2,
+                                    //"mimeType": "image/jpeg",
+                                    "mimeType": "video/mp4",
+                                    "percentageOfDelivery": 0,
+                                    "isArchived": false,
+                                    "partnerMeasurementScriptIds": []
+                                }*/
+
+                                requestImageCreatives={
+                                    "id": creatives_id,
+                                    "insertionId": insertion_id,
+                                    "url": body.url_cdn,
+                                    "clickUrl": body.url_clic,
+                                    "name": "RECTANGLE VIDEO",
+                                    "fileName": "1280x720",
+                                    "width": 1280,
+                                    "height": 720,
+                                    "isActivated": true,
+                                    "creativeTypeId": 2,
+                                    "mimeType": "video/mp4",
+                                    "percentageOfDelivery": 0,
+                                    "isArchived": false,
+                                    "partnerMeasurementScriptIds":[]
+                                    }
+
+                               /* if (creatives_name.match(/300x250/igm)) {
+                                    //Attention j'ai delate SM-ANDROID LINFO
+                                    requestImageCreatives['url'] = body.display_mobile_file
+                                    requestImageCreatives['clickUrl'] = body.display_mobile_url
+
+                                }*/
+                                console.log(requestImageCreatives)
+                                console.log("--------------------------")
+
+                               /* const test = await AxiosFunction.putManage(
+                                    'imagecreatives',
+                                    requestImageCreatives
+                                );*/
+                                const test = await AxiosFunction.putManage(
+                                    'videocreatives',
+                                    requestImageCreatives
+                                );
+
+
+
+                            }
+                        }
+
+
+
+                    }
+                }
+            }
+
+
+
+        })
+
+
+
+
+
+    } catch (error) {
+        console.log(error)
+    }
 }

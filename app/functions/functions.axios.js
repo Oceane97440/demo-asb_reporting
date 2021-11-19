@@ -58,7 +58,7 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
         console.log('------------');
-      //  console.log('data : ', data);
+        //  console.log('data : ', data);
         console.log('response.data : ', error.response.data);
         console.log('response.status : ', error.response.status);
         console.log('response.headers : ', error.response.headers);
@@ -213,9 +213,46 @@ exports.postManage = async (method, data = null) => {
     case 'insertions':
       var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
       break;
-      case 'creatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives';
-        break;
+    case 'creatives':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives';
+      break;
+
+    default:
+
+      break;
+  }
+
+  test = await axios({
+    method: 'POST',
+    url: configApiUrl,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    },
+    auth: {
+      username: dbApi.SMART_login,
+      password: dbApi.SMART_password
+    },
+    data
+  })
+
+
+  return test;
+}
+exports.copyManage = async (method, data = null, id) => {
+
+  var test;
+
+
+
+  switch (method) {
+
+    case 'insertions':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + id + '/copy/';
+      break;
+    case 'creatives':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives';
+      break;
 
     default:
 
@@ -241,7 +278,7 @@ exports.postManage = async (method, data = null) => {
 }
 
 
-exports.getManage = async (url_location) => {
+exports.getManage = async (url_location, id) => {
 
   var test;
 
@@ -251,6 +288,42 @@ exports.getManage = async (url_location) => {
   test = await axios({
     method: 'GET',
     url: url_location,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    },
+    auth: {
+      username: dbApi.SMART_login,
+      password: dbApi.SMART_password
+    },
+  })
+
+
+  return test;
+}
+
+
+exports.getManageCopy = async (method, id) => {
+
+  var test;
+
+  console.log('method' + method)
+  console.log('method' + id)
+
+  switch (method) {
+
+    case 'creatives':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + id + '/creatives';
+      break;
+
+    default:
+
+      break;
+  }
+
+  test = await axios({
+    method: 'GET',
+    url: configApiUrl,
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "Application/json"
@@ -276,8 +349,14 @@ exports.putManage = async (method, data = null) => {
     case 'insertiontargetings':
       var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontargetings';
       break;
-      case 'insertiontemplates':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontemplates';
+    case 'insertiontemplates':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontemplates';
+      break;
+    case 'imagecreatives':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives/';
+      break;
+      case 'videocreatives':
+        var configApiUrl = 'https://manage.smartadserverapis.com/2044/videocreatives/';
         break;
     default:
 
@@ -310,12 +389,12 @@ exports.getAdManager = async (campaign_id) => {
   try {
     test = await axios({
       method: 'GET',
-      url: 'https://reporting.antennesb.fr/api_google-manager/data/json/campaignID-'+campaign_id+ '.json',
+      url: 'https://reporting.antennesb.fr/api_google-manager/data/json/campaignID-' + campaign_id + '.json',
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-type": "Application/json"
       }
-   
+
     })
     return test
 
@@ -324,20 +403,20 @@ exports.getAdManager = async (campaign_id) => {
 
   }
 
-  
- /*test = await axios({
-    method: 'GET',
-    url: 'https://reporting.antennesb.fr/api_google-manager/data/json/campaignID-'+campaign_id+ '.json',
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Content-type": "Application/json"
-    }
- 
-  }).catch(error => {
-      console.log(error.response)
-  });
 
-  return test*/
+  /*test = await axios({
+     method: 'GET',
+     url: 'https://reporting.antennesb.fr/api_google-manager/data/json/campaignID-'+campaign_id+ '.json',
+     headers: {
+       "Access-Control-Allow-Origin": "*",
+       "Content-type": "Application/json"
+     }
+  
+   }).catch(error => {
+       console.log(error.response)
+   });
+
+   return test*/
 
 
 
