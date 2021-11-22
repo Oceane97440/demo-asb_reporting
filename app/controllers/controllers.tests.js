@@ -2052,9 +2052,15 @@ exports.duplication = async (req, res) => {
         }*/
 
         const body = {
-            campaign_id: 1987679, //campagne selectionnée
+            //campaign_id: 1987679, //campagne selectionnée
+            campaign_id: 1989230, //campagne selectionnée
+
+
+
+
             display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/BOUTIK_ANTENNE/300x250.jpg',
             display_mobile_url: 'https://www.boutikantenne.fr/offres-black-friday-c-1080',
+
             display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/BOUTIK_ANTENNE/300x600.jpg',
             display_desktop_url: 'https://www.boutikantenne.fr/offres-black-friday-c-1080',
 
@@ -2068,16 +2074,24 @@ exports.duplication = async (req, res) => {
                 campaign_id: 1988414, //campagne_id model
                 insertion_id: {
                     [Op.in]: [
-                        // GRAND ANGLE APPLI
+                     
+                        /* GRAND ANGLE */
+                        10535957,
                         10535958,
+                        10535959,
                         10535960,
                         10535961,
                         10535962,
                         10535963,
                         10535964,
+                        10535965,
+                        10535966,
+                        10535967,
+                        10535968,
+                        10535969
 
-                        //Rectangle video
-                        /* 10536724,
+                        /*Rectangle video
+                        10536724,
                          10536725,
                          10536726,
                          10536727,
@@ -2152,59 +2166,58 @@ exports.duplication = async (req, res) => {
                                     'creatives_height': creatives_height,
                                     'creatives_typeId': creatives_typeId,
 
-
-
                                 })
 
 
+                                requestCreatives = {
+                                    "fileSize": 0,
+                                    "id": creatives_id,
+                                    "insertionId": insertion_id,
+                                    "url": body.display_desktop_file,
+                                    "clickUrl": body.display_desktop_url,
+                                    "name": creatives_name,
+                                    "fileName": creatives_name,
+                                    "width": creatives_width,
+                                    "height": creatives_height,
+                                    "isActivated": true,
+                                    "creativeTypeId": 1,
+                                    "mimeType": "image/jpeg",
+                                    "percentageOfDelivery": 0,
+                                    "isArchived": false,
+                                    "partnerMeasurementScriptIds": []
+                                }
+
                                 //Creative de type image
                                 if (creatives_typeId === 1) {
-                                    requestImageCreatives = {
-                                        "fileSize": 0,
-                                        "id": creatives_id,
-                                        "insertionId": insertion_id,
-                                        "url": body.url_cdn,
-                                        "clickUrl": body.url_clic,
-                                        "name": creatives_name,
-                                        "fileName": creatives_name,
-                                        "width": creatives_width,
-                                        "height": creatives_height,
-                                        "isActivated": true,
-                                        "creativeTypeId": 1,
-                                        "mimeType": "image/jpeg",
-                                        "percentageOfDelivery": 0,
-                                        "isArchived": false,
-                                        "partnerMeasurementScriptIds": []
-                                    }
+                                
+                                    if (creatives_name.match(/300x250/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_mobile_file
+                                        requestCreatives['clickUrl'] = body.display_mobile_url
 
+                                    }
                                     await AxiosFunction.putManage(
                                         'imagecreatives',
-                                        requestImageCreatives
+                                        requestCreatives
                                     );
                                 }
 
                                 //Creative de type video
 
                                 if (creatives_typeId === 2) {
-                                    requestVideoCreatives = {
-                                        "id": creatives_id,
-                                        "insertionId": insertion_id,
-                                        "url": body.url_cdn,
-                                        "clickUrl": body.url_clic,
-                                        "name": "RECTANGLE VIDEO",
-                                        "fileName": "1280x720",
-                                        "width": 1280,
-                                        "height": 720,
-                                        "isActivated": true,
-                                        "creativeTypeId": 2,
-                                        "mimeType": "video/mp4",
-                                        "percentageOfDelivery": 0,
-                                        "isArchived": false,
-                                        "partnerMeasurementScriptIds": []
-                                    }
+                                    requestCreatives['url'] =body.url_video
+                                    requestCreatives['clickUrl'] = body.url_clic_video
+                                    requestCreatives['fileName'] = "1280x720"
+                                    requestCreatives['width'] = 1280
+                                    requestCreatives['height'] =720
+                                    requestCreatives['creativeTypeId'] = 2
+                                    requestCreatives['mimeType'] ="video/mp4",
+                                    requestCreatives['height'] =720
+
+
                                     await AxiosFunction.putManage(
                                         'videocreatives',
-                                        requestVideoCreatives
+                                        requestCreatives
                                     );
                                 }
 
@@ -2222,20 +2235,24 @@ exports.duplication = async (req, res) => {
 
                                     //   const found = script_creative.match(/(https?):\/\/[a-z0-9\/:%_+.,#?!@&=-]+/igm);
 
-
                                     const regex1 = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif)/igm;
                                     const regex2 = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
 
+                                    replace = script_creative.replace(regex1, body.display_mobile_file)
+                                    const replace_script = replace.replace(regex2, body.display_mobile_url)
 
+                                    requestCreatives['script'] =replace_script
+                                    requestCreatives['url'] =""
+                                    requestCreatives['clickUrl'] = ""
+                                    requestCreatives['fileName'] = ""
+                                    requestCreatives['name'] = "300x250 APPLI"
+                                    requestCreatives['width'] = 300
+                                    requestCreatives['height'] =250
+                                    requestCreatives['creativeTypeId'] = 4
+                                    requestCreatives['mimeType'] ="",
 
-                                    test2 = script_creative.replace(regex1, body.display_mobile_file)
-
-                                    test3 = test2.replace(regex2, body.display_mobile_url)
-                                    console.log(test3)
-
-
-                                    requestScriptCreatives = {
-                                        "script": test3,
+                                    /*requestScriptCreatives = {
+                                        "script": replace_script,
                                         "id": creatives_id,
                                         "insertionId": insertion_id,
                                         "name": "300x250 APPLI",
@@ -2246,23 +2263,18 @@ exports.duplication = async (req, res) => {
                                         "percentageOfDelivery": 0,
                                         "isArchived": false,
                                         "partnerMeasurementScriptIds": []
-                                    }
+                                    }*/
 
                                     await AxiosFunction.putManage(
                                         'scriptcreatives',
-                                        requestScriptCreatives
+                                        requestCreatives
                                     );
                                 }
 
 
 
+                             
 
-                                /* if (creatives_name.match(/300x250/igm)) {
-                                     //Attention j'ai delate SM-ANDROID LINFO
-                                     requestImageCreatives['url'] = body.display_mobile_file
-                                     requestImageCreatives['clickUrl'] = body.display_mobile_url
-
-                                 }*/
                                 console.log("--------------------------")
 
 
