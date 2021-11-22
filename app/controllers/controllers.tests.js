@@ -2037,7 +2037,7 @@ exports.duplication = async (req, res) => {
 
     try {
 
-        const body = {
+        /*const body = {
             campaign_id: 1987679, //campagne selectionnée
             //insertion_id_model: 10535965,
             display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
@@ -2047,9 +2047,19 @@ exports.duplication = async (req, res) => {
             display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
             display_desktop_url: 'https://www.bmw.re/',
 
-           url_clic: 'https://www.distripc.com/',
-           url_cdn : 'https://cdn.antennepublicite.re/linfo/IMG/pub/video/DISTRI_PC/20211119/DISTRI_PC_VU_SUR_ANTENNE-73641/1280x720_DISTRIPC_v3_15s.mp4'
+            url_clic: 'https://www.distripc.com/',
+            url_cdn: 'https://cdn.antennepublicite.re/linfo/IMG/pub/video/DISTRI_PC/20211119/DISTRI_PC_VU_SUR_ANTENNE-73641/1280x720_DISTRIPC_v3_15s.mp4'
+        }*/
+
+        const body = {
+            campaign_id: 1987679, //campagne selectionnée
+            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/BOUTIK_ANTENNE/300x250.jpg',
+            display_mobile_url: 'https://www.boutikantenne.fr/offres-black-friday-c-1080',
+            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/BOUTIK_ANTENNE/300x600.jpg',
+            display_desktop_url: 'https://www.boutikantenne.fr/offres-black-friday-c-1080',
+
         }
+
 
 
 
@@ -2058,34 +2068,30 @@ exports.duplication = async (req, res) => {
                 campaign_id: 1988414, //campagne_id model
                 insertion_id: {
                     [Op.in]: [
-                       
-                        10536724,
-                        10536725,
-                        10536726,
-                        10536727,
-                        10536728,
-                        10536729,
-                        10536730,
-                        10536731,
-                        10536732,
-                        10536733,
-                        10536734,
-                        10536735,
-                        10536736
-                
-                        /* 79431,
-                        84660,
-                        84658,
-                        84658,
-                        84657,
-                        79425,
-                        79425,
-                        79956,
-                        79650,
-                        79651,
-                        79652,
-                        79653,
-                        79655*/
+                        // GRAND ANGLE APPLI
+                        10535958,
+                        10535960,
+                        10535961,
+                        10535962,
+                        10535963,
+                        10535964,
+
+                        //Rectangle video
+                        /* 10536724,
+                         10536725,
+                         10536726,
+                         10536727,
+                         10536728,
+                         10536729,
+                         10536730,
+                         10536731,
+                         10536732,
+                         10536733,
+                         10536734,
+                         10536735,
+                         10536736*/
+
+
                     ]
                 }
             }
@@ -2114,14 +2120,14 @@ exports.duplication = async (req, res) => {
 
                     console.log(requestInsertionsCopy)
 
-         
-                  if (insertion_copy.headers.location) {
+
+                    if (insertion_copy.headers.location) {
 
                         var url_location = insertion_copy.headers.location
                         var insertion_get = await AxiosFunction.getManage(url_location);
                         const insertion_id = insertion_get.data.id
-                        console.log('insertion_id dupliqués '+ insertion_id)
- 
+                        console.log('insertion_id dupliqués ' + insertion_id)
+
                         var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
                         var dataValue = insertions_creatives_get.data;
                         var number_line_offset = insertions_creatives_get.data.length;
@@ -2136,72 +2142,132 @@ exports.duplication = async (req, res) => {
                                 var creatives_fileName = dataValue[d].fileName
                                 var creatives_width = dataValue[d].width
                                 var creatives_height = dataValue[d].height
+                                var creatives_typeId = dataValue[d].creativeTypeId
 
                                 console.log({
                                     'creatives_id': creatives_id,
                                     'creatives_name': creatives_name,
                                     'creatives_fileName': creatives_fileName,
                                     'creatives_width': creatives_width,
-                                    'creatives_height': creatives_height
+                                    'creatives_height': creatives_height,
+                                    'creatives_typeId': creatives_typeId,
+
+
+
                                 })
 
-                              /* requestImageCreatives = {
-                                    "fileSize": 0,
-                                    "id": creatives_id,
-                                    "insertionId": insertion_id,
-                                   // "url": body.display_desktop_file,
-                                    //"clickUrl": body.display_desktop_url,
-                                    "url": body.url_cdn,
-                                    "clickUrl": body.url_clic,
 
-                                    "name": creatives_name,
-                                    "fileName": "test", //creatives_fileName
-                                    "width": creatives_width,
-                                    "height": creatives_height,
-                                    "isActivated": true,
-                                    //"creativeTypeId": 1,
-                                    "creativeTypeId": 2,
-                                    //"mimeType": "image/jpeg",
-                                    "mimeType": "video/mp4",
-                                    "percentageOfDelivery": 0,
-                                    "isArchived": false,
-                                    "partnerMeasurementScriptIds": []
-                                }*/
-
-                                requestImageCreatives={
-                                    "id": creatives_id,
-                                    "insertionId": insertion_id,
-                                    "url": body.url_cdn,
-                                    "clickUrl": body.url_clic,
-                                    "name": "RECTANGLE VIDEO",
-                                    "fileName": "1280x720",
-                                    "width": 1280,
-                                    "height": 720,
-                                    "isActivated": true,
-                                    "creativeTypeId": 2,
-                                    "mimeType": "video/mp4",
-                                    "percentageOfDelivery": 0,
-                                    "isArchived": false,
-                                    "partnerMeasurementScriptIds":[]
+                                //Creative de type image
+                                if (creatives_typeId === 1) {
+                                    requestImageCreatives = {
+                                        "fileSize": 0,
+                                        "id": creatives_id,
+                                        "insertionId": insertion_id,
+                                        "url": body.url_cdn,
+                                        "clickUrl": body.url_clic,
+                                        "name": creatives_name,
+                                        "fileName": creatives_name,
+                                        "width": creatives_width,
+                                        "height": creatives_height,
+                                        "isActivated": true,
+                                        "creativeTypeId": 1,
+                                        "mimeType": "image/jpeg",
+                                        "percentageOfDelivery": 0,
+                                        "isArchived": false,
+                                        "partnerMeasurementScriptIds": []
                                     }
 
-                               /* if (creatives_name.match(/300x250/igm)) {
-                                    //Attention j'ai delate SM-ANDROID LINFO
-                                    requestImageCreatives['url'] = body.display_mobile_file
-                                    requestImageCreatives['clickUrl'] = body.display_mobile_url
+                                    await AxiosFunction.putManage(
+                                        'imagecreatives',
+                                        requestImageCreatives
+                                    );
+                                }
 
-                                }*/
-                                console.log(requestImageCreatives)
+                                //Creative de type video
+
+                                if (creatives_typeId === 2) {
+                                    requestVideoCreatives = {
+                                        "id": creatives_id,
+                                        "insertionId": insertion_id,
+                                        "url": body.url_cdn,
+                                        "clickUrl": body.url_clic,
+                                        "name": "RECTANGLE VIDEO",
+                                        "fileName": "1280x720",
+                                        "width": 1280,
+                                        "height": 720,
+                                        "isActivated": true,
+                                        "creativeTypeId": 2,
+                                        "mimeType": "video/mp4",
+                                        "percentageOfDelivery": 0,
+                                        "isArchived": false,
+                                        "partnerMeasurementScriptIds": []
+                                    }
+                                    await AxiosFunction.putManage(
+                                        'videocreatives',
+                                        requestVideoCreatives
+                                    );
+                                }
+
+                                //Creative de type script
+
+                                if (creatives_typeId === 4) {
+                                    // (https?):\/\/[a-z0-9\/:%_+.,#?!@&=-]+
+
+                                    // https://cdn.antennepublicite.re/linfo/IMG/pub/(video|display)/(.*).(jpg|gif)
+
+                                    var scriptcreatives_get = await AxiosFunction.getManageCopy('scriptcreatives', creatives_id);
+                                    var dataValueCreative = scriptcreatives_get.data;
+                                    var script_creative = dataValueCreative.script
+                                    console.log(script_creative)
+
+                                    //   const found = script_creative.match(/(https?):\/\/[a-z0-9\/:%_+.,#?!@&=-]+/igm);
+
+
+                                    const regex1 = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif)/igm;
+                                    const regex2 = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
+
+
+
+                                    test2 = script_creative.replace(regex1, body.display_mobile_file)
+
+                                    test3 = test2.replace(regex2, body.display_mobile_url)
+                                    console.log(test3)
+
+
+                                    requestScriptCreatives = {
+                                        "script": test3,
+                                        "id": creatives_id,
+                                        "insertionId": insertion_id,
+                                        "name": "300x250 APPLI",
+                                        "width": 300,
+                                        "height": 250,
+                                        "isActivated": true,
+                                        "creativeTypeId": 4,
+                                        "percentageOfDelivery": 0,
+                                        "isArchived": false,
+                                        "partnerMeasurementScriptIds": []
+                                    }
+
+                                    await AxiosFunction.putManage(
+                                        'scriptcreatives',
+                                        requestScriptCreatives
+                                    );
+                                }
+
+
+
+
+                                /* if (creatives_name.match(/300x250/igm)) {
+                                     //Attention j'ai delate SM-ANDROID LINFO
+                                     requestImageCreatives['url'] = body.display_mobile_file
+                                     requestImageCreatives['clickUrl'] = body.display_mobile_url
+
+                                 }*/
                                 console.log("--------------------------")
 
-                               /* const test = await AxiosFunction.putManage(
-                                    'imagecreatives',
-                                    requestImageCreatives
-                                );*/
-                                const test = await AxiosFunction.putManage(
-                                    'videocreatives',
-                                    requestImageCreatives
-                                );
+
+
+
 
 
 

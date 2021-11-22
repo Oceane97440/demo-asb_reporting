@@ -315,6 +315,9 @@ exports.getManageCopy = async (method, id) => {
     case 'creatives':
       var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + id + '/creatives';
       break;
+    case 'scriptcreatives':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/scriptcreatives/' + id;
+      break;
 
     default:
 
@@ -355,9 +358,13 @@ exports.putManage = async (method, data = null) => {
     case 'imagecreatives':
       var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives/';
       break;
-      case 'videocreatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/videocreatives/';
+    case 'videocreatives':
+      var configApiUrl = 'https://manage.smartadserverapis.com/2044/videocreatives/';
+      break;
+      case 'scriptcreatives':
+        var configApiUrl = 'https://manage.smartadserverapis.com/2044/scriptcreatives/';
         break;
+
     default:
 
       break;
