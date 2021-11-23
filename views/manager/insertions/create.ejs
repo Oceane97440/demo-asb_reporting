@@ -24,23 +24,30 @@
                 <% } %>
 
                 <fieldset>
+                    <legend>ANNONCEUR</legend>
+
+                    <div class="form-group">
+                        <label class="form-label" for="advertiser_id">Annonceur
+                        </label>
+                        <select class="form-control" id="advertiser_id" name="advertiser_id" required="required">
+
+                            <option value="">Choisir une annonceur</option>
+
+                            <% for (let i=0; i < advertisers.length; i++) { %>
+                            <option value="<%= advertisers[i].advertiser_id %>"><%= advertisers[i].advertiser_name %>
+                            </option>
+                            <% } %>
+                        </select>
+                    </div>
                     <legend>CAMPAGNE</legend>
 
                     <div class="form-group">
                         <label class="form-label" for="campaign_id">Campagne
                         </label>
                         <select class="form-control" id="campaign_id" name="campaign_id" required="required">
-                           
-                            <option value="1764641">
-                                TEST > Api manager
-                            </option>
-                           <option value="">-----------------------------</option>
-                            <option value="">Choisir une campagne</option>
-                            <% for (let i=0; i < campaigns.length; i++) { %>
-                            <option value="<%= campaigns[i].campaign_id %>">
-                                <%= campaigns[i].advertiser.advertiser_name %> > <%= campaigns[i].campaign_name %>
-                            </option>
-                            <% } %>
+
+                            <option></option>
+
                         </select>
                     </div>
 
@@ -52,9 +59,9 @@
                                 required="required">
                                 <option value="">Choisir un format</option>
                                 <% for(let i=1; i < formats.length; i++) {%>
-                                    <option value="<%= formats[i].format_group %>">
-                                        <%= formats[i].format_group %></option>
-                                    <% } %>
+                                <option value="<%= formats[i].format_group %>">
+                                    <%= formats[i].format_group %></option>
+                                <% } %>
                             </select>
                         </div>
 
@@ -78,14 +85,13 @@
                         <div class="form-group col-6">
                             <label class="form-label" for="display_mobile_file">Fichier Mobile</label>
                             <input type="url" name="display_mobile_file" id="display_mobile_file" class="form-control"
-                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG"
-                                 />
+                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
                         </div>
 
                         <div class="form-group col-6">
                             <label class="form-label" for="display_mobile_url">Url Mobile</label>
                             <input type="url" name="display_mobile_url" id="display_mobile_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour le mobile"  />
+                                placeholder="Saisissez l'url de redirection pour le mobile" />
                         </div>
                     </div>
 
@@ -93,13 +99,12 @@
                         <div class="form-group col-6">
                             <label class="form-label" for="display_tablet_file">Fichier Tablette</label>
                             <input type="url" name="display_tablet_file" id="display_tablet_file" class="form-control"
-                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG"
-                                 />
+                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
                         </div>
                         <div class="form-group col-6">
                             <label class="form-label" for="display_tablet_url">Url Tablette</label>
                             <input type="url" name="display_tablet_url" id="display_tablet_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour la tablette"  />
+                                placeholder="Saisissez l'url de redirection pour la tablette" />
                         </div>
                     </div>
 
@@ -107,13 +112,12 @@
                         <div class="form-group col-6">
                             <label class="form-label" for="display_desktop_file">Fichier Desktop</label>
                             <input type="url" name="display_desktop_file" id="display_desktop_file" class="form-control"
-                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG"
-                                 />
+                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG" />
                         </div>
                         <div class="form-group col-6">
                             <label class="form-label" for="display_desktop_url">Url Desktop</label>
                             <input type="url" name="display_desktop_url" id="display_desktop_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour le desktop"  />
+                                placeholder="Saisissez l'url de redirection pour le desktop" />
                         </div>
                     </div>
                 </fieldset>
@@ -124,13 +128,13 @@
                         <div class="form-group col-6">
                             <label class="form-label" for="video_file">Fichier Vidéo</label>
                             <input type="url" name="video_file" id="video_file" class="form-control"
-                                placeholder="Saisissez l'url du fichier au format MP4"  />
+                                placeholder="Saisissez l'url du fichier au format MP4" />
                         </div>
 
                         <div class="form-group col-6">
                             <label class="form-label" for="video_url">Url Vidéo</label>
                             <input type="url" name="video_url" id="video_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection"  />
+                                placeholder="Saisissez l'url de redirection" />
                         </div>
                     </div>
                 </fieldset>
@@ -145,4 +149,76 @@
 
 </div>
 
-<%- include("../../layouts/manager/footer.ejs") -%>
+</div>
+<!-- [ Main Content ] end -->
+</div>
+</div>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KT6H7LH" height="0" width="0"
+        style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script src="/assets/js/vendor-all.min.js"></script>
+<script src="/assets/js/plugins/bootstrap.min.js"></script>
+<script src="/assets/js/plugins/feather.min.js"></script>
+<script src="/assets/js/pcoded.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async>
+</script>
+
+
+<!-- custom-chart js
+<script src="/assets/js/pages/dashboard-sale.js"></script>  -->
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="/manager/js/manager.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        let select_advertiser = $('#advertiser_id option:selected').val()
+        //let select_advertiser = $("#advertiser_id");
+        let select_campaign = $("#campaign_id");
+
+        console.log(select_advertiser)
+
+
+
+        select_advertiser.on("change", function () {
+            model($(this).val());
+        })
+
+        select_campaign.on("change", function () {
+           console.log($(this).find(":selected").data("advertiser_id"), $(this).val()) ;
+
+
+        })
+
+
+        function model(idmarque) {
+            $.get(`http://127.0.0.1:3001/app/json/campaign/${idmarque}`, function (campaign) {
+
+
+                let list_campaign = `<option value="" selected disabled>Sélectionner une campagne</option>`;
+                //pour chaque éléments crée un option dans le select
+                campaign.forEach((campaign) => {
+                    list_campaign +=
+                        `<option value="${campaign.campaign_id}">${campaign.campaign_name}</option>`
+                });
+
+                //on affiche sur la page l'ensemble des données
+                $("#campaign_id").html(list_campaign);
+
+            
+
+            })
+        }
+
+    })
+</script>
+</body>
+
+</html>

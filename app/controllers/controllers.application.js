@@ -41,6 +41,7 @@ const ModelPackSite = require("../models/models.packs_sites")
 const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
 const ModelUser_Role = require("../models/models.roles_users")
+const ModelCampaigns = require("../models/models.campaigns")
 
 exports.login_add = async (req, res) => {
     const user_email = req.body.user_email;
@@ -644,6 +645,29 @@ exports.packs_sites_json = async (req, res) => {
             })
             .then(packs_sites => {
                 res.json(packs_sites)
+
+            })
+    } catch (error) {
+        console.log(error)
+
+    }
+}
+
+exports.campaign_json = async (req, res) => {
+    //renvoie du json les info campagnes
+    var advertiser_id = req.params.advertiser_id
+    try {
+        await ModelCampaigns
+            .findOne({
+                where: {
+                    advertiser_id: advertiser_id
+                },
+                order: [
+                    ['campaign_id', 'ASC']
+                ]
+            })
+            .then(campagnes => {
+                res.json(campagnes)
 
             })
     } catch (error) {
