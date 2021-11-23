@@ -2052,17 +2052,19 @@ exports.duplication = async (req, res) => {
         }*/
 
         const body = {
-            //campaign_id: 1987679, //campagne selectionnée
-            campaign_id: 1989230, //campagne selectionnée
+           // campaign_id: 1987679, //campagne selectionnée
+           // campaign_id: 1989230, //campagne selectionnée
+            campaign_id:  1989229,
 
 
+            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/RODALI/970x250.jpg',
+            display_desktop_url: 'https://www.rodali.fr/mise-en-avant/black-friday/black-friday-2021,95',
 
+            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/RODALI/640x100.jpg',
+            display_mobile_url: 'https://www.rodali.fr/mise-en-avant/black-friday/black-friday-2021,95',
 
-            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/BOUTIK_ANTENNE/300x250.jpg',
-            display_mobile_url: 'https://www.boutikantenne.fr/offres-black-friday-c-1080',
-
-            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/BOUTIK_ANTENNE/300x600.jpg',
-            display_desktop_url: 'https://www.boutikantenne.fr/offres-black-friday-c-1080',
+            display_tablette_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/RODALI/640x100.jpg',
+            display_tablette_url: 'https://www.rodali.fr/mise-en-avant/black-friday/black-friday-2021,95',
 
         }
 
@@ -2074,8 +2076,8 @@ exports.duplication = async (req, res) => {
                 campaign_id: 1988414, //campagne_id model
                 insertion_id: {
                     [Op.in]: [
-                     
-                        /* GRAND ANGLE */
+
+                        /* GRAND ANGLE 
                         10535957,
                         10535958,
                         10535959,
@@ -2088,7 +2090,7 @@ exports.duplication = async (req, res) => {
                         10535966,
                         10535967,
                         10535968,
-                        10535969
+                        10535969*/
 
                         /*Rectangle video
                         10536724,
@@ -2104,6 +2106,36 @@ exports.duplication = async (req, res) => {
                          10536734,
                          10536735,
                          10536736*/
+
+                        /* MASTHEAD */
+                        10543043,
+                        10543044,
+                        10543045,
+                        10543046,
+                        10543047,
+                        10543048,
+                        10543049,
+                        10543050,
+                        10543051,
+                        10543052,
+                        10543053,
+                        10543054,
+                        10543055
+
+                        /*INTERSTITIEL
+                        10543020,
+                        10543021,
+                        10543024,
+                        10543025,
+                        10543026, */
+
+                        /*INTERSTITIEL VIDEO
+
+                        10543022,
+                        10543023,
+                        10543027,
+                        10543028,
+                        10543029*/
 
 
                     ]
@@ -2169,7 +2201,7 @@ exports.duplication = async (req, res) => {
                                 })
 
 
-                                requestCreatives = {
+                                var requestCreatives = {
                                     "fileSize": 0,
                                     "id": creatives_id,
                                     "insertionId": insertion_id,
@@ -2189,13 +2221,53 @@ exports.duplication = async (req, res) => {
 
                                 //Creative de type image
                                 if (creatives_typeId === 1) {
-                                
+
+                                    //format grand angle mobile
                                     if (creatives_name.match(/300x250/igm)) {
                                         //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = body.display_mobile_file
                                         requestCreatives['clickUrl'] = body.display_mobile_url
 
                                     }
+                                    //format masthead mobile
+                                    if (creatives_name.match(/320x50/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_mobile_file
+                                        requestCreatives['clickUrl'] = body.display_mobile_url
+                                        requestCreatives['width'] = 320
+                                        requestCreatives['height'] = 50
+
+                                    }
+                                    //format masthead tablette
+                                    if (creatives_name.match(/640x100/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_tablette_file
+                                        requestCreatives['clickUrl'] = body.display_tablette_url
+                                        requestCreatives['width'] = 640
+                                        requestCreatives['height'] = 100
+
+                                    }
+
+                                    //format interstitiel tablette
+                                    if (creatives_name.match(/1536x2048_20211112141143307/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_tablette_file
+                                        requestCreatives['clickUrl'] = body.display_tablette_url
+                                        requestCreatives['width'] = 1536
+                                        requestCreatives['height'] = 2048
+
+                                    }
+
+                                    //format interstitiel mobile
+                                    if (creatives_name.match(/720x1280_20211112141153742/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_mobile_file
+                                        requestCreatives['clickUrl'] = body.display_mobile_url
+                                        requestCreatives['width'] = 720
+                                        requestCreatives['height'] = 1280
+
+                                    }
+
                                     await AxiosFunction.putManage(
                                         'imagecreatives',
                                         requestCreatives
@@ -2205,14 +2277,14 @@ exports.duplication = async (req, res) => {
                                 //Creative de type video
 
                                 if (creatives_typeId === 2) {
-                                    requestCreatives['url'] =body.url_video
+                                    requestCreatives['url'] = body.url_video
                                     requestCreatives['clickUrl'] = body.url_clic_video
                                     requestCreatives['fileName'] = "1280x720"
                                     requestCreatives['width'] = 1280
-                                    requestCreatives['height'] =720
+                                    requestCreatives['height'] = 720
                                     requestCreatives['creativeTypeId'] = 2
-                                    requestCreatives['mimeType'] ="video/mp4",
-                                    requestCreatives['height'] =720
+                                    requestCreatives['mimeType'] = "video/mp4",
+                                        requestCreatives['height'] = 720
 
 
                                     await AxiosFunction.putManage(
@@ -2241,39 +2313,39 @@ exports.duplication = async (req, res) => {
                                     replace = script_creative.replace(regex1, body.display_mobile_file)
                                     const replace_script = replace.replace(regex2, body.display_mobile_url)
 
-                                    requestCreatives['script'] =replace_script
-                                    requestCreatives['url'] =""
+                                    requestCreatives['script'] = replace_script
+                                    requestCreatives['url'] = ""
                                     requestCreatives['clickUrl'] = ""
                                     requestCreatives['fileName'] = ""
                                     requestCreatives['name'] = "300x250 APPLI"
                                     requestCreatives['width'] = 300
-                                    requestCreatives['height'] =250
+                                    requestCreatives['height'] = 250
                                     requestCreatives['creativeTypeId'] = 4
-                                    requestCreatives['mimeType'] ="",
+                                    requestCreatives['mimeType'] = "",
 
-                                    /*requestScriptCreatives = {
-                                        "script": replace_script,
-                                        "id": creatives_id,
-                                        "insertionId": insertion_id,
-                                        "name": "300x250 APPLI",
-                                        "width": 300,
-                                        "height": 250,
-                                        "isActivated": true,
-                                        "creativeTypeId": 4,
-                                        "percentageOfDelivery": 0,
-                                        "isArchived": false,
-                                        "partnerMeasurementScriptIds": []
-                                    }*/
+                                        /*requestScriptCreatives = {
+                                            "script": replace_script,
+                                            "id": creatives_id,
+                                            "insertionId": insertion_id,
+                                            "name": "300x250 APPLI",
+                                            "width": 300,
+                                            "height": 250,
+                                            "isActivated": true,
+                                            "creativeTypeId": 4,
+                                            "percentageOfDelivery": 0,
+                                            "isArchived": false,
+                                            "partnerMeasurementScriptIds": []
+                                        }*/
 
-                                    await AxiosFunction.putManage(
-                                        'scriptcreatives',
-                                        requestCreatives
-                                    );
+                                        await AxiosFunction.putManage(
+                                            'scriptcreatives',
+                                            requestCreatives
+                                        );
                                 }
 
 
 
-                             
+
 
                                 console.log("--------------------------")
 
