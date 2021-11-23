@@ -657,10 +657,46 @@ exports.campaign_json = async (req, res) => {
     //renvoie du json les info campagnes
     var advertiser_id = req.params.advertiser_id
     try {
+        const advertiserExclus = new Array(
+            418935,
+            427952,
+            409707,
+            425912,
+            425914,
+            438979,
+            439470,
+            439506,
+            439511,
+            439512,
+            439513,
+            439514,
+            439515,
+            440117,
+            440118,
+            440121,
+            440122,
+            440124,
+            440126,
+            445117,
+            455371,
+            455384,
+            320778,
+            417243,
+            414097,
+            411820,
+            320778
+        );
         await ModelCampaigns
-            .findOne({
+            .findAll({
                 where: {
-                    advertiser_id: advertiser_id
+                    advertiser_id: advertiser_id,
+                    campaign_archived:0,
+                    [Op.and]: [{
+                        advertiser_id: {
+                            [Op.notIn]: advertiserExclus
+                        }
+                    }],
+                    
                 },
                 order: [
                     ['campaign_id', 'ASC']

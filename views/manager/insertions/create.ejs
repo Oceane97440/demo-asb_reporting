@@ -179,8 +179,7 @@
 
 <script>
     $(document).ready(function () {
-        let select_advertiser = $('#advertiser_id option:selected').val()
-        //let select_advertiser = $("#advertiser_id");
+        let select_advertiser = $("#advertiser_id");
         let select_campaign = $("#campaign_id");
 
         console.log(select_advertiser)
@@ -188,23 +187,16 @@
 
 
         select_advertiser.on("change", function () {
-            model($(this).val());
-        })
+            //model($(this).val());
+            var advertiser_id = $(this).val()
 
-        select_campaign.on("change", function () {
-           console.log($(this).find(":selected").data("advertiser_id"), $(this).val()) ;
-
-
-        })
-
-
-        function model(idmarque) {
-            $.get(`http://127.0.0.1:3001/app/json/campaign/${idmarque}`, function (campaign) {
+            console.log(advertiser_id)
+            $.get(`http://127.0.0.1:3001/app/json/campaign/${advertiser_id}`, function (campagnes) {
 
 
                 let list_campaign = `<option value="" selected disabled>Sélectionner une campagne</option>`;
                 //pour chaque éléments crée un option dans le select
-                campaign.forEach((campaign) => {
+                campagnes.forEach((campaign) => {
                     list_campaign +=
                         `<option value="${campaign.campaign_id}">${campaign.campaign_name}</option>`
                 });
@@ -215,7 +207,13 @@
             
 
             })
-        }
+        
+        })
+
+
+
+
+       
 
     })
 </script>
