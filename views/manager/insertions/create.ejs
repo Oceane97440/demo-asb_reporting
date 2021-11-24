@@ -3,7 +3,7 @@
 <div class="col-xl-12 col-md-12">
 
     <div class="card">
-        <form method="POST" action="/manager/insertions/create">
+        <form method="POST" action="/manager/insertions/create_post">
             <div class="card-header">
                 <h5>Ajouter une insertion</h5>
             </div>
@@ -31,7 +31,7 @@
                         </label>
                         <select class="form-control" id="advertiser_id" name="advertiser_id" required="required">
 
-                            <option value=""selected disabled>Choisir une annonceur</option>
+                            <option value="" selected disabled>Choisir une annonceur</option>
 
                             <% for (let i=0; i < advertisers.length; i++) { %>
                             <option value="<%= advertisers[i].advertiser_id %>"><%= advertisers[i].advertiser_name %>
@@ -52,20 +52,20 @@
                         </select>
                     </div>
 
-                     <div class="row">
+                    <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label" for="date-start">Date de début de campagne
+                            <label class="form-label" for="date_start">Date de début de campagne
                             </label>
-                            <input type="date" name="date-start" id="date-start" class="form-control"/>
+                            <input type="date" name="date_start" id="date_start" class="form-control" />
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label" for="date-end">Date de fin de campagne
+                            <label class="form-label" for="date_end">Date de fin de campagne
                             </label>
-                            <input type="date" name="date-end" id="date-end" class="form-control"/>
+                            <input type="date" name="date_end" id="date_end" class="form-control" />
                         </div>
                     </div>
-                
+
 
                     <div class="row">
                         <div class="form-group col-6">
@@ -73,7 +73,7 @@
                             </label>
                             <select class="form-control" id="format_group_id" name="format_group_id"
                                 required="required">
-                                <option value=""selected disabled>Sélectionner le format</option>
+                                <option value="" selected disabled>Sélectionner le format</option>
                                 <% for(let i=1; i < group_formats.length; i++) {%>
                                 <option value="<%= group_formats[i].format_group_id %>">
                                     <%= group_formats[i].format_group_name %></option>
@@ -84,20 +84,23 @@
                         <div class="form-group col-6">
                             <label class="form-label" for="creative_type_id">Type de créative
                             </label>
-                            <select class="form-control" id="creative_type_id" name="creative_type_id" required="required">
+                            <select class="form-control" id="creative_type_id" name="creative_type_id"
+                                required="required">
                                 <option></option>
-                           
+
                             </select>
                         </div>
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <legend>DISPLAY</legend>
+                <legend>INSERTION CREATIVE</legend>
                     <div class="form-group col-6">
                         <label class="form-label" for="insertion_name">Nom de l'insertion</label>
-                        <input type="text" name="insertion_name" id="insertion_name" class="form-control" />
+                        <input type="text" name="insertion_name" id="insertion_name" class="form-control"  placeholder="GRAND ANGLE APPLI INFO"/>
                     </div>
+                <fieldset id="creativeImage">
+                    <legend>DISPLAY</legend>
+
                     <div class="row">
                         <div class="form-group col-6">
                             <label class="form-label" for="display_mobile_file">Fichier Mobile</label>
@@ -139,7 +142,7 @@
                     </div>
                 </fieldset>
 
-                <fieldset>
+                <fieldset id="creativeVideo">
                     <legend>VIDEO</legend>
                     <div class="row">
                         <div class="form-group col-6">
@@ -203,6 +206,10 @@
 
 
 
+        $("#creativeImage").hide();
+        $("#creativeVideo").hide();
+
+        
 
         select_advertiser.on("change", function () {
             //model($(this).val());
@@ -212,7 +219,8 @@
             $.get(`http://127.0.0.1:3001/app/json/campaign/${advertiser_id}`, function (campagnes) {
 
 
-                let list_campaign = `<option value="" selected disabled>Sélectionner une campagne</option>`;
+                let list_campaign =
+                    `<option value="" selected disabled>Sélectionner une campagne</option>`;
                 //pour chaque éléments crée un option dans le select
                 campagnes.forEach((campaign) => {
                     list_campaign +=
@@ -222,10 +230,10 @@
                 //on affiche sur la page l'ensemble des données
                 $("#campaign_id").html(list_campaign);
 
-            
+
 
             })
-        
+
         })
 
 
@@ -234,11 +242,13 @@
             var format_group_id = $(this).val()
 
             console.log(format_group_id)
-            $.get(`http://127.0.0.1:3001/app/json/creative/${format_group_id}`, function (creativeType) {
+            $.get(`http://127.0.0.1:3001/app/json/creative/${format_group_id}`, function (
+            creativeType) {
 
-                
 
-                let list_creative = `<option value="" selected disabled>Sélectionner une campagne</option>`;
+
+                let list_creative =
+                    `<option value="" selected disabled>Sélectionner une campagne</option>`;
                 //pour chaque éléments crée un option dans le select
                 creativeType.forEach((creativeType) => {
                     list_creative +=
@@ -248,16 +258,39 @@
                 //on affiche sur la page l'ensemble des données
                 $("#creative_type_id").html(list_creative);
 
-            
+
+
 
             })
-        
+
         })
 
 
 
+        select_creativeType.on("change", function () {
+            var creativeType_id = $(this).val()
 
-       
+            console.log(creativeType_id)
+
+            if (creativeType_id === '1' || creativeType_id === '3') {
+                $('#creativeImage').show();
+            }else{
+                $("#creativeImage").hide();
+
+            }
+
+            if (creativeType_id === '2' ) {
+                $('#creativeVideo').show();
+
+            }else{
+                $("#creativeVideo").hide();
+
+            }
+
+
+        })
+
+
 
     })
 </script>

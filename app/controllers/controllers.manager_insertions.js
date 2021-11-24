@@ -278,7 +278,7 @@ exports.create = async (req, res) => {
         const advertiserExclus = new Array(
             418935,
             427952,
-           // 409707,
+            // 409707,
             425912,
             425914,
             438979,
@@ -306,15 +306,15 @@ exports.create = async (req, res) => {
         );
 
         data.advertisers = await ModelAdvertisers.findAll({
-            where:{
-                advertiser_archived:0,
+            where: {
+                advertiser_archived: 0,
                 [Op.and]: [{
                     advertiser_id: {
                         [Op.notIn]: advertiserExclus
                     }
                 }],
             },
-           
+
             order: [
                 // Will escape title and validate DESC against a list of valid direction
                 // parameters
@@ -339,8 +339,11 @@ exports.create = async (req, res) => {
 
         data.group_formats = await ModelGroupFormats.findAll({
             attributes: ['format_group_id', 'format_group_name'],
+            where: {
+                format_group_id: [2, 3, 4, 9, 12]
+            },
             order: [
-                ['format_group_name', 'ASC']
+                ['format_group_name', 'DESC']
             ],
         })
 
@@ -374,32 +377,38 @@ exports.create = async (req, res) => {
 exports.create_post = async (req, res) => {
 
     try {
+
+
+
         var body = {
-            // campaign_id: '1764641',
-            campaign_id: '1985799',
+            advertiser_id: req.body.advertiser_id,
+            campaign_id: req.body.campaign_id,
+            date_start: req.body.date_start,
+            date_end: req.body.date_end,
+            format_group_id: req.body.format_group_id,
+            creative_type_id: req.body.creative_type_id,
 
-
-            // format_group_id: '4',
-            format_group_id: 'GRAND ANGLE',
-
-            pack_id: '1',
-            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
-            display_mobile_url: 'https://www.bmw.re/',
-            display_tablet_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
-            display_tablet_url: 'https://www.bmw.re/',
-            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
-            display_desktop_url: 'https://www.bmw.re/',
-            video_file: '',
-            video_url: '',
-            submit: 'Créer une nouvelle insertion'
+            insertion_name: req.body.insertion_name,
+            display_mobile_file: req.body.display_mobile_file,
+            display_mobile_url: req.body.display_mobile_url,
+            display_tablet_file: req.body.display_tablet_file,
+            display_tablet_url: req.body.display_tablet_url,
+            display_desktop_file: req.body.display_desktop_file,
+            display_desktop_url: req.body.display_desktop_url,
+            video_file: req.body.video_file,
+            video_url: req.body.video_url,
         }
 
 
 
-
+        const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
         const format_group_id = body.format_group_id;
-        const pack_id = body.pack_id;
+        const creative_type_id = body.creative_type_id;
+        const insertion_name = body.insertion_name;
+        const date_start = body.date_start;
+        const date_end = body.date_end;
+
 
         const display_mobile_file = body.display_mobile_file;
         const display_mobile_url = body.display_mobile_url;
@@ -414,6 +423,292 @@ exports.create_post = async (req, res) => {
         const video_url = body.video_url;
 
 
+
+        console.log(body)
+
+        //date aujourd'hui en timestamp 
+        const date_now = Date.now();
+        const timstasp_start = Date.parse(date_start);
+        const timstasp_end = Date.parse(date_end);
+
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
+        if (timstasp_start <= date_now || timstasp_start >= timstasp_end) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'La date de début doit être J+1 à la date du jour'
+            }
+            return res.redirect('/manager/insertions/create');
+        }
+
+        // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
+        if (timstasp_end <= date_now || timstasp_end <= timstasp_start) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Un problème est survenu',
+                message: 'La date de fin doit être supérieur à la date du jour'
+            }
+            return res.redirect('/manager/insertions/create');
+        }
+
+        const formatGroup = await ModelFormatsGroups.findOne({
+            where: {
+                format_group_id: format_group_id
+            }
+        });
+
+        var formatGroupName = formatGroup.format_group_name
+
+        if ((format_group_id === '2') && (creative_type_id === '2')) {
+            formatGroupName = "INTERSTITIEL VIDEO"
+        }
+        if (format_group_id === '9') {
+            formatGroupName = "PREROLL/ MIDROLL"
+
+
+        }
+
+        await ModelInsertions.findAll({
+            where: {
+                campaign_id: 1988414, //campagne_id model
+                insertion_name: {
+                    [Op.like]: "%" + formatGroupName + "%"
+                }
+            }
+        }).then(async function (insertion_model) {
+
+            for (let i = 0; i < insertion_model.length; i++) {
+                if (!Utilities.empty(insertion_model)) {
+
+
+                    var insertion_id_model = insertion_model[i].insertion_id
+                    var insertion_name_model = insertion_model[i].insertion_name + ' - ' + insertion_name
+                    //console.log(insertion_model)
+
+
+
+                    requestInsertionsCopy = {
+
+                        "name": insertion_name_model, //recupération du nom de l'insertion GET
+                        "campaignId": campaign_id,
+                        "startDate": date_start + "T00:00:00",
+                        "endDate": date_end + "T23:59:00",
+                        "ignorePlacements": "false",
+                        "ignoreCreatives": "false"
+
+                    }
+
+                    let insertion_copy = await AxiosFunction.copyManage(
+                        'insertions',
+                        requestInsertionsCopy,
+                        insertion_id_model
+                    );
+
+                    console.log(requestInsertionsCopy)
+
+
+                    if (insertion_copy.headers.location) {
+
+                        var url_location = insertion_copy.headers.location
+                        var insertion_get = await AxiosFunction.getManage(url_location);
+                        const insertion_id = insertion_get.data.id
+                        console.log('insertion_id dupliqués ' + insertion_id)
+
+                        var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
+                        var dataValue = insertions_creatives_get.data;
+                        var number_line_offset = insertions_creatives_get.data.length;
+
+                        for (let d = 0; d < number_line_offset; d++) {
+                            if (!Utilities.empty(dataValue)) {
+
+
+                                console.log(number_line_offset)
+                                var creatives_id = dataValue[d].id
+                                var creatives_name = dataValue[d].name
+                                var creatives_fileName = dataValue[d].fileName
+                                var creatives_width = dataValue[d].width
+                                var creatives_height = dataValue[d].height
+                                var creatives_typeId = dataValue[d].creativeTypeId
+
+                                console.log({
+                                    'creatives_id': creatives_id,
+                                    'creatives_name': creatives_name,
+                                    'creatives_fileName': creatives_fileName,
+                                    'creatives_width': creatives_width,
+                                    'creatives_height': creatives_height,
+                                    'creatives_typeId': creatives_typeId,
+
+                                })
+
+
+                                var requestCreatives = {
+                                    "fileSize": 0,
+                                    "id": creatives_id,
+                                    "insertionId": insertion_id,
+                                    "url": display_desktop_file,
+                                    "clickUrl": display_desktop_url,
+                                    "name": creatives_name,
+                                    "fileName": creatives_name,
+                                    "width": creatives_width,
+                                    "height": creatives_height,
+                                    "isActivated": true,
+                                    "creativeTypeId": 1,
+                                    "mimeType": "image/jpeg",
+                                    "percentageOfDelivery": 0,
+                                    "isArchived": false,
+                                    "partnerMeasurementScriptIds": []
+                                }
+
+                                //Creative de type image
+                                if (creatives_typeId === 1) {
+
+                                    //format grand angle mobile
+                                    if (creatives_name.match(/300x250/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_mobile_file
+                                        requestCreatives['clickUrl'] = display_mobile_url
+
+                                    }
+                                    //format masthead mobile
+                                    if (creatives_name.match(/320x50/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_mobile_file
+                                        requestCreatives['clickUrl'] = display_mobile_url
+                                        requestCreatives['width'] = 320
+                                        requestCreatives['height'] = 50
+
+                                    }
+                                    //format masthead tablette
+                                    if (creatives_name.match(/640x100/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_tablet_file
+                                        requestCreatives['clickUrl'] = display_tablet_url
+                                        requestCreatives['width'] = 640
+                                        requestCreatives['height'] = 100
+
+                                    }
+
+                                    //format interstitiel tablette
+                                    if (creatives_name.match(/1536x2048_20211112141143307/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_tablet_file
+                                        requestCreatives['clickUrl'] = display_tablet_url
+                                        requestCreatives['width'] = 1536
+                                        requestCreatives['height'] = 2048
+
+                                    }
+
+                                    //format interstitiel mobile
+                                    if (creatives_name.match(/720x1280_20211112141153742/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_mobile_file
+                                        requestCreatives['clickUrl'] = display_mobile_url
+                                        requestCreatives['width'] = 720
+                                        requestCreatives['height'] = 1280
+
+                                    }
+
+                                    await AxiosFunction.putManage(
+                                        'imagecreatives',
+                                        requestCreatives
+                                    );
+                                }
+
+                                //Creative de type video
+
+                                if (creatives_typeId === 2) {
+                                    requestCreatives['url'] = video_file
+                                    requestCreatives['clickUrl'] = video_url
+                                    requestCreatives['fileName'] = "1280x720"
+                                    requestCreatives['width'] = 1280
+                                    requestCreatives['height'] = 720
+                                    requestCreatives['creativeTypeId'] = 2
+                                    requestCreatives['mimeType'] = "video/mp4"
+
+                                    if (creatives_name.match(/300x250/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['fileName'] = "300x250 APPLI"
+                                        requestCreatives['width'] = 300
+                                        requestCreatives['height'] = 250
+
+                                    }
+
+                                    if (format_group_id === '2' && creative_type_id === '2') {
+                                        requestCreatives['name'] = "interstitiel - video"
+
+                                    }
+
+                                    await AxiosFunction.putManage(
+                                        'videocreatives',
+                                        requestCreatives
+                                    );
+                                }
+
+                                //Creative de type script
+
+                                if (creatives_typeId === 4) {
+
+                                    var scriptcreatives_get = await AxiosFunction.getManageCopy('scriptcreatives', creatives_id);
+                                    var dataValueCreative = scriptcreatives_get.data;
+                                    var script_creative = dataValueCreative.script
+                                    console.log(script_creative)
+
+                                    const regex1 = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif)/igm;
+                                    const regex2 = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
+
+                                    replace = script_creative.replace(regex1, display_mobile_file)
+                                    const replace_script = replace.replace(regex2, display_mobile_url)
+
+                                    requestCreatives['script'] = replace_script
+                                    requestCreatives['url'] = ""
+                                    requestCreatives['clickUrl'] = ""
+                                    requestCreatives['fileName'] = ""
+                                    requestCreatives['name'] = "300x250 APPLI"
+                                    requestCreatives['width'] = 300
+                                    requestCreatives['height'] = 250
+                                    requestCreatives['creativeTypeId'] = 4
+                                    requestCreatives['mimeType'] = "",
+
+                                        await AxiosFunction.putManage(
+                                            'scriptcreatives',
+                                            requestCreatives
+                                        );
+                                }
+
+
+
+
+
+                                console.log("--------------------------")
+
+
+
+
+
+
+
+                            }
+                        }
+
+
+
+                    }
+                }
+            }
+
+
+
+        })
+
+
+
+        res.json({
+            type: 'success',
+            intro: 'Ok',
+            message: 'Les inserions ont été crées dans SMARTADSERVEUR',
+
+        })
+        process.exit()
 
         const formatIdsArray = []
         const sites = []
@@ -581,8 +876,8 @@ exports.create_post = async (req, res) => {
 
 
                     //Ciblage reunion
-                   var requestInsertionsTarget = {
-                        "countryIds":[61],
+                    var requestInsertionsTarget = {
+                        "countryIds": [61],
                         "insertionId": insertion_id,
                         "isExactMatch": true,
                         "targetBrowserWithCookies": false
