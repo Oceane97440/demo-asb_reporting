@@ -31,7 +31,7 @@
                         </label>
                         <select class="form-control" id="advertiser_id" name="advertiser_id" required="required">
 
-                            <option value="">Choisir une annonceur</option>
+                            <option value=""selected disabled>Choisir une annonceur</option>
 
                             <% for (let i=0; i < advertisers.length; i++) { %>
                             <option value="<%= advertisers[i].advertiser_id %>"><%= advertisers[i].advertiser_name %>
@@ -39,6 +39,7 @@
                             <% } %>
                         </select>
                     </div>
+
                     <legend>CAMPAGNE</legend>
 
                     <div class="form-group">
@@ -51,28 +52,41 @@
                         </select>
                     </div>
 
+                     <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label" for="date-start">Date de début de campagne
+                            </label>
+                            <input type="date" name="date-start" id="date-start" class="form-control"/>
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label" for="date-end">Date de fin de campagne
+                            </label>
+                            <input type="date" name="date-end" id="date-end" class="form-control"/>
+                        </div>
+                    </div>
+                
+
                     <div class="row">
                         <div class="form-group col-6">
                             <label class="form-label" for="format_group_id">Format
                             </label>
                             <select class="form-control" id="format_group_id" name="format_group_id"
                                 required="required">
-                                <option value="">Choisir un format</option>
-                                <% for(let i=1; i < formats.length; i++) {%>
-                                <option value="<%= formats[i].format_group %>">
-                                    <%= formats[i].format_group %></option>
+                                <option value=""selected disabled>Sélectionner le format</option>
+                                <% for(let i=1; i < group_formats.length; i++) {%>
+                                <option value="<%= group_formats[i].format_group_id %>">
+                                    <%= group_formats[i].format_group_name %></option>
                                 <% } %>
                             </select>
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label" for="pack_id">Pack
+                            <label class="form-label" for="creative_type_id">Type de créative
                             </label>
-                            <select class="form-control" id="pack_id" name="pack_id" required="required">
-                                <option value="">Choisir un pack</option>
-                                <% for (let i=0; i < packs.length; i++) { %>
-                                <option value="<%= packs[i].pack_id %>"><%= packs[i].pack_name %></option>
-                                <% } %>
+                            <select class="form-control" id="creative_type_id" name="creative_type_id" required="required">
+                                <option></option>
+                           
                             </select>
                         </div>
                     </div>
@@ -80,7 +94,10 @@
 
                 <fieldset>
                     <legend>DISPLAY</legend>
-
+                    <div class="form-group col-6">
+                        <label class="form-label" for="insertion_name">Nom de l'insertion</label>
+                        <input type="text" name="insertion_name" id="insertion_name" class="form-control" />
+                    </div>
                     <div class="row">
                         <div class="form-group col-6">
                             <label class="form-label" for="display_mobile_file">Fichier Mobile</label>
@@ -181,8 +198,9 @@
     $(document).ready(function () {
         let select_advertiser = $("#advertiser_id");
         let select_campaign = $("#campaign_id");
+        let select_format = $("#format_group_id")
+        let select_creativeType = $("#creative_type_id")
 
-        console.log(select_advertiser)
 
 
 
@@ -203,6 +221,32 @@
 
                 //on affiche sur la page l'ensemble des données
                 $("#campaign_id").html(list_campaign);
+
+            
+
+            })
+        
+        })
+
+
+        select_format.on("change", function () {
+            //model($(this).val());
+            var format_group_id = $(this).val()
+
+            console.log(format_group_id)
+            $.get(`http://127.0.0.1:3001/app/json/creative/${format_group_id}`, function (creativeType) {
+
+                
+
+                let list_creative = `<option value="" selected disabled>Sélectionner une campagne</option>`;
+                //pour chaque éléments crée un option dans le select
+                creativeType.forEach((creativeType) => {
+                    list_creative +=
+                        `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
+                });
+
+                //on affiche sur la page l'ensemble des données
+                $("#creative_type_id").html(list_creative);
 
             
 

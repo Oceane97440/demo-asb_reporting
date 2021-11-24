@@ -2054,17 +2054,18 @@ exports.duplication = async (req, res) => {
         const body = {
            // campaign_id: 1987679, //campagne selectionnée
            // campaign_id: 1989230, //campagne selectionnée
-            campaign_id:  1989229,
+           // campaign_id:  1989229,
 
-
-            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/RODALI/970x250.jpg',
-            display_desktop_url: 'https://www.rodali.fr/mise-en-avant/black-friday/black-friday-2021,95',
-
-            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/RODALI/640x100.jpg',
-            display_mobile_url: 'https://www.rodali.fr/mise-en-avant/black-friday/black-friday-2021,95',
-
-            display_tablette_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/AUTOPROMOTION/20211121/RODALI/640x100.jpg',
-            display_tablette_url: 'https://www.rodali.fr/mise-en-avant/black-friday/black-friday-2021,95',
+           campaign_id:  1990069,
+           
+            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x600.jpg',
+            display_desktop_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
+            
+            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x250.jpg',
+            display_mobile_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
+            
+            display_tablette_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x250.jpg',
+            display_tablette_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
 
         }
 
@@ -2077,7 +2078,7 @@ exports.duplication = async (req, res) => {
                 insertion_id: {
                     [Op.in]: [
 
-                        /* GRAND ANGLE 
+                        /* GRAND ANGLE */
                         10535957,
                         10535958,
                         10535959,
@@ -2090,7 +2091,7 @@ exports.duplication = async (req, res) => {
                         10535966,
                         10535967,
                         10535968,
-                        10535969*/
+                        10535969
 
                         /*Rectangle video
                         10536724,
@@ -2107,7 +2108,7 @@ exports.duplication = async (req, res) => {
                          10536735,
                          10536736*/
 
-                        /* MASTHEAD */
+                        /* MASTHEAD
                         10543043,
                         10543044,
                         10543045,
@@ -2120,7 +2121,7 @@ exports.duplication = async (req, res) => {
                         10543052,
                         10543053,
                         10543054,
-                        10543055
+                        10543055 */
 
                         /*INTERSTITIEL
                         10543020,

@@ -42,6 +42,9 @@ const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
 const ModelUser_Role = require("../models/models.roles_users")
 const ModelCampaigns = require("../models/models.campaigns")
+const ModelCreativesTypesFormats =  require("../models/models.creatives_types_formats")
+const ModelFormatsGroups=   require("../models/models.formats_groups")
+const ModelCreativesTypes =  require("../models/models.creatives_types")
 
 exports.login_add = async (req, res) => {
     const user_email = req.body.user_email;
@@ -700,6 +703,37 @@ exports.campaign_json = async (req, res) => {
                 },
                 order: [
                     ['campaign_id', 'ASC']
+                ]
+            })
+            .then(campagnes => {
+                res.json(campagnes)
+
+            })
+    } catch (error) {
+        console.log(error)
+
+    }
+}
+
+exports.creativeType_json = async (req, res) => {
+    //renvoie du json les info campagnes
+    var format_group_id = req.params.format_group_id
+    try {
+     
+        await ModelCreativesTypesFormats
+            .findAll({
+                where: {
+                    format_group_id: format_group_id,
+                
+                    
+                },
+                include: [{
+                    model: ModelCreativesTypes,
+                    attributes: ['creative_type_id', 'creative_type_name']
+                }],
+                
+                order: [
+                    ['creative_type_id', 'ASC']
                 ]
             })
             .then(campagnes => {
