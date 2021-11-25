@@ -18,24 +18,24 @@
                     </div>
                 </div>
                 <% if (message) { %>
+
+                <% if (message.type==="success") { %>
+
                 <div class="alert alert-<%=message.type%>" role="alert">
-
-                    <% if (message.type==="success") { %>
-                    <div class="alert alert-<%=message.type%>" role="alert">
-                        <%=message.intro%>:<a href="<%=message.message%>"><strong>Voir la campagne</strong> </a>
-                    </div>
-
-                    <% }else{ %>
-
-                    <div class="alert alert-<%=message.type%>" role="alert">
-                        <%=message.intro%>:<%=message.message%> </div>
-
-                    <%  } %>
-
-
-                    <%  } %>
-
+                    <%=message.intro%>:<a href="<%=message.message%>"><strong> Voir la campagne</strong> </a>
                 </div>
+
+                <% }else{ %>
+
+                <div class="alert alert-<%=message.type%>" role="alert">
+                    <%=message.intro%>:<%=message.message%> </div>
+
+
+                <%  } %>
+
+
+                <%  } %>
+
 
 
                 <fieldset>
@@ -235,7 +235,7 @@
             var advertiser_id = $(this).val()
 
             console.log(advertiser_id)
-            $.get(`http://127.0.0.1:3001/app/json/campaign/${advertiser_id}`, function (campagnes) {
+            $.get(`https://reporting.antennesb.fr/app/json/campaign/${advertiser_id}`, function (campagnes) {
 
 
                 let list_campaign =
@@ -261,7 +261,7 @@
             var format_group_id = $(this).val()
 
             console.log(format_group_id)
-            $.get(`http://127.0.0.1:3001/app/json/creative/${format_group_id}`, function (
+            $.get(`https://reporting.antennesb.fr/app/json/creative/${format_group_id}`, function (
                 creativeType) {
 
 

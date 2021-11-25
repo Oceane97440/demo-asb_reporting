@@ -754,7 +754,7 @@ exports.create_post = async (req, res) => {
 
         req.session.message = {
             type: 'success',
-            intro: 'Les insertions ont été crées dans SMARTADSERVEUR ',
+            intro: 'Les insertions ont été crées dans SMARTADSERVER',
             message: `https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=${campaign_id}`
         }
         return res.redirect("/manager/insertions/create")
