@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <title></title>
-        <!--[if lt IE 11]> <script
+
+<head>
+    <title></title>
+    <!--[if lt IE 11]> <script
         src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script> <script
         src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <!-- Meta -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <!-- font css
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- font css
         <link rel="stylesheet" href="http://127.0.0.1/dashboardkit-free-v1.0/dist/assets/fonts/feather.css">
         <link rel="stylesheet" href="http://127.0.0.1/dashboardkit-free-v1.0/dist/assets/fonts/fontawesome.css">
         <link rel="stylesheet" href="http://127.0.0.1/dashboardkit-free-v1.0/dist/assets/fonts/material.css">
         -->
-        <!-- vendor css -->
-        <link rel="stylesheet" href="/assets/css/style.css" id="main-style-link">
+    <!-- vendor css -->
+    <link rel="stylesheet" href="/assets/css/style.css" id="main-style-link">
 
-        <!-- Favicon icon <link rel="icon" href="http://localhost:3022/assets/images/favicon.svg"
+    <!-- Favicon icon <link rel="icon" href="http://localhost:3022/assets/images/favicon.svg"
         type="image/x-icon"> -->
-        <!-- font css -->
-        <link rel="stylesheet" href="/assets/fonts/feather.css">
-        <link rel="stylesheet" href="/assets/fonts/fontawesome.css">
-        <link rel="stylesheet" href="/assets/fonts/material.css">
-        <!-- <link
+    <!-- font css -->
+    <link rel="stylesheet" href="/assets/fonts/feather.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/assets/fonts/material.css">
+    <!-- <link
             rel="stylesheet"
             href="http://localhost:3022/assets/css/style.css"
             id="main-style-link">
@@ -32,7 +33,7 @@
             rel="stylesheet"
             href="http://localhost:3022/assets/css/manager.css"
             id="main-style-link"> -->
-        <!-- 
+    <!-- 
             <link rel="icon" href="http://localhost:3670/assets/images/favicon.svg"
         type="image/x-icon"> <link rel="stylesheet"
         href="http://localhost:3670/assets/fonts/feather.css"> <link rel="stylesheet"
@@ -60,54 +61,60 @@
             })(window, document, 'script', 'dataLayer', 'GTM-KT6H7LH');
         </script>
        End Google Tag Manager -->
-       
-        <link
-            href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css"
-            rel="stylesheet"/>
-        
-    </head>
 
-    <body class="">
-        <!-- [ Pre-loader ] start -->
-        <div class="loader-bg">
-            <div class="loader-track">
-                <div class="loader-fill"></div>
-            </div>
+    <link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <style>
+        label.form-label.required:after {
+            content: " *";
+            color: red;
+        }
+
+        label.form-label.required {
+            color: red
+        }
+
+    </style>
+</head>
+
+<body class="">
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
         </div>
-        <!-- [ Pre-loader ] End -->
-        <!-- [ Mobile header ] start -->
-        <div class="pc-mob-header pc-header">
-            <div class="pcm-logo">
-                <img
-                    src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png"
-                    alt=""
-                    class="logo logo-lg">
-            </div>
-            <div class="pcm-toolbar">
-                <a href="#!" class="pc-head-link" id="mobile-collapse">
-                    <div class="hamburger hamburger--arrowturn">
-                        <div class="hamburger-box">
-                            <div class="hamburger-inner"></div>
-                        </div>
+    </div>
+    <!-- [ Pre-loader ] End -->
+    <!-- [ Mobile header ] start -->
+    <div class="pc-mob-header pc-header">
+        <div class="pcm-logo">
+            <img src="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-1-151x89.png"
+                alt="" class="logo logo-lg">
+        </div>
+        <div class="pcm-toolbar">
+            <a href="#!" class="pc-head-link" id="mobile-collapse">
+                <div class="hamburger hamburger--arrowturn">
+                    <div class="hamburger-box">
+                        <div class="hamburger-inner"></div>
                     </div>
-                </a>
-                <a href="#!" class="pc-head-link" id="headerdrp-collapse">
-                    <i data-feather="align-right"></i>
-                </a>
-                <a href="#!" class="pc-head-link" id="header-collapse">
-                    <i data-feather="more-vertical"></i>
-                </a>
-            </div>
+                </div>
+            </a>
+            <a href="#!" class="pc-head-link" id="headerdrp-collapse">
+                <i data-feather="align-right"></i>
+            </a>
+            <a href="#!" class="pc-head-link" id="header-collapse">
+                <i data-feather="more-vertical"></i>
+            </a>
         </div>
-        <!-- [ Mobile header ] End -->
+    </div>
+    <!-- [ Mobile header ] End -->
 
-        <%- include("sidebar.ejs") -%>
-        <%- include("header.ejs") -%>
-      
-        <!-- [ Main Content ] start -->
-        <div class="pc-container">
-            <%- include("breadcrumb.ejs") -%>
-            <div class="pcoded-content">                     
+    <%- include("sidebar.ejs") -%>
+    <%- include("header.ejs") -%>
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+        <%- include("breadcrumb.ejs") -%>
+        <div class="pcoded-content">
 
             <!-- Chargement des widgets toast-->
             <div id="toast-widget"></div>

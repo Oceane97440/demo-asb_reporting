@@ -19,15 +19,30 @@
                 </div>
                 <% if (message) { %>
                 <div class="alert alert-<%=message.type%>" role="alert">
-                    <%=message.intro%>:<%=message.message%>
+
+                    <% if (message.type==="success") { %>
+                    <div class="alert alert-<%=message.type%>" role="alert">
+                        <%=message.intro%>:<a href="<%=message.message%>"><strong>Voir la campagne</strong> </a>
+                    </div>
+
+                    <% }else{ %>
+
+                    <div class="alert alert-<%=message.type%>" role="alert">
+                        <%=message.intro%>:<%=message.message%> </div>
+
+                    <%  } %>
+
+
+                    <%  } %>
+
                 </div>
-                <% } %>
+
 
                 <fieldset>
                     <legend>ANNONCEUR</legend>
 
                     <div class="form-group">
-                        <label class="form-label" for="advertiser_id">Annonceur
+                        <label class="form-label required" for="advertiser_id">Annonceur
                         </label>
                         <select class="form-control" id="advertiser_id" name="advertiser_id" required="required">
 
@@ -43,33 +58,34 @@
                     <legend>CAMPAGNE</legend>
 
                     <div class="form-group">
-                        <label class="form-label" for="campaign_id">Campagne
+                        <label class="form-label required" for="campaign_id">Campagne
                         </label>
                         <select class="form-control" id="campaign_id" name="campaign_id" required="required">
 
-                            <option></option>
+                            <option value="" selected disabled>Sélectionner une campagne</option>
 
                         </select>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="display: none;">
                         <div class="form-group col-6">
-                            <label class="form-label" for="date_start">Date de début de campagne
+                            <label class="form-label required" for="date_start">Date de début de campagne
                             </label>
-                            <input type="date" name="date_start" id="date_start" class="form-control" />
+                            <input type="date" name="date_start" id="date_start" class="form-control"
+                                required="required" />
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label" for="date_end">Date de fin de campagne
+                            <label class="form-label required" for="date_end">Date de fin de campagne
                             </label>
-                            <input type="date" name="date_end" id="date_end" class="form-control" />
+                            <input type="date" name="date_end" id="date_end" class="form-control" required="required" />
                         </div>
                     </div>
 
 
                     <div class="row">
-                        <div class="form-group col-6">
-                            <label class="form-label" for="format_group_id">Format
+                        <div class="form-group col-6 ">
+                            <label class="form-label required" for="format_group_id">Format
                             </label>
                             <select class="form-control" id="format_group_id" name="format_group_id"
                                 required="required">
@@ -82,34 +98,47 @@
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label" for="creative_type_id">Type de créative
+                            <label class="form-label required" for="creative_type_id">Type de créative
                             </label>
                             <select class="form-control" id="creative_type_id" name="creative_type_id"
                                 required="required">
-                                <option></option>
-
+                                <option value="" selected disabled>Sélectionner un type créative</option>
                             </select>
                         </div>
                     </div>
                 </fieldset>
 
                 <legend>INSERTION CREATIVE</legend>
-                    <div class="form-group col-6">
-                        <label class="form-label" for="insertion_name">Nom de l'insertion</label>
-                        <input type="text" name="insertion_name" id="insertion_name" class="form-control"  placeholder="GRAND ANGLE APPLI INFO"/>
-                    </div>
+                <div class="form-group col-6">
+                    <label class="form-label" for="insertion_name">Nom de l'insertion</label>
+                    <input type="text" name="insertion_name" id="insertion_name" class="form-control"
+                        placeholder="Saisissez un nom insertion" />
+                </div>
                 <fieldset id="creativeImage">
                     <legend>DISPLAY</legend>
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label" for="display_mobile_file">Fichier Mobile</label>
+                            <label class="form-label required" for="display_desktop_file">Fichier Desktop</label>
+                            <input type="url" name="display_desktop_file" id="display_desktop_file" class="form-control"
+                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_desktop_url">Url Desktop</label>
+                            <input type="url" name="display_desktop_url" id="display_desktop_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le desktop" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_mobile_file">Fichier Mobile</label>
                             <input type="url" name="display_mobile_file" id="display_mobile_file" class="form-control"
                                 placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label" for="display_mobile_url">Url Mobile</label>
+                            <label class="form-label required" for="display_mobile_url">Url Mobile</label>
                             <input type="url" name="display_mobile_url" id="display_mobile_url" class="form-control"
                                 placeholder="Saisissez l'url de redirection pour le mobile" />
                         </div>
@@ -117,42 +146,31 @@
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label" for="display_tablet_file">Fichier Tablette</label>
+                            <label class="form-label required" for="display_tablet_file">Fichier Tablette</label>
                             <input type="url" name="display_tablet_file" id="display_tablet_file" class="form-control"
                                 placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
                         </div>
                         <div class="form-group col-6">
-                            <label class="form-label" for="display_tablet_url">Url Tablette</label>
+                            <label class="form-label required" for="display_tablet_url">Url Tablette</label>
                             <input type="url" name="display_tablet_url" id="display_tablet_url" class="form-control"
                                 placeholder="Saisissez l'url de redirection pour la tablette" />
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <label class="form-label" for="display_desktop_file">Fichier Desktop</label>
-                            <input type="url" name="display_desktop_file" id="display_desktop_file" class="form-control"
-                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG" />
-                        </div>
-                        <div class="form-group col-6">
-                            <label class="form-label" for="display_desktop_url">Url Desktop</label>
-                            <input type="url" name="display_desktop_url" id="display_desktop_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour le desktop" />
-                        </div>
-                    </div>
+
                 </fieldset>
 
                 <fieldset id="creativeVideo">
                     <legend>VIDEO</legend>
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label" for="video_file">Fichier Vidéo</label>
+                            <label class="form-label required" for="video_file">Fichier Vidéo</label>
                             <input type="url" name="video_file" id="video_file" class="form-control"
                                 placeholder="Saisissez l'url du fichier au format MP4" />
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label" for="video_url">Url Vidéo</label>
+                            <label class="form-label required" for="video_url">Url Vidéo</label>
                             <input type="url" name="video_url" id="video_url" class="form-control"
                                 placeholder="Saisissez l'url de redirection" />
                         </div>
@@ -164,6 +182,7 @@
                 <input type="submit" name="submit" class="btn btn-primary mr-2 btn-submit"
                     value="Créer une nouvelle insertion" />
             </div>
+
         </form>
     </div>
 
@@ -209,7 +228,7 @@
         $("#creativeImage").hide();
         $("#creativeVideo").hide();
 
-        
+
 
         select_advertiser.on("change", function () {
             //model($(this).val());
@@ -243,12 +262,12 @@
 
             console.log(format_group_id)
             $.get(`http://127.0.0.1:3001/app/json/creative/${format_group_id}`, function (
-            creativeType) {
+                creativeType) {
 
 
 
                 let list_creative =
-                    `<option value="" selected disabled>Sélectionner une campagne</option>`;
+                    `<option value="" selected disabled>Sélectionner un type créative</option>`;
                 //pour chaque éléments crée un option dans le select
                 creativeType.forEach((creativeType) => {
                     list_creative +=
@@ -272,17 +291,17 @@
 
             console.log(creativeType_id)
 
-            if (creativeType_id === '1' || creativeType_id === '3') {
+            if (creativeType_id === '1') {
                 $('#creativeImage').show();
-            }else{
+            } else {
                 $("#creativeImage").hide();
 
             }
 
-            if (creativeType_id === '2' ) {
+            if (creativeType_id === '2') {
                 $('#creativeVideo').show();
 
-            }else{
+            } else {
                 $("#creativeVideo").hide();
 
             }
@@ -291,6 +310,17 @@
         })
 
 
+        const now = new Date();
+
+        var timestamp_now = now.setDate(now.getDate() + 1);
+        var timestamp_end = now.setDate(now.getDate() + 15);
+
+        const date_start_last = new Date(timestamp_now)
+        const date_end_last = new Date(timestamp_end)
+
+
+        document.getElementById("date_start").valueAsDate = date_start_last;
+        document.getElementById("date_end").valueAsDate = date_end_last;
 
     })
 </script>

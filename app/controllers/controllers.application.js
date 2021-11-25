@@ -724,12 +724,13 @@ exports.creativeType_json = async (req, res) => {
             .findAll({
                 where: {
                     format_group_id: format_group_id,
-                
+                    creative_type_id:[1,2]
                     
                 },
                 include: [{
                     model: ModelCreativesTypes,
                     attributes: ['creative_type_id', 'creative_type_name']
+                    
                 }],
                 
                 order: [
