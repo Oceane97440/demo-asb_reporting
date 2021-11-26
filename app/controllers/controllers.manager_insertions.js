@@ -340,7 +340,7 @@ exports.create = async (req, res) => {
         data.group_formats = await ModelGroupFormats.findAll({
             attributes: ['format_group_id', 'format_group_name'],
             where: {
-                format_group_id: [1, 2, 3, 4, 9, 12]
+                format_group_id: [2, 3, 4, 9, 12]
             },
             order: [
                 ['format_group_name', 'DESC']
