@@ -516,7 +516,7 @@ exports.create_post = async (req, res) => {
             where: {
                 campaign_id: 1988414, //campagne_id model
                 insertion_name: {
-                    [Op.like]: "%" + formatGroupName + "%"
+                    [Op.like]: "%" + formatGroupName +' -'+ "%"
                 }
             }
         }).then(async function (insertion_model) {
@@ -526,6 +526,8 @@ exports.create_post = async (req, res) => {
 
                     var insertion_id_model = insertion_model[i].insertion_id
                     var insertion_name_model = insertion_model[i].insertion_name
+
+                  //  console.log(insertion_name_model)
 
                     //Si input text n'est pas vide
                     if (!Utilities.empty(insertion_name)) {
