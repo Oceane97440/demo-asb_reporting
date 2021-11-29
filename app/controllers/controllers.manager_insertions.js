@@ -313,7 +313,12 @@ exports.create = async (req, res) => {
                         [Op.notIn]: advertiserExclus
                     }
                 }],
+               
             },
+            include: [{
+                model: ModelCampaigns,
+                
+            }],
 
             order: [
                 // Will escape title and validate DESC against a list of valid direction
@@ -322,6 +327,8 @@ exports.create = async (req, res) => {
                 // ['campaign_name', 'ASC']
             ]
         });
+
+        
 
         data.deliverytypes = await ModelDeliverytTypes.findAll({
             where: {
@@ -340,12 +347,14 @@ exports.create = async (req, res) => {
         data.group_formats = await ModelGroupFormats.findAll({
             attributes: ['format_group_id', 'format_group_name'],
             where: {
-                format_group_id: [2, 3, 4, 9, 12]
+                format_group_id: [2, 3, 4, 9, 12,16,17,18]
             },
             order: [
                 ['format_group_name', 'DESC']
             ],
         })
+
+        data.utilities = Utilities
 
         data.formats = await ModelFormats.findAll({
             attributes: ['format_group'],
@@ -468,31 +477,6 @@ exports.create_post = async (req, res) => {
         }
 
 
-        //date aujourd'hui en timestamp 
-        /* const date_now = Date.now();
-         const timstasp_start = Date.parse(date_start);
-         const timstasp_end = Date.parse(date_end);
-
-         // si date aujourd'hui est >= à la date selectionné envoie une erreur ou date debut > à la date de fin
-         if (timstasp_start <= date_now || timstasp_start >= timstasp_end) {
-             req.session.message = {
-                 type: 'danger',
-                 intro: 'Un problème est survenu',
-                 message: 'La date de début doit être J+1 à la date du jour'
-             }
-             return res.redirect('/manager/insertions/create');
-         }
-
-         // si date aujourd'hui est >= à la date selectionné envoie une erreur ou la date de fin < à la date de début
-         if (timstasp_end <= date_now || timstasp_end <= timstasp_start) {
-             req.session.message = {
-                 type: 'danger',
-                 intro: 'Un problème est survenu',
-                 message: 'La date de fin doit être supérieur à la date du jour'
-             }
-             return res.redirect('/manager/insertions/create');
-         }*/
-
         const formatGroup = await ModelFormatsGroups.findOne({
             where: {
                 format_group_id: format_group_id
@@ -500,15 +484,27 @@ exports.create_post = async (req, res) => {
         });
 
         //recupération du nom du format group
-        var formatGroupName = formatGroup.format_group_name
+        var formatGroupName = formatGroup.format_group_name + ' -'
 
         //si format interstitel video
         if ((format_group_id === '2') && (creative_type_id === '2')) {
-            formatGroupName = "INTERSTITIEL VIDEO"
+            formatGroupName = "INTERSTITIEL VIDEO -"
         }
         //si format instream
         if (format_group_id === '9') {
-            formatGroupName = "PREROLL/ MIDROLL"
+            formatGroupName = "PREROLL"
+        }
+        //GRAND ANGLE DUPLICATION POSITION MASTHEAD
+        if (format_group_id === '16') {
+            formatGroupName = "GRAND ANGLE M -"
+        }
+        //MASTHEAD DUPLICATION POSITION GRAND ANGLE
+        if (format_group_id === '17') {
+            formatGroupName = "MASTHEAD G -"
+        }
+        //RECTANGLE VIDEO DUPLICATION POSITION MASTHEAD
+        if (format_group_id === '18') {
+            formatGroupName = "RECTANGLE VIDEO M -"
         }
 
         //Recupère la campagne modèle + filtre en fonction du name du l'insertion
@@ -516,7 +512,7 @@ exports.create_post = async (req, res) => {
             where: {
                 campaign_id: 1988414, //campagne_id model
                 insertion_name: {
-                    [Op.like]: "%" + formatGroupName +' -'+ "%"
+                    [Op.like]: "%" + formatGroupName + "%"
                 }
             }
         }).then(async function (insertion_model) {
@@ -527,7 +523,7 @@ exports.create_post = async (req, res) => {
                     var insertion_id_model = insertion_model[i].insertion_id
                     var insertion_name_model = insertion_model[i].insertion_name
 
-                  //  console.log(insertion_name_model)
+                    console.log(insertion_name_model)
 
                     //Si input text n'est pas vide
                     if (!Utilities.empty(insertion_name)) {
