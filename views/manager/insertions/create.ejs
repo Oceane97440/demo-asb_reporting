@@ -67,33 +67,31 @@
                         </select>
                     </div>
 
-                    <div class="row" style="display: none;">
-                        <div class="form-group col-6">
-                            <label class="form-label required" for="date_start">Date de début de campagne
-                            </label>
-                            <input type="date" name="date_start" id="date_start" class="form-control"
-                                required="required" />
-                        </div>
-
-                        <div class="form-group col-6">
-                            <label class="form-label required" for="date_end">Date de fin de campagne
-                            </label>
-                            <input type="date" name="date_end" id="date_end" class="form-control" required="required" />
-                        </div>
-                    </div>
 
 
                     <div class="row">
                         <div class="form-group col-6 ">
+
+
                             <label class="form-label required" for="format_group_id">Format
                             </label>
                             <select class="form-control" id="format_group_id" name="format_group_id"
                                 required="required">
                                 <option value="" selected disabled>Sélectionner le format</option>
-                                <% for(let i=0; i < group_formats.length; i++) {%>
-                                <option value="<%= group_formats[i].format_group_id %>">
-                                    <%= group_formats[i].format_group_name %></option>
-                                <% } %>
+                                <optgroup label="MASTHEAD">
+                                    <option value="3">MASTHEAD</option>
+                                    <option value="17">DUPLICATION POSITION GRAND ANGLE</option>
+                                </optgroup>
+                                <optgroup label="RECTANGLE VIDEO">
+                                    <option value="12">RECTANGLE VIDEO</option>
+                                    <option value="18">DUPLICATION POSITION MASTHEAD</option>
+                                </optgroup>
+                                <optgroup label="GRAND ANGLE">
+                                    <option value="4">GRAND ANGLE</option>
+                                    <option value="16">DUPLICATION POSITION MASTHEAD</option>
+                                </optgroup>
+                                <option value="2" style="font-weight: bold;">INTERSTITIEL</option>
+                                <option value="9"style="font-weight: bold;">INSTREAM</option>
                             </select>
                         </div>
 
@@ -235,7 +233,8 @@
             var advertiser_id = $(this).val()
 
             console.log(advertiser_id)
-            $.get(`https://reporting.antennesb.fr/app/json/campaign/${advertiser_id}`, function (campagnes) {
+            $.get(`https://reporting.antennesb.fr/app/json/campaign/${advertiser_id}`, function (
+                campagnes) {
 
 
                 let list_campaign =
