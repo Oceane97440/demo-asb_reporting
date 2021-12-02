@@ -347,7 +347,7 @@ exports.create = async (req, res) => {
         data.group_formats = await ModelGroupFormats.findAll({
             attributes: ['format_group_id', 'format_group_name'],
             where: {
-                format_group_id: [2, 3, 4, 9, 12,16,17,18]
+                format_group_id: [1,2, 3, 4, 9, 12,16,17,18]
             },
             order: [
                 ['format_group_name', 'DESC']
@@ -404,6 +404,17 @@ exports.create_post = async (req, res) => {
             display_tablet_url: req.body.display_tablet_url,
             display_desktop_file: req.body.display_desktop_file,
             display_desktop_url: req.body.display_desktop_url,
+
+            display_linfo_file: req.body.display_linfo_file,
+            display_linfo_url: req.body.display_linfo_url,
+            display_linfo_appli_file: req.body.display_linfo_appli_file,
+            display_linfo_appli_url: req.body.display_linfo_appli_url,
+            display_ar_file: req.body.display_ar_file,
+            display_ar_url: req.body.display_ar_url,
+            display_linfo_mobile_file: req.body.display_linfo_mobile_file,
+            display_linfo_mobile_url: req.body.display_linfo_mobile_url,
+
+
             video_file: req.body.video_file,
             video_url: req.body.video_url,
         }
@@ -415,8 +426,7 @@ exports.create_post = async (req, res) => {
         const format_group_id = body.format_group_id;
         const creative_type_id = body.creative_type_id;
         const insertion_name = body.insertion_name;
-        const date_start = body.date_start;
-        const date_end = body.date_end;
+      
 
 
         const display_mobile_file = body.display_mobile_file;
@@ -434,6 +444,7 @@ exports.create_post = async (req, res) => {
 
 
         console.log(body)
+        process.exit()
 
         if (Utilities.empty(advertiser_id) ||
             Utilities.empty(campaign_id) ||

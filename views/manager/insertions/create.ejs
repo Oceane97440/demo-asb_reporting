@@ -90,16 +90,17 @@
                                     <option value="4">GRAND ANGLE</option>
                                     <option value="16">DUPLICATION POSITION MASTHEAD</option>
                                 </optgroup>
+                                <option value="1" style="font-weight: bold;">HABILLAGE</option>
                                 <option value="2" style="font-weight: bold;">INTERSTITIEL</option>
-                                <option value="9"style="font-weight: bold;">INSTREAM</option>
+                                <option value="9" style="font-weight: bold;">INSTREAM</option>
                             </select>
                         </div>
 
-                        <div class="form-group col-6">
+                        <div class="form-group col-6" id="creativeType">
                             <label class="form-label required" for="creative_type_id">Type de créative
                             </label>
                             <select class="form-control" id="creative_type_id" name="creative_type_id"
-                                required="required">
+                                >
                                 <option value="" selected disabled>Sélectionner un type créative</option>
                             </select>
                         </div>
@@ -156,6 +157,64 @@
                     </div>
 
 
+                </fieldset>
+
+                <fieldset id="creativeHabillage">
+                    <legend>DISPLAY HABILLAGE</legend>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_file">Fichier LINFO</label>
+                            <input type="url" name="display_linfo_file" id="display_linfo_file" class="form-control"
+                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_url">Url LINFO</label>
+                            <input type="url" name="display_linfo_url" id="display_linfo_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le desktop" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_appli_file">Fichier LINFO APPLI</label>
+                            <input type="url" name="display_linfo_appli_file" id="display_linfo_appli_file" class="form-control"
+                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_appli_url">Url LINFO APPLI</label>
+                            <input type="url" name="display_linfo_appli_url" id="display_linfo_appli_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le mobile" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_ar_file">Fichier ANTENNE REUNION</label>
+                            <input type="url" name="display_ar_file" id="display_ar_file" class="form-control"
+                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_ar_url">Url ANTENNE REUNION</label>
+                            <input type="url" name="display_ar_url" id="display_ar_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour la tablette" />
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_mobile_file">Fichier LINFO MOBILE</label>
+                            <input type="url" name="display_linfo_mobile_file" id="display_linfo_mobile_file" class="form-control"
+                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_mobile_url">Url LINFO MOBILE</label>
+                            <input type="url" name="display_linfo_mobile_url" id="display_linfo_mobile_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour la tablette" />
+                        </div>
+                    </div>
                 </fieldset>
 
                 <fieldset id="creativeVideo">
@@ -225,6 +284,8 @@
 
         $("#creativeImage").hide();
         $("#creativeVideo").hide();
+        $("#creativeHabillage").hide();
+
 
 
 
@@ -259,36 +320,48 @@
             //model($(this).val());
             var format_group_id = $(this).val()
 
-            console.log(format_group_id)
             $.get(`https://reporting.antennesb.fr/app/json/creative/${format_group_id}`, function (
                 creativeType) {
 
 
 
-                let list_creative =
-                    `<option value="" selected disabled>Sélectionner un type créative</option>`;
-                //pour chaque éléments crée un option dans le select
-                creativeType.forEach((creativeType) => {
-                    list_creative +=
-                        `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
-                });
-
-                //on affiche sur la page l'ensemble des données
-                $("#creative_type_id").html(list_creative);
 
 
+
+                if (format_group_id === '1') {
+                    $("#creativeType").hide();
+                    $("#creativeHabillage").show();
+                    $("#creativeImage").hide();
+                    $("#creativeVideo").hide();
+                  
+
+
+                } else {
+                    $("#creativeType").show();
+                    $("#creativeHabillage").hide();
+                    let list_creative =
+                        `<option value="" selected disabled>Sélectionner un type créative</option>`;
+                    //pour chaque éléments crée un option dans le select
+                    creativeType.forEach((creativeType) => {
+                        list_creative +=
+                            `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
+                    });
+
+                    //on affiche sur la page l'ensemble des données
+                    $("#creative_type_id").html(list_creative);
+
+                }
 
 
             })
 
+
+
         })
-
-
-
         select_creativeType.on("change", function () {
             var creativeType_id = $(this).val()
 
-            console.log(creativeType_id)
+
 
             if (creativeType_id === '1') {
                 $('#creativeImage').show();
@@ -296,6 +369,8 @@
                 $("#creativeImage").hide();
 
             }
+
+
 
             if (creativeType_id === '2') {
                 $('#creativeVideo').show();
@@ -307,20 +382,6 @@
 
 
         })
-
-
-        const now = new Date();
-
-        var timestamp_now = now.setDate(now.getDate() + 1);
-        var timestamp_end = now.setDate(now.getDate() + 15);
-
-        const date_start_last = new Date(timestamp_now)
-        const date_end_last = new Date(timestamp_end)
-
-
-        document.getElementById("date_start").valueAsDate = date_start_last;
-        document.getElementById("date_end").valueAsDate = date_end_last;
-
     })
 </script>
 </body>
