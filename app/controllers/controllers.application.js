@@ -662,7 +662,7 @@ exports.campaign_json = async (req, res) => {
     try {
         const advertiserExclus = new Array(
             418935,
-            427952,
+            //427952,
           //  409707,
             425912,
             425914,

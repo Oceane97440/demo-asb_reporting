@@ -277,7 +277,7 @@ exports.create = async (req, res) => {
         });
         const advertiserExclus = new Array(
             418935,
-            427952,
+            //427952,
             // 409707,
             425912,
             425914,
@@ -313,11 +313,11 @@ exports.create = async (req, res) => {
                         [Op.notIn]: advertiserExclus
                     }
                 }],
-               
+
             },
             include: [{
                 model: ModelCampaigns,
-                
+
             }],
 
             order: [
@@ -328,7 +328,7 @@ exports.create = async (req, res) => {
             ]
         });
 
-        
+
 
         data.deliverytypes = await ModelDeliverytTypes.findAll({
             where: {
@@ -347,7 +347,7 @@ exports.create = async (req, res) => {
         data.group_formats = await ModelGroupFormats.findAll({
             attributes: ['format_group_id', 'format_group_name'],
             where: {
-                format_group_id: [1,2, 3, 4, 9, 12,16,17,18]
+                format_group_id: [1, 2, 3, 4, 9, 12, 13,16, 17, 18]
             },
             order: [
                 ['format_group_name', 'DESC']
@@ -396,8 +396,8 @@ exports.create_post = async (req, res) => {
             date_end: req.body.date_end,
             format_group_id: req.body.format_group_id,
             creative_type_id: req.body.creative_type_id,
-
             insertion_name: req.body.insertion_name,
+
             display_mobile_file: req.body.display_mobile_file,
             display_mobile_url: req.body.display_mobile_url,
             display_tablet_file: req.body.display_tablet_file,
@@ -411,22 +411,24 @@ exports.create_post = async (req, res) => {
             display_linfo_appli_url: req.body.display_linfo_appli_url,
             display_ar_file: req.body.display_ar_file,
             display_ar_url: req.body.display_ar_url,
-            display_linfo_mobile_file: req.body.display_linfo_mobile_file,
-            display_linfo_mobile_url: req.body.display_linfo_mobile_url,
-
+            display_dtj_file: req.body.display_dtj_file,
+            display_dtj_url: req.body.display_dtj_url,
+            display_mea_file: req.body.display_mea_file,
+            display_mea_url: req.body.display_mea_url,
 
             video_file: req.body.video_file,
             video_url: req.body.video_url,
         }
 
 
+        console.log(body)
 
         const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
         const format_group_id = body.format_group_id;
-        const creative_type_id = body.creative_type_id;
+        var creative_type_id = body.creative_type_id;
         const insertion_name = body.insertion_name;
-      
+
 
 
         const display_mobile_file = body.display_mobile_file;
@@ -438,18 +440,26 @@ exports.create_post = async (req, res) => {
         const display_desktop_file = body.display_desktop_file;
         const display_desktop_url = body.display_desktop_url;
 
+        const display_linfo_file = body.display_linfo_file
+        const display_linfo_url = body.display_linfo_url
+        const display_linfo_appli_file = body.display_linfo_appli_file
+        const display_linfo_appli_url = body.display_linfo_appli_url
+        const display_ar_file = body.display_ar_file
+        const display_ar_url = body.display_ar_url
+        const display_dtj_file = body.display_dtj_file
+        const display_dtj_url = body.display_dtj_url
+        const display_mea_file = body.display_mea_file
+        const display_mea_url = body.display_mea_url
+
         const video_file = body.video_file;
         const video_url = body.video_url;
 
 
 
-        console.log(body)
-        process.exit()
 
         if (Utilities.empty(advertiser_id) ||
             Utilities.empty(campaign_id) ||
-            Utilities.empty(format_group_id) ||
-            Utilities.empty(creative_type_id)
+            Utilities.empty(format_group_id)
         ) {
             req.session.message = {
                 type: 'danger',
@@ -459,12 +469,12 @@ exports.create_post = async (req, res) => {
             return res.redirect('/manager/insertions/create');
         }
 
-        if ((creative_type_id) === '1' && (Utilities.empty(display_mobile_file) ||
-                Utilities.empty(display_mobile_url) ||
-                Utilities.empty(display_tablet_file) ||
-                Utilities.empty(display_tablet_url) ||
-                Utilities.empty(display_desktop_file) ||
-                Utilities.empty(display_desktop_url)
+        if ((creative_type_id === '1') && ((Utilities.empty(display_mobile_file) ||
+                    Utilities.empty(display_mobile_url) ||
+                    Utilities.empty(display_tablet_file) ||
+                    Utilities.empty(display_tablet_url) ||
+                    Utilities.empty(display_desktop_file) ||
+                    Utilities.empty(display_desktop_url)) && (format_group_id !== '1') && (format_group_id !== '13')
 
             )) {
 
@@ -517,6 +527,9 @@ exports.create_post = async (req, res) => {
         if (format_group_id === '18') {
             formatGroupName = "RECTANGLE VIDEO M -"
         }
+        if (format_group_id === '13') {
+            formatGroupName = "MEA -"
+        }
 
         //Recupère la campagne modèle + filtre en fonction du name du l'insertion
         await ModelInsertions.findAll({
@@ -536,6 +549,7 @@ exports.create_post = async (req, res) => {
 
                     console.log(insertion_name_model)
 
+
                     //Si input text n'est pas vide
                     if (!Utilities.empty(insertion_name)) {
                         insertion_name_model = insertion_model[i].insertion_name + ' - ' + insertion_name
@@ -544,7 +558,7 @@ exports.create_post = async (req, res) => {
                     requestInsertionsCopy = {
 
                         "name": insertion_name_model, //recupération du nom de l'insertion GET
-                        "campaignId": campaign_id,                   
+                        "campaignId": campaign_id,
                         "ignorePlacements": "false",
                         "ignoreCreatives": "false"
 
@@ -557,7 +571,7 @@ exports.create_post = async (req, res) => {
                         insertion_id_model
                     );
 
-                   // console.log(requestInsertionsCopy)
+                    // console.log(requestInsertionsCopy)
 
 
                     if (insertion_copy.headers.location) {
@@ -565,9 +579,9 @@ exports.create_post = async (req, res) => {
                         var url_location = insertion_copy.headers.location
                         var insertion_get = await AxiosFunction.getManage(url_location);
                         const insertion_id = insertion_get.data.id
-                       // console.log('insertion_id dupliqués ' + insertion_id)
+                        // console.log('insertion_id dupliqués ' + insertion_id)
 
-                       //recupération data des creatives
+                        //recupération data des creatives
                         var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
                         var dataValue = insertions_creatives_get.data;
                         var number_line_offset = insertions_creatives_get.data.length;
@@ -583,7 +597,7 @@ exports.create_post = async (req, res) => {
                                 var creatives_height = dataValue[d].height
                                 var creatives_typeId = dataValue[d].creativeTypeId
 
-                                /*console.log({
+                                console.log({
                                     'creatives_id': creatives_id,
                                     'creatives_name': creatives_name,
                                     'creatives_fileName': creatives_fileName,
@@ -591,7 +605,7 @@ exports.create_post = async (req, res) => {
                                     'creatives_height': creatives_height,
                                     'creatives_typeId': creatives_typeId,
 
-                                })*/
+                                })
 
 
                                 var requestCreatives = {
@@ -613,7 +627,7 @@ exports.create_post = async (req, res) => {
                                 }
 
                                 //Creative de type image
-                                if (creatives_typeId === 1) {
+                                if ((creatives_typeId === 1) && (format_group_id !== '1')) {
 
                                     //format grand angle mobile
                                     if (creatives_name.match(/300x250/igm)) {
@@ -642,7 +656,7 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     //format interstitiel tablette
-                                    if (creatives_name.match(/1536x2048_20211112141143307/igm)) {
+                                    if (creatives_width === 1536) {
                                         //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_tablet_file
                                         requestCreatives['clickUrl'] = display_tablet_url
@@ -652,8 +666,8 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     //format interstitiel mobile
-                                    if (creatives_name.match(/720x1280_20211112141153742/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
+                                    if (creatives_width === 720) {
+                                        //Attention j'ai delete SM-ANDROID LINFO
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
                                         requestCreatives['width'] = 720
@@ -661,11 +675,78 @@ exports.create_post = async (req, res) => {
 
                                     }
 
-                                    //format habillage mobile
+                                    //format interstitiel mobile
                                     if (creatives_width === 1024) {
                                         //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
+                                        requestCreatives['width'] = 1024
+                                        requestCreatives['height'] = 320
+
+                                    }
+
+                                    //format interstitiel mobile
+                                    if (creatives_name.match(/CATALOGUE - VIGNETTE/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_mea_file
+                                        requestCreatives['clickUrl'] = display_mea_url
+                                        requestCreatives['width'] = 354
+                                        requestCreatives['height'] = 500
+
+                                    }
+
+                                    await AxiosFunction.putManage(
+                                        'imagecreatives',
+                                        requestCreatives
+                                    );
+                                }
+
+                                //Creative de type image - format habillage
+                                if ((creatives_typeId === 1) && (format_group_id === '1')) {
+
+                                    if (creatives_name.match(/HABILLAGE - AR/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_ar_file
+                                        requestCreatives['clickUrl'] = display_ar_url
+                                        requestCreatives['name'] = " HABILLAGE - AR"
+
+
+                                    }
+
+                                    if (creatives_name.match(/HABILLAGE - LINFO/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_linfo_file
+                                        requestCreatives['clickUrl'] = display_linfo_url
+                                        requestCreatives['name'] = "HABILLAGE - LINFO"
+
+
+                                    }
+
+                                    if (creatives_name.match(/HABILLAGE - LINFO MOBILE/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_linfo_appli_file
+                                        requestCreatives['clickUrl'] = display_linfo_appli_url
+                                        requestCreatives['name'] = " HABILLAGE - LINFO MOBILE"
+
+
+                                    }
+
+                                    if (creatives_name.match(/HABILLAGE - DOMTOMJOB/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_dtj_file
+                                        requestCreatives['clickUrl'] = display_dtj_url
+                                        requestCreatives['name'] = "HABILLAGE - DOMTOMJOB"
+
+
+                                    }
+
+                                    //format habillage appli linfo
+                                    if (creatives_name.match(/habillage - appli linfo/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = display_linfo_appli_file
+                                        requestCreatives['clickUrl'] = display_linfo_appli_url
+                                        requestCreatives['name'] = "habillage - appli linfo"
+                                        requestCreatives['fileName'] = "1024x320"
                                         requestCreatives['width'] = 1024
                                         requestCreatives['height'] = 320
 
@@ -712,7 +793,7 @@ exports.create_post = async (req, res) => {
                                     var scriptcreatives_get = await AxiosFunction.getManageCopy('scriptcreatives', creatives_id);
                                     var dataValueCreative = scriptcreatives_get.data;
                                     var script_creative = dataValueCreative.script
-                                   // console.log(script_creative)
+                                    // console.log(script_creative)
 
                                     const regex1 = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif)/igm;
                                     const regex2 = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
@@ -740,7 +821,7 @@ exports.create_post = async (req, res) => {
 
 
 
-                             //   console.log("--------------------------")
+                                //   console.log("--------------------------")
 
 
 
@@ -994,7 +1075,7 @@ exports.create_creative = async (req, res) => {
 
         data.insertions = await ModelInsertions.findOne({
             where: {
-                insertion_id: req.params.id
+                insertion_id: req.body.params.id
             },
 
         });

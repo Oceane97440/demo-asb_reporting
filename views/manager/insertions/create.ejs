@@ -93,14 +93,15 @@
                                 <option value="1" style="font-weight: bold;">HABILLAGE</option>
                                 <option value="2" style="font-weight: bold;">INTERSTITIEL</option>
                                 <option value="9" style="font-weight: bold;">INSTREAM</option>
+                                <option value="13" style="font-weight: bold;">MISE EN AVANTS</option>
+
                             </select>
                         </div>
 
                         <div class="form-group col-6" id="creativeType">
                             <label class="form-label required" for="creative_type_id">Type de créative
                             </label>
-                            <select class="form-control" id="creative_type_id" name="creative_type_id"
-                                >
+                            <select class="form-control" id="creative_type_id" name="creative_type_id">
                                 <option value="" selected disabled>Sélectionner un type créative</option>
                             </select>
                         </div>
@@ -159,17 +160,39 @@
 
                 </fieldset>
 
+                <fieldset id="creativeMea">
+                    <legend>DISPLAY</legend>
+
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_mea_file">Fichier RZ LP</label>
+                            <input type="url" name="display_mea_file" id="display_mea_file" class="form-control"
+                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_mea_url">Url RZ LP</label>
+                            <input type="url" name="display_mea_url" id="display_mea_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le mobile" />
+                        </div>
+                    </div>
+
+
+
+                </fieldset>
+
                 <fieldset id="creativeHabillage">
                     <legend>DISPLAY HABILLAGE</legend>
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_linfo_file">Fichier LINFO</label>
+                            <label class="form-label required" for="display_linfo_file">Fichier Linfo (Desktop)</label>
                             <input type="url" name="display_linfo_file" id="display_linfo_file" class="form-control"
                                 placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG" />
                         </div>
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_linfo_url">Url LINFO</label>
+                            <label class="form-label required" for="display_linfo_url">Url Linfo (Desktop)</label>
                             <input type="url" name="display_linfo_url" id="display_linfo_url" class="form-control"
                                 placeholder="Saisissez l'url de redirection pour le desktop" />
                         </div>
@@ -177,26 +200,29 @@
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_linfo_appli_file">Fichier LINFO APPLI</label>
-                            <input type="url" name="display_linfo_appli_file" id="display_linfo_appli_file" class="form-control"
+                            <label class="form-label required" for="display_linfo_appli_file">Fichier Linfo (Mobile +
+                                Appli)</label>
+                            <input type="url" name="display_linfo_appli_file" id="display_linfo_appli_file"
+                                class="form-control"
                                 placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_linfo_appli_url">Url LINFO APPLI</label>
-                            <input type="url" name="display_linfo_appli_url" id="display_linfo_appli_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour le mobile" />
+                            <label class="form-label required" for="display_linfo_appli_url">Url Linfo (Mobile +
+                                Appli)</label>
+                            <input type="url" name="display_linfo_appli_url" id="display_linfo_appli_url"
+                                class="form-control" placeholder="Saisissez l'url de redirection pour le mobile" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_ar_file">Fichier ANTENNE REUNION</label>
+                            <label class="form-label required" for="display_ar_file">Fichier AntenneRéunion </label>
                             <input type="url" name="display_ar_file" id="display_ar_file" class="form-control"
                                 placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
                         </div>
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_ar_url">Url ANTENNE REUNION</label>
+                            <label class="form-label required" for="display_ar_url">Url AntenneRéunion </label>
                             <input type="url" name="display_ar_url" id="display_ar_url" class="form-control"
                                 placeholder="Saisissez l'url de redirection pour la tablette" />
                         </div>
@@ -205,13 +231,13 @@
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_linfo_mobile_file">Fichier LINFO MOBILE</label>
-                            <input type="url" name="display_linfo_mobile_file" id="display_linfo_mobile_file" class="form-control"
+                            <label class="form-label required" for="display_dtj_file">Fichier Domtomjob</label>
+                            <input type="url" name="display_dtj_file" id="display_dtj_file" class="form-control"
                                 placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
                         </div>
                         <div class="form-group col-6">
-                            <label class="form-label required" for="display_linfo_mobile_url">Url LINFO MOBILE</label>
-                            <input type="url" name="display_linfo_mobile_url" id="display_linfo_mobile_url" class="form-control"
+                            <label class="form-label required" for="display_dtj_url">Url Domtomjob</label>
+                            <input type="url" name="display_dtj_url" id="display_dtj_url" class="form-control"
                                 placeholder="Saisissez l'url de redirection pour la tablette" />
                         </div>
                     </div>
@@ -285,6 +311,8 @@
         $("#creativeImage").hide();
         $("#creativeVideo").hide();
         $("#creativeHabillage").hide();
+        $("#creativeMea").hide();
+
 
 
 
@@ -324,33 +352,69 @@
                 creativeType) {
 
 
+                switch (format_group_id) {
+                    case "1":
+                        $("#creativeType").hide();
+                        $("#creativeHabillage").show();
+                        $("#creativeMea").hide();
+                        $("#creativeImage").hide();
+                        $("#creativeVideo").hide();
+                        break;
+                    case "13":
+                        $("#creativeType").hide();
+                        $("#creativeMea").show();
+                        $("#creativeHabillage").hide();
+                        $("#creativeImage").hide();
+                        $("#creativeVideo").hide();
+                        break;
 
+                    default:
+                        $("#creativeType").show();
+                        $("#creativeHabillage").hide();
+                        $("#creativeMea").hide();
 
+                        let list_creative =
+                            `<option value="" selected disabled>Sélectionner un type créative</option>`;
+                        //pour chaque éléments crée un option dans le select
+                        creativeType.forEach((creativeType) => {
+                            list_creative +=
+                                `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
+                        });
 
+                        //on affiche sur la page l'ensemble des données
+                        $("#creative_type_id").html(list_creative);
 
-                if (format_group_id === '1') {
-                    $("#creativeType").hide();
-                    $("#creativeHabillage").show();
-                    $("#creativeImage").hide();
-                    $("#creativeVideo").hide();
-                  
-
-
-                } else {
-                    $("#creativeType").show();
-                    $("#creativeHabillage").hide();
-                    let list_creative =
-                        `<option value="" selected disabled>Sélectionner un type créative</option>`;
-                    //pour chaque éléments crée un option dans le select
-                    creativeType.forEach((creativeType) => {
-                        list_creative +=
-                            `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
-                    });
-
-                    //on affiche sur la page l'ensemble des données
-                    $("#creative_type_id").html(list_creative);
+                        break;
 
                 }
+
+
+
+                /* if (format_group_id === '1') {
+                     $("#creativeType").hide();
+                     $("#creativeHabillage").show();
+                     $("#creativeImage").hide();
+                     $("#creativeVideo").hide();
+
+
+
+                 } else {
+                     $("#creativeType").show();
+                     $("#creativeHabillage").hide();
+                     let list_creative =
+                         `<option value="" selected disabled>Sélectionner un type créative</option>`;
+                     //pour chaque éléments crée un option dans le select
+                     creativeType.forEach((creativeType) => {
+                         list_creative +=
+                             `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
+                     });
+
+                     //on affiche sur la page l'ensemble des données
+                     $("#creative_type_id").html(list_creative);
+
+                 }*/
+
+
 
 
             })
