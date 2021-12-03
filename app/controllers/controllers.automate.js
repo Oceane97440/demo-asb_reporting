@@ -3032,12 +3032,16 @@ exports.reports = async (req, res) => {
                             }
 
 
+                            
 
-                            if (campaignsReports.length > 0) {
-                                // Trie les campagnes selon la date d'expiration
+                         
+ /* 
+                          if (campaignsReports.length > 0) {
+                              // Trie les campagnes selon la date d'expiration
                                 campaignsReports.sort(function (a, b) {
                                     return a.timestamp_expiration - b.timestamp_expiration;
                                 });
+                                
 
                                 var format = req.query.format;
                                 if (!Utilities.empty(format) && (format === 'json')) {
@@ -3050,12 +3054,11 @@ exports.reports = async (req, res) => {
 
                                     return res.redirect('/r/automate/' + campaign_id);
                                 }
-                                console.log(campaignsReports)
 
                             } else {
                                 return res.json('Aucune campagne existante');
                             }
-
+*/
 
                         }
 
@@ -3066,6 +3069,32 @@ exports.reports = async (req, res) => {
 
 
                 }
+
+                console.log(campaignsReports)
+                console.log('campaignReports length '+campaignsReports.length)
+                
+                if (campaignsReports.length > 0) {
+                    // Trie les campagnes selon la date d'expiration
+                      campaignsReports.sort(function (a, b) {
+                          return a.timestamp_expiration - b.timestamp_expiration;
+                      });
+                      
+
+                      var format = req.query.format;
+                      if (!Utilities.empty(format) && (format === 'json')) {
+                           res
+                              .status(200)
+                              .json(campaignsReports);
+                      } else {
+                          campaign_crypt = campaignsReports[0].campaign_crypt;
+                         campaign_id = campaignsReports[0].campaign_id;
+
+                          return res.redirect('/r/automate/' + campaign_id);
+                      }
+
+                  } else {
+                      return res.json('Aucune campagne existante');
+                  }
 
 
             });
