@@ -55,7 +55,6 @@ exports.index = async (req, res) => {
         var statusCoded = error.response;
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
-
 }
 
 exports.campaigns = async (req, res) => {

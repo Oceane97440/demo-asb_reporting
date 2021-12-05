@@ -274,7 +274,7 @@ exports.import = async (req, res) => {
                                     'epilot_insertion_commercial': epilot_insertion_commercial
                                 }
 
-                                // console.log(data_insertion); process.exit(1); Ajoute ou MAJ la campagne
+                                 // Ajoute ou MAJ la campagne
                                 // EPILOT
                                 Utilities
                                     .updateOrCreate(ModelEpilotInsertions, {
@@ -282,11 +282,11 @@ exports.import = async (req, res) => {
                                         epilot_insertion_name: epilot_insertion_name
                                     }, data_insertion)
                                     .then(function (result) {
-                                        console.log(' - ',epilot_campaign_name,' - ',epilot_insertion_name);
+                                        console.log(' - ',data_insertion['epilot_campaign_name'],' - ',data_insertion['epilot_insertion_name']);
                                         result.item; // the model
                                         //   result.created;  bool, if a new item was created.
                                     });
-
+                                   // console.log(data_insertion); process.exit(1);
                             } else {
                                 // Gére les campagnes EPILOT
                                 if (results[i]['Campagne']) {

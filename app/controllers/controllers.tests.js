@@ -26,13 +26,54 @@ const Utilities = require('../functions/functions.utilities');
 const SmartFunction = require("../functions/functions.smartadserver.api");
 
 
-// Initialise les models
-//const ModelSite = require("../models/models.site");
-const ModelFormat = require("../models/models.formats");
-const ModelCountry = require("../models/models.countries")
-const ModelPack = require("../models/models.packs")
+// Initialise les models const ModelSite = require("../models/models.site");
+const ModelFormats = require("../models/models.formats");
+const ModelAgencies = require("../models/models.agencies");
+const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
+const ModelInsertionsPriorities = require(
+    "../models/models.insertions_priorities"
+);
+const ModelInsertionsStatus = require("../models/models.insertions_status");
+const ModelSites = require("../models/models.sites");
+const ModelCreatives = require("../models/models.creatives");
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
+const ModelEpilotInsertions = require("../models/models.epilot_insertions");
+const ModelUsers = require("../models/models.users");
+
+exports.chartCampaign = async (req, res) => {
+    try {
+        let campaign_id = req.query.campaign_id;
+        // Récupére l'ensemble des insertions de la campagne
+        var epilotCampaign = await ModelEpilotCampaigns
+            .findOne({
+                where: {
+                    campaign_id: campaign_id
+                },
+                include: [
+                  /*  {
+                        model: ModelEpilotInsertions,
+                        attributes: [
+                            'format_group_id',
+                            [sequelize.fn('sum', sequelize.col('epilot_insertion_volume')), 'insertion_volume']
+                        ],
+                        where: {
+                            epilot_campaign_id: Sequelize.col('epilot_campaigns.epilot_campaign_id'),
+                            'format_group_id': '9'
+                        },
+                        group: ['format_group_id', 'user_id']
+                    }*/
+                ]
+            })
+            .then(async function (epilotCampaign) {
+                console.log(epilotCampaign)
+            });
+
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 exports.index = async (req, res) => {
 
@@ -171,10 +212,10 @@ exports.export_excel = async (req, res) => {
         //Array of objects representing heading rows (very top)
         const heading = [
             [{
-                    value: 'Rapport : ' + campaign_name,
-                    style: styles.headerDark,
-                    alignment: styles.alignment
-                }
+                value: 'Rapport : ' + campaign_name,
+                style: styles.headerDark,
+                alignment: styles.alignment
+            }
 
             ],
 
@@ -187,18 +228,18 @@ exports.export_excel = async (req, res) => {
 
         const headingformats = [
             [{
-                    value: 'Par Format',
-                    style: styles.headerDark,
-                }
+                value: 'Par Format',
+                style: styles.headerDark,
+            }
 
             ]
 
         ];
         const headingsites = [
             [{
-                    value: 'Par Sites',
-                    style: styles.headerDark,
-                }
+                value: 'Par Sites',
+                style: styles.headerDark,
+            }
 
             ]
 
@@ -319,13 +360,13 @@ exports.export_excel = async (req, res) => {
         // specification provided above. But you should have all the fields
         // that are listed in the report specification
         const dataset_global = [{
-                impressions: table.total_impression_format,
-                clics: table.total_click_format,
-                ctr_clics: table.CTR,
-                vu: table.Total_VU,
-                repetions: table.Repetition
+            impressions: table.total_impression_format,
+            clics: table.total_click_format,
+            ctr_clics: table.CTR,
+            vu: table.Total_VU,
+            repetions: table.Repetition
 
-            }
+        }
 
 
 
@@ -907,15 +948,15 @@ exports.export_excel = async (req, res) => {
         // The merges are independent of the data.
         // A merge will overwrite all data _not_ in the top-left cell.
         const merges = [{
-                start: {
-                    row: 1,
-                    column: 1
-                },
-                end: {
-                    row: 1,
-                    column: 5
-                }
+            start: {
+                row: 1,
+                column: 1
             },
+            end: {
+                row: 1,
+                column: 5
+            }
+        },
 
 
         ]
@@ -1007,10 +1048,10 @@ exports.test_exportExcel = async (req, res) => {
         //Array of objects representing heading rows (very top)
         const heading = [
             [{
-                    value: 'Rapport :' + campaign_name,
-                    style: styles.headerDark,
-                    alignment: styles.alignment
-                }
+                value: 'Rapport :' + campaign_name,
+                style: styles.headerDark,
+                alignment: styles.alignment
+            }
 
             ],
             // ['Date de génération : ' + date_now +' | ' + 'Période diffusion :' + StartDate + '-' + EndDate
@@ -1094,35 +1135,35 @@ exports.test_exportExcel = async (req, res) => {
         // specification provided above. But you should have all the fields
         // that are listed in the report specification
         const dataset = [{
-                impressions: '19 535',
-                clics: '1 101',
-                ctr_clics: '5.64%',
-                vu: '9 341',
-                repetions: '2.09'
+            impressions: '19 535',
+            clics: '1 101',
+            ctr_clics: '5.64%',
+            vu: '9 341',
+            repetions: '2.09'
 
-            },
+        },
 
 
 
         ]
         const dataset2 = [{
-                sites: 'SM_LINFO.re',
-                impressions: '1 503	',
-                clics: '111',
-                ctr_clics: '7.39%',
-                // vtr: '55.76%',
-                repetions: '0'
+            sites: 'SM_LINFO.re',
+            impressions: '1 503	',
+            clics: '111',
+            ctr_clics: '7.39%',
+            // vtr: '55.76%',
+            repetions: '0'
 
-            },
-            {
-                sites: 'SM_LINFO.re',
-                impressions: '1 503	',
-                clics: '111',
-                ctr_clics: '7.39%',
-                // vtr: '55.76%',
-                repetions: '0'
+        },
+        {
+            sites: 'SM_LINFO.re',
+            impressions: '1 503	',
+            clics: '111',
+            ctr_clics: '7.39%',
+            // vtr: '55.76%',
+            repetions: '0'
 
-            },
+        },
 
 
         ]
@@ -1132,15 +1173,15 @@ exports.test_exportExcel = async (req, res) => {
         // A merge will overwrite all data _not_ in the top-left cell.
         //permet fusionne des colonne
         const merges = [{
-                start: {
-                    row: 1,
-                    column: 1
-                },
-                end: {
-                    row: 1,
-                    column: 5
-                }
+            start: {
+                row: 1,
+                column: 1
             },
+            end: {
+                row: 1,
+                column: 5
+            }
+        },
 
 
         ]
@@ -1538,7 +1579,7 @@ exports.taskid = async (req, res) => {
                     ObjTaskProgress.push(itemProgress)
 
 
-             
+
                     if ((ObjTaskProgress[index].jobProgress == '1.0') && (ObjTaskProgress[index].instanceStatus == 'SUCCESS')) {
 
                         dataFile = await AxiosFunction.getReportingData(
@@ -1573,7 +1614,7 @@ exports.taskid = async (req, res) => {
 
             } else {
 
-                    clearInterval(timerFile);
+                clearInterval(timerFile);
 
 
                 console.log('Stop clearInterval timerFile - else');
