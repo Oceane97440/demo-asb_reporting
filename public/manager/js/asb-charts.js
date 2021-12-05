@@ -1,13 +1,13 @@
 'use strict';
 $(document).ready(function () {
 
-    var chartCampaignUrl = config.baseurl+'manager/charts/campaigns';
-    var chartAdvertiserUrl = config.baseurl+'manager/charts/advertisers';
-    var chartCampaignReportUrl = config.baseurl+'manager/charts/campaign/report';
+    var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
+    var chartAdvertiserUrl = config.baseurl + 'manager/charts/advertisers';
+    var chartCampaignReportUrl = config.baseurl + 'manager/charts/campaign/report';
 
-/*
-* Chart Campaigns -
-*/
+    /*
+    * Chart Campaigns -
+    */
 
     $.getJSON(chartCampaignUrl, function (response) {
         var options = {
@@ -48,53 +48,53 @@ $(document).ready(function () {
         chart.render();
     });
 
-/*
-* Annonceurs 
-*/
-
-$.getJSON(chartAdvertiserUrl, function (response) {
-    var options = {
-        chart: {
-            type: 'line',
-            animations: {
-                enabled: true,
-                easing: 'easeinout',
-                speed: 800,
-                animateGradually: {
-                    enabled: true,
-                    delay: 150
-                },
-                dynamicAnimation: {
-                    enabled: true,
-                    speed: 20
-                }
-            }
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        series: [
-            {
-                name: response.lastYear.year,
-                data: response.lastYear.result
-            }, {
-                name: response.nowYear.year,
-                data: response.nowYear.result
-            }
-        ],
-        xaxis: {
-            categories: response.month
-        }
-    }
-
-    var chart = new ApexCharts(document.querySelector("#chart-advertisers"), options);
-    chart.render();
-});
-
-
-
-
     /*
+    * Annonceurs 
+    */
+
+    $.getJSON(chartAdvertiserUrl, function (response) {
+        var options = {
+            chart: {
+                type: 'line',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800,
+                    animateGradually: {
+                        enabled: true,
+                        delay: 150
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 20
+                    }
+                }
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            series: [
+                {
+                    name: response.lastYear.year,
+                    data: response.lastYear.result
+                }, {
+                    name: response.nowYear.year,
+                    data: response.nowYear.result
+                }
+            ],
+            xaxis: {
+                categories: response.month
+            }
+        }
+
+        var chart = new ApexCharts(document.querySelector("#chart-advertisers"), options);
+        chart.render();
+    });
+
+
+
+
+/*
 * Chart Bar Reporting
 */
 
@@ -102,13 +102,11 @@ $.getJSON(chartAdvertiserUrl, function (response) {
         series: [
             {
                 name: 'Réservée',
-                data: [(467000), (374268), (289980)]
+                data: [(127000)]
             }, {
                 name: 'Restant à diffuser',
                 data: [
-                    (467000 - 475272),
-                    (374268 - 383483),
-                    (289980 - 268365)
+                    (127000 - 87223)
                 ]
             }
         ],
@@ -128,11 +126,11 @@ $.getJSON(chartAdvertiserUrl, function (response) {
         },
         xaxis: {
             categories: [
-                'Habillage', 'Interstitiel', 'Instream'
+                 'Interstitiel'
             ],
             labels: {
                 formatter: function (val) {
-                    return val 
+                    return val
                 }
             }
         },
@@ -166,7 +164,6 @@ $.getJSON(chartAdvertiserUrl, function (response) {
         options
     );
     chart.render();
-
 });
 
 /*
