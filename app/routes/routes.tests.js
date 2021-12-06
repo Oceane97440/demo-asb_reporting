@@ -18,7 +18,7 @@ router.get("/taskid",test.taskid);
 router.get("/taskid2",test.test_taskid);
 
 router.get("/chart-campaign",test.chartCampaign);
-
+router.get("/campaigns/report",test.campaignsReport);
 
 
 module.exports = router;

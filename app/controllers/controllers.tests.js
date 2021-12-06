@@ -1247,7 +1247,6 @@ exports.array_unique = async (req, res) => {
     console.log(uniqueArray);
 }
 
-
 exports.nodemail = async (req, res) => {
 
 
@@ -1407,10 +1406,6 @@ exports.read_excel = async (req, res) => {
 
 
 exports.log_error = async (req, res) => {
-
-
-
-
     /*var path = "proxy_error_log"
     var contents = fs.readFileSync(path).toString();
     console.log(contents)
@@ -1998,5 +1993,82 @@ exports.test_taskid = async (req, res) => {
 
 
     process.exit();
+
+}
+
+
+exports.campaignsReport = async (req, res) => {
+
+      // Répartitions instreams
+      try {
+        const data = new Object();
+
+        // Affiche les campagnes se terminant aujourd'hui
+        /*
+    var dateLastMonday = moment().weekday(-7).format('YYYY-MM-DD'); // moment().add(1, 'days').format('YYYY-MM-DD');
+    var dateLastSunday = moment().weekday(-1).format('YYYY-MM-DD');
+
+    console.log('dateLastMonday : ',dateLastMonday);
+    console.log('dateLastSunday : ',dateLastSunday);
+*/
+
+        var dateLastMonday = "2021-11-29";
+        var dateLastSunday = "2021-12-07";
+
+        var campaigns = await ModelCampaigns
+            .findAll({
+                where: {
+                    [Op.and]: [
+                        {
+                            campaign_start_date: {
+                                [Op.between]: [dateLastMonday, dateLastSunday]
+                            }
+                        }
+                    ],
+                    [Op.and]: [
+                        {
+                            campaign_end_date: {
+                                [Op.between]: [dateLastMonday, dateLastSunday]
+                            }
+                        }
+                    ]
+                },            
+                order: [
+                    ['campaign_start_date', 'ASC']
+                ],
+                include: [
+                    {
+                        model: ModelAdvertisers
+                    },
+                    {
+                        model: ModelInsertions,
+                        where: {
+                            format_id: 43791
+                        }
+    
+                    }
+                ]
+            })
+            .then(async function (campaigns) {
+                if (!campaigns) {
+                    return res
+                        .status(404)
+                        .render("manager/error.ejs", {statusCoded: 404});
+                }
+
+
+                // Attribue les données de la campagne
+                data.campaigns = campaigns;
+                console.log(campaigns)
+                data.moment = moment;
+                data.utilities = Utilities;
+
+            });
+
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        // res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
 
 }
