@@ -347,7 +347,7 @@ exports.create = async (req, res) => {
         data.group_formats = await ModelGroupFormats.findAll({
             attributes: ['format_group_id', 'format_group_name'],
             where: {
-                format_group_id: [1, 2, 3, 4, 9, 12, 13,16, 17, 18]
+                format_group_id: [1, 2, 3, 4, 5, 9, 12, 13, 16, 17, 18]
             },
             order: [
                 ['format_group_name', 'DESC']
@@ -392,8 +392,6 @@ exports.create_post = async (req, res) => {
         var body = {
             advertiser_id: req.body.advertiser_id,
             campaign_id: req.body.campaign_id,
-            date_start: req.body.date_start,
-            date_end: req.body.date_end,
             format_group_id: req.body.format_group_id,
             creative_type_id: req.body.creative_type_id,
             insertion_name: req.body.insertion_name,
@@ -415,6 +413,8 @@ exports.create_post = async (req, res) => {
             display_dtj_url: req.body.display_dtj_url,
             display_mea_file: req.body.display_mea_file,
             display_mea_url: req.body.display_mea_url,
+            display_slider_file: req.body.display_slider_file,
+            display_slider_url: req.body.display_slider_url,
 
             video_file: req.body.video_file,
             video_url: req.body.video_url,
@@ -426,7 +426,7 @@ exports.create_post = async (req, res) => {
         const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
         const format_group_id = body.format_group_id;
-        var creative_type_id = body.creative_type_id;
+        const creative_type_id = body.creative_type_id;
         const insertion_name = body.insertion_name;
 
 
@@ -450,6 +450,8 @@ exports.create_post = async (req, res) => {
         const display_dtj_url = body.display_dtj_url
         const display_mea_file = body.display_mea_file
         const display_mea_url = body.display_mea_url
+        const display_slider_file = body.display_slider_file
+        const display_slider_url = body.display_slider_url
 
         const video_file = body.video_file;
         const video_url = body.video_url;
@@ -531,6 +533,12 @@ exports.create_post = async (req, res) => {
             formatGroupName = "MEA -"
         }
 
+        //SLIDER
+        if (format_group_id === '5') {
+            formatGroupName = "SLIDER"
+        }
+
+
         //Recupère la campagne modèle + filtre en fonction du name du l'insertion
         await ModelInsertions.findAll({
             where: {
@@ -579,6 +587,7 @@ exports.create_post = async (req, res) => {
                         var url_location = insertion_copy.headers.location
                         var insertion_get = await AxiosFunction.getManage(url_location);
                         const insertion_id = insertion_get.data.id
+                        const insertion_name_copy = insertion_get.data.name
                         // console.log('insertion_id dupliqués ' + insertion_id)
 
                         //recupération data des creatives
@@ -636,7 +645,7 @@ exports.create_post = async (req, res) => {
 
                                     }
                                     //format masthead mobile
-                                    if (creatives_width ===320) {
+                                    if (creatives_width === 320) {
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
                                         requestCreatives['width'] = 320
@@ -644,7 +653,7 @@ exports.create_post = async (req, res) => {
 
                                     }
                                     //format masthead tablette
-                                    if (creatives_width ===640) {
+                                    if (creatives_width === 640) {
                                         requestCreatives['url'] = display_tablet_file
                                         requestCreatives['clickUrl'] = display_tablet_url
                                         requestCreatives['width'] = 640
@@ -679,7 +688,7 @@ exports.create_post = async (req, res) => {
 
                                     }
 
-                                    //format interstitiel mobile
+                                    //format mise en avants (MEA)
                                     if (creatives_width === 354) {
                                         requestCreatives['url'] = display_mea_file
                                         requestCreatives['clickUrl'] = display_mea_url
@@ -687,6 +696,127 @@ exports.create_post = async (req, res) => {
                                         requestCreatives['height'] = 500
 
                                     }
+
+                                    //format slider (SLIDER tous les positions)
+                                    if (creatives_width === 187) {
+
+                                        //Pour chaque position slider on ajoute url qui lui correspond, regex sur le nom insertion dupliqué
+                                        if (display_slider_file) {
+
+                                            requestCreatives['width'] = 187
+                                            requestCreatives['height'] = 280
+
+                                            if (insertion_name_copy.match(/SLIDER 01{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[0]
+                                                requestCreatives['clickUrl'] = display_slider_url[0]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 02{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[1]
+                                                requestCreatives['clickUrl'] = display_slider_url[1]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 03{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[2]
+                                                requestCreatives['clickUrl'] = display_slider_url[2]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 04{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[3]
+                                                requestCreatives['clickUrl'] = display_slider_url[3]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 05{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[4]
+                                                requestCreatives['clickUrl'] = display_slider_url[4]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 06{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[5]
+                                                requestCreatives['clickUrl'] = display_slider_url[5]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 07{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[6]
+                                                requestCreatives['clickUrl'] = display_slider_url[6]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 08{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[7]
+                                                requestCreatives['clickUrl'] = display_slider_url[7]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 09{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[8]
+                                                requestCreatives['clickUrl'] = display_slider_url[8]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 10{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[9]
+                                                requestCreatives['clickUrl'] = display_slider_url[9]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 11{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[10]
+                                                requestCreatives['clickUrl'] = display_slider_url[10]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 12{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[11]
+                                                requestCreatives['clickUrl'] = display_slider_url[11]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 13{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[12]
+                                                requestCreatives['clickUrl'] = display_slider_url[12]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 14{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[13]
+                                                requestCreatives['clickUrl'] = display_slider_url[13]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 15{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[14]
+                                                requestCreatives['clickUrl'] = display_slider_url[14]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 16{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[15]
+                                                requestCreatives['clickUrl'] = display_slider_url[15]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 17{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[16]
+                                                requestCreatives['clickUrl'] = display_slider_url[16]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 18{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[17]
+                                                requestCreatives['clickUrl'] = display_slider_url[17]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 19{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[18]
+                                                requestCreatives['clickUrl'] = display_slider_url[18]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 20{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[19]
+                                                requestCreatives['clickUrl'] = display_slider_url[19]
+                                            }
+
+
+
+                                        }
+
+
+
+                                    }
+
+                                    console.log(requestCreatives)
+                                    console.log("-----------------------------------")
 
                                     await AxiosFunction.putManage(
                                         'imagecreatives',
