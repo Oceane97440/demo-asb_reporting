@@ -1879,7 +1879,30 @@ exports.epilotInsertions = async (req, res) => {
                 });
             });
 
+
         // Mettre à jour les formats
+        const groupFormats = await ModelFormatsGroups
+        .findAll()
+        .then(async function (groupFormats) {
+            groupFormats.forEach(function (item) {
+                const format_group_id = item.format_group_id;
+                const format_group_name = item.format_group_name;
+                console.log('group_format_name : ', format_group_name, ' - format_group_id : ', format_group_id);
+              
+                ModelEpilotInsertions.update({
+                    format_group_id: format_group_id
+                }, {
+                    where: {
+                        epilot_insertion_name: {
+                            [Op.like]: "%" + format_group_name + "%"
+                        }
+                    }
+                });
+
+            });
+        });
+
+        /*
         const groupFormats = await ModelFormatsGroups
             .findAll()
             .then(async function (groupFormats) {
@@ -1900,6 +1923,8 @@ exports.epilotInsertions = async (req, res) => {
 
                 });
             });
+
+        */
 
 
         // Mettre à jour les utilisateurs
@@ -1934,7 +1959,6 @@ exports.epilotInsertions = async (req, res) => {
         });
     }
 }
-
 exports.formats = async (req, res) => {
     try {
         var config = SmartFunction.config('formats');
