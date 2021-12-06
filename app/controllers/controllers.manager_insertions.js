@@ -630,15 +630,13 @@ exports.create_post = async (req, res) => {
                                 if ((creatives_typeId === 1) && (format_group_id !== '1')) {
 
                                     //format grand angle mobile
-                                    if (creatives_name.match(/300x250/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
+                                    if (creatives_width === 300) {
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
 
                                     }
                                     //format masthead mobile
-                                    if (creatives_name.match(/320x50/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
+                                    if (creatives_width ===320) {
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
                                         requestCreatives['width'] = 320
@@ -646,8 +644,7 @@ exports.create_post = async (req, res) => {
 
                                     }
                                     //format masthead tablette
-                                    if (creatives_name.match(/640x100/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
+                                    if (creatives_width ===640) {
                                         requestCreatives['url'] = display_tablet_file
                                         requestCreatives['clickUrl'] = display_tablet_url
                                         requestCreatives['width'] = 640
@@ -657,7 +654,6 @@ exports.create_post = async (req, res) => {
 
                                     //format interstitiel tablette
                                     if (creatives_width === 1536) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_tablet_file
                                         requestCreatives['clickUrl'] = display_tablet_url
                                         requestCreatives['width'] = 1536
@@ -667,7 +663,6 @@ exports.create_post = async (req, res) => {
 
                                     //format interstitiel mobile
                                     if (creatives_width === 720) {
-                                        //Attention j'ai delete SM-ANDROID LINFO
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
                                         requestCreatives['width'] = 720
@@ -677,7 +672,6 @@ exports.create_post = async (req, res) => {
 
                                     //format interstitiel mobile
                                     if (creatives_width === 1024) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
                                         requestCreatives['width'] = 1024
@@ -686,8 +680,7 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     //format interstitiel mobile
-                                    if (creatives_name.match(/CATALOGUE - VIGNETTE/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
+                                    if (creatives_width === 354) {
                                         requestCreatives['url'] = display_mea_file
                                         requestCreatives['clickUrl'] = display_mea_url
                                         requestCreatives['width'] = 354
@@ -705,7 +698,6 @@ exports.create_post = async (req, res) => {
                                 if ((creatives_typeId === 1) && (format_group_id === '1')) {
 
                                     if (creatives_name.match(/HABILLAGE - AR/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_ar_file
                                         requestCreatives['clickUrl'] = display_ar_url
                                         requestCreatives['name'] = " HABILLAGE - AR"
@@ -714,7 +706,6 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     if (creatives_name.match(/HABILLAGE - LINFO/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_linfo_file
                                         requestCreatives['clickUrl'] = display_linfo_url
                                         requestCreatives['name'] = "HABILLAGE - LINFO"
@@ -723,7 +714,6 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     if (creatives_name.match(/HABILLAGE - LINFO MOBILE/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_linfo_appli_file
                                         requestCreatives['clickUrl'] = display_linfo_appli_url
                                         requestCreatives['name'] = " HABILLAGE - LINFO MOBILE"
@@ -732,7 +722,6 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     if (creatives_name.match(/HABILLAGE - DOMTOMJOB/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_dtj_file
                                         requestCreatives['clickUrl'] = display_dtj_url
                                         requestCreatives['name'] = "HABILLAGE - DOMTOMJOB"
@@ -742,7 +731,6 @@ exports.create_post = async (req, res) => {
 
                                     //format habillage appli linfo
                                     if (creatives_name.match(/habillage - appli linfo/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
                                         requestCreatives['url'] = display_linfo_appli_file
                                         requestCreatives['clickUrl'] = display_linfo_appli_url
                                         requestCreatives['name'] = "habillage - appli linfo"
@@ -768,8 +756,7 @@ exports.create_post = async (req, res) => {
                                     requestCreatives['creativeTypeId'] = 2
                                     requestCreatives['mimeType'] = "video/mp4"
 
-                                    if (creatives_name.match(/300x250/igm)) {
-                                        //Attention j'ai delate SM-ANDROID LINFO
+                                    if (creatives_width === 300) {
                                         requestCreatives['fileName'] = "300x250 APPLI"
                                         requestCreatives['width'] = 300
                                         requestCreatives['height'] = 250
@@ -804,7 +791,7 @@ exports.create_post = async (req, res) => {
                                     requestCreatives['script'] = replace_script
                                     requestCreatives['url'] = ""
                                     requestCreatives['clickUrl'] = ""
-                                    requestCreatives['fileName'] = ""
+                                    requestCreatives['fileName'] = "300x250 script"
                                     requestCreatives['name'] = "300x250 APPLI"
                                     requestCreatives['width'] = 300
                                     requestCreatives['height'] = 250

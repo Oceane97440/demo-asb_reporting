@@ -40,7 +40,7 @@ exports.index = async (req, res) => {
     try {
         const test = await ModelCampaigns.findAll({
 
-            attributes: ['campaign_id'],
+            attributes: ['campaign_id','campaign_name','campaign_start_date','campaign_end_date'],
             group: "campaign_id",
             where: {
                 campaign_id: {
@@ -48,7 +48,7 @@ exports.index = async (req, res) => {
                 }
             },
             campaign_end_date: {
-                [Op.between]: ['2021-11-08  04:00:00', '2021-11-14 04:00:00']
+                [Op.between]: ['2021-11-29  04:00:00', '2021-12-05 04:00:00']
             },
 
             order: [
@@ -60,7 +60,7 @@ exports.index = async (req, res) => {
                 where: {
                     format_id: 43791,
                     insertion_end_date: {
-                        [Op.between]: ['2021-11-08  04:00:00', '2021-11-14 04:00:00']
+                        [Op.between]: ['2021-11-29  04:00:00', '2021-12-05 04:00:00']
                     }
                 }
 
