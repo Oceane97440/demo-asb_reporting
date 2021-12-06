@@ -589,8 +589,8 @@ exports.repartitions = async (req, res) => {
     console.log('dateLastSunday : ',dateLastSunday);
 */
 
-        var dateLastMonday = "2021-08-01";
-        var dateLastSunday = "2021-08-08";
+        var dateLastMonday = "2021-11-29";
+        var dateLastSunday = "2021-12-07";
 
         var campaigns = await ModelCampaigns
             .findAll({
@@ -613,6 +613,13 @@ exports.repartitions = async (req, res) => {
                 include: [
                     {
                         model: ModelAdvertisers
+                    },
+                    {
+                        model: ModelInsertions,
+                        where: {
+                            format_id: 43791
+                        }
+    
                     }
                 ]
             })
