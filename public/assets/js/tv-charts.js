@@ -1,7 +1,11 @@
 'use strict';
 $(document).ready(function () {
+  var config = {
+    baseurl: "http://localhost:3001/"
+};
+
  
-var chartCampaignUrl = config.baseurl+'/t/charts';
+var chartCampaignUrl = config.baseurl+'t/charts';
      
 $.getJSON(chartCampaignUrl, function (response) {   
 
