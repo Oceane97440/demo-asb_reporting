@@ -1,5 +1,8 @@
 // Initialise les identifiants de connexion à l'api
+const dotenv = require("dotenv");
+dotenv.config({path:"./config.env"})
+
 module.exports = {
-  SMART_login: "alvine.didier@antenne_reunion",
-  SMART_password: "yBLCMaexW.8j0erjvZYI-OOnzWlgd9,2"
+  SMART_login: process.env.SMART_LOG,
+  SMART_password: process.env.SMART_PASS
 };

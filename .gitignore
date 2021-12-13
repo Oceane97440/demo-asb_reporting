@@ -113,3 +113,4 @@ app/config/config.database.js
 app/config/_config.database copy.js
 app/config/_config.database.js
 app/config/_config.database.js
+config.env

@@ -524,7 +524,7 @@
                                 placeholder="Saisissez l'url de redirection pour le desktop" />
                         </div>
                     </div>
-
+                </fieldset>
             </div>
     </div>
 
@@ -584,8 +584,10 @@
         $("#creativeVideo").hide();
         $("#creativeHabillage").hide();
         $("#creativeMea").hide();
+        $("#creativeSlider").hide();
 
 
+        
 
 
 
@@ -631,6 +633,8 @@
                         $("#creativeMea").hide();
                         $("#creativeImage").hide();
                         $("#creativeVideo").hide();
+                        $("#creativeSlider").hide();
+
                         break;
                     case "13":
                         $("#creativeType").hide();
@@ -638,6 +642,8 @@
                         $("#creativeHabillage").hide();
                         $("#creativeImage").hide();
                         $("#creativeVideo").hide();
+                        $("#creativeSlider").hide();
+
                         break;
                     case "5":
                         $("#creativeType").hide();
@@ -652,6 +658,8 @@
                         $("#creativeType").show();
                         $("#creativeHabillage").hide();
                         $("#creativeMea").hide();
+                        $("#creativeSlider").hide();
+
 
                         let list_creative =
                             `<option value="" selected disabled>Sélectionner un type créative</option>`;
