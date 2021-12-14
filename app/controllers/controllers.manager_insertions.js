@@ -422,7 +422,7 @@ exports.create_post = async (req, res) => {
         }
 
 
-        console.log(body)
+         console.log(body)
 
         const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
@@ -430,14 +430,10 @@ exports.create_post = async (req, res) => {
         const creative_type_id = body.creative_type_id;
         const insertion_name = body.insertion_name;
 
-
-
         const display_mobile_file = body.display_mobile_file;
         const display_mobile_url = body.display_mobile_url;
-
         const display_tablet_file = body.display_tablet_file;
         const display_tablet_url = body.display_tablet_url;
-
         const display_desktop_file = body.display_desktop_file;
         const display_desktop_url = body.display_desktop_url;
 
@@ -449,6 +445,7 @@ exports.create_post = async (req, res) => {
         const display_ar_url = body.display_ar_url
         const display_dtj_file = body.display_dtj_file
         const display_dtj_url = body.display_dtj_url
+
         const display_mea_file = body.display_mea_file
         const display_mea_url = body.display_mea_url
         const display_slider_file = body.display_slider_file
@@ -458,6 +455,22 @@ exports.create_post = async (req, res) => {
         const video_url = body.video_url;
 
 
+        //Regex test si url commence par https://cdn.antennepublicite.re ,si l'extension est valide, si les caratère speciaux sont valide
+        const regex_url = /(https?:\/\/(cdn.antennepublicite.re))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4)/igm
+        const regex_video = video_file.match(regex_url)
+    
+
+        if (!regex_video) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'URL invalides: ',
+                message: 'Les url fichiers est invalide'
+            }
+     
+
+            return res.redirect('/manager/insertions/create');
+
+        }
 
 
         if (Utilities.empty(advertiser_id) ||
