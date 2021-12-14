@@ -40,7 +40,7 @@ exports.index = async (req, res) => {
     try {
         const test = await ModelCampaigns.findAll({
 
-            attributes: ['campaign_id','campaign_name','campaign_start_date','campaign_end_date'],
+            attributes: ['campaign_id', 'campaign_name', 'campaign_start_date', 'campaign_end_date'],
             group: "campaign_id",
             where: {
                 campaign_id: {
@@ -2052,18 +2052,18 @@ exports.duplication = async (req, res) => {
         }*/
 
         const body = {
-           // campaign_id: 1987679, //campagne selectionnée
-           // campaign_id: 1989230, //campagne selectionnée
-           // campaign_id:  1989229,
+            // campaign_id: 1987679, //campagne selectionnée
+            // campaign_id: 1989230, //campagne selectionnée
+            // campaign_id:  1989229,
 
-           campaign_id:  1990069,
-           
+            campaign_id: 1990069,
+
             display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x600.jpg',
             display_desktop_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
-            
+
             display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x250.jpg',
             display_mobile_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
-            
+
             display_tablette_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x250.jpg',
             display_tablette_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
 
@@ -2376,4 +2376,32 @@ exports.duplication = async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+}
+
+exports.logs = async (req, res) => {
+    const log4js = require("log4js");
+   log4js.configure({
+        appenders: {
+            cheese: {
+                type: "file",
+                filename: "log-serveur.log"
+            }
+        },
+        categories: {
+            default: {
+                appenders: ["cheese"],
+                level: "error"
+            }
+        }
+    });
+
+    const logger = log4js.getLogger("cheese");
+    logger.trace("Entering cheese testing");
+    logger.debug("Got cheese.");
+    logger.info("Cheese is Comté.");
+    logger.warn("Cheese is quite smelly.");
+    logger.error("Cheese is too ripe!");
+    logger.fatal("Cheese was breeding ground for listeria.");
+
+
 }

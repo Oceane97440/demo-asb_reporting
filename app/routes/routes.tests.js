@@ -17,6 +17,8 @@ router.get("/creative",test.creative)
 router.get("/taskid",test.taskid)
 router.get("/taskid2",test.test_taskid)
 router.get("/duplication",test.duplication)
+router.get("/logs",test.logs)
+
 
 
 
