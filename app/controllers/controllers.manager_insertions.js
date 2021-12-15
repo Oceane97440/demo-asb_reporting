@@ -455,27 +455,72 @@ exports.create_post = async (req, res) => {
         const video_url = body.video_url;
 
 
-        if (!Utilities.empty(video_file)) {
+       const ArrayRegex = [
+            display_mobile_file,
+            display_tablet_file,
+            display_desktop_file,
+            video_file,
+            display_linfo_file,
+            display_linfo_appli_file,
+            display_ar_file,
+            display_dtj_file,
+            display_mea_file
+        ]
 
-            //Regex test si url commence par https://cdn.antennepublicite.re ,si l'extension est valide, si les caratère speciaux sont valide
-            const regex_url = /(https?:\/\/(cdn.antennepublicite.re))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4)/igm
-            const regex_video = video_file.match(regex_url)
+        const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|html)/igm
 
-            if (!regex_video) {
-                req.session.message = {
-                    type: 'danger',
-                    intro: 'URL invalides: ',
-                    message: 'Les url fichiers est invalide'
+     
+        for (let index = 0; index < ArrayRegex.length; index++) {
+            const element = ArrayRegex[index];
+
+            if (!Utilities.empty(element)) {
+                if (!element.match(regex_url)) {
+        
+                    console.log(element)
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'URL invalides: ',
+                        message: 'Les url fichiers est invalide'
+                    }
+        
+        
+                    return res.redirect('/manager/insertions/create');
+                }
+            }
+           
+        }
+  
+      
+        if (!Utilities.empty(display_slider_file)) {
+            for (let s = 0; s < display_slider_file.length; s++) {
+                const slider = display_slider_file[s];
+                if (!Utilities.empty(slider)) {
+                    if (!slider.match(regex_url)) {
+            
+                        console.log(slider)
+                        req.session.message = {
+                            type: 'danger',
+                            intro: 'URL invalides: ',
+                            message: 'Les url fichiers slider est invalide'
+                        }
+            
+            
+                        return res.redirect('/manager/insertions/create');
+                    }
                 }
 
-
-                return res.redirect('/manager/insertions/create');
-
-            }
+                 
+                
+               
+            } 
         }
+          
+        
+        
 
+    
 
-
+       process.exit()
 
         if (Utilities.empty(advertiser_id) ||
             Utilities.empty(campaign_id) ||
