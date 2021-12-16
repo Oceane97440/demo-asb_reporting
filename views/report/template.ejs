@@ -83,7 +83,7 @@
         <% if(reporting.campaign.campaign_end_date > reporting.reporting_start_date) { %>
         <div class="col-12 mb-5">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Les statistiques de campagne sont mises à jour toutes les 2 heures.</strong>
+                <strong>Les statistiques de la campagne sont mises à jour toutes les 2 heures.</strong>
                 <% if(moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') > moment().format('DD/MM/YYYY à HH:mm')) { %>
                 <p>La prochaine mise à jour de cette campagne se fera le <strong>
                         <%= moment(reporting.reporting_end_date).format('DD/MM/YYYY à HH:mm') %></strong></p>

@@ -467,7 +467,7 @@ exports.create_post = async (req, res) => {
             display_mea_file
         ]
 
-        const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|html)/igm
+        const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
 
      
         for (let index = 0; index < ArrayRegex.length; index++) {
@@ -480,7 +480,7 @@ exports.create_post = async (req, res) => {
                     req.session.message = {
                         type: 'danger',
                         intro: 'URL invalides: ',
-                        message: 'Les url fichiers sont invalides'
+                        message: 'Les urls fichiers sont invalides'
                     }
         
         
@@ -501,7 +501,7 @@ exports.create_post = async (req, res) => {
                         req.session.message = {
                             type: 'danger',
                             intro: 'URL invalides: ',
-                            message: 'Les url fichiers slider sont invalides'
+                            message: 'Les urls fichiers slider sont invalides'
                         }
             
             
@@ -613,7 +613,7 @@ exports.create_post = async (req, res) => {
                     var insertion_id_model = insertion_model[i].insertion_id
                     var insertion_name_model = insertion_model[i].insertion_name
 
-                  //  console.log(insertion_name_model)
+                   // console.log(insertion_name_model)
 
 
                     //Si input text n'est pas vide
