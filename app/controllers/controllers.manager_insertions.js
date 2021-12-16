@@ -422,7 +422,7 @@ exports.create_post = async (req, res) => {
         }
 
 
-        console.log(body)
+      //  console.log(body)
 
         const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
@@ -480,7 +480,7 @@ exports.create_post = async (req, res) => {
                     req.session.message = {
                         type: 'danger',
                         intro: 'URL invalides: ',
-                        message: 'Les url fichiers est invalide'
+                        message: 'Les url fichiers sont invalides'
                     }
         
         
@@ -501,7 +501,7 @@ exports.create_post = async (req, res) => {
                         req.session.message = {
                             type: 'danger',
                             intro: 'URL invalides: ',
-                            message: 'Les url fichiers slider est invalide'
+                            message: 'Les url fichiers slider sont invalides'
                         }
             
             
@@ -517,11 +517,6 @@ exports.create_post = async (req, res) => {
           
         
         
-
-    
-
-       process.exit()
-
         if (Utilities.empty(advertiser_id) ||
             Utilities.empty(campaign_id) ||
             Utilities.empty(format_group_id)
@@ -618,7 +613,7 @@ exports.create_post = async (req, res) => {
                     var insertion_id_model = insertion_model[i].insertion_id
                     var insertion_name_model = insertion_model[i].insertion_name
 
-                    console.log(insertion_name_model)
+                  //  console.log(insertion_name_model)
 
 
                     //Si input text n'est pas vide
@@ -878,8 +873,8 @@ exports.create_post = async (req, res) => {
 
                                     }
 
-                                    console.log(requestCreatives)
-                                    console.log("-----------------------------------")
+                                   // console.log(requestCreatives)
+                                  //  console.log("-----------------------------------")
 
                                     await AxiosFunction.putManage(
                                         'imagecreatives',
@@ -1029,200 +1024,7 @@ exports.create_post = async (req, res) => {
         }
         return res.redirect("/manager/insertions/create")
 
-        /*
-                const formatIdsArray = []
-                const sites = []
-                // si format site countrie ne sont pas vide selectionne le groupe format
-                if (format_group_id.length != 0 && pack_id.length != 0 && campaign_id.length != 0) {
-                    // select groupe format + format id
-                    const formatIds = await ModelFormats.findAll({
-                        attributes: ['format_id'],
-                        where: {
-                            format_group: {
-                                [Op.eq]: format_group_id
-                            }
-                        }
-                    });
-
-                    // Create formatIdsArray's variable to handler more later
-                    for (let l = 0; l < formatIds.length; l++) {
-                        formatIdsArray.push(formatIds[l].format_id);
-                    }
-                }
-
-
-                // recupération des site d'un pack
-                const sitesdb = await ModelPacksSites.findAll({
-                    attributes: ['pack_id', 'site_id'],
-                    where: {
-                        pack_id: {
-                            [Op.eq]: pack_id
-                        }
-                    }
-                });
-
-                if (sitesdb.length > 0) {
-                    for (let l = 0; l < sitesdb.length; l++) {
-                        sites.push(sitesdb[l].site_id);
-                    }
-
-                    // Si c'est un string on met en tableau pour respecter l'api
-                    if (typeof sites == 'string') {
-                        sites = [sites];
-                    }
-                }
-
-                // console.log('GRANG ANGLE ' + formatIdsArray)
-                //   console.log('Pack GR ' + sites)
-
-
-                formats_sites = await ModelFormatsSites.findAll({
-                    where: {
-                        format_id: formatIdsArray
-                    },
-                    include: [{
-                            model: ModelFormats
-                        },
-                        {
-                            model: ModelSites
-                        }
-                    ]
-                });
-
-
-                for (let index = 0; index < formats_sites.length; index++) {
-                    if (!Utilities.empty(formats_sites)) {
-                        const siteName = formats_sites[index].site.site_group
-                        var siteIds = formats_sites[index].site.site_id
-
-                        const formatName = formats_sites[index].format.format_name
-                        const formatIds = formats_sites[index].format.format_id
-
-
-
-                        // Regex libélé position remplace btf -> position 5
-                        const regex = /BTF/igm;
-                        var label = formatName.replace(regex, '5');
-                        const found = label.match(/[0-9]/igm);
-                        const libélé = format_group_id + " - " + siteName + ' - ' + 'POSITION ' + found
-
-
-
-
-                        var requestInsertion = {
-                            "isDeliveryRegulated": true,
-                            "isUsedByGuaranteedDeal": false,
-                            "isUsedByNonGuaranteedDeal": false,
-                            "name": libélé,
-                            "description": "",
-                            "isPersonalizedAd": false,
-                            "siteIds": [siteIds],
-                            "insertionStatusId": 1,
-                            "startDate": "2021-10-27T00:00:00",
-                            "endDate": "2021-10-27T23:59:00",
-                            "campaignId": 1764641,
-                            "insertionTypeId": 0,
-                            "deliveryTypeId": 1, //Categorie WEB
-                            "timezoneId": 4, // Insertion TimezoneId
-                            "priorityId": 62, // Insertion PriorityId Normal 3
-                            "insertionGroupedVolumeId": 452054,
-                            "globalCapping": 0, // Insertion CappingGlobal
-                            "cappingPerVisit": 0, // Insertion CappingVisite
-                            //   "cappingPerClick": 0,
-                            //   "autoCapping": 0,
-                            "PeriodicCappingImpressions": 0,
-                            "PeriodicCappingPeriod": 0,
-                            "isObaIconEnabled": false,
-                            "formatId": formatIds,
-                            "isArchived": false,
-                             "insertionExclusionIds": [
-                                 111233
-                             ],
-                            "customizedScript": "",
-                            "salesChannelId": 1
-                        }
-
-
-
-                        //   PARAMETRE REQUETE   
-
-                        //Condition si c du mobile
-                        if (siteName.match(/APPLI/igm)) {
-
-                            requestInsertion['deliveryTypeId'] = 10
-
-
-                        }
-                        if (siteName.match(/APPLI LINFO/igm)) {
-                            //Attention j'ai delate SM-ANDROID LINFO
-                            requestInsertion['siteIds'] = [299248, 299249]
-
-
-
-
-
-                        }
-
-                        //console.log(libélé)
-                        //console.log('REQUEST : ', requestInsertion);
-
-                        const type_creative = await ModelFormatsGroups.findOne({
-                            where: {
-                                format_group_name: format_group_id
-                            },
-                            include: [{
-                                model: ModelCreativesTypesFormats,
-
-
-                            }]
-                        })
-
-                        console.log(type_creative.format_group_name)
-                        console.log(type_creative.creatives_types_formats)
-
-
-
-
-                        let insertion_create = await AxiosFunction.postManage(
-                            'insertions',
-                            requestInsertion
-                        );
-
-                        if (insertion_create.headers.location) {
-                            var url_location = insertion_create.headers.location
-                            console.log(url_location)
-                            var insertion_get = await AxiosFunction.getManage(url_location);
-                            const insertion_id = insertion_get.data.id
-
-
-                            //Ciblage reunion
-                            var requestInsertionsTarget = {
-                                "countryIds": [61],
-                                "insertionId": insertion_id,
-                                "isExactMatch": true,
-                                "targetBrowserWithCookies": false
-                            }
-
-                            await AxiosFunction.putManage(
-                                'insertiontargetings',
-                                requestInsertionsTarget
-                            );
-
-                            res.json({
-                                type: 'success',
-                                intro: 'Ok',
-                                message: 'L\'inserion a été crée dans SMARTADSERVEUR',
-
-                            })
-                        }
-
-                        console.log("------------------------")
-
-                    }
-
-                }*/
-
-
+  
 
     } catch (error) {
         console.log(error);

@@ -1,7 +1,7 @@
 'use strict';
 $(document).ready(function () {
   var config = {
-    baseurl: "http://localhost:3001/"
+    baseurl: "http://reporting.antennesb.fr/"
 };
 
  
