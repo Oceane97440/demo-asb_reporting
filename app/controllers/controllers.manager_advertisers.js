@@ -341,7 +341,7 @@ exports.create_post = async (req, res) => {
             req.session.message = {
                 type: 'danger',
                 intro: 'Erreur',
-                message: 'Le nombre de caratère est limité à 50'
+                message: 'Le nombre de caractère est limité à 50'
             }
             return res.redirect('/manager/advertisers/create');
         }
@@ -407,7 +407,7 @@ exports.create_post = async (req, res) => {
                     req.session.message = {
                         type: 'success',
                         intro: 'Ok',
-                        message: 'L\'annonceur a été dans SMARTADSERVEUR',
+                        message: 'L\'annonceur a été crée dans SMARTADSERVEUR',
 
                     }
                     return res.redirect('/manager/advertisers/create');
@@ -423,7 +423,7 @@ exports.create_post = async (req, res) => {
                 req.session.message = {
                     type: 'danger',
                     intro: 'Erreur',
-                    message: 'Annonceur est déjà utilisé'
+                    message: "L'annonceur a été déjà utilisée"
                 }
                 return res.redirect('/manager/advertisers/create');
             }

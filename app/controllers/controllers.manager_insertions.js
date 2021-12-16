@@ -479,7 +479,7 @@ exports.create_post = async (req, res) => {
                     console.log(element)
                     req.session.message = {
                         type: 'danger',
-                        intro: 'URL invalides: ',
+                        intro: 'URLS invalides: ',
                         message: 'Les urls fichiers sont invalides'
                     }
         
@@ -500,7 +500,7 @@ exports.create_post = async (req, res) => {
                         console.log(slider)
                         req.session.message = {
                             type: 'danger',
-                            intro: 'URL invalides: ',
+                            intro: 'URLS invalides: ',
                             message: 'Les urls fichiers slider sont invalides'
                         }
             
@@ -524,7 +524,7 @@ exports.create_post = async (req, res) => {
             req.session.message = {
                 type: 'danger',
                 intro: 'Champ invalides',
-                message: 'Les champs de couleur rouge avec un astérisque * sont obligatoires'
+                message: 'Les champs de couleur rouge et avec un astérisque * sont obligatoires'
             }
             return res.redirect('/manager/insertions/create');
         }
@@ -541,7 +541,7 @@ exports.create_post = async (req, res) => {
             req.session.message = {
                 type: 'danger',
                 intro: 'Champ invalides',
-                message: 'Les champs de couleur rouge avec un astérisque * sont obligatoires'
+                message: 'Les champs de couleur rouge et avec un astérisque * sont obligatoires'
             }
             return res.redirect('/manager/insertions/create');
         }
@@ -552,7 +552,7 @@ exports.create_post = async (req, res) => {
             req.session.message = {
                 type: 'danger',
                 intro: 'Champ invalides',
-                message: 'Les champs de couleur rouge avec un astérisque * sont obligatoires'
+                message: 'Les champs de couleur rouge et avec un astérisque * sont obligatoires'
             }
             return res.redirect('/manager/insertions/create');
         }
