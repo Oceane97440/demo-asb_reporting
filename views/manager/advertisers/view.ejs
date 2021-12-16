@@ -54,14 +54,20 @@
 
                                     <div class="d-grid gap-2">
                                         <a
-                                            href="https://manage.smartadserver.com/gestion/smartprog2.asp?AnnonceurID=<%= advertiser.advertiser_id %>"
+                                            href="https://manage.smartadserver.com/gestion/smartprog2.asp?AnnonceurID=<%=advertiser.advertiser_id%>"
                                             target="_blank"
                                             class="btn btn-warning"
                                             title="Voir sur SMARTADSERVER">
                                             <i class="material-icons-two-tone">send</i>
                                             Accéder à SMARTADSERVER</a>
 
-                                            <a href="/automate/advertisers/campaigns?advertiser_id=<%= advertiser.advertiser_id %>" target="_blank" class="btn btn-info btn-automate" data-automate="advertiser-campaigns" title="Mettre à jour les campagnes"><i class="fas fa-sync"></i> Mettre à jour les campagnes</a>
+                                            <a href="/automate/advertisers/campaigns?advertiser_id=<%=advertiser.advertiser_id%>" target="_blank" class="btn btn-info" data-automate="advertiser-campaigns" title="Mettre à jour les campagnes"><i class="fas fa-sync"></i> Mettre à jour les campagnes</a>
+
+                                            <a href="/automate/advertiser?advertiser_id=<%=advertiser.advertiser_id%>" target="_blank"
+                                                class="btn btn-info" data-automate-btn="campaign-update"
+                                                title=" Mettre à jour l'annonceur">
+                                                <i class="fas fa-sync"></i>
+                                                Mettre à jour l'annonceur</a>
                                     </div>
 
                                 </div>
