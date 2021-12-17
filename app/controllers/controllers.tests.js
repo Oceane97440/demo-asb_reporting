@@ -32,88 +32,80 @@ const ModelAgencies = require("../models/models.agencies");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
-const ModelInsertionsPriorities = require(
-    "../models/models.insertions_priorities"
-);
-const ModelInsertionsStatus = require("../models/models.insertions_status");
-const ModelSites = require("../models/models.sites");
-const ModelCreatives = require("../models/models.creatives");
-const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
-const ModelEpilotInsertions = require("../models/models.epilot_insertions");
-const ModelUsers = require("../models/models.users");
-
-exports.chartCampaign = async (req, res) => {
-    try {
-        let campaign_id = req.query.campaign_id;
-        // Récupére l'ensemble des insertions de la campagne
-        var epilotCampaign = await ModelEpilotCampaigns
-            .findOne({
-                where: {
-                    campaign_id: campaign_id
-                },
-                include: [
-                  /*  {
-                        model: ModelEpilotInsertions,
-                        attributes: [
-                            'format_group_id',
-                            [sequelize.fn('sum', sequelize.col('epilot_insertion_volume')), 'insertion_volume']
-                        ],
-                        where: {
-                            epilot_campaign_id: Sequelize.col('epilot_campaigns.epilot_campaign_id'),
-                            'format_group_id': '9'
-                        },
-                        group: ['format_group_id', 'user_id']
-                    }*/
-                ]
-            })
-            .then(async function (epilotCampaign) {
-                console.log(epilotCampaign)
-            });
-
-    } catch (error) {
-        console.log(error);
-    }
-};
+const ModelTemplates = require("../models/models.templates");
 
 exports.index = async (req, res) => {
 
     try {
-        // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
-        const formats = await ModelFormat.findAll({
-            attributes: ['format_group'],
-            group: "format_group",
+        const test = await ModelCampaigns.findAll({
+
+            attributes: ['campaign_id', 'campaign_name', 'campaign_start_date', 'campaign_end_date'],
+            group: "campaign_id",
             where: {
-                format_group: {
+                campaign_id: {
                     [Op.not]: null
                 }
             },
-            order: [
-                ['format_group', 'ASC']
-            ],
-        })
-
-        const packs = await ModelPack.findAll({
-            attributes: ['pack_id', 'pack_name'],
-            order: [
-                ['pack_name', 'ASC']
-            ],
-        })
-
-        const countrys = await ModelCountry.findAll({
-            attributes: ['country_id', 'country_name'],
-            where: {
-                country_id: [61, 125, 184]
+            campaign_end_date: {
+                [Op.between]: ['2021-11-29  04:00:00', '2021-12-05 04:00:00']
             },
+
             order: [
-                ['country_name', 'DESC']
+                ['campaign_id', 'ASC']
             ],
+            include: [{
+                model: ModelInsertions,
+                attributes: ["format_id", "insertion_id", "insertion_end_date", "campaign_id"],
+                where: {
+                    format_id: 43791,
+                    insertion_end_date: {
+                        [Op.between]: ['2021-11-29  04:00:00', '2021-12-05 04:00:00']
+                    }
+                }
+
+            }]
+
+
         })
 
-        res.render('forecast/form.ejs', {
-            formats: formats,
-            packs: packs,
-            countrys: countrys
-        });
+        res.json(test)
+
+        /* // SELECT `format_group` FROM `_asb_formats` WHERE `format_group` IS NOT NULL GROUP BY `format_group` ORDER BY `format_group` ASC
+         const formats = await ModelFormat.findAll({
+             attributes: ['format_group'],
+             group: "format_group",
+             where: {
+                 format_group: {
+                     [Op.not]: null
+                 }
+             },
+             order: [
+                 ['format_group', 'ASC']
+             ],
+         })
+
+         const packs = await ModelPack.findAll({
+             attributes: ['pack_id', 'pack_name'],
+             order: [
+                 ['pack_name', 'ASC']
+             ],
+         })
+
+         const countrys = await ModelCountry.findAll({
+             attributes: ['country_id', 'country_name'],
+             where: {
+                 country_id: [61, 125, 184]
+             },
+             order: [
+                 ['country_name', 'DESC']
+             ],
+         })
+
+         res.render('forecast/form.ejs', {
+             formats: formats,
+             packs: packs,
+             countrys: countrys
+         });*/
     } catch (error) {
         console.log(error);
     }
@@ -1405,35 +1397,78 @@ exports.read_excel = async (req, res) => {
 };
 
 
-exports.log_error = async (req, res) => {
-    /*var path = "proxy_error_log"
-    var contents = fs.readFileSync(path).toString();
-    console.log(contents)
-    res.send(contents)*/
+exports.creative = async (req, res) => {
+
+    var body = {
+        insertion_id: '10524742',
+        format_group_id: 'GRAND ANGLE',
+        pack_id: '1',
+        display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+        display_mobile_url: 'https://www.bmw.re/',
+        display_tablet_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+        display_tablet_url: 'https://www.bmw.re/',
+        display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
+        display_desktop_url: 'https://www.bmw.re/',
+        video_file: '',
+        video_url: '',
+        submit: 'Créer une nouvelle insertion'
+    }
 
 
-    /*
-        var data = contents.match('(.*)')
-        console.log(data)
-        console.log('data.length ' + data.length)
+    requestCreatives = {
 
+        "InsertionId": body.insertion_id,
 
-       var dataArray = new Array()
+        "Name": "Creative test",
 
-        function logArrayElements(element, index, array) {
-            console.log("a[" + index + "] = " + element);
+        "FileName": "File desktop bmw",
 
-            dataArray.push(element.split(","));
+        "Url": body.display_desktop_file,
 
+        "clickUrl": body.display_desktop_url,
 
+        "Width": 300,
+
+        "Height": 600,
+
+        "CreativeTypeId": 1, //creative type image (jpeg,gif)
+
+        "IsActivated": "true"
+
+    }
+
+    let creative_create = await AxiosFunction.postManage(
+        'creatives',
+        requestCreatives
+    );
+
+    if (creative_create.headers.location) {
+        console.log(creative_create.headers.location)
+
+        const templateId = await ModelTemplates.findOne({
+            where: {
+                template_id: 84585 //Default Banner
+            }
+        })
+
+        var RequestInsertionTemplate = {
+            "InsertionId": body.insertion_id,
+            "ParameterValues": templateId.parameter_default_values,
+            "TemplateId": templateId.template_id
         }
-        data.forEach(logArrayElements);
 
-        console.log(dataArray)
+        await AxiosFunction.putManage(
+            'insertiontemplates',
+            RequestInsertionTemplate
+        );
 
-        res.send('test')
-    */
+        return res.json({
+            type: 'success',
+            intro: 'Ok',
+            message: 'La créative a été crée dans SMARTADSERVEUR',
 
+        })
+    }
 }
 
 exports.taskid = async (req, res) => {
@@ -1996,79 +2031,364 @@ exports.test_taskid = async (req, res) => {
 
 }
 
+exports.duplication = async (req, res) => {
 
-exports.campaignsReport = async (req, res) => {
+    try {
 
-      // Répartitions instreams
-      try {
-        const data = new Object();
+        /*const body = {
+            campaign_id: 1987679, //campagne selectionnée
+            //insertion_id_model: 10535965,
+            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+            display_mobile_url: 'https://www.bmw.re/',
+            display_tablet_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
+            display_tablet_url: 'https://www.bmw.re/',
+            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
+            display_desktop_url: 'https://www.bmw.re/',
 
-        // Affiche les campagnes se terminant aujourd'hui
-        /*
-    var dateLastMonday = moment().weekday(-7).format('YYYY-MM-DD'); // moment().add(1, 'days').format('YYYY-MM-DD');
-    var dateLastSunday = moment().weekday(-1).format('YYYY-MM-DD');
+            url_clic: 'https://www.distripc.com/',
+            url_cdn: 'https://cdn.antennepublicite.re/linfo/IMG/pub/video/DISTRI_PC/20211119/DISTRI_PC_VU_SUR_ANTENNE-73641/1280x720_DISTRIPC_v3_15s.mp4'
+        }*/
 
-    console.log('dateLastMonday : ',dateLastMonday);
-    console.log('dateLastSunday : ',dateLastSunday);
-*/
+        const body = {
+            // campaign_id: 1987679, //campagne selectionnée
+            // campaign_id: 1989230, //campagne selectionnée
+            // campaign_id:  1989229,
 
-        var dateLastMonday = "2021-11-29";
-        var dateLastSunday = "2021-12-07";
+            campaign_id: 1990069,
 
-        var campaigns = await ModelCampaigns
-            .findAll({
-                where: {
-                    [Op.and]: [
-                        {
-                            campaign_start_date: {
-                                [Op.between]: [dateLastMonday, dateLastSunday]
-                            }
-                        }
-                    ],
-                    [Op.and]: [
-                        {
-                            campaign_end_date: {
-                                [Op.between]: [dateLastMonday, dateLastSunday]
-                            }
-                        }
+            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x600.jpg',
+            display_desktop_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
+
+            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x250.jpg',
+            display_mobile_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
+
+            display_tablette_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LUCA/20211123/LA_GRANDE_RECRE-74162/SITE/300x250.jpg',
+            display_tablette_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
+
+        }
+
+
+
+
+        await ModelInsertions.findAll({
+            where: {
+                campaign_id: 1988414, //campagne_id model
+                insertion_id: {
+                    [Op.in]: [
+
+                        /* GRAND ANGLE */
+                        10535957,
+                        10535958,
+                        10535959,
+                        10535960,
+                        10535961,
+                        10535962,
+                        10535963,
+                        10535964,
+                        10535965,
+                        10535966,
+                        10535967,
+                        10535968,
+                        10535969
+
+                        /*Rectangle video
+                        10536724,
+                         10536725,
+                         10536726,
+                         10536727,
+                         10536728,
+                         10536729,
+                         10536730,
+                         10536731,
+                         10536732,
+                         10536733,
+                         10536734,
+                         10536735,
+                         10536736*/
+
+                        /* MASTHEAD
+                        10543043,
+                        10543044,
+                        10543045,
+                        10543046,
+                        10543047,
+                        10543048,
+                        10543049,
+                        10543050,
+                        10543051,
+                        10543052,
+                        10543053,
+                        10543054,
+                        10543055 */
+
+                        /*INTERSTITIEL
+                        10543020,
+                        10543021,
+                        10543024,
+                        10543025,
+                        10543026, */
+
+                        /*INTERSTITIEL VIDEO
+
+                        10543022,
+                        10543023,
+                        10543027,
+                        10543028,
+                        10543029*/
+
+
                     ]
-                },            
-                order: [
-                    ['campaign_start_date', 'ASC']
-                ],
-                include: [
-                    {
-                        model: ModelAdvertisers
-                    },
-                    {
-                        model: ModelInsertions,
-                        where: {
-                            format_id: 43791
-                        }
-    
-                    }
-                ]
-            })
-            .then(async function (campaigns) {
-                if (!campaigns) {
-                    return res
-                        .status(404)
-                        .render("manager/error.ejs", {statusCoded: 404});
                 }
+            }
+        }).then(async function (insertion_model) {
+
+            for (let i = 0; i < insertion_model.length; i++) {
+                if (!Utilities.empty(insertion_model)) {
+
+                    var insertion_id_model = insertion_model[i].insertion_id
+                    var insertion_name_model = insertion_model[i].insertion_name
+
+                    requestInsertionsCopy = {
+
+                        "name": insertion_name_model, //recupération du nom de l'insertion GET
+                        "campaignId": body.campaign_id,
+                        "ignorePlacements": "false",
+                        "ignoreCreatives": "false"
+
+                    }
+
+                    let insertion_copy = await AxiosFunction.copyManage(
+                        'insertions',
+                        requestInsertionsCopy,
+                        insertion_id_model
+                    );
+
+                    console.log(requestInsertionsCopy)
 
 
-                // Attribue les données de la campagne
-                data.campaigns = campaigns;
-                console.log(campaigns)
-                data.moment = moment;
-                data.utilities = Utilities;
+                    if (insertion_copy.headers.location) {
 
-            });
+                        var url_location = insertion_copy.headers.location
+                        var insertion_get = await AxiosFunction.getManage(url_location);
+                        const insertion_id = insertion_get.data.id
+                        console.log('insertion_id dupliqués ' + insertion_id)
+
+                        var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
+                        var dataValue = insertions_creatives_get.data;
+                        var number_line_offset = insertions_creatives_get.data.length;
+
+                        for (let d = 0; d < number_line_offset; d++) {
+                            if (!Utilities.empty(dataValue)) {
+
+
+                                console.log(number_line_offset)
+                                var creatives_id = dataValue[d].id
+                                var creatives_name = dataValue[d].name
+                                var creatives_fileName = dataValue[d].fileName
+                                var creatives_width = dataValue[d].width
+                                var creatives_height = dataValue[d].height
+                                var creatives_typeId = dataValue[d].creativeTypeId
+
+                                console.log({
+                                    'creatives_id': creatives_id,
+                                    'creatives_name': creatives_name,
+                                    'creatives_fileName': creatives_fileName,
+                                    'creatives_width': creatives_width,
+                                    'creatives_height': creatives_height,
+                                    'creatives_typeId': creatives_typeId,
+
+                                })
+
+
+                                var requestCreatives = {
+                                    "fileSize": 0,
+                                    "id": creatives_id,
+                                    "insertionId": insertion_id,
+                                    "url": body.display_desktop_file,
+                                    "clickUrl": body.display_desktop_url,
+                                    "name": creatives_name,
+                                    "fileName": creatives_name,
+                                    "width": creatives_width,
+                                    "height": creatives_height,
+                                    "isActivated": true,
+                                    "creativeTypeId": 1,
+                                    "mimeType": "image/jpeg",
+                                    "percentageOfDelivery": 0,
+                                    "isArchived": false,
+                                    "partnerMeasurementScriptIds": []
+                                }
+
+                                //Creative de type image
+                                if (creatives_typeId === 1) {
+
+                                    //format grand angle mobile
+                                    if (creatives_name.match(/300x250/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_mobile_file
+                                        requestCreatives['clickUrl'] = body.display_mobile_url
+
+                                    }
+                                    //format masthead mobile
+                                    if (creatives_name.match(/320x50/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_mobile_file
+                                        requestCreatives['clickUrl'] = body.display_mobile_url
+                                        requestCreatives['width'] = 320
+                                        requestCreatives['height'] = 50
+
+                                    }
+                                    //format masthead tablette
+                                    if (creatives_name.match(/640x100/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_tablette_file
+                                        requestCreatives['clickUrl'] = body.display_tablette_url
+                                        requestCreatives['width'] = 640
+                                        requestCreatives['height'] = 100
+
+                                    }
+
+                                    //format interstitiel tablette
+                                    if (creatives_name.match(/1536x2048_20211112141143307/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_tablette_file
+                                        requestCreatives['clickUrl'] = body.display_tablette_url
+                                        requestCreatives['width'] = 1536
+                                        requestCreatives['height'] = 2048
+
+                                    }
+
+                                    //format interstitiel mobile
+                                    if (creatives_name.match(/720x1280_20211112141153742/igm)) {
+                                        //Attention j'ai delate SM-ANDROID LINFO
+                                        requestCreatives['url'] = body.display_mobile_file
+                                        requestCreatives['clickUrl'] = body.display_mobile_url
+                                        requestCreatives['width'] = 720
+                                        requestCreatives['height'] = 1280
+
+                                    }
+
+                                    await AxiosFunction.putManage(
+                                        'imagecreatives',
+                                        requestCreatives
+                                    );
+                                }
+
+                                //Creative de type video
+
+                                if (creatives_typeId === 2) {
+                                    requestCreatives['url'] = body.url_video
+                                    requestCreatives['clickUrl'] = body.url_clic_video
+                                    requestCreatives['fileName'] = "1280x720"
+                                    requestCreatives['width'] = 1280
+                                    requestCreatives['height'] = 720
+                                    requestCreatives['creativeTypeId'] = 2
+                                    requestCreatives['mimeType'] = "video/mp4",
+                                        requestCreatives['height'] = 720
+
+
+                                    await AxiosFunction.putManage(
+                                        'videocreatives',
+                                        requestCreatives
+                                    );
+                                }
+
+                                //Creative de type script
+
+                                if (creatives_typeId === 4) {
+                                    // (https?):\/\/[a-z0-9\/:%_+.,#?!@&=-]+
+
+                                    // https://cdn.antennepublicite.re/linfo/IMG/pub/(video|display)/(.*).(jpg|gif)
+
+                                    var scriptcreatives_get = await AxiosFunction.getManageCopy('scriptcreatives', creatives_id);
+                                    var dataValueCreative = scriptcreatives_get.data;
+                                    var script_creative = dataValueCreative.script
+                                    console.log(script_creative)
+
+                                    //   const found = script_creative.match(/(https?):\/\/[a-z0-9\/:%_+.,#?!@&=-]+/igm);
+
+                                    const regex1 = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif)/igm;
+                                    const regex2 = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
+
+                                    replace = script_creative.replace(regex1, body.display_mobile_file)
+                                    const replace_script = replace.replace(regex2, body.display_mobile_url)
+
+                                    requestCreatives['script'] = replace_script
+                                    requestCreatives['url'] = ""
+                                    requestCreatives['clickUrl'] = ""
+                                    requestCreatives['fileName'] = ""
+                                    requestCreatives['name'] = "300x250 APPLI"
+                                    requestCreatives['width'] = 300
+                                    requestCreatives['height'] = 250
+                                    requestCreatives['creativeTypeId'] = 4
+                                    requestCreatives['mimeType'] = "",
+
+                                        /*requestScriptCreatives = {
+                                            "script": replace_script,
+                                            "id": creatives_id,
+                                            "insertionId": insertion_id,
+                                            "name": "300x250 APPLI",
+                                            "width": 300,
+                                            "height": 250,
+                                            "isActivated": true,
+                                            "creativeTypeId": 4,
+                                            "percentageOfDelivery": 0,
+                                            "isArchived": false,
+                                            "partnerMeasurementScriptIds": []
+                                        }*/
+
+                                        await AxiosFunction.putManage(
+                                            'scriptcreatives',
+                                            requestCreatives
+                                        );
+                                }
+
+
+
+
+
+                                console.log("--------------------------")
+
+
+
+
+
+
+
+                            }
+                        }
+
+
+
+                    }
+                }
+            }
+
+
+
+        })
+
+
+
+
 
     } catch (error) {
-        console.log(error);
-        var statusCoded = error.response;
-        // res.render("manager/error.ejs", {statusCoded: statusCoded});
+        console.log(error)
     }
+}
+
+exports.logs = async (req, res) => {
+
+  var test = await Utilities.logs('info')
+
+  test.info("TEst fonction");
+    res.send("ok")
+    /*
+    logger.trace("Entering cheese testing");
+    logger.debug("Got cheese.");
+    logger.info("Cheese is Comté.");
+    logger.warn("Cheese is quite smelly.");
+    logger.error("Cheese is too ripe!");
+    logger.fatal("Cheese was breeding ground for listeria.");*/
+
 
 }

@@ -21,6 +21,8 @@ const roles = require('./app/models/models.roles');
 const roles_users = require('./app/models/models.roles_users');
 const campaigns = require('./app/models/models.campaigns');
 const advertisers = require('./app/models/models.advertisers');
+const campaigns_gam = require('./app/models/models.campaigns_gam');
+
 const advertisers_users = require('./app/models/models.advertisers_users');
 const agencies = require('./app/models/models.agencies');
 const formats = require('./app/models/models.formats');
@@ -37,6 +39,8 @@ const insertions_templates = require('./app/models/models.insertions_templates')
 const creatives = require('./app/models/models.creatives');
 const insertions_status = require('./app/models/models.insertions_status');
 const insertions_priorities = require('./app/models/models.insertions_priorities');
+const creatives_types_formats = require('./app/models/models.creatives_types_formats');
+const creatives_types = require('./app/models/models.creatives_types');
 
 /* Mettre les relation ici */
 /*sites.belongsTo(countries);
@@ -151,6 +155,34 @@ formats.hasMany(formatssites, {
     hooks: true
 });
 
+// un format_groups posséde un ou plusieurs creatives_types : un creatives_types posséde un à plusieurs format_groups
+formats_groups.hasMany(creatives_types_formats, {
+    foreignKey: 'format_group_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+creatives_types_formats.belongsTo(formats_groups, {
+    foreignKey: 'format_group_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+creatives_types_formats.belongsTo(creatives_types, {
+    foreignKey: 'creative_type_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+creatives_types.hasMany(creatives_types_formats, {
+    foreignKey: 'creative_type_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+
+
+
 campaigns.belongsTo(advertisers, {
     foreignKey: 'advertiser_id',
   //  onDelete: 'cascade',
@@ -162,6 +194,19 @@ advertisers.hasMany(campaigns, {
   //  onDelete: 'cascade',
     hooks: true
 });
+
+campaigns_gam.belongsTo(campaigns, {
+    foreignKey: 'campaign_id',
+  //  onDelete: 'cascade',
+    hooks: true
+});
+
+campaigns.hasMany(campaigns_gam, {
+    foreignKey: 'campaign_id',
+  //  onDelete: 'cascade',
+    hooks: true
+});
+
 
 campaigns.belongsTo(agencies, {
     foreignKey: 'agency_id',
@@ -319,7 +364,7 @@ app.use(cookieParser());
 app.use(cookieSession({
     name: 'BI_antennesb',
     keys: ['asq4b4PR'],
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 2592000000 // 30 jour
 }))
 /**L'image à une limite min=50px max=2000px */
 app.use(fileUpload());
@@ -424,6 +469,7 @@ app.use('/manager', manager);
 
 // Automatise la récupération de donnée
 const automate = require('./app/routes/routes.automate');
+const { campaign } = require('./app/controllers/controllers.automate');
 app.use('/automate', automate);
 
 const extention_chrome = require('./app/routes/routes.plugin_chrome');
@@ -433,7 +479,6 @@ app.use('/extension-chrome', extention_chrome);
 // Le serveur ecoute sur le port 3022
 app.set("port", process.env.PORT || 3001);
 
-console.log('ENVIRONNEMENT : ',process.env.MY_VARIABLE)
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

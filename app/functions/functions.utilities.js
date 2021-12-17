@@ -1,5 +1,8 @@
 const Utilities = require('../functions/functions.utilities');
 const AxiosFunction = require('../functions/functions.axios');
+const log4js = require("log4js");
+const moment = require('moment');
+
 /*
 * Teste si la valeur est vide
 */
@@ -200,4 +203,33 @@ exports.RequestReportDate =  async function RequestReport(startDate , endDate , 
 
   
    // r
+}
+
+
+exports.logs =  async function (level){
+  
+    log4js.configure({
+        appenders: {
+            asb: {
+                type: "file",
+                filename: "./log/log-"+moment().format('YYYYMMDD')+".log"
+
+            }
+        },
+        categories: {
+            default: {
+                appenders: ["asb"],
+                level: level
+            }
+        }
+    });
+
+    const logger = log4js.getLogger("asb");
+
+
+    return logger;
+       
+    
+
+  
 }

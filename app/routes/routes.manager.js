@@ -4,6 +4,8 @@ const Sequelize = require('sequelize');
 const manager = require("../controllers/controllers.manager");
 const manager_campaigns = require("../controllers/controllers.manager_campaigns");
 const manager_epilot = require("../controllers/controllers.manager_epilot");
+const manager_gam = require("../controllers/controllers.manager_gam");
+
 const manager_insertions = require("../controllers/controllers.manager_insertions");
 const manager_agencies = require("../controllers/controllers.manager_agencies");
 const manager_advertisers = require("../controllers/controllers.manager_advertisers");
@@ -89,12 +91,18 @@ router.get("/", manager.index);
 router.get("/campaigns", manager_campaigns.index);
 
 router.get("/campaigns/list", manager_campaigns.list);
+router.get("/campaigns/export", manager_campaigns.export);
 router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
 router.get('/campaigns/repartitions', manager_campaigns.repartitions);
 router.get("/campaigns/:id", manager_campaigns.view);
 
 router.get('/campaigns/epilot/list', manager_epilot.list);
+router.get('/campaigns/epilot/export', manager_epilot.export);
+
+router.get('/campaigns/gam/list', manager_gam.list);
+router.get('/campaigns/gam/export', manager_gam.export);
+
 router.get('/campaigns/epilot/insertions', manager_epilot.insertions);
 router.get('/campaigns/epilot/create', manager_epilot.create);
 router.post('/campaigns/epilot/import', manager_epilot.import);
@@ -109,7 +117,7 @@ router.get("/formats/:id", manager_formats.view);
 router.get("/insertions", manager_insertions.index);
 router.get("/insertions/list", manager_insertions.list);
 router.get("/insertions/create", manager_insertions.create);
-router.get("/insertions/create_post", manager_insertions.create_post);
+router.post("/insertions/create_post", manager_insertions.create_post);
 /*
 router.get("/insertions/create/", manager_insertions.create);
 router.post("/insertions/create", manager_insertions.create_post);
@@ -179,6 +187,8 @@ router.get("/agencies/:id", manager_agencies.view);
 
 router.get("/advertisers", manager_advertisers.index);
 router.get("/advertisers/list", manager_advertisers.list);
+router.get("/advertisers/export", manager_advertisers.export);
+
 router.get('/advertisers/create', manager_advertisers.create);
 router.post('/advertisers/create', manager_advertisers.create_post);
 router.get("/advertisers/:id", manager_advertisers.view);
@@ -189,6 +199,8 @@ router.get("/sites/:id", manager_sites.view);
 
 router.get("/users", manager_users.index);
 router.get("/users/list", manager_users.list);
+router.get("/users/export", manager_users.export);
+
 router.get("/users/create", manager_users.create);
 router.get("/users/:id", manager_users.view);
 router.get("/users/:id/edit", manager_users.edit);

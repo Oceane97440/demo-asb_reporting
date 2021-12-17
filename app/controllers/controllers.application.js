@@ -41,6 +41,10 @@ const ModelPackSite = require("../models/models.packs_sites")
 const ModelRole = require("../models/models.roles")
 const ModelUser = require("../models/models.users")
 const ModelUser_Role = require("../models/models.roles_users")
+const ModelCampaigns = require("../models/models.campaigns")
+const ModelCreativesTypesFormats =  require("../models/models.creatives_types_formats")
+const ModelFormatsGroups=   require("../models/models.formats_groups")
+const ModelCreativesTypes =  require("../models/models.creatives_types")
 
 exports.login_add = async (req, res) => {
     const user_email = req.body.user_email;
@@ -644,6 +648,97 @@ exports.packs_sites_json = async (req, res) => {
             })
             .then(packs_sites => {
                 res.json(packs_sites)
+
+            })
+    } catch (error) {
+        console.log(error)
+
+    }
+}
+
+exports.campaign_json = async (req, res) => {
+    //renvoie du json les info campagnes
+    var advertiser_id = req.params.advertiser_id
+    try {
+        const advertiserExclus = new Array(
+            418935,
+            //427952,
+          //  409707,
+            425912,
+            425914,
+            438979,
+            439470,
+            439506,
+            439511,
+            439512,
+            439513,
+            439514,
+            439515,
+            440117,
+            440118,
+            440121,
+            440122,
+            440124,
+            440126,
+            445117,
+            455371,
+            455384,
+            320778,
+            417243,
+            414097,
+            411820,
+            320778
+        );
+        await ModelCampaigns
+            .findAll({
+                where: {
+                    advertiser_id: advertiser_id,
+                    campaign_archived:0,
+                    [Op.and]: [{
+                        advertiser_id: {
+                            [Op.notIn]: advertiserExclus
+                        }
+                    }],
+                    
+                },
+                order: [
+                    ['campaign_id', 'ASC']
+                ]
+            })
+            .then(campagnes => {
+                res.json(campagnes)
+
+            })
+    } catch (error) {
+        console.log(error)
+
+    }
+}
+
+exports.creativeType_json = async (req, res) => {
+    //renvoie du json les info campagnes
+    var format_group_id = req.params.format_group_id
+    try {
+     
+        await ModelCreativesTypesFormats
+            .findAll({
+                where: {
+                    format_group_id: format_group_id,
+                    creative_type_id:[1,2]
+                    
+                },
+                include: [{
+                    model: ModelCreativesTypes,
+                    attributes: ['creative_type_id', 'creative_type_name']
+                    
+                }],
+                
+                order: [
+                    ['creative_type_id', 'ASC']
+                ]
+            })
+            .then(campagnes => {
+                res.json(campagnes)
 
             })
     } catch (error) {

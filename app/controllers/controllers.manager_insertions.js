@@ -4,6 +4,8 @@ const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
 
+
+
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
@@ -31,6 +33,8 @@ const moment = require('moment');
 const AxiosFunction = require('../functions/functions.axios');
 const Utilities = require("../functions/functions.utilities");
 
+
+
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
@@ -53,6 +57,9 @@ const ModelGroupFormats = require("../models/models.formats_groups")
 const ModelTemplates = require("../models/models.templates")
 const ModelInsertionsTemplates = require("../models/models.insertions_templates")
 const ModelFormatsSites = require("../models/models.formats_sites");
+const ModelCreativesTypes = require("../models/models.creatives_types");
+const ModelCreativesTypesFormats = require("../models/models.creatives_types_formats");
+
 
 const TEXT_REGEX = /^.{1,51}$/
 
@@ -272,8 +279,52 @@ exports.create = async (req, res) => {
                 ['campaign_name', 'ASC']
             ]
         });
+        const advertiserExclus = new Array(
+            418935,
+            //427952,
+            // 409707,
+            430476,
+            425912,
+            425914,
+            438979,
+            439470,
+            439506,
+            439511,
+            439512,
+            439513,
+            439514,
+            439515,
+            440117,
+            440118,
+            440121,
+            440122,
+            440124,
+            440126,
+            445117,
+            455371,
+            455384,
+            320778,
+            417243,
+            414097,
+            411820,
+            320778
+        );
 
         data.advertisers = await ModelAdvertisers.findAll({
+            where: {
+                advertiser_archived: 0,
+                [Op.and]: [{
+                    advertiser_id: {
+                        [Op.notIn]: advertiserExclus
+                    }
+                }],
+
+            },
+            include: [{
+                model: ModelCampaigns,
+
+            }],
+
             order: [
                 // Will escape title and validate DESC against a list of valid direction
                 // parameters
@@ -281,6 +332,8 @@ exports.create = async (req, res) => {
                 // ['campaign_name', 'ASC']
             ]
         });
+
+
 
         data.deliverytypes = await ModelDeliverytTypes.findAll({
             where: {
@@ -298,10 +351,15 @@ exports.create = async (req, res) => {
 
         data.group_formats = await ModelGroupFormats.findAll({
             attributes: ['format_group_id', 'format_group_name'],
+            where: {
+                format_group_id: [1, 2, 3, 4, 5, 9, 12, 13, 16, 17, 18]
+            },
             order: [
-                ['format_group_name', 'ASC']
+                ['format_group_name', 'DESC']
             ],
         })
+
+        data.utilities = Utilities
 
         data.formats = await ModelFormats.findAll({
             attributes: ['format_group'],
@@ -333,623 +391,674 @@ exports.create = async (req, res) => {
 exports.create_post = async (req, res) => {
 
     try {
+
+
+
         var body = {
-            campaign_id: '1764641',
-            // format_group_id: '4',
-            format_group_id: 'GRAND ANGLE',
+            advertiser_id: req.body.advertiser_id,
+            campaign_id: req.body.campaign_id,
+            format_group_id: req.body.format_group_id,
+            creative_type_id: req.body.creative_type_id,
+            insertion_name: req.body.insertion_name,
 
-            pack_id: '1',
-            display_mobile_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
-            display_mobile_url: 'https://www.bmw.re/',
-            display_tablet_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x250.jpg',
-            display_tablet_url: 'https://www.bmw.re/',
-            display_desktop_file: 'https://cdn.antennepublicite.re/linfo/IMG/pub/display/LEAL_REUNION/20201104/BMWSERIE4-63594/300x600.jpg',
-            display_desktop_url: 'https://www.bmw.re/',
-            video_file: '',
-            video_url: '',
-            submit: 'Créer une nouvelle insertion'
+            display_mobile_file: req.body.display_mobile_file,
+            display_mobile_url: req.body.display_mobile_url,
+            display_tablet_file: req.body.display_tablet_file,
+            display_tablet_url: req.body.display_tablet_url,
+            display_desktop_file: req.body.display_desktop_file,
+            display_desktop_url: req.body.display_desktop_url,
+
+            display_linfo_file: req.body.display_linfo_file,
+            display_linfo_url: req.body.display_linfo_url,
+            display_linfo_appli_file: req.body.display_linfo_appli_file,
+            display_linfo_appli_url: req.body.display_linfo_appli_url,
+            display_ar_file: req.body.display_ar_file,
+            display_ar_url: req.body.display_ar_url,
+            display_dtj_file: req.body.display_dtj_file,
+            display_dtj_url: req.body.display_dtj_url,
+            display_mea_file: req.body.display_mea_file,
+            display_mea_url: req.body.display_mea_url,
+            display_slider_file: req.body.display_slider_file,
+            display_slider_url: req.body.display_slider_url,
+
+            video_file: req.body.video_file,
+            video_url: req.body.video_url,
         }
+       /* var log_body = await Utilities.logs('info')
+        log_body.info(body);*/ 
 
+        //  console.log(body)
 
-
-
+        const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
         const format_group_id = body.format_group_id;
-        const pack_id = body.pack_id;
+        const creative_type_id = body.creative_type_id;
+        const insertion_name = body.insertion_name;
 
         const display_mobile_file = body.display_mobile_file;
         const display_mobile_url = body.display_mobile_url;
-
         const display_tablet_file = body.display_tablet_file;
         const display_tablet_url = body.display_tablet_url;
-
         const display_desktop_file = body.display_desktop_file;
         const display_desktop_url = body.display_desktop_url;
+
+        const display_linfo_file = body.display_linfo_file
+        const display_linfo_url = body.display_linfo_url
+        const display_linfo_appli_file = body.display_linfo_appli_file
+        const display_linfo_appli_url = body.display_linfo_appli_url
+        const display_ar_file = body.display_ar_file
+        const display_ar_url = body.display_ar_url
+        const display_dtj_file = body.display_dtj_file
+        const display_dtj_url = body.display_dtj_url
+
+        const display_mea_file = body.display_mea_file
+        const display_mea_url = body.display_mea_url
+        const display_slider_file = body.display_slider_file
+        const display_slider_url = body.display_slider_url
 
         const video_file = body.video_file;
         const video_url = body.video_url;
 
 
+        const ArrayRegex = [
+            display_mobile_file,
+            display_tablet_file,
+            display_desktop_file,
+            video_file,
+            display_linfo_file,
+            display_linfo_appli_file,
+            display_ar_file,
+            display_dtj_file,
+            display_mea_file
+        ]
 
-        const formatIdsArray = []
-        const sites = []
-        // si format site countrie ne sont pas vide selectionne le groupe format
-        if (format_group_id.length != 0 && pack_id.length != 0 && campaign_id.length != 0) {
-            // select groupe format + format id
-            const formatIds = await ModelFormats.findAll({
-                attributes: ['format_id'],
-                where: {
-                    format_group: {
-                        [Op.eq]: format_group_id
+        const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
+
+
+        for (let index = 0; index < ArrayRegex.length; index++) {
+            const element = ArrayRegex[index];
+
+            if (!Utilities.empty(element)) {
+                if (!element.match(regex_url)) {
+
+                    console.log(element)
+                    req.session.message = {
+                        type: 'danger',
+                        intro: 'URLS invalides: ',
+                        message: 'Les urls fichiers sont invalides'
+                    }
+
+
+                    return res.redirect('/manager/insertions/create');
+                }
+            }
+
+        }
+
+
+        if (!Utilities.empty(display_slider_file)) {
+            for (let s = 0; s < display_slider_file.length; s++) {
+                const slider = display_slider_file[s];
+                if (!Utilities.empty(slider)) {
+                    if (!slider.match(regex_url)) {
+
+                        console.log(slider)
+                        req.session.message = {
+                            type: 'danger',
+                            intro: 'URLS invalides: ',
+                            message: 'Les urls fichiers slider sont invalides'
+                        }
+
+
+                        return res.redirect('/manager/insertions/create');
                     }
                 }
-            });
 
-            // Create formatIdsArray's variable to handler more later
-            for (let l = 0; l < formatIds.length; l++) {
-                formatIdsArray.push(formatIds[l].format_id);
+
+
+
             }
         }
 
 
-        // recupération des site d'un pack
-        const sitesdb = await ModelPacksSites.findAll({
-            attributes: ['pack_id', 'site_id'],
-            where: {
-                pack_id: {
-                    [Op.eq]: pack_id
-                }
-            }
-        });
 
-        if (sitesdb.length > 0) {
-            for (let l = 0; l < sitesdb.length; l++) {
-                sites.push(sitesdb[l].site_id);
+        if (Utilities.empty(advertiser_id) ||
+            Utilities.empty(campaign_id) ||
+            Utilities.empty(format_group_id)
+        ) {
+            req.session.message = {
+                type: 'danger',
+                intro: 'Champ invalides',
+                message: 'Les champs de couleur rouge et avec un astérisque * sont obligatoires'
             }
-
-            // Si c'est un string on met en tableau pour respecter l'api
-            if (typeof sites == 'string') {
-                sites = [sites];
-            }
+            return res.redirect('/manager/insertions/create');
         }
 
-       // console.log('GRANG ANGLE ' + formatIdsArray)
-     //   console.log('Pack GR ' + sites)
+        if ((creative_type_id === '1') && ((Utilities.empty(display_mobile_file) ||
+                    Utilities.empty(display_mobile_url) ||
+                    Utilities.empty(display_tablet_file) ||
+                    Utilities.empty(display_tablet_url) ||
+                    Utilities.empty(display_desktop_file) ||
+                    Utilities.empty(display_desktop_url)) && (format_group_id !== '1') && (format_group_id !== '13')
 
+            )) {
 
-        formats_sites = await ModelFormatsSites.findAll({
-            where: {
-                format_id: formatIdsArray
-            },
-            include: [{
-                    model: ModelFormats
-                },
-                {
-                    model: ModelSites
-                }
-            ]
-        });
-
-
-        for (let index = 0; index < formats_sites.length; index++) {
-            if (!Utilities.empty(formats_sites)) {
-                const siteName = formats_sites[index].site.site_group
-                const siteIds = formats_sites[index].site.site_id
-
-                const formatName = formats_sites[index].format.format_name
-                const formatIds = formats_sites[index].format.format_id
-
-               
-
-                // Regex libélé position remplace btf -> position 5
-                const regex = /BTF/igm;
-                var label = formatName.replace(regex, '5');
-                const found = label.match(/[0-9]/igm);
-                const libélé = format_group_id + " - " + siteName + ' - ' + 'POSITION ' + found
-
-                var requestInsertion = {
-                    "isDeliveryRegulated": true,
-                    "isUsedByGuaranteedDeal": false,
-                    "isUsedByNonGuaranteedDeal": false,
-                    "name": libélé,
-                    "description": "",
-                    "isPersonalizedAd": false,
-                    "siteIds": [siteIds],
-                    "insertionStatusId": 1,
-                    "startDate": "2021-10-27T00:00:00",
-                    "endDate": "2021-10-27T23:59:00",
-                    "campaignId": 1764641,
-                    "insertionTypeId": 0,
-                    "deliveryTypeId": 1, //Categorie WEB
-                    "timezoneId": 4, // Insertion TimezoneId
-                    "priorityId": 62, // Insertion PriorityId Normal 3
-                    "insertionGroupedVolumeId": 452054,
-                    "globalCapping": 0, // Insertion CappingGlobal
-                    "cappingPerVisit": 0, // Insertion CappingVisite
-                    //   "cappingPerClick": 0,
-                    //   "autoCapping": 0,
-                    "PeriodicCappingImpressions": 0,
-                    "PeriodicCappingPeriod": 0,
-                    "isObaIconEnabled": false,
-                    "formatId": formatIds,
-                    "isArchived": false,
-                    /* "insertionExclusionIds": [
-                         111233
-                     ],*/
-                    "customizedScript": "",
-                    "salesChannelId": 1
-                }
-
-
-
-                /**     PARAMETRE REQUETE   */
-
-                //Condition si c du mobile
-                if (siteName.match(/APPLI/igm)) {
-
-                    requestInsertion['deliveryTypeId'] = 10
-
-                }
-                console.log(libélé)
-                console.log('REQUEST : ', requestInsertion);
-
-
-
-
-
-
-                let insertion_create = await AxiosFunction.postManage(
-                    'insertions',
-                    requestInsertion
-                );
-
-                if (insertion_create.headers.location) {
-                    var url_location = insertion_create.headers.location
-                  //  var insertion_get = await AxiosFunction.getManage(url_location);
-                    //const insertion_id = insertion_get.data.id
-
-
-
-
-                    res.json({
-                        type: 'success',
-                        intro: 'Ok',
-                        message: 'L\'inserion a été crée dans SMARTADSERVEUR',
-
-                    })  
-                }
-
-                console.log("------------------------")
-
+            req.session.message = {
+                type: 'danger',
+                intro: 'Champ invalides',
+                message: 'Les champs de couleur rouge et avec un astérisque * sont obligatoires'
             }
-
+            return res.redirect('/manager/insertions/create');
         }
 
-        process.exit()
 
-        // Affichage du tableau
-        var requestValues = new Array();
+        if ((creative_type_id === '2') && (Utilities.empty(video_file) || Utilities.empty(video_url))) {
 
-        // ------ 
+            req.session.message = {
+                type: 'danger',
+                intro: 'Champ invalides',
+                message: 'Les champs de couleur rouge et avec un astérisque * sont obligatoires'
+            }
+            return res.redirect('/manager/insertions/create');
+        }
 
-        // 1. Sélectionner la campagne
-        // 
-        console.log('campaign_id :', campaign_id);
 
-        // 2. Sélectionner le format 
-        // 
-        console.log('format_group_id :', format_group_id);
-
-        const formats = await ModelFormatsGroupsTypes.findAll({
+        const formatGroup = await ModelFormatsGroups.findOne({
             where: {
                 format_group_id: format_group_id
-            },
-            include: [{
-                model: ModelFormats,
-                attributes: ['format_id', 'format_name', 'format_type_id']
-            }, {
-                model: ModelFormatsGroups,
-                attributes: ['format_group_id', 'format_group_name']
-            }]
+            }
         });
 
-        // if(!utilities.empty(formats)) {
-        console.log('Formats :', formats.length)
-        for (i = 0; i < formats.length; i++) {
-            var value = new Array();
-            // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
-            value['format_group_name'] = formats[i].formats_group.format_group_name;
-            value['format_id'] = formats[i].format_id;
-            value['format_name'] = formats[i].format.format_name;
-            value['format_type_id'] = formats[i].format.format_type_id;
+        //recupération du nom du format group
+        var formatGroupName = formatGroup.format_group_name + ' -'
 
-            requestValues.push(value);
+        //si format interstitel video
+        if ((format_group_id === '2') && (creative_type_id === '2')) {
+            formatGroupName = "INTERSTITIEL VIDEO -"
+        }
+        //si format instream
+        if (format_group_id === '9') {
+            formatGroupName = "PREROLL"
+        }
+        //GRAND ANGLE DUPLICATION POSITION MASTHEAD
+        if (format_group_id === '16') {
+            formatGroupName = "GRAND ANGLE M -"
+        }
+        //MASTHEAD DUPLICATION POSITION GRAND ANGLE
+        if (format_group_id === '17') {
+            formatGroupName = "MASTHEAD G -"
+        }
+        //RECTANGLE VIDEO DUPLICATION POSITION MASTHEAD
+        if (format_group_id === '18') {
+            formatGroupName = "RECTANGLE VIDEO M -"
+        }
+        if (format_group_id === '13') {
+            formatGroupName = "MEA -"
         }
 
-        console.log(requestValues);
-        // }
+        //SLIDER
+        if (format_group_id === '5') {
+            formatGroupName = "SLIDER"
+        }
 
 
-        /*
-       
-        process.exit();
-        console.log(formats[0])
-        */
-        // 3. Sélectionner le pack 
-        // 
-
-        const packs = await ModelPacks.findAll({
+        //Recupère la campagne modèle + filtre en fonction du name du l'insertion
+        await ModelInsertions.findAll({
             where: {
-                pack_id: pack_id
-            },
-            include: [{
-                    model: ModelPacksSites,
-                    attributes: ['pack_site_id', 'pack_id', 'site_id']
+                campaign_id: 1988414, //campagne_id model
+                insertion_name: {
+                    [Op.like]: "%" + formatGroupName + "%"
                 }
-                /* {
-                                model: ModelFormatsGroups,
-                                attributes: ['format_group_id', 'format_group_name']
-                            }*/
-            ]
-        });
+            }
+        }).then(async function (insertion_model) {
+
+            for (let i = 0; i < insertion_model.length; i++) {
+                if (!Utilities.empty(insertion_model)) {
+
+                    var insertion_id_model = insertion_model[i].insertion_id
+                    var insertion_name_model = insertion_model[i].insertion_name
+
+                    // console.log(insertion_name_model)
 
 
-        if (Utilities.empty(packs)) {
-            console.log('Packs :', packs.length, ' - pack_id :', pack_id);
+                    //Si input text n'est pas vide
+                    if (!Utilities.empty(insertion_name)) {
+                        insertion_name_model = insertion_model[i].insertion_name + ' - ' + insertion_name
+                    }
 
-            for (i = 0; i < packs.length; i++) {
-                var value = new Array();
-                console.log(packs[i].pack_site_id, ' ', packs[i].pack_id, ' ', packs[i].site_id);
-                // console.log(formats[i].formats_group.format_group_name, ' ', formats[i].format_id, ' ', formats[i].format.format_name, ' - ', formats[i].format.format_type_id);
-                /* value['format_group_name'] = formats[i].formats_group.format_group_name;
-                 value['format_id'] = formats[i].format_id;
-                 value['format_name'] = formats[i].format.format_name;
-                 value['format_type_id'] = formats[i].format.format_type_id;
+                    requestInsertionsCopy = {
 
-                 requestValues.push(value);*/
+                        "name": insertion_name_model, //recupération du nom de l'insertion GET
+                        "campaignId": campaign_id,
+                        "ignorePlacements": "false",
+                        "ignoreCreatives": "false"
+
+                    }
+
+                    //requête duplication des insertions modèle
+                    let insertion_copy = await AxiosFunction.copyManage(
+                        'insertions',
+                        requestInsertionsCopy,
+                        insertion_id_model
+                    );
+
+
+                    // console.log(requestInsertionsCopy)
+
+
+                    if (insertion_copy.headers.location) {
+
+
+
+                        var url_location = insertion_copy.headers.location
+                        var insertion_get = await AxiosFunction.getManage(url_location);
+                        const insertion_id = insertion_get.data.id
+                        const insertion_name_copy = insertion_get.data.name
+                        // console.log('insertion_id dupliqués ' + insertion_id)
+                       /* var log_insertion_copy = await Utilities.logs('info')
+                        log_insertion_copy.info("L'insertion a été copiée :" + insertion_id);*/
+
+                        //recupération data des creatives
+                        var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
+                        var dataValue = insertions_creatives_get.data;
+                        var number_line_offset = insertions_creatives_get.data.length;
+
+
+
+                        for (let d = 0; d < number_line_offset; d++) {
+                            if (!Utilities.empty(dataValue)) {
+
+
+                                var creatives_id = dataValue[d].id
+                                var creatives_name = dataValue[d].name
+                                var creatives_fileName = dataValue[d].fileName
+                                var creatives_width = dataValue[d].width
+                                var creatives_height = dataValue[d].height
+                                var creatives_typeId = dataValue[d].creativeTypeId
+
+                                /*var log_creatives = await Utilities.logs('info')
+                                log_creatives.info("Requête récupération data des créatives creatives_id :" + creatives_id + " Total creative :" + number_line_offset);*/
+
+                                console.log({
+                                    'creatives_id': creatives_id,
+                                    'creatives_name': creatives_name,
+                                    'creatives_fileName': creatives_fileName,
+                                    'creatives_width': creatives_width,
+                                    'creatives_height': creatives_height,
+                                    'creatives_typeId': creatives_typeId,
+
+                                })
+
+
+                                var requestCreatives = {
+                                    "fileSize": 0,
+                                    "id": creatives_id,
+                                    "insertionId": insertion_id,
+                                    "url": display_desktop_file,
+                                    "clickUrl": display_desktop_url,
+                                    "name": creatives_name,
+                                    "fileName": creatives_fileName,
+                                    "width": creatives_width,
+                                    "height": creatives_height,
+                                    "isActivated": true,
+                                    "creativeTypeId": 1,
+                                    "mimeType": "image/jpeg",
+                                    "percentageOfDelivery": 0,
+                                    "isArchived": false,
+                                    "partnerMeasurementScriptIds": []
+                                }
+
+                                //Creative de type image
+                                if ((creatives_typeId === 1) && (format_group_id !== '1')) {
+
+                                    //format grand angle mobile
+                                    if (creatives_width === 300) {
+                                        requestCreatives['url'] = display_mobile_file
+                                        requestCreatives['clickUrl'] = display_mobile_url
+
+                                    }
+                                    //format masthead mobile
+                                    if (creatives_width === 320) {
+                                        requestCreatives['url'] = display_mobile_file
+                                        requestCreatives['clickUrl'] = display_mobile_url
+                                        requestCreatives['width'] = 320
+                                        requestCreatives['height'] = 50
+
+                                    }
+                                    //format masthead tablette
+                                    if (creatives_width === 640) {
+                                        requestCreatives['url'] = display_tablet_file
+                                        requestCreatives['clickUrl'] = display_tablet_url
+                                        requestCreatives['width'] = 640
+                                        requestCreatives['height'] = 100
+
+                                    }
+
+                                    //format interstitiel tablette
+                                    if (creatives_width === 1536) {
+                                        requestCreatives['url'] = display_tablet_file
+                                        requestCreatives['clickUrl'] = display_tablet_url
+                                        requestCreatives['width'] = 1536
+                                        requestCreatives['height'] = 2048
+
+                                    }
+
+                                    //format interstitiel mobile
+                                    if (creatives_width === 720) {
+                                        requestCreatives['url'] = display_mobile_file
+                                        requestCreatives['clickUrl'] = display_mobile_url
+                                        requestCreatives['width'] = 720
+                                        requestCreatives['height'] = 1280
+
+                                    }
+
+                                    //format interstitiel mobile
+                                    if (creatives_width === 1024) {
+                                        requestCreatives['url'] = display_mobile_file
+                                        requestCreatives['clickUrl'] = display_mobile_url
+                                        requestCreatives['width'] = 1024
+                                        requestCreatives['height'] = 320
+
+                                    }
+
+                                    //format mise en avants (MEA)
+                                    if (creatives_width === 354) {
+                                        requestCreatives['url'] = display_mea_file
+                                        requestCreatives['clickUrl'] = display_mea_url
+                                        requestCreatives['width'] = 354
+                                        requestCreatives['height'] = 500
+
+                                    }
+
+                                    //format slider (SLIDER tous les positions)
+                                    if (creatives_width === 187) {
+
+                                        //Pour chaque position slider on ajoute url qui lui correspond, regex sur le nom insertion dupliqué
+                                        if (display_slider_file) {
+
+                                            requestCreatives['width'] = 187
+                                            requestCreatives['height'] = 280
+
+                                            if (insertion_name_copy.match(/SLIDER 01{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[0]
+                                                requestCreatives['clickUrl'] = display_slider_url[0]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 02{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[1]
+                                                requestCreatives['clickUrl'] = display_slider_url[1]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 03{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[2]
+                                                requestCreatives['clickUrl'] = display_slider_url[2]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 04{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[3]
+                                                requestCreatives['clickUrl'] = display_slider_url[3]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 05{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[4]
+                                                requestCreatives['clickUrl'] = display_slider_url[4]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 06{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[5]
+                                                requestCreatives['clickUrl'] = display_slider_url[5]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 07{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[6]
+                                                requestCreatives['clickUrl'] = display_slider_url[6]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 08{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[7]
+                                                requestCreatives['clickUrl'] = display_slider_url[7]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 09{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[8]
+                                                requestCreatives['clickUrl'] = display_slider_url[8]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 10{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[9]
+                                                requestCreatives['clickUrl'] = display_slider_url[9]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 11{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[10]
+                                                requestCreatives['clickUrl'] = display_slider_url[10]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 12{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[11]
+                                                requestCreatives['clickUrl'] = display_slider_url[11]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 13{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[12]
+                                                requestCreatives['clickUrl'] = display_slider_url[12]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 14{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[13]
+                                                requestCreatives['clickUrl'] = display_slider_url[13]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 15{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[14]
+                                                requestCreatives['clickUrl'] = display_slider_url[14]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 16{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[15]
+                                                requestCreatives['clickUrl'] = display_slider_url[15]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 17{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[16]
+                                                requestCreatives['clickUrl'] = display_slider_url[16]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 18{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[17]
+                                                requestCreatives['clickUrl'] = display_slider_url[17]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 19{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[18]
+                                                requestCreatives['clickUrl'] = display_slider_url[18]
+                                            }
+                                            if (insertion_name_copy.match(/SLIDER 20{1}/igm)) {
+
+                                                requestCreatives['url'] = display_slider_file[19]
+                                                requestCreatives['clickUrl'] = display_slider_url[19]
+                                            }
+
+
+
+                                        }
+
+
+
+                                    }
+
+                                    // console.log(requestCreatives)
+                                    //  console.log("-----------------------------------")
+
+                                    await AxiosFunction.putManage(
+                                        'imagecreatives',
+                                        requestCreatives
+                                    );
+                                   /* log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative display creatives_id: "+creatives_id);*/
+
+                                }
+
+                                //Creative de type image - format habillage
+                                if ((creatives_typeId === 1) && (format_group_id === '1')) {
+
+                                    if (creatives_name.match(/HABILLAGE - AR/igm)) {
+                                        requestCreatives['url'] = display_ar_file
+                                        requestCreatives['clickUrl'] = display_ar_url
+                                        requestCreatives['name'] = " HABILLAGE - AR"
+
+
+                                    }
+
+                                    if (creatives_name.match(/HABILLAGE - LINFO/igm)) {
+                                        requestCreatives['url'] = display_linfo_file
+                                        requestCreatives['clickUrl'] = display_linfo_url
+                                        requestCreatives['name'] = "HABILLAGE - LINFO"
+
+
+                                    }
+
+                                    if (creatives_name.match(/HABILLAGE - LINFO MOBILE/igm)) {
+                                        requestCreatives['url'] = display_linfo_appli_file
+                                        requestCreatives['clickUrl'] = display_linfo_appli_url
+                                        requestCreatives['name'] = " HABILLAGE - LINFO MOBILE"
+
+
+                                    }
+
+                                    if (creatives_name.match(/HABILLAGE - DOMTOMJOB/igm)) {
+                                        requestCreatives['url'] = display_dtj_file
+                                        requestCreatives['clickUrl'] = display_dtj_url
+                                        requestCreatives['name'] = "HABILLAGE - DOMTOMJOB"
+
+
+                                    }
+
+                                    //format habillage appli linfo
+                                    if (creatives_name.match(/habillage - appli linfo/igm)) {
+                                        requestCreatives['url'] = display_linfo_appli_file
+                                        requestCreatives['clickUrl'] = display_linfo_appli_url
+                                        requestCreatives['name'] = "habillage - appli linfo"
+                                        requestCreatives['fileName'] = "1024x320"
+                                        requestCreatives['width'] = 1024
+                                        requestCreatives['height'] = 320
+
+                                    }
+
+                                    await AxiosFunction.putManage(
+                                        'imagecreatives',
+                                        requestCreatives
+                                    );
+
+                                    /*log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative habillage creatives_id: "+creatives_id);*/
+
+                                }
+
+                                //Creative de type video
+                                if (creatives_typeId === 2) {
+                                    requestCreatives['url'] = video_file
+                                    requestCreatives['clickUrl'] = video_url
+                                    requestCreatives['fileName'] = "1280x720"
+                                    requestCreatives['width'] = 1280
+                                    requestCreatives['height'] = 720
+                                    requestCreatives['creativeTypeId'] = 2
+                                    requestCreatives['mimeType'] = "video/mp4"
+
+                                    if (creatives_width === 300) {
+                                        requestCreatives['fileName'] = "300x250 APPLI"
+                                        requestCreatives['width'] = 300
+                                        requestCreatives['height'] = 250
+
+                                    }
+
+                                    if (format_group_id === '2' && creative_type_id === '2') {
+                                        requestCreatives['name'] = "interstitiel - video"
+
+                                    }
+
+                                    await AxiosFunction.putManage(
+                                        'videocreatives',
+                                        requestCreatives
+                                    );
+
+                                   /* log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative video creatives_id: "+creatives_id);*/
+
+                                }
+
+                                //Creative de type script
+                                if (creatives_typeId === 4) {
+
+                                    var scriptcreatives_get = await AxiosFunction.getManageCopy('scriptcreatives', creatives_id);
+                                    var dataValueCreative = scriptcreatives_get.data;
+                                    var script_creative = dataValueCreative.script
+                                    // console.log(script_creative)
+
+                                    const regex1 = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif)/igm;
+                                    const regex2 = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
+
+                                    replace = script_creative.replace(regex1, display_mobile_file)
+                                    const replace_script = replace.replace(regex2, display_mobile_url)
+
+                                    requestCreatives['script'] = replace_script
+                                    requestCreatives['url'] = ""
+                                    requestCreatives['clickUrl'] = ""
+                                    requestCreatives['fileName'] = "300x250 script"
+                                    requestCreatives['name'] = "300x250 APPLI"
+                                    requestCreatives['width'] = 300
+                                    requestCreatives['height'] = 250
+                                    requestCreatives['creativeTypeId'] = 4
+                                    requestCreatives['mimeType'] = ""
+
+                                    await AxiosFunction.putManage(
+                                        'scriptcreatives',
+                                        requestCreatives
+                                    );
+                                    /*log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative script creatives_id: "+creatives_id);*/
+
+                                }
+
+
+
+
+
+                                //   console.log("--------------------------")
+
+
+
+
+
+
+
+                            }
+                        }
+
+
+
+                    }
+                }
             }
 
-            switch (pack_id) {
-                case '1':
 
-                    break;
-                case '2':
-                    break;
-                case '3':
-                    break;
-                case '4':
-                    break;
-                case '5':
-                    break;
-                case '6':
-                    break;
-                default:
-                    console.log(`Sorry, we are out of ${expr}.`);
-            }
+
+        })
+
+        req.session.message = {
+            type: 'success',
+            intro: 'Les insertions ont été crées dans SMARTADSERVER',
+            message: `https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=${campaign_id}`
         }
+        return res.redirect("/manager/insertions/create")
 
 
-
-        // 4. Sélectionner le format et les afficher
-        // 
-
-
-        // 5. 
-        // 
-
-
-        // 6. Requête de l'insertion
-        var requestInsertion = {
-            "isDeliveryRegulated": true,
-            "isUsedByGuaranteedDeal": false,
-            "isUsedByNonGuaranteedDeal": false,
-            "name": "20211101 - MPAVE AD - ",
-            "description": "",
-            "isPersonalizedAd": false,
-            /* "siteIds": [
-                 299248,
-                 299249
-             ],*/
-            "insertionStatusId": 1,
-            "startDate": "2021-10-27T00:00:00",
-            "endDate": "2021-10-27T23:59:00",
-            "campaignId": 1764641,
-            "insertionTypeId": 0,
-            "deliveryTypeId": 10,
-            "timezoneId": 4, // Insertion TimezoneId
-            "priorityId": 62, // Insertion PriorityId
-            "insertionGroupedVolumeId": 452054,
-            "globalCapping": 0, // Insertion CappingGlobal
-            "cappingPerVisit": 0, // Insertion CappingVisite
-            //   "cappingPerClick": 0,
-            //   "autoCapping": 0,
-            "PeriodicCappingImpressions": 0,
-            "PeriodicCappingPeriod": 0,
-            "isObaIconEnabled": false,
-            // "formatId": 79654,
-            "isArchived": false,
-            /* "insertionExclusionIds": [
-                 111233
-             ],*/
-            "customizedScript": "",
-            "salesChannelId": 1
-        }
-
-        console.log('REQUEST : ', requestInsertion);
-
-
-        process.exit();
-
-        /*
-               const campaign_id = req.body.campaign_id;
-               const format_group_id = req.body.format_group_id;        
-               const pack_id = req.body.pack_id;
-
-               const display_mobile_file = req.body.display_mobile_file;
-               const display_mobile_url = req.body.display_mobile_url;
-               
-               const display_tablet_file = req.body.display_tablet_file;
-               const display_tablet_url = req.body.display_tablet_url;
-               
-               const display_desktop_file = req.body.display_desktop_file;
-               const display_desktop_url = req.body.display_desktop_url;
-               
-               const video_file = req.body.video_file;
-               const video_url = req.body.video_url;
-                   
-               console.log(req.body)
-
-              
-
-               const campaign_id = req.body.campaign_id;
-               const insertion = req.body.insertion
-               const format = req.body.format
-               const packs = req.body.packs
-               const start_date = req.body.campaign_start_date
-               const end_date = req.body.campaign_end_date
-               const delivery_type = req.body.delivery_type
-               const priority = req.body.priority
-
-               console.log(req.body)
-
-               if (!TEXT_REGEX.test(insertion)) {
-                   req.session.message = {
-                       type: 'danger',
-                       intro: 'Erreur',
-                       message: 'Le nombre de caratère est limité à 50'
-                   }
-                   return res.redirect(`/manager/insertions/create/${campaign}`)
-
-               }
-
-               if (insertion == '' || campaign == '' || start_date == '' || end_date == '' || format == '') {
-                   req.session.message = {
-                       type: 'danger',
-                       intro: 'Un problème est survenu',
-                       message: 'Les champs doivent être complétés'
-                   }
-                   return res.redirect(`/manager/insertions/create/${campaign}`)
-               }
-
-               const timstasp_start = Date.parse(start_date)
-               const timstasp_end = Date.parse(end_date)
-
-               // si date aujourd'hui est >= à la date selectionné envoie une erreur
-               if (timstasp_end <= timstasp_start || timstasp_start >= timstasp_end) {
-                   req.session.message = {
-                       type: 'danger',
-                       intro: 'Un problème est survenu',
-                       message: 'Saisissez une date valide'
-                   }
-                   return res.redirect(`/manager/insertions/create/${campaign}`)
-               }
-
-               const dateNow = moment().format('YYYY-MM-DD HH:mm:ss');
-
-
-               var requestInsertion = {
-
-                   "isDeliveryRegulated": true,
-                   "isUsedByGuaranteedDeal": false,
-                   "isUsedByNonGuaranteedDeal": false,
-                   "impressionTypeId": 0,
-                   "voiceShare": 0,
-                   "eventId": 0,
-                   "creativeRotationModeId": 0,
-                   "name": insertion,
-                   "description": "",
-                   "isPersonalizedAd": false,
-                   "insertionStatusId": 0,
-                   //"siteIds": site,
-                   "packIds": [packs],
-                   "insertionStatusId": 1,
-                   "startDate": start_date,
-                   "endDate": end_date,
-                   "campaignId": campaign,
-                   "insertionTypeId": 0,
-                   "deliveryTypeId": delivery_type,
-                   "timezoneId": 4,
-                   "priorityId": priority,
-                   "periodicCappingId": 0,
-                   "groupCappingId": 0,
-                   "maxImpressions": 0,
-                   "weight": 0,
-                   "maxClicks": 0,
-                   "maxImpressionsPerDay": 0,
-                   "maxClicksPerDay": 0,
-                   "eventImpressions": 0,
-                   "isHolisticYieldEnabled": false,
-                   "deliverLeftVolumeAfterEndDate": false,
-                   "globalCapping": 0,
-                   "cappingPerVisit": 0,
-                   "cappingPerClick": 0,
-                   "autoCapping": 0,
-                   // "periodicCappingImpressions": 0,
-                   // "periodicCappingPeriod": 0,
-                   "isObaIconEnabled": false,
-                   "formatId": format,
-                   "externalId": 0,
-                   "externalDescription": "",
-                   "updatedAt": dateNow,
-                   "createdAt": dateNow,
-                   "isArchived": false,
-                   "rateTypeId": 0,
-                   "rate": 0.0,
-                   "rateNet": 0.0,
-                   "discount": 0.0,
-                   "currencyId": 0,
-                   "insertionLinkId": 0,
-                   "customizedScript": "",
-                   "salesChannelId": 1,
-                   "inventoryTypeId": 0
-
-               }
-
-               //paramètre avec capping si format Interstitiel
-               if (format === '79633' || format === '44152') {
-
-                   var requestInsertion = {
-
-                       "isDeliveryRegulated": true,
-                       "isUsedByGuaranteedDeal": false,
-                       "isUsedByNonGuaranteedDeal": false,
-                       "impressionTypeId": 0,
-                       "voiceShare": 0,
-                       "eventId": 0,
-                       "creativeRotationModeId": 0,
-                       "name": insertion,
-                       "description": "",
-                       "isPersonalizedAd": false,
-                       "insertionStatusId": 0,
-                       //"siteIds": site,
-                       "packIds": [packs],
-                       "insertionStatusId": 1,
-                       "startDate": start_date,
-                       "endDate": end_date,
-                       "campaignId": campaign,
-                       "insertionTypeId": 0,
-                       "deliveryTypeId": delivery_type,
-                       "timezoneId": 4,
-                       "priorityId": priority,
-                       "periodicCappingId": 0,
-                       "groupCappingId": 0,
-                       "maxImpressions": 0,
-                       "weight": 0,
-                       "maxClicks": 0,
-                       "maxImpressionsPerDay": 0,
-                       "maxClicksPerDay": 0,
-                       "eventImpressions": 0,
-                       "isHolisticYieldEnabled": false,
-                       "deliverLeftVolumeAfterEndDate": false,
-                       "globalCapping": 0,
-                       "cappingPerVisit": 0,
-                       "cappingPerClick": 0,
-                       "autoCapping": 0,
-                       "periodicCappingImpressions": 1,
-                       "periodicCappingPeriod": 15,
-                       "isObaIconEnabled": false,
-                       "formatId": format,
-                       "externalId": 0,
-                       "externalDescription": "",
-                       "updatedAt": dateNow,
-                       "createdAt": dateNow,
-                       "isArchived": false,
-                       "rateTypeId": 0,
-                       "rate": 0.0,
-                       "rateNet": 0.0,
-                       "discount": 0.0,
-                       "currencyId": 0,
-                       "insertionLinkId": 0,
-                       "customizedScript": "",
-                       "salesChannelId": 1,
-                       "inventoryTypeId": 0
-
-                   }
-
-
-               }
-
-
-               await ModelInsertions
-                   .findOne({
-                       attributes: ['insertion_name'],
-                       where: {
-                           insertion_name: insertion
-                       }
-                   }).then(async function (insertionFound) {
-
-
-                       if (!insertionFound) {
-
-
-                           let insertion_create = await AxiosFunction.postManage(
-                               'insertions',
-                               requestInsertion
-                           );
-
-
-                           if (insertion_create.headers.location) {
-                               var url_location = insertion_create.headers.location
-                               var insertion_get = await AxiosFunction.getManage(url_location);
-                               const insertion_id = insertion_get.data.id
-
-                               //Si le format Interstitiel est choisi et que il n'y a pas exclusion
-                               //on coche la case targeting cookie
-                               if (format === '79633' || format === '44152') {
-                                   requestInsertionsTarget = {
-                                       "insertionId": insertion_id,
-                                       "targetBrowserWithCookies": true
-                                   }
-                                   await AxiosFunction.putManage(
-                                       'insertiontargetings',
-                                       requestInsertionsTarget
-                                   );
-                               }
-
-
-                               await ModelInsertions.create({
-                                   insertion_id: insertion_id,
-                                   insertion_name: insertion,
-                                   campaign_id: campaign,
-                                   insertion_start_date: start_date,
-                                   insertion_end_date: end_date,
-                                   pack_id: packs,
-                                   format_id: format,
-                                   delivery_type_id: delivery_type,
-                                   timezone_id: 4,
-                                   priority_id: priority,
-                                   campaign_archived: 0
-
-                               });
-
-                               req.session.message = {
-                                   type: 'success',
-                                   intro: 'Ok',
-                                   message: 'L\'inserion a été crée dans SMARTADSERVEUR',
-
-                               }
-                               return res.redirect(`/manager/insertions/create/${campaign}`)
-                           }
-
-
-
-
-
-                       } else {
-                           req.session.message = {
-                               type: 'danger',
-                               intro: 'Erreur',
-                               message: 'Insertions est déjà utilisé'
-                           }
-                           return res.redirect(`/manager/insertions/create/${campaign}`)
-                       }
-
-
-                   })
-         */
 
     } catch (error) {
         console.log(error);
+      /*  var log_error = await Utilities.logs('error')
+        log_error.error(error)*/
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
@@ -979,7 +1088,7 @@ exports.create_creative = async (req, res) => {
 
         data.insertions = await ModelInsertions.findOne({
             where: {
-                insertion_id: req.params.id
+                insertion_id: req.body.params.id
             },
 
         });

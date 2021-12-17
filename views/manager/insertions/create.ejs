@@ -3,7 +3,7 @@
 <div class="col-xl-12 col-md-12">
 
     <div class="card">
-        <form method="POST" action="/manager/insertions/create">
+        <form method="POST" action="/manager/insertions/create_post">
             <div class="card-header">
                 <h5>Ajouter une insertion</h5>
             </div>
@@ -18,131 +18,724 @@
                     </div>
                 </div>
                 <% if (message) { %>
+
+                <% if (message.type==="success") { %>
+
                 <div class="alert alert-<%=message.type%>" role="alert">
-                    <%=message.intro%>:<%=message.message%>
+                    <%=message.intro%>:<a href="<%=message.message%>"><strong> Voir la campagne</strong> </a>
                 </div>
-                <% } %>
+
+                <% }else{ %>
+
+                <div class="alert alert-<%=message.type%>" role="alert">
+                    <%=message.intro%>:<%=message.message%> </div>
+
+
+                <%  } %>
+
+
+                <%  } %>
+
+
 
                 <fieldset>
-                    <legend>CAMPAGNE</legend>
+                    <legend>ANNONCEUR</legend>
 
                     <div class="form-group">
-                        <label class="form-label" for="campaign_id">Campagne
+                        <label class="form-label required" for="advertiser_id">Annonceur
                         </label>
-                        <select class="form-control" id="campaign_id" name="campaign_id" required="required">
-                           
-                            <option value="1764641">
-                                TEST > Api manager
-                            </option>
-                           <option value="">-----------------------------</option>
-                            <option value="">Choisir une campagne</option>
-                            <% for (let i=0; i < campaigns.length; i++) { %>
-                            <option value="<%= campaigns[i].campaign_id %>">
-                                <%= campaigns[i].advertiser.advertiser_name %> > <%= campaigns[i].campaign_name %>
+                        <select class="form-control" id="advertiser_id" name="advertiser_id" required="required">
+
+                            <option value="" selected disabled>Choisir une annonceur</option>
+
+                            <% for (let i=0; i < advertisers.length; i++) { %>
+                            <option value="<%= advertisers[i].advertiser_id %>"><%= advertisers[i].advertiser_name %>
                             </option>
                             <% } %>
                         </select>
                     </div>
 
+                    <legend>CAMPAGNE</legend>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="campaign_id">Campagne
+                        </label>
+                        <select class="form-control" id="campaign_id" name="campaign_id" required="required">
+
+                            <option value="" selected disabled>Sélectionner une campagne</option>
+
+                        </select>
+                    </div>
+
+
+
                     <div class="row">
-                        <div class="form-group col-6">
-                            <label class="form-label" for="format_group_id">Format
+                        <div class="form-group col-6 ">
+
+
+                            <label class="form-label required" for="format_group_id">Format
                             </label>
                             <select class="form-control" id="format_group_id" name="format_group_id"
                                 required="required">
-                                <option value="">Choisir un format</option>
-                                <% for(let i=1; i < formats.length; i++) {%>
-                                    <option value="<%= formats[i].format_group %>">
-                                        <%= formats[i].format_group %></option>
-                                    <% } %>
+                                <option value="" selected disabled>Sélectionner le format</option>
+                                <optgroup label="MASTHEAD">
+                                    <option value="3">MASTHEAD</option>
+                                    <option value="17">DUPLICATION POSITION GRAND ANGLE</option>
+                                </optgroup>
+                                <optgroup label="RECTANGLE VIDEO">
+                                    <option value="12">RECTANGLE VIDEO</option>
+                                    <option value="18">DUPLICATION POSITION MASTHEAD</option>
+                                </optgroup>
+                                <optgroup label="GRAND ANGLE">
+                                    <option value="4">GRAND ANGLE</option>
+                                    <option value="16">DUPLICATION POSITION MASTHEAD</option>
+                                </optgroup>
+                                <option value="1" style="font-weight: bold;">HABILLAGE</option>
+                                <option value="2" style="font-weight: bold;">INTERSTITIEL</option>
+                                <option value="9" style="font-weight: bold;">INSTREAM</option>
+                                <option value="13" style="font-weight: bold;">MISE EN AVANT</option>
+                                <option value="5" style="font-weight: bold;">SLIDER</option>
+
+
                             </select>
                         </div>
 
-                        <div class="form-group col-6">
-                            <label class="form-label" for="pack_id">Pack
+                        <div class="form-group col-6" id="creativeType">
+                            <label class="form-label required" for="creative_type_id">Type de créative
                             </label>
-                            <select class="form-control" id="pack_id" name="pack_id" required="required">
-                                <option value="">Choisir un pack</option>
-                                <% for (let i=0; i < packs.length; i++) { %>
-                                <option value="<%= packs[i].pack_id %>"><%= packs[i].pack_name %></option>
-                                <% } %>
+                            <select class="form-control" id="creative_type_id" name="creative_type_id">
+                                <option value="" selected disabled>Sélectionner un type créative</option>
                             </select>
                         </div>
                     </div>
                 </fieldset>
 
-                <fieldset>
+                <legend>INSERTION CREATIVE</legend>
+                <div class="form-group col-6">
+                    <label class="form-label" for="insertion_name">Nom de l'insertion</label>
+                    <input type="text" name="insertion_name" id="insertion_name" class="form-control"
+                        placeholder="Saisissez un nom insertion" />
+                </div>
+                <fieldset id="creativeImage">
                     <legend>DISPLAY</legend>
 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label" for="display_mobile_file">Fichier Mobile</label>
-                            <input type="url" name="display_mobile_file" id="display_mobile_file" class="form-control"
-                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG"
-                                 />
-                        </div>
-
-                        <div class="form-group col-6">
-                            <label class="form-label" for="display_mobile_url">Url Mobile</label>
-                            <input type="url" name="display_mobile_url" id="display_mobile_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour le mobile"  />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <label class="form-label" for="display_tablet_file">Fichier Tablette</label>
-                            <input type="url" name="display_tablet_file" id="display_tablet_file" class="form-control"
-                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG"
-                                 />
-                        </div>
-                        <div class="form-group col-6">
-                            <label class="form-label" for="display_tablet_url">Url Tablette</label>
-                            <input type="url" name="display_tablet_url" id="display_tablet_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour la tablette"  />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <label class="form-label" for="display_desktop_file">Fichier Desktop</label>
+                            <label class="form-label required" for="display_desktop_file">Fichier Desktop</label>
                             <input type="url" name="display_desktop_file" id="display_desktop_file" class="form-control"
-                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG"
-                                 />
+                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG" />
                         </div>
                         <div class="form-group col-6">
-                            <label class="form-label" for="display_desktop_url">Url Desktop</label>
+                            <label class="form-label required" for="display_desktop_url">Url Desktop</label>
                             <input type="url" name="display_desktop_url" id="display_desktop_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection pour le desktop"  />
+                                placeholder="Saisissez l'url de redirection pour le desktop" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_mobile_file">Fichier Mobile</label>
+                            <input type="url" name="display_mobile_file" id="display_mobile_file" class="form-control"
+                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_mobile_url">Url Mobile</label>
+                            <input type="url" name="display_mobile_url" id="display_mobile_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le mobile" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_tablet_file">Fichier Tablette</label>
+                            <input type="url" name="display_tablet_file" id="display_tablet_file" class="form-control"
+                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_tablet_url">Url Tablette</label>
+                            <input type="url" name="display_tablet_url" id="display_tablet_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour la tablette" />
+                        </div>
+                    </div>
+
+
+                </fieldset>
+
+                <fieldset id="creativeMea">
+                    <legend>DISPLAY</legend>
+
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_mea_file">Fichier RZ LP</label>
+                            <input type="url" name="display_mea_file" id="display_mea_file" class="form-control"
+                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_mea_url">Url RZ LP</label>
+                            <input type="url" name="display_mea_url" id="display_mea_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le mobile" />
+                        </div>
+                    </div>
+
+
+
+                </fieldset>
+
+                <fieldset id="creativeHabillage">
+                    <legend>DISPLAY HABILLAGE</legend>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_file">Fichier Linfo (Desktop)</label>
+                            <input type="url" name="display_linfo_file" id="display_linfo_file" class="form-control"
+                                placeholder="Saisissez le fichier desktop au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_url">Url Linfo (Desktop)</label>
+                            <input type="url" name="display_linfo_url" id="display_linfo_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour le desktop" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_appli_file">Fichier Linfo (Mobile +
+                                Appli)</label>
+                            <input type="url" name="display_linfo_appli_file" id="display_linfo_appli_file"
+                                class="form-control"
+                                placeholder="Saisissez le fichier mobile au format JPEG, GIF, PNG" />
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_linfo_appli_url">Url Linfo (Mobile +
+                                Appli)</label>
+                            <input type="url" name="display_linfo_appli_url" id="display_linfo_appli_url"
+                                class="form-control" placeholder="Saisissez l'url de redirection pour le mobile" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_ar_file">Fichier AntenneRéunion </label>
+                            <input type="url" name="display_ar_file" id="display_ar_file" class="form-control"
+                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_ar_url">Url AntenneRéunion </label>
+                            <input type="url" name="display_ar_url" id="display_ar_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour la tablette" />
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_dtj_file">Fichier Domtomjob</label>
+                            <input type="url" name="display_dtj_file" id="display_dtj_file" class="form-control"
+                                placeholder="Saisissez le fichier tablette au format JPEG, GIF, PNG" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_dtj_url">Url Domtomjob</label>
+                            <input type="url" name="display_dtj_url" id="display_dtj_url" class="form-control"
+                                placeholder="Saisissez l'url de redirection pour la tablette" />
                         </div>
                     </div>
                 </fieldset>
 
-                <fieldset>
+                <fieldset id="creativeVideo">
                     <legend>VIDEO</legend>
                     <div class="row">
                         <div class="form-group col-6">
-                            <label class="form-label" for="video_file">Fichier Vidéo</label>
+                            <label class="form-label required" for="video_file">Fichier Vidéo</label>
                             <input type="url" name="video_file" id="video_file" class="form-control"
-                                placeholder="Saisissez l'url du fichier au format MP4"  />
+                                placeholder="Saisissez l'url du fichier au format MP4" />
                         </div>
 
                         <div class="form-group col-6">
-                            <label class="form-label" for="video_url">Url Vidéo</label>
+                            <label class="form-label required" for="video_url">Url Vidéo</label>
                             <input type="url" name="video_url" id="video_url" class="form-control"
-                                placeholder="Saisissez l'url de redirection"  />
+                                placeholder="Saisissez l'url de redirection" />
                         </div>
                     </div>
                 </fieldset>
 
+                <fieldset id="creativeSlider">
+                    <legend>DISPLAY SLIDER</legend>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 1</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 1</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 2</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 2</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 3</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 3</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 4</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 4</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 5</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 5</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 6</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 6</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 7</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 7</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 8</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 8</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 9</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 9</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 10</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 10</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 11</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 11</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 12</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 12</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 13</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 13</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 14</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 14</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 15</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 15</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 16</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 16</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 17</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 17</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 18</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 18</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 19</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 19</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_file">Fichier Slider 20</label>
+                            <input type="url" name="display_slider_file" id="display_slider_file" class="form-control"
+                                placeholder="Saisissez le fichier slider" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="form-label required" for="display_slider_url">Url Slider 20</label>
+                            <input type="url" name="display_slider_url" id="display_slider_url" class="form-control"
+                                placeholder="Saisissez l'url slider" />
+                        </div>
+                    </div>
+                </fieldset>
             </div>
-            <div class="card-footer">
-                <input type="submit" name="submit" class="btn btn-primary mr-2 btn-submit"
-                    value="Créer une nouvelle insertion" />
-            </div>
-        </form>
     </div>
+
+
+
+    </fieldset>
+
+
+</div>
+<div class="card-footer">
+    <input type="submit" name="submit" class="btn btn-primary mr-2 btn-submit" value="Créer une nouvelle insertion" />
+</div>
+
+</form>
+</div>
 
 </div>
 
-<%- include("../../layouts/manager/footer.ejs") -%>
+</div>
+<!-- [ Main Content ] end -->
+</div>
+</div>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KT6H7LH" height="0" width="0"
+        style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<script src="/assets/js/vendor-all.min.js"></script>
+<script src="/assets/js/plugins/bootstrap.min.js"></script>
+<script src="/assets/js/plugins/feather.min.js"></script>
+<script src="/assets/js/pcoded.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async>
+</script>
+
+
+<!-- custom-chart js
+<script src="/assets/js/pages/dashboard-sale.js"></script>  -->
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="/manager/js/manager.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        let select_advertiser = $("#advertiser_id");
+        let select_campaign = $("#campaign_id");
+        let select_format = $("#format_group_id")
+        let select_creativeType = $("#creative_type_id")
+
+
+
+        $("#creativeImage").hide();
+        $("#creativeVideo").hide();
+        $("#creativeHabillage").hide();
+        $("#creativeMea").hide();
+        $("#creativeSlider").hide();
+
+
+        
+
+
+
+        select_advertiser.on("change", function () {
+            //model($(this).val());
+            var advertiser_id = $(this).val()
+
+            console.log(advertiser_id)
+            $.get(`https://reporting.antennesb.fr/app/json/campaign/${advertiser_id}`, function (
+                campagnes) {
+
+
+                let list_campaign =
+                    `<option value="" selected disabled>Sélectionner une campagne</option>`;
+                //pour chaque éléments crée un option dans le select
+                campagnes.forEach((campaign) => {
+                    list_campaign +=
+                        `<option value="${campaign.campaign_id}">${campaign.campaign_name}</option>`
+                });
+
+                //on affiche sur la page l'ensemble des données
+                $("#campaign_id").html(list_campaign);
+
+
+
+            })
+
+        })
+
+
+        select_format.on("change", function () {
+            //model($(this).val());
+            var format_group_id = $(this).val()
+
+            $.get(`https://reporting.antennesb.fr/app/json/creative/${format_group_id}`, function (
+                creativeType) {
+
+
+                switch (format_group_id) {
+                    case "1":
+                        $("#creativeType").hide();
+                        $("#creativeHabillage").show();
+                        $("#creativeMea").hide();
+                        $("#creativeImage").hide();
+                        $("#creativeVideo").hide();
+                        $("#creativeSlider").hide();
+
+                        break;
+                    case "13":
+                        $("#creativeType").hide();
+                        $("#creativeMea").show();
+                        $("#creativeHabillage").hide();
+                        $("#creativeImage").hide();
+                        $("#creativeVideo").hide();
+                        $("#creativeSlider").hide();
+
+                        break;
+                    case "5":
+                        $("#creativeType").hide();
+                        $("#creativeSlider").show();
+                        $("#creativeMea").hide();
+                        $("#creativeHabillage").hide();
+                        $("#creativeImage").hide();
+                        $("#creativeVideo").hide();
+                        break;
+
+                    default:
+                        $("#creativeType").show();
+                        $("#creativeHabillage").hide();
+                        $("#creativeMea").hide();
+                        $("#creativeSlider").hide();
+
+
+                        let list_creative =
+                            `<option value="" selected disabled>Sélectionner un type créative</option>`;
+                        //pour chaque éléments crée un option dans le select
+                        creativeType.forEach((creativeType) => {
+                            list_creative +=
+                                `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
+                        });
+
+                        //on affiche sur la page l'ensemble des données
+                        $("#creative_type_id").html(list_creative);
+
+                        break;
+
+                }
+
+
+
+                /* if (format_group_id === '1') {
+                     $("#creativeType").hide();
+                     $("#creativeHabillage").show();
+                     $("#creativeImage").hide();
+                     $("#creativeVideo").hide();
+
+
+
+                 } else {
+                     $("#creativeType").show();
+                     $("#creativeHabillage").hide();
+                     let list_creative =
+                         `<option value="" selected disabled>Sélectionner un type créative</option>`;
+                     //pour chaque éléments crée un option dans le select
+                     creativeType.forEach((creativeType) => {
+                         list_creative +=
+                             `<option value="${creativeType.creative_type_id}">${creativeType.creatives_type.creative_type_name}</option>`
+                     });
+
+                     //on affiche sur la page l'ensemble des données
+                     $("#creative_type_id").html(list_creative);
+
+                 }*/
+
+
+
+
+            })
+
+
+
+        })
+        select_creativeType.on("change", function () {
+            var creativeType_id = $(this).val()
+
+
+
+            if (creativeType_id === '1') {
+                $('#creativeImage').show();
+            } else {
+                $("#creativeImage").hide();
+
+            }
+
+
+
+            if (creativeType_id === '2') {
+                $('#creativeVideo').show();
+
+            } else {
+                $("#creativeVideo").hide();
+
+            }
+
+
+        })
+    })
+</script>
+</body>
+
+</html>

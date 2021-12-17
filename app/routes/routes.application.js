@@ -13,5 +13,9 @@ router.get("/json/formats", app.formast_json)
 router.get("/json/packs", app.packs_json)
 router.get("/json/countrys", app.countrys_json)
 router.get("/json/packs/sites", app.packs_sites_json)
+router.get("/json/campaign/:advertiser_id", app.campaign_json)
+router.get("/json/creative/:format_group_id", app.creativeType_json)
+
+
 
 module.exports = router;

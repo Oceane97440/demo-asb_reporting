@@ -96,7 +96,7 @@ exports.generate = async (req, res) => {
 
             console.log(reportingData);
             if (reportingDataStorage && (reportingData.reporting_end_date < date_now)) {
-
+               
 
                 res.render('report/template.ejs', {
                     reporting: reportingData,
@@ -128,7 +128,7 @@ exports.generate = async (req, res) => {
                 });
             }
 
-
+            
         });
 }
 
@@ -244,18 +244,18 @@ exports.report = async (req, res) => {
 
                     } else {
 
-                        var insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                        insertion_start_date = await ModelInsertions.max('insertion_start_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
-                        var insertion_end_date = await ModelInsertions.max('insertion_end_date', {
+                        insertion_end_date = await ModelInsertions.max('insertion_end_date', {
                             where: {
                                 campaign_id: campaign_id
                             }
                         });
 
-                       var insertion_format = await ModelInsertions.findOne({
+                        insertion_format = await ModelInsertions.findOne({
                             where: {
                                 campaign_id: campaign_id,
                                 format_id: {
@@ -436,6 +436,9 @@ exports.report = async (req, res) => {
                             // firstLinkTaskId = vide
                             if (firstLink) {
                                 if (firstLink.status == 201) {
+                                    /*log_reporting = await Utilities.logs('info')
+                                    log_reporting.info("Task id global : "+firstLink);*/
+
                                     localStorageTasks.setItem(
                                         cacheStorageID + '-firstLink-' + cacheStorageIDHour,
                                         firstLink.data.taskId
@@ -444,6 +447,8 @@ exports.report = async (req, res) => {
                                 }
                             } else {
                                 firstLinkTaskId = null;
+                                /*log_reporting.info("Task id global null: "+firstLinkTaskId);*/
+
                             }
                         }
 
@@ -464,6 +469,8 @@ exports.report = async (req, res) => {
                             // twoLinkTaskId = vide
                             if (twoLink) {
                                 if (twoLink.status == 201) {
+                                    /*log_reporting.info("Task id vu : "+twoLink);*/
+
                                     localStorageTasks.setItem(
                                         cacheStorageID + '-twoLink-' + cacheStorageIDHour,
                                         twoLink.data.taskId
@@ -516,6 +523,8 @@ exports.report = async (req, res) => {
                                                     `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
                                                     ''
                                                 );
+                                                /*log_reporting.info("Data global crée : "+taskId);*/
+
                                                 // save la data requête 1 dans le local storage
                                                 dataLSTaskGlobal = {
                                                     'datafile': dataFile.data
@@ -548,6 +557,8 @@ exports.report = async (req, res) => {
                                                     `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}/file`,
                                                     ''
                                                 );
+                                                /*log_reporting.info("Data vu crée : "+taskId_uu);*/
+
                                                 // save la data requête 2 dans le local storage
                                                 dataLSTaskGlobalVU = {
                                                     'datafile': dataFile2.data
@@ -907,12 +918,8 @@ exports.report = async (req, res) => {
                                         formatObjects.campaign.repetition = repetition;
                                     }
                                     //Si la campagne possède un masthead ou interstitiel , on recupère le localstorage de GAM
-
                                     if (!Utilities.empty(insertion_format)) {
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
-                                        console.log("-------------")
-
-                                        console.log(admanager)
 
                                         if (admanager) {
 
@@ -984,8 +991,7 @@ exports.report = async (req, res) => {
 
 
                                     }
-
-                                    console.log(admanager)
+                                    
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
@@ -996,9 +1002,7 @@ exports.report = async (req, res) => {
                                     if (localStorage.getItem(cacheStorageID)) {
                                         localStorage.removeItem(cacheStorageID);
                                     }
-                                    if (localStorage.getItem(cacheStorageID)) {
-                                        localStorage.removeItem(cacheStorageID);
-                                    }
+                                    if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
 
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
@@ -1013,6 +1017,8 @@ exports.report = async (req, res) => {
                     }
 
                 } catch (error) {
+                    /*log_err =  Utilities.logs('error')
+                    log_err.error('Un problème est survenu lors de la génération reporting ' + error.response.status +' - ' +error.response.headers);*/
                     var statusCoded = error.response;
 
                     res.render("error.ejs", {
@@ -1026,6 +1032,9 @@ exports.report = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+   /* log_err =  Utilities.logs('error')
+        log_err.error('Un problème est survenu lors de la génération reporting ' + error.response.status +' - ' +error.response.headers);*/
+    
         var statusCoded = error.response;
         res.render("error.ejs", {
             statusCoded: statusCoded,

@@ -190,7 +190,7 @@ exports.forecast = async (req, res, next) => {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
-                message: 'La date de début doit être J+1 à la date du jour'
+                message: 'Saisissez une date valide'
             }
             return res.redirect('manager/forecast');
         }
@@ -200,7 +200,7 @@ exports.forecast = async (req, res, next) => {
             req.session.message = {
                 type: 'danger',
                 intro: 'Un problème est survenu',
-                message: 'La date de fin doit être supérieur à la date du jour'
+                message: 'Saisissez une date valide'
             }
             return res.redirect('manager/forecast');
         }

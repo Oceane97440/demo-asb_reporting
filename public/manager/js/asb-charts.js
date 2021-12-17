@@ -1,5 +1,9 @@
 'use strict';
 $(document).ready(function () {
+    var config = {
+        baseurl: "http://reporting.antennesb.fr/"
+    };
+    
 
     var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
     var chartAdvertiserUrl = config.baseurl + 'manager/charts/advertisers';

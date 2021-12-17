@@ -11,14 +11,12 @@ router.get('/campaignday', test.campaignday);
 router.get("/template", test.template);
 
 router.get("/array", test.array_unique);
-router.get("/nodemail",test.nodemail);
-router.get("/read",test.read_excel);
-router.get("/log",test.log_error);
-router.get("/taskid",test.taskid);
-router.get("/taskid2",test.test_taskid);
-
-router.get("/chart-campaign",test.chartCampaign);
-router.get("/campaigns/report",test.campaignsReport);
-
+router.get("/nodemail",test.nodemail)
+router.get("/read",test.read_excel)
+router.get("/creative",test.creative)
+router.get("/taskid",test.taskid)
+router.get("/taskid2",test.test_taskid)
+router.get("/duplication",test.duplication)
+router.get("/logs",test.logs)
 
 module.exports = router;
