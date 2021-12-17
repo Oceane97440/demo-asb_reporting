@@ -436,6 +436,9 @@ exports.report = async (req, res) => {
                             // firstLinkTaskId = vide
                             if (firstLink) {
                                 if (firstLink.status == 201) {
+                                    log_reporting = await Utilities.logs('info')
+                                    log_reporting.info("Task id global : "+firstLink);
+
                                     localStorageTasks.setItem(
                                         cacheStorageID + '-firstLink-' + cacheStorageIDHour,
                                         firstLink.data.taskId
@@ -444,6 +447,8 @@ exports.report = async (req, res) => {
                                 }
                             } else {
                                 firstLinkTaskId = null;
+                                log_reporting.info("Task id global null: "+firstLinkTaskId);
+
                             }
                         }
 
@@ -464,6 +469,8 @@ exports.report = async (req, res) => {
                             // twoLinkTaskId = vide
                             if (twoLink) {
                                 if (twoLink.status == 201) {
+                                    log_reporting.info("Task id vu : "+twoLink);
+
                                     localStorageTasks.setItem(
                                         cacheStorageID + '-twoLink-' + cacheStorageIDHour,
                                         twoLink.data.taskId
@@ -516,6 +523,8 @@ exports.report = async (req, res) => {
                                                     `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
                                                     ''
                                                 );
+                                                log_reporting.info("Data global crée : "+taskId);
+
                                                 // save la data requête 1 dans le local storage
                                                 dataLSTaskGlobal = {
                                                     'datafile': dataFile.data
@@ -548,6 +557,8 @@ exports.report = async (req, res) => {
                                                     `https://reporting.smartadserverapis.com/2044/reports/${taskId_uu}/file`,
                                                     ''
                                                 );
+                                                log_reporting.info("Data vu crée : "+taskId_uu);
+
                                                 // save la data requête 2 dans le local storage
                                                 dataLSTaskGlobalVU = {
                                                     'datafile': dataFile2.data
@@ -1006,6 +1017,8 @@ exports.report = async (req, res) => {
                     }
 
                 } catch (error) {
+                    log_err =  Utilities.logs('error')
+                    log_err.error('Un problème est survenu lors de la génération reporting ' + error.response.status +' - ' +error.response.headers);
                     var statusCoded = error.response;
 
                     res.render("error.ejs", {
@@ -1019,6 +1032,9 @@ exports.report = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        log_err =  Utilities.logs('error')
+        log_err.error('Un problème est survenu lors de la génération reporting ' + error.response.status +' - ' +error.response.headers);
+    
         var statusCoded = error.response;
         res.render("error.ejs", {
             statusCoded: statusCoded,

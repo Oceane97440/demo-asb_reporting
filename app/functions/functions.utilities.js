@@ -218,18 +218,15 @@ exports.logs =  async function (level){
         },
         categories: {
             default: {
-                appenders: ["cheese"],
+                appenders: ["asb"],
                 level: level
             }
         }
     });
 
-    const logger = log4js.getLogger("cheese");
+    const logger = log4js.getLogger("asb");
 
 
-
-
-   
     return logger;
        
     

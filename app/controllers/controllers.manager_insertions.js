@@ -4,6 +4,8 @@ const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
 
+
+
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
@@ -30,6 +32,8 @@ const moment = require('moment');
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
 const Utilities = require("../functions/functions.utilities");
+
+
 
 // Initialise les models const ModelSite = require("../models/models.site");
 const ModelFormats = require("../models/models.formats");
@@ -420,9 +424,10 @@ exports.create_post = async (req, res) => {
             video_file: req.body.video_file,
             video_url: req.body.video_url,
         }
+        var log_body = await Utilities.logs('info')
+        log_body.info(body);
 
-
-      //  console.log(body)
+        //  console.log(body)
 
         const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
@@ -455,7 +460,7 @@ exports.create_post = async (req, res) => {
         const video_url = body.video_url;
 
 
-       const ArrayRegex = [
+        const ArrayRegex = [
             display_mobile_file,
             display_tablet_file,
             display_desktop_file,
@@ -469,54 +474,54 @@ exports.create_post = async (req, res) => {
 
         const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
 
-     
+
         for (let index = 0; index < ArrayRegex.length; index++) {
             const element = ArrayRegex[index];
 
             if (!Utilities.empty(element)) {
                 if (!element.match(regex_url)) {
-        
+
                     console.log(element)
                     req.session.message = {
                         type: 'danger',
                         intro: 'URLS invalides: ',
                         message: 'Les urls fichiers sont invalides'
                     }
-        
-        
+
+
                     return res.redirect('/manager/insertions/create');
                 }
             }
-           
+
         }
-  
-      
+
+
         if (!Utilities.empty(display_slider_file)) {
             for (let s = 0; s < display_slider_file.length; s++) {
                 const slider = display_slider_file[s];
                 if (!Utilities.empty(slider)) {
                     if (!slider.match(regex_url)) {
-            
+
                         console.log(slider)
                         req.session.message = {
                             type: 'danger',
                             intro: 'URLS invalides: ',
                             message: 'Les urls fichiers slider sont invalides'
                         }
-            
-            
+
+
                         return res.redirect('/manager/insertions/create');
                     }
                 }
 
-                 
-                
-               
-            } 
+
+
+
+            }
         }
-          
-        
-        
+
+
+
         if (Utilities.empty(advertiser_id) ||
             Utilities.empty(campaign_id) ||
             Utilities.empty(format_group_id)
@@ -613,7 +618,7 @@ exports.create_post = async (req, res) => {
                     var insertion_id_model = insertion_model[i].insertion_id
                     var insertion_name_model = insertion_model[i].insertion_name
 
-                   // console.log(insertion_name_model)
+                    // console.log(insertion_name_model)
 
 
                     //Si input text n'est pas vide
@@ -637,21 +642,28 @@ exports.create_post = async (req, res) => {
                         insertion_id_model
                     );
 
+
                     // console.log(requestInsertionsCopy)
 
 
                     if (insertion_copy.headers.location) {
+
+
 
                         var url_location = insertion_copy.headers.location
                         var insertion_get = await AxiosFunction.getManage(url_location);
                         const insertion_id = insertion_get.data.id
                         const insertion_name_copy = insertion_get.data.name
                         // console.log('insertion_id dupliqués ' + insertion_id)
+                        var log_insertion_copy = await Utilities.logs('info')
+                        log_insertion_copy.info("L'insertion a été copiée :" + insertion_id);
 
                         //recupération data des creatives
                         var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
                         var dataValue = insertions_creatives_get.data;
                         var number_line_offset = insertions_creatives_get.data.length;
+
+
 
                         for (let d = 0; d < number_line_offset; d++) {
                             if (!Utilities.empty(dataValue)) {
@@ -663,6 +675,9 @@ exports.create_post = async (req, res) => {
                                 var creatives_width = dataValue[d].width
                                 var creatives_height = dataValue[d].height
                                 var creatives_typeId = dataValue[d].creativeTypeId
+
+                                var log_creatives = await Utilities.logs('info')
+                                log_creatives.info("Requête récupération data des créatives creatives_id :" + creatives_id + " Total creative :" + number_line_offset);
 
                                 console.log({
                                     'creatives_id': creatives_id,
@@ -873,13 +888,16 @@ exports.create_post = async (req, res) => {
 
                                     }
 
-                                   // console.log(requestCreatives)
-                                  //  console.log("-----------------------------------")
+                                    // console.log(requestCreatives)
+                                    //  console.log("-----------------------------------")
 
                                     await AxiosFunction.putManage(
                                         'imagecreatives',
                                         requestCreatives
                                     );
+                                    log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative display creatives_id: "+creatives_id);
+
                                 }
 
                                 //Creative de type image - format habillage
@@ -932,6 +950,10 @@ exports.create_post = async (req, res) => {
                                         'imagecreatives',
                                         requestCreatives
                                     );
+
+                                    log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative habillage creatives_id: "+creatives_id);
+
                                 }
 
                                 //Creative de type video
@@ -960,6 +982,10 @@ exports.create_post = async (req, res) => {
                                         'videocreatives',
                                         requestCreatives
                                     );
+
+                                    log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative video creatives_id: "+creatives_id);
+
                                 }
 
                                 //Creative de type script
@@ -984,12 +1010,15 @@ exports.create_post = async (req, res) => {
                                     requestCreatives['width'] = 300
                                     requestCreatives['height'] = 250
                                     requestCreatives['creativeTypeId'] = 4
-                                    requestCreatives['mimeType'] = "",
+                                    requestCreatives['mimeType'] = ""
 
-                                        await AxiosFunction.putManage(
-                                            'scriptcreatives',
-                                            requestCreatives
-                                        );
+                                    await AxiosFunction.putManage(
+                                        'scriptcreatives',
+                                        requestCreatives
+                                    );
+                                    log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative script creatives_id: "+creatives_id);
+
                                 }
 
 
@@ -1024,10 +1053,12 @@ exports.create_post = async (req, res) => {
         }
         return res.redirect("/manager/insertions/create")
 
-  
+
 
     } catch (error) {
         console.log(error);
+        var log_error = await Utilities.logs('error')
+        log_error.error(error)
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded

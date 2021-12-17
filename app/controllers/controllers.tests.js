@@ -2380,10 +2380,10 @@ exports.duplication = async (req, res) => {
 
 exports.logs = async (req, res) => {
 
-  var test = await Utilities.logs('error')
-  console.log(test)
-  test.error("TEst fonction");
+  var test = await Utilities.logs('info')
 
+  test.info("TEst fonction");
+    res.send("ok")
     /*
     logger.trace("Entering cheese testing");
     logger.debug("Got cheese.");
