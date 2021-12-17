@@ -424,8 +424,8 @@ exports.create_post = async (req, res) => {
             video_file: req.body.video_file,
             video_url: req.body.video_url,
         }
-        var log_body = await Utilities.logs('info')
-        log_body.info(body);
+       /* var log_body = await Utilities.logs('info')
+        log_body.info(body);*/ 
 
         //  console.log(body)
 
@@ -655,8 +655,8 @@ exports.create_post = async (req, res) => {
                         const insertion_id = insertion_get.data.id
                         const insertion_name_copy = insertion_get.data.name
                         // console.log('insertion_id dupliqués ' + insertion_id)
-                        var log_insertion_copy = await Utilities.logs('info')
-                        log_insertion_copy.info("L'insertion a été copiée :" + insertion_id);
+                       /* var log_insertion_copy = await Utilities.logs('info')
+                        log_insertion_copy.info("L'insertion a été copiée :" + insertion_id);*/
 
                         //recupération data des creatives
                         var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
@@ -676,8 +676,8 @@ exports.create_post = async (req, res) => {
                                 var creatives_height = dataValue[d].height
                                 var creatives_typeId = dataValue[d].creativeTypeId
 
-                                var log_creatives = await Utilities.logs('info')
-                                log_creatives.info("Requête récupération data des créatives creatives_id :" + creatives_id + " Total creative :" + number_line_offset);
+                                /*var log_creatives = await Utilities.logs('info')
+                                log_creatives.info("Requête récupération data des créatives creatives_id :" + creatives_id + " Total creative :" + number_line_offset);*/
 
                                 console.log({
                                     'creatives_id': creatives_id,
@@ -895,8 +895,8 @@ exports.create_post = async (req, res) => {
                                         'imagecreatives',
                                         requestCreatives
                                     );
-                                    log_creative = await Utilities.logs('info')
-                                    log_creative.info("Mise à jour créative display creatives_id: "+creatives_id);
+                                   /* log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative display creatives_id: "+creatives_id);*/
 
                                 }
 
@@ -951,8 +951,8 @@ exports.create_post = async (req, res) => {
                                         requestCreatives
                                     );
 
-                                    log_creative = await Utilities.logs('info')
-                                    log_creative.info("Mise à jour créative habillage creatives_id: "+creatives_id);
+                                    /*log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative habillage creatives_id: "+creatives_id);*/
 
                                 }
 
@@ -983,8 +983,8 @@ exports.create_post = async (req, res) => {
                                         requestCreatives
                                     );
 
-                                    log_creative = await Utilities.logs('info')
-                                    log_creative.info("Mise à jour créative video creatives_id: "+creatives_id);
+                                   /* log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative video creatives_id: "+creatives_id);*/
 
                                 }
 
@@ -1016,8 +1016,8 @@ exports.create_post = async (req, res) => {
                                         'scriptcreatives',
                                         requestCreatives
                                     );
-                                    log_creative = await Utilities.logs('info')
-                                    log_creative.info("Mise à jour créative script creatives_id: "+creatives_id);
+                                    /*log_creative = await Utilities.logs('info')
+                                    log_creative.info("Mise à jour créative script creatives_id: "+creatives_id);*/
 
                                 }
 
