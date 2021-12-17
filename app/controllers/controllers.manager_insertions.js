@@ -1057,8 +1057,8 @@ exports.create_post = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        var log_error = await Utilities.logs('error')
-        log_error.error(error)
+      /*  var log_error = await Utilities.logs('error')
+        log_error.error(error)*/
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded

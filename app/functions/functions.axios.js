@@ -63,9 +63,9 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
         console.log('response.status : ', error.response.status);
         console.log('response.headers : ', error.response.headers);
       
-        log_err =  Utilities.logs('error')
+       /* log_err =  Utilities.logs('error')
         log_err.error('Requête Reporting erreur : ' + error.response.status + " - " + error.response.statusText);
-        log_err.error(error.response.data.Message);
+        log_err.error(error.response.data.Message);*/
     
         console.log('------------');
         return return_data = null;
@@ -196,9 +196,9 @@ exports.getManageData = async (method) => {
   
     return format_data
   } catch (error) {
-    log_err = await Utilities.logs('error')
+   /* log_err = await Utilities.logs('error')
     log_err.error('Requête GET API errreur : ' + error.response.status + " - " + error.response.statusText);
-    log_err.error(error.response.data.Message);
+    log_err.error(error.response.data.Message);*/
 
   }
 
@@ -253,9 +253,9 @@ exports.postManage = async (method, data = null) => {
 
     return test;
   } catch (error) {
-    log_err = await Utilities.logs('error')
+    /*log_err = await Utilities.logs('error')
     log_err.error('Requête POST API errreur : ' + error.response.status + " - " + error.response.statusText);
-    log_err.error(error.response.data.Message);
+    log_err.error(error.response.data.Message);*/
 
   }
 
@@ -302,9 +302,9 @@ exports.copyManage = async (method, data = null, id) => {
 
     return test;
   } catch (error) {
-    log_err = await Utilities.logs('error')
+    /*log_err = await Utilities.logs('error')
     log_err.error("Erreur lors de la duplication d'une insertion insertion_id :" + id + '-' + error.response.status + " - " + error.response.statusText);
-    log_err.error(error.response.data.Message);
+    log_err.error(error.response.data.Message);*/
 
   }
 
@@ -374,9 +374,9 @@ exports.getManageCopy = async (method, id) => {
 
     return test;
   } catch (error) {
-    log_err = await Utilities.logs('error')
+   /*log_err = await Utilities.logs('error')
     log_err.error('Erreur GET API créative : ' + id + '-' + error.response.status + " - " + error.response.statusText);
-    log_err.error(error.response.data.Message);
+    log_err.error(error.response.data.Message);*/
   }
 
 
@@ -430,9 +430,9 @@ exports.putManage = async (method, data = null) => {
     return test;
   } catch (error) {
 
-    log_err = await Utilities.logs('error')
+   /* log_err = await Utilities.logs('error')
     log_err.error(error.response.status + " - " + error.response.statusText);
-    log_err.error(error.response.data.Message);
+    log_err.error(error.response.data.Message);*/
 
 
   }
@@ -459,8 +459,8 @@ exports.getAdManager = async (campaign_id) => {
 
   } catch (error) {
 
-    log_err = await Utilities.logs('error')
-    log_err.error('Erreur campagne GAM ' + error.response);
+   /* log_err = await Utilities.logs('error')
+    log_err.error('Erreur campagne GAM ' + error.response);*/
 
   }
 
