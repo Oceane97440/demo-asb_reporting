@@ -1,31 +1,61 @@
-<div class="table-responsive">
+<div class="table-responsive" id="table_epilot_insertions">
     <table class="table table-striped table_sort">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Annonceur</th>
-                <th>Campagne</th>
-                <th>Insertion</th>
-                <th>Commercial</th>
-                <th>Date de début</th>
-                <th>Date de fin</th>
-                <th>Volume</th>
-                <th>Status</th>
+                <th class="epilot_insertion_id">#</th>
+                <th class="epilot_advertiser_name">Annonceur</th>
+                <th class="epilot_campaign_name">Campagne</th>
+                <th class="epilot_insertion_name">Insertion</th>
+                <th class="format_group_name">Format</th>
+                <th class="epilot_insertion_commercial">Commercial</th>
+                <th class="epilot_insertion_start_date">Date de début</th>
+                <th class="epilot_insertion_end_date">Date de fin</th>
+                <th class="epilot_insertion_volume">Volume</th>
+                <th class="epilot_insertion_budget_net">Budget net</th>
+                <th class="epilot_insertion_cpm_net_prevu">CPM net</th>
+                <th class="epilot_insertion_status">Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <% for (let i = 0; i < insertions.length; i++) { %>
+            <% for (let i = 0; i < epilot_insertions.length; i++) { %>
             <tr>
-                <td><%= insertions[i].epilot_insertion_id %></td>
-                <td><%= insertions[i].epilot_advertiser_name %></td>
-                <td><%= insertions[i].epilot_campaign_name %></td>
-                <td><%= insertions[i].epilot_insertion_name %></td>
-                <td><%= insertions[i].epilot_insertion_commercial %></td>
-                <td><%= insertions[i].epilot_insertion_start_date %></td>
-                <td><%= insertions[i].epilot_insertion_end_date %></td>
-                <td><%= insertions[i].epilot_insertion_volume %></td>
-                <td><%= insertions[i].epilot_insertion_status %></td>
+                <td class="epilot_insertion_id"><%= epilot_insertions[i].epilot_insertion_id %></td>
+                <td class="epilot_advertiser_name">
+                    <% if(!utilities.empty(epilot_insertions[i].advertiser_id)) { %> 
+                        <a href="/manager/advertisers/<%= epilot_insertions[i].advertiser_id %>"><%= epilot_insertions[i].epilot_advertiser_name %></a>
+                    <% } else { %>    
+                    <%= epilot_insertions[i].epilot_advertiser_name %>
+                    <% } %>
+                </td>
+                <td class="epilot_campaign_name">
+                    <% if(!utilities.empty(epilot_insertions[i].campaign_id)) { %> 
+                        <a href="/manager/campaigns/<%= epilot_insertions[i].campaign_id %>"><%= epilot_insertions[i].epilot_campaign_name %></a>
+                    <% } else { %>    
+                    <%= epilot_insertions[i].epilot_campaign_name %>
+                    <% } %>
+                </td>
+                <td class="epilot_insertion_name"><%= epilot_insertions[i].epilot_insertion_name %></td>
+                <td class="format_group_name">
+                    <% if(!utilities.empty(epilot_insertions[i].format_group_id)) { %> 
+                        <a href="/manager/formats/<%= epilot_insertions[i].formats_group_id %>"><%= epilot_insertions[i].formats_group.format_group_name %></a>
+                    <% } else { %>    
+                     -
+                    <% } %>
+                </td>
+                <td class="epilot_insertion_commercial">
+                    <% if(!utilities.empty(epilot_insertions[i].user_id)) { %> 
+                        <a href="/manager/users/<%= epilot_insertions[i].user_id %>"><%= epilot_insertions[i].epilot_insertion_commercial %></a>
+                    <% } else { %>    
+                    <%= epilot_insertions[i].epilot_insertion_commercial %>
+                    <% } %>
+                </td>
+                <td class="epilot_insertion_start_date"><%= epilot_insertions[i].epilot_insertion_start_date %></td>
+                <td class="epilot_insertion_end_date"><%= epilot_insertions[i].epilot_insertion_end_date %></td>
+                <td class="epilot_insertion_volume"><%= utilities.numStr(epilot_insertions[i].epilot_insertion_volume) %></td>
+                <td class="epilot_insertion_budget_net"><%= utilities.numStr(epilot_insertions[i].epilot_insertion_budget_net) %></td>
+                <td class="epilot_insertion_cpm_net_prevu"><%= epilot_insertions[i].epilot_insertion_cpm_net_prevu %></td>
+                <td class="epilot_insertion_status"><%= epilot_insertions[i].epilot_insertion_status %></td>
                 <td></td>
                 <% } %>
             </tr>

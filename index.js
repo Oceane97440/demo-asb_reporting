@@ -262,9 +262,6 @@ formats.hasMany(insertions, {
     hooks: true
 });
 
-
-
-
 insertions_templates.belongsTo(insertions, {
     foreignKey: 'insertion_id',
     onDelete: 'cascade',
@@ -276,11 +273,13 @@ insertions.hasMany(insertions_templates, {
     onDelete: 'cascade',
     hooks: true
 });
+
 insertions_templates.belongsTo(templates, {
     foreignKey: 'template_id',
     onDelete: 'cascade',
     hooks: true
 });
+
 templates.hasMany(insertions_templates, {
     foreignKey: 'template_id',
     onDelete: 'cascade',
@@ -292,6 +291,7 @@ creatives.belongsTo(insertions, {
     onDelete: 'cascade',
     hooks: true
 });
+
 insertions.hasMany(creatives, {
     as: 'insertions',
     foreignKey: 'insertion_id',
@@ -340,7 +340,6 @@ epilot_insertions.belongsTo(formats_groups, {
     onDelete: 'cascade',
     hooks: true
 });
-
 
 db
     .sequelize

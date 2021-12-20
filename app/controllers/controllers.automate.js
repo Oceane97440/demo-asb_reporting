@@ -171,8 +171,6 @@ exports.advertisers = async (req, res) => {
                                         var advertiser_archived = dataValue[i].isArchived;
                                         var agency_id = dataValue[i].agencyIds
 
-
-
                                         // console.log(dataValue);
 
                                         Utilities
@@ -242,16 +240,15 @@ exports.advertiser = async (req, res) => {
                     // var agency_id = dataValue.agencyIds
                     // console.log(dataValue)
 
-
                     Utilities
                         .updateOrCreate(ModelAdvertisers, {
                             advertiser_id: advertiser_id
                         }, {
                             advertiser_id,
                             advertiser_name,
-                            advertiser_archived,
-                            // agency_id
                             advertiser_archived
+                            // agency_id
+                            // advertiser_archived
                         })
                         .then(function (result) {
                             result.item; // the model
@@ -486,7 +483,6 @@ exports.campaign = async (req, res) => {
     try {
         let campaign_id = req.query.campaign_id;
 
-
         if (campaign_id) {
             campaignObject = {
                 "campaign_id": req.query.campaign_id
@@ -496,10 +492,8 @@ exports.campaign = async (req, res) => {
             var config = SmartFunction.config('campaign', campaignObject);
 
             await axios(config).then(async function (result) {
-
                 if (!Utilities.empty(result.data)) {
                     var dataValue = result.data;
-
 
                     var campaign_id = dataValue.id;
                     var campaign_name = dataValue.name;
@@ -532,18 +526,61 @@ exports.campaign = async (req, res) => {
                         .then(function (result) {
                             result.item; // the model
                             result.created; // bool, if a new item was created.
-
-                            res.redirect(`/manager/campaigns/${campaign_id}`)
                         });
-
-
-
-
-
-
                 }
 
-            });
+            }).then(async function () {
+                
+                const regexCampaignCode = /([0-9]{5})/g;
+                const campaign_id = campaignObject.campaign_id;
+               
+                var campaign = await ModelCampaigns
+                .findOne({
+                    where: {
+                        campaign_id: campaign_id
+                    },
+                    include: [{
+                        model: ModelAdvertisers
+                    }]
+                })
+                .then(async function (campaign) {
+                    if (!campaign) {
+                        return res.json({
+                            type: 'error',
+                            message: 'Cette campagne n\'existe pas.'
+                        });
+                    }
+                    const epilot_campaign_name = campaign.campaign_name;
+                    const advertiser_id = campaign.advertiser.advertiser_id;
+                    regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
+
+                    if (regexCampaignCodeResult) { 
+                        var epilot_campaign_code = regexCampaignCodeResult[0];
+ 
+                        ModelEpilotCampaigns.update({
+                            campaign_id: campaign_id,
+                            advertiser_id: advertiser_id,
+                        }, {
+                            where: {
+                                epilot_campaign_name: { [Op.like]: "%" + epilot_campaign_code + "%" }
+                            }
+                        });
+
+                        return res.json({
+                            type: 'success',
+                            message: 'Cette campagne a bien été mise à jour.'
+                        });
+
+                    } else {
+                        
+                        return res.json({
+                            type: 'error',
+                            message: 'Cette campagne n\'a pu être mise à jour.'
+                        });
+                    }
+                });
+
+            }); 
 
         } else {
             return res.json({
@@ -1748,21 +1785,25 @@ exports.epilotCampaigns = async (req, res) => {
                 campaigns.forEach(function (item) {
 
                     const regexCampaignCode = /([0-9]{5})/g;
-
                     const campaign_id = item.campaign_id;
                     const epilot_campaign_name = item.campaign_name;
 
                     regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
                     if (regexCampaignCodeResult) {
-                        var epilot_campaign_code = regexCampaignCodeResult[0];
+                       var epilot_campaign_code = regexCampaignCodeResult[0];
                         console.log(epilot_campaign_name, ' - ', epilot_campaign_code);
-
+ 
                         ModelEpilotCampaigns.update({
                             campaign_id: campaign_id
                         }, {
                             where: {
+                                epilot_campaign_name: {
+                            [Op.like]: "%" + epilot_campaign_code + "%"
+                        }
+                    }
+                           /* where: {
                                 epilot_campaign_code: epilot_campaign_code
-                            }
+                            }*/
                         });
 
                     } else {
@@ -1772,6 +1813,7 @@ exports.epilotCampaigns = async (req, res) => {
                 });
             });
 
+      
         // Mettre à jour les annonceurs
         const advertisers = await ModelAdvertisers
             .findAll()
@@ -1790,8 +1832,7 @@ exports.epilotCampaigns = async (req, res) => {
 
                 });
             });
-
-        /*
+/*
          // Mettre à jour les campagnes
          const campaigns = await ModelCampaigns.findAll()
          .then(async function (campaigns) {
@@ -1809,6 +1850,8 @@ exports.epilotCampaigns = async (req, res) => {
              });
          });
 */
+
+
         // Mettre à jour les utilisateurs
         const users = await ModelUsers
             .findAll()

@@ -13,6 +13,8 @@
                 <th>Volume</th>
                 <th>Budget</th>
                 <th>CPM</th>
+                <th>% de remise</th>
+                <th>Mandataire</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -37,9 +39,11 @@
                 <td><%= campaigns[i].epilot_campaign_status %></td>
                 <td><%= campaigns[i].epilot_campaign_start_date %></td>
                 <td><%= campaigns[i].epilot_campaign_end_date %></td>
-                <td><%= campaigns[i].epilot_campaign_volume %></td>
-                <td><%= campaigns[i].epilot_campaign_budget_net %></td>
+                <td><%= utilities.numStr(campaigns[i].epilot_campaign_volume) %></td>
+                <td><%= utilities.numStr(campaigns[i].epilot_campaign_budget_net) %></td>
                 <td><%= campaigns[i].epilot_campaign_cpm_net %></td>
+                <td><%= campaigns[i].epilot_campaign_discount_rate %></td>
+                <td><%= campaigns[i].epilot_campaign_mandataire %></td>
                 <td>
                 </td>
                 <% } %>

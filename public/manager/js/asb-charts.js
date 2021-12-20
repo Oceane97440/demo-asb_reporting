@@ -1,13 +1,14 @@
 'use strict';
 $(document).ready(function () {
     var config = {
-        baseurl: "http://reporting.antennesb.fr/"
+        baseurl: "http://localhost:3001/" // "http://reporting.antennesb.fr/"
     };
     
-
     var chartCampaignUrl = config.baseurl+'manager/charts/campaigns';
     var chartAdvertiserUrl = config.baseurl+'manager/charts/advertisers';
-    var chartCampaignReportUrl = config.baseurl+'manager/charts/campaign/report';
+
+    var campaign_id = $('div.card').attr('data-campaign_id');
+    var chartCampaignReportUrl = config.baseurl+'manager/charts/campaign/report?campaign_id='+campaign_id;
 
 /*
 * Chart Campaigns -
@@ -98,10 +99,77 @@ $.getJSON(chartAdvertiserUrl, function (response) {
 
 
 
-    /*
+/*
 * Chart Bar Reporting
 */
+$.getJSON(chartCampaignReportUrl, function (response) {
+    var options = {
+        series: [
+            {
+                name: 'Diffusé',
+                data:  response.values.delivery
+            }, {
+                name: 'Restant à diffuser',
+                data:  response.values.booking
+            }
+        ],
+        chart: {
+            type: 'bar',
+            height: 150,
+            stacked: true,
+          stackType: '100%'
+        },
+        plotOptions: {
+            bar: {
+                horizontal: true
+            }
+        },
+        stroke: {
+            width: 1,
+            colors: ['#fff']
+        },
+        xaxis: {
+            categories: response.formats,
+            labels: {
+                formatter: function (val) {
+                    return val 
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: undefined
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        colors: [
+            '#3f51b5', '#cc0000'
+        ],
+        legend: {
+            position: 'bottom',
+            horizontalAlign: 'left',
+            offsetX: 10
+        }
+    };
 
+    var chart = new ApexCharts(
+        document.querySelector("#chart-campaignreport"),
+        options
+    );
+    chart.render();
+
+});
+
+/*
     var options = {
         series: [
             {
@@ -170,8 +238,10 @@ $.getJSON(chartAdvertiserUrl, function (response) {
         options
     );
     chart.render();
+*/
 
 });
+
 
 /*
 $(document).ready(function() {

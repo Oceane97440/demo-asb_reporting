@@ -15,8 +15,7 @@ const EpilotCampaigns = sequelize.define('epilot_campaigns', {
     epilot_campaign_name: {
         type: Sequelize.STRING(255),
         allowNull: false
-    },
-    
+    },    
     advertiser_id: {
         type: Sequelize.INTEGER,
         allowNull: true
@@ -53,12 +52,24 @@ const EpilotCampaigns = sequelize.define('epilot_campaigns', {
         type: Sequelize.STRING(255),
         allowNull: false
     },
+    epilot_campaign_budget_brut: {
+        type: Sequelize.STRING(255),
+        allowNull: false
+    },
     epilot_campaign_budget_net: {
-        type: Sequelize.FLOAT(),
+        type: Sequelize.STRING(255),
         allowNull: false
     },
     epilot_campaign_cpm_net: {
         type: Sequelize.FLOAT(),
+        allowNull: false
+    },
+    epilot_campaign_discount_rate: {
+        type: Sequelize.FLOAT(),
+        allowNull: false
+    },
+    epilot_campaign_mandataire: {
+        type: Sequelize.STRING(255),
         allowNull: false
     }
 }, {

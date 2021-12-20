@@ -324,6 +324,23 @@ exports.advertisers = async (req, res) => {
 exports.campaignReport = async (req, res) => {
     try {
 
+        var formatHabillage = new Array();
+        var formatInterstitiel = new Array();
+        var formatGrandAngle = new Array();
+        var formatMasthead = new Array();
+        var formatInstream = new Array();
+        var formatRectangleVideo = new Array();
+        var formatLogo = new Array();
+        var formatNative = new Array();
+        var formatSlider = new Array();
+        var formatMea = new Array();
+        var formatSliderVideo = new Array();
+        var formatClickCommand = new Array();
+
+          // Permet de faire l'addition
+          const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+
         let campaign_id = req.query.campaign_id;
         if (campaign_id) {
             campaignObject = {
@@ -353,7 +370,6 @@ exports.campaignReport = async (req, res) => {
                     var campaign_start_date = campaign.campaign_start_date;
                     var campaign_end_date = campaign.campaign_end_date;
                    
-                    /*
                     // Récupére l'ensemble des insertions de la campagne
                     var epilotCampaign = await ModelEpilotCampaigns
                     .findOne({
@@ -364,58 +380,100 @@ exports.campaignReport = async (req, res) => {
                             {
                                 model: ModelEpilotInsertions,
                                 attributes: [
-                                   'format_group_id',
-                                    [sequelize.fn('sum', sequelize.col('epilot_insertion_volume')), 'insertion_volume']
-                                ],
+                                    'epilot_campaign_id', 
+                                    'epilot_campaign_name', 
+                                    'format_group_id', 
+                                    'epilot_insertion_volume'
+                                ], 
                                 where : {
-                                    epilot_campaign_id : Sequelize.col('epilot_campaigns.epilot_campaign_id'),
-                                    'format_group_id' : '9'
-                                },
-                                group:['format_group_id','user_id']
+                                    epilot_campaign_id : Sequelize.col('epilot_campaigns.epilot_campaign_id')
+                                }
                             }
                         ]
                     })
                     .then(async function (epilotCampaign) {
-                       console.log(epilotCampaign.epilot_insertions)
+                       
+                       if(epilotCampaign.epilot_insertions) {
+                            var epilot_insertions_count = epilotCampaign.epilot_insertions.length;
+                           
+                            var insertions_group = new Array();
+                            var booking = new Array();
+
+                            for (let i = 0; i < epilot_insertions_count; i++) {
+                                var format_group_id = epilotCampaign.epilot_insertions[i].format_group_id;
+                                var insertion_volume = epilotCampaign.epilot_insertions[i].epilot_insertion_volume;
+
+                                switch(format_group_id) {                                   
+                                   case 1: formatHabillage.push(insertion_volume); break;
+                                   case 2: formatInterstitiel.push(insertion_volume); break;
+                                   case 3: formatMasthead.push(insertion_volume); break;
+                                   case 4: formatGrandAngle.push(insertion_volume); break;                                  
+                                   case 5: formatSlider.push(insertion_volume); break;
+                                   case 6: formatLogo.push(insertion_volume); break;
+                                   case 9: formatInstream.push(insertion_volume); break;  
+                                   case 10: formatClickCommand.push(insertion_volume);  break;   
+                                   case 11: formatNative.push(insertion_volume);  break;
+                                   case 12: formatRectangleVideo.push(insertion_volume); break;
+                                   case 13: formatMea.push(insertion_volume); break;
+                                   case 14: formatSliderVideo.push(insertion_volume); break;
+                                }
+
+                            }
+                       }
+                       
                     });  
-                    */
+                  
 
                     // Récupére l'ensemble des données du rapport
                     datalocalStorage = localStorage.getItem('campaignID-' + campaign.campaign_id);
                     if (reporting = JSON.parse(datalocalStorage)) {
-                        console.log('REPORTING : ', reporting);
 
                         var formats = new Array();
                         var booking = new Array(); 
                         var delivery = new Array();
 
                         if (reporting.habillage) {
-                            formats.push('habillage');
+                            formats.push('Habillage');
                             delivery.push(reporting.habillage.impressions);
+                            booking.push(formatHabillage.reduce(reducer));
                         }
 
                         if (reporting.instream) {
-                            formats.push('instream');
+                            formats.push('Instream');
                             delivery.push(reporting.instream.impressions);
+                            booking.push(formatInstream.reduce(reducer) - reporting.instream.impressions);
                         }
 
                         if (reporting.interstitiel) {
-                            formats.push('interstitiel');
+                            formats.push('Interstitiel');
                             delivery.push(reporting.interstitiel.impressions);
+                            booking.push(formatInterstitiel.reduce(reducer) - reporting.interstitiel.impressions);
                         }
-                        
+
+                        if (reporting.grandangle) {
+                            formats.push('Grand Angle');
+                            delivery.push(reporting.grandangle.impressions);
+                            booking.push(formatGrandAngle.reduce(reducer) - reporting.grandangle.impressions);
+                        }
+
+                        if (reporting.masthead) {
+                            formats.push('Masthead');
+                            delivery.push(reporting.masthead.impressions);
+                            booking.push(formatMasthead.reduce(reducer) - reporting.masthead.impressions);
+                        }
+
+                        if (reporting.rectanglevideo) {
+                            formats.push('Rectangle Vidéo');
+                            delivery.push(reporting.rectanglevideo.impressions);
+                            booking.push(formatRectangleVideo.reduce(reducer) - reporting.rectanglevideo.impressions);
+                        }
+                       
                         var data = { 'values' : {delivery : delivery, booking : booking}, formats : formats}
 
                         return res
                             .status(200)
                             .json(data);
-                    }
-
-                    /* 
-                    var month =  new Array('janvier','février','mars','avril','mai','juin','juillet', 'aout','septembre','octobre','novembre','décembre');
-                    var data = { 'lastYear' : { year : dateYearLast, result : lastYear} ,  'nowYear' : { year : dateYearNow, result : nowYear} , month : month}
-                    return res.status(200).json(data);
-                    */
+                    }                   
 
                 });
 

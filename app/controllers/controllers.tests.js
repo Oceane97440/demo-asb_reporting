@@ -34,8 +34,55 @@ const ModelPack = require("../models/models.packs")
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
 const ModelTemplates = require("../models/models.templates");
+const ModelEpilotCampaigns =  require("../models/models.epilot_campaigns");
 
 exports.index = async (req, res) => {
+
+// Change everyone without a last name to "Doe"
+const data_campaign = {
+    epilot_campaign_name: "TURB'AUTO VU SUR ANTENNE - 74648",
+    epilot_advertiser_name: "TURB'AUTO",
+   epilot_campaign_code: '744648',
+    epilot_campaign_status: 1,
+    epilot_campaign_start_date: '2021-12-14 00:00:00',
+    epilot_campaign_end_date: '2021-12-18 23:59:00',
+    epilot_campaign_volume: '150000',
+    epilot_campaign_nature : 'CLS',
+    epilot_campaign_budget_brut: '7200.00',
+    epilot_campaign_budget_net: '500.00',
+    epilot_campaign_cpm_net: '3.833',
+    epilot_campaign_commercial: 'AG',
+    epilot_campaign_discount_rate: '31.00',
+    epilot_campaign_mandataire: "TURB'AUTO"
+  };
+
+  await Utilities
+  .updateOrCreate(ModelEpilotCampaigns, {
+      epilot_campaign_code: 74648
+  }, data_campaign)
+/*
+  await ModelEpilotCampaigns.update( data_campaign
+, {
+    where: {
+        epilot_campaign_code: 74648
+    }
+  });
+*/
+
+/*
+ // Ajoute ou MAJ la campagne EPILOT
+ Utilities
+ .updateOrCreate(ModelEpilotCampaigns, {
+     epilot_campaign_code: '74648'
+ }, data_campaign)
+ .then(function (result) {
+     result.item; // the model
+     result.created; // bool, if a new item was created.
+     console.log(result)
+ });
+*/
+
+    process.exit(1);
 
     try {
         const test = await ModelCampaigns.findAll({

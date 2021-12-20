@@ -92,6 +92,7 @@ exports.list = async (req, res) => {
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
+
 exports.export = async (req, res) => {
     try {
 
@@ -176,39 +177,36 @@ exports.export = async (req, res) => {
                 [],
             ];
     
-            const bilan_global = {
-    
+            const bilan_global = {    
                 id: { // <- the key should match the actual data key
                     displayName: '#', // <- Here you specify the column header
                     headerStyle: styles.headerDark, // <- Header style
                     width: 100, // <- width in pixels
-                    cellStyle: styles.cellNone,
+                    cellStyle: styles.cellNone
                 },
                 annonceurs: {
                     displayName: 'ANNONCEURS',
                     headerStyle: styles.headerDark,
                     width: 300, // <- width in chars (when the number is passed as string)
-                    cellStyle: styles.cellNone,
-    
+                    cellStyle: styles.cellNone    
                 },
                 campagnes: {
                     displayName: 'NOMS',
                     headerStyle: styles.headerDark,
                     width: 450, // <- width in chars (when the number is passed as string)
-                    cellStyle: styles.cellNone,
-    
+                    cellStyle: styles.cellNone    
                 },
                 commercial: { // <- the key should match the actual data key
                     displayName: 'COMMERCIAL', // <- Here you specify the column header
                     headerStyle: styles.headerDark, // <- Header style
                     width: 100, // <- width in pixels
-                    cellStyle: styles.cellNone,
+                    cellStyle: styles.cellNone
                 },
                 nature: { // <- the key should match the actual data key
                     displayName: 'NATURE', // <- Here you specify the column header
                     headerStyle: styles.headerDark, // <- Header style
                     width: 100, // <- width in pixels
-                    cellStyle: styles.cellNone,
+                    cellStyle: styles.cellNone
                 },
                 status: {
                     displayName: 'STATUS',
@@ -217,44 +215,38 @@ exports.export = async (req, res) => {
                         return (value == 1) ? 'Confirmé' : 'Réservé';
                     },
                     width: 100, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
+                    cellStyle: styles.cellNone    
                 },
                 date_start: {
                     displayName: 'DATE DE DEBUT',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
+                    cellStyle: styles.cellNone    
                 },
                 date_end: {
                     displayName: 'DATE DE FIN',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
+                    cellStyle: styles.cellNone    
                 },
                 volumes: {
                     displayName: 'VOLUMES',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
+                    cellStyle: styles.cellNone    
                 },
                 budget: {
                     displayName: 'BUDGETS',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
+                    cellStyle: styles.cellNone    
                 },
-                cmp: {
-                    displayName: 'CMP',
+                cpm: {
+                    displayName: 'CPM',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
-                },
+                    cellStyle: styles.cellNone,    
+                }
     
             };
     
@@ -277,9 +269,9 @@ exports.export = async (req, res) => {
                         date_end: data.campaigns[i].epilot_campaign_end_date,
                         volumes: data.campaigns[i].epilot_campaign_volume,
                         budget: data.campaigns[i].epilot_campaign_budget_net,
-                        cmp: data.campaigns[i].epilot_campaign_cpm_net,
-
-
+                        cpm: data.campaigns[i].epilot_campaign_cpm_net,
+                        discount_rate: data.campaigns[i].epilot_campaign_discount_rate,
+                        mandataire: data.campaigns[i].epilot_campaign_mandataire
                     });
     
                 }
@@ -321,6 +313,7 @@ exports.export = async (req, res) => {
         res.render("manager/error.ejs", {statusCoded: statusCoded});
     }
 }
+
 exports.insertions = async (req, res) => {
     try {
         const data = new Object();
@@ -338,7 +331,7 @@ exports.insertions = async (req, res) => {
         });
         data.breadcrumb = breadcrumb;
         
-        // Récupére l'ensemble des annonceurs
+        // Récupére l'ensemble des insertions
         var insertions = await ModelEpilotInsertions
             .findAll({
                 order: [
@@ -346,7 +339,7 @@ exports.insertions = async (req, res) => {
                 ]
             })
             .then(async function (insertions) {
-                data.insertions = insertions;
+                data.epilot_insertions = insertions;
             });
         
         res.render('manager/epilot/insertions.ejs', data);
@@ -461,6 +454,7 @@ exports.import = async (req, res) => {
                                     }
                                 }
 
+                                var epilot_advertiser_name = results[i]['Annonceur'];
                                 var epilot_insertion_name = results[i]['Nom'];
 
                                 if (results[i]['Etat']) {
@@ -480,7 +474,17 @@ exports.import = async (req, res) => {
                                 }
 
                                 var epilot_insertion_volume = results[i]['Volume total prévu'];
+                                var epilot_insertion_budget_brut = results[i]['Brut prévu'];
+                                var epilot_insertion_budget_net = results[i]['Net prévu'];
+
+                                var epilot_insertion_cpm_net_p = results[i]['CPM Net payant prévu']
+                                var epilot_insertion_cpm_net_prevu = epilot_insertion_cpm_net_p.replace(',', '.');
+
+                                var epilot_insertion_cpm_net_d = results[i]['CMP Net total diffusé']
+                                var epilot_insertion_cpm_net_diffuse = epilot_insertion_cpm_net_d.replace(',', '.');
+
                                 var epilot_insertion_commercial = results[i]['Responsable commercial'];
+                                var epilot_insertion_group = results[i]["Groupe d'insertions"];
 
                                 var epilot_insertion_start_date = moment(
                                     results[i]['Date de début prévue'],
@@ -495,12 +499,18 @@ exports.import = async (req, res) => {
                                 var data_insertion = {
                                     'epilot_campaign_name': epilot_campaign_name,
                                     'epilot_campaign_code': epilot_campaign_code,
+                                    'epilot_advertiser_name': epilot_advertiser_name,
                                     'epilot_insertion_name': epilot_insertion_name,
                                     'epilot_insertion_status': epilot_insertion_status,
                                     'epilot_insertion_volume': epilot_insertion_volume,
+                                    'epilot_insertion_budget_brut': epilot_insertion_budget_brut,
+                                    'epilot_insertion_budget_net': epilot_insertion_budget_net,
+                                    'epilot_insertion_cpm_net_prevu': epilot_insertion_cpm_net_prevu,
+                                    'epilot_insertion_cpm_net_diffuse': epilot_insertion_cpm_net_diffuse,
                                     'epilot_insertion_start_date': epilot_insertion_start_date,
                                     'epilot_insertion_end_date': epilot_insertion_end_date,
-                                    'epilot_insertion_commercial': epilot_insertion_commercial
+                                    'epilot_insertion_commercial': epilot_insertion_commercial,
+                                    'epilot_insertion_group': epilot_insertion_group
                                 }
 
                                 // console.log(data_insertion); process.exit(1); Ajoute ou MAJ la campagne
@@ -509,12 +519,7 @@ exports.import = async (req, res) => {
                                     .updateOrCreate(ModelEpilotInsertions, {
                                         epilot_campaign_name: epilot_campaign_name,
                                         epilot_insertion_name: epilot_insertion_name
-                                    }, data_insertion)
-                                    .then(function (result) {
-                                        console.log(' - ',epilot_campaign_name,' - ',epilot_insertion_name);
-                                        result.item; // the model
-                                        //   result.created;  bool, if a new item was created.
-                                    });
+                                    }, data_insertion);
 
                             } else {
                                 // Gére les campagnes EPILOT
@@ -558,39 +563,44 @@ exports.import = async (req, res) => {
                                 var epilot_campaign_volume = results[i]['Volume total prévu'];
                                 var epilot_campaign_nature = results[i]['Nature'];
 
-                                var epilot_campaign_budget = results[i]['Net diffusé'];
-                                var epilot_campaign_budget_net = epilot_campaign_budget.replace(',', '.');
+                                var epilot_campaign_budget_b = results[i]['Brut prévu'];
+                                var epilot_campaign_budget_brut = epilot_campaign_budget_b.replace(',', '.');
+
+                                var epilot_campaign_budget_n = results[i]['Net prévu'];
+                                var epilot_campaign_budget_net = epilot_campaign_budget_n.replace(',', '.');
 
                                 var epilot_campaign_cpm = results[i]['CPM net prévu']
                                 var epilot_campaign_cpm_net = epilot_campaign_cpm.replace(',', '.');
 
                                 var epilot_campaign_commercial = results[i]['Responsable commercial'];
 
+                                var epilot_campaign_discount_rate = results[i]['Taux de remise prévu'];
+                                
+                                var epilot_campaign_mandataire = results[i]['Mandataire de réservation'];
+
                                 // Charge les données dans la base de donnée
                                 var data_campaign = {
-                                    'epilot_campaign_name': epilot_campaign_name,
-                                    'epilot_advertiser_name': epilot_advertiser_name,
-                                    'epilot_campaign_code': epilot_campaign_code,
-                                    'epilot_campaign_status': epilot_campaign_status,
-                                    'epilot_campaign_start_date': epilot_campaign_start_date,
-                                    'epilot_campaign_end_date': epilot_campaign_end_date,
-                                    'epilot_campaign_volume': epilot_campaign_volume,
-                                    'epilot_campaign_nature': epilot_campaign_nature,
-                                    'epilot_campaign_budget_net': epilot_campaign_budget_net,
-                                    'epilot_campaign_cpm_net': epilot_campaign_cpm_net,
-                                    'epilot_campaign_commercial': epilot_campaign_commercial
+                                    epilot_campaign_name: epilot_campaign_name,
+                                    epilot_advertiser_name: epilot_advertiser_name,
+                                    epilot_campaign_code: epilot_campaign_code,
+                                    epilot_campaign_status: epilot_campaign_status,
+                                    epilot_campaign_start_date: epilot_campaign_start_date,
+                                    epilot_campaign_end_date: epilot_campaign_end_date,
+                                    epilot_campaign_volume: epilot_campaign_volume,
+                                    epilot_campaign_nature: epilot_campaign_nature,
+                                    epilot_campaign_budget_brut : epilot_campaign_budget_brut,
+                                    epilot_campaign_budget_net: epilot_campaign_budget_net,
+                                    epilot_campaign_cpm_net: epilot_campaign_cpm_net,
+                                    epilot_campaign_commercial: epilot_campaign_commercial,
+                                    epilot_campaign_discount_rate: epilot_campaign_discount_rate,
+                                    epilot_campaign_mandataire : epilot_campaign_mandataire
                                 }
-
+                                
                                 // Ajoute ou MAJ la campagne EPILOT
                                 Utilities
                                     .updateOrCreate(ModelEpilotCampaigns, {
-                                        epilot_campaign_name: epilot_campaign_name
-                                    }, data_campaign)
-                                    .then(function (result) {
-                                        result.item; // the model
-                                        //   result.created;  bool, if a new item was created.
-                                    });
-                               
+                                        epilot_campaign_code: epilot_campaign_code
+                                    }, data_campaign);
                             }
                         }
 

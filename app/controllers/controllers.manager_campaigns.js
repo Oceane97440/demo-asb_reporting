@@ -51,6 +51,7 @@ const ModelCreatives = require("../models/models.creatives");
 const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
 const ModelEpilotInsertions = require("../models/models.epilot_insertions");
 const ModelUsers = require("../models/models.users");
+const ModelFormatsGroups = require("../models/models.formats_groups");
 
 const TEXT_REGEX = /^.{1,51}$/
 
@@ -449,6 +450,7 @@ exports.view = async (req, res) => {
         var insertionsIds = new Array();
         data.insertions = new Array();
         data.creatives = new Array();
+        data.epilot_insertions = new Array();
 
         var campaign_id = req.params.id;
         var campaign = await ModelCampaigns
@@ -491,18 +493,29 @@ exports.view = async (req, res) => {
 
                 // Récupére les données des campagnes epilot
                 var epilot_campaign = await ModelEpilotCampaigns.findOne({
-                    attributes: ['epilot_campaign_volume', 'epilot_campaign_budget_net'],
                     where: {
                         campaign_id: campaign_id
                     }
                 });
-
-                //test si epilot_campaign existe
+                         
+                // Teste si epilot_campaign existe
                 if (!Utilities.empty(epilot_campaign)) {
                     data.epilot_campaign = epilot_campaign;
+
+                    // Récupére les données des insertions epilot
+                    var epilot_insertions = await ModelEpilotInsertions.findAll({
+                        where: {
+                            epilot_campaign_id: epilot_campaign.epilot_campaign_id
+                        },
+                        include: [{
+                            model: ModelFormatsGroups
+                        }]
+                    });
+                    if (!Utilities.empty(epilot_insertions)) { data.epilot_insertions = epilot_insertions; } else { data.epilot_insertions = NULL; }
+                   
                 } else {
                     data.epilot_campaign = 0;
-                }
+                }             
 
                 // Récupére les données des insertions de la campagne
                 var insertionList = await ModelInsertions
