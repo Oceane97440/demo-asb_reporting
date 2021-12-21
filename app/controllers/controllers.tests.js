@@ -32,34 +32,75 @@ const ModelFormat = require("../models/models.formats");
 const ModelCountry = require("../models/models.countries")
 const ModelPack = require("../models/models.packs")
 const ModelCampaigns = require("../models/models.campaigns");
+const ModelAdvertisers = require("../models/models.advertisers");
 const ModelInsertions = require("../models/models.insertions");
 const ModelTemplates = require("../models/models.templates");
 const ModelEpilotCampaigns =  require("../models/models.epilot_campaigns");
 
 exports.index = async (req, res) => {
 
-// Change everyone without a last name to "Doe"
-const data_campaign = {
-    epilot_campaign_name: "TURB'AUTO VU SUR ANTENNE - 74648",
-    epilot_advertiser_name: "TURB'AUTO",
-   epilot_campaign_code: '744648',
-    epilot_campaign_status: 1,
-    epilot_campaign_start_date: '2021-12-14 00:00:00',
-    epilot_campaign_end_date: '2021-12-18 23:59:00',
-    epilot_campaign_volume: '150000',
-    epilot_campaign_nature : 'CLS',
-    epilot_campaign_budget_brut: '7200.00',
-    epilot_campaign_budget_net: '500.00',
-    epilot_campaign_cpm_net: '3.833',
-    epilot_campaign_commercial: 'AG',
-    epilot_campaign_discount_rate: '31.00',
-    epilot_campaign_mandataire: "TURB'AUTO"
-  };
+     // Affiche les annonceurs
+     const advertiserExclus = new Array(
+        418935,
+        427952,
+        409707,
+        425912,
+        425914,
+        438979,
+        439470,
+        439506,
+        439511,
+        439512,
+        439513,
+        439514,
+        439515,
+        440117,
+        440118,
+        440121,
+        440122,
+        440124,
+        440126,
+        445117,
+        455371,
+        455384,
+        320778,
+        417243,
+        414097,
+        411820,
+        320778
+    );
 
-  await Utilities
-  .updateOrCreate(ModelEpilotCampaigns, {
-      epilot_campaign_code: 74648
-  }, data_campaign)
+var dateNow = "2021-12-22";
+
+ ;;   // Affiche les campagnes en ligne
+    campaigns_online = await ModelCampaigns.findAll({
+        where: {
+            [Op.and]: [{
+                advertiser_id: {
+                    [Op.notIn]: advertiserExclus
+                }
+            }],
+            [Op.or]: [{
+                campaign_start_date: {
+                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                }
+            }, {
+                campaign_end_date: {
+                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                }
+            }]
+        },
+        order: [
+            ['campaign_end_date', 'ASC']
+        ],
+        include: [{
+            model: ModelAdvertisers
+        }]
+    });
+
+
+    console.log(campaigns_online.length);
+
 /*
   await ModelEpilotCampaigns.update( data_campaign
 , {
