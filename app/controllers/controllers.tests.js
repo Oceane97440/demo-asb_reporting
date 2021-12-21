@@ -67,7 +67,10 @@ exports.index = async (req, res) => {
         417243,
         414097,
         411820,
-        320778
+        320778,
+        464149,
+        417716,
+        464862
     );
 
 var dateNow = "2021-12-22";
@@ -75,12 +78,28 @@ var dateNow = "2021-12-22";
  ;;   // Affiche les campagnes en ligne
     campaigns_online = await ModelCampaigns.findAll({
         where: {
-            [Op.and]: [{
+       //  [Op.and]: [{
                 advertiser_id: {
                     [Op.notIn]: advertiserExclus
-                }
-            }],
-            [Op.or]: [{
+                },
+                [Op.or]: [{
+                    campaign_start_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                    }
+                }, {
+                    campaign_end_date: {
+                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                    }
+                }]
+                 /* campaign_start_date: {
+                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                },
+              campaign_end_date: {
+                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                }*/
+
+           /* }],
+            [Op.and]: [{
                 campaign_start_date: {
                     [Op.between]: [dateNow, '2040-12-31 23:59:00']
                 }
@@ -88,7 +107,7 @@ var dateNow = "2021-12-22";
                 campaign_end_date: {
                     [Op.between]: [dateNow, '2040-12-31 23:59:00']
                 }
-            }]
+            }]*/
         },
         order: [
             ['campaign_end_date', 'ASC']
@@ -100,6 +119,13 @@ var dateNow = "2021-12-22";
 
 
     console.log(campaigns_online.length);
+    var campaign_ids = new Array();
+    for(i = 0; i < campaigns_online.length; i++) {
+        console.log(campaigns_online[i].campaign_name+' - '+campaigns_online[i].campaign_id);
+        campaign_ids.push(campaigns_online[i].campaign_id);
+    }
+
+    console.log(campaign_ids)
 
 /*
   await ModelEpilotCampaigns.update( data_campaign
