@@ -467,7 +467,7 @@ exports.view = async (req, res) => {
                 }]
             })
             .then(async function (campaign) {
-                console.log(campaign)
+               // console.log(campaign)
                 if (!campaign) {
                     return res.redirect(`/extension-chrome/campaign?campaign_id=${campaign_id}`)
                   /*  return res
@@ -511,10 +511,11 @@ exports.view = async (req, res) => {
                             model: ModelFormatsGroups
                         }]
                     });
-                    if (!Utilities.empty(epilot_insertions)) { data.epilot_insertions = epilot_insertions; } else { data.epilot_insertions = NULL; }
+                    // console.log(epilot_insertions); process.exit(1);
+                    if (!Utilities.empty(epilot_insertions)) { data.epilot_insertions = epilot_insertions; } else { data.epilot_insertions = ''; }
                    
                 } else {
-                    data.epilot_campaign = 0;
+                    data.epilot_campaign = '';
                 }             
 
                 // Récupére les données des insertions de la campagne
@@ -784,8 +785,8 @@ exports.repartitions = async (req, res) => {
     console.log('dateLastSunday : ',dateLastSunday);
 */
 
-        var dateLastMonday = "2021-08-01";
-        var dateLastSunday = "2021-08-08";
+        var dateLastMonday = "2021-12-20";
+        var dateLastSunday = "2021-12-31";
 
         var campaigns = await ModelCampaigns
             .findAll({

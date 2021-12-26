@@ -1,7 +1,7 @@
 'use strict';
 $(document).ready(function () {
   var config = {
-    baseurl: "http://reporting.antennesb.fr/"
+    baseurl: "http://localhost:3002"
 };
 
  
@@ -299,9 +299,9 @@ $.getJSON(chartCampaignUrl, function (response) {
 /*
 
 
-    var chartCampaignUrl = 'http://localhost:3001/manager/charts/campaigns';
-    var chartAdvertiserUrl = 'http://localhost:3001/manager/charts/advertisers';
-    var chartCampaignReportUrl = 'http://localhost:3001/manager/charts/campaign/report';
+    var chartCampaignUrl = 'http://localhost:3002/manager/charts/campaigns';
+    var chartAdvertiserUrl = 'http://localhost:3002/manager/charts/advertisers';
+    var chartCampaignReportUrl = 'http://localhost:3002/manager/charts/campaign/report';
 
 
     $.getJSON(chartCampaignUrl, function (response) {

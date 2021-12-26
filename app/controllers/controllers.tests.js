@@ -36,8 +36,20 @@ const ModelAdvertisers = require("../models/models.advertisers");
 const ModelInsertions = require("../models/models.insertions");
 const ModelTemplates = require("../models/models.templates");
 const ModelEpilotCampaigns =  require("../models/models.epilot_campaigns");
+const ModelFormatsGroupsTypes = require(
+    "../models/models.formats_groups_types"
+);
+const ModelFormatsGroups = require("../models/models.formats_groups");
 
 exports.index = async (req, res) => {
+
+    // Mettre à jour les formats
+    const groupFormats = await ModelFormatsGroups
+    .findAll();
+
+    console.log(groupFormats)
+
+process.exit(1);
 
      // Affiche les annonceurs
      const advertiserExclus = new Array(

@@ -530,57 +530,59 @@ exports.campaign = async (req, res) => {
                 }
 
             }).then(async function () {
-                
+
                 const regexCampaignCode = /([0-9]{5})/g;
                 const campaign_id = campaignObject.campaign_id;
-               
+
                 var campaign = await ModelCampaigns
-                .findOne({
-                    where: {
-                        campaign_id: campaign_id
-                    },
-                    include: [{
-                        model: ModelAdvertisers
-                    }]
-                })
-                .then(async function (campaign) {
-                    if (!campaign) {
-                        return res.json({
-                            type: 'error',
-                            message: 'Cette campagne n\'existe pas.'
-                        });
-                    }
-                    const epilot_campaign_name = campaign.campaign_name;
-                    const advertiser_id = campaign.advertiser.advertiser_id;
-                    regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
+                    .findOne({
+                        where: {
+                            campaign_id: campaign_id
+                        },
+                        include: [{
+                            model: ModelAdvertisers
+                        }]
+                    })
+                    .then(async function (campaign) {
+                        if (!campaign) {
+                            return res.json({
+                                type: 'error',
+                                message: 'Cette campagne n\'existe pas.'
+                            });
+                        }
+                        const epilot_campaign_name = campaign.campaign_name;
+                        const advertiser_id = campaign.advertiser.advertiser_id;
+                        regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
 
-                    if (regexCampaignCodeResult) { 
-                        var epilot_campaign_code = regexCampaignCodeResult[0];
- 
-                        ModelEpilotCampaigns.update({
-                            campaign_id: campaign_id,
-                            advertiser_id: advertiser_id,
-                        }, {
-                            where: {
-                                epilot_campaign_name: { [Op.like]: "%" + epilot_campaign_code + "%" }
-                            }
-                        });
+                        if (regexCampaignCodeResult) {
+                            var epilot_campaign_code = regexCampaignCodeResult[0];
 
-                        return res.json({
-                            type: 'success',
-                            message: 'Cette campagne a bien été mise à jour.'
-                        });
+                            ModelEpilotCampaigns.update({
+                                campaign_id: campaign_id,
+                                advertiser_id: advertiser_id,
+                            }, {
+                                where: {
+                                    epilot_campaign_name: {
+                                        [Op.like]: "%" + epilot_campaign_code + "%"
+                                    }
+                                }
+                            });
 
-                    } else {
-                        
-                        return res.json({
-                            type: 'error',
-                            message: 'Cette campagne n\'a pu être mise à jour.'
-                        });
-                    }
-                });
+                            return res.json({
+                                type: 'success',
+                                message: 'Cette campagne a bien été mise à jour.'
+                            });
 
-            }); 
+                        } else {
+
+                            return res.json({
+                                type: 'error',
+                                message: 'Cette campagne n\'a pu être mise à jour.'
+                            });
+                        }
+                    });
+
+            });
 
         } else {
             return res.json({
@@ -1482,6 +1484,8 @@ exports.campaignsInsertions = async (req, res) => {
             "campaign_id": req.query.campaign_id
         };
 
+        console.log('campaignsInsertions : ', campaignObject); // process.exit(1);
+
         if (campaign_id) {
             var config = SmartFunction.config('campaignsInsertions', campaignObject);
             await axios(config).then(function (result) {
@@ -1510,8 +1514,6 @@ exports.campaignsInsertions = async (req, res) => {
                                     var number_line_offset = data.length;
                                     if (number_line_offset >= 0) {
                                         for (i = 0; i < number_line_offset; i++) {
-
-                                            // console.log(dataValue)
                                             var insertion_id = dataValue[i].id;
                                             var delivery_regulated = dataValue[i].isDeliveryRegulated;
                                             var used_guaranteed_deal = dataValue[i].isUsedByGuaranteedDeal;
@@ -1775,6 +1777,136 @@ exports.campaignsCreatives = async (req, res) => {
     }
 }
 
+exports.campaignEpilot = async (req, res) => {
+    try {
+        let campaign_id = req.query.campaign_id;
+        if (campaign_id) {
+            campaignObject = {
+                "campaign_id": req.query.campaign_id
+            };
+            // console.log(campaignObject); process.exit(1);
+
+            var campaign = await ModelCampaigns
+                .findOne({
+                    where: {
+                        campaign_id: campaign_id
+                    },
+                    include: [{
+                        model: ModelAdvertisers
+                    }]
+                }).then(async function (campaign) {
+                    if (!campaign) {
+                        return res.json({
+                            type: 'error',
+                            message: 'Cette campagne n\'existe pas.'
+                        });
+                    }
+
+                    // Affiche l'ensemble des infos de la campagne
+                    let campaigncrypt = campaign.campaign_crypt
+                    let advertiserid = campaign.advertiser_id;
+                    let campaignid = campaign.campaign_id;
+                    let epilot_campaign_name = campaign.campaign_name;
+                    let campaign_start_date = campaign.campaign_start_date;
+                    let campaign_end_date = campaign.campaign_end_date;
+
+                    const regexCampaignCode = /([0-9]{5})/g;              
+
+                    regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
+                    if (regexCampaignCodeResult) {
+                        var epilot_campaign_code = regexCampaignCodeResult[0];
+                        console.log(epilot_campaign_name, ' - ', epilot_campaign_code);
+                    
+                            // MAJ de la campagne EPILOT
+                            var epilotcampaign = ModelEpilotCampaigns.findOne({
+                                where: {
+                                    epilot_campaign_name: {
+                                        [Op.like]: "%" + epilot_campaign_code + "%"
+                                    }
+                                }
+                            }).then(async function (epilotcampaign) {
+                                let epilot_campaign_id = epilotcampaign.epilot_campaign_id;
+                                let epilot_campaign_name = epilotcampaign.epilot_campaign_name;
+                                
+                                 // MAJ des insertions EPILOT
+                                ModelEpilotInsertions
+                                .update({
+                                    epilot_campaign_id: epilot_campaign_id
+                                }, {
+                                    where: {
+                                        epilot_campaign_name: epilot_campaign_name
+                                    }
+                                });
+
+
+                                // MAJ de la campagne EPILOT
+                                ModelEpilotCampaigns.update({
+                                     campaign_id: campaign_id
+                                 }, {
+                                     where: {
+                                         epilot_campaign_id: epilot_campaign_id
+                                     }
+                                 });
+
+
+                                // MAJ des insertions de la campagne EPILOT
+                                ModelEpilotCampaigns.update({
+                                    campaign_id: campaign_id
+                                }, {
+                                    where: {
+                                        epilot_campaign_id: epilot_campaign_id
+                                    }
+                                });
+
+
+                                 // Mettre à jour les utilisateurs
+                                 const users = await ModelUsers
+                                 .findAll()
+                                 .then(async function (users) {
+                                     users.forEach(function (item) {
+                                         const user_id = item.user_id;
+                                         const user_initial = item.user_initial;
+                                         console.log('user_initial :', user_initial);
+                                         ModelEpilotCampaigns.update({
+                                             user_id: user_id,                                                
+                                             epilot_campaign_id: epilot_campaign_id
+                                         }, {
+                                             where: {
+                                                 epilot_campaign_commercial: user_initial
+                                             }
+                                         });
+ 
+                                     });
+                                 });
+                                
+                            }).catch(async function (epilot_campaign_id) { 
+                                return res.json({
+                                    type: 'success',
+                                    message: 'La campagne et les insertions EPILOT de cette campagne ont été MAJ.'
+                                });
+
+                            });                                          
+                 
+                    }                             
+
+
+
+                });
+
+        } else {
+            return res.json({
+                type: 'error',
+                message: 'Cette campagne n\'existe pas.'
+            });
+        }
+    } catch (error) {
+        return res.json({
+            type: 'error',
+            message: error
+        });
+    }
+}
+
 exports.epilotCampaigns = async (req, res) => {
     try {
 
@@ -1790,20 +1922,17 @@ exports.epilotCampaigns = async (req, res) => {
 
                     regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
                     if (regexCampaignCodeResult) {
-                       var epilot_campaign_code = regexCampaignCodeResult[0];
+                        var epilot_campaign_code = regexCampaignCodeResult[0];
                         console.log(epilot_campaign_name, ' - ', epilot_campaign_code);
- 
+
                         ModelEpilotCampaigns.update({
                             campaign_id: campaign_id
                         }, {
                             where: {
                                 epilot_campaign_name: {
-                            [Op.like]: "%" + epilot_campaign_code + "%"
-                        }
-                    }
-                           /* where: {
-                                epilot_campaign_code: epilot_campaign_code
-                            }*/
+                                    [Op.like]: "%" + epilot_campaign_code + "%"
+                                }
+                            }
                         });
 
                     } else {
@@ -1813,7 +1942,7 @@ exports.epilotCampaigns = async (req, res) => {
                 });
             });
 
-      
+
         // Mettre à jour les annonceurs
         const advertisers = await ModelAdvertisers
             .findAll()
@@ -1832,24 +1961,24 @@ exports.epilotCampaigns = async (req, res) => {
 
                 });
             });
-/*
-         // Mettre à jour les campagnes
-         const campaigns = await ModelCampaigns.findAll()
-         .then(async function (campaigns) {
-             campaigns.forEach(function(item){
-                const campaign_id = item.campaign_id;
-                const campaign_name = item.campaign_name;
+        /*
+                 // Mettre à jour les campagnes
+                 const campaigns = await ModelCampaigns.findAll()
+                 .then(async function (campaigns) {
+                     campaigns.forEach(function(item){
+                        const campaign_id = item.campaign_id;
+                        const campaign_name = item.campaign_name;
 
-                 ModelEpilotCampaigns
-                 .update({ campaign_id: campaign_id}, {
-                     where: {
-                         epilot_campaign_name : campaign_name
-                     }
+                         ModelEpilotCampaigns
+                         .update({ campaign_id: campaign_id}, {
+                             where: {
+                                 epilot_campaign_name : campaign_name
+                             }
+                         });
+
+                     });
                  });
-
-             });
-         });
-*/
+        */
 
 
         // Mettre à jour les utilisateurs
@@ -1925,25 +2054,26 @@ exports.epilotInsertions = async (req, res) => {
 
         // Mettre à jour les formats
         const groupFormats = await ModelFormatsGroups
-        .findAll()
-        .then(async function (groupFormats) {
-            groupFormats.forEach(function (item) {
-                const format_group_id = item.format_group_id;
-                const format_group_name = item.format_group_name;
-                console.log('group_format_name : ', format_group_name, ' - format_group_id : ', format_group_id);
-              
-                ModelEpilotInsertions.update({
-                    format_group_id: format_group_id
-                }, {
-                    where: {
-                        epilot_insertion_name: {
-                            [Op.like]: "%" + format_group_name + "%"
-                        }
-                    }
-                });
+            .findAll()
+            .then(async function (groupFormats) {
+                groupFormats.forEach(function (item) {
+                    const format_group_id = item.format_group_id;
 
+                    const format_group_name = item.format_group_name;
+                    console.log('group_format_name : ', format_group_name, ' - format_group_id : ', format_group_id);
+
+                    ModelEpilotInsertions.update({
+                        format_group_id: format_group_id
+                    }, {
+                        where: {
+                            epilot_insertion_name: {
+                                [Op.like]: "%" + format_group_name + "%"
+                            }
+                        }
+                    });
+
+                });
             });
-        });
 
         /*
         const groupFormats = await ModelFormatsGroups
@@ -1969,27 +2099,27 @@ exports.epilotInsertions = async (req, res) => {
 
         */
 
+        /*
+                // Mettre à jour les utilisateurs
+                const users = await ModelUsers
+                    .findAll()
+                    .then(async function (users) {
+                        users.forEach(function (item) {
+                            const user_id = item.user_id;
+                            const user_initial = item.user_initial;
+                            const user_name = item.user_lastname + ' ' + item.user_firstname;
 
-        // Mettre à jour les utilisateurs
-        const users = await ModelUsers
-            .findAll()
-            .then(async function (users) {
-                users.forEach(function (item) {
-                    const user_id = item.user_id;
-                    const user_initial = item.user_initial;
-                    const user_name = item.user_lastname + ' ' + item.user_firstname;
+                            ModelEpilotInsertions.update({
+                                user_id: user_id
+                            }, {
+                                where: {
+                                    epilot_insertion_commercial: user_name
+                                }
+                            });
 
-                    ModelEpilotInsertions.update({
-                        user_id: user_id
-                    }, {
-                        where: {
-                            epilot_insertion_commercial: user_name
-                        }
+                        });
                     });
-
-                });
-            });
-
+        */
         return res.json({
             type: 'success',
             message: "Les insertions, les campagnes et les utilisateurs sont MAJ"
@@ -2002,6 +2132,7 @@ exports.epilotInsertions = async (req, res) => {
         });
     }
 }
+
 exports.formats = async (req, res) => {
     try {
         var config = SmartFunction.config('formats');
@@ -2693,7 +2824,6 @@ exports.creatives = async (req, res) => {
     }
 }
 
-
 exports.insertions = async (req, res) => {
     try {
         var config = SmartFunction.config('insertions');
@@ -3014,7 +3144,7 @@ exports.reports = async (req, res) => {
                 console.log('nbCampaigns :', nbCampaigns)
                 a = 0;
                 for (i = 0; i < nbCampaigns; i++) {
-                   if (!Utilities.empty(campaigns[i].insertions)) {
+                    if (!Utilities.empty(campaigns[i].insertions)) {
                         var campaigns_start_date = campaigns[i].campaign_start_date;
                         var campaigns_end_date = campaigns[i].campaign_end_date;
 
@@ -3099,10 +3229,10 @@ exports.reports = async (req, res) => {
                             }
 
 
-                            
 
-                         
- /* 
+
+
+                            /* 
                           if (campaignsReports.length > 0) {
                               // Trie les campagnes selon la date d'expiration
                                 campaignsReports.sort(function (a, b) {
@@ -3138,30 +3268,30 @@ exports.reports = async (req, res) => {
                 }
 
                 console.log(campaignsReports)
-                console.log('campaignReports length '+campaignsReports.length)
-                
+                console.log('campaignReports length ' + campaignsReports.length)
+
                 if (campaignsReports.length > 0) {
                     // Trie les campagnes selon la date d'expiration
-                      campaignsReports.sort(function (a, b) {
-                          return a.timestamp_expiration - b.timestamp_expiration;
-                      });
-                      
+                    campaignsReports.sort(function (a, b) {
+                        return a.timestamp_expiration - b.timestamp_expiration;
+                    });
 
-                      var format = req.query.format;
-                      if (!Utilities.empty(format) && (format === 'json')) {
-                           res
-                              .status(200)
-                              .json(campaignsReports);
-                      } else {
-                          campaign_crypt = campaignsReports[0].campaign_crypt;
-                         campaign_id = campaignsReports[0].campaign_id;
 
-                          return res.redirect('/r/automate/' + campaign_id);
-                      }
+                    var format = req.query.format;
+                    if (!Utilities.empty(format) && (format === 'json')) {
+                        res
+                            .status(200)
+                            .json(campaignsReports);
+                    } else {
+                        campaign_crypt = campaignsReports[0].campaign_crypt;
+                        campaign_id = campaignsReports[0].campaign_id;
 
-                  } else {
-                      return res.json('Aucune campagne existante');
-                  }
+                        return res.redirect('/r/automate/' + campaign_id);
+                    }
+
+                } else {
+                    return res.json('Aucune campagne existante');
+                }
 
 
             });

@@ -513,7 +513,7 @@ exports.import = async (req, res) => {
                                     'epilot_insertion_group': epilot_insertion_group
                                 }
 
-                                // console.log(data_insertion); process.exit(1); Ajoute ou MAJ la campagne
+                             console.log(data_insertion);// process.exit(1); // Ajoute ou MAJ la campagne
                                 // EPILOT
                                 Utilities
                                     .updateOrCreate(ModelEpilotInsertions, {

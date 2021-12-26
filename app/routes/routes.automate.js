@@ -12,9 +12,11 @@ router.get("/advertiser", automate.advertiser);
 router.get("/campaigns", automate.campaigns);
 router.get("/campaign", automate.campaign);
 router.get("/campaign/report", automate.campaignReport);
+router.get("/campaign/epilot", automate.campaignEpilot);
 router.get("/campaigns/insertions", automate.campaignsInsertions);
 router.get("/campaigns/creatives", automate.campaignsCreatives);
 router.get("/campaigns/days", automate.campaignsDays);
+
 router.get("/epilot/campaigns", automate.epilotCampaigns);
 router.get("/epilot/insertions", automate.epilotInsertions);
 

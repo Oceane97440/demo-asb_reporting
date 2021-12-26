@@ -1,18 +1,21 @@
 'use strict';
 $(document).ready(function () {
     var config = {
-        baseurl: "http://localhost:3001/" // "http://reporting.antennesb.fr/"
+        baseurl: "http://127.0.0.1:3002/" // "http://localhost:3002"
     };
-    
-    var chartCampaignUrl = config.baseurl+'manager/charts/campaigns';
-    var chartAdvertiserUrl = config.baseurl+'manager/charts/advertisers';
+
+    var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
+    var chartAdvertiserUrl = config.baseurl + 'manager/charts/advertisers';
 
     var campaign_id = $('div.card').attr('data-campaign_id');
-    var chartCampaignReportUrl = config.baseurl+'manager/charts/campaign/report?campaign_id='+campaign_id;
+    var chartCampaignReportUrl = config.baseurl + 'manager/charts/campaign/report?campaign_id=' + campaign_id;
 
-/*
-* Chart Campaigns -
-*/
+  //  alert('lol campaign id : '+campaign_id);
+
+
+    /*
+     * Chart Campaigns -
+    
 
     $.getJSON(chartCampaignUrl, function (response) {
         var options = {
@@ -35,15 +38,13 @@ $(document).ready(function () {
             stroke: {
                 curve: 'smooth'
             },
-            series: [
-                {
-                    name: response.lastYear.year,
-                    data: response.lastYear.result
-                }, {
-                    name: response.nowYear.year,
-                    data: response.nowYear.result
-                }
-            ],
+            series: [{
+                name: response.lastYear.year,
+                data: response.lastYear.result
+            }, {
+                name: response.nowYear.year,
+                data: response.nowYear.result
+            }],
             xaxis: {
                 categories: response.month
             }
@@ -52,193 +53,190 @@ $(document).ready(function () {
         var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
         chart.render();
     });
+ */
+    /*
+     * Annonceurs 
+    
 
-/*
-* Annonceurs 
-*/
-
-$.getJSON(chartAdvertiserUrl, function (response) {
-    var options = {
-        chart: {
-            type: 'line',
-            animations: {
-                enabled: true,
-                easing: 'easeinout',
-                speed: 800,
-                animateGradually: {
+    $.getJSON(chartAdvertiserUrl, function (response) {
+        var options = {
+            chart: {
+                type: 'line',
+                animations: {
                     enabled: true,
-                    delay: 150
-                },
-                dynamicAnimation: {
-                    enabled: true,
-                    speed: 20
+                    easing: 'easeinout',
+                    speed: 800,
+                    animateGradually: {
+                        enabled: true,
+                        delay: 150
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 20
+                    }
                 }
-            }
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        series: [
-            {
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            series: [{
                 name: response.lastYear.year,
                 data: response.lastYear.result
             }, {
                 name: response.nowYear.year,
                 data: response.nowYear.result
+            }],
+            xaxis: {
+                categories: response.month
             }
-        ],
-        xaxis: {
-            categories: response.month
         }
-    }
 
-    var chart = new ApexCharts(document.querySelector("#chart-advertisers"), options);
-    chart.render();
-});
+        var chart = new ApexCharts(document.querySelector("#chart-advertisers"), options);
+        chart.render();
+    });
+
+ */
 
 
-
-
-/*
-* Chart Bar Reporting
-*/
-$.getJSON(chartCampaignReportUrl, function (response) {
-    var options = {
-        series: [
-            {
+    /*
+     * Chart Bar Reporting
+     */
+ //   alert(chartCampaignReportUrl)
+    $.getJSON(chartCampaignReportUrl, function (response) {
+        var options = {
+            series: [{
                 name: 'Diffusé',
-                data:  response.values.delivery
+                data: response.values.delivery
             }, {
                 name: 'Restant à diffuser',
-                data:  response.values.booking
-            }
-        ],
-        chart: {
-            type: 'bar',
-            height: 150,
-            stacked: true,
-          stackType: '100%'
-        },
-        plotOptions: {
-            bar: {
-                horizontal: true
-            }
-        },
-        stroke: {
-            width: 1,
-            colors: ['#fff']
-        },
-        xaxis: {
-            categories: response.formats,
-            labels: {
-                formatter: function (val) {
-                    return val 
+                data: response.values.booking
+            }],
+            chart: {
+                type: 'bar',
+                height: 150,
+                stacked: true,
+                stackType: '100%'
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true
                 }
-            }
-        },
-        yaxis: {
-            title: {
-                text: undefined
-            }
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val
+            },
+            stroke: {
+                width: 1,
+                colors: ['#fff']
+            },
+            xaxis: {
+                categories: response.formats,
+                labels: {
+                    formatter: function (val) {
+                        return val
+                    }
                 }
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        colors: [
-            '#3f51b5', '#cc0000'
-        ],
-        legend: {
-            position: 'bottom',
-            horizontalAlign: 'left',
-            offsetX: 10
-        }
-    };
-
-    var chart = new ApexCharts(
-        document.querySelector("#chart-campaignreport"),
-        options
-    );
-    chart.render();
-
-});
-
-/*
-    var options = {
-        series: [
-            {
-                name: 'Réservée',
-                data: [(467000), (374268), (289980)]
-            }, {
-                name: 'Restant à diffuser',
-                data: [
-                    (467000 - 475272),
-                    (374268 - 383483),
-                    (289980 - 268365)
-                ]
-            }
-        ],
-        chart: {
-            type: 'bar',
-            height: 250,
-            stacked: true
-        },
-        plotOptions: {
-            bar: {
-                horizontal: true
-            }
-        },
-        stroke: {
-            width: 1,
-            colors: ['#fff']
-        },
-        xaxis: {
-            categories: [
-                'Habillage', 'Interstitiel', 'Instream'
+            },
+            yaxis: {
+                title: {
+                    text: undefined
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            colors: [
+                '#3f51b5', '#cc0000'
             ],
-            labels: {
-                formatter: function (val) {
-                    return val 
-                }
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'left',
+                offsetX: 10
             }
-        },
-        yaxis: {
-            title: {
-                text: undefined
-            }
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val
-                }
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        colors: [
-            '#3f51b5', '#cc0000'
-        ],
-        legend: {
-            position: 'bottom',
-            horizontalAlign: 'left',
-            offsetX: 10
-        }
-    };
+        };
 
-    var chart = new ApexCharts(
-        document.querySelector("#chart-campaignreport"),
-        options
-    );
-    chart.render();
-*/
+        var chart = new ApexCharts(
+            document.querySelector("#chart-campaignreport"),
+            options
+        );
+        chart.render();
+
+    });
+
+    /*
+        var options = {
+            series: [
+                {
+                    name: 'Réservée',
+                    data: [(467000), (374268), (289980)]
+                }, {
+                    name: 'Restant à diffuser',
+                    data: [
+                        (467000 - 475272),
+                        (374268 - 383483),
+                        (289980 - 268365)
+                    ]
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 250,
+                stacked: true
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true
+                }
+            },
+            stroke: {
+                width: 1,
+                colors: ['#fff']
+            },
+            xaxis: {
+                categories: [
+                    'Habillage', 'Interstitiel', 'Instream'
+                ],
+                labels: {
+                    formatter: function (val) {
+                        return val 
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: undefined
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            colors: [
+                '#3f51b5', '#cc0000'
+            ],
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'left',
+                offsetX: 10
+            }
+        };
+
+        var chart = new ApexCharts(
+            document.querySelector("#chart-campaignreport"),
+            options
+        );
+        chart.render();
+    */
 
 });
 

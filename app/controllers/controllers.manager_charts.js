@@ -393,7 +393,7 @@ exports.campaignReport = async (req, res) => {
                     })
                     .then(async function (epilotCampaign) {
                        
-                       if(epilotCampaign.epilot_insertions) {
+                       if((!Utilities.empty(epilotCampaign)) && (!Utilities.empty(epilotCampaign.epilot_insertions))) {
                             var epilot_insertions_count = epilotCampaign.epilot_insertions.length;
                            
                             var insertions_group = new Array();
@@ -402,7 +402,7 @@ exports.campaignReport = async (req, res) => {
                             for (let i = 0; i < epilot_insertions_count; i++) {
                                 var format_group_id = epilotCampaign.epilot_insertions[i].format_group_id;
                                 var insertion_volume = epilotCampaign.epilot_insertions[i].epilot_insertion_volume;
-
+                                // console.log('format_group_id :',format_group_id);
                                 switch(format_group_id) {                                   
                                    case 1: formatHabillage.push(insertion_volume); break;
                                    case 2: formatInterstitiel.push(insertion_volume); break;
@@ -445,6 +445,8 @@ exports.campaignReport = async (req, res) => {
                         }
 
                         if (reporting.interstitiel) {
+                            console.log('RETORDT <<<<<<<<<<<<<',reporting.interstitiel.impressions)
+                            console.log('RETORDT <<<<<<<<<<<<<',formatInterstitiel)
                             formats.push('Interstitiel');
                             delivery.push(reporting.interstitiel.impressions);
                             booking.push(formatInterstitiel.reduce(reducer) - reporting.interstitiel.impressions);
