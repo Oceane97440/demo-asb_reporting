@@ -1,5 +1,5 @@
 var config = {
-    baseurl: "http://127.0.0.1:3002"
+    baseurl: "http://127.0.0.1:3001"
 };
 
 $(document).ready(function () {
@@ -37,7 +37,7 @@ $(document).ready(function () {
             search: "Rechercher&nbsp;:",
             lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
             info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eac" +
-                    "ute;ments",
+                "ute;ments",
             infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
             infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
             infoPostFix: "",
@@ -77,7 +77,7 @@ $(document).ready(function () {
             target = ' target="_blank"';
         }
         var toastHtml = '<div class="toast" aria-live="assertive" aria-atomic="true" style="z-index:999' +
-                '9;top:12px;right:12px;position:fixed">';
+            '9;top:12px;right:12px;position:fixed">';
         toastHtml += '<div class="toast-header">'
         toastHtml += '<strong class="mr-auto"><i class="fa fa-grav"></i> ' + title + '</strong>'
         toastHtml += '<small>' + time + '</small>'
@@ -87,7 +87,7 @@ $(document).ready(function () {
         toastHtml += '</div>'
         toastHtml += '<div class="toast-body">'
         toastHtml += '<div class="toast-message"><a href="' + url + '" ' + target + '>' +
-                message + '</a></div>'
+            message + '</a></div>'
         toastHtml += '</div>'
         toastHtml += '</div>'
 
@@ -113,7 +113,7 @@ $(document).ready(function () {
         $(".toast").toast('show');
     }
 
-   
+
     /*
     $.getJSON(config.baseurl + '/automate/reports', function (data) {
 
@@ -166,7 +166,7 @@ $(document).ready(function () {
                     success: function (data) {
                         toastWidget('Mise à jour de la campagne', '', data.message);
                         automateAction('campaign-insertions');
-                      //  automateAction('campaign-epilot');
+                        //  automateAction('campaign-epilot');
                         // automateAction('campaign-report');*/
                     },
                     error: function () {
@@ -204,11 +204,11 @@ $(document).ready(function () {
                         automateAction('campaign-creatives');
                     },
                     error: function () {
-                         swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning");
+                        swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning");
                     },
                     timeout: 300000
                 });
-            break;
+                break;
             case "campaign-insertions-epilot":
                 // Récupére les insertions d'epilot
                 $.ajax({
@@ -225,12 +225,12 @@ $(document).ready(function () {
                     },
                     timeout: 300000
                 });
-            break;
+                break;
             case "campaign-creatives":
                 // $('div.alert-automate').attr('data-automate');
                 // var automateData = $('div.alert-automate').attr('data-automate');
                 // if(automateData == "campaign-creatives") {  alert('campaign-creatives');  }
-                
+
                 // Récupére les creatives
                 $.ajax({
                     type: 'GET',
@@ -290,11 +290,7 @@ $(document).ready(function () {
     var advertiser_id = $('div.card').attr('data-advertiser_id');
     var automateData = $('div.alert-automate').attr('data-automate');
 
-    if (campaign_id) {
-       automateAction(automateData);
-    }
-
-    if (advertiser_id) {
+    if (campaign_id || advertiser_id) {
         automateAction(automateData);
     }
 
@@ -304,15 +300,15 @@ $(document).ready(function () {
         return false;
     })
 
-    var classList = $('div.alert-automate').attr('data-automate').split(/\s+/);
-    $.each(classList, function(index, item) {
-       // if (item === 'someClass') {
-            //do something
-       // }
-       console.log('classList : '+item)
-    });
-    
-
-
+    /*
+    var IDsAdsLoad = document.querySelectorAll("div[data-automate]");
+    if (IDsAdsLoad.length > 0) {
+        [].forEach.call(IDsAdsLoad, function (advertiseLoad) {
+           if (campaign_id || advertiser_id) { 
+             automateAction(advertiseLoad.dataset.automate);
+            }
+        });
+    }
+    */
 
 });

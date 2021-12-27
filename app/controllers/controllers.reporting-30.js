@@ -97,7 +97,6 @@ exports.generate = async (req, res) => {
             console.log(reportingData);
             if (reportingDataStorage && (reportingData.reporting_end_date < date_now)) {
 
-
                 res.render('report/template.ejs', {
                     reporting: reportingData,
                     moment: moment,
@@ -320,11 +319,8 @@ exports.report = async (req, res) => {
                             console.log(campaign_date_end)
                         }
 
-
-
                         var diff_day = campaign_date_end.diff(campaign_date_start, 'd');
                         /*----------- Si la campagne > 30j ------------*/
-
 
                         var NbrTask = Math.ceil(diff_day / 30);
                         console.log('NbrTask : ' + NbrTask);
@@ -347,12 +343,8 @@ exports.report = async (req, res) => {
                                     campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
                                     var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
-
                                     taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
                                     arrayTaskId.push(taskOne)
-
-
-
                                 }
 
                                 if ((index >= 1) && (index < (NbrTask - 1)) && campaign_task_date_tomorrow) {
@@ -364,9 +356,7 @@ exports.report = async (req, res) => {
                                     var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
                                     taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
-                                    arrayTaskId.push(taskTwo)
-
-
+                                    arrayTaskId.push(taskTwo);
                                 }
 
                                 if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
@@ -375,10 +365,7 @@ exports.report = async (req, res) => {
                                     var campaign_enf_last = moment(campaign_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
 
                                     taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
-                                    arrayTaskId.push(taskThree)
-
-
-
+                                    arrayTaskId.push(taskThree);
                                 }
 
                             }
@@ -410,10 +397,7 @@ exports.report = async (req, res) => {
                                         let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
 
                                         console.log('requete_global' + requete_global)
-
-
                                         let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-
 
                                         var jobProgress = threeLink.data.lastTaskInstance.jobProgress
                                         var instanceStatus = threeLink.data.lastTaskInstance.instanceStatus
@@ -422,11 +406,9 @@ exports.report = async (req, res) => {
                                             'task': taskId,
                                             'jobProgress': jobProgress,
                                             'instanceStatus': instanceStatus
-
                                         }
 
-                                        ObjTaskProgress.push(itemProgress)
-
+                                        ObjTaskProgress.push(itemProgress);
 
 
                                         if ((ObjTaskProgress[index].jobProgress == '1.0') && (ObjTaskProgress[index].instanceStatus == 'SUCCESS')) {
@@ -437,14 +419,10 @@ exports.report = async (req, res) => {
                                                 ''
                                             );
 
-
-
                                             var itemData = {
                                                 'dataFile': dataFile.data
-
                                             };
                                             dataObjTaskGlobalAll[taskId] = itemData;
-
 
                                             localStorageTasks.setItem(
                                                 cacheStorageID + '-taskGlobalAll',
@@ -458,17 +436,10 @@ exports.report = async (req, res) => {
                                     }
 
 
-
-
                                 } else {
 
                                     clearInterval(timerFile);
-
-
                                     console.log('Stop clearInterval timerFile - else');
-
-
-
                                     process.exit()
 
                                 }

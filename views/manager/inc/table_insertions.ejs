@@ -33,12 +33,8 @@
                 </td>
                 <td class="d-none"><%= insertions[i].insertion_start_date %></td>
                 <td>
-                    <% if(insertions[i].priority_id) { 
-                      
-                        %>
-
-                    <%= insertions[i].insertions_priority.priority_name %>
-
+                    <% if(insertions[i].priority_id) {  %>
+                     <span class="badge bg-priority_<%= insertions[i].insertions_priority.priority_id %>"><%= insertions[i].insertions_priority.priority_name %></span>
                     <% } else { %>-<% } %>
                 </td>
                 <td><% if(!utilities.empty(insertions[i].max_impression)) { %><%= utilities.numStr(insertions[i].max_impression) %><% } else { %>-<% } %>
@@ -46,7 +42,7 @@
                 <td class="d-none"><%= insertions[i].insertion_end_date %></td>
                 <td><% if(insertions[i].format) { %>
                     <a href="/manager/formats/<%= insertions[i].format.format_id %>"
-                        title="<%= insertions[i].format.format_name %>"><%= insertions[i].format.format_name %></a>
+                        title="<%= insertions[i].format.format_name %>" class="badge bg-info"><%= insertions[i].format.format_name %></a>
                     <% } else { %>-<% } %></td>
                 <td class="d-none"><% if(insertions[i].insertions_status) { %><span
                         class="badge bg-success"><%= insertions[i].insertions_status.insertion_status_name %></span><% } else { %>-<% } %>

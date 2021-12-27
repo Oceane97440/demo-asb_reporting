@@ -1,14 +1,14 @@
 'use strict';
 $(document).ready(function () {
     var config = {
-        baseurl: "http://127.0.0.1:3002/" // "http://localhost:3002"
+        baseurl: "http://127.0.0.1:3001" // "http://localhost:3002"
     };
 
-    var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
-    var chartAdvertiserUrl = config.baseurl + 'manager/charts/advertisers';
+    var chartCampaignUrl = config.baseurl + '/manager/charts/campaigns';
+    var chartAdvertiserUrl = config.baseurl + '/manager/charts/advertisers';
 
     var campaign_id = $('div.card').attr('data-campaign_id');
-    var chartCampaignReportUrl = config.baseurl + 'manager/charts/campaign/report?campaign_id=' + campaign_id;
+    var chartCampaignReportUrl = config.baseurl + '/manager/charts/campaign/report?campaign_id=' + campaign_id;
 
   //  alert('lol campaign id : '+campaign_id);
 

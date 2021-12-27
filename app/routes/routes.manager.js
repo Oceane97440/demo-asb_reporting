@@ -16,6 +16,8 @@ const manager_forecast = require("../controllers/controllers.manager_forecast");
 const manager_search = require("../controllers/controllers.manager_search");
 const manager_charts = require("../controllers/controllers.manager_charts");
 
+const manager_alerts = require("../controllers/controllers.manager_alerts");
+
 
 /**
 * Middleware to know if user is connected
@@ -136,6 +138,8 @@ router.get("/charts/campaigns", manager_charts.campaigns);
 router.get("/charts/advertisers/", manager_charts.advertisers);
 router.get("/charts/advertisers/:advertiser_id", manager_charts.advertisers);
 router.get("/charts/campaign/report", manager_charts.campaignReport);
+
+router.get("/alerts", manager_alerts.index);
 
 /*
 router.post('/campaigns/epilot/create', checkSchema(ValidateCustom.campaignEpilotSchema), (req, res) => {

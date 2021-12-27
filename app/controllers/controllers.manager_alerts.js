@@ -30,8 +30,43 @@ const ModelCreatives = require("../models/models.creatives");
 const ModelUsers = require("../models/models.users");
 
 exports.index = async (req, res) => {
-   /* try {
-        // Liste tous les campagnes
+   try {
+         // Liste tous les campagnes
+         const data = new Object();
+
+         // Créer le fil d'ariane
+         breadcrumb = new Array({
+             'name': 'Gestion des alertes',
+             'link': ''
+         }, );
+         data.breadcrumb = breadcrumb;
+    
+        // Liste les campagnes sans insertions
+        data.campaigns = await ModelCampaigns.findAll(
+            {
+               where: {
+                    campaign_start_date: { 
+                        [Op.between]: ['2020-01-01', '2020-12-31']
+                     }
+                },
+                include: [{
+                    model: ModelInsertions,
+                    where: { campaign_id: {
+                        [Op.eq]: null
+                      } }
+                }]
+            }
+        );
+
+
+        data.moment = moment;
+        console.log( data.campaigns.length);
+        res.render('manager/alerts/index.ejs', data);
+      //  
+
+      //  process.exit(1);
+
+      /*   // Liste tous les campagnes
         const data = new Object();
         data.campaigns = await ModelCampaigns.count();
         data.formats = await ModelFormats.count();
@@ -61,10 +96,11 @@ exports.index = async (req, res) => {
         data.campaigns_last = campaigns_last;
   
         res.render('manager/index.ejs', data);
+        */
     } catch (error) {
-        var statusCoded = error.response;
+        var statusCoded = error.response;        
         res.render("manager/error.ejs", {statusCoded: statusCoded});
-    }*/
+    }
 }
 
 exports.error = async (req, res) => {

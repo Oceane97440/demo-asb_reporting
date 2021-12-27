@@ -88,10 +88,11 @@ exports.index = async (req, res) => {
         464862
     );
 
-var dateNow = moment().format('YYYY-M-D'); // "2021-12-22";
+var dateNow = moment().format('YYYY-M-D 00:00:00'); // "2021-12-22";
+var dateEnd = '2040-12-31 23:59:00';
 console.log('dateNow : ',dateNow);
 
- ;;   // Affiche les campagnes en ligne
+  // Affiche les campagnes en ligne
     campaigns_online = await ModelCampaigns.findAll({
         where: {
        //  [Op.and]: [{
@@ -100,11 +101,11 @@ console.log('dateNow : ',dateNow);
                 },
                 [Op.or]: [{
                     campaign_start_date: {
-                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                        [Op.between]: [dateNow, dateEnd]
                     }
                 }, {
                     campaign_end_date: {
-                        [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                        [Op.between]: [dateNow, dateEnd]
                     }
                 }]
                  /* campaign_start_date: {
@@ -133,16 +134,78 @@ console.log('dateNow : ',dateNow);
         }]
     });
 
+    console.log(campaigns_online.length); 
 
-    console.log(campaigns_online.length); process.exit(1);
     var campaign_ids = new Array();
     for(i = 0; i < campaigns_online.length; i++) {
         console.log(campaigns_online[i].campaign_name+' - '+campaigns_online[i].campaign_id);
         campaign_ids.push(campaigns_online[i].campaign_id);
     }
+   
+    console.log(campaign_ids);
 
-    console.log(campaign_ids)
+      // initialisation des requêtes
+      var requestReporting = {
+        "startDate": dateNow,
+        "endDate": dateEnd,
+        "fields": [{
+            "CampaignStartDate": {}
+        }, {
+            "CampaignEndDate": {}
+        }, {
+            "CampaignId": {}
+        }, {
+            "CampaignName": {}
+        }, {
+            "InsertionId": {}
+        }, {
+            "InsertionName": {}
+        }, {
+            "FormatId": {}
+        }, {
+            "FormatName": {}
+        }, {
+            "SiteId": {}
+        }, {
+            "SiteName": {}
+        }, {
+            "Impressions": {}
+        }, {
+            "ClickRate": {}
+        }, {
+            "Clicks": {}
+        }, {
+            "VideoCount": {
+                "Id": "17",
+                "OutputName": "Nbr_complete"
+            }
+        }, {
+            "ViewableImpressions": {}
+        }],
+        "filter": [{
+            "CampaignId": [1989163, 2007792, 1913649, 2003528,
+                1938504, 2007632, 1850218, 2003310,
+                2004336, 1909617, 1974651, 1913231,
+                1921937, 1974685, 1913245, 1971870,
+                2001079, 1989854, 1989864, 1863912,
+                1961451, 1997595, 1983659, 1996358,
+                2003316, 1965099, 1981048, 1975229,
+                1974724, 1985080, 1996479, 1989974,
+                1989977, 2009119, 2008909, 1992587,
+                2007959, 1698950]
+        }]
+    }
 
+    console.log(requestReporting);
+    let firstLink = await AxiosFunction.getReportingData(
+        'POST',
+        '',
+        requestReporting
+    );
+
+    console.log('firstLink : ',firstLink);
+
+    process.exit(1);
 /*
   await ModelEpilotCampaigns.update( data_campaign
 , {

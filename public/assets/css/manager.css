@@ -4,6 +4,53 @@ table.dataTable thead .sorting{
     background-repeat:no-repeat!important
 }
 
+#campaign-insertions .table-responsive .campaign_name, 
+#campaign-epilot .table-responsive .epilot_campaign_name,
+#campaign-epilot .table-responsive .epilot_advertiser_name,
+#campaign-main .table-responsive .advertiser_name {display:none}
 
-#campaign-insertions .table-responsive table .campaign_name {display:none}
-#advertiser-campaigns .table-responsive table .advertiser_name {display:none}
+label.form-label.required:after {
+    content: " *";
+    color: red;
+}
+
+label.form-label.required {
+    color: red
+}
+
+
+.bg-format_43791, .bg-format_79409 {background-color: chartreuse;}
+
+
+.bg-priority_101 {background-color:#ef4444;}
+.bg-priority_102 {background-color:#b91c1c;}
+.bg-priority_103 {background-color:#991b1b;}
+.bg-priority_104 {background-color:#7f1d1d;}
+
+.bg-priority_81 {background-color:#fdba74;}
+.bg-priority_82 {background-color:#fb923c;}
+.bg-priority_83 {background-color:#f97316;}
+.bg-priority_84 {background-color:#ea580c;}
+
+.bg-priority_61 {background-color:#16a34a;}
+.bg-priority_62 {background-color:#15803d;}
+.bg-priority_63 {background-color:#166534;}
+.bg-priority_64 {background-color:#15803d;}
+
+.bg-priority_31 {background-color:;}
+.bg-priority_32 {background-color:;}
+.bg-priority_33 {background-color:;}
+.bg-priority_34 {background-color:;}
+
+.bg-priority_26 {background-color:#38bdf8;}
+.bg-priority_8 {background-color:#7dd3fc;}
+.bg-priority_7 {background-color:#bae6fd;}
+.bg-priority_6 {background-color:#e0f2fe;}
+
+.bg-priority_50 {background-color:;}
+.bg-priority_20 {background-color:;}
+
+
+.dataTables_info {font-size: 0.85em;}
+
+.card-body {padding:25px 5px!important}

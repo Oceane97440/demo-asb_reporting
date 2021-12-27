@@ -1,0 +1,23 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+
+<!-- support-section start -->
+<div class="row">
+<ul>
+    <% for (let i=0; i < campaigns.length; i++) { %>
+        <li class="list-group-item">
+            <a href="/manager/campaigns/<%= campaigns[i].campaign_id %>"
+                title="<%= campaigns[i].campaign_name %>"><%= campaigns[i].campaign_name %>
+                <br />
+                <span class="small">(Du
+                    <%= moment(campaigns[i].campaign_start_date).format('DD/MM/YYYY') %>
+                    au
+                    <%= moment(campaigns[i].campaign_end_date).format('DD/MM/YYYY') %>)</span>
+            </a>
+        </li>
+        <% } %>
+    </ul>
+</div>
+
+
+
+<%- include("../../layouts/manager/footer.ejs") -%>
