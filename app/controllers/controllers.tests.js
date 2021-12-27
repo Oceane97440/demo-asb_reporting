@@ -44,12 +44,15 @@ const ModelFormatsGroups = require("../models/models.formats_groups");
 exports.index = async (req, res) => {
 
     // Mettre à jour les formats
-    const groupFormats = await ModelFormatsGroups
-    .findAll();
+   // const groupFormats = await ModelFormatsGroups
+   // .findAll();
 
-    console.log(groupFormats)
+    // console.log(groupFormats)
 
-process.exit(1);
+ // Crée label avec le date du jour ex : 20210403
+
+ const dateNowLong = Date.now();
+
 
      // Affiche les annonceurs
      const advertiserExclus = new Array(
@@ -85,7 +88,8 @@ process.exit(1);
         464862
     );
 
-var dateNow = "2021-12-22";
+var dateNow = moment().format('YYYY-M-D'); // "2021-12-22";
+console.log('dateNow : ',dateNow);
 
  ;;   // Affiche les campagnes en ligne
     campaigns_online = await ModelCampaigns.findAll({
@@ -130,7 +134,7 @@ var dateNow = "2021-12-22";
     });
 
 
-    console.log(campaigns_online.length);
+    console.log(campaigns_online.length); process.exit(1);
     var campaign_ids = new Array();
     for(i = 0; i < campaigns_online.length; i++) {
         console.log(campaigns_online[i].campaign_name+' - '+campaigns_online[i].campaign_id);

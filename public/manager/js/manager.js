@@ -227,6 +227,10 @@ $(document).ready(function () {
                 });
             break;
             case "campaign-creatives":
+                // $('div.alert-automate').attr('data-automate');
+                // var automateData = $('div.alert-automate').attr('data-automate');
+                // if(automateData == "campaign-creatives") {  alert('campaign-creatives');  }
+                
                 // Récupére les creatives
                 $.ajax({
                     type: 'GET',
@@ -299,5 +303,16 @@ $(document).ready(function () {
         automateAction(btnAutomate);
         return false;
     })
+
+    var classList = $('div.alert-automate').attr('data-automate').split(/\s+/);
+    $.each(classList, function(index, item) {
+       // if (item === 'someClass') {
+            //do something
+       // }
+       console.log('classList : '+item)
+    });
+    
+
+
 
 });
