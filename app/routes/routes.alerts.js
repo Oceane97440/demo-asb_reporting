@@ -5,5 +5,7 @@ const alert = require("../controllers/controllers.alerts");
 
 // Affiche la page api
 router.get("/", alert.index);
+router.get("/campaigns", alert.campaigns);
+
 
 module.exports = router;

@@ -2826,6 +2826,7 @@ exports.creatives = async (req, res) => {
 
 exports.insertions = async (req, res) => {
     try {
+       
         var config = SmartFunction.config('insertions');
         await axios(config).then(function (res) {
             if (!Utilities.empty(res.data)) {
@@ -3127,15 +3128,12 @@ exports.reports = async (req, res) => {
                     {
                         model: ModelInsertions
                     }
-
                 ]
             })
             .then(async function (campaigns) {
                 if (!campaigns) {
                     //return res.json(404, 'Aucune campagne existante');
                 }
-
-
 
                 campaignsList = new Object();
                 var campaignsReports = [];
@@ -3148,7 +3146,6 @@ exports.reports = async (req, res) => {
                         var campaigns_start_date = campaigns[i].campaign_start_date;
                         var campaigns_end_date = campaigns[i].campaign_end_date;
 
-
                         var start_date = new Date(campaigns_start_date);
                         var end_date_time = new Date(campaigns_end_date);
                         var date_now = Date.now();
@@ -3159,9 +3156,6 @@ exports.reports = async (req, res) => {
                         } else {
                             var NbDayCampaign = diff.day;
                         }
-
-
-
 
                         /** Recupère les campagne en ligne uniquement < 31j */
                         if (NbDayCampaign < 31) {
@@ -3227,10 +3221,6 @@ exports.reports = async (req, res) => {
                             if (moment().format('YYYY-MM-DD HH:mm:ss') < campaign_end_date) {
                                 campaignsReports.push(campaignsList);
                             }
-
-
-
-
 
                             /* 
                           if (campaignsReports.length > 0) {

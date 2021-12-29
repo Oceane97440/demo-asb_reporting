@@ -1,5 +1,5 @@
 var config = {
-    baseurl: "http://127.0.0.1:3001"
+    baseurl: "http://127.0.0.1:3002"
 };
 
 $(document).ready(function () {
@@ -209,7 +209,7 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
-            case "campaign-insertions-epilot":
+           /* case "campaign-insertions-epilot":
                 // Récupére les insertions d'epilot
                 $.ajax({
                     type: 'GET',
@@ -225,7 +225,7 @@ $(document).ready(function () {
                     },
                     timeout: 300000
                 });
-                break;
+                break;*/
             case "campaign-creatives":
                 // $('div.alert-automate').attr('data-automate');
                 // var automateData = $('div.alert-automate').attr('data-automate');
@@ -247,7 +247,7 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
-            case "campaign-epilot":
+         /*   case "campaign-epilot":
                 // Réinitialise les données d'Epilot
                 $.ajax({
                     type: 'GET',
@@ -263,7 +263,7 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
-
+*/
             case "advertiser-campaigns":
                 // Récupére les campagnes des annonceurs console.log(
                 // config.baseurl+'automate/advertisers/campaigns?advertiser='+id)
@@ -291,7 +291,16 @@ $(document).ready(function () {
     var automateData = $('div.alert-automate').attr('data-automate');
 
     if (campaign_id || advertiser_id) {
-        automateAction(automateData);
+   //   automateAction(automateData);
+
+        var IDsAdsLoad = document.querySelectorAll("div[data-automate]");
+        if (IDsAdsLoad.length > 0) {
+            [].forEach.call(IDsAdsLoad, function (advertiseLoad) {
+                    alert(advertiseLoad.dataset.automate)
+                    automateAction(advertiseLoad.dataset.automate);
+            });
+        }
+        
     }
 
     $('.btn-automate').click(function () {
@@ -300,15 +309,8 @@ $(document).ready(function () {
         return false;
     })
 
-    /*
-    var IDsAdsLoad = document.querySelectorAll("div[data-automate]");
-    if (IDsAdsLoad.length > 0) {
-        [].forEach.call(IDsAdsLoad, function (advertiseLoad) {
-           if (campaign_id || advertiser_id) { 
-             automateAction(advertiseLoad.dataset.automate);
-            }
-        });
-    }
-    */
+   
+   
+    
 
 });

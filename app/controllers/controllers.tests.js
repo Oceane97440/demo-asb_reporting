@@ -88,14 +88,15 @@ exports.index = async (req, res) => {
         464862
     );
 
-var dateNow = moment().format('YYYY-M-D 00:00:00'); // "2021-12-22";
+var dateNow = moment().format('YYYY-M-D 00:00:00'); // "2021-12-29 00:00:00";
+var dateNowRequest = moment().format('YYYY-M-DT00:00:00'); 
 var dateEnd = '2040-12-31 23:59:00';
+var dateEndRequest = '2021-12-31T23:59:00';
 console.log('dateNow : ',dateNow);
 
   // Affiche les campagnes en ligne
-    campaigns_online = await ModelCampaigns.findAll({
+  /* var campaigns = await ModelCampaigns.findAll({
         where: {
-       //  [Op.and]: [{
                 advertiser_id: {
                     [Op.notIn]: advertiserExclus
                 },
@@ -108,46 +109,91 @@ console.log('dateNow : ',dateNow);
                         [Op.between]: [dateNow, dateEnd]
                     }
                 }]
-                 /* campaign_start_date: {
-                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                },
-              campaign_end_date: {
-                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                }*/
-
-           /* }],
-            [Op.and]: [{
-                campaign_start_date: {
-                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                }
-            }, {
-                campaign_end_date: {
-                    [Op.between]: [dateNow, '2040-12-31 23:59:00']
-                }
-            }]*/
         },
         order: [
             ['campaign_end_date', 'ASC']
         ],
-        include: [{
-            model: ModelAdvertisers
-        }]
+        include: [
+            { model: ModelAdvertisers },
+            { model: ModelInsertions }
+            ]
     });
 
-    console.log(campaigns_online.length); 
+    */
+
+
+    var campaignsMin = await ModelInsertions.findAll({
+        attributes: [
+            'insertion_id',
+             [sequelize.fn('min', sequelize.col('insertion_start_date')), 'startDate']
+            ],
+        where: {
+                    insertion_start_date: {  [Op.between]: [dateNow, dateEnd] }                     
+                },
+        include: [
+             { 
+                 model: ModelCampaigns,
+                 where: {
+                    advertiser_id: {
+                        [Op.notIn]: advertiserExclus
+                    },
+                    campaign_name: {
+                        [Op.notLike]: '% PARR %'
+                    }
+                
+                }                
+             }
+        ]        
+    });
+
+    var campaignsMax = await ModelInsertions.findAll({
+        attributes: [
+            'insertion_id',
+             [sequelize.fn('min', sequelize.col('insertion_end_date')), 'endDate']
+            ],
+        where: {
+            insertion_end_date: { [Op.gte]: dateNow }                     
+                },
+        include: [
+             { 
+                 model: ModelCampaigns,
+                 where: {
+                    advertiser_id: {
+                        [Op.notIn]: advertiserExclus
+                    },
+                    campaign_name: {
+                        [Op.notLike]: '% PARR %'
+                    }
+                
+                }                
+             }
+        ]        
+    });
+
+
+    /*
+    console.log(campaigns.length); // process.exit(1);
 
     var campaign_ids = new Array();
-    for(i = 0; i < campaigns_online.length; i++) {
-        console.log(campaigns_online[i].campaign_name+' - '+campaigns_online[i].campaign_id);
-        campaign_ids.push(campaigns_online[i].campaign_id);
-    }
-   
-    console.log(campaign_ids);
+    for(i = 0; i < campaigns.length; i++) {
+      //  console.log(campaigns[i].campaign_name+' - '+campaigns[i].campaign_id);
+      console.log(campaigns[i].campaign_name+' - '+campaigns[i].campaign_id);
+      //  campaign_ids.push(campaigns[i].campaign_id);
+    }*/
+
+    return res.json({
+        type: 'success',
+        campaignsMin: campaignsMin,
+      campaignsMax: campaignsMax
+    });
+
+   process.exit(1);
+    // console.log(campaign_ids);
 
       // initialisation des requêtes
       var requestReporting = {
-        "startDate": dateNow,
-        "endDate": dateEnd,
+        "startDate": dateNowRequest,
+        "endDate": dateEndRequest,
         "fields": [{
             "CampaignStartDate": {}
         }, {
@@ -179,11 +225,9 @@ console.log('dateNow : ',dateNow);
                 "Id": "17",
                 "OutputName": "Nbr_complete"
             }
-        }, {
-            "ViewableImpressions": {}
         }],
         "filter": [{
-            "CampaignId": [1989163, 2007792, 1913649, 2003528,
+            "CampaignId": '1989163'/*, 2007792, 1913649, 2003528,
                 1938504, 2007632, 1850218, 2003310,
                 2004336, 1909617, 1974651, 1913231,
                 1921937, 1974685, 1913245, 1971870,
@@ -192,7 +236,7 @@ console.log('dateNow : ',dateNow);
                 2003316, 1965099, 1981048, 1975229,
                 1974724, 1985080, 1996479, 1989974,
                 1989977, 2009119, 2008909, 1992587,
-                2007959, 1698950]
+        2007959, 1698950]*/
         }]
     }
 
