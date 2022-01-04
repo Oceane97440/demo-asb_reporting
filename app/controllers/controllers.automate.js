@@ -1713,9 +1713,9 @@ exports.campaignsCreatives = async (req, res) => {
                                         var creative_height = creativesData[m].height;
                                         var creative_mime_type = creativesData[m].mimeType;
                                         var creative_percentage_delivery = creativesData[m].percentageOfDelivery;
-                                        var creatives_type_id = creativesData[m].creativeTypeId;
-                                        var creatives_activated = creativesData[m].isActivated;
-                                        var creatives_archived = creativesData[m].isArchived;
+                                        var creative_type_id = creativesData[m].creativeTypeId;
+                                        var creative_activated = creativesData[m].isActivated;
+                                        var creative_archived = creativesData[m].isArchived;
 
                                         var result = Utilities
                                             .updateOrCreate(ModelCreatives, {
@@ -1732,9 +1732,9 @@ exports.campaignsCreatives = async (req, res) => {
                                                 creative_height,
                                                 creative_mime_type,
                                                 creative_percentage_delivery,
-                                                creatives_type_id,
-                                                creatives_activated,
-                                                creatives_archived
+                                                creative_type_id,
+                                                creative_activated,
+                                                creative_archived
                                             })
                                             .then(function (result) {
                                                 result.item; // the model
@@ -2783,8 +2783,8 @@ exports.creatives = async (req, res) => {
                                 var creative_mime_type = dataValue[m].mimeType;
                                 var creative_percentage_delivery = dataValue[m].percentageOfDelivery;
                                 var creatives_type_id = dataValue[m].creativeTypeId;
-                                var creatives_activated = dataValue[m].isActivated;
-                                var creatives_archived = dataValue[m].isArchived;
+                                var creative_activated = dataValue[m].isActivated;
+                                var creative_archived = dataValue[m].isArchived;
 
                                 Utilities
                                     .updateOrCreate(ModelCreatives, {
@@ -2802,8 +2802,8 @@ exports.creatives = async (req, res) => {
                                         creative_mime_type,
                                         creative_percentage_delivery,
                                         creatives_type_id,
-                                        creatives_activated,
-                                        creatives_archived
+                                        creative_activated,
+                                        creative_archived
                                     })
                                     .then(function (result) {
                                         result.item; // the model
@@ -3052,7 +3052,7 @@ exports.reports = async (req, res) => {
         var date5Days = moment()
             .add(5, 'days')
             .format('YYYY-MM-DD');
-
+        
         // Affiche les annonceurs à exclure
         const advertiserExclus = new Array(
             418935,
@@ -3084,8 +3084,51 @@ exports.reports = async (req, res) => {
             320778,
             417716,
             421871,
-            459132
+            459132,
+            464862
         );
+
+  
+
+ // Affiche les campagnes en ligne
+ let insertions = await ModelInsertions
+ .findAll({
+    /* where: [{       
+           campaign_id: {
+               [Op.In]: campaignsIds
+           }
+       }],*/
+       group : ['insertion_start_date'],
+       include: [{
+        model: ModelAdvertisers,
+        where: [{       
+            advertiser_id: {
+                [Op.In]: advertiserExclus
+            }
+        }]
+    }
+   
+]
+ });
+
+ // console.log(insertions);
+ console.log('nbCampaigns :', insertions.length);
+ campaignsIds = new Array();
+ for (i = 0; i < insertions.length; i++) {
+     console.log(insertions[i].campaign_id,' - ',insertions[i].campaign.campaign_name,' - I : ',insertions[i].insertion_start_date,' - C : ',insertions[i].campaign.campaign_start_date)
+     campaignsIds.push(insertions[i].campaign_id); 
+ }
+
+
+            process.exit(1);
+
+/*
+SELECT asb_insertions.campaign_id, asb_insertions.insertion_start_date FROM asb_insertions, asb_campaigns, asb_advertisers  WHERE 
+(insertion_start_date BETWEEN "2022-01-04" AND "2022-02-04") OR (insertion_end_date BETWEEN "2022-01-04" AND "2022-02-04") AND 
+(campaign_name NOT LIKE "% PARR %" AND asb_advertisers.advertiser_id IN(418935,427952,409707,425912,425914,438979,439470,439506,439511,439512,439513,439514,439515,440117,440118,440121,440122,440124,440126,445117,455371,455384,320778,417243,414097,411820,320778,417716,421871,459132,464862) AND asb_campaigns.campaign_id = asb_insertions.campaign_id AND asb_campaigns.advertiser_id = asb_advertisers.advertiser_id) GROUP BY asb_insertions.insertion_start_date
+*/
+
+
 
         // Affiche les campagnes en ligne
         let campaigns = await ModelCampaigns
@@ -3122,12 +3165,12 @@ exports.reports = async (req, res) => {
                 order: [
                     ['campaign_start_date', 'ASC']
                 ],
-                include: [{
+               include: [{
                         model: ModelAdvertisers
-                    },
-                    {
-                        model: ModelInsertions
                     }
+                    /* {
+                        model: ModelInsertions
+                    }*/
                 ]
             })
             .then(async function (campaigns) {

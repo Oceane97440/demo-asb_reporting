@@ -1,6 +1,6 @@
 <div class="row" data-masonry="{'percentPosition': true }">
     <% for (let i=0; i < creatives.length; i++) { %>       
-    <div class="card p-2 m-1 col-sm-6 col-md-3 border<% if(creatives[i].creatives_activated == "1") { %> border-success<% } else { %> border-warning<% } %>">
+    <div class="card p-2 m-1 col-sm-6 col-md-3 border<% if(creatives[i].creative_activated == "1") { %> border-success<% } else { %> border-warning<% } %>">
         <a href="<%= creatives[i].creative_url %>" title="<%= creatives[i].creative_name %>" target="_blank">
             <% switch(creatives[i].creative_mime_type) {
                 case "image/jpeg": 
@@ -36,7 +36,7 @@
                     <a href="<%= creatives[i].creative_click_url %>" class="btn btn-sm btn-primary" title="Url de redirection" target="_blank"><i class="material-icons-two-tone text-white">link</i></a>
                 </div>
                 <small class="text-muted">
-                    <% if(creatives[i].creatives_activated == "1") { %> <span class="material-icons-two-tone text-success">visibility</span> <% } else { %> <span class="material-icons-two-tone text-danger">visibility_off</span> <% } %>
+                    <% if(creatives[i].creative_activated == "1") { %> <span class="material-icons-two-tone text-success">visibility</span> <% } else { %> <span class="material-icons-two-tone text-danger">visibility_off</span> <% } %>
                 </small>
               </div>
         

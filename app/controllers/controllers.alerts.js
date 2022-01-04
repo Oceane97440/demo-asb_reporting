@@ -59,18 +59,17 @@ const {
 } = require('process');
 
 exports.index = async (req, res) => {
-
     try {
 
-        //Creative url CDN: Vérification de l'https dans la créative / extentions
+        // Creative url CDN: Vérification de l'https dans la créative / extentions
         const NOW = new Date();
         const url = 'https://cdn.antennepublicite.re';
         const extention = 'mp4|gif|jpeg|png|html';
 
         const creatives = await sequelize.query(
             'SELECT creatives.creative_id, creatives.creative_name, creatives.insertion_id,' +
-            ' creatives.creative_url, creatives.creative_mime_type, creatives.creatives_act' +
-            'ivated, creatives.creatives_archived,campaigns.campaign_id ,campaigns.campaign' +
+            ' creatives.creative_url, creatives.creative_mime_type, creatives.creative_act' +
+            'ivated, creatives.creative_archived,campaigns.campaign_id ,campaigns.campaign' +
             '_name ,campaigns.campaign_archived , advertisers.advertiser_name, campaigns.ad' +
             'vertiser_id FROM asb_creatives AS creatives INNER JOIN asb_insertions AS inser' +
             'tion ON creatives.insertion_id = insertion.insertion_id AND insertion.insertio' +
@@ -78,7 +77,7 @@ exports.index = async (req, res) => {
             'AS campaigns ON campaigns.campaign_id = insertion.campaign_id INNER JOIN asb_a' +
             'dvertisers AS advertisers ON advertisers.advertiser_id = campaigns.advertiser_' +
             'id  WHERE (creatives.creative_url NOT REGEXP ? OR creatives.creative_mime_type' +
-            ' NOT REGEXP ?) AND creatives.creatives_activated = 1 AND creatives.creatives_a' +
+            ' NOT REGEXP ?) AND creatives.creative_activated = 1 AND creatives.creatives_a' +
             'rchived = 0 AND campaigns.campaign_archived = 0 AND advertisers.advertiser_id ' +
             ' NOT IN (409707,320778)', {
                 replacements: [
@@ -384,3 +383,5 @@ exports.campaigns = async (req, res) => {
     }
 
 }
+
+
