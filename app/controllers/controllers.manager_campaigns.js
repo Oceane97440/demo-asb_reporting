@@ -379,14 +379,9 @@ exports.export = async (req, res) => {
                 displayName: 'DERNIERE MAJ',
                 headerStyle: styles.headerDark,
                 width: 200, // <- width in pixels
-                cellStyle: styles.cellNone,
-
-            },
-
-
+                cellStyle: styles.cellNone
+            }
         };
-
-
 
         const dataset_global = []
 
@@ -785,12 +780,51 @@ exports.repartitions = async (req, res) => {
     console.log('dateLastSunday : ',dateLastSunday);
 */
 
-        var dateLastMonday = "2021-12-20";
-        var dateLastSunday = "2021-12-31";
+        var dateLastMonday = "2022-01-08";
+        var dateLastSunday = "2040-12-31";
+
+  // Affiche les annonceurs
+  const advertiserExclus = new Array(
+    418935,
+    427952,
+    409707,
+    425912,
+    425914,
+    438979,
+    439470,
+    439506,
+    439511,
+    439512,
+    439513,
+    439514,
+    439515,
+    440117,
+    440118,
+    440121,
+    440122,
+    440124,
+    440126,
+    445117,
+    455371,
+    455384,
+    320778,
+    417243,
+    414097,
+    411820,
+    320778,
+    417716,
+    464149,
+    421871
+);
 
         var campaigns = await ModelCampaigns
             .findAll({
                 where: {
+                     [Op.and]: [{
+                            campaign_name: {
+                                [Op.notLike]: '% PARR %'
+                            }
+                    }],
                     [Op.or]: [{
                         campaign_start_date: {
                             [Op.between]: [dateLastMonday, dateLastSunday]
@@ -805,7 +839,12 @@ exports.repartitions = async (req, res) => {
                     ['campaign_start_date', 'ASC']
                 ],
                 include: [{
-                    model: ModelAdvertisers
+                    model: ModelAdvertisers,
+                    where: {
+                        [Op.and]: [
+                            {advertiser_id: { [Op.notIn]: advertiserExclus } }
+                        ] 
+                    }
                 }]
             })
             .then(async function (campaigns) {

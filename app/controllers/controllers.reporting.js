@@ -922,12 +922,8 @@ exports.report = async (req, res) => {
                                         var admanager = await AxiosFunction.getAdManager(campaign_id);
 
                                         if (admanager) {
-
-
                                             if (admanager.status == 201 || admanager.status == 200) {
-
                                                 const data_admanager = admanager.data
-
                                                 // test si le localstorage admanager existe 
                                                 if (!Utilities.empty(data_admanager)) {
 
@@ -1781,8 +1777,6 @@ exports.automate = async (req, res) => {
                 }]
             })
             .then(async function (campaign) {
-
-
                 if (!campaign)
                     return res
                         .status(403).json({
@@ -1798,7 +1792,6 @@ exports.automate = async (req, res) => {
 
                 // Gestion du cache
                 var cacheStorageID = 'campaignID-' + campaign_id;
-
 
                 // Initialise la date
                 let date = new Date();
@@ -2447,8 +2440,6 @@ exports.automate = async (req, res) => {
 
                         }, time);
                     }
-
-
 
                 } else {
                     //   res.status(404).json({'message': 'La task globale n\'existe pas.'});

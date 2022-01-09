@@ -1,7 +1,7 @@
 'use strict';
 $(document).ready(function () {
   var config = {
-    baseurl: "http://localhost:3002"
+    baseurl: "http://localhost:3001"
 };
 
  

@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2, 
+  "name": "ASB REPORTING",
+  "description": "Extension Chrome pour gérer le projet Business Intelligence",
+  "version": "1.0", 
+  "author": "Alvine DIDIER", 
+  "browser_action": { 
+    "default_icon": "icon.png",  
+    "default_title": "Extension Chrome pour gérer le projet Business Intelligence", 
+    "default_popup": "popup.html" 
+  },  
+  "content_scripts": [ {
+    "matches": [
+     // "*://*/*"
+     "https://*.smartadserver.com/gestion/smartprog*.asp?*"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "asb.js"
+    ]
+  } ],  
+  "permissions": [
+    "activeTab",   
+    // Exemple : https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=1954311&AnnonceurID=443697
+    // "https://manage.smartadserver.com/gestion/smartprog*.asp?*",
+    // "https://manage.smartadserver.com/Admin/Annonceurs/Liste.aspx",
+    // "https://*",
+    // "http://*",
+    "file://*/*"
+    //"*://*/*"
+  ]   
+}

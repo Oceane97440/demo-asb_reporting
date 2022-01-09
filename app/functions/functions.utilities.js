@@ -139,7 +139,6 @@ exports.DateToTimestamps = function toTimestamp(strDate){
     return datum/1000;
  }
 
- 
 exports.RequestReportDate =  async function RequestReport(startDate , endDate , campaignId){
     console.log('startDate  '+startDate + '  -  '+'endDate'  +endDate +'  -  '+ 'campaignId  '+campaignId)
   
@@ -225,11 +224,5 @@ exports.logs =  async function (level){
     });
 
     const logger = log4js.getLogger("asb");
-
-
     return logger;
-       
-    
-
-  
 }

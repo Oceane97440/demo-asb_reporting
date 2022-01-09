@@ -1,5 +1,5 @@
 var config = {
-    baseurl: "http://127.0.0.1:3002"
+    baseurl: "http://localhost:3001"
 };
 
 $(document).ready(function () {
@@ -175,7 +175,7 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
-            case "campaign-report":
+        /*    case "campaign-report":
                 // Récupére les insertions
                 $.ajax({
                     type: 'GET',
@@ -192,6 +192,7 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
+                */
             case "campaign-insertions":
                 // Récupére les insertions
                 $.ajax({
@@ -296,7 +297,7 @@ $(document).ready(function () {
         var IDsAdsLoad = document.querySelectorAll("div[data-automate]");
         if (IDsAdsLoad.length > 0) {
             [].forEach.call(IDsAdsLoad, function (advertiseLoad) {
-                    alert(advertiseLoad.dataset.automate)
+                  //  alert(advertiseLoad.dataset.automate)
                     automateAction(advertiseLoad.dataset.automate);
             });
         }

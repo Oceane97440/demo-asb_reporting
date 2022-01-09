@@ -45,7 +45,6 @@ exports.getForecastData = async (method, urlForecast, data = null) => {
 
 exports.dataFormatingForForecast = async (dataArrayFromReq, StartDate, EndDate, format) => {
 
-
     var TotalImpressions = []
     var OccupiedImpressions = []
     var SiteID = []
@@ -89,8 +88,6 @@ exports.dataFormatingForForecast = async (dataArrayFromReq, StartDate, EndDate, 
     sommeImpressions = Utilities.numStr(sommeImpressions);
     sommeOccupied = Utilities.numStr(sommeOccupied);
     volumeDispo = Utilities.numStr(volumeDispo);
-
-
 
     var tableData = {
         success: true,

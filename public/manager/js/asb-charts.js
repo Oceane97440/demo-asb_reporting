@@ -1,7 +1,7 @@
 'use strict';
 $(document).ready(function () {
     var config = {
-        baseurl: "http://127.0.0.1:3002" // "http://localhost:3002"
+        baseurl: "http://localhost:3001/" 
     };
 
     var chartCampaignUrl = config.baseurl + '/manager/charts/campaigns';
@@ -10,12 +10,12 @@ $(document).ready(function () {
     var campaign_id = $('div.card').attr('data-campaign_id');
     var chartCampaignReportUrl = config.baseurl + '/manager/charts/campaign/report?campaign_id=' + campaign_id;
 
-  //  alert('lol campaign id : '+campaign_id);
+ // alert('http://localhost:3001/manager/charts/campaign/report?campaign_id='+campaign_id);
 
 
     /*
      * Chart Campaigns -
-    
+    */
 
     $.getJSON(chartCampaignUrl, function (response) {
         var options = {
@@ -53,10 +53,10 @@ $(document).ready(function () {
         var chart = new ApexCharts(document.querySelector("#chart-campaigns"), options);
         chart.render();
     });
- */
+ 
     /*
      * Annonceurs 
-    
+    */
 
     $.getJSON(chartAdvertiserUrl, function (response) {
         var options = {
@@ -95,10 +95,7 @@ $(document).ready(function () {
         chart.render();
     });
 
- */
-
-
-    /*
+     /*
      * Chart Bar Reporting
      */
  //   alert(chartCampaignReportUrl)
