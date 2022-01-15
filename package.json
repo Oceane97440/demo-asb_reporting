@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/alvinedidier/asb_report_node#readme",
   "dependencies": {
+    "@azure/msal-node": "^1.5.0",
     "@fast-csv/format": "^4.3.5",
     "@fast-csv/parse": "^4.3.6",
     "algoliasearch": "^4.11.0",

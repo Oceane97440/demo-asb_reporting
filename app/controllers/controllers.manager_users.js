@@ -29,6 +29,9 @@ const moment = require('moment');
 const AxiosFunction = require('../functions/functions.axios');
 const Utilities = require("../functions/functions.utilities");
 
+const bcrypt = require('bcrypt');
+const validator = require('validator');
+
 // Initialise les models
 const ModelFormats = require("../models/models.formats");
 const ModelAdvertisers = require("../models/models.advertisers");
@@ -40,6 +43,9 @@ const ModelCreatives = require("../models/models.creatives");
 const ModelUsers = require("../models/models.users");
 const ModelRolesUsers = require("../models/models.roles_users");
 const ModelRoles = require("../models/models.roles");
+
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const PASSWORD_REGEX = /^(?=.*\d).{6,}$/;
 
 exports.index = async (req, res) => {
     try {
@@ -61,18 +67,13 @@ exports.index = async (req, res) => {
 
 exports.list = async (req, res) => {
     try {
-        // Liste tous les campagnes
+        // Liste tous les utilisateurs
         const data = new Object();
         data.breadcrumb = "Liste des utilisateurs";
 
         var userList = await ModelUsers.findAll({
-            include: [{
-                    model: ModelRolesUsers
-                }
-                /*,
-                                {
-                                    model: ModelRoles
-                                }*/
+            include: [{ model: ModelRolesUsers }
+                /*, {  model: ModelRoles }*/
             ]
         });
         data.users = userList;
@@ -95,6 +96,7 @@ exports.list = async (req, res) => {
         });
     }
 }
+
 exports.export = async (req, res) => {
     try {
         var type = 'users'
@@ -119,7 +121,6 @@ exports.export = async (req, res) => {
             'link': 'users'
         });
         data.breadcrumb = breadcrumb;
-
 
         data.users = await ModelUsers.findAll({
             include: [{
@@ -170,70 +171,59 @@ exports.export = async (req, res) => {
                 displayName: '#', // <- Here you specify the column header
                 headerStyle: styles.headerDark, // <- Header style
                 width: 100, // <- width in pixels
+                cellStyle: styles.cellNone
+            },            
+            initials: { // <- the key should match the actual data key
+                displayName: 'Initial', // <- Here you specify the column header
+                headerStyle: styles.headerDark, // <- Header style
+                width: 100, // <- width in pixels
                 cellStyle: styles.cellNone,
-            },
-            email: {
-                displayName: 'EMAIL',
-                headerStyle: styles.headerDark,
-                width: 300, // <- width in chars (when the number is passed as string)
-                cellStyle: styles.cellNone,
-
-            },
-            prenoms: {
-                displayName: 'PRENOMS',
-                headerStyle: styles.headerDark,
-                width: 450, // <- width in chars (when the number is passed as string)
-                cellStyle: styles.cellNone,
-
             },
             noms: { // <- the key should match the actual data key
-                displayName: 'NOMS', // <- Here you specify the column header
+                displayName: 'Nom', // <- Here you specify the column header
                 headerStyle: styles.headerDark, // <- Header style
                 width: 100, // <- width in pixels
                 cellStyle: styles.cellNone,
             },
-            initials: { // <- the key should match the actual data key
-                displayName: 'INITIAL', // <- Here you specify the column header
-                headerStyle: styles.headerDark, // <- Header style
-                width: 100, // <- width in pixels
-                cellStyle: styles.cellNone,
+            prenoms: {
+                displayName: 'Prénom',
+                headerStyle: styles.headerDark,
+                width: 450, // <- width in chars (when the number is passed as string)
+                cellStyle: styles.cellNone
+            },
+            email: {
+                displayName: 'Email',
+                headerStyle: styles.headerDark,
+                width: 300, // <- width in chars (when the number is passed as string)
+                cellStyle: styles.cellNone
             },
             roles: {
-                displayName: 'ROLES',
+                displayName: 'Rôle',
                 headerStyle: styles.headerDark,
                 cellFormat: function (value, row) { // <- Renderer function, you can access also any row.property
-                    return (value == 1) ? 'Admins' : 'Utilisateurs';
+                    return (value == 1) ? 'Administrateur' : ((value == 2) ? 'Commercial' : 'ADV');
                 },
                 width: 100, // <- width in pixels
-                cellStyle: styles.cellNone,
-
+                cellStyle: styles.cellNone
             },
             nbr_connexion: {
-                displayName: 'NOMBRES DE CONNEXION',
+                displayName: 'Nombre de connexion',
                 headerStyle: styles.headerDark,
                 width: 200, // <- width in pixels
-                cellStyle: styles.cellNone,
-
+                cellStyle: styles.cellNone
             },
             maj: {
-                displayName: 'DERNIERE MAJ',
+                displayName: 'Dernière mise à jour',
                 headerStyle: styles.headerDark,
                 width: 200, // <- width in pixels
-                cellStyle: styles.cellNone,
-
+                cellStyle: styles.cellNone
             }
-
-
         };
-
-
 
         const dataset_global = []
 
-
         if (!Utilities.empty(data)) {
             for (i = 0; i < data.users.length; i++) {
-
                 dataset_global.push({
                     id: data.users[i].user_id,
                     email: data.users[i].user_email,
@@ -242,12 +232,8 @@ exports.export = async (req, res) => {
                     initials: data.users[i].user_initial,
                     roles: data.users[i].user_role,
                     nbr_connexion: data.users[i].user_log,
-                    maj: data.users[i].updated_at,
-
-
-
+                    maj: data.users[i].updated_at
                 });
-
             }
         }
 
@@ -275,11 +261,9 @@ exports.export = async (req, res) => {
         // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
         res.attachment(
             'exports-' + type + '-' + label_now + '.xlsx',
-
         ); // This is sails.js specific (in general you need to set headers)
 
         return res.send(report);
-
 
     } catch (error) {
         console.log(error);
@@ -290,9 +274,25 @@ exports.export = async (req, res) => {
     }
 }
 
-
 exports.create = async (req, res) => {
-    try {} catch (error) {
+    try {
+        // Liste tous les utilisateurs
+        const data = new Object();
+        data.breadcrumb = "Liste des utilisateurs";
+
+         // Créer le fil d'ariane
+         var breadcrumbLink = 'users'
+         breadcrumb = new Array({
+             'name': 'Utilisateurs',
+             'link': 'users'
+         },{
+            'name': 'Ajouter un nouvel utilisateur',
+            'link': ''
+        });
+         data.breadcrumb = breadcrumb;
+
+        res.render("manager/users/create.ejs");
+    } catch (error) {
         console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {
@@ -301,9 +301,95 @@ exports.create = async (req, res) => {
     }
 }
 
+exports.create_post = async (req, res) => {
+
+    const user_firstname = req.body.user_firstname;
+    const user_lastname = req.body.user_lastname;
+    const user_email = req.body.user_email;
+    const user_password = req.body.user_password;
+    const user_role = req.body.user_role;
+
+    try {
+      // verifier si les champs ne sont pas vide
+      if (user_email === '' || user_password === '' || user_role === '' || user_firstname === '' || user_lastname === '') {
+        req.session.message = {
+          type: 'danger',
+          message: 'Tous les champs du formulaire doivent être remplis.'
+        }
+        return res.redirect('create');
+      }
+  
+      // verifie si email est valide avec le regex
+      if (!EMAIL_REGEX.test(user_email)) {
+        req.session.message = {
+          type: 'danger',
+          message: 'L\'adresse email est invalide.'
+        }
+        return res.redirect('create');
+      }
+  
+      // verifie si le password contien entre min 4 et max 8 caratère + un number
+      if (!PASSWORD_REGEX.test(user_password)) {
+        req.session.message = {
+          type: 'danger',
+          message: 'Le mot de passe doit être compris entre 4 et 12 caractères, avec 1 chiffre et un caractère spécial.'
+        }
+        return res.redirect('create');
+      }
+  
+      // search si email exsite déjà dans le bdd  
+      await ModelUsers.findOne({
+        attributes: ['user_email'],
+        where: {
+          user_email: user_email
+        }
+      }).then(async function (userFound) {
+  
+        if (!userFound) {
+          //validator + bycrypt
+          const hashedPwd = await bcrypt.hash(user_password, 12);
+          const user = await ModelUsers.create({
+            user_firstname,
+            user_lastname,
+            user_email: validator.normalizeEmail(user_email),
+            user_password: hashedPwd,
+            user_role: user_role
+          });
+  
+          await ModelRolesUsers.create({
+            role_id: user_role,
+            user_id: user.user_id
+          });
+  
+          req.session.message = {
+            type: 'success',
+            message: 'Le compte est créé.'
+          }
+          
+          res.redirect('create');
+  
+        } else {
+          req.session.message = {
+            type: 'danger',
+            message: 'Cette adresse email existe déjà.'
+          }
+          res.redirect('create');
+        }
+  
+      });
+  
+    } catch (error) {
+      console.log(error);
+      var statusCoded = error.response;
+      res.render("error.ejs", {
+        statusCoded: statusCoded
+      });
+    }
+  
+  }
+
 exports.edit = async (req, res) => {
     try {
-
         res.render("manager/users/create.ejs");
 
     } catch (error) {

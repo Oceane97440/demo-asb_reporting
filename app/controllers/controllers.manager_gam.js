@@ -8,16 +8,23 @@ const excel = require('node-excel-export');
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
-const {Op} = require("sequelize");
+const {
+    Op
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 
-const {check, query} = require('express-validator');
+const {
+    check,
+    query
+} = require('express-validator');
 
 const moment = require('moment');
 
@@ -46,8 +53,12 @@ const ModelGamCampaigns = require("../models/models.campaigns_gam");
 const ModelEpilotInsertions = require("../models/models.epilot_insertions");
 const ModelUsers = require("../models/models.users");
 
-const {promiseImpl} = require('ejs');
-const {insertions} = require('./controllers.automate');
+const {
+    promiseImpl
+} = require('ejs');
+const {
+    insertions
+} = require('./controllers.automate');
 
 exports.list = async (req, res) => {
     try {
@@ -60,30 +71,32 @@ exports.list = async (req, res) => {
             'name': 'Campagnes',
             'link': 'campaigns'
         }, {
-            'name': 'Liste les campagnes Google Admanager',
+            'name': 'Liste les campagnes Google Ad Manager',
             'link': 'campaigns/gam'
         });
         data.breadcrumb = breadcrumb;
-      
+
         // Récupére l'ensemble des annonceurs
         var campaigns = await ModelGamCampaigns
             .findAll({
                 order: [
                     ['campaign_admanager_name', 'ASC']
                 ],
-                  include: [{ model: ModelCampaigns}
-                ]
+                include: [{
+                    model: ModelCampaigns
+                }]
             })
             .then(async function (campaigns) {
-                data.campaigns = campaigns;              
+                data.campaigns = campaigns;
             });
- 
 
-       res.render('manager/gam/list.ejs', data);
+        res.render('manager/gam/list.ejs', data);
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
 exports.export = async (req, res) => {
@@ -116,154 +129,136 @@ exports.export = async (req, res) => {
             'link': 'campaigns/gam'
         });
         data.breadcrumb = breadcrumb;
-      
+
         // Récupére l'ensemble des annonceurs
-         data.campaigns = await ModelGamCampaigns
+        data.campaigns = await ModelGamCampaigns
             .findAll({
                 order: [
                     ['campaign_admanager_name', 'ASC']
                 ],
-                  include: [
-                {
+                include: [{
                     model: ModelCampaigns
-                }
-                ]
+                }]
             })
-       
 
-            const styles = {
-                headerDark: {
-                    fill: {
-                        fgColor: {
-                            rgb: 'FF000000'
-                        }
-    
-                    },
-    
-                    font: {
-                        color: {
-                            rgb: 'FFFFFFFF'
-                        },
-                        sz: 14,
-                        bold: false,
-                        underline: false
+        const styles = {
+            headerDark: {
+                fill: {
+                    fgColor: {
+                        rgb: 'FF000000'
                     }
                 },
-                cellNone: {
-    
-                    numFmt: "0",
-    
-                },
-    
-                cellTc: {
-                    numFmt: "0",
-    
+                font: {
+                    color: {
+                        rgb: 'FFFFFFFF'
+                    },
+                    sz: 14,
+                    bold: false,
+                    underline: false
                 }
-            };
-    
-            const heading = [
-                [],
-            ];
-    
-            const bilan_global = {
-    
-                id: { // <- the key should match the actual data key
-                    displayName: '#', // <- Here you specify the column header
-                    headerStyle: styles.headerDark, // <- Header style
-                    width: 100, // <- width in pixels
-                    cellStyle: styles.cellNone,
-                },
-           
-                campagnes: {
-                    displayName: 'NOMS',
-                    headerStyle: styles.headerDark,
-                    width: 450, // <- width in chars (when the number is passed as string)
-                    cellStyle: styles.cellNone,
-    
-                },
-                date_start: {
-                    displayName: 'DATE DE DEBUT',
-                    headerStyle: styles.headerDark,
-                    width: 200, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
-                },
-                date_end: {
-                    displayName: 'DATE DE FIN',
-                    headerStyle: styles.headerDark,
-                    width: 200, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
-                },
-                status: {
-                    displayName: 'STATUS',
-                    headerStyle: styles.headerDark,
-                    width: 100, // <- width in pixels
-                    cellStyle: styles.cellNone,
-    
-                },
-           
-             
-            };
-    
-    
-    
-            const dataset_global = []
-
-    
-            if (!Utilities.empty(data)) {
-                for (i = 0; i < data.campaigns.length; i++) {
-    
-                    dataset_global.push({
-                        id: data.campaigns[i].campaign_admanager_id,
-                        campagnes: data.campaigns[i].campaign_admanager_name,
-                        date_start: data.campaigns[i].campaign_admanager_start_date,
-                        date_end: data.campaigns[i].campaign_admanager_end_date,
-                        status: data.campaigns[i].campaign_admanager_status,
-                
-                     
-
-
-                    });
-    
-                }
+            },
+            cellNone: {
+                numFmt: "0"
+            },
+            cellTc: {
+                numFmt: "0"
             }
-    
-            const merges = [{
-                start: {
-                    row: 1,
-                    column: 1
-                },
-                end: {
-                    row: 1,
-                    column: 5
-                }
-            }];
-    
-            // Create the excel report. This function will return Buffer
-            const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
-                name: 'Listes', // <- Specify sheet name (optional)
-                heading: heading, // <- Raw heading array (optional)
-                merges: merges, // <- Merge cell ranges
-                specification: bilan_global, // <- Report specification
-                data: dataset_global // <-- Report data
-            }]);
-    
-            // You can then return this straight
-            // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
-            res.attachment(
-                'exports-' + type + '-' + label_now + '.xlsx',
-    
-            ); // This is sails.js specific (in general you need to set headers)
-    
-            return res.send(report);
-    
+        };
+
+        const heading = [
+            [],
+        ];
+
+        const bilan_global = {
+
+            id: { // <- the key should match the actual data key
+                displayName: '#', // <- Here you specify the column header
+                headerStyle: styles.headerDark, // <- Header style
+                width: 100, // <- width in pixels
+                cellStyle: styles.cellNone,
+            },            
+            advertisers: {
+                displayName: 'Annonceur',
+                headerStyle: styles.headerDark,
+                width: 450, // <- width in chars (when the number is passed as string)
+                cellStyle: styles.cellNone,
+            },
+            campaigns: {
+                displayName: 'Campagne',
+                headerStyle: styles.headerDark,
+                width: 450, // <- width in chars (when the number is passed as string)
+                cellStyle: styles.cellNone,
+            },
+            date_start: {
+                displayName: 'Date de début',
+                headerStyle: styles.headerDark,
+                width: 200, // <- width in pixels
+                cellStyle: styles.cellNone,
+            },
+            date_end: {
+                displayName: 'Date de fin',
+                headerStyle: styles.headerDark,
+                width: 200, // <- width in pixels
+                cellStyle: styles.cellNone,
+            },
+            status: {
+                displayName: 'Status',
+                headerStyle: styles.headerDark,
+                width: 100, // <- width in pixels
+                cellStyle: styles.cellNone
+            },
+        };
+
+        const dataset_global = []
+
+        if (!Utilities.empty(data)) {
+            for (i = 0; i < data.campaigns.length; i++) {
+
+                dataset_global.push({
+                    id: data.campaigns[i].campaign_admanager_id,
+                    advertisers: data.campaigns[i].advertiser_admanager_id,
+                    campaigns: data.campaigns[i].campaign_admanager_name,
+                    date_start: data.campaigns[i].campaign_admanager_start_date,
+                    date_end: data.campaigns[i].campaign_admanager_end_date,
+                    status: data.campaigns[i].campaign_admanager_status
+                });
+
+            }
+        }
+
+        const merges = [{
+            start: {
+                row: 1,
+                column: 1
+            },
+            end: {
+                row: 1,
+                column: 5
+            }
+        }];
+
+        // Create the excel report. This function will return Buffer
+        const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+            name: 'Listes', // <- Specify sheet name (optional)
+            heading: heading, // <- Raw heading array (optional)
+            merges: merges, // <- Merge cell ranges
+            specification: bilan_global, // <- Report specification
+            data: dataset_global // <-- Report data
+        }]);
+
+        // You can then return this straight
+        // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
+        res.attachment(
+            'exports-' + type + '-' + label_now + '.xlsx',
+        ); // This is sails.js specific (in general you need to set headers)
+
+        return res.send(report);
 
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
 }
-
-

@@ -33,7 +33,7 @@
                 </td>
                 <td class="d-none"><%= insertions[i].insertion_start_date %></td>
                 <td>
-                    <% if(insertions[i].priority_id) {  %>
+                    <% if(insertions[i].priority_id) { %>
                      <span class="badge bg-priority_<%= insertions[i].insertions_priority.priority_id %>"><%= insertions[i].insertions_priority.priority_name %></span>
                     <% } else { %>-<% } %>
                 </td>

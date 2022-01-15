@@ -428,7 +428,6 @@ exports.export = async (req, res) => {
 
         return res.send(report);
 
-   
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
@@ -506,7 +505,7 @@ exports.view = async (req, res) => {
                             model: ModelFormatsGroups
                         }]
                     });
-                    // console.log(epilot_insertions); process.exit(1);
+                    
                     if (!Utilities.empty(epilot_insertions)) { data.epilot_insertions = epilot_insertions; } else { data.epilot_insertions = ''; }
                    
                 } else {

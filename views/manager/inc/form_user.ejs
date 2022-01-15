@@ -1,66 +1,46 @@
+<div class="card-body">
+    <%- include("../inc/message.ejs") -%>
 
+             <div class="row">
+                <div class="form-group col-6">
+                    <label class="form-label required" for="user_firstname">Prénom</label>
+                    <input type="text" name="user_firstname" id="user_firstname" class="form-control"
+                        placeholder="Saisissez votre prénom" required="required" />
+                </div>
 
-   
-        <div class="card-body">
-            <% if (message) { %>
-                <div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
-                    <%=message.intro%>:<%=message.message%>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>            
-            <% } %>
-        
-            <div class="form-group">
-                <label class="form-label" for="user_firstname">Prénom</label>
-                <input
-                    type="text"
-                    name="user_firstname"
-                    id="user_firstname"
-                    class="form-control"
-                    placeholder="Saisissez le prénom"
-                    required="required"/>
-            </div>
-           
-            <div class="form-group">
-                <label class="form-label" for="user_lastname">Nom</label>
-                <input
-                    type="text"
-                    name="user_lastname"
-                    id="user_lastname"
-                    class="form-control"
-                    placeholder="Saisissez le nom"
-                    required="required"/>
-            </div>
-           
-            <div class="form-group">
-                <label class="form-label" for="user_email">Email</label>
-                <input
-                    type="text"
-                    name="user_email"
-                    id="user_email"
-                    class="form-control"
-                    placeholder="Saisissez l'email"
-                    required="required"/>
+                <div class="form-group col-6">
+                    <label class="form-label required" for="user_lastname">Nom</label>
+                    <input type="text" name="user_lastname" id="user_lastname" class="form-control"
+                        placeholder="Saisissez votre nom" required="required" />
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="user_role">Rôle</label>
-                <input
-                    type="text"
-                    name="user_role"
-                    id="user_role"
-                    class="form-control"
-                    placeholder="Saisissez le rôle"
-                    required="required"/>
+            <div class="row">
+                <div class="form-group col-12">
+                    <label class="form-label required" for="user_email">Email</label>
+                    <input type="text" name="user_email" id="user_email" class="form-control"
+                        placeholder="Saisissez votre adresse email" required="required" />
+                </div>
+
+                <div class="form-group col-12">
+                    <label class="form-label required" for="user_password">Mot de passe</label>
+                    <input type="password" name="user_password" id="user_password" class="form-control"
+                        placeholder="Saisissez le mot de passe" required="required" />
+                </div>
             </div>
-         
-        </div>
-        <div class="card-footer">
-            <input
-                type="submit"
-                name="submit"
-                class="btn btn-primary mr-2 btn-submit"
-                value="Ajouter un utilisateur"/>
-        </div>
-    
+
+            <div class="form-group col-12">
+                <label class="form-label required" for="user_role">Fonction</label>
+                <select class="form-select" id="user_role" name="user_role" required>
+                    <option value="">Choisir une fonction</option>
+                    <option value="1">Administrateur</option>
+                    <option value="2">Commercial</option>
+                    <option value="3">Administration des ventes</option>
+                </select>
+            </div>
+
+</div>
+<div class="card-footer">
+    <input type="submit" name="submit" class="btn btn-primary mr-2 btn-submit w-100 btn-lg"
+        value="Ajouter un nouvel utilisateur" />
+</div>

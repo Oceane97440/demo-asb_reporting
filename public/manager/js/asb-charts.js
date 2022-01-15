@@ -4,14 +4,11 @@ $(document).ready(function () {
         baseurl: "http://localhost:3001/" 
     };
 
-    var chartCampaignUrl = config.baseurl + '/manager/charts/campaigns';
-    var chartAdvertiserUrl = config.baseurl + '/manager/charts/advertisers';
+    var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
+    var chartAdvertiserUrl = config.baseurl + 'manager/charts/advertisers';
 
     var campaign_id = $('div.card').attr('data-campaign_id');
     var chartCampaignReportUrl = config.baseurl + '/manager/charts/campaign/report?campaign_id=' + campaign_id;
-
- // alert('http://localhost:3001/manager/charts/campaign/report?campaign_id='+campaign_id);
-
 
     /*
      * Chart Campaigns -
@@ -56,9 +53,9 @@ $(document).ready(function () {
  
     /*
      * Annonceurs 
-    */
-
+    */  
     $.getJSON(chartAdvertiserUrl, function (response) {
+      
         var options = {
             chart: {
                 type: 'line',
@@ -236,7 +233,6 @@ $(document).ready(function () {
     */
 
 });
-
 
 /*
 $(document).ready(function() {

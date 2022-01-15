@@ -5,7 +5,6 @@ const request = require('request');
 // Initialise le module
 const bodyParser = require('body-parser');
 
-//let csvToJson = require('convert-csv-to-json');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 
@@ -37,12 +36,38 @@ const {
   query
 } = require('express-validator');
 
-
 const ModelRole = require("../models/models.roles")
-const ModelUser = require("../models/models.users")
-const ModelUser_Role = require("../models/models.roles_users")
+const ModelUsers = require("../models/models.users")
+const ModelRolesUsers = require("../models/models.roles_users")
+
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
+const msal = require('@azure/msal-node');
+
+// Initialise les identifiants de connexion à l'api
+const dotenv = require("dotenv");
+dotenv.config({path:"./config.env"})
+
+// Configuration pour se connecter via Microsoft Azure
+const config = {
+  auth: {
+    clientId: process.env.MICROSOFT_CLIENTID,
+    authority: process.env.MICROSOFT_AUTHORITY,
+    clientSecret: process.env.MICROSOFT_CLIENTSECRET
+  },
+  system: {
+      loggerOptions: {
+          loggerCallback(loglevel, message, containsPii) {
+              console.log(message);
+          },
+          piiLoggingEnabled: false,
+          logLevel: msal.LogLevel.Verbose,
+      }
+  }
+};
+
+// Create msal application object
+const cca = new msal.ConfidentialClientApplication(config);
 
 exports.home_page = async (req, res) => {
   res.render('landing_page.ejs');
@@ -71,21 +96,19 @@ exports.signup = async (req, res) => {
   }
 
 }
+
 exports.signup_add = async (req, res) => {
 
   const user_email = req.body.user_email;
   const user_password = req.body.user_password;
   const user_role = req.body.user_role;
 
-
-
   try {
     // verifier si les champs ne son pas vide
     if (user_email === '' || user_password === '' || user_role === '') {
       req.session.message = {
         type: 'danger',
-        intro: 'Erreur',
-        message: 'Les champs ne doivents pas être vide'
+        message: 'Les champs ne doivent pas être vide'
       }
       return res.redirect('/signup');
       // return res.render('users/signup.ejs')
@@ -105,15 +128,14 @@ exports.signup_add = async (req, res) => {
     if (!PASSWORD_REGEX.test(user_password)) {
       req.session.message = {
         type: 'danger',
-        intro: 'Erreur',
-        message: 'Le mot de passe doit être compris entre 4 et 12 caratères avec 1 chiffre et un caratère spécial'
+        message: 'Le mot de passe doit être compris entre 4 et 12 caractères avec 1 chiffre et un caratère spécial'
       }
       return res.redirect('/signup');
     }
 
     // search si email exsite déjà dans le bdd
 
-    await ModelUser.findOne({
+    await ModelUsers.findOne({
       attributes: ['user_email'],
       where: {
         user_email: user_email
@@ -123,7 +145,7 @@ exports.signup_add = async (req, res) => {
       if (!userFound) {
         //validator + bycrypt
         const hashedPwd = await bcrypt.hash(user_password, 12);
-        const user = await ModelUser.create({
+        const user = await ModelUsers.create({
           user_email: validator.normalizeEmail(user_email),
           user_password: hashedPwd,
           user_role
@@ -131,7 +153,7 @@ exports.signup_add = async (req, res) => {
 
         console.log(user.user_id)
 
-        await ModelUser_Role.create({
+        await ModelRolesUsers.create({
           role_id: user_role,
           user_id: user.user_id
         });
@@ -159,9 +181,6 @@ exports.signup_add = async (req, res) => {
 
 }
 
-
-
-
 exports.login = async (req, res) => {
   res.render('users/login.ejs');
 }
@@ -170,7 +189,6 @@ exports.login_add = async (req, res) => {
   const user_email = req.body.user_email;
   const user_password = req.body.user_password;
 
-
   console.log('Email : ', user_email, ' - Password : ', user_password);
 
   try {
@@ -178,14 +196,13 @@ exports.login_add = async (req, res) => {
     if (user_email == '' || user_password == '') {
       req.session.message = {
         type: 'danger',
-        intro: 'Erreur',
-        message: 'Email ou mot passe est incorrect'
+        message: 'Votre adresse email ou votre mot passe est incorrect.'
       }
       return res.redirect('/login');
     }
 
     // verifie si le email est présent dans la base
-    ModelUser.findOne({
+    ModelUsers.findOne({
       where: {
         user_email: user_email
       }
@@ -200,63 +217,39 @@ exports.login_add = async (req, res) => {
           if (user.user_email !== user_email && user.user_password !== user_password) {
             res.redirect('/login');
           } else {
-
-            //Date et l'heure de la connexion
+          
+            // Date et l'heure de la connexion
             const now = new Date();
             const date_now = now.getTime();
             const updated_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
 
             // use session for user connected
             req.session.user = user;
+            var nbr_log = req.session.user.user_log + 1
 
-            console.log('Req session user_role :', req.session.user.user_role)
+            ModelUsers.update({
+              updated_at: updated_at,
+              user_log: nbr_log
+            }, {
+              where: {
+                user_id: user.user_id
+              }
+            }).then(function() {
+              if(req.session.user.user_role === 1) { 
+                // Si c'est un administrateur....
+                res.redirect('/manager'); 
+              } else {
+                // Sinon
+                res.redirect('/forecast');
+              }
+            });
 
-            if (req.session.user.user_role === 1) {
-
-              console.log('date heure de la connexion admin' + updated_at)
-              var nbr_log = req.session.user.user_log + 1
-
-              ModelUser.update({
-                updated_at: updated_at,
-                user_log: nbr_log
-              }, {
-                where: {
-                  user_id: user.user_id
-                }
-              }).then(
-                res.redirect('/manager')
-              )
-
-            }
-            if (req.session.user.user_role === 2 || req.session.user.user_role === 3) {
-
-              var nbr_log = req.session.user.user_log + 1
-
-              console.log('date heure de la connexion user' + updated_at)
-
-
-              ModelUser.update({
-                updated_at: updated_at,
-                user_log: nbr_log
-
-
-
-              }, {
-                where: {
-                  user_id: user.user_id
-                }
-              }).then(
-                res.redirect('/forecast')
-              )
-
-            }
           }
 
         } else {
           req.session.message = {
             type: 'danger',
-            intro: 'Erreur',
-            message: 'Adresse email ou mot de passe invalide"'
+            message: 'Votre adresse email ou votre mot de passe est incorrect.'
           }
           return res.redirect('/login');
         }
@@ -264,8 +257,7 @@ exports.login_add = async (req, res) => {
       } else {
         req.session.message = {
           type: 'danger',
-          intro: 'Erreur',
-          message: 'Adresse email ou mot de passe invalide'
+          message: 'Votre adresse email ou votre mot passe est incorrect.'
         }
         return res.redirect('/login');
       }
@@ -279,13 +271,101 @@ exports.login_add = async (req, res) => {
 
 }
 
+exports.login_microsoft = async (req, res) => {    
+  const authCodeUrlParameters = {
+    scopes: ["user.read"],
+    redirectUri: process.env.MICROSOFT_REDIRECT
+  };
 
+    // get url to sign user in and consent to scopes needed for application
+    cca.getAuthCodeUrl(authCodeUrlParameters).then((response) => {
+      res.redirect(response);
+  }).catch((error) => console.log(JSON.stringify(error)));
+
+}
+
+exports.login_microsoft_redirect = async (req, res) => {
+  
+  const tokenRequest = {
+      code: req.query.code,
+      scopes: ["user.read"],
+      redirectUri: process.env.MICROSOFT_REDIRECT,
+  };
+
+  cca.acquireTokenByCode(tokenRequest).then((response) => {
+     // console.log("\nResponse: \n:", response);
+     // res.json(response.account.username);
+
+      // Récupére l'adresse email
+      const user_email = response.account.username;
+
+      try {
+        // verifie si l'adresse mail existe
+        if (user_email == '') {
+          req.session.message = { type: 'danger', message: 'Ton adresse email ou ton mot passe est incorrect.' }
+          return res.redirect('/login');
+        }
+    
+        // verifie si le email est présent dans la base
+        ModelUsers.findOne({
+          where: {
+            user_email: user_email
+          }
+        }).then(async function (user) {
+          // si email trouvé
+          if (user) {
+            console.log('OK USER : ',user)
+
+            // Date et l'heure de la connexion
+            const now = new Date();
+            const date_now = now.getTime();
+            const updated_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
+
+            // use session for user connected
+            req.session.user = user;
+            var nbr_log = req.session.user.user_log + 1
+
+            ModelUsers.update({
+              updated_at: updated_at,
+              user_log: nbr_log
+            }, {
+              where: {
+                user_id: user.user_id
+              }
+            }).then(function() {
+              if(req.session.user.user_role === 1) { 
+                // Si c'est un administrateur....
+                res.redirect('/manager'); 
+              } else {
+                // Sinon
+                res.redirect('/forecast');
+              }
+            })
+
+          } else {
+            req.session.message = {
+              type: 'danger',
+              message: 'Ton adresse email ou ton mot passe est incorrect.'
+            }
+            return res.redirect('/login');
+          }
+    
+        })
+    
+      } catch (error) {
+        console.log(error);
+        res.redirect('/login');
+      }
+
+  }).catch((error) => {
+      console.log(error);
+      res.status(500).send(error);
+  });
+}
 
 exports.logout = async (req, res) => {
-
-  req.session = null
-  res.redirect('/login')
-
+  req.session = null;
+  res.redirect('login');
 }
 
 exports.index = async (req, res) => {

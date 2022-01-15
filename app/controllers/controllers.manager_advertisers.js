@@ -6,9 +6,6 @@ const axios = require(`axios`);
 const Utilities = require("../functions/functions.utilities");
 const excel = require('node-excel-export');
 
-// const request = require('request'); const bodyParser =
-// require('body-parser');
-
 const {
     Op
 } = require("sequelize");
@@ -70,9 +67,6 @@ exports.index = async (req, res) => {
                 ['advertiser_id', 'ASC']
             ]
         });
-
-        console.log(advertisers_last.length)
-
 
         data.moment = moment;
 
@@ -210,38 +204,37 @@ exports.export = async (req, res) => {
                 cellStyle: styles.cellNone,
             },
             noms: {
-                displayName: 'NOMS',
+                displayName: 'Nom',
                 headerStyle: styles.headerDark,
                 width: 300, // <- width in chars (when the number is passed as string)
                 cellStyle: styles.cellNone,
 
             },
             archives: {
-                displayName: 'ARCHIVES',
+                displayName: 'Archive',
                 headerStyle: styles.headerDark,
-                cellFormat: function(value, row) { // <- Renderer function, you can access also any row.property
+                cellFormat: function (value, row) { // <- Renderer function, you can access also any row.property
                     return (value == 1) ? 'Archivé' : '-';
-                  },
+                },
                 width: 100, // <- width in pixels
                 cellStyle: styles.cellNone,
 
             },
             maj: {
-                displayName: 'DERNIERE MAJ',
+                displayName: 'Dernière mise à jour',
                 headerStyle: styles.headerDark,
                 width: 200, // <- width in pixels
                 cellStyle: styles.cellNone,
 
             },
 
-
         };
 
         /*const dataset_global = [{
-            id: '459140	',
-            noms: 'TEST 3 API 20210804	',
-            archives: 'Archivé',
-            maj: 'il y a 3 mois	',
+        id: '459140	',
+        noms: 'TEST 3 API 20210804	',
+        archives: 'Archivé',
+        maj: 'il y a 3 mois	',
 
         }];*/
 
@@ -252,7 +245,7 @@ exports.export = async (req, res) => {
 
                 dataset_global.push({
                     id: data.advertisers[i].advertiser_id,
-                    noms:data.advertisers[i].advertiser_name,
+                    noms: data.advertisers[i].advertiser_name,
                     archives: data.advertisers[i].advertiser_archived,
                     maj: data.advertisers[i].updated_at,
                 });
@@ -283,14 +276,14 @@ exports.export = async (req, res) => {
         // You can then return this straight
         // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
         res.attachment(
-            'exports-' + type +'-'+ label_now + '.xlsx',
+            'exports-' + type + '-' + label_now + '.xlsx',
 
         ); // This is sails.js specific (in general you need to set headers)
 
         return res.send(report);
 
         /* console.log(data.advertisers.advertiser_name)
-         res.render('manager/advertisers/list.ejs', data);*/
+        res.render('manager/advertisers/list.ejs', data);*/
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
@@ -319,7 +312,6 @@ exports.create = async (req, res) => {
         });
         data.moment = moment;
 
-
         res.render('manager/advertisers/create.ejs', data);
 
     } catch (error) {
@@ -331,17 +323,14 @@ exports.create = async (req, res) => {
     }
 }
 
-
 exports.create_post = async (req, res) => {
     try {
         const advertiser = req.body.advertiser_name
 
-
         if (!TEXT_REGEX.test(advertiser)) {
             req.session.message = {
                 type: 'danger',
-                intro: 'Erreur',
-                message: 'Le nombre de caractère est limité à 50'
+                message: 'Le nombre de caractère doit être inférieur à 50.'
             }
             return res.redirect('/manager/advertisers/create');
         }
@@ -349,26 +338,18 @@ exports.create_post = async (req, res) => {
         if (advertiser == '') {
             req.session.message = {
                 type: 'danger',
-                intro: 'Un problème est survenu',
-                message: 'Les champs doivent être complétés'
+                message: 'Tous les champs sont requis.'
             }
             return res.redirect('/manager/advertisers/create');
         }
 
-
         var requestAdvertiser = {
             "name": advertiser,
-
             "isDirectAdvertiser": true,
-
             "isHouseAds": false,
-
             "isArchived": false,
-
             "userGroupId": 12958
-
         }
-
 
         await ModelAdvertisers.findOne({
             attributes: ['advertiser_name'],
@@ -376,7 +357,6 @@ exports.create_post = async (req, res) => {
                 advertiser_name: advertiser
             }
         }).then(async function (advertiserFound) {
-
 
             //Test si le nom annonceur exsite
             if (!advertiserFound) {
@@ -394,7 +374,6 @@ exports.create_post = async (req, res) => {
                     var advertiser_get = await AxiosFunction.getManage(url_location);
 
                     const advertiser_id = advertiser_get.data.id
-
 
                     // On crée annonceur dans la bdd
 
@@ -429,11 +408,6 @@ exports.create_post = async (req, res) => {
             }
         })
 
-
-
-
-
-
     } catch (error) {
         console.log(error);
 
@@ -444,15 +418,11 @@ exports.create_post = async (req, res) => {
     }
 }
 
-
-
 exports.view = async (req, res) => {
     try {
-
         const data = new Object();
 
         var advertiser_id = req.params.id;
-
 
         var advertiser = await ModelAdvertisers
             .findOne({
@@ -464,17 +434,14 @@ exports.view = async (req, res) => {
                 }]
             })
             .then(async function (advertiser) {
-              
-
-
 
                 if (!advertiser) {
                     return res.redirect(`/extension-chrome/advertiser/?advertiser_id=${advertiser_id}`)
-                   /* return res
-                        .status(404)
-                        .render("manager/error.ejs", {
-                            statusCoded: 404
-                        });*/
+                    /* return res
+                    .status(404)
+                    .render("manager/error.ejs", {
+                    statusCoded: 404
+                    });*/
 
                 }
 
@@ -505,7 +472,6 @@ exports.view = async (req, res) => {
 
                 console.log(epilot_campaigns);
 
-
                 // Récupére les données des campagnes
                 campaigns = await ModelCampaigns.findAll({
                     where: {
@@ -532,67 +498,6 @@ exports.view = async (req, res) => {
         });
     }
 }
-
-/*exports.advertiser_add = async (req, res) => {
-
-  //ajoute dans la bdd les annonceurs
-
-  try {
-
-    if (req.session.user.user_role == 1) {
-
-
-      var config = {
-        method: 'GET',
-        url: 'https://manage.smartadserverapis.com/2044/advertisers/',
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        auth: {
-          username: dbApi.SMART_login,
-          password: dbApi.SMART_password
-        },
-
-      };
-      await axios(config)
-        .then(function (res) {
-
-          var data = res.data
-          var number_line = data.length
-
-          for (i = 0; i < number_line; i++) {
-
-            var advertiser_id = data[i].id
-            var advertiser_name = data[i].name
-
-            const advertiser = ModelAdvertisers.create({
-              advertiser_id,
-              advertiser_name,
-
-
-            })
-
-          }
-
-        })
-        res.redirect("/manager/list_advertisers")
-
-    }
-
-
-  }catch (error) {
-    console.log(error)
-    var statusCoded = error.response;
-
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-
-    })
-  }
-
-
-}*/
 
 exports.advertiser_list = async (req, res) => {
 
@@ -621,75 +526,8 @@ exports.advertiser_list = async (req, res) => {
             statusCoded: statusCoded
         })
     }
-
 }
 
-/*exports.campaign_add = async (req, res) => {
-
-  //ajoute les campagnes dans la bdd
-
-  try {
-    if (req.session.user.user_role == 1) {
-
-
-      var config = {
-        method: 'GET',
-        url: 'https://manage.smartadserverapis.com/2044/advertisers/442520/advertisers',
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        auth: {
-          username: dbApi.SMART_login,
-          password: dbApi.SMART_password
-        },
-
-      };
-      await axios(config)
-        .then(function (res) {
-
-          var data = res.data
-          var number_line = data.length
-
-          for (i = 0; i < number_line; i++) {
-
-
-            var advertiser_id = data[i].id
-            var campaign_name = data[i].name
-            var advertiser_id = data[i].advertiserId
-            var start_date = data[i].startDate
-            var end_date = data[i].endDate
-
-            const advertisers = ModelAdvertisers.create({
-              advertiser_id,
-              campaign_name,
-              advertiser_id,
-              start_date,
-              end_date
-
-
-
-            })
-          }
-
-
-        })
-        res.redirect("/manager/list_advertisers")
-
-    }
-  } catch (error) {
-    console.log(error)
-    var statusCoded = error.response;
-
-    res.render("error.ejs",{
-      statusCoded:statusCoded,
-
-    })
-  }
-
-
-}
-*/
 exports.view_campagne = async (req, res) => {
 
     //affiche dans une vue les campagnes liée à annnonceur id
@@ -734,7 +572,6 @@ exports.view_campagne = async (req, res) => {
             statusCoded: statusCoded
         })
     }
-
 }
 
 exports.campagne_json = async (req, res) => {
@@ -742,15 +579,12 @@ exports.campagne_json = async (req, res) => {
     try {
         ModelAdvertisers
             .findOne({
-
                 where: {
                     advertiser_id: req.params.id
-
                 }
             })
             .then(campagnes => {
                 res.json(campagnes)
-
             })
     } catch (error) {
         console.log(error)

@@ -19,7 +19,20 @@
                         <%= users[i].user_lastname %></a></td>
                 <td><a href="/manager/users/<%= users[i].user_id %>"
                         title="<%= users[i].user_email %>"><%= users[i].user_email %></a></td>
-                <td><%= users[i].roles_user.role_id%> - <%= users[i].roles_user.user_id %></td>
+                <td>
+                   <%
+                   switch (users[i].roles_user.role_id) {
+                    case 1: %>
+                    <span class="badge bg-danger">Administrateur</span>
+                      <% break;
+                    case 2: %>
+                    <span class="badge bg-success">Commercial</span>
+                    <% break;
+                    case 3: %>
+                    <span class="badge bg-warning">ADV</span>
+                    <% break;                   
+                  }  %>
+                </td>
                 <td>
                     <div class="btn-group" role="group">
                         <a href="/manager/users/<%= users[i].user_id %>" title="Visualiser" class="btn btn-sm"><i

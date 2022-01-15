@@ -6,7 +6,7 @@ const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session')
 var fileUpload = require('express-fileupload');
-var runner = require("child_process");
+var runner = require("child_process");
 
 const db = require("./app/config/_config.database");
 
@@ -365,17 +365,21 @@ app.use(cookieSession({
     keys: ['asq4b4PR'],
     maxAge: 2592000000 // 30 jour
 }))
-/**L'image à une limite min=50px max=2000px */
+/*
+L'image à une limite min=50px max=2000px 
+*/
 app.use(fileUpload());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('files'));
 
-/*var phpScriptPath = "./api_google-manager/GetAllOrder.php";
+/*
+var phpScriptPath = "./api_google-manager/GetAllOrder.php";
 runner.exec("php " + phpScriptPath + " " , function(err, phpResponse, stderr) {
  if(err) console.log(err); 
 console.log( phpResponse );
-});*/
+});
+*/
 
 
 /**
@@ -477,7 +481,6 @@ app.use('/extension-chrome', extention_chrome);
 
 // Le serveur ecoute sur le port 3022
 app.set("port", process.env.PORT || 3001);
-
 
 app.listen(app.get("port"), () => {
     console.log(`server on port ${app.get("port")}`);

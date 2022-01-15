@@ -8,16 +8,23 @@ var crypto = require('crypto');
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
-const {Op} = require("sequelize");
+const {
+    Op
+} = require("sequelize");
 
 process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
 
-const {QueryTypes} = require('sequelize');
+const {
+    QueryTypes
+} = require('sequelize');
 
-const {check, query} = require('express-validator');
+const {
+    check,
+    query
+} = require('express-validator');
 
 const moment = require('moment');
 
@@ -46,16 +53,21 @@ const ModelUsers = require("../models/models.users");
 
 const TEXT_REGEX = /^.{1,51}$/
 
-const {promiseImpl} = require('ejs');
-const {insertions} = require('./controllers.automate');
+const {
+    promiseImpl
+} = require('ejs');
+const {
+    insertions
+} = require('./controllers.automate');
 
 exports.index = async (req, res) => {
     try {} catch (error) {
         console.log(error);
         var statusCoded = error.response;
-        res.render("manager/error.ejs", {statusCoded: statusCoded});
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
     }
-
 }
 
 exports.campaigns = async (req, res) => {
@@ -101,16 +113,14 @@ exports.campaigns = async (req, res) => {
                 raw: true
             }, {
                 where: {
-                    [Op.and]: [
-                        {
-                            [sequelize.fn('YEAR', sequelize.col('campaign_start_date'))]: {
-                                [Op.between]: [dateYearLast, dateYearNow]
-                            },
-                            [sequelize.fn('MONTH', sequelize.col('campaign_start_date'))]: {
-                                [Op.between]: [1, 12]
-                            }
+                    [Op.and]: [{
+                        [sequelize.fn('YEAR', sequelize.col('campaign_start_date'))]: {
+                            [Op.between]: [dateYearLast, dateYearNow]
+                        },
+                        [sequelize.fn('MONTH', sequelize.col('campaign_start_date'))]: {
+                            [Op.between]: [1, 12]
                         }
-                    ]
+                    }]
                 },
                 order: [
                     [
@@ -125,7 +135,9 @@ exports.campaigns = async (req, res) => {
                 if (!campaigns) {
                     return res
                         .status(404)
-                        .json({statusCoded: '404'});
+                        .json({
+                            statusCoded: '404'
+                        });
                 }
                 //  console.log(campaigns);
                 if (campaigns.length > 0) {
@@ -190,14 +202,16 @@ exports.campaigns = async (req, res) => {
         var statusCoded = error.response;
         res
             .status(404)
-            .json({statusCoded: statusCoded});
+            .json({
+                statusCoded: statusCoded
+            });
     }
 }
 
 exports.advertisers = async (req, res) => {
     try {
-       // Graph de suivi des annonceurs
-       // var advertiser_id = req.params.advertiser_id;
+        // Graph de suivi des annonceurs
+        // var advertiser_id = req.params.advertiser_id;
 
         // L'année derniére
         var dateYearLast = moment()
@@ -210,7 +224,7 @@ exports.advertisers = async (req, res) => {
             .findAll({
                 attributes: [
                     [
-                        sequelize.fn('COUNT', sequelize.col('campaign_id')),
+                        sequelize.fn('COUNT', sequelize.col('advertiser_id')),
                         'count'
                     ],
                     [
@@ -223,21 +237,19 @@ exports.advertisers = async (req, res) => {
                     ]
                 ],
                 group: [
-                   'month', 'year'
+                    'month', 'year'
                 ],
                 raw: true
             }, {
                 where: {
-                    [Op.and]: [
-                        {
-                            [sequelize.fn('YEAR', sequelize.col('campaign_start_date'))]: {
-                                [Op.between]: [dateYearLast, dateYearNow]
-                            },
-                            [sequelize.fn('MONTH', sequelize.col('campaign_start_date'))]: {
-                                [Op.between]: [1, 12]
-                            }
+                    [Op.and]: [{
+                        [sequelize.fn('YEAR', sequelize.col('campaign_start_date'))]: {
+                            [Op.between]: [dateYearLast, dateYearNow]
+                        },
+                        [sequelize.fn('MONTH', sequelize.col('campaign_start_date'))]: {
+                            [Op.between]: [1, 12]
                         }
-                    ]
+                    }]
                 },
                 order: [
                     [
@@ -252,9 +264,11 @@ exports.advertisers = async (req, res) => {
                 if (!campaigns) {
                     return res
                         .status(404)
-                        .json({statusCoded: '404'});
+                        .json({
+                            statusCoded: '404'
+                        });
                 }
-              
+
                 if (campaigns.length > 0) {
                     var dataArray = new Array();
                     var lastYear = new Array();
@@ -311,13 +325,15 @@ exports.advertisers = async (req, res) => {
                 }
 
             });
-          
+
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
         res
             .status(404)
-            .json({statusCoded: statusCoded});
+            .json({
+                statusCoded: statusCoded
+            });
     }
 }
 
@@ -337,9 +353,8 @@ exports.campaignReport = async (req, res) => {
         var formatSliderVideo = new Array();
         var formatClickCommand = new Array();
 
-          // Permet de faire l'addition
-          const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
+        // Permet de faire l'addition
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
         let campaign_id = req.query.campaign_id;
         if (campaign_id) {
@@ -352,15 +367,16 @@ exports.campaignReport = async (req, res) => {
                     where: {
                         campaign_id: campaign_id
                     },
-                    include: [
-                        {
-                            model: ModelAdvertisers
-                        }
-                    ]
+                    include: [{
+                        model: ModelAdvertisers
+                    }]
                 })
                 .then(async function (campaign) {
                     if (!campaign) {
-                        return res.json({type: 'error', message: 'Cette campagne n\'existe pas.'});
+                        return res.json({
+                            type: 'error',
+                            message: 'Cette campagne n\'existe pas.'
+                        });
                     }
 
                     // fonctionnalité de géneration du rapport
@@ -369,67 +385,88 @@ exports.campaignReport = async (req, res) => {
                     let campaignid = campaign.campaign_id;
                     var campaign_start_date = campaign.campaign_start_date;
                     var campaign_end_date = campaign.campaign_end_date;
-                   
+
                     // Récupére l'ensemble des insertions de la campagne
                     var epilotCampaign = await ModelEpilotCampaigns
-                    .findOne({
-                        where: {
-                            campaign_id: campaign_id
-                        },
-                        include: [
-                            {
+                        .findOne({
+                            where: {
+                                campaign_id: campaign_id
+                            },
+                            include: [{
                                 model: ModelEpilotInsertions,
                                 attributes: [
-                                    'epilot_campaign_id', 
-                                    'epilot_campaign_name', 
-                                    'format_group_id', 
+                                    'epilot_campaign_id',
+                                    'epilot_campaign_name',
+                                    'format_group_id',
                                     'epilot_insertion_volume'
-                                ], 
-                                where : {
-                                    epilot_campaign_id : Sequelize.col('epilot_campaigns.epilot_campaign_id')
+                                ],
+                                where: {
+                                    epilot_campaign_id: Sequelize.col('epilot_campaigns.epilot_campaign_id')
+                                }
+                            }]
+                        })
+                        .then(async function (epilotCampaign) {
+
+                            if ((!Utilities.empty(epilotCampaign)) && (!Utilities.empty(epilotCampaign.epilot_insertions))) {
+                                var epilot_insertions_count = epilotCampaign.epilot_insertions.length;
+
+                                var insertions_group = new Array();
+                                var booking = new Array();
+
+                                for (let i = 0; i < epilot_insertions_count; i++) {
+                                    var format_group_id = epilotCampaign.epilot_insertions[i].format_group_id;
+                                    var insertion_volume = epilotCampaign.epilot_insertions[i].epilot_insertion_volume;
+                                    // console.log('format_group_id :',format_group_id);
+                                    switch (format_group_id) {
+                                        case 1:
+                                            formatHabillage.push(insertion_volume);
+                                            break;
+                                        case 2:
+                                            formatInterstitiel.push(insertion_volume);
+                                            break;
+                                        case 3:
+                                            formatMasthead.push(insertion_volume);
+                                            break;
+                                        case 4:
+                                            formatGrandAngle.push(insertion_volume);
+                                            break;
+                                        case 5:
+                                            formatSlider.push(insertion_volume);
+                                            break;
+                                        case 6:
+                                            formatLogo.push(insertion_volume);
+                                            break;
+                                        case 9:
+                                            formatInstream.push(insertion_volume);
+                                            break;
+                                        case 10:
+                                            formatClickCommand.push(insertion_volume);
+                                            break;
+                                        case 11:
+                                            formatNative.push(insertion_volume);
+                                            break;
+                                        case 12:
+                                            formatRectangleVideo.push(insertion_volume);
+                                            break;
+                                        case 13:
+                                            formatMea.push(insertion_volume);
+                                            break;
+                                        case 14:
+                                            formatSliderVideo.push(insertion_volume);
+                                            break;
+                                    }
+
                                 }
                             }
-                        ]
-                    })
-                    .then(async function (epilotCampaign) {
-                       
-                       if((!Utilities.empty(epilotCampaign)) && (!Utilities.empty(epilotCampaign.epilot_insertions))) {
-                            var epilot_insertions_count = epilotCampaign.epilot_insertions.length;
-                           
-                            var insertions_group = new Array();
-                            var booking = new Array();
 
-                            for (let i = 0; i < epilot_insertions_count; i++) {
-                                var format_group_id = epilotCampaign.epilot_insertions[i].format_group_id;
-                                var insertion_volume = epilotCampaign.epilot_insertions[i].epilot_insertion_volume;
-                                // console.log('format_group_id :',format_group_id);
-                                switch(format_group_id) {                                   
-                                   case 1: formatHabillage.push(insertion_volume); break;
-                                   case 2: formatInterstitiel.push(insertion_volume); break;
-                                   case 3: formatMasthead.push(insertion_volume); break;
-                                   case 4: formatGrandAngle.push(insertion_volume); break;                                  
-                                   case 5: formatSlider.push(insertion_volume); break;
-                                   case 6: formatLogo.push(insertion_volume); break;
-                                   case 9: formatInstream.push(insertion_volume); break;  
-                                   case 10: formatClickCommand.push(insertion_volume);  break;   
-                                   case 11: formatNative.push(insertion_volume);  break;
-                                   case 12: formatRectangleVideo.push(insertion_volume); break;
-                                   case 13: formatMea.push(insertion_volume); break;
-                                   case 14: formatSliderVideo.push(insertion_volume); break;
-                                }
-
-                            }
-                       }
-                       
-                    });  
-                  
+                        });
 
                     // Récupére l'ensemble des données du rapport
                     datalocalStorage = localStorage.getItem('campaignID-' + campaign.campaign_id);
                     if (reporting = JSON.parse(datalocalStorage)) {
 
                         var formats = new Array();
-                        var booking = new Array(); 
+                        var booking = new Array();
                         var delivery = new Array();
 
                         if (reporting.habillage) {
@@ -445,8 +482,8 @@ exports.campaignReport = async (req, res) => {
                         }
 
                         if (reporting.interstitiel) {
-                            console.log('RETORDT <<<<<<<<<<<<<',reporting.interstitiel.impressions)
-                            console.log('RETORDT <<<<<<<<<<<<<',formatInterstitiel)
+                            console.log('RETORDT <<<<<<<<<<<<<', reporting.interstitiel.impressions)
+                            console.log('RETORDT <<<<<<<<<<<<<', formatInterstitiel)
                             formats.push('Interstitiel');
                             delivery.push(reporting.interstitiel.impressions);
                             booking.push(formatInterstitiel.reduce(reducer) - reporting.interstitiel.impressions);
@@ -469,20 +506,27 @@ exports.campaignReport = async (req, res) => {
                             delivery.push(reporting.rectanglevideo.impressions);
                             booking.push(formatRectangleVideo.reduce(reducer) - reporting.rectanglevideo.impressions);
                         }
-                       
-                        var data = { 'values' : {delivery : delivery, booking : booking}, formats : formats}
+
+                        var data = {
+                            'values': {
+                                delivery: delivery,
+                                booking: booking
+                            },
+                            formats: formats
+                        }
 
                         return res
                             .status(200)
                             .json(data);
-                    }                   
+                    }
 
                 });
 
         } else {
-            return res.json(
-                {type: 'error', message: 'Veuillez saisir l\'identifiant de la campagne.'}
-            );
+            return res.json({
+                type: 'error',
+                message: 'Veuillez saisir l\'identifiant de la campagne.'
+            });
         }
 
     } catch (error) {
@@ -490,6 +534,8 @@ exports.campaignReport = async (req, res) => {
         var statusCoded = error.response;
         res
             .status(404)
-            .json({statusCoded: statusCoded});
+            .json({
+                statusCoded: statusCoded
+            });
     }
 }

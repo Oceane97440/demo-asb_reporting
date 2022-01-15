@@ -18,7 +18,6 @@ const manager_charts = require("../controllers/controllers.manager_charts");
 
 const manager_alerts = require("../controllers/controllers.manager_alerts");
 
-
 /**
 * Middleware to know if user is connected
 **/
@@ -28,8 +27,7 @@ router.use(function (req, res, next) {
         return res.redirect('../../login');    
     } 
     res.locals.user = req.session.user;  
-    next();  
-    // console.log('User Login :',req.session.user)
+    next(); 
 });
 
 const ModelFormats = require("../models/models.formats");
@@ -206,6 +204,7 @@ router.get("/users/list", manager_users.list);
 router.get("/users/export", manager_users.export);
 
 router.get("/users/create", manager_users.create);
+router.post("/users/create", manager_users.create_post);
 router.get("/users/:id", manager_users.view);
 router.get("/users/:id/edit", manager_users.edit);
 

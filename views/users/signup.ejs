@@ -14,13 +14,8 @@
 
 <body>
 
-
-	
 	<div class="container">
 		<div class="row" style="margin-top: 20px;">
-
-
-
 
 			<!--section 1-->
 
@@ -30,13 +25,14 @@
 					<div class="card-img-overlay">
 						<% if (message) { %>
 
-							<div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
+							<div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark"
+								role="alert">
 								<%=message.intro%>:<%=message.message%>
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
 							</div>
-						
+
 							<% } %>
 					</div>
 				</div>
@@ -46,23 +42,17 @@
 			<div class="col-lg-6 p-0">
 				<div class="our-team-main">
 
-
-
 					<div id="card-signup" class="card">
 						<div class="card-header">
 							<h4 class="card-title">
 								Créer votre compte
 							</h4>
-					
+
 						</div>
 
 						<div class="card-body text-left">
-						
-
 
 							<form action="/signup/add" method="POST">
-
-
 
 								<div class="col">
 									<div class="md-form">
@@ -72,21 +62,15 @@
 									</div>
 								</div>
 
-
-
 								<div class="col">
 									<div class="md-form">
 										<label for="mdp"><i class="fas fa-key" id="icon"></i>Mot de passe </label>
 
-
-										<input type="password" class="form-control" name="user_password" id="mdp" value=""
-											placeholder="6 caratères + 1 caratère spécial" required>
+										<input type="password" class="form-control" name="user_password" id="mdp"
+											value="" placeholder="6 caractères + 1 caractère spécial" required>
 
 									</div>
 								</div>
-
-
-
 
 								<div class="col">
 
@@ -95,18 +79,13 @@
 
 										<% for(let i=0; i < roles.length; i++) {%>
 
-										<option value="<%= roles[i].role_id %>"><%= roles[i].label %></option>
-										<% } %>
+											<option value="<%= roles[i].role_id %>">
+												<%= roles[i].label %>
+											</option>
+											<% } %>
 									</select>
 
 								</div>
-
-
-
-
-
-
-
 
 						</div>
 						<div class="card-footer bg-transparent  justify-content-center d-flex">
@@ -122,16 +101,12 @@
 						</form>
 					</div>
 
-
-
-
-
 				</div>
 			</div>
 		</div>
 
 	</div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
 </body>

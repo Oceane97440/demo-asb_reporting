@@ -18,9 +18,7 @@ label.form-label.required {
     color: red
 }
 
-
 .bg-format_43791, .bg-format_79409 {background-color: chartreuse;}
-
 
 .bg-priority_101 {background-color:#ef4444;}
 .bg-priority_102 {background-color:#b91c1c;}
@@ -50,7 +48,4 @@ label.form-label.required {
 .bg-priority_50 {background-color:;}
 .bg-priority_20 {background-color:;}
 
-
 .dataTables_info {font-size: 0.85em;}
-
-.card-body {padding:25px 5px!important}

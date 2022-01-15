@@ -2,34 +2,27 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Campagnes SMART</th>
-            <th>Annonceurs ID</th>
+            <th>Campagne SMARTADSERVER</th>
+            <th>ID Annonceur</th>
             <th>Date de début</th>
             <th>Date de fin</th>
             <th>Status</th>
-
-            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <% for (let i = 0; i < campaigns.length; i++) { %>
         <tr>
             <td><%= campaigns[i].campaign_admanager_id %></td>
-
             <td><% if(!utilities.empty(campaigns[i].campaign_id)) { %><a
                     href="/manager/campaigns/<%= campaigns[i].campaign_id %>"
                     title="<%= campaigns[i].campaign_admanager_name %>"><%= campaigns[i].campaign_admanager_name %></a>
-                <% } else { %> <%= campaigns[i].campaign_admanager_name %> <% } %></td>
-          
+                <% } else { %> <%= campaigns[i].campaign_admanager_name %> <% } %></td>         
 
             <td><%= campaigns[i].advertiser_admanager_id %></td>
             <td><%= campaigns[i].campaign_admanager_start_date %></td>
             <td><%= campaigns[i].campaign_admanager_end_date %></td>
-            <td><%= campaigns[i].campaign_admanager_status %></td>
-
-            <td>
-
-            </td>
+            <td><span class="badge bg-success"><%= campaigns[i].campaign_admanager_status %></span></td>
+           
             <% } %>
         </tr>
     </tbody>

@@ -1,17 +1,14 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-    <!-- support-section start -->
     <div class="col-xl-12 col-md-12">
 
         <div class="card">
             <form method="POST" action="/manager/users/create">
-            <div class="card-header">
-                <h5>Ajouter un utilisateur</h5>
-            </div>
-            <%- include("../inc/form_user.ejs") -%>
-
-        </form>
+                <div class="card-header">
+                    <h4>Ajouter un nouvel utilisateur</h4>
+                </div>
+                <%- include("../inc/form_user.ejs") -%>
+            </form>
         </div>
 
     </div>
-
     <%- include("../../layouts/manager/footer.ejs") -%>
