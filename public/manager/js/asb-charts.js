@@ -6,6 +6,7 @@ $(document).ready(function () {
 
     var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
     var chartAdvertiserUrl = config.baseurl + 'manager/charts/advertisers';
+    var chartEpilotCampaignUrl = config.baseurl + 'manager/charts/epilot/campaigns';
 
     var campaign_id = $('div.card').attr('data-campaign_id');
     var chartCampaignReportUrl = config.baseurl + '/manager/charts/campaign/report?campaign_id=' + campaign_id;
@@ -13,7 +14,6 @@ $(document).ready(function () {
     /*
      * Chart Campaigns -
     */
-
     $.getJSON(chartCampaignUrl, function (response) {
         var options = {
             chart: {
@@ -54,8 +54,7 @@ $(document).ready(function () {
     /*
      * Annonceurs 
     */  
-    $.getJSON(chartAdvertiserUrl, function (response) {
-      
+    $.getJSON(chartAdvertiserUrl, function (response) {      
         var options = {
             chart: {
                 type: 'line',
@@ -95,7 +94,6 @@ $(document).ready(function () {
      /*
      * Chart Bar Reporting
      */
- //   alert(chartCampaignReportUrl)
     $.getJSON(chartCampaignReportUrl, function (response) {
         var options = {
             series: [{

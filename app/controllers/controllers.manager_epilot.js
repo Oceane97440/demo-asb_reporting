@@ -23,6 +23,7 @@ const moment = require('moment');
 
 const csv = require('csv-parser');
 const fs = require('fs');
+var mkdirp = require('mkdirp');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -47,6 +48,32 @@ const ModelUsers = require("../models/models.users");
 const {promiseImpl} = require('ejs');
 const {insertions} = require('./controllers.automate');
 
+exports.index = async (req, res) => {
+    try {
+        const data = new Object();
+        data.moment = moment;
+        data.utilities = Utilities;
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Campagnes',
+            'link': 'campaigns'
+        },{
+            'name': 'EPILOT',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
+
+        data.epilot_advertisers_last = new Array();
+        
+        res.render('manager/epilot/index.ejs', data);
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
+}
+
 exports.list = async (req, res) => {
     try {
         const data = new Object();
@@ -57,9 +84,13 @@ exports.list = async (req, res) => {
         breadcrumb = new Array({
             'name': 'Campagnes',
             'link': 'campaigns'
-        }, {
-            'name': 'Liste les campagnes EPILOT',
+        },{
+            'name': 'EPILOT',
             'link': 'campaigns/epilot'
+        },        
+        {
+            'name': 'Liste les campagnes EPILOT',
+            'link': ''
         });
         data.breadcrumb = breadcrumb;
       
@@ -84,7 +115,6 @@ exports.list = async (req, res) => {
                 data.campaigns = campaigns;              
             });
  
-
        res.render('manager/epilot/list.ejs', data);
     } catch (error) {
         console.log(error);
@@ -114,16 +144,6 @@ exports.export = async (req, res) => {
         data.moment = moment;
         data.utilities = Utilities;
 
-        // Créer le fil d'ariane
-        breadcrumb = new Array({
-            'name': 'Campagnes',
-            'link': 'campaigns'
-        }, {
-            'name': 'Liste les campagnes EPILOT',
-            'link': 'campaigns/epilot'
-        });
-        data.breadcrumb = breadcrumb;
-      
         // Récupére l'ensemble des annonceurs
          data.campaigns = await ModelEpilotCampaigns
             .findAll({
@@ -142,16 +162,13 @@ exports.export = async (req, res) => {
                 ]
             })
        
-
             const styles = {
                 headerDark: {
                     fill: {
                         fgColor: {
                             rgb: 'FF000000'
-                        }
-    
-                    },
-    
+                        }    
+                    },    
                     font: {
                         color: {
                             rgb: 'FFFFFFFF'
@@ -161,15 +178,11 @@ exports.export = async (req, res) => {
                         underline: false
                     }
                 },
-                cellNone: {
-    
-                    numFmt: "0",
-    
-                },
-    
+                cellNone: {    
+                    numFmt: "0"
+                },    
                 cellTc: {
-                    numFmt: "0",
-    
+                    numFmt: "0"    
                 }
             };
     
@@ -185,31 +198,31 @@ exports.export = async (req, res) => {
                     cellStyle: styles.cellNone
                 },
                 annonceurs: {
-                    displayName: 'ANNONCEURS',
+                    displayName: 'Annonceur',
                     headerStyle: styles.headerDark,
                     width: 300, // <- width in chars (when the number is passed as string)
                     cellStyle: styles.cellNone    
                 },
                 campagnes: {
-                    displayName: 'NOMS',
+                    displayName: 'Nom',
                     headerStyle: styles.headerDark,
                     width: 450, // <- width in chars (when the number is passed as string)
                     cellStyle: styles.cellNone    
                 },
                 commercial: { // <- the key should match the actual data key
-                    displayName: 'COMMERCIAL', // <- Here you specify the column header
+                    displayName: 'Commercial', // <- Here you specify the column header
                     headerStyle: styles.headerDark, // <- Header style
                     width: 100, // <- width in pixels
                     cellStyle: styles.cellNone
                 },
                 nature: { // <- the key should match the actual data key
-                    displayName: 'NATURE', // <- Here you specify the column header
+                    displayName: 'Nature', // <- Here you specify the column header
                     headerStyle: styles.headerDark, // <- Header style
                     width: 100, // <- width in pixels
                     cellStyle: styles.cellNone
                 },
                 status: {
-                    displayName: 'STATUS',
+                    displayName: 'Status',
                     headerStyle: styles.headerDark,
                     cellFormat: function (value, row) { // <- Renderer function, you can access also any row.property
                         return (value == 1) ? 'Confirmé' : 'Réservé';
@@ -218,25 +231,25 @@ exports.export = async (req, res) => {
                     cellStyle: styles.cellNone    
                 },
                 date_start: {
-                    displayName: 'DATE DE DEBUT',
+                    displayName: 'Date de début',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
                     cellStyle: styles.cellNone    
                 },
                 date_end: {
-                    displayName: 'DATE DE FIN',
+                    displayName: 'Date de fin',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
                     cellStyle: styles.cellNone    
                 },
                 volumes: {
-                    displayName: 'VOLUMES',
+                    displayName: 'Volume',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
                     cellStyle: styles.cellNone    
                 },
                 budget: {
-                    displayName: 'BUDGETS',
+                    displayName: 'Budget',
                     headerStyle: styles.headerDark,
                     width: 200, // <- width in pixels
                     cellStyle: styles.cellNone    
@@ -250,11 +263,8 @@ exports.export = async (req, res) => {
     
             };
     
-    
-    
             const dataset_global = []
 
-    
             if (!Utilities.empty(data)) {
                 for (i = 0; i < data.campaigns.length; i++) {
     
@@ -306,7 +316,6 @@ exports.export = async (req, res) => {
     
             return res.send(report);
     
-
     } catch (error) {
         console.log(error);
         var statusCoded = error.response;
@@ -357,10 +366,10 @@ exports.create = async (req, res) => {
         // Créer le fil d'ariane
         breadcrumb = new Array({
             'name': 'Campagnes',
-            'link': 'insertions'
+            'link': 'campaigns'
         }, {
             'name': 'Liste les campagnes EPILOT',
-            'link': 'campaigns/epilot'
+            'link': 'campaigns/epilot/list'
         }, {
             'name': 'Ajouter une campagne EPILOT',
             'link': ''
@@ -409,24 +418,25 @@ exports.import = async (req, res) => {
             var dirDateNOW = moment().format('YYYY/MM/DD');
         
             // Créer un dossier si celui-ci n'existe pas
-            fs.mkdir('public/uploads/' + dirDateNOW + '/', {
+            fs.mkdir('public/uploads/' + dirDateNOW , {
                 recursive: true
             }, (err) => {
-                if (err) 
-                    throw err;
-                }
-            );
+                if (err) {
+                    return console.error(err);
+                  }
+                  console.log('Directory created successfully!');
+            });
 
             // Déplace le fichier de l'upload vers le dossier
             await file.mv('public/uploads/' + dirDateNOW + '/' + file.name, err => {
-                if (err) 
-                    return res
-                        .status(500)
-                        .send('ERRORRRRRRRRRRRRRR :' + err);
+                if (err) {
+                    req.session.message = {
+                        type: 'danger',
+                        message: 'Le dossier de sauvegarde n\'a pu être créé.'
+                    }
                 }
-            );
-
-            fs
+                   
+                fs
                 .createReadStream('public/uploads/' + dirDateNOW + '/' + file.name)
                 .pipe(csv({
                     separator: '\;'
@@ -607,7 +617,6 @@ exports.import = async (req, res) => {
                         // Envoie du message de confirmation
                         req.session.message = {
                             type: 'info',
-                            intro: 'Importation réussie',
                             message: 'L\'importation a été faite : "' + results.length + ' éléments" a' +
                                     'joutés.'
                         }
@@ -623,6 +632,8 @@ exports.import = async (req, res) => {
                         return res.redirect('/manager/campaigns/epilot/create');
 
                     }
+
+                });
 
                 });
 

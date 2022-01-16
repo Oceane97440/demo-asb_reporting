@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 //let csvToJson = require('convert-csv-to-json');
 const Utilities = require('../functions/functions.utilities');
 
-
 const axios = require(`axios`);
 
 //const asyncly = require('async');
@@ -99,7 +98,6 @@ exports.index = async (req, res) => {
 
 };
 
-
 exports.forecast_user = async (req, res, next) => {
 
     // Définition des variables
@@ -149,7 +147,6 @@ exports.forecast_user = async (req, res, next) => {
             }
             return res.redirect('/utilisateur')
         }
-
 
         if (timstasp_end <= date_now || timstasp_end <= timstasp_start) {
 
@@ -478,7 +475,6 @@ exports.forecast_user = async (req, res, next) => {
                     //Habilage
                     "44149"
 
-
                 ]
             }
         }
@@ -494,7 +490,6 @@ exports.forecast_user = async (req, res, next) => {
                         //Masthead / Grand_angle
                         "79425", "79431", "79409", "79421", "79637"
 
-
                     ]
                 }
 
@@ -506,12 +501,10 @@ exports.forecast_user = async (req, res, next) => {
         // On fait les 3 steps pour récupérer l'informations du csv puis on push dans un tableau
         let firstLink = await AxiosFunction.getForecastData('POST', '', requestForecast);
 
-
         if (firstLink.headers.location) {
             headerlocation = firstLink.headers.location;
 
             let secondLink = await AxiosFunction.getForecastData('GET', headerlocation);
-
 
             if (secondLink.data.progress == '100') {
                 headerlocation = secondLink.headers.location;
@@ -606,10 +599,7 @@ exports.forecast_user = async (req, res, next) => {
 
                 var array_reserver = [];
 
-
-
                 for (let i = 0; i < requete.length; i++) {
-
 
                     // Calculer l'intervalle de date sur la période
                     const campaign_epilot_start_date = requete[i].campaign_epilot_start_date
@@ -629,9 +619,6 @@ exports.forecast_user = async (req, res, next) => {
                     // Calculer le nombre de jour à cheval en fonction des dates du forecast
                     const date_start_forecast = date_start
                     const date_end_forecast = date_end
-
-
-
 
                     if ((campaign_date_end > date_start_forecast)) {
 
@@ -660,7 +647,6 @@ exports.forecast_user = async (req, res, next) => {
                         }
                     }
 
-
                     const periode_a_cheval = new Date(date_end_cheval) - new Date(date_start_cheval);
 
                     const nb_jour_cheval = Math.round(periode_a_cheval / 86400000)
@@ -670,13 +656,9 @@ exports.forecast_user = async (req, res, next) => {
                     //Exclure des campagnes confirmées ou réservées qui sont égales ou inf. à la date de début du forecast
                     //Exclure des campagnes confirmées ou réservées qui sont sup. ou égales à la date de fin du forecast
 
-
-
                     if (requete[i].etat == "2") {
 
                         if ((campaign_date_start <= date_start_forecast) || (campaign_date_end >= date_end_forecast)) {
-
-
 
                         } else {
 
@@ -686,13 +668,9 @@ exports.forecast_user = async (req, res, next) => {
 
                     }
 
-
                 }
 
-
                 var sommeReserver = 0
-
-
 
                 for (let i = 0; i < array_reserver.length; i++) {
                     if (array_reserver[i] != '') {
@@ -700,9 +678,6 @@ exports.forecast_user = async (req, res, next) => {
                         sommeReserver += parseInt(array_reserver[i])
                     }
                 }
-
-
-
 
                 var reserver_reel = volumeDispo - sommeReserver;
 
@@ -715,7 +690,6 @@ exports.forecast_user = async (req, res, next) => {
                 sommeOccupied = Utilities.numStr(sommeOccupied);
                 volumeDispo = Utilities.numStr(volumeDispo);
 
-
                 var table = {
 
                     sommeImpressions,
@@ -723,7 +697,6 @@ exports.forecast_user = async (req, res, next) => {
                     volumeDispo,
                     option,
                 }
-
 
                 var reserver = {
                     //RESERVER//
@@ -749,14 +722,11 @@ exports.forecast_user = async (req, res, next) => {
      
                  }*/
 
-
                 return res.render('forecast/users/data_user.ejs', {
                     table: table,
                     insertions: insertions,
                     reserver: reserver
                 });
-
-
 
             }
         }
@@ -777,7 +747,6 @@ exports.epilot = async (req, res, next) => {
 
     try {
 
-
         var confirmer = await ModelCampaign_epilot.findAll({
 
             where: {
@@ -797,7 +766,6 @@ exports.epilot = async (req, res, next) => {
                 ['campaign_name', 'ASC']
             ],
         })
-
 
         var formats = await ModelFormat.findAll({
             attributes: ['format_group'],
@@ -846,11 +814,8 @@ exports.campaign_epilot = async (req, res, next) => {
     var campaign_epilot_end_date = req.body.campaign_epilot_end_date
     var volume_prevue = req.body.volume_prevue
 
-
-
     var campaign_debut = campaign_epilot_start_date + 'T00:00:00.000Z'
     var campaign_fin = campaign_epilot_end_date + 'T00:00:00.000Z'
-
 
     try {
 
@@ -872,7 +837,6 @@ exports.campaign_epilot = async (req, res, next) => {
 
         }
 
-
         if (!campagne_search) {
 
             ModelCampaign_epilot.create({
@@ -885,16 +849,12 @@ exports.campaign_epilot = async (req, res, next) => {
 
                 })
                 .then(campagne => {
-                    return res.send("OK: le campagne est ajouté à la bdd")
+                    return res.send("La campagne a été ajouté à la base de donnée.")
                 })
 
         } else {
-            return res.send("la données exsite, verifier que le nom de campagne, le formar, la date de debut et fin ne soit pas identique")
+            return res.send("la donnée existe. Veuillez vérifier le nom de la campagne, le format et / ou que la date de début ou la date de fin ne soit pas identique")
         }
-
-
-
-
 
     } catch (error) {
         console.log(error)
@@ -912,8 +872,6 @@ exports.campaign_epilot = async (req, res, next) => {
 exports.epilot_edit = async (req, res, next) => {
 
     try {
-
-
 
         await ModelCampaign_epilot.findOne({
             where: {
@@ -936,34 +894,12 @@ exports.epilot_edit = async (req, res, next) => {
                 ],
             })
 
-
             return res.render('forecast/form_edit_epilot.ejs', {
                 campaign_epilot: campaign_epilot,
                 formats,
             })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         })
-
-
-
-
-
-
-
 
     } catch (error) {
         console.log(error)

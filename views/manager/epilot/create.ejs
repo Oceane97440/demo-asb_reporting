@@ -45,11 +45,8 @@
                         </div>
                     </div>
                 </div>
-                <% if (message) { %>
-                <div class="alert alert-<%=message.type%>" role="alert">
-                    <%=message.intro%>:<%=message.message%>
-                </div>
-                <% } %>
+               
+                <%- include("../inc/message.ejs") -%>
 
                 <div class="form-group col-6">
                     <label class="form-label" for="epilot_file">Fichier</label>

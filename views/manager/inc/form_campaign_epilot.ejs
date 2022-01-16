@@ -1,12 +1,5 @@
 
-                <% if (message) { %>
-                    <div class="alert alert-<%=message.type%> alert-dismissible fade show text-dark" role="alert">
-                        <%=message.intro%>:<%=message.message%>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>            
-                <% } %>
+                 <%- include("message.ejs") -%>
 
                 <div class="form-group">
                     <label class="form-label" for="advertiser_id">Annonceur

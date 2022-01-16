@@ -95,6 +95,7 @@ router.get("/campaigns/export", manager_campaigns.export);
 router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
 router.get('/campaigns/repartitions', manager_campaigns.repartitions);
+router.get('/campaigns/epilot', manager_epilot.list);
 router.get("/campaigns/:id", manager_campaigns.view);
 
 router.get('/campaigns/epilot/list', manager_epilot.list);
@@ -136,6 +137,7 @@ router.get("/charts/campaigns", manager_charts.campaigns);
 router.get("/charts/advertisers/", manager_charts.advertisers);
 router.get("/charts/advertisers/:advertiser_id", manager_charts.advertisers);
 router.get("/charts/campaign/report", manager_charts.campaignReport);
+router.get("/charts/epilot/campaigns", manager_charts.epilotCampaigns);
 
 router.get("/alerts", manager_alerts.index);
 

@@ -43,6 +43,7 @@
     "fast-csv": "^4.3.6",
     "file-get-contents": "^1.0.0",
     "log4js": "^6.3.0",
+    "mkdirp": "^1.0.4",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "node-cache": "^5.1.2",

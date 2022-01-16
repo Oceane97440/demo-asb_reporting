@@ -1,6 +1,43 @@
 <%- include("../../layouts/manager/head.ejs") -%>
-<div class="col-xl-12 col-md-12">
 
-
-</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card table-card">
+            <div class="card-header">
+                <h5>Annonceurs</h5>
+            </div>
+            <div class="pro-scroll">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <ul class="list-group list-group-flush">
+                            <% for (let i=0; i < epilot_advertisers_last.length; i++) { %>
+                            <li class="list-group-item">
+                                <a href="/manager/advertisers/<%= epilot_advertisers_last[i].advertiser_id %>"
+                                    title="<%= epilot_advertisers_last[i].epilot_advertiser_name %>">
+                                    <%= epilot_advertisers_last[i].epilot_advertiser_name %>
+                                </a>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card table-card">
+            <div class="card-header">
+                <h5>Répartition des annonceurs</h5>
+            </div>
+            <div class="pro-scroll">
+                <div class="card-body p-3">
+                    <div class="col-md-12">
+                        <div id="chart-epilot-campaigns"></div>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 <%- include("../../layouts/manager/footer.ejs") -%>
