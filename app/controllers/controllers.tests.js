@@ -1,5 +1,5 @@
 const {
-    Op
+    Op, ARRAY
 } = require("sequelize");
 
 // const excel = require('node-excel-export');
@@ -25,7 +25,6 @@ const AxiosFunction = require('../functions/functions.axios');
 const Utilities = require('../functions/functions.utilities');
 const SmartFunction = require("../functions/functions.smartadserver.api");
 
-
 // Initialise les models
 //const ModelSite = require("../models/models.site");
 const ModelFormat = require("../models/models.formats");
@@ -33,6 +32,7 @@ const ModelCountry = require("../models/models.countries")
 const ModelPack = require("../models/models.packs")
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelAdvertisers = require("../models/models.advertisers");
+const ModelAgencies = require("../models/models.agencies");
 const ModelInsertions = require("../models/models.insertions");
 const ModelTemplates = require("../models/models.templates");
 const ModelEpilotCampaigns =  require("../models/models.epilot_campaigns");
@@ -41,8 +41,235 @@ const ModelFormatsGroupsTypes = require(
 );
 const ModelFormatsGroups = require("../models/models.formats_groups");
 
-exports.index = async (req, res) => {
+// Initialise les identifiants de connexion à l'api
+const dotenv = require("dotenv");
+dotenv.config({path:"./config.env"})
 
+// For the default version
+const algoliasearch = require('algoliasearch');
+
+exports.search = async (req, res) => {
+    try {
+       
+        const client = algoliasearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_SEARCH_APIKEY);
+        const index = client.initIndex(process.env.ALGOLIA_INDEXNAME);
+      
+        // only query string
+index.search('rodzafer').then(({ hits }) => {
+    console.log(hits);
+  });
+  
+  //process.exit();
+  
+  /*
+        var campaigns = await ModelCampaigns.findAll({
+            include: [
+                { model: ModelAdvertisers },
+                { model: ModelAgencies},
+                { model: ModelInsertions}
+            ]
+        }).then(async function (campaigns) {
+           
+            const client = algoliasearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_SEARCH_APIKEY);
+            const index = client.initIndex(process.env.ALGOLIA_INDEXNAME);
+            campaignsObjects = new Array();
+            campaigns.forEach(function(item){
+
+                advertiserObject = new Array();
+                if(!Utilities.empty(item.advertiser.advertiser_id)) {
+                    advertiserObject = {
+                        advertiser_id : item.advertiser.advertiser_id,
+                        advertiser_name : item.advertiser.advertiser_name
+                    }
+                }
+
+                agencyObject = new Array();
+                if(!Object.is(item.agency_id,null)) {
+                    agencyObject = {
+                        agency_id : item.agency_id,
+                        agency_name : item.agency.agency_name
+                    }
+                } 
+
+                 // Liste les insertions
+                 const insertions = item.insertions;
+                 insertionsObject = new Array();
+                 insertions.forEach(function(itemI){
+                    
+                     //  console.log('Insertions : ', itemI.insertion_id,' - ', itemI.insertion_name)
+                     var insertionObject = {
+                         insertion_id : itemI.insertion_id,
+                         insertion_name : itemI.insertion_name,
+                         insertion_start_date : itemI.insertion_start_date,
+                         insertion_end_date : itemI.insertion_end_date,
+                         campaign_id :  itemI.campaign_id,
+                         priority_id: itemI.priority_id
+                     }
+
+                     insertionsObject.push(insertionObject);
+                 });
+
+                    var campaignObject = {
+                        campaign_id : item.campaign_id,
+                        advertiser : advertiserObject,
+                        agency : agencyObject,
+                        campaign_crypt : item.campaign_crypt,
+                        campaign_name : item.campaign_name,
+                        campaign_start_date : item.campaign_start_date,
+                        campaign_end_date : item.campaign_end_date,
+                        insertions : insertionsObject
+                    }
+                    campaignsObjects.push(campaignObject);
+             })
+
+             console.log(campaignsObjects)
+
+             index.saveObjects(campaignsObjects, {'autoGenerateObjectIDIfNotExist': true}).then(({ objectIDs }) => {
+                console.log(objectIDs);
+             });
+
+        });
+
+*/
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.lol = async (req, res) => {
+    try {
+
+        const client = algoliasearch('7L0LDMH42V', 'bf57bd2367126fc4d4a48d8549f48f03');
+        const index = client.initIndex('index_campaigns');
+     
+        const objects = [{
+            firstname: 'Jimmie',
+            lastname: 'Barninger',
+            objectID: 'myID1'
+          }, {
+            firstname: 'Warren',
+            lastname: 'Speach',
+            objectID: 'myID2'
+          }];
+          
+          index.saveObjects(objects).then(({ objectIDs }) => {
+            console.log(objectIDs);
+          });
+
+          console.log('mqsmkd')
+
+          process.exit();
+        
+        campaignsObjects = new Array();
+        var campaigns = await ModelCampaigns.findAll({
+            include: [
+                { model: ModelAdvertisers },
+                { model: ModelAgencies},
+                { model: ModelInsertions}
+            ],
+            limit : 4
+
+        }).then(async function (campaigns) {
+                campaigns.forEach(function(item){
+                    console.log(item.campaign_id,' ',item.campaign_name)
+                   
+                    var campaignObject = {
+                        campaign_id : item.campaign_id,
+                        campaign_crypt : item.campaign_crypt,
+                        campaign_name : item.campaign_name
+                    }
+
+                    advertiserObject = new Array();
+                    if(!Utilities.empty(item.advertiser.advertiser_id)) {
+                        advertiserObject = {
+                            advertiser_id : item.advertiser.advertiser_id,
+                            advertiser_name : item.advertiser.advertiser_name
+                        }
+                    }
+
+                    // Liste les insertions
+                    const insertions = item.insertions;
+                    insertionsObject = new Array();
+                    insertions.forEach(function(itemI){
+                       
+                        //  console.log('Insertions : ', itemI.insertion_id,' - ', itemI.insertion_name)
+                        var insertionObject = {
+                            insertion_id : itemI.insertion_id,
+                            insertion_name : itemI.insertion_name,
+                            insertion_start_date : itemI.insertion_start_date,
+                            insertion_end_date : itemI.insertion_end_date,
+                            campaign_id :  itemI.campaign_id,
+                            priority_id: itemI.priority_id
+                        }
+
+                        insertionsObject.push(insertionObject);
+                    });
+
+                    // campaignObject.insertions = insertionsObject;
+                    agencyObject = new Array();
+                    if(!Object.is(item.agency_id,null)) {
+                        agencyObject = {
+                            agency_id : item.agency_id,
+                            agency_name : item.agency.agency_name
+                        }
+                    } 
+
+                 // Remplie l'object
+                    campaignsObjects.push({
+                        campaign_id : item.campaign_id,
+                        campaign_crypt : item.campaign_crypt,
+                        campaign_name : item.campaign_name,
+                        campaign_start_date : item.campaign_start_date,
+                        campaign_end_date : item.campaign_end_date,
+                        advertiser : advertiserObject,
+                        agency : agencyObject,
+                        insertions : insertionsObject
+                    });
+
+                });
+            });
+
+              // console.log(campaignsObjects);
+
+               index.saveObjects(campaignsObjects).then(({ objectIDs }) => {
+                console.log(objectIDs);
+              });
+
+            /*
+           for(i = 0; i < campaigns.length; i++) {
+            console.log(campaigns[i].campaign_id,' ',campaigns[i].campaign_name)
+
+           }
+           // const object = {
+           
+            const objects = [{
+                firstname: 'Jimmie',
+                lastname: 'Barninger',
+                objectID: 'myID1'
+              }, {
+                firstname: 'Warren',
+                lastname: 'Speach',
+                objectID: 'myID2'
+              }];
+              
+              index.saveObjects(campaignsObjects).then(({ objectIDs }) => {
+                console.log(objectIDs);
+              });*/
+
+       // });
+       // console.log(advertisers);
+
+     //   return res.json(advertisers);
+
+        process.exit(1);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.index = async (req, res) => {
+    console.log('dfsd');  process.exit(1);
     // Mettre à jour les formats
    // const groupFormats = await ModelFormatsGroups
    // .findAll();
@@ -52,7 +279,6 @@ exports.index = async (req, res) => {
  // Crée label avec le date du jour ex : 20210403
 
  const dateNowLong = Date.now();
-
 
      // Affiche les annonceurs
      const advertiserExclus = new Array(
@@ -121,7 +347,6 @@ console.log('dateNow : ',dateNow);
 
     */
 
-
     var campaignsMin = await ModelInsertions.findAll({
         attributes: [
             'insertion_id',
@@ -169,7 +394,6 @@ console.log('dateNow : ',dateNow);
              }
         ]        
     });
-
 
     /*
     console.log(campaigns.length); // process.exit(1);
@@ -303,7 +527,6 @@ console.log('dateNow : ',dateNow);
 
             }]
 
-
         })
 
         res.json(test)
@@ -353,7 +576,6 @@ exports.template = async (req, res) => {
     res.render('manager/template.ejs');
 };
 
-
 exports.campaignday = async (req, res) => {
     var file = 'https://reporting.smartadserverapis.com/2044/reports/E0F446DB-34BF-4975-9D1A-C502197C0D4F/file';
     // Récupère la date de chaque requête
@@ -389,10 +611,7 @@ exports.export_excel = async (req, res) => {
     var data_native = data_report_view.data_native;
     var data_video = data_report_view.data_video;
 
-
     try {
-
-
 
         // You can define styles as json object
         const styles = {
@@ -423,8 +642,6 @@ exports.export_excel = async (req, res) => {
 
             },
 
-
-
             cellNone: {
                 font: {
                     color: {
@@ -433,7 +650,6 @@ exports.export_excel = async (req, res) => {
 
                 }
             },
-
 
         };
 
@@ -475,10 +691,8 @@ exports.export_excel = async (req, res) => {
 
         ];
 
-
         //Here you specify the export structure
         const bilan_global = {
-
 
             impressions: { // <- the key should match the actual data key
                 displayName: 'Impressions', // <- Here you specify the column header
@@ -511,9 +725,7 @@ exports.export_excel = async (req, res) => {
                 width: 220 // <- width in pixels
             }
 
-
         }
-
 
         const bilan_formats = {
 
@@ -545,7 +757,6 @@ exports.export_excel = async (req, res) => {
             },
 
         }
-
 
         const bilan_sites = {
             formats: { // <- the key should match the actual data key
@@ -582,8 +793,6 @@ exports.export_excel = async (req, res) => {
 
         }
 
-
-
         // The data set should have the following shape (Array of Objects)
         // The order of the keys is irrelevant, it is also irrelevant if the
         // dataset contains more fields as the report is build based on the
@@ -598,9 +807,6 @@ exports.export_excel = async (req, res) => {
 
             }
 
-
-
-
         ]
         const dataset_format = []
 
@@ -610,7 +816,6 @@ exports.export_excel = async (req, res) => {
                 Impressions: table.sommeInterstitielImpression,
                 Clics: table.sommeInterstitielClicks,
                 Ctr_clics: table.CTR_interstitiel,
-
 
             }
         }
@@ -623,9 +828,6 @@ exports.export_excel = async (req, res) => {
                 Clics: table.sommeHabillageClicks,
                 Ctr_clics: table.CTR_habillage,
 
-
-
-
             }
         }
         if (table.sommeMastheadImpression !== '0') {
@@ -635,8 +837,6 @@ exports.export_excel = async (req, res) => {
                 Impressions: table.sommeMastheadImpression,
                 Clics: table.sommeMastheadClicks,
                 Ctr_clics: table.CTR_masthead,
-
-
 
             }
         }
@@ -649,9 +849,6 @@ exports.export_excel = async (req, res) => {
                 Clics: table.sommeGrand_AngleClicks,
                 Ctr_clics: table.CTR_grand_angle
 
-
-
-
             }
         }
 
@@ -662,7 +859,6 @@ exports.export_excel = async (req, res) => {
                 Clics: table.sommeNativeClicks,
                 Ctr_clics: table.CTR_native
 
-
             }
         }
         if (table.sommeVideoImpression !== '0') {
@@ -671,7 +867,6 @@ exports.export_excel = async (req, res) => {
                 Impressions: table.sommeVideoImpression,
                 Clics: table.sommeVideoClicks,
                 Ctr_clics: table.CTR_video,
-
 
             }
         }
@@ -682,12 +877,7 @@ exports.export_excel = async (req, res) => {
             Ctr_clics: table.CTR,
         }
 
-
-
-
-
         const dataset_site = []
-
 
         if (data_interstitiel.interstitielImpressions.length > 0) {
 
@@ -703,7 +893,6 @@ exports.export_excel = async (req, res) => {
                     vtr: '-',
 
                 }
-
 
             }
             if (data_interstitiel.total_impressions_linfo_androidInterstitiel !== "0") {
@@ -731,7 +920,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_interstitiel.total_impressions_dtjInterstitiel !== "0") {
 
-
                 dataset_site[3] = {
                     formats: 'INTERSTITIEL',
                     sites: data_interstitiel.interstitiel_dtj_siteName,
@@ -745,7 +933,6 @@ exports.export_excel = async (req, res) => {
             }
             if (data_interstitiel.total_impressions_antenneInterstitiel !== "0") {
 
-
                 dataset_site[4] = {
                     formats: 'INTERSTITIEL',
                     sites: data_interstitiel.interstitiel_antenne_siteName,
@@ -757,8 +944,6 @@ exports.export_excel = async (req, res) => {
                 }
 
             }
-
-
 
         }
 
@@ -776,7 +961,6 @@ exports.export_excel = async (req, res) => {
                     vtr: '-',
 
                 }
-
 
             }
             if (data_habillage.total_impressions_linfo_androidHabillage !== "0") {
@@ -804,7 +988,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_habillage.total_impressions_dtjHabillage !== "0") {
 
-
                 dataset_site[8] = {
                     formats: 'HABILLAGE',
                     sites: data_habillage.habillage_dtj_siteName,
@@ -818,7 +1001,6 @@ exports.export_excel = async (req, res) => {
             }
             if (data_habillage.total_impressions_antenneHabillage !== "0") {
 
-
                 dataset_site[9] = {
                     formats: 'HABILLAGE',
                     sites: data_habillage.habillage_antenne_siteName,
@@ -830,8 +1012,6 @@ exports.export_excel = async (req, res) => {
                 }
 
             }
-
-
 
         }
 
@@ -849,7 +1029,6 @@ exports.export_excel = async (req, res) => {
                     vtr: '-',
 
                 }
-
 
             }
             if (data_masthead.total_impressions_linfo_androidMasthead !== "0") {
@@ -877,7 +1056,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_masthead.total_impressions_dtjMasthead !== "0") {
 
-
                 dataset_site[13] = {
                     formats: 'MASTHEAD',
                     sites: data_masthead.masthead_dtj_siteName,
@@ -891,7 +1069,6 @@ exports.export_excel = async (req, res) => {
             }
             if (data_masthead.total_impressions_antenneMasthead !== "0") {
 
-
                 dataset_site[14] = {
                     formats: 'MASTHEAD',
                     sites: data_masthead.masthead_antenne_siteName,
@@ -903,8 +1080,6 @@ exports.export_excel = async (req, res) => {
                 }
 
             }
-
-
 
         }
 
@@ -922,7 +1097,6 @@ exports.export_excel = async (req, res) => {
                     vtr: '-',
 
                 }
-
 
             }
             if (data_grand_angle.total_impressions_linfo_androidGrandAngle !== "0") {
@@ -950,7 +1124,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_grand_angle.total_impressions_dtjGrandAngle !== "0") {
 
-
                 dataset_site[17] = {
                     formats: 'GRAND ANGLE',
                     sites: data_grand_angle.grandAngle_dtj_siteName,
@@ -964,7 +1137,6 @@ exports.export_excel = async (req, res) => {
             }
             if (data_grand_angle.total_impressions_antenneGrandAngle !== "0") {
 
-
                 dataset_site[18] = {
                     formats: 'GRAND ANGLE',
                     sites: data_grand_angle.grandAngle_antenne_siteName,
@@ -976,8 +1148,6 @@ exports.export_excel = async (req, res) => {
                 }
 
             }
-
-
 
         }
 
@@ -995,7 +1165,6 @@ exports.export_excel = async (req, res) => {
                     vtr: data_video.VTR_linfo,
 
                 }
-
 
             }
             if (data_video.total_impressions_linfo_androidVideo !== "0") {
@@ -1023,7 +1192,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_video.total_impressions_dtjVideo !== "0") {
 
-
                 dataset_site[22] = {
                     formats: 'VIDEO',
                     sites: data_video.video_antenne_siteName,
@@ -1036,7 +1204,6 @@ exports.export_excel = async (req, res) => {
 
             }
             if (data_video.total_impressions_antenneVideo !== "0") {
-
 
                 dataset_site[23] = {
                     formats: 'VIDEO',
@@ -1052,7 +1219,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_video.total_impressions_tf1Video !== "0") {
 
-
                 dataset_site[24] = {
                     formats: 'VIDEO',
                     sites: data_video.video_tf1_siteName,
@@ -1065,7 +1231,6 @@ exports.export_excel = async (req, res) => {
             }
 
             if (data_video.total_impressions_m6Video !== "0") {
-
 
                 dataset_site[25] = {
                     formats: 'VIDEO',
@@ -1080,7 +1245,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_video.total_impressions_dailymotionVideo !== "0") {
 
-
                 dataset_site[26] = {
                     formats: 'VIDEO',
                     sites: data_video.video_dailymotion_siteName,
@@ -1092,10 +1256,7 @@ exports.export_excel = async (req, res) => {
                 }
             }
 
-
-
         }
-
 
         if (data_native.nativeImpressions.length > 0) {
 
@@ -1111,7 +1272,6 @@ exports.export_excel = async (req, res) => {
                     vtr: '-',
 
                 }
-
 
             }
             if (data_native.total_impressions_linfo_androidNative !== "0") {
@@ -1139,7 +1299,6 @@ exports.export_excel = async (req, res) => {
 
             if (data_native.total_impressions_dtjNative !== "0") {
 
-
                 dataset_site[30] = {
                     formats: 'NATIVE',
                     sites: data_native.native_dtj_siteName,
@@ -1153,7 +1312,6 @@ exports.export_excel = async (req, res) => {
             }
             if (data_native.total_impressions_antenneNative !== "0") {
 
-
                 dataset_site[31] = {
                     formats: 'NATIVE',
                     sites: data_native.native_antenne_siteName,
@@ -1166,13 +1324,7 @@ exports.export_excel = async (req, res) => {
 
             }
 
-
-
         }
-
-
-
-
 
         // Define an array of merges. 1-1 = A:1
         // The merges are independent of the data.
@@ -1188,9 +1340,7 @@ exports.export_excel = async (req, res) => {
                 }
             },
 
-
         ]
-
 
         // Create the excel report.
         // This function will return Buffer
@@ -1226,8 +1376,6 @@ exports.export_excel = async (req, res) => {
 
         // OR you can save this buffer to the disk by creating a file.
 
-
-
     } catch (error) {
         console.log(error)
 
@@ -1237,18 +1385,12 @@ exports.export_excel = async (req, res) => {
 
 exports.test_exportExcel = async (req, res) => {
 
-
-
-
     var campaign_name = "ESPACE DECO - 67590"
     var date_now = "03/04/2021"
     var StartDate = "16/04/2021"
     var EndDate = "03/05/2021"
 
-
     try {
-
-
 
         // You can define styles as json object
         const styles = {
@@ -1291,8 +1433,6 @@ exports.test_exportExcel = async (req, res) => {
             ],
             ['Période diffusion :' + StartDate + '-' + EndDate]
         ];
-
-
 
         //Here you specify the export structure
         const bilan_global = {
@@ -1373,8 +1513,6 @@ exports.test_exportExcel = async (req, res) => {
 
             },
 
-
-
         ]
         const dataset2 = [{
                 sites: 'SM_LINFO.re',
@@ -1395,7 +1533,6 @@ exports.test_exportExcel = async (req, res) => {
 
             },
 
-
         ]
 
         // Define an array of merges. 1-1 = A:1
@@ -1413,9 +1550,7 @@ exports.test_exportExcel = async (req, res) => {
                 }
             },
 
-
         ]
-
 
         // Create the excel report.
         // This function will return Buffer
@@ -1446,8 +1581,6 @@ exports.test_exportExcel = async (req, res) => {
 
         // OR you can save this buffer to the disk by creating a file.
 
-
-
     } catch (error) {
         console.log(error)
 
@@ -1477,10 +1610,7 @@ exports.array_unique = async (req, res) => {
     console.log(uniqueArray);
 }
 
-
 exports.nodemail = async (req, res) => {
-
-
 
 };
 
@@ -1491,10 +1621,8 @@ exports.read_excel = async (req, res) => {
 
         .then(function () {
 
-
             // Note: workbook.worksheets.forEach will still work but this is better
             workbook.eachSheet(function (worksheet, sheetId) {
-
 
                 /*
                 worksheet.eachRow({
@@ -1521,7 +1649,6 @@ exports.read_excel = async (req, res) => {
                 if (sheetId === 1) {
                     console.log(worksheet.name)
                     console.log(sheetId);
-
 
                     console.log()
 
@@ -1619,7 +1746,6 @@ exports.read_excel = async (req, res) => {
                             console.log('jour_nomme_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' + JSON.stringify(row.values) + ' - | - ' + value[1]);
                         }
 
-
                         // console.log('Ligne ' + rowNumber + ' (Item : '+ numberCols +') = ' + JSON.stringify(row.values) + ' - | - '+value[1]);
                     })
 
@@ -1627,14 +1753,11 @@ exports.read_excel = async (req, res) => {
                     console.log('numberCols :' + dataLinesName);
                 }
 
-
             });
-
 
         });
 
 };
-
 
 exports.creative = async (req, res) => {
 
@@ -1652,7 +1775,6 @@ exports.creative = async (req, res) => {
         video_url: '',
         submit: 'Créer une nouvelle insertion'
     }
-
 
     requestCreatives = {
 
@@ -1746,7 +1868,6 @@ exports.taskid = async (req, res) => {
 
     /*----------- Si la campagne > 30j ------------*/
 
-
     var NbrTask = Math.ceil(diff_day / 30);
     console.log('NbrTask : ' + NbrTask);
 
@@ -1767,11 +1888,8 @@ exports.taskid = async (req, res) => {
                 campaign_task_date_endOne = moment(campaign_task_date_end, "DD/MM/YYYY").format('YYYY-MM-DDT23:59:00')
                 var campaign_task_date_tomorrow = campaign_task_date_end = campaign_task_date_end.add(1, 'days');
 
-
                 taskOne = await Utilities.RequestReportDate(campaign_date_startOne, campaign_task_date_endOne, campaign_id)
                 arrayTaskId.push(taskOne)
-
-
 
             }
 
@@ -1786,7 +1904,6 @@ exports.taskid = async (req, res) => {
                 taskTwo = await Utilities.RequestReportDate(campaign_start_date_tomorrow, campaign_start_end_tomorrow, campaign_id)
                 arrayTaskId.push(taskTwo)
 
-
             }
 
             if (index === (NbrTask - 1) && (index > 1) && campaign_task_date_tomorrow) {
@@ -1796,8 +1913,6 @@ exports.taskid = async (req, res) => {
 
                 taskThree = await Utilities.RequestReportDate(campaign_start_last, campaign_enf_last, campaign_id)
                 arrayTaskId.push(taskThree)
-
-
 
             }
 
@@ -1810,14 +1925,12 @@ exports.taskid = async (req, res) => {
         const taskLength = TaskIDG.split(',')
         var dataObjTaskGlobalAll = new Object()
 
-
         var time = 5000;
         let timerFile = setInterval(async () => {
 
             var dataLSTaskGlobalAll = localStorageTasks.getItem(
                 cacheStorageID + '-taskGlobalAll'
             );
-
 
             if (!dataLSTaskGlobalAll && !Utilities.empty(TaskIDG)) {
                 var ObjTaskProgress = new Array()
@@ -1831,9 +1944,7 @@ exports.taskid = async (req, res) => {
 
                     console.log('requete_global' + requete_global)
 
-
                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-
 
                     var jobProgress = threeLink.data.lastTaskInstance.jobProgress
                     var instanceStatus = threeLink.data.lastTaskInstance.instanceStatus
@@ -1847,8 +1958,6 @@ exports.taskid = async (req, res) => {
 
                     ObjTaskProgress.push(itemProgress)
 
-
-
                     if ((ObjTaskProgress[index].jobProgress == '1.0') && (ObjTaskProgress[index].instanceStatus == 'SUCCESS')) {
 
                         dataFile = await AxiosFunction.getReportingData(
@@ -1857,14 +1966,11 @@ exports.taskid = async (req, res) => {
                             ''
                         );
 
-
-
                         var itemData = {
                             'dataFile': dataFile.data
 
                         };
                         dataObjTaskGlobalAll[taskId] = itemData;
-
 
                         localStorageTasks.setItem(
                             cacheStorageID + '-taskGlobalAll',
@@ -1877,25 +1983,18 @@ exports.taskid = async (req, res) => {
                     }
                 }
 
-
                 console.log(ObjTaskProgress);
-
 
             } else {
 
                 clearInterval(timerFile);
 
-
                 console.log('Stop clearInterval timerFile - else');
-
-
 
                 process.exit()
 
             }
         }, time)
-
-
 
     }
 
@@ -1918,10 +2017,8 @@ exports.test_taskid = async (req, res) => {
 
     let cacheStorageID = 'campaignID-' + campaign_id;
 
-
     // Permet de faire l'addition
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
 
     const InsertionName = [];
     const Impressions = [];
@@ -1934,11 +2031,7 @@ exports.test_taskid = async (req, res) => {
     let TaskIDG = localStorageTasks.getItem(cacheStorageID + '-taskGlobalAll');
     const dataSplitGlobalALL = JSON.parse(TaskIDG);
 
-
     const keyTaskID = Object.keys(dataSplitGlobalALL);
-
-
-
 
     for (let index = 0; index < Object.keys(dataSplitGlobalALL).length; index++) {
         const element = keyTaskID[index];
@@ -2002,13 +2095,10 @@ exports.test_taskid = async (req, res) => {
                     //  dataList[i] = itemData;
                     dataList.push(itemData)
 
-
-
                 }
 
             }
         }
-
 
     }
 
@@ -2031,13 +2121,10 @@ exports.test_taskid = async (req, res) => {
         var formatSliderVideo = new Array();
         var formatClickCommand = new Array();
 
-
-
         var siteLINFO = new Array();
         var siteLINFO_ANDROID = new Array();
         var siteLINFO_IOS = new Array();
         var siteANTENNEREUNION = new Array();
-
 
         var siteDOMTOMJOB = new Array();
         var siteIMMO974 = new Array();
@@ -2057,8 +2144,6 @@ exports.test_taskid = async (req, res) => {
 
             // console.log(site_name + ' - ' + index)
             // console.log(insertion_name + ' - ' + index)
-
-
 
             // Créer les tableaux des formats
             if (insertion_name.match(/HABILLAGE{1}/igm)) {
@@ -2202,7 +2287,6 @@ exports.test_taskid = async (req, res) => {
 
     }
 
-
     // Ajoute les infos de la campagne
     if (Impressions.length > 0) {
         campaignImpressions = Impressions.reduce(reducer);
@@ -2236,8 +2320,6 @@ exports.test_taskid = async (req, res) => {
         campaignCtrComplete = null;
     }
 
-
-
     formatObjects.campaign = {
         campaign_id: campaign.campaign_id,
         campaign_name: campaign.campaign_name,
@@ -2253,18 +2335,14 @@ exports.test_taskid = async (req, res) => {
         ctrComplete: campaignCtrComplete
     }
 
-
     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
     formatObjects.reporting_end_date = moment()
         .add(2, 'hours')
         .format('YYYY-MM-DD HH:m:s');
 
-
-
     // Créer le localStorage
     console.log(formatObjects)
     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
-
 
     process.exit();
 
@@ -2305,9 +2383,6 @@ exports.duplication = async (req, res) => {
             display_tablette_url: 'https://lagranderecre.re/?utm_source=antenne&utm_medium=banner&utm_campaign=LGR_Noel&utm_id=LGR+Noel',
 
         }
-
-
-
 
         await ModelInsertions.findAll({
             where: {
@@ -2375,7 +2450,6 @@ exports.duplication = async (req, res) => {
                         10543028,
                         10543029*/
 
-
                     ]
                 }
             }
@@ -2404,7 +2478,6 @@ exports.duplication = async (req, res) => {
 
                     console.log(requestInsertionsCopy)
 
-
                     if (insertion_copy.headers.location) {
 
                         var url_location = insertion_copy.headers.location
@@ -2418,7 +2491,6 @@ exports.duplication = async (req, res) => {
 
                         for (let d = 0; d < number_line_offset; d++) {
                             if (!Utilities.empty(dataValue)) {
-
 
                                 console.log(number_line_offset)
                                 var creatives_id = dataValue[d].id
@@ -2437,7 +2509,6 @@ exports.duplication = async (req, res) => {
                                     'creatives_typeId': creatives_typeId,
 
                                 })
-
 
                                 var requestCreatives = {
                                     "fileSize": 0,
@@ -2524,7 +2595,6 @@ exports.duplication = async (req, res) => {
                                     requestCreatives['mimeType'] = "video/mp4",
                                         requestCreatives['height'] = 720
 
-
                                     await AxiosFunction.putManage(
                                         'videocreatives',
                                         requestCreatives
@@ -2581,34 +2651,16 @@ exports.duplication = async (req, res) => {
                                         );
                                 }
 
-
-
-
-
                                 console.log("--------------------------")
-
-
-
-
-
-
 
                             }
                         }
-
-
 
                     }
                 }
             }
 
-
-
         })
-
-
-
-
 
     } catch (error) {
         console.log(error)
@@ -2628,6 +2680,5 @@ exports.logs = async (req, res) => {
     logger.warn("Cheese is quite smelly.");
     logger.error("Cheese is too ripe!");
     logger.fatal("Cheese was breeding ground for listeria.");*/
-
 
 }

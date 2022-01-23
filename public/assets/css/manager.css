@@ -18,6 +18,7 @@ label.form-label.required {
     color: red
 }
 
+.bg-format_44152 {background-color:#000;}
 .bg-format_43791, .bg-format_79409 {background-color: chartreuse;}
 
 .bg-priority_101 {background-color:#ef4444;}
@@ -49,3 +50,17 @@ label.form-label.required {
 .bg-priority_20 {background-color:;}
 
 .dataTables_info {font-size: 0.85em;}
+
+.opacity-100 {
+    opacity: 1!important;
+}
+
+.opacity-50 {
+    opacity: 0.5!important;
+}
+.opacity-75 {
+    opacity: 0.75!important;
+}
+.opacity-10 {
+    opacity: 0.1!important;
+}

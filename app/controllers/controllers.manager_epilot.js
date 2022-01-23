@@ -47,6 +47,7 @@ const ModelUsers = require("../models/models.users");
 
 const {promiseImpl} = require('ejs');
 const {insertions} = require('./controllers.automate');
+const { Console } = require('console');
 
 exports.index = async (req, res) => {
     try {
@@ -449,6 +450,8 @@ exports.import = async (req, res) => {
                     if (results.length > 0) {
                     
                         for (i = 0; i < results.length; i++) {
+                           // console.log(results[i]); process.exit(1);
+
                             if ((results[i]['PAD']) && (results[i]['Nom'])) {
                                 // Gére les insertions de la campagne EPILOT console.log('INSERTIONS
                                 // :',results[i]); process.exit();
@@ -468,13 +471,13 @@ exports.import = async (req, res) => {
                                 var epilot_insertion_name = results[i]['Nom'];
 
                                 if (results[i]['Etat']) {
+                                    console.log('Etat :',results[i]['Etat']);
+
                                     switch (results[i]['Etat']) {
                                         case 'Confirmée':
-                                        case 'Confirmee':
                                             var epilot_insertion_status = 1;
                                             break;
-                                        case 'Reservée':
-                                        case 'Reservee':
+                                        case 'Réservée':
                                             var epilot_insertion_status = 2;
                                             break;
                                         default:
@@ -550,13 +553,17 @@ exports.import = async (req, res) => {
                                 if (results[i]['Etat planning']) {
                                     switch (results[i]['Etat planning']) {
                                         case 'Confirmée':
-                                        case 'Confirmee':
                                             var epilot_campaign_status = 1;
                                             break;
-                                        case 'Reservée':
-                                        case 'Reservee':
+                                        case 'Réservée':
                                             var epilot_campaign_status = 2;
                                             break;
+                                            case 'Demande':
+                                                var epilot_campaign_status = 3;
+                                                break;
+                                                case 'Option':
+                                                    var epilot_campaign_status = 4;
+                                                    break;
                                         default:
                                             var epilot_insertion_status = 0;
                                             break;
@@ -605,6 +612,7 @@ exports.import = async (req, res) => {
                                     epilot_campaign_discount_rate: epilot_campaign_discount_rate,
                                     epilot_campaign_mandataire : epilot_campaign_mandataire
                                 }
+                                console.log(data_campaign);
                                 
                                 // Ajoute ou MAJ la campagne EPILOT
                                 Utilities

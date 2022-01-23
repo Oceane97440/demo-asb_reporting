@@ -107,7 +107,6 @@ formats_groups_types.belongsTo(formats_groups, {
     hooks: true
 });
 
-
 // un format posséde un ou plusieurs templates : un template posséde un à plusieurs formats
 
 templates.hasMany(formatstemplates, {
@@ -148,7 +147,6 @@ formatssites.belongsTo(sites, {
     hooks: true
 });
 
-
 formats.hasMany(formatssites, {
     foreignKey: 'format_id',
     onDelete: 'cascade',
@@ -179,10 +177,6 @@ creatives_types.hasMany(creatives_types_formats, {
     hooks: true
 });
 
-
-
-
-
 campaigns.belongsTo(advertisers, {
     foreignKey: 'advertiser_id',
   //  onDelete: 'cascade',
@@ -206,7 +200,6 @@ campaigns.hasMany(campaigns_gam, {
   //  onDelete: 'cascade',
     hooks: true
 });
-
 
 campaigns.belongsTo(agencies, {
     foreignKey: 'agency_id',
@@ -381,7 +374,6 @@ console.log( phpResponse );
 });
 */
 
-
 /**
  * @MidleWare
  * UTILISATEUR CONNECTÉ
@@ -427,6 +419,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 const index = require('./app/routes/routes.index');
 app.use('/', index);
 
+const json = require('./app/routes/routes.json');
+app.use('/json', json);
+
 // action admin forecast
 const forecast = require('./app/routes/routes.api_forecast');
 app.use('/forecast', forecast);
@@ -434,7 +429,6 @@ app.use('/forecast', forecast);
 // action admin reporting
 // const reporting = require('./app/routes/routes.api_report');
 // app.use('/r/', reporting);
-
 
 // action liste campagne epilot
 const epilot = require('./app/routes/routes.api_epilot');
@@ -477,7 +471,6 @@ app.use('/automate', automate);
 
 const extention_chrome = require('./app/routes/routes.plugin_chrome');
 app.use('/extension-chrome', extention_chrome);
-
 
 // Le serveur ecoute sur le port 3022
 app.set("port", process.env.PORT || 3001);

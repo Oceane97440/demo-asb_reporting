@@ -565,7 +565,8 @@ exports.epilotCampaigns = async (req, res) => {
                     'epilot_campaign_nature'
                 ],
                 where: {
-                    $and: sequelize.where(sequelize.fn('YEAR', sequelize.col('epilot_campaign_start_date')), { [Op.between]: [dateYearLast, dateYearNow]} )
+                    $and: sequelize.where(sequelize.fn('YEAR', sequelize.col('epilot_campaign_start_date')), { [Op.between]: [dateYearLast, dateYearNow] } ),
+                    $and: sequelize.where(sequelize.col('epilot_campaign_status'), { [Op.eq]: 1 })  
                   // $and: sequelize.fn('YEAR', sequelize.col('epilot_campaign_start_date'))
                 },
                 group: [
@@ -595,6 +596,8 @@ exports.epilotCampaigns = async (req, res) => {
                     var dataResult = [];
                     var dataPeriode = [];
                     var dataMonthYear = [];
+                    var dataMonthLetterYear = [];
+                    
                     var dataResult_CL = [];
                     var dataResult_DIGOPS = [];
                     var dataResult_ECD = [];
@@ -605,134 +608,95 @@ exports.epilotCampaigns = async (req, res) => {
                     var dataResult_MISS = [];
                     var dataResult_PROD = [];
                     var dataResult_PRODOP = [];
-                    
-                    console.log(campaigns.length);
 
-                    var dataYears = new Array(dateYearLast, dateYearNow);
-                    
+                    var dataResult_CL1 = [];
+                    var dataResult_DIGOPS1 = [];
+                    var dataResult_ECD1 = [];
+                    var dataResult_EXTWB1 = [];
+                    var dataResult_FLS1 = [];
+                    var dataResult_HMOP1 = [];
+                    var dataResult_IN1 = [];
+                    var dataResult_MISS1 = [];
+                    var dataResult_PROD1 = [];
+                    var dataResult_PRODOP1 = [];
+
+                   // console.log('Campaign lenght :',campaigns.length);
+
+                    // Créer un tableau avec les années
+                    var dataYears = new Array(dateYearLast, dateYearNow);                    
                     var monthLetter = new Array('janvier','février','mars','avril','mai','juin','juillet','aout','septembre','octobre','novembre','décembre');
-                    var monthNumber = new Array('01','02','03','04','05','06','07','08','09','10','11','12');
+                    var monthNumber = new Array('01','02','03','04','05','06','07','08','09','10','11','12'); 
+                    for (i = 0; i < monthNumber.length; i++) { dataMonthYear.push(monthNumber[i]+'-'+dateYearLast); dataMonthLetterYear.push(monthLetter[i]+' '+dateYearLast); }
+                    for (i = 0; i < monthNumber.length; i++) { dataMonthYear.push(monthNumber[i]+'-'+dateYearNow); dataMonthLetterYear.push(monthLetter[i]+' '+dateYearNow); }
+
+                    for (i = 0; i < dataMonthYear.length; i++) { 
+                      var month = dataMonthYear[i];
+                                            
+                      dataResult_CL[month] = 0;
+                      dataResult_DIGOPS[month] = 0;
+                      dataResult_ECD[month] = 0;
+                      dataResult_EXTWB[month] = 0;
+                      dataResult_FLS[month] = 0;
+                      dataResult_HMOP[month] = 0;
+                      dataResult_IN[month] = 0;
+                      dataResult_MISS[month] = 0;
+                      dataResult_PROD[month] = 0;
+                      dataResult_PRODOP[month] = 0;
+                    } 
                     
-                    for (i = 0; i < monthNumber.length; i++) { dataMonthYear.push(monthNumber[i]+'-'+dateYearLast); }
-                    for (i = 0; i < monthNumber.length; i++) { dataMonthYear.push(monthNumber[i]+'-'+dateYearNow); }
-            
                     for (i = 0; i < campaigns.length; i++) {
                         var campaignYear = campaigns[i].year;
                         var campaignMonth = campaigns[i].month;
                         var campaignSum = campaigns[i].sum;
                         var campaignNature = campaigns[i].epilot_campaign_nature;
-                        console.log(i+' '+campaignYear+' - '+campaignMonth+' : '+campaignNature+' - '+campaignSum)
-
+                       
                         if(campaignMonth < 10) { var campaignMonth = '0'+campaignMonth; } else { var campaignMonth = campaignMonth;  }
                         var searchMonth = campaignMonth+'-'+campaignYear;
-                       
-                       // if (dataPeriode.indexOf(searchMonth) === -1) {
-                            if((campaignNature === 'CL') && !Utilities.empty(campaignSum)) { dataResult_CL[searchMonth] = campaignSum.toFixed(2); }
-                            if((campaignNature === 'DIGOPS') && !Utilities.empty(campaignSum)) { dataResult_DIGOPS[searchMonth] = campaignSum.toFixed(2); }
-                            if((campaignNature === 'ECD') && !Utilities.empty(campaignSum)) { dataResult_ECD[searchMonth] = campaignSum.toFixed(2); }
-                            if((campaignNature === 'EXTWB') && !Utilities.empty(campaignSum)) { dataResult_EXTWB[searchMonth] = campaignSum.toFixed(2); }   
-                            if((campaignNature === 'FLS') && !Utilities.empty(campaignSum)) { dataResult_FLS[searchMonth] = campaignSum.toFixed(2); } 
-                            if((campaignNature === 'HMOP') && !Utilities.empty(campaignSum)) { dataResult_HMOP[searchMonth] = campaignSum.toFixed(2); }  
-                            if((campaignNature === 'IN') && !Utilities.empty(campaignSum)) { dataResult_IN[searchMonth] = campaignSum.toFixed(2); }   
-                            if((campaignNature === 'MISS') && !Utilities.empty(campaignSum)) { dataResult_MISS[searchMonth] = campaignSum.toFixed(2); }  
-                            if((campaignNature === 'PROD') && !Utilities.empty(campaignSum)) { dataResult_PROD[searchMonth] = campaignSum.toFixed(2); } 
-                            if((campaignNature === 'PRODOP') && !Utilities.empty(campaignSum)) { dataResult_PRODOP[searchMonth] = campaignSum.toFixed(2); }  
 
-                      /*  } else {
-                            
-                            if((campaignNature === 'CL') && !Utilities.empty(campaignSum)) { dataResult_CL[searchMonth] = 0; }
-                            if((campaignNature === 'DIGOPS') && !Utilities.empty(campaignSum)) { dataResult_DIGOPS[searchMonth] = 0; }
-                            if((campaignNature === 'ECD') && !Utilities.empty(campaignSum)) { dataResult_ECD[searchMonth] = 0; }
-                            if((campaignNature === 'EXTWB') && !Utilities.empty(campaignSum)) { dataResult_EXTWB[searchMonth] = 0; }   
-                            if((campaignNature === 'FLS') && !Utilities.empty(campaignSum)) { dataResult_FLS[searchMonth] = 0; } 
-                            if((campaignNature === 'HMOP') && !Utilities.empty(campaignSum)) { dataResult_HMOP[searchMonth] = 0; }  
-                            if((campaignNature === 'IN') && !Utilities.empty(campaignSum)) { dataResult_IN[searchMonth] = 0; }   
-                            if((campaignNature === 'MISS') && !Utilities.empty(campaignSum)) { dataResult_MISS[searchMonth] = 0; }  
-                            if((campaignNature === 'PROD') && !Utilities.empty(campaignSum)) { dataResult_PROD[searchMonth] = 0; } 
-                            if((campaignNature === 'PRODOP') && !Utilities.empty(campaignSum)) { dataResult_PRODOP[searchMonth] = 0; }  
-
-                        }  */                    
-                        
+                        if((campaignNature === 'CL') && !Utilities.empty(campaignSum)) { dataResult_CL[searchMonth] = campaignSum.toFixed(2); }
+                        if((campaignNature === 'DIGOPS') && !Utilities.empty(campaignSum)) { dataResult_DIGOPS[searchMonth] = campaignSum.toFixed(2); }
+                        if((campaignNature === 'ECD') && !Utilities.empty(campaignSum)) { dataResult_ECD[searchMonth] = campaignSum.toFixed(2); }
+                        if((campaignNature === 'EXTWB') && !Utilities.empty(campaignSum)) { dataResult_EXTWB[searchMonth] = campaignSum.toFixed(2); }   
+                        if((campaignNature === 'FLS') && !Utilities.empty(campaignSum)) { dataResult_FLS[searchMonth] = campaignSum.toFixed(2); } 
+                        if((campaignNature === 'HMOP') && !Utilities.empty(campaignSum)) { dataResult_HMOP[searchMonth] = campaignSum.toFixed(2); }  
+                        if((campaignNature === 'IN') && !Utilities.empty(campaignSum)) { dataResult_IN[searchMonth] = campaignSum.toFixed(2); }   
+                        if((campaignNature === 'MISS') && !Utilities.empty(campaignSum)) { dataResult_MISS[searchMonth] = campaignSum.toFixed(2); }  
+                        if((campaignNature === 'PROD') && !Utilities.empty(campaignSum)) { dataResult_PROD[searchMonth] = campaignSum.toFixed(2); } 
+                        if((campaignNature === 'PRODOP') && !Utilities.empty(campaignSum)) { dataResult_PRODOP[searchMonth] = campaignSum.toFixed(2); }                         
                     }
 
-                    console.log(dataMonthYear.length); 
-                    console.log(dataResult_CL); 
+                    // Retravaille les fichiers
+                    for (i = 0; i < dataMonthYear.length; i++) {                       
+                        var month = dataMonthYear[i];
 
-                    for (i = 0; i < dataMonthYear.length; i++) {
-                        if(Utilities.empty(dataResult_CL[dataMonthYear[i]])) { dataResult_CL[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_DIGOPS[dataMonthYear[i]])) { dataResult_DIGOPS[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_ECD[dataMonthYear[i]])) { dataResult_ECD[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_EXTWB[dataMonthYear[i]])) { dataResult_EXTWB[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_FLS[dataMonthYear[i]])) { dataResult_FLS[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_HMOP[dataMonthYear[i]])) { dataResult_HMOP[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_IN[dataMonthYear[i]])) { dataResult_IN[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_MISS[dataMonthYear[i]])) { dataResult_MISS[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_PROD[dataMonthYear[i]])) { dataResult_PROD[dataMonthYear[i]] = 0; }
-                        if(Utilities.empty(dataResult_PRODOP[dataMonthYear[i]])) { dataResult_PRODOP[dataMonthYear[i]] = 0; }
-                       
-                       /* if((campaignNature === 'CL') && !Utilities.empty(campaignSum)) { dataResult_CL[searchMonth] = 0; }
-                        if((campaignNature === 'DIGOPS') && !Utilities.empty(campaignSum)) { dataResult_DIGOPS[searchMonth] = 0; }
-                        if((campaignNature === 'ECD') && !Utilities.empty(campaignSum)) { dataResult_ECD[searchMonth] = 0; }
-                        if((campaignNature === 'EXTWB') && !Utilities.empty(campaignSum)) { dataResult_EXTWB[searchMonth] = 0; }   
-                        if((campaignNature === 'FLS') && !Utilities.empty(campaignSum)) { dataResult_FLS[searchMonth] = 0; } 
-                        if((campaignNature === 'HMOP') && !Utilities.empty(campaignSum)) { dataResult_HMOP[searchMonth] = 0; }  
-                        if((campaignNature === 'IN') && !Utilities.empty(campaignSum)) { dataResult_IN[searchMonth] = 0; }   
-                        if((campaignNature === 'MISS') && !Utilities.empty(campaignSum)) { dataResult_MISS[searchMonth] = 0; }  
-                        if((campaignNature === 'PROD') && !Utilities.empty(campaignSum)) { dataResult_PROD[searchMonth] = 0; } 
-                        if((campaignNature === 'PRODOP') && !Utilities.empty(campaignSum)) { dataResult_PRODOP[searchMonth] = 0; }  
-*/
+                        dataResult_CL1.push(dataResult_CL[month]);
+                        dataResult_DIGOPS1.push(dataResult_DIGOPS[month]);
+                        dataResult_ECD1.push(dataResult_ECD[month]);
+                        dataResult_EXTWB1.push(dataResult_EXTWB[month]);
+                        dataResult_FLS1.push(dataResult_FLS[month]);
+                        dataResult_HMOP1.push(dataResult_HMOP[month]);
+                        dataResult_IN1.push(dataResult_IN[month]);
+                        dataResult_MISS1.push(dataResult_MISS[month]);
+                        dataResult_PROD1.push(dataResult_PROD[month]);
+                        dataResult_PRODOP1.push(dataResult_PRODOP[month]);
                     }
+                   
+                    dataResult[0] = { name: 'CL', data: dataResult_CL1 }
+                    dataResult[1] = { name: 'DIGOPS', data: dataResult_DIGOPS1 }
+                    dataResult[2] = { name: 'ECD', data: dataResult_ECD1 }
+                    dataResult[3] = { name: 'EXTWB', data: dataResult_EXTWB1 }
+                    dataResult[4] = { name: 'FLS', data: dataResult_FLS1 }
+                    dataResult[5] = { name: 'HMOP', data: dataResult_HMOP1 }
+                    dataResult[6] = { name: 'IN', data: dataResult_IN1 }
+                    dataResult[7] = { name: 'MISS', data: dataResult_MISS1 }
+                    dataResult[8] = { name: 'PROD', data: dataResult_PROD1 }
+                    dataResult[9] = { name: 'PRODOP', data: dataResult_PRODOP1 }
 
-                     console.log(dataResult_CL); 
-                  
-                    process.exit();
-                    dataResult[0] = { name: 'CL', data: dataResult_CL }
-                    dataResult[1] = { name: 'DIGOPS', data: dataResult_DIGOPS }
-                    dataResult[2] = { name: 'ECD', data: dataResult_ECD }
-                    dataResult[3] = { name: 'EXTWB', data: dataResult_EXTWB }
-                    dataResult[4] = { name: 'FLS', data: dataResult_FLS }
-                    dataResult[5] = { name: 'HMOP', data: dataResult_HMOP }
-                    dataResult[6] = { name: 'IN', data: dataResult_IN }
-                    dataResult[7] = { name: 'MISS', data: dataResult_MISS }
-                    dataResult[8] = { name: 'PROD', data: dataResult_PROD }
-                    dataResult[9] = { name: 'PRODOP', data: dataResult_PRODOP }
-
-                    var data = {
+                     var data = {
                         data : dataResult,
-                        month: dataPeriode
-                    }
-                    
-                    //  console.log(dataResult_CL);
-                    // process.exit(1);
-                    /*
-                    var month = new Array(
-                        'janvier',
-                        'février',
-                        'mars',
-                        'avril',
-                        'mai',
-                        'juin',
-                        'juillet',
-                        'aout',
-                        'septembre',
-                        'octobre',
-                        'novembre',
-                        'décembre'
-                    );
-
-                    var data = {
-                        'lastYear': {
-                            year: dateYearLast,
-                            result: lastYear
-                        },
-                        'nowYear': {
-                            year: dateYearNow,
-                            result: nowYear
-                        },
-                        month: month
-                    }
-                    */
-
+                        month: dataMonthLetterYear
+                     }
+                   
                     return res
                         .status(200)
                         .json(data);

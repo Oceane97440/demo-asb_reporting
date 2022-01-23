@@ -47,15 +47,11 @@ h1
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
 
-
   }
   table{
     font-family: 'Poppins', sans-serif;
 
   }
-
-
-
 
 #card_menu {
     background-color: #e3e8f1;
@@ -64,19 +60,16 @@ h1
     border-radius: 20px;
     margin-top: 20px;
 
-
 }
 #button{
     background-color: #4cd7ef;
     font-weight: bold;
-
 
 }
 #button:hover {
     box-shadow: 2px 2px 5px black;
     background-color: #e46e59;
     font-weight: bold;
-
 
 }
 input.btn.btn-block.btn-default.text-white {
@@ -173,14 +166,12 @@ div.card.bg-dark.text-dark{
     background-color: #007cff;
     font-family: 'Poppins', sans-serif;    
 
-
 }
 #card-login{
     height: 472px;
     color: white;
     background-color: #385a64;
     font-family: 'Poppins', sans-serif;    
-
 
 }
 

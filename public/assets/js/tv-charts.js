@@ -1,10 +1,9 @@
 'use strict';
 $(document).ready(function () {
   var config = {
-    baseurl: "http://localhost:3001"
+    baseurl: "http://localhost:3001/"
 };
 
- 
 var chartCampaignUrl = config.baseurl+'t/charts';
      
 $.getJSON(chartCampaignUrl, function (response) {   
@@ -178,7 +177,6 @@ $.getJSON(chartCampaignUrl, function (response) {
         var campaigntimeSlotDiaryChart = new ApexCharts(document.querySelector("#chart-table_ventilations_GRP_horaires"), campaigntimeSlotDiaryOptions);
         campaigntimeSlotDiaryChart.render();    
         
-        
         // Jours nommés
         // Ventilations des GRP par tranches horaires​
         var campaignNameDayOptions = {
@@ -287,22 +285,15 @@ $.getJSON(chartCampaignUrl, function (response) {
               }
               };   */
 
-
-
-
-
        var campaignNameDayChart = new ApexCharts(document.querySelector("#chart-table_ventilations_GRP_jours"), campaignNameDayOptions);
         campaignNameDayChart.render();    
     });
 
-
 /*
-
 
     var chartCampaignUrl = 'http://localhost:3002/manager/charts/campaigns';
     var chartAdvertiserUrl = 'http://localhost:3002/manager/charts/advertisers';
     var chartCampaignReportUrl = 'http://localhost:3002/manager/charts/campaign/report';
-
 
     $.getJSON(chartCampaignUrl, function (response) {
         var options = {

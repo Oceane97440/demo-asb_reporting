@@ -41,14 +41,12 @@ localStorageTV = new LocalStorage('data/tv/reporting');
 exports.index = async (req, res) => {
     //
 
-
     const alpha = Array.from(Array(26)).map((e, i) => i + 65);
     const alphabet = alpha.map((x) => String.fromCharCode(x));
     console.log(alphabet);
 
-
-  //  var fileXLS = 'data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx';
-  var fileXLS = 'data/tv/CHENAI_EXPRESS_PDCV_ST_PIERRE-Plan_Campagne-132833564497030334.xlsx';
+    var fileXLS = 'data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx';
+ // var fileXLS = 'data/tv/CHENAI_EXPRESS_PDCV_ST_PIERRE-Plan_Campagne-132833564497030334.xlsx';
 
     var workbook = new ExcelJS.Workbook();
     workbook
@@ -183,7 +181,6 @@ exports.index = async (req, res) => {
                                 var label = worksheet.getCell(cellKey).value;
                                 var value = worksheet.getCell(cellValue).value;
 
-
                                 if (label === 'GRP') {
                                     var grp = worksheet.getCell(cellValue).value;
                                     var value = grp.toFixed(2);
@@ -216,7 +213,6 @@ exports.index = async (req, res) => {
                             // Mets la chaine dans l'object campagne
                             campaignObjects[worksheetName].campaignChannel = ChannelArray;
                         }
-
 
                         // Récupération des données de la Montée en charge
                         if ((rowNumber > dataItemsLinesSelect['increaseInLoadPerDayLineBegin']) && dataRowOne.match(regexIncreaseInLoadPerDay) && (numberCols > 2)) {
@@ -288,23 +284,18 @@ exports.index = async (req, res) => {
                                     var value = repetition.toFixed(2);
                                 }
 
-
                                 // Récup Graph
                             }
-
 
                             //console.log(IncreaseInLoadPerDayArray);
                             nameDayArray.push(nameDayObject);
 
-
                             // Mets es données des données des tranches horaires
                             campaignObjects[worksheetName].campaignNameDay = nameDayArray;
-
 
                             console.log('--------++++++++++++++++++++++++------------')
                             console.log(nameDayArray);
                             console.log('--------++++++++++++++++++++++++------------')
-
 
                             console.log(
                                 'jour_nomme_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' +
@@ -328,7 +319,6 @@ exports.index = async (req, res) => {
 
 }
 
-
 exports.generate = async (req, res) => {
     let cacheStorageID = "Campagne_Leclerc-Plan_Campagne-132748939578174030";
     LocalStorageTVDATA = localStorageTV.getItem(cacheStorageID);
@@ -346,10 +336,7 @@ exports.generate = async (req, res) => {
 
 exports.export = async (req, res) => {
 
-
     try {
-
-
 
         // crée label avec le date du jour ex : 20210403
         const date = new Date();
@@ -373,16 +360,12 @@ exports.export = async (req, res) => {
 
         console.log(reporting)
 
-
         var reporting_start_date = moment(date).format(
             'DD/MM/YYYY - HH:mm'
         );
 
         var campaign_name = reporting["a-Ensemble"].campaignName;
         var advertiser_name = reporting["a-Ensemble"].campaignAdvertiser;
-
-
-
 
         // You can define styles as json object
         const styles = {
@@ -471,7 +454,6 @@ exports.export = async (req, res) => {
 
         };
 
-
         const dataset_global = [{
             couverture: reporting["a-Ensemble"].campaignChannel.Couverture,
             ensemble: reporting["a-Ensemble"].campaignChannel['Nombre de contacts'],
@@ -480,10 +462,6 @@ exports.export = async (req, res) => {
             contacts: reporting["a-Ensemble"].campaignChannel['CPM contacts Brut']
 
         }];
-
-
-
-
 
         // Define an array of merges. 1-1 = A:1 The merges are independent of the data.
         // A merge will overwrite all data _not_ in the top-left cell.
@@ -517,7 +495,6 @@ exports.export = async (req, res) => {
         return res.send(report);
 
         // OR you can save this buffer to the disk by creating a file.
-
 
     } catch (error) {
         console.log(error)
@@ -627,7 +604,6 @@ exports.charts = async (req, res) => {
                 data: campaignNameDayRepetitionArray
             };
         }
-
 
         return res
             .status(200)

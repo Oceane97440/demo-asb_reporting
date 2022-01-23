@@ -35,8 +35,30 @@
                         title=""><%= campaigns[i].user.user_firstname %> <%= campaigns[i].user.user_lastname %></a>
                     <% } else { %> <%= campaigns[i].epilot_campaign_commercial %> <% } %></td>
 
-                <td><%= campaigns[i].epilot_campaign_nature %></td>
-                <td><%= campaigns[i].epilot_campaign_status %></td>
+                <td><% switch(campaigns[i].epilot_campaign_nature) {
+                    case 'CL': %><span class="badge bg-primary">CLASSIQUE</span><% break;
+                    case 'EXTWB': %><span class="badge bg-secondary">EXTENSION WEB</span><% break;
+                    case 'IN': %><span class="badge bg-dark">INSTREAM</span><% break;
+                    case 'FLS': %><span class="badge bg-dark bg-opacity-10">FULLSCREEN</span><% break;
+                    case 'PROD': %><span class="badge bg-info">PRODUCTION</span><% break;
+                    case 'HMOPS': %><span class="badge bg-danger bg-opacity-25">HORS MEDIA OPS</span><% break;  
+                    case 'DIGOPS': %><span class="badge bg-info bg-opacity-75">DIGITAL OPS</span><% break;
+                    case 'PRODOP': %><span class="badge bg-info bg-opacity-50">PRODUCTION OPS</span><% break;
+                    case 'ECD': %><span class="badge bg-info bg-opacity-10">ECHANGE DIGITAL</span><% break;        
+                   case 'MISS': %><span class="badge bg-danger bg-opacity-10">MISS REUNION</span><% break;        
+                   case 'GRCOMP': %><span class="badge bg-danger bg-opacity-10">GRACIEUX COMPENSATION</span><% break;        
+                   default: %><span class="badge bg-warning"> <%= campaigns[i].epilot_campaign_nature %></span> <% break; } %>
+                                
+                </td>
+                <td>
+                  <% switch(campaigns[i].epilot_campaign_status) {
+                    case 1: %><span class="badge bg-success">CONFIRMÉ</span><% break;
+                    case 2: %><span class="badge bg-warning">RÉSERVÉ</span><% break;
+                    case 3: %><span class="badge bg-warning">DEMANDE</span><% break;
+                    case 4: %><span class="badge bg-info">OPTION</span><% break;
+                    default: %><span class="badge bg-warning"> <%= campaigns[i].epilot_campaign_status %></span> <% break; 
+                    } %>                    
+                </td>
                 <td><%= campaigns[i].epilot_campaign_start_date %></td>
                 <td><%= campaigns[i].epilot_campaign_end_date %></td>
                 <td><%= utilities.numStr(campaigns[i].epilot_campaign_volume) %></td>
