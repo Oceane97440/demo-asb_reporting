@@ -427,7 +427,7 @@ exports.create_post = async (req, res) => {
        /* var log_body = await Utilities.logs('info')
         log_body.info(body);*/ 
 
-        //  console.log(body)
+         // console.log(body)
 
         const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
@@ -712,7 +712,7 @@ exports.create_post = async (req, res) => {
                                 if ((creatives_typeId === 1) && (format_group_id !== '1')) {
 
                                     //format grand angle mobile
-                                    if (creatives_width === 300) {
+                                    if (creatives_width === 300 && creatives_height===250) {
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
 

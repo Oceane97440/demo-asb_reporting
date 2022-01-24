@@ -667,6 +667,7 @@ exports.report = async (req, res) => {
                                         var formatGrandAngle = new Array();
                                         var formatMasthead = new Array();
                                         var formatInstream = new Array();
+                                        var formatRectangle = new Array();
                                         var formatRectangleVideo = new Array();
                                         var formatLogo = new Array();
                                         var formatNative = new Array();
@@ -716,6 +717,9 @@ exports.report = async (req, res) => {
                                             }
                                             if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
                                                 formatInstream.push(index);
+                                            }
+                                            if (insertion_name.match(/RECTANGLE{1}/igm)) {
+                                                formatRectangle.push(index);
                                             }
                                             if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
                                                 formatRectangleVideo.push(index);
@@ -808,6 +812,12 @@ exports.report = async (req, res) => {
                                         }
                                         if (!Utilities.empty(formatInstream)) {
                                             formatObjects.instream = SmartFunction.sortDataReport(formatInstream, dataList);
+                                        }
+                                        if (!Utilities.empty(formatRectangle)) {
+                                            formatObjects.rectangle = SmartFunction.sortDataReport(
+                                                formatRectangle,
+                                                dataList
+                                            );
                                         }
                                         if (!Utilities.empty(formatRectangleVideo)) {
                                             formatObjects.rectanglevideo = SmartFunction.sortDataReport(
@@ -1133,6 +1143,7 @@ exports.export_excel = async (req, res) => {
                 var instream = reporting.instream;
                 var masthead = reporting.masthead;
                 var grandangle = reporting.grandangle;
+                var rectangle = reporting.rectangle;
                 var rectanglevideo = reporting.rectanglevideo;
                 var native = reporting.native;
                 var slider = reporting.slider;
@@ -1397,9 +1408,19 @@ exports.export_excel = async (req, res) => {
                     }
                 }
 
-                if (!Utilities.empty(mea)) {
+                if (!Utilities.empty(rectangle)) {
 
                     dataset_format[8] = {
+                        Formats: 'RECTANGLE',
+                        Impressions: reporting.rectangle.impressions,
+                        Clics: reporting.rectangle.clicks,
+                        Ctr_clics: reporting.rectangle.ctr.replace('.', ',') + '%'
+                    }
+                }
+
+                if (!Utilities.empty(mea)) {
+
+                    dataset_format[9] = {
                         Formats: 'MISE EN AVANT',
                         Impressions: reporting.mea.impressions,
                         Clics: reporting.mea.clicks,
@@ -1408,7 +1429,7 @@ exports.export_excel = async (req, res) => {
                 }
                 if (!Utilities.empty(slidervideo)) {
 
-                    dataset_format[9] = {
+                    dataset_format[10] = {
                         Formats: 'SLIDER VIDEO',
                         Impressions: reporting.slidervideo.impressions,
                         Clics: reporting.slidervideo.clicks,
@@ -1417,7 +1438,7 @@ exports.export_excel = async (req, res) => {
                 }
                 if (!Utilities.empty(logo)) {
 
-                    dataset_format[10] = {
+                    dataset_format[11] = {
                         Formats: 'LOGO',
                         Impressions: reporting.logo.impressions,
                         Clics: reporting.logo.clicks,
@@ -1426,7 +1447,7 @@ exports.export_excel = async (req, res) => {
                 }
                 if (!Utilities.empty(clickcommand)) {
 
-                    dataset_format[11] = {
+                    dataset_format[12] = {
                         Formats: 'CLICK COMMAND',
                         Impressions: '-',
                         Clics: reporting.clickcommand.clicks,
@@ -1579,6 +1600,29 @@ exports.export_excel = async (req, res) => {
 
                     }
                 }
+
+                if (!Utilities.empty(rectangle)) {
+                    for (i = 0; i < Object.keys(reporting.rectangle.siteList).length; i++) {
+                        dataset_site.push({
+                            formats: 'RECTANGLE',
+                            sites: reporting
+                                .rectangle
+                                .siteList[i]
+                                .site,
+                            impressions: reporting.rectangle.siteList[i].impressions,
+                            clics: reporting.rectangle.siteList[i].clicks,
+                            ctr_clics: reporting
+                                .rectangle
+                                .siteList[i]
+                                .ctr.replace('.', ',') + '%',
+                            vtr: ' - '
+
+
+                        })
+
+                    }
+                }
+
                 if (!Utilities.empty(slider)) {
                     for (i = 0; i < Object.keys(reporting.slider.siteList).length; i++) {
                         dataset_site.push({
@@ -2186,6 +2230,7 @@ exports.automate = async (req, res) => {
                                     var formatGrandAngle = new Array();
                                     var formatMasthead = new Array();
                                     var formatInstream = new Array();
+                                    var formatRectangle= new Array();
                                     var formatRectangleVideo = new Array();
                                     var formatLogo = new Array();
                                     var formatNative = new Array();
@@ -2232,6 +2277,9 @@ exports.automate = async (req, res) => {
                                         }
                                         if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
                                             formatInstream.push(index);
+                                        }
+                                        if (insertion_name.match(/RECTANGLE{1}/igm)) {
+                                            formatRectangle.push(index);
                                         }
                                         if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
                                             formatRectangleVideo.push(index);
@@ -2328,6 +2376,12 @@ exports.automate = async (req, res) => {
                                     if (!Utilities.empty(formatRectangleVideo)) {
                                         formatObjects.rectanglevideo = SmartFunction.sortDataReport(
                                             formatRectangleVideo,
+                                            dataList
+                                        );
+                                    }
+                                    if (!Utilities.empty(formatRectangle)) {
+                                        formatObjects.rectangle = SmartFunction.sortDataReport(
+                                            formatRectangle,
                                             dataList
                                         );
                                     }

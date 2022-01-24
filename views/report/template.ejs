@@ -244,6 +244,15 @@
 
                     </tr>
                     <% } %>
+                    <% if(reporting.rectangle) { %>
+                        <tr>
+                            <td class="text-left">RECTANGLE</td>
+                            <td><%= utilities.numStr(reporting.rectangle.impressions) %></td>
+                            <td><%= utilities.numStr(reporting.rectangle.clicks) %></td>
+                            <td class="text-center"><%= reporting.rectangle.ctr %>%</td>
+    
+                        </tr>
+                        <% } %>
                     <% if(reporting.logo) { %>
                     <tr>
                         <td class="text-left">LOGO</td>
@@ -522,6 +531,47 @@
             </table>
         </div>
         <% } %>
+
+        <% if(reporting.rectangle) { %>
+            <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+                <h3 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    <strong>RECTANGLE / par site</strong>
+                </h3>
+            </div>
+            <div class="table-responsive-md">
+                <table class="table">
+                    <thead class="text-center thead-dark">
+                        <tr>
+                            <th class="text-left">Sites</th>
+                            <th>Impressions</th>
+                            <th>Clics</th>
+                            <th>Taux de clics</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <% for(i=0; i < Object.keys(reporting.rectangle.siteList).length; i++) { %>
+                        <tr>
+                            <td class="text-left"><%= reporting.rectangle.siteList[i].site %></td>
+                            <td><%= utilities.numStr(reporting.rectangle.siteList[i].impressions) %></td>
+                            <td><%= utilities.numStr(reporting.rectangle.siteList[i].clicks) %></td>
+                            <td><%= reporting.rectangle.siteList[i].ctr %>%</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                    <tfoot class="text-center table-dark">
+                        <tr>
+                            <td class="text-left">
+                                <strong>Total</strong>
+                            </td>
+                            <td><%= utilities.numStr(reporting.rectangle.impressions) %></td>
+                            <td><%= utilities.numStr(reporting.rectangle.clicks) %></td>
+                            <td><%= reporting.rectangle.ctr %>%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <% } %>
 
         <% if(reporting.rectanglevideo) { %>
         <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
