@@ -41,6 +41,10 @@ const insertions_status = require('./app/models/models.insertions_status');
 const insertions_priorities = require('./app/models/models.insertions_priorities');
 const creatives_types_formats = require('./app/models/models.creatives_types_formats');
 const creatives_types = require('./app/models/models.creatives_types');
+const planmedia = require('./app/models/models.planmedia');
+const tv_advertisers = require('./app/models/models.tv_advertisers');
+
+
 
 /* Mettre les relation ici */
 /*sites.belongsTo(countries);
@@ -340,6 +344,18 @@ epilot_insertions.belongsTo(formats_groups, {
     onDelete: 'cascade',
     hooks: true
 });
+
+
+
+users.belongsTo(planmedia, {
+    foreignKey: 'user_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+
+
+
 
 
 db

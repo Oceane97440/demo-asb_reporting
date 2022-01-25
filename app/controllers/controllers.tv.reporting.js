@@ -7,6 +7,7 @@ process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
+var crypto = require('crypto');
 
 const {
     QueryTypes
@@ -35,6 +36,10 @@ const ModelCampaigns = require("../models/models.campaigns");
 const ModelInsertions = require("../models/models.insertions");
 const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
+const ModelPlanmedia = require("../models/models.planmedia")
+const ModelTvadvertisers = require("../models/models.tv_advertisers")
+
+
 
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorageTV = new LocalStorage('data/tv/reporting');
@@ -140,7 +145,7 @@ exports.index = async (req, res) => {
                 var campaignObjects = new Object();
 
                 // Note: workbook.worksheets.forEach will still work but this is better
-                workbook.eachSheet(function (worksheet, sheetId) {
+                workbook.eachSheet(async function (worksheet, sheetId) {
                     const regexEnsemble = /Ensemble/gi;
 
                     // Récupére le nom de la feuille
@@ -151,6 +156,7 @@ exports.index = async (req, res) => {
 
                         const campaignName = worksheet.getCell('C3').value;
                         const campaignPeriod = worksheet.getCell('C4').value;
+                        const campaignUser = worksheet.getCell('C5').value;
                         const campaignCurrency = worksheet.getCell('C7').value;
                         const campaignBudget = worksheet.getCell('C8').value;
                         const campaignWeightedNumber = worksheet.getCell('C9').value;
@@ -399,7 +405,65 @@ exports.index = async (req, res) => {
 
                         localStorageTV.removeItem(cacheStorageID);
                         localStorageTV.setItem(cacheStorageID, JSON.stringify(campaignObjects));
-                        return res.redirect('/t/generate');
+
+                        var regexnPeriod = /([0-9]{2}\/[0-9]{2}\/[0-9]{4})/gi
+                        var regexnBudget = /([0-9])/gi
+
+
+                        var PeriodCampaign = campaignPeriod.match(regexnPeriod)
+                        var PeriodBudget = campaignBudget.match(regexnBudget)
+
+
+
+
+                        var planmedia_start_date = moment(PeriodCampaign[0], 'DD-MM-YYYY');
+                        var planmedia_end_date = moment(PeriodCampaign[1], 'DD-MM-YYYY');
+
+                  
+
+                        const Budget = PeriodBudget.join('')
+
+                       await ModelPlanmedia.create({
+                            planmedia_name: campaignName,
+                            planmedia_start_date: moment(planmedia_start_date).format('YYYY-MM-DD'),
+                            planmedia_end_date: moment(planmedia_end_date).format('YYYY-MM-DD'),
+                            planmedia_user: campaignUser,
+                            user_id: req.session.user.user_id,
+                            planmedia_budget: Budget,
+                            planmedia_type: "a-Ensemble",
+                            planmedia_file: path_file
+
+                        }).then(async function (result) {
+
+                            console.log(result)
+
+
+                            planmedia_id = result.planmedia_id
+
+                            var planmedia_crypt = crypto
+                                .createHash('md5')
+                                .update(planmedia_id.toString())
+                                .digest("hex");
+
+
+                            const now = new Date();
+                            const date_now = now.getTime();
+                            const updated_at = moment(date_now).format('YYYY-MM-DDTHH:m:00');
+
+
+                            await ModelPlanmedia.update({
+                                updated_at: updated_at,
+                                planmedia_crypt: planmedia_crypt
+                            }, {
+                                where: {
+                                    planmedia_id: planmedia_id
+                                }
+                            })
+
+                            return res.redirect('/t/generate');
+
+                        });
+
 
 
                     }
