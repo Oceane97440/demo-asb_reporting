@@ -29,7 +29,7 @@
         })(window, document, 'script', 'dataLayer', 'GTM-KT6H7LH');
     </script>
     <!-- End Google Tag Manager -->
-    <title>Rapport de la campagne "<%= reporting %>" - Antenne Solutions Business</title>
+    <title>Rapport de la campagne "<%= reporting["a-Ensemble"].campaignName %>" - Antenne Solutions Business</title>
 
     <link rel="icon" type="image/png"
         href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-32x32.png"
@@ -149,8 +149,8 @@
                     <li>Coût du GRP moyen : <% if(reporting["a-Ensemble"].campaignChannel['Ct GRP']) { %>
                         <strong><%= reporting["a-Ensemble"].campaignChannel['Ct GRP'] %></strong> <% } %> €​</li>
                     <li>Coût pour 1000 contacts :
-                        <% if(reporting["a-Ensemble"].campaignChannel['CPM contacts Brut']) { %>
-                        <strong><%= reporting["a-Ensemble"].campaignChannel['CPM contacts Brut'] %></strong> <% } %> €​
+                        <% if(reporting["a-Ensemble"].campaignChannel['CPM contacts Net']) { %>
+                        <strong><%= reporting["a-Ensemble"].campaignChannel['CPM contacts Net'] %></strong> <% } %> €​
                     </li>
                 </ul>
             </div>
