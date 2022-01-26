@@ -417,64 +417,93 @@ exports.index = async (req, res) => {
                             }).then(async function (foundcampaign_tv) {
 
 
+
                                 if (Utilities.empty(foundcampaign_tv)) {
-                                    
-                                var regexnPeriod = /([0-9]{2}\/[0-9]{2}\/[0-9]{4})/gi
-                                var regexnBudget = /([0-9])/gi
+
+                                    var regexnPeriod = /([0-9]{2}\/[0-9]{2}\/[0-9]{4})/gi
+                                    var regexnBudget = /([0-9])/gi
 
 
-                                var PeriodCampaign = campaignPeriod.match(regexnPeriod)
-                                var PeriodBudget = campaignBudget.match(regexnBudget)
+                                    var PeriodCampaign = campaignPeriod.match(regexnPeriod)
+                                    var PeriodBudget = campaignBudget.match(regexnBudget)
 
-                                var campaign_tv_start_date = moment(PeriodCampaign[0], 'DD-MM-YYYY');
-                                var campaign_tv_end_date = moment(PeriodCampaign[1], 'DD-MM-YYYY');
-                                const Budget = PeriodBudget.join('')
+                                    var campaign_tv_start_date = moment(PeriodCampaign[0], 'DD-MM-YYYY');
+                                    var campaign_tv_end_date = moment(PeriodCampaign[1], 'DD-MM-YYYY');
+                                    const Budget = PeriodBudget.join('')
 
-                                await ModelCampaignsTv.create({
-                                    campaign_tv_name: campaignName,
-                                    campaign_tv_start_date: moment(campaign_tv_start_date).format('YYYY-MM-DD'),
-                                    campaign_tv_end_date: moment(campaign_tv_end_date).format('YYYY-MM-DD'),
-                                    campaign_tv_user: campaignUser,
-                                    user_id: req.session.user.user_id,
-                                    campaign_tv_budget: Budget,
-                                    campaign_tv_type: "a-Ensemble",
-                                    campaign_tv_file: path_file
+                                    await ModelCampaignsTv.create({
+                                        campaign_tv_name: campaignName,
+                                        campaign_tv_start_date: moment(campaign_tv_start_date).format('YYYY-MM-DD'),
+                                        campaign_tv_end_date: moment(campaign_tv_end_date).format('YYYY-MM-DD'),
+                                        campaign_tv_user: campaignUser,
+                                        user_id: req.session.user.user_id,
+                                        campaign_tv_budget: Budget,
+                                        campaign_tv_type: "a-Ensemble",
+                                        campaign_tv_file: path_file
 
-                                }).then(async function (campaign_tv) {
-
-                                    const advertiser_tv = await ModelAdvertisersTV.create({
-                                        advertiser_tv_name: campaignAdvertiser,
-                                    })
-
-
-                                    const campaign_tv_id = campaign_tv.campaign_tv_id
-                                    const advertiser_tv_id = advertiser_tv.advertiser_tv_id
-
-
-                                    const campaign_tv_crypt = crypto
-                                        .createHash('md5')
-                                        .update(campaign_tv_id.toString())
-                                        .digest("hex");
+                                    }).then(async function (campaign_tv) {
 
 
 
+                                        const campaign_tv_id = await campaign_tv.campaign_tv_id
 
-                                    await ModelCampaignsTv.update({
-                                        campaign_tv_crypt: campaign_tv_crypt,
-                                        advertiser_tv_id: advertiser_tv_id
-                                    }, {
-                                        where: {
-                                            campaign_tv_id: campaign_tv_id
+
+
+                                        const campaign_tv_crypt = crypto
+                                            .createHash('md5')
+                                            .update(campaign_tv_id.toString())
+                                            .digest("hex");
+
+
+                                        var foundAdvertiser = await ModelAdvertisersTV.findOne({
+                                            where: {
+                                                advertiser_tv_name: campaignAdvertiser
+                                            }
+                                        })
+
+                                        console.log(foundAdvertiser)
+
+                                        if (Utilities.empty(foundAdvertiser)) {
+
+                                            const advertiser = await ModelAdvertisersTV.create({
+                                                advertiser_tv_name: campaignAdvertiser,
+                                            })
+    
+                                            const advertiser_tv_id = advertiser.advertiser_tv_id
+    
+    
+    
+                                            await ModelCampaignsTv.update({
+                                                campaign_tv_crypt: campaign_tv_crypt,
+                                                advertiser_tv_id: advertiser_tv_id
+                                            }, {
+                                                where: {
+                                                    campaign_tv_id: campaign_tv_id
+                                                }
+                                            })
+    
+                                        }else{
+
+                                            await ModelCampaignsTv.update({
+                                                campaign_tv_crypt: campaign_tv_crypt,
+                                                advertiser_tv_id: foundAdvertiser.advertiser_tv_id
+                                            }, {
+                                                where: {
+                                                    campaign_tv_id: campaign_tv_id
+                                                }
+                                            })
                                         }
-                                    })
 
-                                    let cacheStorageID = 'campaign_tv_ID-' + campaign_tv_id;
-                                    localStorageTV.removeItem(cacheStorageID);
-                                    localStorageTV.setItem(cacheStorageID, JSON.stringify(campaignObjects));
+                                      
+                                        let cacheStorageID = 'campaign_tv_ID-' + campaign_tv_id;
+                                        localStorageTV.removeItem(cacheStorageID);
+                                        localStorageTV.setItem(cacheStorageID, JSON.stringify(campaignObjects));
 
-                                    return res.redirect(`/t/${campaign_tv_crypt}`);
+                                        return res.redirect(`/t/${campaign_tv_crypt}`);
 
-                                });
+
+
+                                    });
                                 }
 
 
@@ -553,185 +582,33 @@ exports.generate = async (req, res) => {
 
 exports.export = async (req, res) => {
 
-
-    try {
-
-
-
-        // crée label avec le date du jour ex : 20210403
-        const date = new Date();
-        const JJ = ('0' + (
-            date.getDate()
-        )).slice(-2);
-
-        const MM = ('0' + (
-            date.getMonth()
-        )).slice(-2);
-        const AAAA = date.getFullYear();
-
-        const label_now = AAAA + MM + JJ;
-
-        //recherche dans le local storage id qui correspond à la campagne
-
-        let cacheStorageID = "Plan_Campagne_20220121162550_CAMPAGNE_SOLDES_CHATEAU_D'AX_REUNION_FEVRIER_2022_11027_SAMINADIN";
-        LocalStorageTVDATA = localStorageTV.getItem(cacheStorageID);
-
-        var reporting = JSON.parse(LocalStorageTVDATA);
-
-        console.log(reporting)
-
-
-        var reporting_start_date = moment(date).format(
-            'DD/MM/YYYY - HH:mm'
-        );
-
-        var campaign_name = reporting["a-Ensemble"].campaignName;
-        var advertiser_name = reporting["a-Ensemble"].campaignAdvertiser;
-
-
-
-
-        // You can define styles as json object
-        const styles = {
-            headerDark: {
-                fill: {
-                    fgColor: {
-                        rgb: 'FF000000'
-                    }
-
-                },
-
-                font: {
-                    color: {
-                        rgb: 'FFFFFFFF'
-                    },
-                    sz: 14,
-                    bold: false,
-                    underline: false
-                }
-            },
-            cellNone: {
-
-                numFmt: "0",
-
-            },
-
-            cellTc: {
-                numFmt: "0",
-
-            }
-        };
-
-        //
-
-        //Array of objects representing heading rows (very top)
-        const heading = [
-            [{
-                    value: 'Rapport de la campagne : ' + campaign_name,
-                    style: styles.headerDark
-                }
+    let campaigncrypt = req.params.campaigncrypt;
+    await ModelCampaignsTv
+        .findOne({
+            attributes: [
+                'campaign_tv_id',
+                'campaign_tv_crypt',
+                'campaign_tv_file'
 
             ],
-            ['Annonceur : ' + advertiser_name],
-
-            ['Date de génération : ' + reporting_start_date],
-            ['Période de diffusion : ' + reporting["a-Ensemble"].campaignPeriod],
-            ['Budget : ' + reporting["a-Ensemble"].campaignBudget],
-            ['                ']
-        ];
-
-        //Here you specify the export structure
-        const bilan_global = {
-
-            couverture: { // <- the key should match the actual data key
-                displayName: 'Couverture', // <- Here you specify the column header
-                headerStyle: styles.headerDark, // <- Header style
-                width: 400, // <- width in pixels
-                cellStyle: styles.cellNone,
-            },
-            ensemble: {
-                displayName: 'Contacts ',
-                headerStyle: styles.headerDark,
-                width: 220, // <- width in chars (when the number is passed as string)
-                cellStyle: styles.cellNone,
-
-            },
-            GRP: {
-                displayName: 'Nombre de GRP',
-                headerStyle: styles.headerDark,
-                width: 220, // <- width in pixels
-                cellStyle: styles.cellNone,
-
-            },
-            GRP_CT: {
-                displayName: 'Coût du GRP moyen',
-                headerStyle: styles.headerDark,
-                width: 220, // <- width in pixels
-                cellStyle: styles.cellNone,
-
-            },
-            contacts: {
-                displayName: 'Coût pour 1000 contacts',
-                headerStyle: styles.headerDark,
-                width: 220 // <- width in pixels
+            where: {
+                campaign_tv_crypt: campaigncrypt
             }
 
-        };
+        }).then(async function (campaign) {
 
 
-        const dataset_global = [{
-            couverture: reporting["a-Ensemble"].campaignChannel.Couverture,
-            ensemble: reporting["a-Ensemble"].campaignChannel['Nombre de contacts'],
-            GRP: reporting["a-Ensemble"].campaignChannel['GRP'],
-            GRP_CT: reporting["a-Ensemble"].campaignChannel['Ct GRP'],
-            contacts: reporting["a-Ensemble"].campaignChannel['CPM contacts Brut']
+            // let cacheStorageID = 'campaign_tv_ID-' + campaign.campaign_tv_id;
+            // LocalStorageTVDATA = localStorageTV.getItem(cacheStorageID);
 
-        }];
+            // var reportingData = JSON.parse(LocalStorageTVDATA);
 
+            //  console.log(reportingData)
 
+            res.download('./' + campaign.campaign_tv_file)
 
-
-
-        // Define an array of merges. 1-1 = A:1 The merges are independent of the data.
-        // A merge will overwrite all data _not_ in the top-left cell.
-        const merges = [{
-            start: {
-                row: 1,
-                column: 1
-            },
-            end: {
-                row: 1,
-                column: 5
-            }
-        }];
-
-        // Create the excel report. This function will return Buffer
-        const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
-            name: 'Bilan', // <- Specify sheet name (optional)
-            heading: heading, // <- Raw heading array (optional)
-            merges: merges, // <- Merge cell ranges
-            specification: bilan_global, // <- Report specification
-            data: dataset_global // <-- Report data
-        }]);
-
-        // You can then return this straight
-        // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
-        res.attachment(
-            cacheStorageID + '-' + label_now + '.xlsx',
-
-        ); // This is sails.js specific (in general you need to set headers)
-
-        return res.send(report);
-
-        // OR you can save this buffer to the disk by creating a file.
-
-
-    } catch (error) {
-        console.log(error)
-
-    }
-
-};
+        })
+}
 
 exports.charts = async (req, res) => {
 

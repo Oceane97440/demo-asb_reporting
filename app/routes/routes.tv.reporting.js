@@ -8,7 +8,7 @@ router.get("/planmedia", reportingTV.create);
 router.post("/", reportingTV.index);
 router.get("/charts/:campaigncrypt", reportingTV.charts);
 router.get("/:campaigncrypt", reportingTV.generate);
-router.get("/export/", reportingTV.export);
+router.get("/export/:campaigncrypt", reportingTV.export);
 
 
 module.exports = router;
