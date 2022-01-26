@@ -41,8 +41,8 @@ const insertions_status = require('./app/models/models.insertions_status');
 const insertions_priorities = require('./app/models/models.insertions_priorities');
 const creatives_types_formats = require('./app/models/models.creatives_types_formats');
 const creatives_types = require('./app/models/models.creatives_types');
-const planmedia = require('./app/models/models.planmedia');
-const tv_advertisers = require('./app/models/models.tv_advertisers');
+const campaigns_tv = require('./app/models/models.campaigns_tv');
+const advertisers_tv = require('./app/models/models.advertisers_tv');
 
 
 
@@ -347,13 +347,18 @@ epilot_insertions.belongsTo(formats_groups, {
 
 
 
-users.belongsTo(planmedia, {
+users.belongsTo(campaigns_tv, {
     foreignKey: 'user_id',
     onDelete: 'cascade',
     hooks: true
 });
 
 
+advertisers_tv.belongsTo(campaigns_tv, {
+    foreignKey: 'advertiser_tv_id',
+    onDelete: 'cascade',
+    hooks: true
+});
 
 
 

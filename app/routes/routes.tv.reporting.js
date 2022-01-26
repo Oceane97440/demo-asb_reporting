@@ -6,8 +6,8 @@ const reportingTV = require("../controllers/controllers.tv.reporting");
 // Gestion du reporting de l'API
 router.get("/planmedia", reportingTV.create);
 router.post("/", reportingTV.index);
-router.get("/charts/", reportingTV.charts);
-router.get("/generate/", reportingTV.generate);
+router.get("/charts/:campaigncrypt", reportingTV.charts);
+router.get("/:campaigncrypt", reportingTV.generate);
 router.get("/export/", reportingTV.export);
 
 

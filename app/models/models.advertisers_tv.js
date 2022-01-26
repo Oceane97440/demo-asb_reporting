@@ -2,13 +2,13 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Advertisers = sequelize.define(' tv_advertisers', {
-    advertiser_id: {
+const AdvertisersTV = sequelize.define('advertisers_tv', {
+    advertiser_tv_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    advertiser_name: {
+    advertiser_tv_name: {
         type: Sequelize.STRING(),
         allowNull: false
     },
@@ -22,9 +22,9 @@ const Advertisers = sequelize.define(' tv_advertisers', {
         allowNull: true
     }
 }, {
-    tableName: ' asb_tv_advertisers',
+    tableName: 'asb_advertisers_tv',
     underscored: true,
     timestamps: true
 });
 
-module.exports = Advertisers;
+module.exports = AdvertisersTV;

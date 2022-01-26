@@ -2,30 +2,29 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../config/_config.database').sequelize;
 
-const Tvplanmedia = sequelize.define('tv_planmedia', {
-    planmedia_id: {
+const CampaignsTV = sequelize.define('campaigns_tv', {
+    campaign_tv_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    planmedia_name: {
+    campaign_tv_name: {
         type: Sequelize.STRING(255),
         allowNull: true
     },
-    advertiser_id: {
+    advertiser_tv_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        //defaultValue: 0
+        allowNull: true
     },
-    planmedia_start_date: {
+    campaign_tv_start_date: {
         type: Sequelize.STRING(255),
         allowNull: true
     },
-    planmedia_end_date: {
+    campaign_tv_end_date: {
         type: Sequelize.STRING(255),
         allowNull: true
     },
-    planmedia_user: {
+    campaign_tv_user: {
         type: Sequelize.STRING(255),
         allowNull: true
     },
@@ -33,23 +32,19 @@ const Tvplanmedia = sequelize.define('tv_planmedia', {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-
-    planmedia_budget: {
+    campaign_tv_budget: {
         type: Sequelize.DECIMAL,
         allowNull: true
     },
-
-    planmedia_type: {
+    campaign_tv_type: {
         type: Sequelize.STRING(255),
         allowNull: true
     },
-
-    planmedia_crypt: {
+    campaign_tv_crypt: {
         type: Sequelize.STRING(255),
         allowNull: true
     },
-
-    planmedia_file: {
+    campaign_tv_file: {
         type: Sequelize.STRING(255),
         allowNull: true
     },
@@ -62,9 +57,9 @@ const Tvplanmedia = sequelize.define('tv_planmedia', {
         allowNull: true
     }
 }, {
-    tableName: 'asb_tv_planmedia',
+    tableName: 'asb_campaigns_tv',
     underscored: true,
     timestamps: true
 });
 
-module.exports = Tvplanmedia;
+module.exports = CampaignsTV;
