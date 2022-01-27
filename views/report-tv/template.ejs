@@ -52,7 +52,18 @@
     }
 
     #info_generale {
-      background-color: #14478c !important;
+      background-color: #0052bc !important;
+      position: relative;
+
+    }
+
+    #info {
+      position: absolute;
+      display: flex;
+      right: 20px;
+      align-items: center;
+      align-content: center;
+      cursor: pointer;
     }
 
     hr {
@@ -135,9 +146,28 @@
     </div>
 
     <div class="row p-3 mt-5 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded" id="info_generale">
-      <h3 class="title">
-        <strong>Résumé</strong>
+      <h3 class="title" style="padding-left: 10px;">
+        <div class="row">
+
+          <strong>Résumé</strong>
+          <div id="info">
+
+            <button style="display: contents;
+            color: white;font-size: 25px;
+            " class="btn" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+              aria-controls="collapseExample">
+              <i class="fas fa-info-circle"></i>
+            </button>
+
+
+          </div>
+
+
+        </div>
+
+
       </h3>
+     
       <div class="container">
         <ul class="list-group list-group-flush list-unstyled">
           <li>Couverture : <% if(reporting["a-Ensemble"].campaignChannel.Couverture) { %>
@@ -158,6 +188,14 @@
             <strong><%= reporting["a-Ensemble"].campaignChannel['CPM contacts Net'] %></strong> <% } %> €​
           </li>
         </ul>
+        <div class="collapse" id="collapseExample">
+          <hr>
+          <div style="
+          font-size: small;color: white;">
+            <i class="fas fa-info-circle"></i> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
+            keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -199,7 +237,7 @@
       </div>
     </div>
     <div class="pt-5 pb-5 text-right"> <a href="/t/export/<%=campaign_crypt%>"
-        class="btn btn-xs btn-default  text-white" style="background-color: #E91E63;"> <i class="fas fa-file-excel">
+        class="btn btn-xs btn-default  text-white" style="background-color: #ee0013;"> <i class="fas fa-file-excel">
         </i> Télécharger le rapport <span class="small">(Format : Excel)</span></a> </div>
 
   </div>
@@ -242,7 +280,7 @@
           }],
 
 
-          colors: ['#14478c', '#E91E63'],
+          colors: ['#0052bc', '#ee0013'],
 
           chart: {
             height: 350,
@@ -343,7 +381,7 @@
             width: 380,
             type: 'radialBar',
           },
-          colors: ['#14478c', '#E91E63'],
+          colors: ['#0052bc'],
 
           labels: [response.cibleEnsemble.name],
 
@@ -383,7 +421,7 @@
           dataLabels: {
             enabled: false
           },
-          colors: ['#14478c', '#E91E63'],
+          colors: ['#0052bc', '#ee0013'],
 
           stroke: {
             show: true,
@@ -438,7 +476,7 @@
           dataLabels: {
             enabled: true
           },
-          colors: ['#14478c', '#E91E63'],
+          colors: ['#0052bc', '#ee0013'],
 
           stroke: {
             show: true,
