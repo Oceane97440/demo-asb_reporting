@@ -347,14 +347,14 @@ epilot_insertions.belongsTo(formats_groups, {
 
 
 
-users.belongsTo(campaigns_tv, {
+campaigns_tv.belongsTo(users, {
     foreignKey: 'user_id',
     onDelete: 'cascade',
     hooks: true
 });
 
 
-advertisers_tv.belongsTo(campaigns_tv, {
+campaigns_tv.belongsTo(advertisers_tv, {
     foreignKey: 'advertiser_tv_id',
     onDelete: 'cascade',
     hooks: true

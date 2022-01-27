@@ -44,65 +44,6 @@ const ModelAdvertisersTV = require("../models/models.advertisers_tv")
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorageTV = new LocalStorage('data/tv/reporting');
 
-exports.create = async (req, res) => {
-    try {
-        const data = new Object();
-
-        // Créer le fil d'ariane
-        breadcrumb = new Array({
-            'name': 'Campagnes',
-            'link': 'insertions'
-        }, {
-            'name': 'Liste des planmedia',
-            'link': 't/planmedia'
-        }, {
-            'name': 'Ajouter un planmedia',
-            'link': ''
-        });
-        data.breadcrumb = breadcrumb;
-
-        var dirDateNOW = moment().format('YYYY/MM/DD');
-
-        // Créer un dossier si celui-ci n'existe pas
-        fs.mkdir('data/tv/' + dirDateNOW + '/', {
-            recursive: true
-
-        }, (err) => {
-            if (err)
-                throw err;
-        });
-
-        // // Récupére l'ensemble des annonceurs
-        // var advertisers = await ModelAdvertisers
-        //     .findAll({
-        //         order: [
-        //             ['advertiser_name', 'ASC']
-        //         ]
-        //     })
-        //     .then(async function (advertisers) {
-        //         data.advertisers = advertisers;
-        //     });
-
-        // // Récupére l'ensemble des annonceurs
-        // var formats = await ModelFormats
-        //     .findAll({
-        //         order: [
-        //             ['format_name', 'ASC']
-        //         ]
-        //     })
-        //     .then(async function (formats) {
-        //         data.formats = formats;
-        //     });
-
-        res.render('report-tv/create.ejs', data);
-    } catch (error) {
-        console.log(error);
-        var statusCoded = error.response;
-        res.render("manager/error.ejs", {
-            statusCoded: statusCoded
-        });
-    }
-}
 
 
 exports.index = async (req, res) => {
@@ -125,7 +66,7 @@ exports.index = async (req, res) => {
                         intro: 'Erreur',
                         message: 'Un problème est survenu lors de la création du dossier'
                     }
-                    return res.redirect('/t/planmedia');
+                    return res.redirect('/manager/campaigns/tv/list');
 
 
                 }
@@ -549,7 +490,7 @@ exports.index = async (req, res) => {
                 intro: 'L\'extension du fichier est invalide. ',
                 message: 'Seul les fichiers Excel sont autorisés'
             }
-            return res.redirect('/t/planmedia');
+            return res.redirect('/manager/campaigns/tv/list');
         }
     } catch (error) {
         console.log(error)
@@ -595,7 +536,7 @@ exports.generate = async (req, res) => {
                     intro: 'Erreur',
                     message: "La campagne demandée n'a pas été trouver"
                 }
-                return res.redirect('/t/planmedia');
+                return res.redirect('/manager/campaigns/tv/list');
 
             }
 
@@ -605,7 +546,7 @@ exports.generate = async (req, res) => {
             var reportingData = JSON.parse(LocalStorageTVDATA);
 
             if (!LocalStorageTVDATA) {
-                return res.redirect('/t/planmedia');
+                return res.redirect('/manager/campaigns/tv/list');
             }
 
             res.render('report-tv/template.ejs', {
@@ -646,7 +587,7 @@ exports.export = async (req, res) => {
                         intro: 'Erreur',
                         message: "Un problème est survenu lors de l'export du fichier excel"
                     }
-                    return res.redirect('/t/planmedia');
+                    return res.redirect('/manager/campaigns/tv/list');
                     
 
                 }
