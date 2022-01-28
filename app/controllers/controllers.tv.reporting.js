@@ -546,6 +546,11 @@ exports.generate = async (req, res) => {
             var reportingData = JSON.parse(LocalStorageTVDATA);
 
             if (!LocalStorageTVDATA) {
+                req.session.message = {
+                    type: 'danger',
+                    intro: 'Erreur',
+                    message: "La campagne demandée n'a pas été générer"
+                }
                 return res.redirect('/manager/campaigns/tv/list');
             }
 

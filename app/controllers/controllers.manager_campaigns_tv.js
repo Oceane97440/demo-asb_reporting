@@ -249,3 +249,226 @@ exports.update = async (req, res) => {
         });
     }
 }
+
+exports.export = async (req, res) => {
+    try {
+
+        var type = 'campaigns_tv'
+        // crée label avec le date du jour ex : 20210403
+        const date = new Date();
+        const JJ = ('0' + (
+            date.getDate()
+        )).slice(-2);
+
+        const MM = ('0' + (
+            date.getMonth()
+        )).slice(-2);
+        const AAAA = date.getFullYear();
+
+        const label_now = AAAA + MM + JJ
+
+        const data = new Object();
+        data.moment = moment;
+        data.utilities = Utilities;
+
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Campagnes',
+            'link': 'campaigns'
+        }, {
+            'name': 'Liste les campagnes TV',
+            'link': 'campaigns/tv'
+        });
+        data.breadcrumb = breadcrumb;
+      
+        // Récupére l'ensemble des annonceurs
+         data.campaigns = await ModelCampaignsTv
+            .findAll({
+                order: [
+                    ['campaign_tv_name', 'ASC']
+                ],
+                  include: [
+                {
+                    model: ModelAdvertisersTV
+                }
+                ]
+            })
+       
+
+            const styles = {
+                headerDark: {
+                    fill: {
+                        fgColor: {
+                            rgb: 'FF000000'
+                        }
+    
+                    },
+    
+                    font: {
+                        color: {
+                            rgb: 'FFFFFFFF'
+                        },
+                        sz: 14,
+                        bold: false,
+                        underline: false
+                    }
+                },
+                cellNone: {
+    
+                    numFmt: "0",
+    
+                },
+    
+                cellTc: {
+                    numFmt: "0",
+    
+                }
+            };
+    
+            const heading = [
+                [],
+            ];
+         
+
+
+
+
+
+            const bilan_global = {
+    
+                id: { // <- the key should match the actual data key
+                    displayName: '#', // <- Here you specify the column header
+                    headerStyle: styles.headerDark, // <- Header style
+                    width: 100, // <- width in pixels
+                    cellStyle: styles.cellNone,
+                },
+           
+                campagnes: {
+                    displayName: 'NOMS',
+                    headerStyle: styles.headerDark,
+                    width: 450, // <- width in chars (when the number is passed as string)
+                    cellStyle: styles.cellNone,
+    
+                },
+                campaign_tv_crypt: {
+                    displayName: 'ID CRYPTAGE',
+                    headerStyle: styles.headerDark,
+                    width: 450, // <- width in chars (when the number is passed as string)
+                    cellStyle: styles.cellNone,
+    
+                },
+                advertisers_tv: {
+                    displayName: 'ANNONCEURS',
+                    headerStyle: styles.headerDark,
+                    width: 450, // <- width in chars (when the number is passed as string)
+                    cellStyle: styles.cellNone,
+    
+                },
+                date_start: {
+                    displayName: 'DATE DE DEBUT',
+                    headerStyle: styles.headerDark,
+                    width: 200, // <- width in pixels
+                    cellStyle: styles.cellNone,
+    
+                },
+                date_end: {
+                    displayName: 'DATE DE FIN',
+                    headerStyle: styles.headerDark,
+                    width: 200, // <- width in pixels
+                    cellStyle: styles.cellNone,
+    
+                },
+                campaign_tv_user: {
+                    displayName: 'UTILISATEURS',
+                    headerStyle: styles.headerDark,
+                    width: 200, // <- width in pixels
+                    cellStyle: styles.cellNone,
+    
+                },
+                campaign_tv_type: {
+                    displayName: 'LES CIBLES',
+                    headerStyle: styles.headerDark,
+                    width: 200, // <- width in pixels
+                    cellStyle: styles.cellNone,
+    
+                },
+                budget: {
+                    displayName: 'BUDGET',
+                    headerStyle: styles.headerDark,
+                    width: 100, // <- width in pixels
+                    cellStyle: styles.cellNone,
+    
+                },
+           
+                campaign_tv_file: {
+                    displayName: 'URLS FICHIERS',
+                    headerStyle: styles.headerDark,
+                    width: 300, // <- width in pixels
+                    cellStyle: styles.cellNone,
+    
+                },
+            };
+    
+    
+    
+            const dataset_global = []
+
+    
+            if (!Utilities.empty(data)) {
+                for (i = 0; i < data.campaigns.length; i++) {
+    
+                    dataset_global.push({
+                        id: data.campaigns[i].campaign_tv_id,
+                        campagnes: data.campaigns[i].campaign_tv_name,
+                        campaign_tv_crypt: data.campaigns[i].campaign_tv_crypt,
+                        advertisers_tv: data.campaigns[i].advertisers_tv.advertiser_tv_name,
+                        date_start: data.campaigns[i].campaign_tv_start_date,
+                        date_end: data.campaigns[i].campaign_tv_end_date,
+                        campaign_tv_user: data.campaigns[i].campaign_tv_user,
+                        campaign_tv_type: data.campaigns[i].campaign_tv_type,
+                        budget: data.campaigns[i].campaign_tv_budget,
+                        campaign_tv_file: data.campaigns[i].campaign_tv_file,
+
+
+
+                    });
+    
+                }
+            }
+    
+            const merges = [{
+                start: {
+                    row: 1,
+                    column: 1
+                },
+                end: {
+                    row: 1,
+                    column: 5
+                }
+            }];
+    
+            // Create the excel report. This function will return Buffer
+            const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+                name: 'Listes', // <- Specify sheet name (optional)
+                heading: heading, // <- Raw heading array (optional)
+                merges: merges, // <- Merge cell ranges
+                specification: bilan_global, // <- Report specification
+                data: dataset_global // <-- Report data
+            }]);
+    
+            // You can then return this straight
+            // rapport_antennesb-202105031152-ESPACE_DECO-67590.xls
+            res.attachment(
+                'exports-' + type + '-' + label_now + '.xlsx',
+    
+            ); // This is sails.js specific (in general you need to set headers)
+    
+            return res.send(report);
+    
+
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res.render("manager/error.ejs", {statusCoded: statusCoded});
+    }
+}

@@ -102,6 +102,8 @@ router.get("/campaigns/:id", manager_campaigns.view);
 router.get('/campaigns/tv/list', manager_campaigns_tv.list);
 router.get('/campaigns/tv/edit/:campaigntv', manager_campaigns_tv.edit);
 router.post('/campaigns/tv/edit/:campaigntv', manager_campaigns_tv.update);
+router.get('/campaigns/tv/export', manager_campaigns_tv.export);
+
 
 
 
