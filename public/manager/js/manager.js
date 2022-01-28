@@ -1,5 +1,5 @@
 var config = {
-    baseurl: "http://localhost:3001"
+    baseurl: "https://reporting.antennesb.fr"
 };
 
 $(document).ready(function () {

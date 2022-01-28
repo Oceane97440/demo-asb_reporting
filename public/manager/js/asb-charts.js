@@ -1,7 +1,7 @@
 'use strict';
 $(document).ready(function () {
     var config = {
-        baseurl: "http://localhost:3001/" 
+        baseurl: "https://reporting.antennesb.fr/" 
     };
 
     var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
