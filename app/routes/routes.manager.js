@@ -15,8 +15,7 @@ const manager_users = require("../controllers/controllers.manager_users");
 const manager_forecast = require("../controllers/controllers.manager_forecast");
 const manager_search = require("../controllers/controllers.manager_search");
 const manager_charts = require("../controllers/controllers.manager_charts");
-
-const manager_alerts = require("../controllers/controllers.manager_alerts");
+const manager_campaigns_tv = require("../controllers/controllers.manager_campaigns_tv")
 
 /**
 * Middleware to know if user is connected
@@ -27,7 +26,8 @@ router.use(function (req, res, next) {
         return res.redirect('../../login');    
     } 
     res.locals.user = req.session.user;  
-    next(); 
+    next();  
+    // console.log('User Login :',req.session.user)
 });
 
 const ModelFormats = require("../models/models.formats");
@@ -95,8 +95,12 @@ router.get("/campaigns/export", manager_campaigns.export);
 router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
 router.get('/campaigns/repartitions', manager_campaigns.repartitions);
-router.get('/campaigns/epilot', manager_epilot.list);
 router.get("/campaigns/:id", manager_campaigns.view);
+
+router.get('/campaigns/tv/list', manager_campaigns_tv.list);
+router.get('/campaigns/tv/edit/:campaigntv', manager_campaigns_tv.edit);
+router.post('/campaigns/tv/edit/:campaigntv', manager_campaigns_tv.update);
+router.get('/campaigns/tv/export', manager_campaigns_tv.export);
 
 router.get('/campaigns/epilot/list', manager_epilot.list);
 router.get('/campaigns/epilot/export', manager_epilot.export);
@@ -137,9 +141,6 @@ router.get("/charts/campaigns", manager_charts.campaigns);
 router.get("/charts/advertisers/", manager_charts.advertisers);
 router.get("/charts/advertisers/:advertiser_id", manager_charts.advertisers);
 router.get("/charts/campaign/report", manager_charts.campaignReport);
-router.get("/charts/epilot/campaigns", manager_charts.epilotCampaigns);
-
-router.get("/alerts", manager_alerts.index);
 
 /*
 router.post('/campaigns/epilot/create', checkSchema(ValidateCustom.campaignEpilotSchema), (req, res) => {
@@ -206,7 +207,6 @@ router.get("/users/list", manager_users.list);
 router.get("/users/export", manager_users.export);
 
 router.get("/users/create", manager_users.create);
-router.post("/users/create", manager_users.create_post);
 router.get("/users/:id", manager_users.view);
 router.get("/users/:id/edit", manager_users.edit);
 

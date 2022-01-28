@@ -1,0 +1,57 @@
+<%- include("../layouts/manager/head.ejs") -%>
+<!-- support-section start -->
+<div class="col-xl-12 col-md-12">
+
+    <div class="card table-card">
+        <div class="card-header">
+            <h1>Campagnes Tv</h1>
+        </div>
+        <div class="pro-scroll">
+            <div class="card-body p-0">
+                <%- include("../manager/inc/table_campaigns_tv.ejs") -%>
+
+            </div>
+            <div class="pt-5 pb-5 text-right"> <a href="/manager/campaigns/tv/export"
+                    class="btn btn-xs btn-success"> <i class="fas fa-file-excel"> </i> Télécharger <span
+                        class="small">(Format : Excel)</span></a> </div>
+
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Importer un plan média</h5>
+        </div>
+
+        <form action="/t" method="POST" enctype="multipart/form-data">
+            <div class="card-body">
+                <div class="alert alert-primary">
+                    <div class="media align-items-center">
+                        <i class="feather icon-alert-circle h2"></i>
+                        <div class="media-body ml-3">
+                            Importer un plan média avec un fichier Excel
+                        </div>
+                    </div>
+                </div>
+                <% if (message) { %>
+                <div class="alert alert-<%=message.type%>" role="alert">
+                    <%=message.intro%>:<%=message.message%>
+                </div>
+                <% } %>
+
+                <div class="form-group col-6">
+                    <label class="form-label" for="planmedia_file">Fichier</label>
+                    <input type="file" name="planmedia_file" id="planmedia_file" class="form-control"
+                        placeholder="Uploader un fichier Excel" required="required" />
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="submit" name="submit" class="btn btn-primary mr-2 btn-submit" value="Importer" />
+            </div>
+
+        </form>
+
+    </div>
+
+    <%- include("../layouts/manager/footer.ejs") -%>

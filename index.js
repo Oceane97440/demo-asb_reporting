@@ -41,6 +41,8 @@ const insertions_status = require('./app/models/models.insertions_status');
 const insertions_priorities = require('./app/models/models.insertions_priorities');
 const creatives_types_formats = require('./app/models/models.creatives_types_formats');
 const creatives_types = require('./app/models/models.creatives_types');
+const campaigns_tv = require('./app/models/models.campaigns_tv');
+const advertisers_tv = require('./app/models/models.advertisers_tv');
 
 /* Mettre les relation ici */
 /*sites.belongsTo(countries);
@@ -266,13 +268,11 @@ insertions.hasMany(insertions_templates, {
     onDelete: 'cascade',
     hooks: true
 });
-
 insertions_templates.belongsTo(templates, {
     foreignKey: 'template_id',
     onDelete: 'cascade',
     hooks: true
 });
-
 templates.hasMany(insertions_templates, {
     foreignKey: 'template_id',
     onDelete: 'cascade',
@@ -284,7 +284,6 @@ creatives.belongsTo(insertions, {
     onDelete: 'cascade',
     hooks: true
 });
-
 insertions.hasMany(creatives, {
     as: 'insertions',
     foreignKey: 'insertion_id',
@@ -334,6 +333,18 @@ epilot_insertions.belongsTo(formats_groups, {
     hooks: true
 });
 
+campaigns_tv.belongsTo(users, {
+    foreignKey: 'user_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
+campaigns_tv.belongsTo(advertisers_tv, {
+    foreignKey: 'advertiser_tv_id',
+    onDelete: 'cascade',
+    hooks: true
+});
+
 db
     .sequelize
     .sync();
@@ -358,21 +369,17 @@ app.use(cookieSession({
     keys: ['asq4b4PR'],
     maxAge: 2592000000 // 30 jour
 }))
-/*
-L'image à une limite min=50px max=2000px 
-*/
+/**L'image à une limite min=50px max=2000px */
 app.use(fileUpload());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('files'));
 
-/*
-var phpScriptPath = "./api_google-manager/GetAllOrder.php";
+/*var phpScriptPath = "./api_google-manager/GetAllOrder.php";
 runner.exec("php " + phpScriptPath + " " , function(err, phpResponse, stderr) {
  if(err) console.log(err); 
 console.log( phpResponse );
-});
-*/
+});*/
 
 /**
  * @MidleWare
@@ -418,9 +425,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // signup login home page
 const index = require('./app/routes/routes.index');
 app.use('/', index);
-
-const json = require('./app/routes/routes.json');
-app.use('/json', json);
 
 // action admin forecast
 const forecast = require('./app/routes/routes.api_forecast');
