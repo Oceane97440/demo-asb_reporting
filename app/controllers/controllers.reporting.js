@@ -667,6 +667,7 @@ exports.report = async (req, res) => {
                                         var formatGrandAngle = new Array();
                                         var formatMasthead = new Array();
                                         var formatInstream = new Array();
+                                        var formatRectangle= new Array();
                                         var formatRectangleVideo = new Array();
                                         var formatLogo = new Array();
                                         var formatNative = new Array();
@@ -716,6 +717,9 @@ exports.report = async (req, res) => {
                                             }
                                             if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
                                                 formatInstream.push(index);
+                                            }
+                                            if (insertion_name.match(/RECTANGLE{1}/igm)) {
+                                                formatRectangle.push(index);
                                             }
                                             if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
                                                 formatRectangleVideo.push(index);
@@ -808,6 +812,12 @@ exports.report = async (req, res) => {
                                         }
                                         if (!Utilities.empty(formatInstream)) {
                                             formatObjects.instream = SmartFunction.sortDataReport(formatInstream, dataList);
+                                        }
+                                        if (!Utilities.empty(formatRectangle)) {
+                                            formatObjects.rectangle = SmartFunction.sortDataReport(
+                                                formatRectangle,
+                                                dataList
+                                            );
                                         }
                                         if (!Utilities.empty(formatRectangleVideo)) {
                                             formatObjects.rectanglevideo = SmartFunction.sortDataReport(
@@ -2179,6 +2189,7 @@ exports.automate = async (req, res) => {
                                     var formatGrandAngle = new Array();
                                     var formatMasthead = new Array();
                                     var formatInstream = new Array();
+                                    var formatRectangle = new Array();
                                     var formatRectangleVideo = new Array();
                                     var formatLogo = new Array();
                                     var formatNative = new Array();
@@ -2225,6 +2236,9 @@ exports.automate = async (req, res) => {
                                         }
                                         if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
                                             formatInstream.push(index);
+                                        }
+                                        if (insertion_name.match(/RECTANGLE{1}/igm)) {
+                                            formatRectangle.push(index);
                                         }
                                         if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
                                             formatRectangleVideo.push(index);
@@ -2317,6 +2331,12 @@ exports.automate = async (req, res) => {
                                     }
                                     if (!Utilities.empty(formatInstream)) {
                                         formatObjects.instream = SmartFunction.sortDataReport(formatInstream, dataList);
+                                    }
+                                    if (!Utilities.empty(formatRectangle)) {
+                                        formatObjects.rectangle = SmartFunction.sortDataReport(
+                                            formatRectangle,
+                                            dataList
+                                        );
                                     }
                                     if (!Utilities.empty(formatRectangleVideo)) {
                                         formatObjects.rectanglevideo = SmartFunction.sortDataReport(

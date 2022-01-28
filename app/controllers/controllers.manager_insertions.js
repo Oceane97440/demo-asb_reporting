@@ -712,7 +712,7 @@ exports.create_post = async (req, res) => {
                                 if ((creatives_typeId === 1) && (format_group_id !== '1')) {
 
                                     //format grand angle mobile
-                                    if (creatives_width === 300) {
+                                    if (creatives_width === 300 && creatives_height===250) {
                                         requestCreatives['url'] = display_mobile_file
                                         requestCreatives['clickUrl'] = display_mobile_url
 
