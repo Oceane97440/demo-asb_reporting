@@ -39,15 +39,15 @@ $(document).ready(function () {
   }, function (tabs) {
     var hostUrl = tabs[0].url;
    
-    const hostRegex = '(https://manage.smartadserver.com|http://localhost:3001/manager)';
+    var hostASB = 'https://reporting.antennesb.fr/';
+
+    const hostRegex = '(https://manage.smartadserver.com|'+hostASB+'manager)';
 
     const hostSmartUrlRegex = 'https://manage.smartadserver.com';
     const hostSmartCategory = '([a-zA-Z]+)=([0-9]+)';
     const hostSmartUrlValid = hostUrl.match(hostSmartUrlRegex);
     const hostSmartCategoryValid = hostUrl.matchAll(hostSmartCategory);
-
-    // const hostAsbUrlRegex = 'http://localhost:3001/manager';
-    const hostAsbUrlRegex = 'http://localhost:3001/manager';
+    const hostAsbUrlRegex = hostASB+'manager';
     const hostAsbCategory = '([a-zA-Z]+)/([0-9]+)';
     const hostAsbUrlValid = hostUrl.match(hostAsbUrlRegex);
     const hostAsbCategoryValid = hostUrl.matchAll(hostAsbCategory);
@@ -71,15 +71,16 @@ $(document).ready(function () {
 
             switch (name.toLowerCase()) {
               case 'campagneid':
-                $('#card-smart').append('<a href="http://localhost:3001/automate/campaign?campaign_id=' + id + '" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">visibility</i></span> Visualiser la campagne</a>');
-                $('#card-smart').append('<a href="http://localhost:3001/automate/campaign?campaign_id=' + id + '" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">update</i></span> G&eacute;n&eacute;rer un rapport</a>');
+                $('#card-smart').append('<a href="'+hostASB+'/automate/campaign?campaign_id=' + id + '&extension=true" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">visibility</i></span> Visualiser la campagne</a>');
+                $('#card-smart').append('<a href="'+hostASB+'/automate/campaign/report?campaign_id=' + id + '&extension=true" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">update</i></span> G&eacute;n&eacute;rer un rapport</a>');
+                
                 break;
               case 'annonceurid':
-                $('#card-smart').append('<a href="http://localhost:3001/manager/advertisers/' + id + '" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">store</i></span> Visualiser l\'annonceur</a>');
-                $('#card-smart').append('<a href="http://localhost:3001/manager/advertisers/' + id + '" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">sync</i></span> MAJ des campagnes</a>');
+                $('#card-smart').append('<a href="'+hostASB+'/manager/advertisers/' + id + '&extension=true" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">store</i></span> Visualiser l\'annonceur</a>');
+                $('#card-smart').append('<a href="'+hostASB+'/manager/advertisers/' + id + '&extension=true" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">sync</i></span> MAJ des campagnes</a>');
                 break;
               case 'insertionid':
-                $('#card-smart').append('<a href="http://localhost:3001/manager/insertions/' + id + '" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">view_module</i></span> Visualiser l\'insertion</a>');
+                $('#card-smart').append('<a href="'+hostASB+'/manager/insertions/' + id + '&extension=true" target="_blank" class="collection-item"> <span class="badge"><i class="small material-icons">view_module</i></span> Visualiser l\'insertion</a>');
                 break;
             }
           }
@@ -124,7 +125,6 @@ $(document).ready(function () {
     } else {
       $('#card-smart').append('<div class="center-align"> <img src="' + picturesErrors[random] + '" width="250px" /> </div>');
     }
-
 
   });
 

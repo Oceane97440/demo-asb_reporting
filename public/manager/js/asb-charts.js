@@ -1,8 +1,10 @@
 'use strict';
 $(document).ready(function () {
-    var config = {
+   /* 
+   var config = {
         baseurl: "http://localhost:3001/" 
     };
+    */
 
     var chartCampaignUrl = config.baseurl + 'manager/charts/campaigns';
     var chartAdvertiserUrl = config.baseurl + 'manager/charts/advertisers';

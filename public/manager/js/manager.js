@@ -1,6 +1,7 @@
-var config = {
+/*var config = {
     baseurl: "http://localhost:3001"
 };
+*/
 
 $(document).ready(function () {
 
@@ -65,8 +66,6 @@ $(document).ready(function () {
         return false;
     })
 
-
-
     // Créer un toast
     function toastWidget(title, time, message, url = false, target = false) {
 
@@ -112,7 +111,6 @@ $(document).ready(function () {
         });
         $(".toast").toast('show');
     }
-
 
     /*
     $.getJSON(config.baseurl + '/automate/reports', function (data) {
@@ -175,24 +173,24 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
-        /*    case "campaign-report":
-                // Récupére les insertions
-                $.ajax({
-                    type: 'GET',
-                    url: config.baseurl + '/automate/campaign/report',
-                    dataType: 'json',
-                    data: 'campaign_id=' + campaign_id,
-                    success: function (data) {
-                        toastWidget('Mise à jour du rapport', '', data.message);
-                        // automateAction('campaign-report');
-                    },
-                    error: function () {
-                        swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning");
-                    },
-                    timeout: 300000
-                });
-                break;
-                */
+                /*    case "campaign-report":
+                        // Récupére les insertions
+                        $.ajax({
+                            type: 'GET',
+                            url: config.baseurl + '/automate/campaign/report',
+                            dataType: 'json',
+                            data: 'campaign_id=' + campaign_id,
+                            success: function (data) {
+                                toastWidget('Mise à jour du rapport', '', data.message);
+                                // automateAction('campaign-report');
+                            },
+                            error: function () {
+                                swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning");
+                            },
+                            timeout: 300000
+                        });
+                        break;
+                        */
             case "campaign-insertions":
                 // Récupére les insertions
                 $.ajax({
@@ -210,23 +208,23 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
-           /* case "campaign-insertions-epilot":
-                // Récupére les insertions d'epilot
-                $.ajax({
-                    type: 'GET',
-                    url: config.baseurl + '/automate/epilot/insertions',
-                    dataType: 'json',
-                    data: 'campaign_id=' + campaign_id,
-                    success: function (data) {
-                        toastWidget('Mise à jour des insertions', '', data.message);
-                        automateAction('campaign-creatives');
-                    },
-                    error: function () {
-                        swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning");
-                    },
-                    timeout: 300000
-                });
-                break;*/
+                /* case "campaign-insertions-epilot":
+                     // Récupére les insertions d'epilot
+                     $.ajax({
+                         type: 'GET',
+                         url: config.baseurl + '/automate/epilot/insertions',
+                         dataType: 'json',
+                         data: 'campaign_id=' + campaign_id,
+                         success: function (data) {
+                             toastWidget('Mise à jour des insertions', '', data.message);
+                             automateAction('campaign-creatives');
+                         },
+                         error: function () {
+                             swal("Erreur", "La g\351n\351ration automatique du mot de passe n'a pu aboutir. R\351essayer ult\351rieurement.", "warning");
+                         },
+                         timeout: 300000
+                     });
+                     break;*/
             case "campaign-creatives":
                 // $('div.alert-automate').attr('data-automate');
                 // var automateData = $('div.alert-automate').attr('data-automate');
@@ -248,7 +246,7 @@ $(document).ready(function () {
                     timeout: 300000
                 });
                 break;
-         /*   case "campaign-epilot":
+                /*   case "campaign-epilot":
                 // Réinitialise les données d'Epilot
                 $.ajax({
                     type: 'GET',
@@ -292,16 +290,16 @@ $(document).ready(function () {
     var automateData = $('div.alert-automate').attr('data-automate');
 
     if (campaign_id || advertiser_id) {
-   //   automateAction(automateData);
+        //   automateAction(automateData);
 
         var IDsAdsLoad = document.querySelectorAll("div[data-automate]");
         if (IDsAdsLoad.length > 0) {
             [].forEach.call(IDsAdsLoad, function (advertiseLoad) {
-                  //  alert(advertiseLoad.dataset.automate)
-                    automateAction(advertiseLoad.dataset.automate);
+                //  alert(advertiseLoad.dataset.automate)
+                automateAction(advertiseLoad.dataset.automate);
             });
         }
-        
+
     }
 
     $('.btn-automate').click(function () {
@@ -309,9 +307,5 @@ $(document).ready(function () {
         automateAction(btnAutomate);
         return false;
     })
-
-   
-   
-    
 
 });
