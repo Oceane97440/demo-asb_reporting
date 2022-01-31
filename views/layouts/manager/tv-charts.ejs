@@ -1,0 +1,307 @@
+<script>
+    'use strict';
+    $(document).ready(function () {
+      var config = {
+        baseurl: "https://reporting.antennesb.fr/"
+      };
+
+
+      var chartCampaignUrl = config.baseurl + 't/charts/<%=campaign_crypt%>';
+
+      $.getJSON(chartCampaignUrl, function (response) {
+
+        // Montée en couverture et répétition
+        var campaignIncreaseInLoadPerDayOptions = {
+
+          series: [{
+            name: response.campaignIncreaseInLoadPerDayCouverture.name,
+            type: 'column',
+            data: response.campaignIncreaseInLoadPerDayCouverture.data
+          }, {
+            name: response.campaignIncreaseInLoadPerDayRepetition.name,
+            type: 'line',
+            data: response.campaignIncreaseInLoadPerDayRepetition.data
+          }],
+
+
+          colors: ['#0052bc', '#ee0013'],
+
+          chart: {
+            height: 350,
+            type: 'line',
+            stacked: false
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 300,
+                height: 300,
+                type: 'line',
+                stacked: false
+              },
+              legend: {
+                horizontalAlign: 'left',
+                offsetX: 40
+              }
+
+            }
+          }],
+          dataLabels: {
+            enabled: false
+          },
+
+          stroke: {
+            width: [1, 5]
+          },
+          /*  title: {
+              text: 'Montée en couverture et répétition',
+              enabled: false,
+              align: 'center',
+            },*/
+          xaxis: {
+            categories: response.campaignIncreaseInLoadPerDayJour.data,
+          },
+          yaxis: [{
+              axisTicks: {
+                show: true,
+              },
+
+              axisBorder: {
+                show: true,
+                color: '#14478c'
+              },
+              labels: {
+                formatter: function (value) {
+                  return value + "%";
+                },
+                style: {
+                  colors: '#14478c',
+                }
+              },
+              title: {
+                text: response.campaignIncreaseInLoadPerDayCouverture.name,
+                style: {
+                  color: '#14478c',
+                }
+              },
+              tooltip: {
+                enabled: true,
+              }
+            },
+            {
+              seriesName: response.campaignIncreaseInLoadPerDayRepetition.name,
+              opposite: true,
+              axisTicks: {
+                show: true,
+              },
+              axisBorder: {
+                show: true,
+                color: '#14478c',
+              },
+              labels: {
+                style: {
+                  colors: '#14478c',
+
+                }
+              },
+              title: {
+                text: response.campaignIncreaseInLoadPerDayRepetition.name,
+                style: {
+                  color: '#14478c',
+                  border: '2px'
+                }
+              },
+            }
+          ],
+          tooltip: {
+
+
+
+            fixed: {
+              enabled: true,
+              position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
+              offsetY: 30,
+              offsetX: 60,
+
+            },
+          },
+          legend: {
+            horizontalAlign: 'left',
+            offsetX: 40
+          }
+        };
+
+        var campaignIncreaseInLoadPerDayChart = new ApexCharts(document.querySelector(
+          "#chart-table_montee_en_couverture"), campaignIncreaseInLoadPerDayOptions);
+        campaignIncreaseInLoadPerDayChart.render();
+        console.log(response.cibleEnsemble)
+        // Couverture par cible
+        var options = {
+          series: [response.cibleEnsemble.data],
+          chart: {
+            width: 300,
+            height: 300,
+            type: 'radialBar',
+          },
+          colors: ['#0052bc'],
+
+          labels: [response.cibleEnsemble.name],
+
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 300,
+                height: 300,
+
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart-table_couverture_par_cible"), options);
+        chart.render();
+
+        console.log(response.campaigntimeSlotDiaryGRP)
+        // Ventilations des GRP par tranches horaires​
+        var campaigntimeSlotDiaryOptions = {
+          series: [{
+            name: response.campaigntimeSlotDiaryGRP.name,
+            data: response.campaigntimeSlotDiaryGRP.data
+          }],
+          chart: {
+            type: 'bar',
+            height: 300
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false
+            },
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                type: 'bar',
+                width: 300,
+                height: 300,
+
+              }
+            }
+          }],
+          dataLabels: {
+            enabled: false
+          },
+          colors: ['#0052bc', '#ee0013'],
+
+          stroke: {
+            show: true,
+            width: 0,
+            colors: ['transparent']
+          },
+          xaxis: {
+            title: {
+              text: response.campaigntimeSlotDiaryTrancheHoraires.name
+            },
+            categories: response.campaigntimeSlotDiaryTrancheHoraires.data
+          },
+          yaxis: {
+            title: {
+              text: response.campaigntimeSlotDiaryGRP.name
+            },
+            type: 'numeric'
+          },
+          fill: {
+            opacity: 1
+          },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val
+              }
+            }
+          }
+        };
+
+        var campaigntimeSlotDiaryChart = new ApexCharts(document.querySelector(
+          "#chart-table_ventilations_GRP_horaires"), campaigntimeSlotDiaryOptions);
+        campaigntimeSlotDiaryChart.render();
+
+        console.log(response.campaignNameDayCouverture)
+        // Jours nommés
+        // Ventilations des GRP par tranches horaires​
+        var campaignNameDayOptions = {
+          series: [{
+            name: response.campaignNameDayCouverture.name,
+            data: response.campaignNameDayCouverture.data
+          }],
+          chart: {
+            type: 'bar',
+            height: 300,
+
+          },
+          responsive: [{
+            options: {
+              chart: {
+                width: 500,
+                height: 300,
+                type: 'bar',
+                stacked: false
+              }
+
+            }
+          }],
+          plotOptions: {
+            bar: {
+              horizontal: false
+            },
+          },
+          dataLabels: {
+            enabled: true
+          },
+          colors: ['#0052bc', '#ee0013'],
+
+          stroke: {
+            show: true,
+            width: 0,
+            colors: ['transparent']
+          },
+          xaxis: {
+            title: {
+              text: 'Jour de la semaine'
+            },
+            categories: response.campaignNameDayJour.data
+          },
+          yaxis: {
+            title: {
+              text: response.campaigntimeSlotDiaryGRP.name
+            },
+            type: 'numeric'
+          },
+          fill: {
+            opacity: 1
+          },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val
+              }
+            }
+          }
+        };
+
+
+
+
+        var campaignNameDayChart = new ApexCharts(document.querySelector("#chart-table_ventilations_GRP_jours"),
+          campaignNameDayOptions);
+        campaignNameDayChart.render();
+      });
+
+
+    });
+  </script>
