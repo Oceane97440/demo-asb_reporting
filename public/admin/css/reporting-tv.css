@@ -1,0 +1,49 @@
+body {
+    background: #eee;
+    font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif;
+
+  }
+
+  #reporting-board {
+    background: #fff;
+  }
+
+  #info_generale {
+    background-color: #0052bc !important;
+    position: relative;
+
+  }
+
+  #info {
+    position: absolute;
+    display: flex;
+    right: 20px;
+    align-items: center;
+    align-content: center;
+    cursor: pointer;
+  }
+  #boutton-info{
+    display: contents;
+    color: white;font-size: 25px
+  }
+  #content-info{
+    font-size: small;color: white;
+  }
+
+  hr {
+    margin-top: 10px;
+    border-color: #ddd;
+  }
+
+  .list-group-flush {
+    width: 100%;
+  }
+
+  .list-group-flush li strong {
+    /* width: 100%; */
+    display: inline-block;
+  }
+
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }

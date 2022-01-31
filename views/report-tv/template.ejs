@@ -40,50 +40,7 @@
   <link rel="apple-touch-icon" type="image/png"
     href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
 
-  <style>
-    body {
-      background: #eee;
-      font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif;
-
-    }
-
-    #reporting-board {
-      background: #fff;
-    }
-
-    #info_generale {
-      background-color: #0052bc !important;
-      position: relative;
-
-    }
-
-    #info {
-      position: absolute;
-      display: flex;
-      right: 20px;
-      align-items: center;
-      align-content: center;
-      cursor: pointer;
-    }
-
-    hr {
-      margin-top: 10px;
-      border-color: #ddd;
-    }
-
-    .list-group-flush {
-      width: 100%;
-    }
-
-    .list-group-flush li strong {
-      /* width: 100%; */
-      display: inline-block;
-    }
-
-    img {
-      image-rendering: -webkit-optimize-contrast;
-    }
-  </style>
+    <link href="/admin/css/reporting-tv.css" rel="stylesheet" />
 
 </head>
 
@@ -98,15 +55,16 @@
   <div class="container p-3 mt-2 mb-2 shadow-lg rounded" id="reporting-board">
 
     <div class="row" style="
-            justify-content: center;
-        ">
-      <div class="col-md-3">
-        <a href="https://antennesb.fr/" target="_blank"><img src="/admin/photos/logo.png" alt="logo_antenne" /></a>
+    justify-content: center;
+    flex-wrap: inherit;
+">
+      <div class="col-md-3 col-sm-6">
+        <a href="https://antennesb.fr/" target="_blank"><img src="/admin/photos/logo.png" alt="logo_antenne"></a>
 
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 col-sm-6">
         <a href="https://www.antennereunion.fr/" target="_blank"><img
-            src="https://www.antennereunion.fr/squelettes/assets/img/logo-ar2.png" alt="logo_antenne" /></a>
+            src="https://www.antennereunion.fr/squelettes/assets/img/logo-ar2.png" alt="logo_antenne"></a>
 
       </div>
 
@@ -152,9 +110,7 @@
           <strong>Résumé</strong>
           <div id="info">
 
-            <button style="display: contents;
-            color: white;font-size: 25px;
-            " class="btn" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+            <button id="boutton-info"  class="btn" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
               aria-controls="collapseExample">
               <i class="fas fa-info-circle"></i>
             </button>
@@ -167,20 +123,21 @@
 
 
       </h3>
-     
+
       <div class="container">
         <ul class="list-group list-group-flush list-unstyled">
           <li>Couverture : <% if(reporting["a-Ensemble"].campaignChannel.Couverture) { %>
-            <strong><%= reporting["a-Ensemble"].campaignChannel.Couverture %> %</strong> <% } %> des
-            Réunionnais de la cible<% if(reporting["a-Ensemble"]) { %> <strong>Ensemble</strong> <% } %> exposés à la
-            campagne​</li>
+            <strong><%= reporting["a-Ensemble"].campaignChannel.Couverture %>%</strong> <% } %> des
+            Réunionnais de la cible<% if(reporting["a-Ensemble"]) { %> <strong>Ensemble</strong> <% } %> sont exposés à
+            la
+            campagne​.</li>
           <li>La campagne a généré <% if(reporting["a-Ensemble"].campaignChannel['Nombre de contacts']) { %>
             <strong><%= utilities.numStr(Math.round(reporting["a-Ensemble"].campaignChannel['Nombre de contacts'])) %></strong>
-            <% } %> contacts de <% if(reporting["a-Ensemble"]) { %> <strong>la cible Ensemble</strong>
-            <% } %>​</li>
+            <% } %> contacts de <% if(reporting["a-Ensemble"]) { %> la cible <strong>Ensemble</strong>
+            <% } %>​.</li>
           <li>Nombre de GRP de la cible <% if(reporting["a-Ensemble"]) { %> <strong>Ensemble</strong> <% } %>​ :
             <% if(reporting["a-Ensemble"].campaignChannel['GRP']) { %>
-            <strong><%= reporting["a-Ensemble"].campaignChannel['GRP'] %></strong> <% } %> GRP​</li>
+            <strong><%= reporting["a-Ensemble"].campaignChannel['GRP'] %></strong> <% } %> GRP​.</li>
           <li>Coût du GRP moyen : <% if(reporting["a-Ensemble"].campaignChannel['Ct GRP']) { %>
             <strong><%= reporting["a-Ensemble"].campaignChannel['Ct GRP'] %></strong> <% } %> €​</li>
           <li>Coût pour 1000 contacts :
@@ -190,9 +147,9 @@
         </ul>
         <div class="collapse" id="collapseExample">
           <hr>
-          <div style="
-          font-size: small;color: white;">
-            <i class="fas fa-info-circle"></i> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
+          <div id="content-info">
+            <i class="fas fa-info-circle"></i> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
+            terry richardson ad squid. Nihil anim
             keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
           </div>
         </div>
@@ -254,270 +211,7 @@
   </script>
 
   <script src="/assets/js/plugins/apexcharts.min.js"></script>
-  <script>
-    'use strict';
-    $(document).ready(function () {
-      var config = {
-        baseurl: "http://127.0.0.1:3001/"
-      };
-
-
-      var chartCampaignUrl = config.baseurl + 't/charts/<%=campaign_crypt%>';
-
-      $.getJSON(chartCampaignUrl, function (response) {
-
-        // Montée en couverture et répétition
-        var campaignIncreaseInLoadPerDayOptions = {
-
-          series: [{
-            name: response.campaignIncreaseInLoadPerDayCouverture.name,
-            type: 'column',
-            data: response.campaignIncreaseInLoadPerDayCouverture.data
-          }, {
-            name: response.campaignIncreaseInLoadPerDayRepetition.name,
-            type: 'line',
-            data: response.campaignIncreaseInLoadPerDayRepetition.data
-          }],
-
-
-          colors: ['#0052bc', '#ee0013'],
-
-          chart: {
-            height: 350,
-            type: 'line',
-            stacked: false
-          },
-          dataLabels: {
-            enabled: false
-          },
-
-          stroke: {
-            width: [1, 3]
-          },
-          /*  title: {
-              text: 'Montée en couverture et répétition',
-              enabled: false,
-              align: 'center',
-            },*/
-          xaxis: {
-            categories: response.campaignIncreaseInLoadPerDayJour.data,
-          },
-          yaxis: [{
-              axisTicks: {
-                show: true,
-              },
-
-              axisBorder: {
-                show: true,
-                color: '#14478c'
-              },
-              labels: {
-                style: {
-                  colors: '#14478c',
-                }
-              },
-              title: {
-                text: response.campaignIncreaseInLoadPerDayCouverture.name,
-                style: {
-                  color: '#14478c',
-                }
-              },
-              tooltip: {
-                enabled: true,
-              }
-            },
-            {
-              seriesName: response.campaignIncreaseInLoadPerDayRepetition.name,
-              opposite: true,
-              axisTicks: {
-                show: true,
-              },
-              axisBorder: {
-                show: true,
-                color: '#14478c'
-              },
-              labels: {
-                style: {
-                  colors: '#14478c',
-                }
-              },
-              title: {
-                text: response.campaignIncreaseInLoadPerDayRepetition.name,
-                style: {
-                  color: '#14478c',
-                  border: '2px'
-                }
-              },
-            }
-          ],
-          tooltip: {
-
-            formatter: function (value) {
-              return value + "%";
-            },
-
-            fixed: {
-              enabled: true,
-              position: 'topLeft', // topRight, topLeft, bottomRight, bottomLeft
-              offsetY: 30,
-              offsetX: 60,
-
-            },
-          },
-          legend: {
-            horizontalAlign: 'left',
-            offsetX: 40
-          }
-        };
-
-        var campaignIncreaseInLoadPerDayChart = new ApexCharts(document.querySelector(
-          "#chart-table_montee_en_couverture"), campaignIncreaseInLoadPerDayOptions);
-        campaignIncreaseInLoadPerDayChart.render();
-        console.log(response.cibleEnsemble)
-        // Couverture par cible
-        var options = {
-          series: [response.cibleEnsemble.data],
-          chart: {
-            width: 380,
-            type: 'radialBar',
-          },
-          colors: ['#0052bc'],
-
-          labels: [response.cibleEnsemble.name],
-
-          responsive: [{
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 100,
-
-              },
-              legend: {
-                position: 'bottom'
-              }
-            }
-          }]
-        };
-
-        var chart = new ApexCharts(document.querySelector("#chart-table_couverture_par_cible"), options);
-        chart.render();
-
-        console.log(response.campaigntimeSlotDiaryGRP)
-        // Ventilations des GRP par tranches horaires​
-        var campaigntimeSlotDiaryOptions = {
-          series: [{
-            name: response.campaigntimeSlotDiaryGRP.name,
-            data: response.campaigntimeSlotDiaryGRP.data
-          }],
-          chart: {
-            type: 'bar',
-            height: 300
-          },
-          plotOptions: {
-            bar: {
-              horizontal: false
-            },
-          },
-          dataLabels: {
-            enabled: false
-          },
-          colors: ['#0052bc', '#ee0013'],
-
-          stroke: {
-            show: true,
-            width: 0,
-            colors: ['transparent']
-          },
-          xaxis: {
-            title: {
-              text: response.campaigntimeSlotDiaryTrancheHoraires.name
-            },
-            categories: response.campaigntimeSlotDiaryTrancheHoraires.data
-          },
-          yaxis: {
-            title: {
-              text: response.campaigntimeSlotDiaryGRP.name
-            },
-            type: 'numeric'
-          },
-          fill: {
-            opacity: 1
-          },
-          tooltip: {
-            y: {
-              formatter: function (val) {
-                return val
-              }
-            }
-          }
-        };
-
-        var campaigntimeSlotDiaryChart = new ApexCharts(document.querySelector(
-          "#chart-table_ventilations_GRP_horaires"), campaigntimeSlotDiaryOptions);
-        campaigntimeSlotDiaryChart.render();
-
-        console.log(response.campaignNameDayCouverture)
-        // Jours nommés
-        // Ventilations des GRP par tranches horaires​
-        var campaignNameDayOptions = {
-          series: [{
-            name: response.campaignNameDayCouverture.name,
-            data: response.campaignNameDayCouverture.data
-          }],
-          chart: {
-            type: 'bar',
-            height: 300
-          },
-          plotOptions: {
-            bar: {
-              horizontal: false
-            },
-          },
-          dataLabels: {
-            enabled: true
-          },
-          colors: ['#0052bc', '#ee0013'],
-
-          stroke: {
-            show: true,
-            width: 0,
-            colors: ['transparent']
-          },
-          xaxis: {
-            title: {
-              text: 'Jour de la semaine'
-            },
-            categories: response.campaignNameDayJour.data
-          },
-          yaxis: {
-            title: {
-              text: response.campaigntimeSlotDiaryGRP.name
-            },
-            type: 'numeric'
-          },
-          fill: {
-            opacity: 1
-          },
-          tooltip: {
-            y: {
-              formatter: function (val) {
-                return val
-              }
-            }
-          }
-        };
-
-
-
-
-        var campaignNameDayChart = new ApexCharts(document.querySelector("#chart-table_ventilations_GRP_jours"),
-          campaignNameDayOptions);
-        campaignNameDayChart.render();
-      });
-
-
-    });
-  </script>
+  <%- include("../layouts/manager/tv-charts.ejs") -%>
 </body>
 
 </html>

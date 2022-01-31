@@ -488,12 +488,12 @@ exports.generate = async (req, res) => {
         }).then(async function (campaign) {
 
             if (!campaign) {
-                req.session.message = {
-                    type: 'danger',
-                    intro: 'Erreur',
-                    message: "La campagne demandée n'a pas été trouver"
-                }
-                return res.redirect('/manager/campaigns/tv/list');
+                return res
+                .status(404)
+                .render("error.ejs", {
+                    statusCoded: 404,
+                    campaigncrypt: campaigncrypt
+                });
 
             }
 
@@ -503,12 +503,12 @@ exports.generate = async (req, res) => {
             var reportingData = JSON.parse(LocalStorageTVDATA);
 
             if (!LocalStorageTVDATA) {
-                req.session.message = {
-                    type: 'danger',
-                    intro: 'Erreur',
-                    message: "La campagne demandée n'a pas été générer"
-                }
-                return res.redirect('/manager/campaigns/tv/list');
+                return res
+                .status(404)
+                .render("error.ejs", {
+                    statusCoded: 404,
+                    campaigncrypt: campaigncrypt
+                });
             }
 
             res.render('report-tv/template.ejs', {
