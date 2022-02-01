@@ -1,0 +1,94 @@
+<%- include("../../layouts/manager/head.ejs") -%>
+
+<div class="col-sm-12" id="campaign-main">
+
+    <div class="card" data-campaign_tv_id="<%= campaign.campaign_tv_id %>">
+        <div class="card-header">
+            <h1><%= campaign.campaign_tv_name %></h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8 col-sm-12">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">info</i>
+                                ID</span>:
+                            <strong><%= campaign.campaign_tv_id %></strong>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">store</i>
+                                Annonceur</span>:
+                            <%= campaign.advertisers_tv.advertiser_tv_name %>
+                        </li>
+                   
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">date_range</i>
+                                Période du</span>: Du
+                            <%= moment(campaign.campaign_tv_start_date).format('DD/MM/YYYY') %>
+                            au
+                            <%= moment(campaign.campaign_tv_end_date).format('DD/MM/YYYY') %>
+                        </li>
+
+                   
+
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">euro_symbol</i>
+                                Budget </span>
+                            :
+                            <% if(!utilities.empty(campaign.campaign_tv_budget) && (campaign.campaign_tv_budget!= 0)) { %>
+                                <strong><%= utilities.numStr(campaign.campaign_tv_budget) %> </strong> €
+                            <% } else { %>-<% } %>
+                        </li>
+
+                     
+                    </ul>
+
+                    <hr />
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">history</i>
+                                Dernière MAJ</span>:
+                            <abbr title="<%= campaign.updated_at %>"><%= moment(campaign.updated_at).fromNow() %></abbr>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+
+                    <div class="d-grid gap-2">
+
+
+
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle"
+                                data-toggle="dropdown">
+                                <i class="material-icons-two-tone">link</i>
+                                Accéder au rapport de campagne
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/t/<%= campaign.campaign_tv_crypt %>" target="_blank">
+                                        Générer le rapport</a></li>
+                    
+                            </ul>
+                        </div>
+
+                        <a href="/manager/campaigns/tv/edit/<%= campaign.campaign_tv_id %>" target="_blank"
+                            class="btn btn-info" title=" Mettre à jour la campagne">
+                            <i class="fas fa-sync"></i>
+                            Mettre à jour la campagne</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<%- include("../../layouts/manager/footer.ejs") -%>

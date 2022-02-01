@@ -11,7 +11,8 @@
         <tbody>
             <% for (let i=0; i < campaignsTv.length; i++) { %>
             <tr>
-                <td><%= campaignsTv[i].campaign_tv_name %><br>
+                <td><a href="/manager/campaigns/tv/<%= campaignsTv[i].campaign_tv_id %>"
+                    title="<%= campaignsTv[i].campaign_tv_name %>"><%= campaignsTv[i].campaign_tv_name %><br></a>
                     <span class="small">(Du <%= moment(campaignsTv[i].campaign_tv_start_date).format('DD/MM/YYYY') %> au
                         <%= moment(campaignsTv[i].campaign_tv_end_date).format('DD/MM/YYYY') %>)</span>
                 </td>
