@@ -334,7 +334,17 @@ exports.index = async (req, res) => {
                                 })
 
                               
+                                // ctr = parseFloat(campaignObjects[worksheetName].campaignChannel.Couverture * campaignObjects[worksheetName].campaignChannel.Répétition).toFixed(
+                                //     2
+                                // );
 
+                                // var grp = {
+                                //     "GRP":ctr
+                                // }
+                                // campaignObjects[worksheetName].campaignChannel = grp;
+
+
+                                console.log(campaignObjects)
 
                                 await ModelCampaignsTv.findOne({
                                     attributes: [
