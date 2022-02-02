@@ -91,8 +91,11 @@ exports.index = async (req, res) => {
                             // Récupére le nom de la feuille
                             var worksheetName = worksheet.name;
 
-                            // Récupére la feuille Ensemble 
-                            if (worksheetName.match(regexEnsemble)) {
+                         
+
+
+                            if (worksheetName.match(/[a-zA ](-){1}(?!Paramétrage tarifaire\b)/gi)) {
+                               
 
                                 const campaignName = worksheet.getCell('C3').value;
                                 const campaignPeriod = worksheet.getCell('C4').value;
@@ -100,13 +103,17 @@ exports.index = async (req, res) => {
                                 const campaignCurrency = worksheet.getCell('C7').value;
                                 const campaignBudget = worksheet.getCell('C8').value;
                                 const campaignWeightedNumber = worksheet.getCell('C9').value;
-
                                 const campaignAdvertiser = worksheet.getCell('H3').value;
                                 const campaignFormat = worksheet.getCell('H6').value;
+                                const campaignTarget =  worksheet.getCell('C11').value;
+
+
 
                                 campaignObjects[worksheetName] = {
+                                    'campaignTarget': campaignTarget,
                                     'campaignName': campaignName,
                                     'campaignPeriod': campaignPeriod,
+                                    'campaignUser': campaignUser,
                                     'campaignCurrency': campaignCurrency,
                                     'campaignBudget': campaignBudget,
                                     'campaignWeightedNumber': campaignWeightedNumber,
@@ -115,7 +122,9 @@ exports.index = async (req, res) => {
                                 }
 
                                 console.log('Campagne : ', campaignName);
+                                console.log('Cible : ', campaignTarget);
                                 console.log('Période : ', campaignPeriod);
+                                console.log('User : ', campaignUser);
                                 console.log('Monnaie : ', campaignCurrency);
                                 console.log('Budget : ', campaignBudget);
                                 console.log('Effectif pondéré : ', campaignWeightedNumber);
@@ -149,18 +158,14 @@ exports.index = async (req, res) => {
                                     if (dataRow[1] === "Montée en charge / Jour") {
                                         var increaseInLoadPerDayLineBegin = rowNumber;
                                         dataItemsLinesSelect['increaseInLoadPerDayLineBegin'] = rowNumber;
-                                        /* console.log(
-                                             '[x] Montée en charge / Jour - Begin :' + increaseInLoadPerDayLineBegin
-                                         );*/
+
                                     }
 
                                     // Récupére le numéro de la ligne où se trouve : "Journal tranches horaires" et le mets dans un tableau
                                     if (dataRow[1] === "Journal tranches horaires") {
                                         var timeSlotDiaryLineBegin = rowNumber;
                                         dataItemsLinesSelect['timeSlotDiaryLineBegin'] = rowNumber;
-                                        /*  console.log(
-                                              '[x] Journal tranches horaires - End : ' + timeSlotDiaryLineBegin
-                                          );*/
+
                                     }
 
                                     // Récupére le numéro de la ligne où se trouve : "Jour nommé" et le mets dans un tableau
@@ -278,17 +283,11 @@ exports.index = async (req, res) => {
 
                                         //console.log(IncreaseInLoadPerDayArray);
                                         timeSlotDiaryArray.push(timeSlotDiaryObject);
-                                        /* console.log('--------++++++++++++++++++++++++------------')
-                                         console.log(timeSlotDiaryArray);
-                                         console.log('--------++++++++++++++++++++++++------------')*/
+
 
                                         // Mets des données des données des tranches horaires
                                         campaignObjects[worksheetName].campaigntimeSlotDiary = timeSlotDiaryArray;
 
-                                        /* console.log(
-                                             'tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') ' +
-                                             '= ' + JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
-                                         );*/
                                     }
 
                                     // Récupération des données des jours de la semaine
@@ -321,27 +320,13 @@ exports.index = async (req, res) => {
                                         // Mets es données des données des tranches horaires
                                         campaignObjects[worksheetName].campaignNameDay = nameDayArray;
 
-                                        /* console.log('--------++++++++++++++++++++++++------------')
-                                         console.log(nameDayArray);
-                                         console.log('--------++++++++++++++++++++++++------------')*/
 
-                                        /*  console.log(
-                                              'jour_nomme_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' +
-                                              JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
-                                          );*/
                                     }
 
                                 })
 
-                              
-                                // ctr = parseFloat(campaignObjects[worksheetName].campaignChannel.Couverture * campaignObjects[worksheetName].campaignChannel.Répétition).toFixed(
-                                //     2
-                                // );
 
-                                // var grp = {
-                                //     "GRP":ctr
-                                // }
-                                // campaignObjects[worksheetName].campaignChannel = grp;
+
 
 
                                 console.log(campaignObjects)

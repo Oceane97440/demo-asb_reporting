@@ -40,7 +40,7 @@
   <link rel="apple-touch-icon" type="image/png"
     href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
 
-  <link href="/admin/css/reporting-tv.css" rel="stylesheet" />
+    <link href="/admin/css/reporting-tv.css" rel="stylesheet" />
 
 </head>
 
@@ -79,11 +79,8 @@
       </div>
     </div>
 
+
     <div class="row mt-5">
-
-
-
-
       <div class="container">
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
@@ -106,97 +103,61 @@
       </div>
     </div>
 
+    <div class="row p-3 mt-5 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded" id="info_generale">
+      <h3 class="title" style="padding-left: 10px;">
+        <div class="row">
 
+          <strong>Résumé</strong>
+          <div id="info">
 
+            <button id="boutton-info"  class="btn" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+              aria-controls="collapseExample">
+              <i class="fas fa-info-circle"></i>
+            </button>
 
-    <nav>
-      <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <% for(const property in reporting) { %>
-        <a class="nav-item nav-link active" id="nav-<%= reporting[property].campaignTarget %>-tab" data-toggle="tab"
-          href="#nav-<%= reporting[property].campaignTarget %>" role="tab"
-          aria-controls="nav-<%= reporting[property].campaignTarget %>"
-          aria-selected="true"><%= reporting[property].campaignTarget %></a>
-        <% } %>
-      </div>
-    </nav>
-    <div class="tab-content" id="nav-tabContent">
-      <% for(const property in reporting) { %>
-
-      <div class="tab-pane fade show active" id="nav-<%= reporting[property].campaignTarget %>" role="tabpanel"
-        aria-labelledby="nav-<%= reporting[property].campaignTarget %>-tab">
-
-
-
-        <div class="row p-3 mt-5 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded" id="info_generale">
-
-          <h3 class="title" style="padding-left: 10px;">
-            <div class="row">
-
-              <strong>Résumé</strong>
-              <div id="info">
-
-                <button id="boutton-info" class="btn" data-toggle="collapse"
-                  data-target="#<%= reporting[property].campaignTarget %>" aria-expanded="false"
-                  aria-controls="<%= reporting[property].campaignTarget %>">
-                  <i class="fas fa-info-circle"></i>
-                </button>
-              </div>
-            </div>
-
-          </h3>
-
-          <div class="container">
-
-            <ul class="list-group list-group-flush list-unstyled">
-              <li>Couverture : <% if(reporting[property].campaignChannel.Couverture) { %>
-                <strong><%= reporting[property].campaignChannel.Couverture %>%</strong> <% } %> des
-                Réunionnais de la cible<% if(reporting[property]) { %>
-                <strong><%= reporting[property].campaignTarget %></strong> <% } %> sont exposés à
-                la
-                campagne​.</li>
-              <li>La répétition est de : <% if(reporting[property].campaignChannel.Répétition) { %>
-                <strong><%= reporting[property].campaignChannel.Répétition %></strong> <% } %>
-              </li>
-
-              <li>La campagne a généré <% if(reporting[property].campaignChannel['Nombre de contacts']) { %>
-                <strong><%= utilities.numStr(Math.round(reporting[property].campaignChannel['Nombre de contacts'])) %></strong>
-                <% } %> contacts de <% if(reporting[property]) { %> la cible
-                <strong><%= reporting[property].campaignTarget %></strong>
-                <% } %>​.</li>
-              <li>Nombre de GRP de la cible <% if(reporting[property]) { %>
-                <strong><%= reporting[property].campaignTarget %></strong> <% } %>​ :
-                <% if(reporting[property].campaignChannel['GRP']) { %>
-                <strong><%= reporting[property].campaignChannel['GRP'] %></strong> <% } %> GRP​.</li>
-              <li>Coût du GRP moyen : <% if(reporting[property].campaignChannel['Ct GRP']) { %>
-                <strong><%= reporting[property].campaignChannel['Ct GRP'] %></strong> <% } %> €​</li>
-              <li>Coût pour 1000 contacts :
-                <% if(reporting[property].campaignChannel['CPM contacts Net']) { %>
-                <strong><%= reporting[property].campaignChannel['CPM contacts Net'] %></strong> <% } %> €​
-              </li>
-            </ul>
-
-            <div class="collapse" id="<%= reporting[property].campaignTarget %>">
-              <hr>
-              <div id="content-info">
-                <i class="fas fa-info-circle"></i> <strong>GRP</strong> est un indicateur de performance qui associe
-                couverture de votre cible multipliée par la répétition.
-                (Exemple : <strong><%= reporting[property].campaignChannel.Couverture %> </strong> x
-                <strong><%= reporting[property].campaignChannel.Répétition %></strong> =
-                <strong><%= reporting[property].campaignChannel['GRP'] %> GRP</strong> )
-              </div>
-            </div>
 
           </div>
+
+
         </div>
 
+
+      </h3>
+
+      <div class="container">
+        <ul class="list-group list-group-flush list-unstyled">
+          <li>Couverture : <% if(reporting["a-Ensemble"].campaignChannel.Couverture) { %>
+            <strong><%= reporting["a-Ensemble"].campaignChannel.Couverture %>%</strong> <% } %> des
+            Réunionnais de la cible<% if(reporting["a-Ensemble"]) { %> <strong>Ensemble</strong> <% } %> sont exposés à
+            la
+            campagne​.</li>
+            <li>La répétition est de : <% if(reporting["a-Ensemble"].campaignChannel.Répétition) { %>
+              <strong><%= reporting["a-Ensemble"].campaignChannel.Répétition %></strong> <% } %> 
+            </li>
+
+          <li>La campagne a généré <% if(reporting["a-Ensemble"].campaignChannel['Nombre de contacts']) { %>
+            <strong><%= utilities.numStr(Math.round(reporting["a-Ensemble"].campaignChannel['Nombre de contacts'])) %></strong>
+            <% } %> contacts de <% if(reporting["a-Ensemble"]) { %> la cible <strong>Ensemble</strong>
+            <% } %>​.</li>
+          <li>Nombre de GRP de la cible <% if(reporting["a-Ensemble"]) { %> <strong>Ensemble</strong> <% } %>​ :
+            <% if(reporting["a-Ensemble"].campaignChannel['GRP']) { %>
+            <strong><%= reporting["a-Ensemble"].campaignChannel['GRP'] %></strong> <% } %> GRP​.</li>
+          <li>Coût du GRP moyen : <% if(reporting["a-Ensemble"].campaignChannel['Ct GRP']) { %>
+            <strong><%= reporting["a-Ensemble"].campaignChannel['Ct GRP'] %></strong> <% } %> €​</li>
+          <li>Coût pour 1000 contacts :
+            <% if(reporting["a-Ensemble"].campaignChannel['CPM contacts Net']) { %>
+            <strong><%= reporting["a-Ensemble"].campaignChannel['CPM contacts Net'] %></strong> <% } %> €​
+          </li>      
+        </ul>
+        <div class="collapse" id="collapseExample">
+          <hr>
+          <div id="content-info">
+            <i class="fas fa-info-circle"></i> <strong>GRP</strong> est un indicateur de performance qui associe couverture de votre cible multipliée par la répétition. 
+            (Exemple : <strong><%= reporting["a-Ensemble"].campaignChannel.Couverture %> </strong> x <strong><%= reporting["a-Ensemble"].campaignChannel.Répétition %></strong> = <strong><%= reporting["a-Ensemble"].campaignChannel['GRP'] %> GRP</strong> )
+          </div>
+        </div>
       </div>
-      <% } %>
-
     </div>
-
-
-
-
 
     <div class="row mt-5">
       <div class="col-md-8 col-sm-12 pt-3" id="table_montee_en_couverture">
