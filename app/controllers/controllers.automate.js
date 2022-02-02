@@ -270,11 +270,16 @@ exports.advertiser = async (req, res) => {
                         .then(function (result) {
                             result.item; // the model
                             result.created; // bool, if a new item was created.
-                            res.redirect(`/manager/advertisers/${advertiser_id}`)
-                            /*return res.json({
-                                type: 'success',
-                                message: 'L\'annonceur <strong>' + advertiser_id + '</strong> a bien été ajouté.'
-                            });*/
+                           
+                            if(req.query.extension) {
+                                 res.redirect(`/manager/advertisers/${advertiser_id}?extension=true`)
+                            } else {                           
+                                return res.json({
+                                    type: 'success',
+                                    message: 'L\'annonceur <strong>' + advertiser_id + '</strong> a bien été ajouté.'
+                                });
+                            }
+
                         });
                 }
 
@@ -360,7 +365,7 @@ exports.advertisersCampaigns = async (req, res) => {
                 } else {
                     return res.json({
                         type: 'error',
-                        message: 'Error : Aucune donnée disponible'
+                        message: 'Erreur : Aucune donnée disponible.'
                     });
                 }
             });
@@ -474,7 +479,7 @@ exports.campaigns = async (req, res) => {
                                 }
                             }
                         } else {
-                            console.error('Error : Aucune donnée disponible');
+                            console.error('Erreur : Aucune donnée disponible.');
                         }
 
                     })
@@ -583,11 +588,18 @@ exports.campaign = async (req, res) => {
                                         [Op.like]: "%" + epilot_campaign_code + "%"
                                     }
                                 }
-                            });
+                            }).then(function() {
 
-                            return res.json({
-                                type: 'success',
-                                message: 'Cette campagne a bien été mise à jour.'
+                                if(req.query.extension) {
+                                  //  return res.redirect('../../manager/campaigns/'+campaign_id+'?extension=true');
+                                  res.redirect(`/manager/campaigns/${campaign_id}?extension=true`)
+                                } else {                           
+                                    return res.json({
+                                        type: 'success',
+                                        message: 'Cette campagne a bien été mise à jour.'
+                                    });
+                                }
+
                             });
 
                         } else {
@@ -634,10 +646,16 @@ exports.campaignReport = async (req, res) => {
                 })
                 .then(async function (campaign) {
                     if (!campaign) {
+
+                        if(req.query.extension) {
+                            res.redirect('../../automate/campaign?campaign_id='+campaign_id+'&extension=true')
+                       } else {                           
                         return res.json({
                             type: 'error',
                             message: 'Cette campagne n\'existe pas.'
                         });
+                       }
+
                     }
 
                     // fonctionnalité de géneration du rapport
@@ -684,10 +702,15 @@ exports.campaignReport = async (req, res) => {
                                 }
 
                                 if (reporting_requete_date < reporting_end_date) {
-                                    return res.json({
-                                        type: 'success',
-                                        message: 'Le rapport de campagne a été généré'
-                                    });
+                                    
+                                    if(req.query.extension) {
+                                        res.redirect('/r/'+campaigncrypt+'?extension=true');
+                                    } else {                           
+                                        return res.json({
+                                            type: 'success',
+                                            message: 'Le rapport de campagne a été généré.'
+                                        });
+                                   }
 
                                 }
 
@@ -707,14 +730,18 @@ exports.campaignReport = async (req, res) => {
                                         'campaignID-' + campaignid + '-taskGlobalVU'
                                     );
 
-                                    // res.redirect('/r/${campaigncrypt}');
+                                    // 
                                 } else {
 
-                                    return res.json({
-                                        type: 'success',
-                                        message: 'Le rapport de campagne a été généré'
-                                    });
-
+                                    if(req.query.extension) {
+                                        res.redirect('/r/${campaigncrypt}?extension=true');
+                                    } else {                           
+                                        return res.json({
+                                            type: 'success',
+                                            message: 'Le rapport de campagne a été généré.'
+                                        });
+                                   }
+       
                                 }
 
                             }
@@ -1314,10 +1341,14 @@ exports.campaignReport = async (req, res) => {
 
                                         localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
 
+                                        if(req.query.extension) {
+                                            res.redirect('/r/'+campaigncrypt+'?extension=true');
+                                        } else {                           
                                         return res.json({
                                             type: 'success',
                                             message: 'Le rapport de campagne a été généré'
                                         });
+                                        }
 
                                     }
 
@@ -1328,7 +1359,7 @@ exports.campaignReport = async (req, res) => {
                     } catch (error) {
                         return res.json({
                             type: 'error',
-                            message: 'Un probléme est survenu sur cette campagne'
+                            message: 'Un problème est survenu sur cette campagne.'
                         });
                     }
                 });
@@ -1813,10 +1844,14 @@ exports.campaignEpilot = async (req, res) => {
                     }]
                 }).then(async function (campaign) {
                     if (!campaign) {
+                        if(req.query.extension) {
+                            res.redirect('../automate/campaign?campaign_id='+campaign_id+'&extension=true')
+                        } else {                           
                         return res.json({
                             type: 'error',
                             message: 'Cette campagne n\'existe pas.'
                         });
+                        }
                     }
 
                     // Affiche l'ensemble des infos de la campagne
@@ -1855,7 +1890,6 @@ exports.campaignEpilot = async (req, res) => {
                                     }
                                 });
 
-
                                 // MAJ de la campagne EPILOT
                                 ModelEpilotCampaigns.update({
                                      campaign_id: campaign_id
@@ -1865,7 +1899,6 @@ exports.campaignEpilot = async (req, res) => {
                                      }
                                  });
 
-
                                 // MAJ des insertions de la campagne EPILOT
                                 ModelEpilotCampaigns.update({
                                     campaign_id: campaign_id
@@ -1874,7 +1907,6 @@ exports.campaignEpilot = async (req, res) => {
                                         epilot_campaign_id: epilot_campaign_id
                                     }
                                 });
-
 
                                  // Mettre à jour les utilisateurs
                                  const users = await ModelUsers
@@ -1897,16 +1929,15 @@ exports.campaignEpilot = async (req, res) => {
                                  });
                                 
                             }).catch(async function (epilot_campaign_id) { 
-                                return res.json({
-                                    type: 'success',
-                                    message: 'La campagne et les insertions EPILOT de cette campagne ont été MAJ.'
-                                });
-
+                              
+                                    return res.json({
+                                        type: 'success',
+                                        message: 'La campagne et les insertions EPILOT de cette campagne ont été MAJ.'
+                                    });
+                                
                             });                                          
                  
-                    }                             
-
-
+                    }
 
                 });
 
@@ -1959,7 +1990,6 @@ exports.epilotCampaigns = async (req, res) => {
                 });
             });
 
-
         // Mettre à jour les annonceurs
         const advertisers = await ModelAdvertisers
             .findAll()
@@ -1996,7 +2026,6 @@ exports.epilotCampaigns = async (req, res) => {
                      });
                  });
         */
-
 
         // Mettre à jour les utilisateurs
         const users = await ModelUsers
@@ -2068,7 +2097,6 @@ exports.epilotInsertions = async (req, res) => {
                 });
             });
 
-
         // Mettre à jour les formats
         const groupFormats = await ModelFormatsGroups
             .findAll()
@@ -2116,7 +2144,6 @@ exports.epilotInsertions = async (req, res) => {
 
         */
 
-        /*
                 // Mettre à jour les utilisateurs
                 const users = await ModelUsers
                     .findAll()
@@ -2124,19 +2151,23 @@ exports.epilotInsertions = async (req, res) => {
                         users.forEach(function (item) {
                             const user_id = item.user_id;
                             const user_initial = item.user_initial;
-                            const user_name = item.user_lastname + ' ' + item.user_firstname;
+                            const user_nameLF = item.user_lastname + ' ' + item.user_firstname;
+                            const user_nameFL = item.user_firstname + ' ' + item.user_lastname;
 
                             ModelEpilotInsertions.update({
                                 user_id: user_id
                             }, {
                                 where: {
-                                    epilot_insertion_commercial: user_name
+                                    epilot_insertion_commercial: user_nameLF,
+                                    $or: [ {
+                                        epilot_insertion_commercial : { $eq : user_nameFL }
+                                     }]
                                 }
                             });
 
                         });
                     });
-        */
+        
         return res.json({
             type: 'success',
             message: "Les insertions, les campagnes et les utilisateurs sont MAJ"
@@ -3108,7 +3139,6 @@ exports.reports = async (req, res) => {
             459132,
             464862
         );
-
 
      //   console.log( [dateNow, dateSub30Days]); process.exit(1);
  // Affiche les campagnes en ligne

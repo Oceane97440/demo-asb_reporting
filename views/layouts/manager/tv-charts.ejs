@@ -135,7 +135,7 @@
         var campaignIncreaseInLoadPerDayChart = new ApexCharts(document.querySelector(
           "#chart-table_montee_en_couverture"), campaignIncreaseInLoadPerDayOptions);
         campaignIncreaseInLoadPerDayChart.render();
-        console.log(response.cibleEnsemble)
+      //  console.log(response.cibleEnsemble)
         // Couverture par cible
         var options = {
           series: [response.cibleEnsemble.data],
@@ -166,7 +166,7 @@
         var chart = new ApexCharts(document.querySelector("#chart-table_couverture_par_cible"), options);
         chart.render();
 
-        console.log(response.campaigntimeSlotDiaryGRP)
+        //console.log(response.campaigntimeSlotDiaryGRP)
         // Ventilations des GRP par tranches horaires​
         var campaigntimeSlotDiaryOptions = {
           series: [{
@@ -177,11 +177,7 @@
             type: 'bar',
             height: 300
           },
-          plotOptions: {
-            bar: {
-              horizontal: false
-            },
-          },
+     
           responsive: [{
             breakpoint: 480,
             options: {
@@ -193,9 +189,14 @@
               }
             }
           }],
-          dataLabels: {
-            enabled: false
-          },
+          plotOptions: {
+          bar: {
+            horizontal: false
+          }
+        },
+        dataLabels: {
+          enabled: true
+        },
           colors: ['#0052bc', '#ee0013'],
 
           stroke: {
@@ -211,7 +212,7 @@
           },
           yaxis: {
             title: {
-              text: response.campaigntimeSlotDiaryGRP.name
+             text: response.campaigntimeSlotDiaryGRP.name
             },
             type: 'numeric'
           },
@@ -231,13 +232,13 @@
           "#chart-table_ventilations_GRP_horaires"), campaigntimeSlotDiaryOptions);
         campaigntimeSlotDiaryChart.render();
 
-        console.log(response.campaignNameDayCouverture)
+      //  console.log(response.campaignNameDayGRP)
         // Jours nommés
         // Ventilations des GRP par tranches horaires​
         var campaignNameDayOptions = {
           series: [{
-            name: response.campaignNameDayCouverture.name,
-            data: response.campaignNameDayCouverture.data
+            name: response.campaignNameDayGRP.name,
+            data: response.campaignNameDayGRP.data
           }],
           chart: {
             type: 'bar',

@@ -142,32 +142,32 @@ exports.index = async (req, res) => {
                                     if (dataRow[1] === "Chaîne") {
                                         var channelLineBegin = rowNumber;
                                         dataItemsLinesSelect['channelLineBegin'] = rowNumber;
-                                       // console.log('[x] Chaîne - Begin :' + channelLineBegin);
+                                        // console.log('[x] Chaîne - Begin :' + channelLineBegin);
                                     }
 
                                     // Récupére le numéro de la ligne où se trouve : "Montée en charge / Jour" et le mets dans un tableau
                                     if (dataRow[1] === "Montée en charge / Jour") {
                                         var increaseInLoadPerDayLineBegin = rowNumber;
                                         dataItemsLinesSelect['increaseInLoadPerDayLineBegin'] = rowNumber;
-                                       /* console.log(
-                                            '[x] Montée en charge / Jour - Begin :' + increaseInLoadPerDayLineBegin
-                                        );*/
+                                        /* console.log(
+                                             '[x] Montée en charge / Jour - Begin :' + increaseInLoadPerDayLineBegin
+                                         );*/
                                     }
 
                                     // Récupére le numéro de la ligne où se trouve : "Journal tranches horaires" et le mets dans un tableau
                                     if (dataRow[1] === "Journal tranches horaires") {
                                         var timeSlotDiaryLineBegin = rowNumber;
                                         dataItemsLinesSelect['timeSlotDiaryLineBegin'] = rowNumber;
-                                      /*  console.log(
-                                            '[x] Journal tranches horaires - End : ' + timeSlotDiaryLineBegin
-                                        );*/
+                                        /*  console.log(
+                                              '[x] Journal tranches horaires - End : ' + timeSlotDiaryLineBegin
+                                          );*/
                                     }
 
                                     // Récupére le numéro de la ligne où se trouve : "Jour nommé" et le mets dans un tableau
                                     if (dataRow[1] === "Jour nommé") {
                                         var nameDayLineBegin = rowNumber;
                                         dataItemsLinesSelect['nameDayLineBegin'] = rowNumber;
-                                      //  console.log('[x] Jour nommé - Begin : ' + nameDayLineBegin);
+                                        //  console.log('[x] Jour nommé - Begin : ' + nameDayLineBegin);
                                     }
                                 })
 
@@ -278,17 +278,17 @@ exports.index = async (req, res) => {
 
                                         //console.log(IncreaseInLoadPerDayArray);
                                         timeSlotDiaryArray.push(timeSlotDiaryObject);
-                                       /* console.log('--------++++++++++++++++++++++++------------')
-                                        console.log(timeSlotDiaryArray);
-                                        console.log('--------++++++++++++++++++++++++------------')*/
+                                        /* console.log('--------++++++++++++++++++++++++------------')
+                                         console.log(timeSlotDiaryArray);
+                                         console.log('--------++++++++++++++++++++++++------------')*/
 
                                         // Mets des données des données des tranches horaires
                                         campaignObjects[worksheetName].campaigntimeSlotDiary = timeSlotDiaryArray;
 
-                                       /* console.log(
-                                            'tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') ' +
-                                            '= ' + JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
-                                        );*/
+                                        /* console.log(
+                                             'tranches_horaires_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') ' +
+                                             '= ' + JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
+                                         );*/
                                     }
 
                                     // Récupération des données des jours de la semaine
@@ -321,20 +321,30 @@ exports.index = async (req, res) => {
                                         // Mets es données des données des tranches horaires
                                         campaignObjects[worksheetName].campaignNameDay = nameDayArray;
 
-                                       /* console.log('--------++++++++++++++++++++++++------------')
-                                        console.log(nameDayArray);
-                                        console.log('--------++++++++++++++++++++++++------------')*/
+                                        /* console.log('--------++++++++++++++++++++++++------------')
+                                         console.log(nameDayArray);
+                                         console.log('--------++++++++++++++++++++++++------------')*/
 
-                                      /*  console.log(
-                                            'jour_nomme_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' +
-                                            JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
-                                        );*/
+                                        /*  console.log(
+                                              'jour_nomme_begin : Ligne ' + rowNumber + ' (Item : ' + numberCols + ') = ' +
+                                              JSON.stringify(row.dataRowOnes) + ' - | - ' + dataRowOne
+                                          );*/
                                     }
 
                                 })
 
-                                //console.log('Total lignes :' + dataLines.length);
-                                //console.log(campaignObjects);
+                              
+                                // ctr = parseFloat(campaignObjects[worksheetName].campaignChannel.Couverture * campaignObjects[worksheetName].campaignChannel.Répétition).toFixed(
+                                //     2
+                                // );
+
+                                // var grp = {
+                                //     "GRP":ctr
+                                // }
+                                // campaignObjects[worksheetName].campaignChannel = grp;
+
+
+                                console.log(campaignObjects)
 
                                 await ModelCampaignsTv.findOne({
                                     attributes: [
@@ -428,10 +438,10 @@ exports.index = async (req, res) => {
                                         });
                                     }
 
-                                    LocalStorageTVDATA = await localStorageTV.getItem('campaign_tv_ID-'+foundcampaign_tv.campaign_tv_id);
+                                    LocalStorageTVDATA = await localStorageTV.getItem('campaign_tv_ID-' + foundcampaign_tv.campaign_tv_id);
 
                                     if (Utilities.empty(LocalStorageTVDATA)) {
-                                        localStorageTV.setItem('campaign_tv_ID-'+foundcampaign_tv.campaign_tv_id, JSON.stringify(campaignObjects));
+                                        localStorageTV.setItem('campaign_tv_ID-' + foundcampaign_tv.campaign_tv_id, JSON.stringify(campaignObjects));
 
                                     }
 
@@ -489,11 +499,11 @@ exports.generate = async (req, res) => {
 
             if (!campaign) {
                 return res
-                .status(404)
-                .render("error.ejs", {
-                    statusCoded: 404,
-                    campaigncrypt: campaigncrypt
-                });
+                    .status(404)
+                    .render("error.ejs", {
+                        statusCoded: 404,
+                        campaigncrypt: campaigncrypt
+                    });
 
             }
 
@@ -504,11 +514,11 @@ exports.generate = async (req, res) => {
 
             if (!LocalStorageTVDATA) {
                 return res
-                .status(404)
-                .render("error.ejs", {
-                    statusCoded: 404,
-                    campaigncrypt: campaigncrypt
-                });
+                    .status(404)
+                    .render("error.ejs", {
+                        statusCoded: 404,
+                        campaigncrypt: campaigncrypt
+                    });
             }
 
             res.render('report-tv/template.ejs', {
@@ -548,7 +558,7 @@ exports.export = async (req, res) => {
                         message: "Un problème est survenu lors de l'export du fichier excel"
                     }
                     return res.redirect('/manager/campaigns/tv/list');
-                    
+
                 }
 
                 res.download('./' + campaign.campaign_tv_file)
@@ -667,17 +677,17 @@ exports.charts = async (req, res) => {
                     for (i = 0; i < campaignNameDay.length; i++) {
                         campaignNameDayJourArray.push(campaignNameDay[i]["Jour nommé"]);
 
-                        var couverture = campaignNameDay[i]['Couverture'];
+                        var couverture = campaignNameDay[i]['GRP'];
                         var couvertureValue = couverture.toFixed(2);
-                        campaignNameDayCouvertureArray.push(campaignNameDay[i]['Couverture']);
+                        campaignNameDayCouvertureArray.push(couvertureValue);
 
                         var repetition = campaignNameDay[i]['Répétition'];
                         var repetitionValue = repetition.toFixed(2);
                         campaignNameDayRepetitionArray.push(repetitionValue);
                     }
 
-                    data.campaignNameDayCouverture = {
-                        name: 'Couverture',
+                    data.campaignNameDayGRP = {
+                        name: 'GRP',
                         data: campaignNameDayCouvertureArray
                     };
                     data.campaignNameDayJour = {

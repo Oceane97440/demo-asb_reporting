@@ -96,7 +96,7 @@
             :
             <%= reporting["a-Ensemble"].campaignPeriod %></li>
           <li class="list-group-item">
-            <strong>Budget</strong>
+            <strong>Budget net HT</strong>
             :
             <%= reporting["a-Ensemble"].campaignBudget %></li>
         </ul>
@@ -131,6 +131,10 @@
             Réunionnais de la cible<% if(reporting["a-Ensemble"]) { %> <strong>Ensemble</strong> <% } %> sont exposés à
             la
             campagne​.</li>
+            <li>La répétition est de : <% if(reporting["a-Ensemble"].campaignChannel.Répétition) { %>
+              <strong><%= reporting["a-Ensemble"].campaignChannel.Répétition %></strong> <% } %> 
+            </li>
+
           <li>La campagne a généré <% if(reporting["a-Ensemble"].campaignChannel['Nombre de contacts']) { %>
             <strong><%= utilities.numStr(Math.round(reporting["a-Ensemble"].campaignChannel['Nombre de contacts'])) %></strong>
             <% } %> contacts de <% if(reporting["a-Ensemble"]) { %> la cible <strong>Ensemble</strong>
@@ -143,12 +147,13 @@
           <li>Coût pour 1000 contacts :
             <% if(reporting["a-Ensemble"].campaignChannel['CPM contacts Net']) { %>
             <strong><%= reporting["a-Ensemble"].campaignChannel['CPM contacts Net'] %></strong> <% } %> €​
-          </li>
+          </li>      
         </ul>
         <div class="collapse" id="collapseExample">
           <hr>
           <div id="content-info">
-            <i class="fas fa-info-circle"></i> <strong>GRP</strong> est un indicateur de performance qui associe couverture de votre cible multipliée par la répétition de celle-ci, c'est donc le pourcentage de votre cible en contact avec votre publicité multiplier par le nombre de fois que celle-ci va voir votre spot.
+            <i class="fas fa-info-circle"></i> <strong>GRP</strong> est un indicateur de performance qui associe couverture de votre cible multipliée par la répétition. 
+            (Exemple : <strong><%= reporting["a-Ensemble"].campaignChannel.Couverture %> </strong>*<strong><%= reporting["a-Ensemble"].campaignChannel.Répétition %></strong> = <strong><%= reporting["a-Ensemble"].campaignChannel['GRP'] %> GRP</strong> )
           </div>
         </div>
       </div>

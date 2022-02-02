@@ -532,6 +532,66 @@ exports.update = async (req, res) => {
         });
     }
 }
+exports.view = async (req, res) => {
+    try {
+        const data = new Object();
+
+        var campaigntv = req.params.campaigntv;
+        var campaign = await ModelCampaignsTv
+            .findOne({
+                where: {
+                    campaign_tv_id: campaigntv
+                },
+                include: [{
+                    model: ModelAdvertisersTV
+                }]
+            })
+            .then(async function (campaign) {
+           //    console.log(campaign)
+                if (!campaign) {
+                   return res
+                        .status(404)
+                        .render("error.ejs", {
+                            statusCoded: 404
+                        });
+                }
+            
+                // Créer le fil d'ariane
+                var breadcrumbLink = 'advertisers'
+                breadcrumb = new Array({
+                    'name': 'Campagnes',
+                    'link': 'campaigns'
+                }, {
+                    'name': campaign.advertisers_tv.advertiser_tv_name,
+                    'link': breadcrumbLink.concat('/', campaign.advertisers_tv)
+                }, {
+                    'name': campaign.campaign_tv_name,
+                    'link': ''
+                });
+                data.breadcrumb = breadcrumb;
+  
+                      
+
+               
+
+                // Attribue les données de la campagne
+                data.campaign = campaign;
+                data.moment = moment;
+                data.utilities = Utilities;
+
+          
+
+                res.render('manager/campaigns-tv/view.ejs', data);
+            });
+
+    } catch (error) {
+        console.log(error);
+        var statusCoded = error.response;
+        res.render("manager/error.ejs", {
+            statusCoded: statusCoded
+        });
+    }
+}
 
 exports.export = async (req, res) => {
     try {

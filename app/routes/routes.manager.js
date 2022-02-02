@@ -101,6 +101,8 @@ router.get('/campaigns/tv/list', manager_campaigns_tv.list);
 router.get('/campaigns/tv/edit/:campaigntv', manager_campaigns_tv.edit);
 router.post('/campaigns/tv/edit/:campaigntv', manager_campaigns_tv.update);
 router.get('/campaigns/tv/export', manager_campaigns_tv.export);
+router.get('/campaigns/tv/:campaigntv', manager_campaigns_tv.view);
+
 
 router.get('/campaigns/epilot/list', manager_epilot.list);
 router.get('/campaigns/epilot/export', manager_epilot.export);
