@@ -98,7 +98,7 @@
             <strong>Période de diffusion</strong>
             :
             <%= reporting["a-Ensemble"].campaignPeriod %></li>
-       
+
         </ul>
       </div>
     </div>
@@ -110,17 +110,23 @@
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <% for(const property in reporting) { %>
-        <a class="nav-item nav-link " id="nav-<%= reporting[property].campaignLabel %>-tab" data-toggle="tab"
+       
+
+        <a class="nav-item nav-link 
+         <% if(reporting[property].campaignLabel === 'ensemble') { %> active <% } %>
+        " id="nav-<%= reporting[property].campaignLabel %>-tab" data-toggle="tab"
           href="#nav-<%= reporting[property].campaignLabel %>" role="tab"
           aria-controls="nav-<%= reporting[property].campaignLabel %>"
           aria-selected="true"><%= reporting[property].campaignTarget %></a>
+       
+
         <% } %>
       </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
       <% for(const property in reporting) { %>
 
-      <div class="tab-pane fade show " id="nav-<%= reporting[property].campaignLabel %>" role="tabpanel"
+      <div class="tab-pane fade<% if(reporting[property].campaignLabel === 'ensemble') { %> show active <% } %>" id="nav-<%= reporting[property].campaignLabel %>" role="tabpanel"
         aria-labelledby="nav-<%= reporting[property].campaignLabel %>-tab">
         <ul class="list-group list-group-flush">
 
@@ -131,12 +137,12 @@
             <%= reporting[property].campaignBudget %></li>
         </ul>
 
-        <div class="row p-3 mt-5 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded" id="info_generale">
+        <div class="row p-3 mt-2 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded" id="info_generale">
 
           <div style="padding-left: 10px;">
             <div class="row">
 
-             <h3 class="title"><strong>Résumé</strong></h3> 
+              <h3 class="title"><strong>Résumé</strong></h3>
               <div id="info">
 
                 <button id="boutton-info" class="btn" data-toggle="collapse"
@@ -257,6 +263,7 @@
   </script>
 
   <script src="/assets/js/plugins/apexcharts.min.js"></script>
+
   <%- include("../layouts/manager/tv-charts.ejs") -%>
 </body>
 
