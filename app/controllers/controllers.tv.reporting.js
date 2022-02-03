@@ -91,11 +91,11 @@ exports.index = async (req, res) => {
                             // Récupére le nom de la feuille
                             var worksheetName = worksheet.name;
 
-                         
+
 
 
                             if (worksheetName.match(/[a-zA ](-){1}(?!Paramétrage tarifaire\b)/gi)) {
-                               
+
 
                                 const campaignName = worksheet.getCell('C3').value;
                                 const campaignPeriod = worksheet.getCell('C4').value;
@@ -105,11 +105,17 @@ exports.index = async (req, res) => {
                                 const campaignWeightedNumber = worksheet.getCell('C9').value;
                                 const campaignAdvertiser = worksheet.getCell('H3').value;
                                 const campaignFormat = worksheet.getCell('H6').value;
-                                const campaignTarget =  worksheet.getCell('C11').value;
+                                const campaignTarget = worksheet.getCell('C11').value;
 
+
+
+                                //recupère data cible filtrage du mot supprésion des accents et transforme en minuscule
+                                const strip_tags = campaignTarget.normalize('NFD').replace(/[\u0300-\u036f ]/g, "")
+                                const campaignLabel = strip_tags.toLowerCase();
 
 
                                 campaignObjects[worksheetName] = {
+                                    'campaignLabel': campaignLabel,
                                     'campaignTarget': campaignTarget,
                                     'campaignName': campaignName,
                                     'campaignPeriod': campaignPeriod,
@@ -121,7 +127,9 @@ exports.index = async (req, res) => {
                                     'campaignFormat': campaignFormat
                                 }
 
+
                                 console.log('Campagne : ', campaignName);
+                                console.log('Label : ', campaignLabel);
                                 console.log('Cible : ', campaignTarget);
                                 console.log('Période : ', campaignPeriod);
                                 console.log('User : ', campaignUser);

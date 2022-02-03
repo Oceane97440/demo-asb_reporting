@@ -98,23 +98,21 @@
             <strong>Période de diffusion</strong>
             :
             <%= reporting["a-Ensemble"].campaignPeriod %></li>
-          <li class="list-group-item">
-            <strong>Budget net HT</strong>
-            :
-            <%= reporting["a-Ensemble"].campaignBudget %></li>
+       
         </ul>
       </div>
     </div>
 
 
+    <br>
 
 
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <% for(const property in reporting) { %>
-        <a class="nav-item nav-link active" id="nav-<%= reporting[property].campaignTarget %>-tab" data-toggle="tab"
-          href="#nav-<%= reporting[property].campaignTarget %>" role="tab"
-          aria-controls="nav-<%= reporting[property].campaignTarget %>"
+        <a class="nav-item nav-link " id="nav-<%= reporting[property].campaignLabel %>-tab" data-toggle="tab"
+          href="#nav-<%= reporting[property].campaignLabel %>" role="tab"
+          aria-controls="nav-<%= reporting[property].campaignLabel %>"
           aria-selected="true"><%= reporting[property].campaignTarget %></a>
         <% } %>
       </div>
@@ -122,28 +120,34 @@
     <div class="tab-content" id="nav-tabContent">
       <% for(const property in reporting) { %>
 
-      <div class="tab-pane fade show active" id="nav-<%= reporting[property].campaignTarget %>" role="tabpanel"
-        aria-labelledby="nav-<%= reporting[property].campaignTarget %>-tab">
+      <div class="tab-pane fade show " id="nav-<%= reporting[property].campaignLabel %>" role="tabpanel"
+        aria-labelledby="nav-<%= reporting[property].campaignLabel %>-tab">
+        <ul class="list-group list-group-flush">
 
 
+          <li class="list-group-item">
+            <strong>Budget net HT</strong>
+            :
+            <%= reporting[property].campaignBudget %></li>
+        </ul>
 
         <div class="row p-3 mt-5 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded" id="info_generale">
 
-          <h3 class="title" style="padding-left: 10px;">
+          <div style="padding-left: 10px;">
             <div class="row">
 
-              <strong>Résumé</strong>
+             <h3 class="title"><strong>Résumé</strong></h3> 
               <div id="info">
 
                 <button id="boutton-info" class="btn" data-toggle="collapse"
-                  data-target="#<%= reporting[property].campaignTarget %>" aria-expanded="false"
-                  aria-controls="<%= reporting[property].campaignTarget %>">
+                  data-target="#<%= reporting[property].campaignLabel %>" aria-expanded="false"
+                  aria-controls="<%= reporting[property].campaignLabel %>">
                   <i class="fas fa-info-circle"></i>
                 </button>
               </div>
             </div>
 
-          </h3>
+          </div>
 
           <div class="container">
 
@@ -175,7 +179,7 @@
               </li>
             </ul>
 
-            <div class="collapse" id="<%= reporting[property].campaignTarget %>">
+            <div class="collapse" id="<%= reporting[property].campaignLabel %>">
               <hr>
               <div id="content-info">
                 <i class="fas fa-info-circle"></i> <strong>GRP</strong> est un indicateur de performance qui associe
