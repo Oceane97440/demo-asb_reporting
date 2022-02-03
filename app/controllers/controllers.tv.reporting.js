@@ -337,7 +337,7 @@ exports.index = async (req, res) => {
 
 
 
-                                console.log(campaignObjects)
+                                // console.log(campaignObjects)
 
                                 await ModelCampaignsTv.findOne({
                                     attributes: [
@@ -391,7 +391,7 @@ exports.index = async (req, res) => {
                                                 }
                                             })
 
-                                            console.log(foundAdvertiser)
+                                            //console.log(foundAdvertiser)
 
                                             if (Utilities.empty(foundAdvertiser)) {
 
@@ -598,7 +598,122 @@ exports.charts = async (req, res) => {
                 var reportingData = JSON.parse(LocalStorageTVDATA);
                 var data = new Object();
 
-                console.log(reportingData)
+
+
+                for (const property in reportingData) {
+                    var i = reportingData[property].campaignLabel
+
+                    data[property]={}
+
+                    data[property]['id'] = reportingData[property].campaignLabel,
+
+                    data[property]['cible_'+reportingData[property].campaignLabel] = {
+                        name: reportingData[property].campaignTarget,
+                        data: reportingData[property].campaignChannel.Couverture
+                    };
+
+
+                    // TRANCHES HORAIRES
+                   if (reportingData[property].campaigntimeSlotDiary) {
+                        var campaigntimeSlotDiaryHourArray = new Array();
+                        var campaigntimeSlotDiaryGRPArray = new Array();
+                        timeSlotDiary = reportingData[property].campaigntimeSlotDiary;
+
+                        for (i = 0; i < timeSlotDiary.length; i++) {
+                            campaigntimeSlotDiaryHourArray.push(timeSlotDiary[i]['Journal tranches horaires']);
+
+                            var grp = timeSlotDiary[i]['GRP'];
+                            var grpValue = grp.toFixed(2);
+                            campaigntimeSlotDiaryGRPArray.push(grpValue);
+                        }
+
+                        console.log(campaigntimeSlotDiaryGRPArray)
+
+                        data[property]['campaigntimeSlotDiaryGRP'] = {
+                            name: 'GRP',
+                            data: campaigntimeSlotDiaryGRPArray
+                        };
+                        data[property]['campaigntimeSlotDiaryTrancheHoraires'] = {
+                            name: "Tranche horaires",
+                            data: campaigntimeSlotDiaryHourArray
+                        };
+                    }
+
+                    //  console.log(reportingData[property].campaignIncreaseInLoadPerDay)
+
+                    if (reportingData[property].campaignIncreaseInLoadPerDay) {
+                        var campaignIncreaseInLoadPerDayJourArray = new Array();
+                        var campaignIncreaseInLoadPerDayCouvertureArray = new Array();
+                        var campaignIncreaseInLoadPerDayRepetitionArray = new Array();
+                        campaignIncreaseInLoadPerDay = reportingData[property].campaignIncreaseInLoadPerDay;
+
+                        for (i = 0; i < campaignIncreaseInLoadPerDay.length; i++) {
+                            campaignIncreaseInLoadPerDayJourArray.push(campaignIncreaseInLoadPerDay[i]['Montée en charge / Jour']);
+                            campaignIncreaseInLoadPerDayCouvertureArray.push(campaignIncreaseInLoadPerDay[i]['Couverture']);
+
+                            var repetition = campaignIncreaseInLoadPerDay[i]['Répétition'];
+                            var repetitionValue = repetition.toFixed(2);
+                            campaignIncreaseInLoadPerDayRepetitionArray.push(repetitionValue);
+                        }
+
+                        data[property]['campaignIncreaseInLoadPerDayCouverture'] = {
+                            name: 'Couverture',
+                            data: campaignIncreaseInLoadPerDayCouvertureArray
+                        };
+                        data[property]['campaignIncreaseInLoadPerDayJour'] = {
+                            name: "Jour",
+                            data: campaignIncreaseInLoadPerDayJourArray
+                        };
+                        data[property]['campaignIncreaseInLoadPerDayRepetition'] = {
+                            name: "Répétition",
+                            data: campaignIncreaseInLoadPerDayRepetitionArray
+                        };
+                    }
+
+                    if (reportingData[property].campaignNameDay) {
+                        var campaignNameDayJourArray = new Array();
+                        var campaignNameDayCouvertureArray = new Array();
+                        var campaignNameDayRepetitionArray = new Array();
+                        campaignNameDay = reportingData[property].campaignNameDay;
+
+                        for (i = 0; i < campaignNameDay.length; i++) {
+                            campaignNameDayJourArray.push(campaignNameDay[i]["Jour nommé"]);
+
+                            var couverture = campaignNameDay[i]['GRP'];
+                            var couvertureValue = couverture.toFixed(2);
+                            campaignNameDayCouvertureArray.push(couvertureValue);
+
+                            var repetition = campaignNameDay[i]['Répétition'];
+                            var repetitionValue = repetition.toFixed(2);
+                            campaignNameDayRepetitionArray.push(repetitionValue);
+                        }
+
+                        data[property]['campaignNameDayGRP'] = {
+                            name: 'GRP',
+                            data: campaignNameDayCouvertureArray
+                        };
+                        data[property]['campaignNameDayJour'] = {
+                            name: "Jour",
+                            data: campaignNameDayJourArray
+                        };
+                        data[property]['campaignNameDayRepetition'] = {
+                            name: "Répétition",
+                            data: campaignNameDayRepetitionArray
+                        };
+                    }
+
+
+                }
+
+                console.log(data)
+
+                return res
+                    .status(200)
+                    .json(data);
+
+                    
+                process.exit()
+
                 data.cibleEnsemble = {
                     name: 'Ensemble',
                     data: reportingData['a-Ensemble'].campaignChannel.Couverture

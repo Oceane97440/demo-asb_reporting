@@ -110,15 +110,15 @@
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <% for(const property in reporting) { %>
-       
+
 
         <a class="nav-item nav-link 
          <% if(reporting[property].campaignLabel === 'ensemble') { %> active <% } %>
-        " id="nav-<%= reporting[property].campaignLabel %>-tab" data-toggle="tab"
+        " id="nav-<%= reporting[property].campaignLabel %>-tab" data-attr="<%= reporting[property].campaignLabel %>" data-toggle="tab"
           href="#nav-<%= reporting[property].campaignLabel %>" role="tab"
           aria-controls="nav-<%= reporting[property].campaignLabel %>"
           aria-selected="true"><%= reporting[property].campaignTarget %></a>
-       
+
 
         <% } %>
       </div>
@@ -126,7 +126,8 @@
     <div class="tab-content" id="nav-tabContent">
       <% for(const property in reporting) { %>
 
-      <div class="tab-pane fade<% if(reporting[property].campaignLabel === 'ensemble') { %> show active <% } %>" id="nav-<%= reporting[property].campaignLabel %>" role="tabpanel"
+      <div class="tab-pane fade<% if(reporting[property].campaignLabel === 'ensemble') { %> show active <% } %>"
+        id="nav-<%= reporting[property].campaignLabel %>" role="tabpanel"
         aria-labelledby="nav-<%= reporting[property].campaignLabel %>-tab">
         <ul class="list-group list-group-flush">
 
@@ -199,52 +200,57 @@
           </div>
         </div>
 
+        <div class="row mt-5">
+          <div class="col-md-8 col-sm-12 pt-3" id="table_montee_en_couverture">
+            <h3 class="title">
+              <strong>Montée en couverture et répétition</strong>
+            </h3>
+            <div class="container">
+              <div id="chart-table_montee_en_couverture"></div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-12 pt-3" id="table_couverture_par_cible">
+            <h3 class="title">
+              <strong>Couverture par cible</strong>
+            </h3>
+            <div class="container">
+              <div id="chart-table_couverture_par_cible"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row p-3 mt-5 ml-2 mr-2" id="table_ventilations_GRP_horaires">
+          <h3 class="title">
+            <strong>Ventilations des GRP par tranche horaires​</strong>
+          </h3>
+          <div class="container">
+            <div id="chart-table_ventilations_GRP_horaires"></div>
+          </div>
+        </div>
+
+        <div class="row p-3 mt-5 ml-2 mr-2" id="table_ventilations_GRP_jours">
+          <h3 class="title">
+            <strong>Ventilations des GRP par jours nommés​​</strong>
+          </h3>
+          <div class="container">
+            <div id="chart-table_ventilations_GRP_jours"></div>
+          </div>
+        </div>
+
+
       </div>
       <% } %>
 
+
+
+
+
+
+
+
     </div>
 
-
-
-
-
-    <div class="row mt-5">
-      <div class="col-md-8 col-sm-12 pt-3" id="table_montee_en_couverture">
-        <h3 class="title">
-          <strong>Montée en couverture et répétition</strong>
-        </h3>
-        <div class="container">
-          <div id="chart-table_montee_en_couverture"></div>
-        </div>
-      </div>
-
-      <div class="col-md-4 col-sm-12 pt-3" id="table_couverture_par_cible">
-        <h3 class="title">
-          <strong>Couverture par cible</strong>
-        </h3>
-        <div class="container">
-          <div id="chart-table_couverture_par_cible"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row p-3 mt-5 ml-2 mr-2" id="table_ventilations_GRP_horaires">
-      <h3 class="title">
-        <strong>Ventilations des GRP par tranche horaires​</strong>
-      </h3>
-      <div class="container">
-        <div id="chart-table_ventilations_GRP_horaires"></div>
-      </div>
-    </div>
-
-    <div class="row p-3 mt-5 ml-2 mr-2" id="table_ventilations_GRP_jours">
-      <h3 class="title">
-        <strong>Ventilations des GRP par jours nommés​​</strong>
-      </h3>
-      <div class="container">
-        <div id="chart-table_ventilations_GRP_jours"></div>
-      </div>
-    </div>
     <div class="pt-5 pb-5 text-right"> <a href="/t/export/<%=campaign_crypt%>"
         class="btn btn-xs btn-default  text-white" style="background-color: #ee0013;"> <i class="fas fa-file-excel">
         </i> Télécharger le rapport <span class="small">(Format : Excel)</span></a> </div>
