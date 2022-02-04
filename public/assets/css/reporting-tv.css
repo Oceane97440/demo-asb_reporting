@@ -47,3 +47,7 @@ body {
   img {
     image-rendering: -webkit-optimize-contrast;
   }
+
+  .nav-item.nav-link{
+    margin-right: 10px;
+  }

@@ -40,7 +40,7 @@
   <link rel="apple-touch-icon" type="image/png"
     href="https://antennesb.fr/wp-content/uploads/2020/02/cropped-Logo-AntenneSolutionsBusiness-coul01-2-180x180.png" />
 
-  <link href="/admin/css/reporting-tv.css" rel="stylesheet" />
+  <link href="/assets/css/reporting-tv.css" rel="stylesheet" />
 
 </head>
 
@@ -99,6 +99,11 @@
             :
             <%= reporting["a-Ensemble"].campaignPeriod %></li>
 
+            <li class="list-group-item">
+              <strong>Budget net HT</strong>
+              :
+              <%= reporting["a-Ensemble"].campaignBudget %></li>
+
         </ul>
       </div>
     </div>
@@ -132,10 +137,7 @@
         <ul class="list-group list-group-flush">
 
 
-          <li class="list-group-item">
-            <strong>Budget net HT</strong>
-            :
-            <%= reporting[property].campaignBudget %></li>
+       
         </ul>
 
         <div class="row p-3 mt-2 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded info_generale"  id="info_generale_<%= reporting[property].campaignLabel %>">
@@ -193,7 +195,7 @@
                 couverture de votre cible multipliée par la répétition.
                 (Exemple : <strong><%= reporting[property].campaignChannel.Couverture %> </strong> x
                 <strong><%= reporting[property].campaignChannel.Répétition %></strong> =
-                <strong><%= reporting[property].campaignChannel['GRP'] %> GRP</strong> )
+                <strong><%= reporting[property].campaignChannel['GRP'] %> GRP</strong> ). Plus le GRP de votre campagne est élevé, plus votre campagne est performante.
               </div>
             </div>
 
