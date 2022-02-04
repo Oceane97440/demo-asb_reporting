@@ -607,7 +607,7 @@ exports.charts = async (req, res) => {
 
                     data[property]['id'] = reportingData[property].campaignLabel,
 
-                    data[property]['cible_'+reportingData[property].campaignLabel] = {
+                    data[property]['cible'] = {
                         name: reportingData[property].campaignTarget,
                         data: reportingData[property].campaignChannel.Couverture
                     };

@@ -8,7 +8,7 @@ body {
     background: #fff;
   }
 
-  #info_generale {
+  .info_generale {
     background-color: #0052bc !important;
     position: relative;
 

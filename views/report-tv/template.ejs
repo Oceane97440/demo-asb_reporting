@@ -114,7 +114,7 @@
 
         <a class="nav-item nav-link 
          <% if(reporting[property].campaignLabel === 'ensemble') { %> active <% } %>
-        " id="nav-<%= reporting[property].campaignLabel %>-tab" data-attr="<%= reporting[property].campaignLabel %>" data-toggle="tab"
+        " id="nav-<%= reporting[property].campaignLabel %>-tab" data-attr="<%= property %>" data-toggle="tab"
           href="#nav-<%= reporting[property].campaignLabel %>" role="tab"
           aria-controls="nav-<%= reporting[property].campaignLabel %>"
           aria-selected="true"><%= reporting[property].campaignTarget %></a>
@@ -138,7 +138,7 @@
             <%= reporting[property].campaignBudget %></li>
         </ul>
 
-        <div class="row p-3 mt-2 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded" id="info_generale">
+        <div class="row p-3 mt-2 ml-2 mr-2 bg-default text-white bg-opacity-75 rounded info_generale"  id="info_generale_<%= reporting[property].campaignLabel %>">
 
           <div style="padding-left: 10px;">
             <div class="row">
@@ -188,7 +188,7 @@
 
             <div class="collapse" id="<%= reporting[property].campaignLabel %>">
               <hr>
-              <div id="content-info">
+              <div id="content-info_<%= reporting[property].campaignLabel %>">
                 <i class="fas fa-info-circle"></i> <strong>GRP</strong> est un indicateur de performance qui associe
                 couverture de votre cible multipliée par la répétition.
                 (Exemple : <strong><%= reporting[property].campaignChannel.Couverture %> </strong> x
@@ -201,40 +201,40 @@
         </div>
 
         <div class="row mt-5">
-          <div class="col-md-8 col-sm-12 pt-3" id="table_montee_en_couverture">
+          <div class="col-md-8 col-sm-12 pt-3" id="table_<%= reporting[property].campaignLabel %>_montee_en_couverture">
             <h3 class="title">
               <strong>Montée en couverture et répétition</strong>
             </h3>
             <div class="container">
-              <div id="chart-table_montee_en_couverture"></div>
+              <div id="chart_<%= reporting[property].campaignLabel %>-table_montee_en_couverture"></div>
             </div>
           </div>
 
-          <div class="col-md-4 col-sm-12 pt-3" id="table_couverture_par_cible">
+          <div class="col-md-4 col-sm-12 pt-3" id="table_<%= reporting[property].campaignLabel %>_couverture_par_cible">
             <h3 class="title">
               <strong>Couverture par cible</strong>
             </h3>
             <div class="container">
-              <div id="chart-table_couverture_par_cible"></div>
+              <div id="chart_<%= reporting[property].campaignLabel %>-table_couverture_par_cible"></div>
             </div>
           </div>
         </div>
 
-        <div class="row p-3 mt-5 ml-2 mr-2" id="table_ventilations_GRP_horaires">
+        <div class="row p-3 mt-5 ml-2 mr-2" id="table_<%= reporting[property].campaignLabel %>_ventilations_GRP_horaires">
           <h3 class="title">
             <strong>Ventilations des GRP par tranche horaires​</strong>
           </h3>
           <div class="container">
-            <div id="chart-table_ventilations_GRP_horaires"></div>
+            <div id="chart_<%= reporting[property].campaignLabel %>-table_ventilations_GRP_horaires"></div>
           </div>
         </div>
 
-        <div class="row p-3 mt-5 ml-2 mr-2" id="table_ventilations_GRP_jours">
+        <div class="row p-3 mt-5 ml-2 mr-2" id="table_<%= reporting[property].campaignLabel %>_ventilations_GRP_jours">
           <h3 class="title">
             <strong>Ventilations des GRP par jours nommés​​</strong>
           </h3>
           <div class="container">
-            <div id="chart-table_ventilations_GRP_jours"></div>
+            <div id="chart_<%= reporting[property].campaignLabel %>-table_ventilations_GRP_jours"></div>
           </div>
         </div>
 
