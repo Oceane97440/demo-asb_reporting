@@ -110,7 +110,7 @@ exports.index = async (req, res) => {
 
 
                                 //recupère data cible filtrage du mot supprésion des accents et transforme en minuscule
-                                const strip_tags = campaignTarget.normalize('NFD').replace(/[\u0300-\u036f ]/g, "")
+                                const strip_tags = campaignTarget.normalize('NFD').replace(/[\u0300-\u036f  _$&+,:;=?@#|'<>.^*()%!-]/g, "")
                                 const campaignLabel = strip_tags.toLowerCase();
 
 
