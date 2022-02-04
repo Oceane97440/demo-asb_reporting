@@ -85,7 +85,7 @@ exports.list = async (req, res) => {
                 data.campaignsTv = campaignsTv;
             });
 
-        console.log(data.campaignsTv)
+     //   console.log(data.campaignsTv)
 
         res.render('manager/campaigns-tv/create.ejs', data);
     } catch (error) {
