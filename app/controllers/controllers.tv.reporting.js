@@ -24,6 +24,7 @@ const fs = require('fs');
 // Module ExcelJS
 const ExcelJS = require('exceljs');
 const excel = require('node-excel-export');
+var nodeoutlook = require('nodejs-nodemailer-outlook');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -38,6 +39,8 @@ const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
 const ModelCampaignsTv = require("../models/models.campaigns_tv")
 const ModelAdvertisersTV = require("../models/models.advertisers_tv")
+const ModelUsers = require("../models/models.users")
+
 
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorageTV = new LocalStorage('data/tv/reporting');
@@ -66,10 +69,10 @@ exports.index = async (req, res) => {
 
                 const alpha = Array.from(Array(26)).map((e, i) => i + 65);
                 const alphabet = alpha.map((x) => String.fromCharCode(x));
-                console.log(alphabet);
+               // console.log(alphabet);
 
                 var path_file = 'data/tv/' + dirDateNOW + '/' + file.name
-                console.log(path_file)
+              //  console.log(path_file)
 
                 //  var fileXLS = 'data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx';
                 var fileXLS = path_file;
@@ -79,7 +82,7 @@ exports.index = async (req, res) => {
                     .xlsx
                     // .readFile('data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
                     .readFile(fileXLS)
-                    .then(function () {
+                    .then(async function () {
                         cacheStorageID = path.basename(fileXLS, '.xlsx');
 
                         const campaignObjects = new Object();
@@ -128,7 +131,7 @@ exports.index = async (req, res) => {
                                 }
 
 
-                                console.log('Campagne : ', campaignName);
+                               /* console.log('Campagne : ', campaignName);
                                 console.log('Label : ', campaignLabel);
                                 console.log('Cible : ', campaignTarget);
                                 console.log('Période : ', campaignPeriod);
@@ -138,7 +141,7 @@ exports.index = async (req, res) => {
                                 console.log('Effectif pondéré : ', campaignWeightedNumber);
                                 console.log('Annonceur : ', campaignAdvertiser);
                                 console.log('Formats : ', campaignFormat);
-                                console.log('------------------------------------------');
+                                console.log('------------------------------------------');*/
 
                                 // Initialisation des tableaux
                                 dataLines = new Array();
@@ -265,7 +268,7 @@ exports.index = async (req, res) => {
 
                                             var label = worksheet.getCell(cellKey).value;
                                             var value = worksheet.getCell(cellValue).value;
-                                            console.log('col : ', i1, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                           // console.log('col : ', i1, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
                                             IncreaseInLoadPerDayObject[label] = value;
                                         }
 
@@ -285,7 +288,7 @@ exports.index = async (req, res) => {
 
                                             var label = worksheet.getCell(cellKey).value;
                                             var value = worksheet.getCell(cellValue).value;
-                                            console.log('col : ', i2, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                            //console.log('col : ', i2, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
                                             timeSlotDiaryObject[label] = value;
                                         }
 
@@ -309,7 +312,7 @@ exports.index = async (req, res) => {
 
                                             var label = worksheet.getCell(cellKey).value;
                                             var value = worksheet.getCell(cellValue).value;
-                                            console.log('col : ', i3, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                           // console.log('col : ', i3, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
                                             nameDayObject[label] = value;
 
                                             if (label === 'Répétition') {
@@ -337,114 +340,153 @@ exports.index = async (req, res) => {
 
 
 
-                                // console.log(campaignObjects)
+                                 console.log(campaignObjects)
 
-                                await ModelCampaignsTv.findOne({
-                                    attributes: [
-                                        'campaign_tv_id',
-                                        'campaign_tv_crypt',
-                                        'campaign_tv_file'
 
-                                    ],
-                                    where: {
-                                        campaign_tv_file: {
-                                            [Op.like]: "%" + file.name + "%"
-                                        }
-                                    }
-
-                                }).then(async function (foundcampaign_tv) {
-
-                                    if (Utilities.empty(foundcampaign_tv)) {
-
-                                        var regexnPeriod = /([0-9]{2}\/[0-9]{2}\/[0-9]{4})/gi
-                                        var regexnBudget = /([0-9])/gi
-
-                                        var PeriodCampaign = campaignPeriod.match(regexnPeriod)
-                                        var PeriodBudget = campaignBudget.match(regexnBudget)
-
-                                        var campaign_tv_start_date = moment(PeriodCampaign[0], 'DD-MM-YYYY');
-                                        var campaign_tv_end_date = moment(PeriodCampaign[1], 'DD-MM-YYYY');
-                                        const Budget = PeriodBudget.join('')
-
-                                        await ModelCampaignsTv.create({
-                                            campaign_tv_name: campaignName,
-                                            campaign_tv_start_date: moment(campaign_tv_start_date).format('YYYY-MM-DD'),
-                                            campaign_tv_end_date: moment(campaign_tv_end_date).format('YYYY-MM-DD'),
-                                            campaign_tv_user: campaignUser,
-                                            user_id: req.session.user.user_id,
-                                            campaign_tv_budget: Budget,
-                                            campaign_tv_type: "a-Ensemble",
-                                            campaign_tv_file: path_file
-
-                                        }).then(async function (campaign_tv) {
-
-                                            const campaign_tv_id = await campaign_tv.campaign_tv_id
-
-                                            const campaign_tv_crypt = crypto
-                                                .createHash('md5')
-                                                .update(campaign_tv_id.toString())
-                                                .digest("hex");
-
-                                            var foundAdvertiser = await ModelAdvertisersTV.findOne({
-                                                where: {
-                                                    advertiser_tv_name: campaignAdvertiser
-                                                }
-                                            })
-
-                                            //console.log(foundAdvertiser)
-
-                                            if (Utilities.empty(foundAdvertiser)) {
-
-                                                const advertiser = await ModelAdvertisersTV.create({
-                                                    advertiser_tv_name: campaignAdvertiser,
-                                                })
-
-                                                const advertiser_tv_id = advertiser.advertiser_tv_id
-
-                                                await ModelCampaignsTv.update({
-                                                    campaign_tv_crypt: campaign_tv_crypt,
-                                                    advertiser_tv_id: advertiser_tv_id
-                                                }, {
-                                                    where: {
-                                                        campaign_tv_id: campaign_tv_id
-                                                    }
-                                                })
-
-                                            } else {
-
-                                                await ModelCampaignsTv.update({
-                                                    campaign_tv_crypt: campaign_tv_crypt,
-                                                    advertiser_tv_id: foundAdvertiser.advertiser_tv_id
-                                                }, {
-                                                    where: {
-                                                        campaign_tv_id: campaign_tv_id
-                                                    }
-                                                })
-                                            }
-
-                                            let cacheStorageID = 'campaign_tv_ID-' + campaign_tv_id;
-                                            localStorageTV.removeItem(cacheStorageID);
-                                            localStorageTV.setItem(cacheStorageID, JSON.stringify(campaignObjects));
-
-                                            return res.redirect(`/t/${campaign_tv_crypt}`);
-
-                                        });
-                                    }
-
-                                    LocalStorageTVDATA = await localStorageTV.getItem('campaign_tv_ID-' + foundcampaign_tv.campaign_tv_id);
-
-                                    if (Utilities.empty(LocalStorageTVDATA)) {
-                                        localStorageTV.setItem('campaign_tv_ID-' + foundcampaign_tv.campaign_tv_id, JSON.stringify(campaignObjects));
-
-                                    }
-
-                                    return res.redirect(`/t/${foundcampaign_tv.campaign_tv_crypt}`);
-
-                                })
 
                             }
 
                         });
+
+
+                        await ModelCampaignsTv.findOne({
+                            attributes: [
+                                'campaign_tv_id',
+                                'campaign_tv_crypt',
+                                'campaign_tv_file'
+
+                            ],
+                            where: {
+                                campaign_tv_file: {
+                                    [Op.like]: "%" + file.name + "%"
+                                }
+                            }
+
+                        }).then(async function (foundcampaign_tv) {
+
+                            if (Utilities.empty(foundcampaign_tv)) {
+
+                                var regexnPeriod = /([0-9]{2}\/[0-9]{2}\/[0-9]{4})/gi
+                                var regexnBudget = /([0-9])/gi
+
+                                var PeriodCampaign = campaignObjects["a-Ensemble"].campaignPeriod.match(regexnPeriod)
+                                var PeriodBudget = campaignObjects["a-Ensemble"].campaignBudget.match(regexnBudget)
+
+                                var campaign_tv_start_date = moment(PeriodCampaign[0], 'DD-MM-YYYY');
+                                var campaign_tv_end_date = moment(PeriodCampaign[1], 'DD-MM-YYYY');
+                                const Budget = PeriodBudget.join('')
+
+                                await ModelCampaignsTv.create({
+                                    campaign_tv_name: campaignObjects["a-Ensemble"].campaignName,
+                                    campaign_tv_start_date: moment(campaign_tv_start_date).format('YYYY-MM-DD'),
+                                    campaign_tv_end_date: moment(campaign_tv_end_date).format('YYYY-MM-DD'),
+                                    campaign_tv_user: campaignObjects["a-Ensemble"].campaignUser,
+                                    user_id: req.session.user.user_id,
+                                    campaign_tv_budget: Budget,
+                                    campaign_tv_type: "a-Ensemble",
+                                    campaign_tv_file: path_file
+
+                                }).then(async function (campaign_tv) {
+
+                                    const campaign_tv_id = await campaign_tv.campaign_tv_id
+
+                                    let cacheStorageID = 'campaign_tv_ID-' + campaign_tv_id;
+                                    localStorageTV.removeItem(cacheStorageID);
+                                    localStorageTV.setItem(cacheStorageID, JSON.stringify(campaignObjects));
+
+                                    const campaign_tv_crypt = crypto
+                                        .createHash('md5')
+                                        .update(campaign_tv_id.toString())
+                                        .digest("hex");
+
+                                    var foundAdvertiser = await ModelAdvertisersTV.findOne({
+                                        where: {
+                                            advertiser_tv_name: campaignObjects["a-Ensemble"].campaignAdvertiser
+                                        }
+                                    })
+
+                                    if (Utilities.empty(foundAdvertiser)) {
+
+                                        const advertiser = await ModelAdvertisersTV.create({
+                                            advertiser_tv_name: campaignObjects["a-Ensemble"].campaignAdvertiser,
+                                        })
+
+                                        const advertiser_tv_id = advertiser.advertiser_tv_id
+
+                                        await ModelCampaignsTv.update({
+                                            campaign_tv_crypt: campaign_tv_crypt,
+                                            advertiser_tv_id: advertiser_tv_id
+                                        }, {
+                                            where: {
+                                                campaign_tv_id: campaign_tv_id
+                                            }
+                                        })
+
+                                    } else {
+
+                                        await ModelCampaignsTv.update({
+                                            campaign_tv_crypt: campaign_tv_crypt,
+                                            advertiser_tv_id: foundAdvertiser.advertiser_tv_id
+                                        }, {
+                                            where: {
+                                                campaign_tv_id: campaign_tv_id
+                                            }
+                                        })
+                                    }
+
+
+                                    var founduser = await ModelUsers.findOne({
+                                        where: {
+                                            user_id:campaign_tv.user_id
+                                        }
+                                    })
+
+                                   // console.log(founduser)
+
+
+                                    const email = await founduser.user_email
+                                    const user_firstname = await founduser.user_firstname
+                                    const campaign_tv_name = await campaign_tv.campaign_tv_name
+
+                                    nodeoutlook.sendEmail({
+
+                                        auth: {
+                                            user: "oceane.sautron@antennereunion.fr",
+                                            pass: "...."
+                                        },
+                                        from: email,
+                                        to: 'adtraffic@antennereunion.fr',
+                                        subject: 'Envoie du permalien de la campagne ' + campaign_tv_name,
+                                        html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour '
+                                        +user_firstname+'<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' 
+                                        +campaign_tv_name+ '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/'
+                                        +campaign_tv_crypt+'">https://reporting.antennesb.fr/t/'
+                                        +campaign_tv_crypt+'</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>',
+
+                                        onError: (e) => console.log(e),
+                                         onSuccess: (i) => {
+                                          return res.redirect(`/t/${campaign_tv_crypt}`)
+                                        }
+
+                                    })
+
+
+
+
+                                    // return res.redirect(`/t/${campaign_tv_crypt}`);
+
+                                });
+                            }
+
+                            LocalStorageTVDATA = await localStorageTV.getItem('campaign_tv_ID-' + foundcampaign_tv.campaign_tv_id);
+
+                            if (Utilities.empty(LocalStorageTVDATA)) {
+                                localStorageTV.setItem('campaign_tv_ID-' + foundcampaign_tv.campaign_tv_id, JSON.stringify(campaignObjects));
+
+                            }
+                            return res.redirect(`/t/${foundcampaign_tv.campaign_tv_crypt}`);
+
+                        })
 
                     });
             });
@@ -603,18 +645,18 @@ exports.charts = async (req, res) => {
                 for (const property in reportingData) {
                     var i = reportingData[property].campaignLabel
 
-                    data[property]={}
+                    data[property] = {}
 
                     data[property]['id'] = reportingData[property].campaignLabel,
 
-                    data[property]['cible'] = {
-                        name: reportingData[property].campaignTarget,
-                        data: reportingData[property].campaignChannel.Couverture
-                    };
+                        data[property]['cible'] = {
+                            name: reportingData[property].campaignTarget,
+                            data: reportingData[property].campaignChannel.Couverture
+                        };
 
 
                     // TRANCHES HORAIRES
-                   if (reportingData[property].campaigntimeSlotDiary) {
+                    if (reportingData[property].campaigntimeSlotDiary) {
                         var campaigntimeSlotDiaryHourArray = new Array();
                         var campaigntimeSlotDiaryGRPArray = new Array();
                         timeSlotDiary = reportingData[property].campaigntimeSlotDiary;
@@ -627,7 +669,7 @@ exports.charts = async (req, res) => {
                             campaigntimeSlotDiaryGRPArray.push(grpValue);
                         }
 
-                        console.log(campaigntimeSlotDiaryGRPArray)
+                      //  console.log(campaigntimeSlotDiaryGRPArray)
 
                         data[property]['campaigntimeSlotDiaryGRP'] = {
                             name: 'GRP',
@@ -705,112 +747,12 @@ exports.charts = async (req, res) => {
 
                 }
 
-                console.log(data)
+              //  console.log(data)
 
                 return res
                     .status(200)
                     .json(data);
 
-                    
-                process.exit()
-
-                data.cibleEnsemble = {
-                    name: 'Ensemble',
-                    data: reportingData['a-Ensemble'].campaignChannel.Couverture
-                };
-
-                // TRANCHES HORAIRES
-                if (reportingData['a-Ensemble'].campaigntimeSlotDiary) {
-                    var campaigntimeSlotDiaryHourArray = new Array();
-                    var campaigntimeSlotDiaryGRPArray = new Array();
-                    timeSlotDiary = reportingData['a-Ensemble'].campaigntimeSlotDiary;
-
-                    for (i = 0; i < timeSlotDiary.length; i++) {
-                        campaigntimeSlotDiaryHourArray.push(timeSlotDiary[i]['Journal tranches horaires']);
-
-                        var grp = timeSlotDiary[i]['GRP'];
-                        var grpValue = grp.toFixed(2);
-                        campaigntimeSlotDiaryGRPArray.push(grpValue);
-                    }
-
-                    console.log(campaigntimeSlotDiaryGRPArray)
-
-                    data.campaigntimeSlotDiaryGRP = {
-                        name: 'GRP',
-                        data: campaigntimeSlotDiaryGRPArray
-                    };
-                    data.campaigntimeSlotDiaryTrancheHoraires = {
-                        name: "Tranche horaires",
-                        data: campaigntimeSlotDiaryHourArray
-                    };
-                }
-
-                //  console.log(reportingData['a-Ensemble'].campaignIncreaseInLoadPerDay)
-
-                if (reportingData['a-Ensemble'].campaignIncreaseInLoadPerDay) {
-                    var campaignIncreaseInLoadPerDayJourArray = new Array();
-                    var campaignIncreaseInLoadPerDayCouvertureArray = new Array();
-                    var campaignIncreaseInLoadPerDayRepetitionArray = new Array();
-                    campaignIncreaseInLoadPerDay = reportingData['a-Ensemble'].campaignIncreaseInLoadPerDay;
-
-                    for (i = 0; i < campaignIncreaseInLoadPerDay.length; i++) {
-                        campaignIncreaseInLoadPerDayJourArray.push(campaignIncreaseInLoadPerDay[i]['Montée en charge / Jour']);
-                        campaignIncreaseInLoadPerDayCouvertureArray.push(campaignIncreaseInLoadPerDay[i]['Couverture']);
-
-                        var repetition = campaignIncreaseInLoadPerDay[i]['Répétition'];
-                        var repetitionValue = repetition.toFixed(2);
-                        campaignIncreaseInLoadPerDayRepetitionArray.push(repetitionValue);
-                    }
-
-                    data.campaignIncreaseInLoadPerDayCouverture = {
-                        name: 'Couverture',
-                        data: campaignIncreaseInLoadPerDayCouvertureArray
-                    };
-                    data.campaignIncreaseInLoadPerDayJour = {
-                        name: "Jour",
-                        data: campaignIncreaseInLoadPerDayJourArray
-                    };
-                    data.campaignIncreaseInLoadPerDayRepetition = {
-                        name: "Répétition",
-                        data: campaignIncreaseInLoadPerDayRepetitionArray
-                    };
-                }
-
-                if (reportingData['a-Ensemble'].campaignNameDay) {
-                    var campaignNameDayJourArray = new Array();
-                    var campaignNameDayCouvertureArray = new Array();
-                    var campaignNameDayRepetitionArray = new Array();
-                    campaignNameDay = reportingData['a-Ensemble'].campaignNameDay;
-
-                    for (i = 0; i < campaignNameDay.length; i++) {
-                        campaignNameDayJourArray.push(campaignNameDay[i]["Jour nommé"]);
-
-                        var couverture = campaignNameDay[i]['GRP'];
-                        var couvertureValue = couverture.toFixed(2);
-                        campaignNameDayCouvertureArray.push(couvertureValue);
-
-                        var repetition = campaignNameDay[i]['Répétition'];
-                        var repetitionValue = repetition.toFixed(2);
-                        campaignNameDayRepetitionArray.push(repetitionValue);
-                    }
-
-                    data.campaignNameDayGRP = {
-                        name: 'GRP',
-                        data: campaignNameDayCouvertureArray
-                    };
-                    data.campaignNameDayJour = {
-                        name: "Jour",
-                        data: campaignNameDayJourArray
-                    };
-                    data.campaignNameDayRepetition = {
-                        name: "Répétition",
-                        data: campaignNameDayRepetitionArray
-                    };
-                }
-
-                return res
-                    .status(200)
-                    .json(data);
 
             })
 
