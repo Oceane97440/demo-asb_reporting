@@ -14,7 +14,7 @@ const {
     QueryTypes
 } = require('sequelize');
 //var nodemailer = require('nodemailer');
-//var nodeoutlook = require('nodejs-nodemailer-outlook');
+var nodeoutlook = require('nodejs-nodemailer-outlook');
 const ExcelJS = require('exceljs');
 var axios = require('axios');
 const fs = require('fs')
@@ -1611,6 +1611,34 @@ exports.array_unique = async (req, res) => {
 }
 
 exports.nodemail = async (req, res) => {
+
+    var campaign_crypt="c4ca4238a0b923820dcc509a6f75849b"
+    var campaign_tv_name="Campagne soldes Mairie du Port février 2022"
+    var email="oceane.sautron@antennereunion.fr"
+    var user_firstname = "Océane"
+
+    nodeoutlook.sendEmail({
+
+        auth: {
+            user: "oceane.sautron@antennereunion.fr",
+            pass: "...."
+        },
+        from: email,
+        to: 'oceane.sautron@antennereunion.fr',
+        subject: 'Envoie du permalien de la campagne '+campaign_tv_name,
+        html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour '
+        +user_firstname+'<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' 
+        +campaign_tv_name+ '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/'
+        +campaign_crypt+'">https://reporting.antennesb.fr/t/'
+        +campaign_crypt+'</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+        
+        ,
+
+        onError: (e) => console.log(e),
+        onSuccess: (i) => res.redirect(`/t/${campaign_crypt}`)
+
+
+    })
 
 };
 
