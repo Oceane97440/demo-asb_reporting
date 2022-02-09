@@ -69,10 +69,10 @@ exports.index = async (req, res) => {
 
                 const alpha = Array.from(Array(26)).map((e, i) => i + 65);
                 const alphabet = alpha.map((x) => String.fromCharCode(x));
-               // console.log(alphabet);
+                // console.log(alphabet);
 
                 var path_file = 'data/tv/' + dirDateNOW + '/' + file.name
-              //  console.log(path_file)
+                //  console.log(path_file)
 
                 //  var fileXLS = 'data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx';
                 var fileXLS = path_file;
@@ -131,17 +131,17 @@ exports.index = async (req, res) => {
                                 }
 
 
-                               /* console.log('Campagne : ', campaignName);
-                                console.log('Label : ', campaignLabel);
-                                console.log('Cible : ', campaignTarget);
-                                console.log('Période : ', campaignPeriod);
-                                console.log('User : ', campaignUser);
-                                console.log('Monnaie : ', campaignCurrency);
-                                console.log('Budget : ', campaignBudget);
-                                console.log('Effectif pondéré : ', campaignWeightedNumber);
-                                console.log('Annonceur : ', campaignAdvertiser);
-                                console.log('Formats : ', campaignFormat);
-                                console.log('------------------------------------------');*/
+                                /* console.log('Campagne : ', campaignName);
+                                 console.log('Label : ', campaignLabel);
+                                 console.log('Cible : ', campaignTarget);
+                                 console.log('Période : ', campaignPeriod);
+                                 console.log('User : ', campaignUser);
+                                 console.log('Monnaie : ', campaignCurrency);
+                                 console.log('Budget : ', campaignBudget);
+                                 console.log('Effectif pondéré : ', campaignWeightedNumber);
+                                 console.log('Annonceur : ', campaignAdvertiser);
+                                 console.log('Formats : ', campaignFormat);
+                                 console.log('------------------------------------------');*/
 
                                 // Initialisation des tableaux
                                 dataLines = new Array();
@@ -268,7 +268,7 @@ exports.index = async (req, res) => {
 
                                             var label = worksheet.getCell(cellKey).value;
                                             var value = worksheet.getCell(cellValue).value;
-                                           // console.log('col : ', i1, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                            // console.log('col : ', i1, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
                                             IncreaseInLoadPerDayObject[label] = value;
                                         }
 
@@ -312,7 +312,7 @@ exports.index = async (req, res) => {
 
                                             var label = worksheet.getCell(cellKey).value;
                                             var value = worksheet.getCell(cellValue).value;
-                                           // console.log('col : ', i3, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                            // console.log('col : ', i3, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
                                             nameDayObject[label] = value;
 
                                             if (label === 'Répétition') {
@@ -340,7 +340,7 @@ exports.index = async (req, res) => {
 
 
 
-                                 console.log(campaignObjects)
+                                console.log(campaignObjects)
 
 
 
@@ -437,11 +437,11 @@ exports.index = async (req, res) => {
 
                                     var founduser = await ModelUsers.findOne({
                                         where: {
-                                            user_id:campaign_tv.user_id
+                                            user_id: campaign_tv.user_id
                                         }
                                     })
 
-                                   // console.log(founduser)
+                                    // console.log(founduser)
 
 
                                     const email = await founduser.user_email
@@ -457,15 +457,15 @@ exports.index = async (req, res) => {
                                         from: email,
                                         to: 'adtraffic@antennereunion.fr',
                                         subject: 'Envoie du permalien de la campagne ' + campaign_tv_name,
-                                        html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour '
-                                        +user_firstname+'<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' 
-                                        +campaign_tv_name+ '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/'
-                                        +campaign_tv_crypt+'">https://reporting.antennesb.fr/t/'
-                                        +campaign_tv_crypt+'</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>',
+                                        html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour ' +
+                                            user_firstname + '<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' +
+                                            campaign_tv_name + '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/' +
+                                            campaign_tv_crypt + '">https://reporting.antennesb.fr/t/' +
+                                            campaign_tv_crypt + '</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>',
 
                                         onError: (e) => console.log(e),
-                                         onSuccess: (i) => {
-                                          return res.redirect(`/t/${campaign_tv_crypt}`)
+                                        onSuccess: (i) => {
+                                            return res.redirect(`/t/${campaign_tv_crypt}`)
                                         }
 
                                     })
@@ -669,7 +669,7 @@ exports.charts = async (req, res) => {
                             campaigntimeSlotDiaryGRPArray.push(grpValue);
                         }
 
-                      //  console.log(campaigntimeSlotDiaryGRPArray)
+                        //  console.log(campaigntimeSlotDiaryGRPArray)
 
                         data[property]['campaigntimeSlotDiaryGRP'] = {
                             name: 'GRP',
@@ -747,7 +747,7 @@ exports.charts = async (req, res) => {
 
                 }
 
-              //  console.log(data)
+                //  console.log(data)
 
                 return res
                     .status(200)
@@ -766,4 +766,59 @@ exports.charts = async (req, res) => {
             });
     }
 
+}
+
+exports.export_pdf = async (req, res) => {
+
+    try {
+
+        let campaigncrypt = req.params.campaigncrypt;
+        await ModelCampaignsTv
+            .findOne({
+                attributes: [
+                    'campaign_tv_id',
+                    'campaign_tv_crypt'
+                ],
+                where: {
+                    campaign_tv_crypt: campaigncrypt
+                }
+
+            }).then(async function (campaign) {
+
+                if (!campaign) {
+                    return res
+                        .status(404)
+                        .render("error.ejs", {
+                            statusCoded: 404,
+                            campaigncrypt: campaigncrypt
+                        });
+
+                }
+
+                let cacheStorageID = 'campaign_tv_ID-' + campaign.campaign_tv_id;
+                LocalStorageTVDATA = localStorageTV.getItem(cacheStorageID);
+
+                var reportingData = JSON.parse(LocalStorageTVDATA);
+
+                if (!LocalStorageTVDATA) {
+                    return res
+                        .status(404)
+                        .render("error.ejs", {
+                            statusCoded: 404,
+                            campaigncrypt: campaigncrypt
+                        });
+                }
+
+                res.render('report-tv/template_pdf.ejs', {
+                    reporting: reportingData,
+                    campaign_crypt: campaigncrypt,
+                    moment: moment,
+                    utilities: Utilities
+                });
+
+            })
+
+    } catch (error) {
+
+    }
 }

@@ -2710,3 +2710,40 @@ exports.logs = async (req, res) => {
     logger.fatal("Cheese was breeding ground for listeria.");*/
 
 }
+
+exports.pdf = async (req,res)=>{
+
+    const puppeteer = require('puppeteer')
+ 
+async function generatePDF() {
+
+  //We start a new browser, without showing UI
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+ const url = 'http://127.0.0.1:3001/t/pdf/c4ca4238a0b923820dcc509a6f75849b';
+
+  //We load the page, one of my blog post (networkidle0 means we're waiting for the network to stop making new calls for 500ms
+  await page.goto(url, {waitUntil: 'networkidle2'});
+  //We add style to hide some UI elements we don't want to see on our pdf
+  await page.addStyleTag({ content:
+    `body {
+          margin: 0;
+          color: #000;
+          background-color: red;
+        }
+      #boutton-info{
+          diplay:none
+      }
+      `
+  });
+
+  //Let's generate the pdf and close the browser
+  const pdf = await page.pdf({ path: "campagne.pdf", format: 'A4' });
+  await browser.close();
+  return pdf;
+}
+
+generatePDF();
+res.send("ok")
+
+}

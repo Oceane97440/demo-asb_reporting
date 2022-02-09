@@ -3,7 +3,15 @@ body {
     font-family: Century Gothic, Verdana, Geneva, Tahoma, sans-serif;
 
   }
+  /* @media print {
 
+    body {
+      margin: 0;
+      color: #000;
+      background-color: red;
+    }
+  
+  } */
   #reporting-board {
     background: #fff;
   }
@@ -50,4 +58,12 @@ body {
 
   .nav-item.nav-link{
     margin-right: 10px;
+  }
+
+  .couverture_cible{
+    /* position: relative; */
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+
   }
