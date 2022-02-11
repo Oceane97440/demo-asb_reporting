@@ -1,5 +1,6 @@
 const {
-    Op, ARRAY
+    Op,
+    ARRAY
 } = require("sequelize");
 
 // const excel = require('node-excel-export');
@@ -19,6 +20,7 @@ const ExcelJS = require('exceljs');
 var axios = require('axios');
 const fs = require('fs')
 const moment = require('moment');
+const puppeteer = require('puppeteer')
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -35,33 +37,37 @@ const ModelAdvertisers = require("../models/models.advertisers");
 const ModelAgencies = require("../models/models.agencies");
 const ModelInsertions = require("../models/models.insertions");
 const ModelTemplates = require("../models/models.templates");
-const ModelEpilotCampaigns =  require("../models/models.epilot_campaigns");
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
 const ModelFormatsGroupsTypes = require(
     "../models/models.formats_groups_types"
 );
 const ModelFormatsGroups = require("../models/models.formats_groups");
-
+const ModelCampaignsTv = require("../models/models.campaigns_tv");
 // Initialise les identifiants de connexion à l'api
 const dotenv = require("dotenv");
-dotenv.config({path:"./config.env"})
+dotenv.config({
+    path: "./config.env"
+})
 
 // For the default version
 const algoliasearch = require('algoliasearch');
 
 exports.search = async (req, res) => {
     try {
-       
+
         const client = algoliasearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_SEARCH_APIKEY);
         const index = client.initIndex(process.env.ALGOLIA_INDEXNAME);
-      
+
         // only query string
-index.search('rodzafer').then(({ hits }) => {
-    console.log(hits);
-  });
-  
-  //process.exit();
-  
-  /*
+        index.search('rodzafer').then(({
+            hits
+        }) => {
+            console.log(hits);
+        });
+
+        //process.exit();
+
+        /*
         var campaigns = await ModelCampaigns.findAll({
             include: [
                 { model: ModelAdvertisers },
@@ -142,101 +148,110 @@ exports.lol = async (req, res) => {
 
         const client = algoliasearch('7L0LDMH42V', 'bf57bd2367126fc4d4a48d8549f48f03');
         const index = client.initIndex('index_campaigns');
-     
+
         const objects = [{
             firstname: 'Jimmie',
             lastname: 'Barninger',
             objectID: 'myID1'
-          }, {
+        }, {
             firstname: 'Warren',
             lastname: 'Speach',
             objectID: 'myID2'
-          }];
-          
-          index.saveObjects(objects).then(({ objectIDs }) => {
+        }];
+
+        index.saveObjects(objects).then(({
+            objectIDs
+        }) => {
             console.log(objectIDs);
-          });
+        });
 
-          console.log('mqsmkd')
+        console.log('mqsmkd')
 
-          process.exit();
-        
+        process.exit();
+
         campaignsObjects = new Array();
         var campaigns = await ModelCampaigns.findAll({
-            include: [
-                { model: ModelAdvertisers },
-                { model: ModelAgencies},
-                { model: ModelInsertions}
+            include: [{
+                model: ModelAdvertisers
+            },
+            {
+                model: ModelAgencies
+            },
+            {
+                model: ModelInsertions
+            }
             ],
-            limit : 4
+            limit: 4
 
         }).then(async function (campaigns) {
-                campaigns.forEach(function(item){
-                    console.log(item.campaign_id,' ',item.campaign_name)
-                   
-                    var campaignObject = {
-                        campaign_id : item.campaign_id,
-                        campaign_crypt : item.campaign_crypt,
-                        campaign_name : item.campaign_name
+            campaigns.forEach(function (item) {
+                console.log(item.campaign_id, ' ', item.campaign_name)
+
+                var campaignObject = {
+                    campaign_id: item.campaign_id,
+                    campaign_crypt: item.campaign_crypt,
+                    campaign_name: item.campaign_name
+                }
+
+                advertiserObject = new Array();
+                if (!Utilities.empty(item.advertiser.advertiser_id)) {
+                    advertiserObject = {
+                        advertiser_id: item.advertiser.advertiser_id,
+                        advertiser_name: item.advertiser.advertiser_name
+                    }
+                }
+
+                // Liste les insertions
+                const insertions = item.insertions;
+                insertionsObject = new Array();
+                insertions.forEach(function (itemI) {
+
+                    //  console.log('Insertions : ', itemI.insertion_id,' - ', itemI.insertion_name)
+                    var insertionObject = {
+                        insertion_id: itemI.insertion_id,
+                        insertion_name: itemI.insertion_name,
+                        insertion_start_date: itemI.insertion_start_date,
+                        insertion_end_date: itemI.insertion_end_date,
+                        campaign_id: itemI.campaign_id,
+                        priority_id: itemI.priority_id
                     }
 
-                    advertiserObject = new Array();
-                    if(!Utilities.empty(item.advertiser.advertiser_id)) {
-                        advertiserObject = {
-                            advertiser_id : item.advertiser.advertiser_id,
-                            advertiser_name : item.advertiser.advertiser_name
-                        }
-                    }
-
-                    // Liste les insertions
-                    const insertions = item.insertions;
-                    insertionsObject = new Array();
-                    insertions.forEach(function(itemI){
-                       
-                        //  console.log('Insertions : ', itemI.insertion_id,' - ', itemI.insertion_name)
-                        var insertionObject = {
-                            insertion_id : itemI.insertion_id,
-                            insertion_name : itemI.insertion_name,
-                            insertion_start_date : itemI.insertion_start_date,
-                            insertion_end_date : itemI.insertion_end_date,
-                            campaign_id :  itemI.campaign_id,
-                            priority_id: itemI.priority_id
-                        }
-
-                        insertionsObject.push(insertionObject);
-                    });
-
-                    // campaignObject.insertions = insertionsObject;
-                    agencyObject = new Array();
-                    if(!Object.is(item.agency_id,null)) {
-                        agencyObject = {
-                            agency_id : item.agency_id,
-                            agency_name : item.agency.agency_name
-                        }
-                    } 
-
-                 // Remplie l'object
-                    campaignsObjects.push({
-                        campaign_id : item.campaign_id,
-                        campaign_crypt : item.campaign_crypt,
-                        campaign_name : item.campaign_name,
-                        campaign_start_date : item.campaign_start_date,
-                        campaign_end_date : item.campaign_end_date,
-                        advertiser : advertiserObject,
-                        agency : agencyObject,
-                        insertions : insertionsObject
-                    });
-
+                    insertionsObject.push(insertionObject);
                 });
+
+                // campaignObject.insertions = insertionsObject;
+                agencyObject = new Array();
+                if (!Object.is(item.agency_id, null)) {
+                    agencyObject = {
+                        agency_id: item.agency_id,
+                        agency_name: item.agency.agency_name
+                    }
+                }
+
+                // Remplie l'object
+                campaignsObjects.push({
+                    campaign_id: item.campaign_id,
+                    campaign_crypt: item.campaign_crypt,
+                    campaign_name: item.campaign_name,
+                    campaign_start_date: item.campaign_start_date,
+                    campaign_end_date: item.campaign_end_date,
+                    advertiser: advertiserObject,
+                    agency: agencyObject,
+                    insertions: insertionsObject
+                });
+
             });
+        });
 
-              // console.log(campaignsObjects);
+        // console.log(campaignsObjects);
 
-               index.saveObjects(campaignsObjects).then(({ objectIDs }) => {
-                console.log(objectIDs);
-              });
+        index.saveObjects(campaignsObjects).then(({
+            objectIDs
+        }) => {
+            console.log(objectIDs);
+        });
 
-            /*
+        /*
            for(i = 0; i < campaigns.length; i++) {
             console.log(campaigns[i].campaign_id,' ',campaigns[i].campaign_name)
 
@@ -257,10 +272,10 @@ exports.lol = async (req, res) => {
                 console.log(objectIDs);
               });*/
 
-       // });
-       // console.log(advertisers);
+        // });
+        // console.log(advertisers);
 
-     //   return res.json(advertisers);
+        //   return res.json(advertisers);
 
         process.exit(1);
     } catch (error) {
@@ -269,19 +284,20 @@ exports.lol = async (req, res) => {
 }
 
 exports.index = async (req, res) => {
-    console.log('dfsd');  process.exit(1);
+    console.log('dfsd');
+    process.exit(1);
     // Mettre à jour les formats
-   // const groupFormats = await ModelFormatsGroups
-   // .findAll();
+    // const groupFormats = await ModelFormatsGroups
+    // .findAll();
 
     // console.log(groupFormats)
 
- // Crée label avec le date du jour ex : 20210403
+    // Crée label avec le date du jour ex : 20210403
 
- const dateNowLong = Date.now();
+    const dateNowLong = Date.now();
 
-     // Affiche les annonceurs
-     const advertiserExclus = new Array(
+    // Affiche les annonceurs
+    const advertiserExclus = new Array(
         418935,
         427952,
         409707,
@@ -314,85 +330,85 @@ exports.index = async (req, res) => {
         464862
     );
 
-var dateNow = moment().format('YYYY-M-D 00:00:00'); // "2021-12-29 00:00:00";
-var dateNowRequest = moment().format('YYYY-M-DT00:00:00'); 
-var dateEnd = '2040-12-31 23:59:00';
-var dateEndRequest = '2021-12-31T23:59:00';
-console.log('dateNow : ',dateNow);
+    var dateNow = moment().format('YYYY-M-D 00:00:00'); // "2021-12-29 00:00:00";
+    var dateNowRequest = moment().format('YYYY-M-DT00:00:00');
+    var dateEnd = '2040-12-31 23:59:00';
+    var dateEndRequest = '2021-12-31T23:59:00';
+    console.log('dateNow : ', dateNow);
 
-  // Affiche les campagnes en ligne
-  /* var campaigns = await ModelCampaigns.findAll({
-        where: {
-                advertiser_id: {
-                    [Op.notIn]: advertiserExclus
-                },
-                [Op.or]: [{
-                    campaign_start_date: {
-                        [Op.between]: [dateNow, dateEnd]
-                    }
-                }, {
-                    campaign_end_date: {
-                        [Op.between]: [dateNow, dateEnd]
-                    }
-                }]
-        },
-        order: [
-            ['campaign_end_date', 'ASC']
-        ],
-        include: [
-            { model: ModelAdvertisers },
-            { model: ModelInsertions }
-            ]
-    });
+    // Affiche les campagnes en ligne
+    /* var campaigns = await ModelCampaigns.findAll({
+          where: {
+                  advertiser_id: {
+                      [Op.notIn]: advertiserExclus
+                  },
+                  [Op.or]: [{
+                      campaign_start_date: {
+                          [Op.between]: [dateNow, dateEnd]
+                      }
+                  }, {
+                      campaign_end_date: {
+                          [Op.between]: [dateNow, dateEnd]
+                      }
+                  }]
+          },
+          order: [
+              ['campaign_end_date', 'ASC']
+          ],
+          include: [
+              { model: ModelAdvertisers },
+              { model: ModelInsertions }
+              ]
+      });
 
-    */
+      */
 
     var campaignsMin = await ModelInsertions.findAll({
         attributes: [
             'insertion_id',
-             [sequelize.fn('min', sequelize.col('insertion_start_date')), 'startDate']
-            ],
+            [sequelize.fn('min', sequelize.col('insertion_start_date')), 'startDate']
+        ],
         where: {
-                    insertion_start_date: {  [Op.between]: [dateNow, dateEnd] }                     
+            insertion_start_date: {
+                [Op.between]: [dateNow, dateEnd]
+            }
+        },
+        include: [{
+            model: ModelCampaigns,
+            where: {
+                advertiser_id: {
+                    [Op.notIn]: advertiserExclus
                 },
-        include: [
-             { 
-                 model: ModelCampaigns,
-                 where: {
-                    advertiser_id: {
-                        [Op.notIn]: advertiserExclus
-                    },
-                    campaign_name: {
-                        [Op.notLike]: '% PARR %'
-                    }
-                
-                }                
-             }
-        ]        
+                campaign_name: {
+                    [Op.notLike]: '% PARR %'
+                }
+
+            }
+        }]
     });
 
     var campaignsMax = await ModelInsertions.findAll({
         attributes: [
             'insertion_id',
-             [sequelize.fn('min', sequelize.col('insertion_end_date')), 'endDate']
-            ],
+            [sequelize.fn('min', sequelize.col('insertion_end_date')), 'endDate']
+        ],
         where: {
-            insertion_end_date: { [Op.gte]: dateNow }                     
+            insertion_end_date: {
+                [Op.gte]: dateNow
+            }
+        },
+        include: [{
+            model: ModelCampaigns,
+            where: {
+                advertiser_id: {
+                    [Op.notIn]: advertiserExclus
                 },
-        include: [
-             { 
-                 model: ModelCampaigns,
-                 where: {
-                    advertiser_id: {
-                        [Op.notIn]: advertiserExclus
-                    },
-                    campaign_name: {
-                        [Op.notLike]: '% PARR %'
-                    }
-                
-                }                
-             }
-        ]        
+                campaign_name: {
+                    [Op.notLike]: '% PARR %'
+                }
+
+            }
+        }]
     });
 
     /*
@@ -408,14 +424,14 @@ console.log('dateNow : ',dateNow);
     return res.json({
         type: 'success',
         campaignsMin: campaignsMin,
-      campaignsMax: campaignsMax
+        campaignsMax: campaignsMax
     });
 
-   process.exit(1);
+    process.exit(1);
     // console.log(campaign_ids);
 
-      // initialisation des requêtes
-      var requestReporting = {
+    // initialisation des requêtes
+    var requestReporting = {
         "startDate": dateNowRequest,
         "endDate": dateEndRequest,
         "fields": [{
@@ -451,16 +467,17 @@ console.log('dateNow : ',dateNow);
             }
         }],
         "filter": [{
-            "CampaignId": '1989163'/*, 2007792, 1913649, 2003528,
-                1938504, 2007632, 1850218, 2003310,
-                2004336, 1909617, 1974651, 1913231,
-                1921937, 1974685, 1913245, 1971870,
-                2001079, 1989854, 1989864, 1863912,
-                1961451, 1997595, 1983659, 1996358,
-                2003316, 1965099, 1981048, 1975229,
-                1974724, 1985080, 1996479, 1989974,
-                1989977, 2009119, 2008909, 1992587,
-        2007959, 1698950]*/
+            "CampaignId": '1989163'
+            /*, 2007792, 1913649, 2003528,
+                            1938504, 2007632, 1850218, 2003310,
+                            2004336, 1909617, 1974651, 1913231,
+                            1921937, 1974685, 1913245, 1971870,
+                            2001079, 1989854, 1989864, 1863912,
+                            1961451, 1997595, 1983659, 1996358,
+                            2003316, 1965099, 1981048, 1975229,
+                            1974724, 1985080, 1996479, 1989974,
+                            1989977, 2009119, 2008909, 1992587,
+                    2007959, 1698950]*/
         }]
     }
 
@@ -471,30 +488,30 @@ console.log('dateNow : ',dateNow);
         requestReporting
     );
 
-    console.log('firstLink : ',firstLink);
+    console.log('firstLink : ', firstLink);
 
     process.exit(1);
-/*
-  await ModelEpilotCampaigns.update( data_campaign
-, {
-    where: {
-        epilot_campaign_code: 74648
-    }
-  });
-*/
+    /*
+      await ModelEpilotCampaigns.update( data_campaign
+    , {
+        where: {
+            epilot_campaign_code: 74648
+        }
+      });
+    */
 
-/*
- // Ajoute ou MAJ la campagne EPILOT
- Utilities
- .updateOrCreate(ModelEpilotCampaigns, {
-     epilot_campaign_code: '74648'
- }, data_campaign)
- .then(function (result) {
-     result.item; // the model
-     result.created; // bool, if a new item was created.
-     console.log(result)
- });
-*/
+    /*
+     // Ajoute ou MAJ la campagne EPILOT
+     Utilities
+     .updateOrCreate(ModelEpilotCampaigns, {
+         epilot_campaign_code: '74648'
+     }, data_campaign)
+     .then(function (result) {
+         result.item; // the model
+         result.created; // bool, if a new item was created.
+         console.log(result)
+     });
+    */
 
     process.exit(1);
 
@@ -658,10 +675,10 @@ exports.export_excel = async (req, res) => {
         //Array of objects representing heading rows (very top)
         const heading = [
             [{
-                    value: 'Rapport : ' + campaign_name,
-                    style: styles.headerDark,
-                    alignment: styles.alignment
-                }
+                value: 'Rapport : ' + campaign_name,
+                style: styles.headerDark,
+                alignment: styles.alignment
+            }
 
             ],
 
@@ -674,18 +691,18 @@ exports.export_excel = async (req, res) => {
 
         const headingformats = [
             [{
-                    value: 'Par Format',
-                    style: styles.headerDark,
-                }
+                value: 'Par Format',
+                style: styles.headerDark,
+            }
 
             ]
 
         ];
         const headingsites = [
             [{
-                    value: 'Par Sites',
-                    style: styles.headerDark,
-                }
+                value: 'Par Sites',
+                style: styles.headerDark,
+            }
 
             ]
 
@@ -799,13 +816,13 @@ exports.export_excel = async (req, res) => {
         // specification provided above. But you should have all the fields
         // that are listed in the report specification
         const dataset_global = [{
-                impressions: table.total_impression_format,
-                clics: table.total_click_format,
-                ctr_clics: table.CTR,
-                vu: table.Total_VU,
-                repetions: table.Repetition
+            impressions: table.total_impression_format,
+            clics: table.total_click_format,
+            ctr_clics: table.CTR,
+            vu: table.Total_VU,
+            repetions: table.Repetition
 
-            }
+        }
 
         ]
         const dataset_format = []
@@ -1330,15 +1347,15 @@ exports.export_excel = async (req, res) => {
         // The merges are independent of the data.
         // A merge will overwrite all data _not_ in the top-left cell.
         const merges = [{
-                start: {
-                    row: 1,
-                    column: 1
-                },
-                end: {
-                    row: 1,
-                    column: 5
-                }
+            start: {
+                row: 1,
+                column: 1
             },
+            end: {
+                row: 1,
+                column: 5
+            }
+        },
 
         ]
 
@@ -1420,10 +1437,10 @@ exports.test_exportExcel = async (req, res) => {
         //Array of objects representing heading rows (very top)
         const heading = [
             [{
-                    value: 'Rapport :' + campaign_name,
-                    style: styles.headerDark,
-                    alignment: styles.alignment
-                }
+                value: 'Rapport :' + campaign_name,
+                style: styles.headerDark,
+                alignment: styles.alignment
+            }
 
             ],
             // ['Date de génération : ' + date_now +' | ' + 'Période diffusion :' + StartDate + '-' + EndDate
@@ -1505,33 +1522,33 @@ exports.test_exportExcel = async (req, res) => {
         // specification provided above. But you should have all the fields
         // that are listed in the report specification
         const dataset = [{
-                impressions: '19 535',
-                clics: '1 101',
-                ctr_clics: '5.64%',
-                vu: '9 341',
-                repetions: '2.09'
+            impressions: '19 535',
+            clics: '1 101',
+            ctr_clics: '5.64%',
+            vu: '9 341',
+            repetions: '2.09'
 
-            },
+        },
 
         ]
         const dataset2 = [{
-                sites: 'SM_LINFO.re',
-                impressions: '1 503	',
-                clics: '111',
-                ctr_clics: '7.39%',
-                // vtr: '55.76%',
-                repetions: '0'
+            sites: 'SM_LINFO.re',
+            impressions: '1 503	',
+            clics: '111',
+            ctr_clics: '7.39%',
+            // vtr: '55.76%',
+            repetions: '0'
 
-            },
-            {
-                sites: 'SM_LINFO.re',
-                impressions: '1 503	',
-                clics: '111',
-                ctr_clics: '7.39%',
-                // vtr: '55.76%',
-                repetions: '0'
+        },
+        {
+            sites: 'SM_LINFO.re',
+            impressions: '1 503	',
+            clics: '111',
+            ctr_clics: '7.39%',
+            // vtr: '55.76%',
+            repetions: '0'
 
-            },
+        },
 
         ]
 
@@ -1540,15 +1557,15 @@ exports.test_exportExcel = async (req, res) => {
         // A merge will overwrite all data _not_ in the top-left cell.
         //permet fusionne des colonne
         const merges = [{
-                start: {
-                    row: 1,
-                    column: 1
-                },
-                end: {
-                    row: 1,
-                    column: 5
-                }
+            start: {
+                row: 1,
+                column: 1
             },
+            end: {
+                row: 1,
+                column: 5
+            }
+        },
 
         ]
 
@@ -1612,9 +1629,9 @@ exports.array_unique = async (req, res) => {
 
 exports.nodemail = async (req, res) => {
 
-    var campaign_crypt="c4ca4238a0b923820dcc509a6f75849b"
-    var campaign_tv_name="Campagne soldes Mairie du Port février 2022"
-    var email="oceane.sautron@antennereunion.fr"
+    var campaign_crypt = "c4ca4238a0b923820dcc509a6f75849b"
+    var campaign_tv_name = "Campagne soldes Mairie du Port février 2022"
+    var email = "oceane.sautron@antennereunion.fr"
     var user_firstname = "Océane"
 
     nodeoutlook.sendEmail({
@@ -1625,13 +1642,13 @@ exports.nodemail = async (req, res) => {
         },
         from: email,
         to: 'oceane.sautron@antennereunion.fr',
-        subject: 'Envoie du permalien de la campagne '+campaign_tv_name,
-        html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour '
-        +user_firstname+'<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' 
-        +campaign_tv_name+ '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/'
-        +campaign_crypt+'">https://reporting.antennesb.fr/t/'
-        +campaign_crypt+'</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
-        
+        subject: 'Envoie du permalien de la campagne ' + campaign_tv_name,
+        html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour ' +
+            user_firstname + '<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' +
+            campaign_tv_name + '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/' +
+            campaign_crypt + '">https://reporting.antennesb.fr/t/' +
+            campaign_crypt + '</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+
         ,
 
         onError: (e) => console.log(e),
@@ -2697,9 +2714,9 @@ exports.duplication = async (req, res) => {
 
 exports.logs = async (req, res) => {
 
-  var test = await Utilities.logs('info')
+    var test = await Utilities.logs('info')
 
-  test.info("TEst fonction");
+    test.info("TEst fonction");
     res.send("ok")
     /*
     logger.trace("Entering cheese testing");
@@ -2711,40 +2728,62 @@ exports.logs = async (req, res) => {
 
 }
 
-exports.pdf = async (req,res)=>{
+exports.pdf = async (req, res) => {
 
-    const puppeteer = require('puppeteer')
- 
-async function generatePDF() {
+    const campaigncrypt = req.params.campaigncrypt;
 
-  //We start a new browser, without showing UI
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
- const url = 'http://127.0.0.1:3001/t/pdf/c4ca4238a0b923820dcc509a6f75849b';
-
-  //We load the page, one of my blog post (networkidle0 means we're waiting for the network to stop making new calls for 500ms
-  await page.goto(url, {waitUntil: 'networkidle2'});
-  //We add style to hide some UI elements we don't want to see on our pdf
-  await page.addStyleTag({ content:
-    `body {
-          margin: 0;
-          color: #000;
-          background-color: red;
+    await ModelCampaignsTv.findOne({
+        attributes: [
+            'campaign_tv_crypt',
+            'campaign_tv_name'
+        ],
+        where: {
+            campaign_tv_crypt: campaigncrypt
         }
-      #boutton-info{
-          diplay:none
-      }
-      `
-  });
+    }).then(async function (campaign) {
 
-  //Let's generate the pdf and close the browser
-  const pdf = await page.pdf({ path: "campagne.pdf", format: 'A4' });
-  await browser.close();
-  return pdf;
-}
+        const campaign_tv_name = campaign.campaign_tv_name
+        const dateNow = moment().format('YYYYMMDD');
+        const label = "campagne-"+campaign_tv_name+"-"+dateNow+".pdf"
 
-generatePDF();
-res.send("ok")
+        async function generatePDF() {
+
+            //We start a new browser, without showing UI
+            const browser = await puppeteer.launch({
+                headless: true
+            });
+            const page = await browser.newPage();
+            const url = 'https://reporting.antennesb.fr/t/pdf/' + campaigncrypt;
+
+            //We load the page, one of my blog post (networkidle0 means we're waiting for the network to stop making new calls for 500ms
+            await page.goto(url, {
+                waitUntil: 'networkidle2'
+            });
+            //We add style to hide some UI elements we don't want to see on our pdf
+            //     await page.addStyleTag({
+            //         content: `body {
+            //       margin: 0;
+            //       color: #000;
+            //       background-color: red;
+            //     }
+            //   #boutton-info{
+            //       diplay:none
+            //   }
+            //   `
+            //     });
+
+            //Let's generate the pdf and close the browser
+            const pdf = await page.pdf({
+              //  path: "campagne.pdf",
+                format: 'A4'
+            });
+            await browser.close();
+            res.attachment(label)
+            return res.send(pdf);
+        }
+
+        generatePDF();
+    })
 
 }
 
@@ -2804,33 +2843,47 @@ exports.reports = async (req, res) => {
         let insertions = await ModelInsertions
             .findAll({
                 where: {
-                    [Op.and]: [
-                        { insertion_start_date: { [Op.between]: [dateSub30Days, dateNow] } },
-                        { insertion_end_date: { [Op.between]: [dateSub30Days, dateNow] } }
+                    [Op.and]: [{
+                        insertion_start_date: {
+                            [Op.between]: [dateSub30Days, dateNow]
+                        }
+                    },
+                    {
+                        insertion_end_date: {
+                            [Op.between]: [dateSub30Days, dateNow]
+                        }
+                    }
                     ]
                 },
                 group: ['campaign_id'],
                 include: [{
                     model: ModelCampaigns,
                     where: {
-                        [Op.and]: [{ campaign_name: { [Op.notLike]: '% PARR %' } }],
+                        [Op.and]: [{
+                            campaign_name: {
+                                [Op.notLike]: '% PARR %'
+                            }
+                        }],
                         /*  [Op.or]: [
                                   { campaign_start_date: { [Op.between]: [dateNow, dateSub30Days] } }, 
                                   { campaign_end_date: { [Op.between]: [dateNow, dateSub30Days] } }
                               ]
                               */
                     },
-                    order: [['campaign_start_date', 'ASC']],
+                    order: [
+                        ['campaign_start_date', 'ASC']
+                    ],
                     include: [{
                         model: ModelAdvertisers,
                         where: {
-                            [Op.and]: [
-                                { advertiser_id: { [Op.notIn]: advertiserExclus } }
-                            ]
+                            [Op.and]: [{
+                                advertiser_id: {
+                                    [Op.notIn]: advertiserExclus
+                                }
+                            }]
                         }
                     }]
-                }
-                ]
+                }]
             });
 
         console.log('nbCampaigns :', insertions.length);
@@ -2844,13 +2897,16 @@ exports.reports = async (req, res) => {
 
         // Affiche la date minimum de l'insertion
         let insertionMinDate = await ModelInsertions.min(
-            'insertion_start_date',
-            {
-                where: {
-                    campaign_id: { [Op.in]: campaignsIds },
-                    insertion_start_date: { [Op.gte]: dateSub30Days }
+            'insertion_start_date', {
+            where: {
+                campaign_id: {
+                    [Op.in]: campaignsIds
+                },
+                insertion_start_date: {
+                    [Op.gte]: dateSub30Days
                 }
-            });
+            }
+        });
         // Transforme la date en format YYYY-MM-DD
         var insertionStartDate = moment(insertionMinDate, "YYYY-MM-DD").format("YYYY-MM-DD");
 
@@ -2927,40 +2983,40 @@ exports.reports = async (req, res) => {
             var dataLSTaskGlobal = localStorageTasks.getItem(cacheStorageID);
             console.log(dataLSTaskGlobal)
             // Vérifie que dataLSTaskGlobal -> existe OU (dataLSTaskGlobalVU -> existe && taskID_uu -> not null)
-             if (dataLSTaskGlobal) {
-                 if (dataLSTaskGlobal && Utilities.empty(requestRepartitionTaskID)) {
-                     time += 10000;
-                     let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}`;
+            if (dataLSTaskGlobal) {
+                if (dataLSTaskGlobal && Utilities.empty(requestRepartitionTaskID)) {
+                    time += 10000;
+                    let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}`;
 
-                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-                     if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-                         // 3) Récupère la date de chaque requête
-                         let dataLSTaskGlobal = localStorageTasks.getItem(
-                             cacheStorageID + '-taskGlobal'
-                         );
-                         console.log('1979 : ' + cacheStorageID);
-                         if (!dataLSTaskGlobal) {
-                             dataFile = await AxiosFunction.getReportingData(
-                                 'GET',
-                                 `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}/file`,
-                                 ''
-                             );
-                             // save la data requête 1 dans le local storage
-                             dataLSTaskGlobal = {
-                                 'datafile': dataFile.data
-                             };
-                             localStorageTasks.setItem(
-                                 cacheStorageID + '-taskGlobal',
-                                 JSON.stringify(dataLSTaskGlobal)
-                             );
-                         }
-                     }
-                 }
-             } else {
-                 // Stoppe l'intervalle timerFile
-                 clearInterval(timerFile);
-                 console.log('Stop clearInterval timerFile');
-             }
+                    let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+                    if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                        // 3) Récupère la date de chaque requête
+                        let dataLSTaskGlobal = localStorageTasks.getItem(
+                            cacheStorageID + '-taskGlobal'
+                        );
+                        console.log('1979 : ' + cacheStorageID);
+                        if (!dataLSTaskGlobal) {
+                            dataFile = await AxiosFunction.getReportingData(
+                                'GET',
+                                `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}/file`,
+                                ''
+                            );
+                            // save la data requête 1 dans le local storage
+                            dataLSTaskGlobal = {
+                                'datafile': dataFile.data
+                            };
+                            localStorageTasks.setItem(
+                                cacheStorageID + '-taskGlobal',
+                                JSON.stringify(dataLSTaskGlobal)
+                            );
+                        }
+                    }
+                }
+            } else {
+                // Stoppe l'intervalle timerFile
+                clearInterval(timerFile);
+                console.log('Stop clearInterval timerFile');
+            }
 
         });
 

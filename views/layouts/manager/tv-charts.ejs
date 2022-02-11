@@ -14,7 +14,7 @@
     $.getJSON(chartCampaignUrl, function (response) {
 
       for (const property in response) {
-       console.log(property)
+        console.log(property)
 
         const target = response[property]
 
@@ -158,8 +158,8 @@
             type: 'radialBar',
           },
           colors: ['#0052bc'],
-          labels:[target.cible.name],
-       
+          labels: [target.cible.name],
+
           responsive: [{
             breakpoint: 480,
             options: {
@@ -245,7 +245,7 @@
         };
 
         var campaigntimeSlotDiaryChart = new ApexCharts(document.querySelector(
-         `#chart_${target.id}-table_ventilations_GRP_horaires`), campaigntimeSlotDiaryOptions);
+          `#chart_${target.id}-table_ventilations_GRP_horaires`), campaigntimeSlotDiaryOptions);
         campaigntimeSlotDiaryChart.render();
 
         // console.log(target.campaignNameDayGRP)
@@ -314,7 +314,8 @@
 
 
 
-        var campaignNameDayChart = new ApexCharts(document.querySelector(`#chart_${target.id}-table_ventilations_GRP_jours`),
+        var campaignNameDayChart = new ApexCharts(document.querySelector(
+            `#chart_${target.id}-table_ventilations_GRP_jours`),
           campaignNameDayOptions);
         campaignNameDayChart.render();
 
@@ -324,8 +325,17 @@
 
 
 
+    $.ajax({
+      method: "GET",
+      url: '/t/pdf/<%=campaign_crypt%>',
+      success: function (data) {
+       // $('body').html(data)
+       // window.location.href = url;
+
+        console.log(data)
+      }
+    })
 
 
-    
   });
 </script>
