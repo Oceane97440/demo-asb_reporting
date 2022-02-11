@@ -1750,11 +1750,25 @@ exports.automate = async (req, res) => {
     try {
         // Réinitialise l'objet Format
         let formatObjects = new Object();
+        let cacheStorageIDHour = moment().format('YYYYMMDD');
 
         let mode = req.query.mode;
         if (!Utilities.empty(mode) && (mode === 'delete')) {
             // si le local storage expire; on supprime les precedents cache et les taskid                           
             localStorage.removeItem('campaignID-' + campaign_id);
+
+            //suppression des task_id
+            localStorageTasks.removeItem(
+                'campaignID-' + campaign_id + '-firstLink-'+cacheStorageIDHour
+            );
+            localStorageTasks.removeItem(
+                'campaignID-' + campaign_id + '-twoLink-'+cacheStorageIDHour
+            );
+
+            //supression data global et vu
+            localStorageTasks.removeItem(
+                'campaignID-' + campaign_id + '-firstLink-'+cacheStorageIDHour
+            );
             localStorageTasks.removeItem(
                 'campaignID-' + campaign_id + '-taskGlobal'
             );
@@ -1805,7 +1819,7 @@ exports.automate = async (req, res) => {
 
                 // Initialise la date
                 let date = new Date();
-                let cacheStorageIDHour = moment().format('YYYYMMDD');
+               // let cacheStorageIDHour = moment().format('YYYYMMDD');
 
                 var localStorageAll = localStorage.getItem(cacheStorageID);
                 let localStorageGlobal = localStorageTasks.getItem(

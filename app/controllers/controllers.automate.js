@@ -3097,13 +3097,9 @@ exports.reports = async (req, res) => {
         var dateTomorrow = moment()
             .add(1, 'days')
             .format('YYYY-MM-DD');
-        var dateSub30Days = moment()
-            .subtract(30, 'days')
+        var date5Days = moment()
+            .add(5, 'days')
             .format('YYYY-MM-DD');
-
-        //   var dateLastMonday = moment().startOf('isoWeek').format('YYYY-MM-DD');
-        var dateLastDay = moment().format('YYYY-MM-DD');
-        var cacheStorageID = 'REPARTITION-TaskRepartition-'.dateLastDay;
 
         // Affiche les annonceurs à exclure
         const advertiserExclus = new Array(
@@ -3136,176 +3132,146 @@ exports.reports = async (req, res) => {
             320778,
             417716,
             421871,
-            459132,
-            464862
+            459132
         );
 
-        //   console.log( [dateNow, dateSub30Days]); process.exit(1);
         // Affiche les campagnes en ligne
-        let insertions = await ModelInsertions
+        let campaigns = await ModelCampaigns
             .findAll({
                 where: {
-                    [Op.and]: [
-                        { insertion_start_date: { [Op.between]: [dateSub30Days, dateNow] } },
-                        { insertion_end_date: { [Op.between]: [dateSub30Days, dateNow] } }
-                    ]
-                },
-                group: ['campaign_id'],
-                include: [{
-                    model: ModelCampaigns,
-                    where: {
-                        [Op.and]: [{ campaign_name: { [Op.notLike]: '% PARR %' } }],
-                        /*  [Op.or]: [
-                                  { campaign_start_date: { [Op.between]: [dateNow, dateSub30Days] } }, 
-                                  { campaign_end_date: { [Op.between]: [dateNow, dateSub30Days] } }
-                              ]
-                              */
-                    },
-                    order: [['campaign_start_date', 'ASC']],
-                    include: [{
-                        model: ModelAdvertisers,
-                        where: {
-                            [Op.and]: [
-                                { advertiser_id: { [Op.notIn]: advertiserExclus } }
-                            ]
+                    [Op.and]: [{
+                        advertiser_id: {
+                            [Op.notIn]: advertiserExclus
+                        }
+                    }, {
+                        campaign_name: {
+                            [Op.notLike]: '% PARR %'
+                        }
+                    }, {
+                        campaign_start_date: {
+                            [Op.lte]: dateNow
+                        }
+                    }, {
+                        campaign_end_date: {
+                            [Op.gte]: dateNow
+                        }
+                    }],
+                    [Op.or]: [{
+                        campaign_start_date: {
+                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
+                        }
+                    }, {
+                        campaign_end_date: {
+                            [Op.between]: [dateNow, '2040-12-31 23:59:00']
                         }
                     }]
+                },
+                order: [
+                    ['campaign_start_date', 'ASC']
+                ],
+                include: [{
+                    model: ModelAdvertisers
+                }]
+            })
+            .then(async function (campaigns) {
+                if (!campaigns) {
+                    return res.json(404, 'Aucune campagne existante');
                 }
-                ]
+
+                campaignsList = new Object();
+                var campaignsReports = [];
+                // 2- Recherche et vérifie si les campagnes ont un rapport
+                var nbCampaigns = campaigns.length;
+                console.log('nbCampaigns :', nbCampaigns)
+                a = 0;
+                for (i = 0; i < nbCampaigns; i++) {
+                    campaign_id = campaigns[i].campaign_id;
+                    campaign_crypt = campaigns[i].campaign_crypt;
+                    campaign_name = campaigns[i].campaign_name;
+                    campaign_start_date = campaigns[i].campaign_start_date;
+                    campaign_end_date = campaigns[i].campaign_end_date;
+                    advertiser_id = campaigns[i].advertiser.advertiser_id;
+                    advertiser_name = campaigns[i].advertiser.advertiser_name;
+
+                    /*
+                    insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                        where: {
+                            campaign_id: campaign_id
+                        }
+                    });
+                    insertion_end_date = await ModelInsertions.max('insertion_end_date', {
+                        where: {
+                            campaign_id: campaign_id
+                        }
+                    });
+                    if(insertion_start_date > campaign_start_date) { campaign_start_date = campaign_start_date; } else { campaign_start_date = insertion_start_date; }
+                    if(insertion_end_date > campaign_end_date) { campaign_end_date = campaign_end_date; } else { campaign_end_date = insertion_end_date; }
+*/
+                    var reportLocalStorage = localStorage.getItem(
+                        'campaignID-' + campaign_id
+                    )
+                    if (reportLocalStorage) {
+                        var reportingData = JSON.parse(reportLocalStorage);
+                        var reporting_end_date = reportingData.reporting_end_date;
+                        // var t = moment.duration(reportingData.reporting_end_date, "minutes");
+
+                        campaignsList = {
+                            'campaign_id': campaign_id,
+                            'advertiser_id': advertiser_id,
+                            'advertiser_name': advertiser_name,
+                            'campaign_name': campaign_name,
+                            'campaign_crypt': campaign_crypt,
+                            'campaign_start_date': campaign_start_date,
+                            'campaign_end_date': campaign_end_date,
+                            'report': '1',
+                            'timestamp_expiration': moment(reporting_end_date).unix(),
+                            'date_expiration': reporting_end_date
+                        }
+                    } else {
+                        campaignsList = {
+                            'campaign_id': campaign_id,
+                            'advertiser_id': advertiser_id,
+                            'advertiser_name': advertiser_name,
+                            'campaign_name': campaign_name,
+                            'campaign_crypt': campaign_crypt,
+                            'campaign_start_date': campaign_start_date,
+                            'campaign_end_date': campaign_end_date,
+                            'report': '0',
+                            'timestamp_expiration': moment().unix(),
+                            'date_expiration': moment().format('YYYY-MM-DD HH:mm:ss')
+                        }
+                    }
+
+                    // Si la date de fin est sup. à la date du jour
+                    if (moment().format('YYYY-MM-DD HH:mm:ss') < campaign_end_date) {
+                        campaignsReports.push(campaignsList);
+                    }
+                }
+
+                if (campaignsReports.length > 0) {
+                    // Trie les campagnes selon la date d'expiration
+                    campaignsReports.sort(function (a, b) {
+                        return a.timestamp_expiration - b.timestamp_expiration;
+                    });
+
+                    var format = req.query.format;
+                    if (!Utilities.empty(format) && (format === 'json')) {
+                        return res
+                            .status(200)
+                            .json(campaignsReports);
+                    } else {
+                        campaign_crypt = campaignsReports[0].campaign_crypt;
+                        campaign_id = campaignsReports[0].campaign_id;
+                        res.redirect('/r/automate/' + campaign_id);
+                    }
+
+                } else {
+                    return res
+                        .status(200)
+                        .json('Aucune campagne existante');
+                }
+
             });
-
-        console.log('nbCampaigns :', insertions.length);
-        campaignsIds = new Array();
-        for (i = 0; i < insertions.length; i++) {
-            console.log(' - StartDate : ', insertions[i].insertion_start_date, ' - EndDate : ', insertions[i].campaign.campaign_start_date, ' - ', insertions[i].campaign_id, ' - ', insertions[i].campaign.campaign_name)
-            campaignsIds.push(insertions[i].campaign_id);
-        }
-
-        console.log('nbCampaigns :', campaignsIds);
-
-        // Affiche la date minimum de l'insertion
-        let insertionMinDate = await ModelInsertions.min(
-            'insertion_start_date',
-            {
-                where: {
-                    campaign_id: { [Op.in]: campaignsIds },
-                    insertion_start_date: { [Op.gte]: dateSub30Days }
-                }
-            });
-        // Transforme la date en format YYYY-MM-DD
-        var insertionStartDate = moment(insertionMinDate, "YYYY-MM-DD").format("YYYY-MM-DD");
-
-        // Rapport de campagne - initialisation des requêtes
-        var requestReporting = {
-            "startDate": insertionStartDate.concat('T00:00:00'),
-            "endDate": dateNow.concat('T23:59:00'), // '2022-01-09T00:00:00', /// ,
-            "fields": [{
-                "CampaignStartDate": {}
-            }, {
-                "CampaignEndDate": {}
-            }, {
-                "CampaignId": {}
-            }, {
-                "CampaignName": {}
-            }, {
-                "InsertionId": {}
-            }, {
-                "InsertionName": {}
-            }, {
-                "FormatId": {}
-            }, {
-                "FormatName": {}
-            }, {
-                "SiteId": {}
-            }, {
-                "SiteName": {}
-            }, {
-                "Impressions": {}
-            }, {
-                "ClickRate": {}
-            }, {
-                "Clicks": {}
-            }, {
-                "VideoCount": {
-                    "Id": "17",
-                    "OutputName": "Nbr_complete"
-                }
-            }, {
-                "ViewableImpressions": {}
-            }],
-            "filter": [{
-                "CampaignId": campaignsIds
-            }]
-        };
-
-        console.log(requestReporting);
-
-        let requestRepartition = await AxiosFunction.getReportingData(
-            'POST',
-            '',
-            requestReporting
-        );
-
-        // si firstLink existe (!= de null) on save la taskId dans le localStorage sinon firstLinkTaskId = vide
-        if (requestRepartition) {
-            if (requestRepartition.status == 201) {
-                /* 
-                localStorageTasks.setItem(
-                    cacheStorageID,
-                    requestRepartition.data.taskId
-                );*/
-
-                requestRepartitionTaskID = requestRepartition.data.taskId;
-                console.log(requestRepartitionTaskID);
-            }
-        }
-
-        // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
-        // commence à 10sec
-        var time = 5000;
-        let timerFile = setInterval(async () => {
-            console.log('setInterval begin') //  DATA STORAGE - TASK 1 et 2
-            var dataLSTaskGlobal = localStorageTasks.getItem(cacheStorageID);
-            console.log(dataLSTaskGlobal)
-            // Vérifie que dataLSTaskGlobal -> existe OU (dataLSTaskGlobalVU -> existe && taskID_uu -> not null)
-             if (dataLSTaskGlobal) {
-                 if (dataLSTaskGlobal && Utilities.empty(requestRepartitionTaskID)) {
-                     time += 10000;
-                     let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}`;
-
-                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
-                     if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
-                         // 3) Récupère la date de chaque requête
-                         let dataLSTaskGlobal = localStorageTasks.getItem(
-                             cacheStorageID + '-taskGlobal'
-                         );
-                         console.log('1979 : ' + cacheStorageID);
-                         if (!dataLSTaskGlobal) {
-                             dataFile = await AxiosFunction.getReportingData(
-                                 'GET',
-                                 `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}/file`,
-                                 ''
-                             );
-                             // save la data requête 1 dans le local storage
-                             dataLSTaskGlobal = {
-                                 'datafile': dataFile.data
-                             };
-                             localStorageTasks.setItem(
-                                 cacheStorageID + '-taskGlobal',
-                                 JSON.stringify(dataLSTaskGlobal)
-                             );
-                         }
-                     }
-                 }
-             } else {
-                 // Stoppe l'intervalle timerFile
-                 clearInterval(timerFile);
-                 console.log('Stop clearInterval timerFile');
-             }
-
-        });
-
-        console.log('dlfskdjflks');
 
     } catch (error) {
         console.error('Error : ' + error);
