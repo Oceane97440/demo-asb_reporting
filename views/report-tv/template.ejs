@@ -203,7 +203,7 @@
         </div>
 
         <div class="row mt-5">
-          <div class="col-md-8 col-sm-12 pt-3" id="table_<%= reporting[property].campaignLabel %>_montee_en_couverture">
+          <div class="col-md-7 col-sm-12 pt-3" id="table_<%= reporting[property].campaignLabel %>_montee_en_couverture">
             <h3 class="title">
               <strong>Montée en couverture et répétition</strong>
             </h3>
@@ -212,11 +212,11 @@
             </div>
           </div>
 
-          <div class="col-md-4 col-sm-12 pt-3" id="table_<%= reporting[property].campaignLabel %>_couverture_par_cible">
+          <div class="col-md-5 col-sm-12 pt-3 " id="table_<%= reporting[property].campaignLabel %>_couverture_par_cible">
             <h3 class="title">
               <strong>Couverture par cible</strong>
             </h3>
-            <div class="container">
+            <div class="container couverture_cible">
               <div id="chart_<%= reporting[property].campaignLabel %>-table_couverture_par_cible"></div>
             </div>
           </div>
@@ -254,8 +254,13 @@
     </div>
 
     <div class="pt-5 pb-5 text-right"> <a href="/t/export/<%=campaign_crypt%>"
-        class="btn btn-xs btn-default  text-white" style="background-color: #ee0013;"> <i class="fas fa-file-excel">
-        </i> Télécharger le rapport <span class="small">(Format : Excel)</span></a> </div>
+        class="btn btn-xs btn-default  text-white" style="background-color: #3ab33a;"> <i class="fas fa-file-excel">
+        </i> Télécharger le rapport <span class="small">(Format : Excel)</span></a> 
+      
+        <a href="/t/pdf/<%=campaign_crypt%>"
+          class="btn btn-xs btn-default  text-white" style="background-color: #d30415;"> <i class="fas fa-file-pdf">
+          </i> Télécharger le rapport <span class="small">(Format : Pdf)</span></a> 
+    </div>
 
   </div>
 

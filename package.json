@@ -53,6 +53,7 @@
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "path": "^0.12.7",
+    "puppeteer": "^13.2.0",
     "request": "^2.88.2",
     "sequelize": "^5.22.4",
     "validator": "^13.7.0"

@@ -2710,3 +2710,263 @@ exports.logs = async (req, res) => {
     logger.fatal("Cheese was breeding ground for listeria.");*/
 
 }
+
+exports.pdf = async (req,res)=>{
+
+    const puppeteer = require('puppeteer')
+ 
+async function generatePDF() {
+
+  //We start a new browser, without showing UI
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+ const url = 'http://127.0.0.1:3001/t/pdf/c4ca4238a0b923820dcc509a6f75849b';
+
+  //We load the page, one of my blog post (networkidle0 means we're waiting for the network to stop making new calls for 500ms
+  await page.goto(url, {waitUntil: 'networkidle2'});
+  //We add style to hide some UI elements we don't want to see on our pdf
+  await page.addStyleTag({ content:
+    `body {
+          margin: 0;
+          color: #000;
+          background-color: red;
+        }
+      #boutton-info{
+          diplay:none
+      }
+      `
+  });
+
+  //Let's generate the pdf and close the browser
+  const pdf = await page.pdf({ path: "campagne.pdf", format: 'A4' });
+  await browser.close();
+  return pdf;
+}
+
+generatePDF();
+res.send("ok")
+
+}
+
+exports.reports = async (req, res) => {
+    try {
+        // 1- Liste les campagnes en lignes Affiche les campagnes se terminant
+        // aujourd'hui
+        var dateNow = moment().format('YYYY-MM-DD');
+        var dateTomorrow = moment()
+            .add(1, 'days')
+            .format('YYYY-MM-DD');
+        var dateSub30Days = moment()
+            .subtract(30, 'days')
+            .format('YYYY-MM-DD');
+
+        //   var dateLastMonday = moment().startOf('isoWeek').format('YYYY-MM-DD');
+        var dateLastDay = moment().format('YYYY-MM-DD');
+        var cacheStorageID = 'REPARTITION-TaskRepartition-'.dateLastDay;
+
+        // Affiche les annonceurs à exclure
+        const advertiserExclus = new Array(
+            418935,
+            427952,
+            409707,
+            425912,
+            425914,
+            438979,
+            439470,
+            439506,
+            439511,
+            439512,
+            439513,
+            439514,
+            439515,
+            440117,
+            440118,
+            440121,
+            440122,
+            440124,
+            440126,
+            445117,
+            455371,
+            455384,
+            320778,
+            417243,
+            414097,
+            411820,
+            320778,
+            417716,
+            421871,
+            459132,
+            464862
+        );
+
+        //   console.log( [dateNow, dateSub30Days]); process.exit(1);
+        // Affiche les campagnes en ligne
+        let insertions = await ModelInsertions
+            .findAll({
+                where: {
+                    [Op.and]: [
+                        { insertion_start_date: { [Op.between]: [dateSub30Days, dateNow] } },
+                        { insertion_end_date: { [Op.between]: [dateSub30Days, dateNow] } }
+                    ]
+                },
+                group: ['campaign_id'],
+                include: [{
+                    model: ModelCampaigns,
+                    where: {
+                        [Op.and]: [{ campaign_name: { [Op.notLike]: '% PARR %' } }],
+                        /*  [Op.or]: [
+                                  { campaign_start_date: { [Op.between]: [dateNow, dateSub30Days] } }, 
+                                  { campaign_end_date: { [Op.between]: [dateNow, dateSub30Days] } }
+                              ]
+                              */
+                    },
+                    order: [['campaign_start_date', 'ASC']],
+                    include: [{
+                        model: ModelAdvertisers,
+                        where: {
+                            [Op.and]: [
+                                { advertiser_id: { [Op.notIn]: advertiserExclus } }
+                            ]
+                        }
+                    }]
+                }
+                ]
+            });
+
+        console.log('nbCampaigns :', insertions.length);
+        campaignsIds = new Array();
+        for (i = 0; i < insertions.length; i++) {
+            console.log(' - StartDate : ', insertions[i].insertion_start_date, ' - EndDate : ', insertions[i].campaign.campaign_start_date, ' - ', insertions[i].campaign_id, ' - ', insertions[i].campaign.campaign_name)
+            campaignsIds.push(insertions[i].campaign_id);
+        }
+
+        console.log('nbCampaigns :', campaignsIds);
+
+        // Affiche la date minimum de l'insertion
+        let insertionMinDate = await ModelInsertions.min(
+            'insertion_start_date',
+            {
+                where: {
+                    campaign_id: { [Op.in]: campaignsIds },
+                    insertion_start_date: { [Op.gte]: dateSub30Days }
+                }
+            });
+        // Transforme la date en format YYYY-MM-DD
+        var insertionStartDate = moment(insertionMinDate, "YYYY-MM-DD").format("YYYY-MM-DD");
+
+        // Rapport de campagne - initialisation des requêtes
+        var requestReporting = {
+            "startDate": insertionStartDate.concat('T00:00:00'),
+            "endDate": dateNow.concat('T23:59:00'), // '2022-01-09T00:00:00', /// ,
+            "fields": [{
+                "CampaignStartDate": {}
+            }, {
+                "CampaignEndDate": {}
+            }, {
+                "CampaignId": {}
+            }, {
+                "CampaignName": {}
+            }, {
+                "InsertionId": {}
+            }, {
+                "InsertionName": {}
+            }, {
+                "FormatId": {}
+            }, {
+                "FormatName": {}
+            }, {
+                "SiteId": {}
+            }, {
+                "SiteName": {}
+            }, {
+                "Impressions": {}
+            }, {
+                "ClickRate": {}
+            }, {
+                "Clicks": {}
+            }, {
+                "VideoCount": {
+                    "Id": "17",
+                    "OutputName": "Nbr_complete"
+                }
+            }, {
+                "ViewableImpressions": {}
+            }],
+            "filter": [{
+                "CampaignId": campaignsIds
+            }]
+        };
+
+        console.log(requestReporting);
+
+        let requestRepartition = await AxiosFunction.getReportingData(
+            'POST',
+            '',
+            requestReporting
+        );
+
+        // si firstLink existe (!= de null) on save la taskId dans le localStorage sinon firstLinkTaskId = vide
+        if (requestRepartition) {
+            if (requestRepartition.status == 201) {
+                /* 
+                localStorageTasks.setItem(
+                    cacheStorageID,
+                    requestRepartition.data.taskId
+                );*/
+
+                requestRepartitionTaskID = requestRepartition.data.taskId;
+                console.log(requestRepartitionTaskID);
+            }
+        }
+
+        // 2) Requete GET boucle jusqu'a que le rapport generer 100% delais 1min on
+        // commence à 10sec
+        var time = 5000;
+        let timerFile = setInterval(async () => {
+            console.log('setInterval begin') //  DATA STORAGE - TASK 1 et 2
+            var dataLSTaskGlobal = localStorageTasks.getItem(cacheStorageID);
+            console.log(dataLSTaskGlobal)
+            // Vérifie que dataLSTaskGlobal -> existe OU (dataLSTaskGlobalVU -> existe && taskID_uu -> not null)
+             if (dataLSTaskGlobal) {
+                 if (dataLSTaskGlobal && Utilities.empty(requestRepartitionTaskID)) {
+                     time += 10000;
+                     let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}`;
+
+                     let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+                     if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                         // 3) Récupère la date de chaque requête
+                         let dataLSTaskGlobal = localStorageTasks.getItem(
+                             cacheStorageID + '-taskGlobal'
+                         );
+                         console.log('1979 : ' + cacheStorageID);
+                         if (!dataLSTaskGlobal) {
+                             dataFile = await AxiosFunction.getReportingData(
+                                 'GET',
+                                 `https://reporting.smartadserverapis.com/2044/reports/${requestRepartitionTaskID}/file`,
+                                 ''
+                             );
+                             // save la data requête 1 dans le local storage
+                             dataLSTaskGlobal = {
+                                 'datafile': dataFile.data
+                             };
+                             localStorageTasks.setItem(
+                                 cacheStorageID + '-taskGlobal',
+                                 JSON.stringify(dataLSTaskGlobal)
+                             );
+                         }
+                     }
+                 }
+             } else {
+                 // Stoppe l'intervalle timerFile
+                 clearInterval(timerFile);
+                 console.log('Stop clearInterval timerFile');
+             }
+
+        });
+
+        console.log('dlfskdjflks');
+
+    } catch (error) {
+        console.error('Error : ' + error);
+    }
+}
