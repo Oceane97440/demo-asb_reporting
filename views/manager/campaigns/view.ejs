@@ -32,6 +32,15 @@
                                 title="<%= campaign.agency.agency_name %>"><%= campaign.agency.agency_name %></a>
                             <% } else { %>-<% } %>
                         </li>
+                        <% if(!utilities.empty(epilot_campaign)) { %>
+                        <li class="list-group-item">
+                            <span class="labelname">
+                                <i class="material-icons-two-tone">info</i>
+                                Commercial</span>:
+                            <strong><%= commercial.user_firstname%></strong>
+                        </li>
+                        <% } %>
+
                         <li class="list-group-item">
                             <span class="labelname">
                                 <i class="material-icons-two-tone">date_range</i>
@@ -58,13 +67,13 @@
                                 Budget réservé</span>
                             :
                             <% if(!utilities.empty(epilot_campaign.epilot_campaign_budget_net) && (epilot_campaign.epilot_campaign_budget_net != 0)) { %>
-                                <strong><%= utilities.numStr(epilot_campaign.epilot_campaign_budget_net) %> </strong> €
+                            <strong><%= utilities.numStr(epilot_campaign.epilot_campaign_budget_net) %> </strong> €
                             <% } else { %>-<% } %>
                         </li>
 
                         <li class="list-group-item">
                             <span class="labelname">
-                                <i class="material-icons-two-tone">filter_alt</i>                                
+                                <i class="material-icons-two-tone">filter_alt</i>
                                 CPM net</span>
                             :
                             <% if(!utilities.empty(epilot_campaign.epilot_campaign_cpm_net)) { %>
@@ -74,7 +83,7 @@
 
                         <li class="list-group-item">
                             <span class="labelname">
-                                <i class="material-icons-two-tone">trending_up</i>                                
+                                <i class="material-icons-two-tone">trending_up</i>
                                 Taux de remise</span>
                             :
                             <% if(!utilities.empty(epilot_campaign.epilot_campaign_discount_rate) && (epilot_campaign.epilot_campaign_discount_rate != 0)) { %>
@@ -82,7 +91,7 @@
                             <% } else { %>-<% } %>
                         </li>
 
-                        
+
 
                         <li class="list-group-item">
                             <span class="labelname">
@@ -90,7 +99,7 @@
                                 Mandataire</span>
                             :
                             <% if(!utilities.empty(epilot_campaign.epilot_campaign_mandataire)) { %>
-                            <%= epilot_campaign.epilot_campaign_mandataire %> 
+                            <%= epilot_campaign.epilot_campaign_mandataire %>
                             <% } else { %>-<% } %>
                         </li>
 
@@ -165,11 +174,16 @@
                                 <li><a class="dropdown-item" href="/r/automate/<%= campaign.campaign_id %>?mode=delete"
                                         target="_blank">Supprimer le
                                         rapport</a></li>
+                                <% if(!utilities.empty(epilot_campaign)) { %>
+                                <li><a class="dropdown-item" href="/manager/campaigns/<%= campaign.campaign_id%>/email/<%= commercial.user_email%> "
+                                        target="_blank">Envoyer le permalien</a></li>
+                                <% } %>
                             </ul>
                         </div>
 
                         <a href="/automate/campaign?campaign_id=<%= campaign.campaign_id %>" target="_blank"
-                            class="btn btn-info btn-automate" data-automate-btn="campaign-update" title=" Mettre à jour la campagne">
+                            class="btn btn-info btn-automate" data-automate-btn="campaign-update"
+                            title=" Mettre à jour la campagne">
                             <i class="fas fa-sync"></i>
                             Mettre à jour la campagne</a>
                     </div>

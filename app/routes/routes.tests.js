@@ -19,7 +19,7 @@ router.get("/taskid",test.taskid)
 router.get("/taskid2",test.test_taskid)
 router.get("/duplication",test.duplication)
 router.get("/logs",test.logs)
-router.get("/pdf",test.pdf)
+router.get("/pdf/:campaigncrypt",test.pdf)
 router.get("/report",test.reports)
 
 

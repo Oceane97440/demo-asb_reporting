@@ -452,10 +452,10 @@ exports.index = async (req, res) => {
 
                                         auth: {
                                             user: "oceane.sautron@antennereunion.fr",
-                                            pass: "...."
+                                            pass: process.env.EMAIL_PASS
                                         },
                                         from: email,
-                                        to: 'adtraffic@antennereunion.fr',
+                                        to: 'adtraffic@antennereunion.fr,oceane.sautron@antennereunion.fr',
                                         subject: 'Envoie du permalien de la campagne ' + campaign_tv_name,
                                         html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour ' +
                                             user_firstname + '<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' +
