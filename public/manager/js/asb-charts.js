@@ -2,7 +2,7 @@
 $(document).ready(function () {
    /* 
    var config = {
-        baseurl: "http://localhost:3001/" 
+        baseurl: "https://reporting.antennesb.fr/" 
     };
     */
 
