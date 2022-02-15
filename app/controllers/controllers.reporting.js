@@ -580,6 +580,8 @@ exports.report = async (req, res) => {
                                     const objDefault = JSON.parse(dataLSTaskGlobal);
                                     var dataSplitGlobal = objDefault.datafile;
 
+
+
                                     // Permet de faire l'addition
                                     const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
@@ -702,6 +704,12 @@ exports.report = async (req, res) => {
                                             var site_id = dataList[index].site_id;
                                             var site_name = dataList[index].site_name;
 
+                                            /*console.log(insertion_name)
+                                            console.log(site_name)
+                                            console.log("---------------")*/
+
+
+
                                             // Créer les tableaux des formats
                                             if (insertion_name.match(/HABILLAGE{1}/igm)) {
                                                 formatHabillage.push(index);
@@ -747,10 +755,10 @@ exports.report = async (req, res) => {
                                             if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
                                                 siteLINFO.push(index);
                                             }
-                                            if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
+                                            if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
                                                 siteLINFO_ANDROID.push(index);
                                             }
-                                            if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
+                                            if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
                                                 siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
@@ -787,6 +795,8 @@ exports.report = async (req, res) => {
                                                 siteRODALI.push(index);
                                             }
                                         }
+
+                                       // console.log(Object.keys(dataList).length)
 
                                         // Trie les formats et compatibilise les insertions et autres clics
                                         if (!Utilities.empty(formatHabillage)) {
