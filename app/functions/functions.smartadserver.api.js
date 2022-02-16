@@ -242,6 +242,8 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
     // Gestion des sites
     if (sites && (sites.length > 0)) {
+        //console.log('length sites '+sites.length)
+
         var siteUnique = new Array();
         var siteUniqueKey = new Array();
         var siteUniqueCount = new Array();
@@ -309,13 +311,26 @@ exports.sortDataReport = function (formatSearch, dataObject) {
              }*/
         }
 
+        //console.log(siteUnique)
+
         // Trie les données de sites
         if (siteUnique && (siteUniqueCount.length > 0)) {
+            //console.log('siteUniqueCount.length  '+siteUniqueCount.length)
+
+
             siteList = new Object();
             for (var ln = 0; ln < siteUniqueCount.length; ln++) {
                 sN = siteUniqueCount[ln];
                 siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
+              // console.log(sN)
+
+              //  console.log(siteImpressionsSUM)
+
                 siteClicksSUM = siteClicks[sN].reduce(reducer);
+               // console.log(siteClicksSUM)
+
+
+
                 siteCompleteSUM = siteComplete[sN].reduce(reducer);
                 //siteViewableImpressionsSUM = siteViewableImpressions[sN].reduce(reducer);
 
@@ -334,12 +349,16 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                     // viewable_impressions: siteViewableImpressionsSUM
                 };
                 siteList[ln] = itemSite;
+                //console.log(itemSite)
 
+               // console.log('-----------------')
             }
+
 
         }
     }
-
+  //  console.log('-----------------')
+   // console.log(siteList)
     // Fais le calcul
     impressionsSUM = impressions.reduce(reducer);
     clicksSUM = clicks.reduce(reducer);
@@ -366,6 +385,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         //  viewable_impressions: viewable_impressionsSUM
 
     };
+    //console.log(resultDateReport)
 
     return resultDateReport;
 }

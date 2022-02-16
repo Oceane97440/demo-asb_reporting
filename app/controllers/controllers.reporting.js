@@ -96,7 +96,7 @@ exports.generate = async (req, res) => {
 
             console.log(reportingData);
             if (reportingDataStorage && (reportingData.reporting_end_date < date_now)) {
-               
+
 
                 res.render('report/template.ejs', {
                     reporting: reportingData,
@@ -128,7 +128,7 @@ exports.generate = async (req, res) => {
                 });
             }
 
-            
+
         });
 }
 
@@ -580,6 +580,8 @@ exports.report = async (req, res) => {
                                     const objDefault = JSON.parse(dataLSTaskGlobal);
                                     var dataSplitGlobal = objDefault.datafile;
 
+
+
                                     // Permet de faire l'addition
                                     const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
@@ -664,10 +666,11 @@ exports.report = async (req, res) => {
                                         // Initialise les formats
                                         var formatHabillage = new Array();
                                         var formatInterstitiel = new Array();
+                                        var formatInterstitielVideo = new Array();
                                         var formatGrandAngle = new Array();
                                         var formatMasthead = new Array();
                                         var formatInstream = new Array();
-                                        var formatRectangle= new Array();
+                                        var formatRectangle = new Array();
                                         var formatRectangleVideo = new Array();
                                         var formatLogo = new Array();
                                         var formatNative = new Array();
@@ -702,13 +705,28 @@ exports.report = async (req, res) => {
                                             var site_id = dataList[index].site_id;
                                             var site_name = dataList[index].site_name;
 
+                                            /*console.log(insertion_name)
+                                            console.log(site_name)
+                                            console.log("---------------")*/
+
+
+
                                             // Créer les tableaux des formats
                                             if (insertion_name.match(/HABILLAGE{1}/igm)) {
                                                 formatHabillage.push(index);
                                             }
-                                            if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
-                                                formatInterstitiel.push(index);
+
+                                            if (insertion_name.match(/INTERSTITIEL|INTERSTITIEL VIDEO{1}/igm)) {
+                                                if (insertion_name.match(/INTERSTITIEL VIDEO{1}/igm)) {
+                                                    formatInterstitielVideo.push(index);
+                                                } else {
+                                                    formatInterstitiel.push(index);
+
+                                                }
                                             }
+
+
+
                                             if (insertion_name.match(/MASTHEAD{1}/igm)) {
                                                 formatMasthead.push(index);
                                             }
@@ -718,23 +736,32 @@ exports.report = async (req, res) => {
                                             if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
                                                 formatInstream.push(index);
                                             }
-                                            if (insertion_name.match(/RECTANGLE{1}/igm)) {
-                                                formatRectangle.push(index);
+
+                                            if (insertion_name.match(/RECTANGLE|RECTANGLE VIDEO{1}/igm)) {
+
+                                                if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                                                    formatRectangleVideo.push(index);
+                                                } else {
+                                                    formatRectangle.push(index);
+
+                                                }
                                             }
-                                            if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
-                                                formatRectangleVideo.push(index);
-                                            }
+
                                             if (insertion_name.match(/LOGO{1}/igm)) {
                                                 formatLogo.push(index);
                                             }
                                             if (insertion_name.match(/NATIVE{1}/igm)) {
                                                 formatNative.push(index);
                                             }
-                                            if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
-                                                formatSliderVideo.push(index);
-                                            }
-                                            if (insertion_name.match(/SLIDER{1}/igm)) {
-                                                formatSlider.push(index);
+
+                                            if (insertion_name.match(/SLIDER|SLIDER VIDEO{1}/igm)) {
+                                                if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                                                    formatSliderVideo.push(index);
+                                                } else {
+                                                    formatSlider.push(index);
+
+                                                }
+
                                             }
                                             if (insertion_name.match(/^\MEA{1}/igm)) {
                                                 formatMea.push(index);
@@ -747,10 +774,10 @@ exports.report = async (req, res) => {
                                             if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
                                                 siteLINFO.push(index);
                                             }
-                                            if (site_name.match(/^\SM_LINFO_ANDROID{1}/igm)) {
+                                            if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
                                                 siteLINFO_ANDROID.push(index);
                                             }
-                                            if (site_name.match(/^\SM_LINFO_IOS{1}/igm)) {
+                                            if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
                                                 siteLINFO_ANDROID.push(index);
                                             }
                                             if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
@@ -788,6 +815,8 @@ exports.report = async (req, res) => {
                                             }
                                         }
 
+                                        // console.log(Object.keys(dataList).length)
+
                                         // Trie les formats et compatibilise les insertions et autres clics
                                         if (!Utilities.empty(formatHabillage)) {
                                             formatObjects.habillage = SmartFunction.sortDataReport(
@@ -798,6 +827,12 @@ exports.report = async (req, res) => {
                                         if (!Utilities.empty(formatInterstitiel)) {
                                             formatObjects.interstitiel = SmartFunction.sortDataReport(
                                                 formatInterstitiel,
+                                                dataList
+                                            );
+                                        }
+                                        if (!Utilities.empty(formatInterstitielVideo)) {
+                                            formatObjects.interstitielvideo = SmartFunction.sortDataReport(
+                                                formatInterstitielVideo,
                                                 dataList
                                             );
                                         }
@@ -997,7 +1032,7 @@ exports.report = async (req, res) => {
 
 
                                     }
-                                    
+
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
@@ -1008,7 +1043,9 @@ exports.report = async (req, res) => {
                                     if (localStorage.getItem(cacheStorageID)) {
                                         localStorage.removeItem(cacheStorageID);
                                     }
-                                    if (localStorage.getItem(cacheStorageID)) { localStorage.removeItem(cacheStorageID); }
+                                    if (localStorage.getItem(cacheStorageID)) {
+                                        localStorage.removeItem(cacheStorageID);
+                                    }
 
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
@@ -1038,9 +1075,9 @@ exports.report = async (req, res) => {
 
     } catch (error) {
         console.log(error)
-   /* log_err =  Utilities.logs('error')
-        log_err.error('Un problème est survenu lors de la génération reporting ' + error.response.status +' - ' +error.response.headers);*/
-    
+        /* log_err =  Utilities.logs('error')
+             log_err.error('Un problème est survenu lors de la génération reporting ' + error.response.status +' - ' +error.response.headers);*/
+
         var statusCoded = error.response;
         res.render("error.ejs", {
             statusCoded: statusCoded,
@@ -1759,15 +1796,15 @@ exports.automate = async (req, res) => {
 
             //suppression des task_id
             localStorageTasks.removeItem(
-                'campaignID-' + campaign_id + '-firstLink-'+cacheStorageIDHour
+                'campaignID-' + campaign_id + '-firstLink-' + cacheStorageIDHour
             );
             localStorageTasks.removeItem(
-                'campaignID-' + campaign_id + '-twoLink-'+cacheStorageIDHour
+                'campaignID-' + campaign_id + '-twoLink-' + cacheStorageIDHour
             );
 
             //supression data global et vu
             localStorageTasks.removeItem(
-                'campaignID-' + campaign_id + '-firstLink-'+cacheStorageIDHour
+                'campaignID-' + campaign_id + '-firstLink-' + cacheStorageIDHour
             );
             localStorageTasks.removeItem(
                 'campaignID-' + campaign_id + '-taskGlobal'
@@ -1819,7 +1856,7 @@ exports.automate = async (req, res) => {
 
                 // Initialise la date
                 let date = new Date();
-               // let cacheStorageIDHour = moment().format('YYYYMMDD');
+                // let cacheStorageIDHour = moment().format('YYYYMMDD');
 
                 var localStorageAll = localStorage.getItem(cacheStorageID);
                 let localStorageGlobal = localStorageTasks.getItem(
@@ -2200,6 +2237,7 @@ exports.automate = async (req, res) => {
                                     // Initialise les formats
                                     var formatHabillage = new Array();
                                     var formatInterstitiel = new Array();
+                                    var formatInterstitielVideo = new Array();
                                     var formatGrandAngle = new Array();
                                     var formatMasthead = new Array();
                                     var formatInstream = new Array();
@@ -2239,9 +2277,15 @@ exports.automate = async (req, res) => {
                                         if (insertion_name.match(/HABILLAGE{1}/igm)) {
                                             formatHabillage.push(index);
                                         }
-                                        if (insertion_name.match(/INTERSTITIEL{1}/igm)) {
-                                            formatInterstitiel.push(index);
+                                        if (insertion_name.match(/INTERSTITIEL|INTERSTITIEL VIDEO{1}/igm)) {
+                                            if (insertion_name.match(/INTERSTITIEL VIDEO{1}/igm)) {
+                                                formatInterstitielVideo.push(index);
+                                            } else {
+                                                formatInterstitiel.push(index);
+
+                                            }
                                         }
+
                                         if (insertion_name.match(/MASTHEAD{1}/igm)) {
                                             formatMasthead.push(index);
                                         }
@@ -2251,27 +2295,36 @@ exports.automate = async (req, res) => {
                                         if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
                                             formatInstream.push(index);
                                         }
-                                        if (insertion_name.match(/RECTANGLE{1}/igm)) {
-                                            formatRectangle.push(index);
+                                        if (insertion_name.match(/RECTANGLE|RECTANGLE VIDEO{1}/igm)) {
+
+                                            if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                                                formatRectangleVideo.push(index);
+                                            } else {
+                                                formatRectangle.push(index);
+
+                                            }
                                         }
-                                        if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
-                                            formatRectangleVideo.push(index);
-                                        }
+
                                         if (insertion_name.match(/LOGO{1}/igm)) {
                                             formatLogo.push(index);
                                         }
                                         if (insertion_name.match(/NATIVE{1}/igm)) {
                                             formatNative.push(index);
                                         }
-                                        if (insertion_name.match(/SLIDER{1}/igm)) {
-                                            formatSlider.push(index);
+                                        if (insertion_name.match(/SLIDER|SLIDER VIDEO{1}/igm)) {
+                                            if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                                                formatSliderVideo.push(index);
+                                            } else {
+                                                formatSlider.push(index);
+
+                                            }
+
                                         }
+
                                         if (insertion_name.match(/^\MEA{1}/igm)) {
                                             formatMea.push(index);
                                         }
-                                        if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
-                                            formatSliderVideo.push(index);
-                                        }
+
                                         if (insertion_name.match(/CLICK COMMAND{1}/igm)) {
                                             formatClickCommand.push(index);
                                         }
@@ -2334,6 +2387,14 @@ exports.automate = async (req, res) => {
                                             dataList
                                         );
                                     }
+
+                                    if (!Utilities.empty(formatInterstitielVideo)) {
+                                        formatObjects.interstitielvideo = SmartFunction.sortDataReport(
+                                            formatInterstitielVideo,
+                                            dataList
+                                        );
+                                    }
+
                                     if (!Utilities.empty(formatMasthead)) {
                                         formatObjects.masthead = SmartFunction.sortDataReport(formatMasthead, dataList);
                                     }
