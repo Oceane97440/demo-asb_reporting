@@ -22,14 +22,22 @@
             <% for (let i = 0; i < campaigns.length; i++) { %>
             <tr>
                 <td><%= campaigns[i].epilot_campaign_id %></td>
-                <td><% if(!utilities.empty(campaigns[i].advertiser_id)) { %><a
+                <td><% if((!utilities.empty(campaigns[i].advertiser) || campaigns[i].advertiser !== null)) {%><a
                         href="/manager/advertisers/<%= campaigns[i].advertiser.advertiser_id %>"
                         title="<%= campaigns[i].advertiser.advertiser_name %>"><%= campaigns[i].advertiser.advertiser_name %></a>
                     <% } else { %> <%= campaigns[i].epilot_advertiser_name %> <% } %></td>
-                <td><% if(!utilities.empty(campaigns[i].campaign_id)) { %><a
-                        href="/manager/campaigns/<%= campaigns[i].campaign_id %>"
-                        title="<%= campaigns[i].epilot_campaign_name %>"><%= campaigns[i].epilot_campaign_name %></a>
+
+                <td><% if(!utilities.empty(campaigns[i].campaign_id)) { %>
+
+                    <% if(campaigns[i].campaign_id !==0){%>
+                    <a href="/manager/campaigns/<%=campaigns[i].campaign_id %> "
+                        title="<%= campaigns[i].epilot_campaign_name %>">
+
+                        <% }%>
+
+                    <%= campaigns[i].epilot_campaign_name %></a>
                     <% } else { %> <%= campaigns[i].epilot_campaign_name %> <% } %></td>
+
                 <td><% if(!utilities.empty(campaigns[i].user_id)) { %><a
                         href="/manager/users/<%= campaigns[i].user.user_id %>"
                         title=""><%= campaigns[i].user.user_firstname %> <%= campaigns[i].user.user_lastname %></a>
@@ -47,17 +55,18 @@
                     case 'ECD': %><span class="badge bg-info bg-opacity-10">ECHANGE DIGITAL</span><% break;        
                    case 'MISS': %><span class="badge bg-danger bg-opacity-10">MISS REUNION</span><% break;        
                    case 'GRCOMP': %><span class="badge bg-danger bg-opacity-10">GRACIEUX COMPENSATION</span><% break;        
-                   default: %><span class="badge bg-warning"> <%= campaigns[i].epilot_campaign_nature %></span> <% break; } %>
-                                
+                   default: %><span class="badge bg-warning"> <%= campaigns[i].epilot_campaign_nature %></span>
+                    <% break; } %>
+
                 </td>
                 <td>
-                  <% switch(campaigns[i].epilot_campaign_status) {
+                    <% switch(campaigns[i].epilot_campaign_status) {
                     case 1: %><span class="badge bg-success">CONFIRMÉ</span><% break;
                     case 2: %><span class="badge bg-warning">RÉSERVÉ</span><% break;
                     case 3: %><span class="badge bg-warning">DEMANDE</span><% break;
                     case 4: %><span class="badge bg-info">OPTION</span><% break;
                     default: %><span class="badge bg-warning"> <%= campaigns[i].epilot_campaign_status %></span> <% break; 
-                    } %>                    
+                    } %>
                 </td>
                 <td><%= campaigns[i].epilot_campaign_start_date %></td>
                 <td><%= campaigns[i].epilot_campaign_end_date %></td>
