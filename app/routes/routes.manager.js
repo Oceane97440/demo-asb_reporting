@@ -115,7 +115,7 @@ router.get('/campaigns/gam/export', manager_gam.export);
 router.get('/campaigns/epilot/insertions', manager_epilot.insertions);
 router.get('/campaigns/epilot/create', manager_epilot.create);
 router.post('/campaigns/epilot/import', manager_epilot.import);
-router.get('/campaigns/epilot/import', manager_epilot.import);
+//router.get('/campaigns/epilot/import', manager_epilot.import);
 router.get("/campaigns/:campaign_id/insertions/:insertion_id", manager_insertions.view);
 
 router.get("/formats", manager_formats.index);

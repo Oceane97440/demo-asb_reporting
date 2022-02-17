@@ -505,11 +505,13 @@ exports.campaign = async (req, res) => {
     try {
         let campaign_id = req.query.campaign_id;
 
+        //console.log(campaign_id)
+
         if (campaign_id) {
             campaignObject = {
                 "campaign_id": req.query.campaign_id
             };
-            console.log("campaign_id  " + campaign_id)
+            //console.log("campaign_id  " + campaign_id)
 
             var config = SmartFunction.config('campaign', campaignObject);
 
@@ -576,6 +578,9 @@ exports.campaign = async (req, res) => {
                         const advertiser_id = campaign.advertiser.advertiser_id;
                         regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
 
+                       //console.log(campaign)
+                        console.log(regexCampaignCodeResult)
+
                         if (regexCampaignCodeResult) {
                             var epilot_campaign_code = regexCampaignCodeResult[0];
 
@@ -600,15 +605,19 @@ exports.campaign = async (req, res) => {
                                     });
                                 }
 
+
                             });
 
                         } else {
-
+                            if (req.query.extension) {
+                                //  return res.redirect('../../manager/campaigns/'+campaign_id+'?extension=true');
+                                res.redirect(`/manager/campaigns/${campaign_id}?extension=true`)
+                            } else {
                             return res.json({
                                 type: 'error',
                                 message: 'Cette campagne n\'a pu être mise à jour.'
                             });
-                        }
+                        } }
                     });
 
             });

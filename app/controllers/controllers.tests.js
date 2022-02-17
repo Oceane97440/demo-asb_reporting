@@ -2730,60 +2730,14 @@ exports.logs = async (req, res) => {
 
 exports.pdf = async (req, res) => {
 
-    const campaigncrypt = req.params.campaigncrypt;
-
-    await ModelCampaignsTv.findOne({
-        attributes: [
-            'campaign_tv_crypt',
-            'campaign_tv_name'
-        ],
-        where: {
-            campaign_tv_crypt: campaigncrypt
-        }
-    }).then(async function (campaign) {
-
-        const campaign_tv_name = campaign.campaign_tv_name
-        const dateNow = moment().format('YYYYMMDD');
-        const label = "campagne-"+campaign_tv_name+"-"+dateNow+".pdf"
-
-        async function generatePDF() {
-
-            //We start a new browser, without showing UI
-            const browser = await puppeteer.launch({
-                headless: true
-            });
-            const page = await browser.newPage();
-            const url = 'https://reporting.antennesb.fr/t/pdf/' + campaigncrypt;
-
-            //We load the page, one of my blog post (networkidle0 means we're waiting for the network to stop making new calls for 500ms
-            await page.goto(url, {
-                waitUntil: 'networkidle2'
-            });
-            //We add style to hide some UI elements we don't want to see on our pdf
-            //     await page.addStyleTag({
-            //         content: `body {
-            //       margin: 0;
-            //       color: #000;
-            //       background-color: red;
-            //     }
-            //   #boutton-info{
-            //       diplay:none
-            //   }
-            //   `
-            //     });
-
-            //Let's generate the pdf and close the browser
-            const pdf = await page.pdf({
-              //  path: "campagne.pdf",
-                format: 'A4'
-            });
-            await browser.close();
-            res.attachment(label)
-            return res.send(pdf);
-        }
-
-        generatePDF();
-    })
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('https://reporting.antennesb.fr/', {
+      waitUntil: 'networkidle2',
+    });
+    await page.pdf({ path: 'testPDF.pdf', format: 'a4' });
+  
+    await browser.close();
 
 }
 
