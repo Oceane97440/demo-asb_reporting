@@ -96,7 +96,7 @@ router.get('/campaigns/create', manager_campaigns.create);
 router.post('/campaigns/create', manager_campaigns.create_post);
 router.get('/campaigns/repartitions', manager_campaigns.repartitions);
 router.get("/campaigns/:id", manager_campaigns.view);
-router.get("/campaigns/:campaign/email/:email", manager_campaigns.email);
+router.get("/campaigns/:campaign/email/:user", manager_campaigns.email);
 
 
 router.get('/campaigns/tv/list', manager_campaigns_tv.list);

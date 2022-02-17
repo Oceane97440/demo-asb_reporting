@@ -391,7 +391,7 @@ exports.export = async (req, res) => {
 
                 dataset_global.push({
                     id: data.campaigns[i].campaign_id,
-                    annonceurs:data.campaigns[i].advertiser.advertiser_name,
+                    annonceurs: data.campaigns[i].advertiser.advertiser_name,
                     noms: data.campaigns[i].campaign_name,
                     archives: data.campaigns[i].campaign_archived,
                     maj: data.campaigns[i].updated_at,
@@ -464,16 +464,16 @@ exports.view = async (req, res) => {
                 }]
             })
             .then(async function (campaign) {
-               // console.log(campaign)
+                // console.log(campaign)
                 if (!campaign) {
                     return res.redirect(`/extension-chrome/campaign?campaign_id=${campaign_id}`)
-                  /*  return res
-                        .status(404)
-                        .render("manager/error.ejs", {
-                            statusCoded: 404
-                        });*/
+                    /*  return res
+                          .status(404)
+                          .render("manager/error.ejs", {
+                              statusCoded: 404
+                          });*/
                 }
-            
+
                 // Créer le fil d'ariane
                 var breadcrumbLink = 'advertisers'
                 breadcrumb = new Array({
@@ -494,15 +494,15 @@ exports.view = async (req, res) => {
                         campaign_id: campaign_id
                     }
                 });
-                         
+
                 // Teste si epilot_campaign existe
                 if (!Utilities.empty(epilot_campaign)) {
-                  //  console.log(epilot_campaign.user_id)
+                    //  console.log(epilot_campaign.user_id)
 
-                   data.commercial = await ModelUsers.findOne({
-                        attributes:['user_id','user_email','user_firstname'],
-                        where:{
-                            user_id:epilot_campaign.user_id
+                    data.commercial = await ModelUsers.findOne({
+                        attributes: ['user_id', 'user_email', 'user_firstname'],
+                        where: {
+                            user_id: epilot_campaign.user_id
                         }
                     })
 
@@ -518,12 +518,16 @@ exports.view = async (req, res) => {
                             model: ModelFormatsGroups
                         }]
                     });
-                    
-                    if (!Utilities.empty(epilot_insertions)) { data.epilot_insertions = epilot_insertions; } else { data.epilot_insertions = ''; }
-                   
+
+                    if (!Utilities.empty(epilot_insertions)) {
+                        data.epilot_insertions = epilot_insertions;
+                    } else {
+                        data.epilot_insertions = '';
+                    }
+
                 } else {
                     data.epilot_campaign = '';
-                }             
+                }
 
                 // Récupére les données des insertions de la campagne
                 var insertionList = await ModelInsertions
@@ -583,7 +587,7 @@ exports.view = async (req, res) => {
                 data_localStorage = localStorage.getItem('campaignID-' + campaign.campaign_id);
                 data.reporting = JSON.parse(data_localStorage);
 
-               // console.log(data)
+                // console.log(data)
                 res.render('manager/campaigns/view.ejs', data);
             });
 
@@ -796,47 +800,47 @@ exports.repartitions = async (req, res) => {
         var dateLastMonday = "2022-01-08";
         var dateLastSunday = "2040-12-31";
 
-  // Affiche les annonceurs
-  const advertiserExclus = new Array(
-    418935,
-    427952,
-    409707,
-    425912,
-    425914,
-    438979,
-    439470,
-    439506,
-    439511,
-    439512,
-    439513,
-    439514,
-    439515,
-    440117,
-    440118,
-    440121,
-    440122,
-    440124,
-    440126,
-    445117,
-    455371,
-    455384,
-    320778,
-    417243,
-    414097,
-    411820,
-    320778,
-    417716,
-    464149,
-    421871
-);
+        // Affiche les annonceurs
+        const advertiserExclus = new Array(
+            418935,
+            427952,
+            409707,
+            425912,
+            425914,
+            438979,
+            439470,
+            439506,
+            439511,
+            439512,
+            439513,
+            439514,
+            439515,
+            440117,
+            440118,
+            440121,
+            440122,
+            440124,
+            440126,
+            445117,
+            455371,
+            455384,
+            320778,
+            417243,
+            414097,
+            411820,
+            320778,
+            417716,
+            464149,
+            421871
+        );
 
         var campaigns = await ModelCampaigns
             .findAll({
                 where: {
-                     [Op.and]: [{
-                            campaign_name: {
-                                [Op.notLike]: '% PARR %'
-                            }
+                    [Op.and]: [{
+                        campaign_name: {
+                            [Op.notLike]: '% PARR %'
+                        }
                     }],
                     [Op.or]: [{
                         campaign_start_date: {
@@ -854,9 +858,11 @@ exports.repartitions = async (req, res) => {
                 include: [{
                     model: ModelAdvertisers,
                     where: {
-                        [Op.and]: [
-                            {advertiser_id: { [Op.notIn]: advertiserExclus } }
-                        ] 
+                        [Op.and]: [{
+                            advertiser_id: {
+                                [Op.notIn]: advertiserExclus
+                            }
+                        }]
                     }
                 }]
             })
@@ -898,57 +904,62 @@ exports.repartitions = async (req, res) => {
 
 exports.email = async (req, res) => {
     const campaign_id = req.params.campaign
-    const email = req.params.email;
+    const user_id = req.params.user
 
     //console.log(campaign_id)
-   // console.log(email)
+    // console.log(email)
 
     await ModelCampaigns
-    .findOne({
-        attributes: ['campaign_id','campaign_name','campaign_crypt'],
-        where: {
-            campaign_id: campaign_id
-        },
-      
-    })
-    .then(async function (campaign) {
-
-       var commercial = await ModelUsers.findOne({
-            attributes:['user_id','user_email','user_firstname'],
-            where:{
-                user_email:email
-            }
-        })
-
-      //  console.log(commercial.user_firstname)
-
-       const user_firstname = commercial.user_firstnam
-        const campaign_name = await campaign.campaign_name
-        const campaign_crypt = await campaign.campaign_crypt
-
-
-        nodeoutlook.sendEmail({
-
-            auth: {
-                user: "oceane.sautron@antennereunion.fr",
-                pass: process.env.EMAIL_PASS
+        .findOne({
+            attributes: ['campaign_id', 'campaign_name', 'campaign_crypt'],
+            where: {
+                campaign_id: campaign_id
             },
-            from: email,
-            to: 'adtraffic@antennereunion.fr,oceane.sautron@antennereunion.fr',
-            subject: 'Envoie du permalien de la campagne ' + campaign_name,
-            html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour ' +
-                user_firstname + '<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' +
-                campaign_name + '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/' +
-                campaign_crypt + '">https://reporting.antennesb.fr/t/' +
-                campaign_crypt + '</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>',
-
-            onError: (e) => console.log(e),
-            onSuccess: (i) => {
-                return res.json(`Le permalien est envoyé`)
-            }
 
         })
+        .then(async function (campaign) {
 
-    })
+            var commercial = await ModelUsers.findOne({
+                attributes: ['user_id', 'user_email', 'user_firstname'],
+                where: {
+                    user_id: user_id
+                }
+            })
+
+            //  console.log(commercial.user_firstname)
+
+            const user_firstname = await commercial.user_firstname
+            const campaign_name = await campaign.campaign_name
+            const campaign_crypt = await campaign.campaign_crypt
+            const email = await commercial.user_email;
+            //const email = "oceane.sautron@antennereunion.fr"
+
+
+            console.log(user_firstname +'-'+  campaign_name  +'-'+campaign_crypt+'-'+email)
+
+
+            nodeoutlook.sendEmail({
+
+                auth: {
+                    user: "oceane.sautron@antennereunion.fr",
+                    pass: process.env.EMAIL_PASS
+                },
+                from: email,
+                to: 'adtraffic@antennereunion.fr,oceane.sautron@antennereunion.fr',
+                subject: 'Envoie du permalien de la campagne ' + campaign_name,
+                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour ' +
+                    user_firstname + '<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' +
+                    campaign_name + '"</b> : <a traget="_blank" href="https://reporting.antennesb.fr/t/' +
+                    campaign_crypt + '">https://reporting.antennesb.fr/t/' +
+                    campaign_crypt + '</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>',
+
+                onError: (e) => console.log(e),
+                onSuccess: (i) => {
+                    return res.json(`Le permalien est envoyé`)
+                }
+
+            })
+
+        })
 
 }
