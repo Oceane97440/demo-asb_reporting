@@ -7,6 +7,8 @@ router.get("/campaigns", json.campaigns);
 router.get("/insertions", json.insertions);
 router.get("/formats", json.formats);
 router.get("/sites", json.sites);
+router.get("/folder", json.folder);
+
 /*
 
 router.get("/platforms", json.platforms);
