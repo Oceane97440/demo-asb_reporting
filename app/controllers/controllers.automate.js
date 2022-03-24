@@ -292,9 +292,10 @@ exports.advertiser = async (req, res) => {
             });
         }
     } catch (error) {
-        return res.json({
-            type: 'error',
-            message: error
+        return res.status(403)
+        .render("error.ejs", {
+         statusCoded: 403,
+         campaigncrypt: ''
         });
     }
 }
@@ -497,7 +498,11 @@ exports.campaigns = async (req, res) => {
         res.json('La liste des campagnes a été mise à jour (total : ' + nbr_add + ')');
 
     } catch (error) {
-        console.error('Error : ' + error);
+        return res.status(403)
+        .render("error.ejs", {
+         statusCoded: 403,
+         campaigncrypt: ''
+        });    
     }
 }
 
@@ -629,9 +634,10 @@ exports.campaign = async (req, res) => {
             });
         }
     } catch (error) {
-        return res.json({
-            type: 'error',
-            message: error
+        return res.status(403)
+        .render("error.ejs", {
+         statusCoded: 403,
+         campaigncrypt: ''
         });
     }
 }

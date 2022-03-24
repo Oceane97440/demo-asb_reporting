@@ -75,7 +75,7 @@ exports.insertions = async (req, res) => {
 
 exports.formats = async (req, res) => {
     try {        
-        var formats = await ModelFormats.findAll();
+        var formats = await ModelFormat.findAll();
         return res.json(formats);
     } catch (error) {
         return res.json({
@@ -113,6 +113,31 @@ exports.platforms = async (req, res) => {
     try {        
         var platforms = await ModelPlatforms.findAll();
         return res.json(platforms);
+    } catch (error) {
+        return res.json({
+            type: 'error',
+            message: 'Les platformes n\existent pas.'
+        });
+    }
+}
+
+exports.folder = async (req, res) => {
+    try {        
+         var dirDateNOW = moment().format('YYYY/MM/DD');
+		  // Créer un dossier si celui-ci n'existe pas
+        fs.mkdir('data/tv/' + dirDateNOW + '/', {
+            recursive: true
+
+        }, (err) => {
+            if (err)
+                throw err;
+        });
+
+        return res.json(
+			{message:dirDateNOW
+			}
+		);
+		
     } catch (error) {
         return res.json({
             type: 'error',
