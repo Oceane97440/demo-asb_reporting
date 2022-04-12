@@ -127,7 +127,7 @@
                                 <%= moment(campaign.campaign_end_date).format('DD/MM/YYYY') %></li>
                             <li class="list-group-item">
                                 <% if(date_now > timestamp_startdate) { %>
-                                <a type="button" href="#" class="btn btn-danger btn-lg btn-block">
+                                <a type="button" href="/r/<%=campaign.campaign_crypt%>" data-toggle="modal" data-target="#exampleModal" class="btn btn-danger btn-lg btn-block">
                                     <i class="fas fa-link"></i>
                                     Générer le rapport de campagne
                                 </a>
@@ -218,11 +218,10 @@
                               method: "GET",
                               url: '/r/report/<%=campaign_crypt%>',
                               success: function (data) {
-                                  $("#exampleModal").hide();
-                                  //$('body').html(data)
+                                  $("#exampleModal").hide();    
                                   window.location.href = url;
-
-                                  console.log(data)
+                                 
+                                 
                               }
                           })
                       })
