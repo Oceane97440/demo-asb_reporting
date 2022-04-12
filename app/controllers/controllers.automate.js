@@ -12,7 +12,11 @@ process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
+const path = require('path');
 
+const ExcelJS = require('exceljs');
+const excel = require('node-excel-export');
+var nodeoutlook = require('nodejs-nodemailer-outlook');
 const {
     QueryTypes
 } = require('sequelize');
@@ -64,7 +68,7 @@ const {
 const {
     cpuUsage
 } = require('process');
-
+const fs = require('fs');
 // Initialise le module
 var LocalStorage = require('node-localstorage').LocalStorage;
 // localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
@@ -123,7 +127,11 @@ exports.agencies = async (req, res) => {
 
 exports.advertisers = async (req, res) => {
     try {
-        var paramsAll = { limit: 100, offset: 0, isArchived: "both" }
+        var paramsAll = {
+            limit: 100,
+            offset: 0,
+            isArchived: "both"
+        }
         var config = SmartFunction.config('advertisers', paramsAll);
         var nbr_add = new Array()
         await axios(config).then(function (res) {
@@ -194,13 +202,15 @@ exports.advertisers = async (req, res) => {
 
                                 Utilities
                                     .updateOrCreate(ModelAdvertisers, {
-                                        advertiser_id: advertiser_id
-                                    }, dataCreate/* {
-                                                advertiser_id,
-                                                advertiser_name,
-                                                advertiser_archived,
-                                                agency_id
-                                            }*/)
+                                            advertiser_id: advertiser_id
+                                        }, dataCreate
+                                        /* {
+                                                                                        advertiser_id,
+                                                                                        advertiser_name,
+                                                                                        advertiser_archived,
+                                                                                        agency_id
+                                                                                    }*/
+                                    )
                                     .then(function (result) {
                                         result.item; // the model
                                         result.created; // bool, if a new item was created.
@@ -293,10 +303,10 @@ exports.advertiser = async (req, res) => {
         }
     } catch (error) {
         return res.status(403)
-        .render("error.ejs", {
-         statusCoded: 403,
-         campaigncrypt: ''
-        });
+            .render("error.ejs", {
+                statusCoded: 403,
+                campaigncrypt: ''
+            });
     }
 }
 
@@ -388,7 +398,11 @@ exports.advertisersCampaigns = async (req, res) => {
 
 exports.campaigns = async (req, res) => {
     try {
-        var paramsAll = { limit: 100, offset: 0, isArchived: "both" }
+        var paramsAll = {
+            limit: 100,
+            offset: 0,
+            isArchived: "both"
+        }
         var config = SmartFunction.config('campaigns', paramsAll);
 
         var nbr_add = new Array()
@@ -499,10 +513,10 @@ exports.campaigns = async (req, res) => {
 
     } catch (error) {
         return res.status(403)
-        .render("error.ejs", {
-         statusCoded: 403,
-         campaigncrypt: ''
-        });    
+            .render("error.ejs", {
+                statusCoded: 403,
+                campaigncrypt: ''
+            });
     }
 }
 
@@ -583,7 +597,7 @@ exports.campaign = async (req, res) => {
                         const advertiser_id = campaign.advertiser.advertiser_id;
                         regexCampaignCodeResult = epilot_campaign_name.match(regexCampaignCode);
 
-                       //console.log(campaign)
+                        //console.log(campaign)
                         console.log(regexCampaignCodeResult)
 
                         if (regexCampaignCodeResult) {
@@ -618,11 +632,12 @@ exports.campaign = async (req, res) => {
                                 //  return res.redirect('../../manager/campaigns/'+campaign_id+'?extension=true');
                                 res.redirect(`/manager/campaigns/${campaign_id}?extension=true`)
                             } else {
-                            return res.json({
-                                type: 'error',
-                                message: 'Cette campagne n\'a pu être mise à jour.'
-                            });
-                        } }
+                                return res.json({
+                                    type: 'error',
+                                    message: 'Cette campagne n\'a pu être mise à jour.'
+                                });
+                            }
+                        }
                     });
 
             });
@@ -635,10 +650,10 @@ exports.campaign = async (req, res) => {
         }
     } catch (error) {
         return res.status(403)
-        .render("error.ejs", {
-         statusCoded: 403,
-         campaigncrypt: ''
-        });
+            .render("error.ejs", {
+                statusCoded: 403,
+                campaigncrypt: ''
+            });
     }
 }
 
@@ -2175,7 +2190,9 @@ exports.epilotInsertions = async (req, res) => {
                         where: {
                             epilot_insertion_commercial: user_nameLF,
                             $or: [{
-                                epilot_insertion_commercial: { $eq: user_nameFL }
+                                epilot_insertion_commercial: {
+                                    $eq: user_nameFL
+                                }
                             }]
                         }
                     });
@@ -3118,6 +3135,8 @@ exports.reports = async (req, res) => {
 
         // Affiche les annonceurs à exclure
         const advertiserExclus = new Array(
+            471802,
+            412328,
             418935,
             427952,
             409707,
@@ -3145,7 +3164,7 @@ exports.reports = async (req, res) => {
             414097,
             411820,
             320778,
-            417716,
+            // 417716,
             421871,
             459132,
             464862
@@ -3209,20 +3228,38 @@ exports.reports = async (req, res) => {
                     advertiser_id = campaigns[i].advertiser.advertiser_id;
                     advertiser_name = campaigns[i].advertiser.advertiser_name;
 
-                    /*
-                    insertion_start_date = await ModelInsertions.max('insertion_start_date', {
+                   /* insertion_start_date = await ModelInsertions.min('insertion_start_date', {
                         where: {
-                            campaign_id: campaign_id
+                            campaign_id: campaign_id,
+                           
                         }
                     });
+
                     insertion_end_date = await ModelInsertions.max('insertion_end_date', {
                         where: {
                             campaign_id: campaign_id
                         }
                     });
-                    if(insertion_start_date > campaign_start_date) { campaign_start_date = campaign_start_date; } else { campaign_start_date = insertion_start_date; }
-                    if(insertion_end_date > campaign_end_date) { campaign_end_date = campaign_end_date; } else { campaign_end_date = insertion_end_date; }
-*/
+
+
+                    if ((!Utilities.empty(insertion_start_date)&& !Utilities.empty(insertion_end_date))) {
+
+
+                        if (insertion_start_date < campaign_start_date) {
+                            campaign_start_date = insertion_start_date;
+                        } 
+    
+                        if (insertion_end_date < campaign_end_date) {
+                            campaign_end_date = insertion_end_date;
+                        } 
+    
+                    }
+                   
+                    console.log("----------------")
+
+                    console.log(campaign_start_date)
+                    console.log(campaign_end_date)*/
+
                     var reportLocalStorage = localStorage.getItem(
                         'campaignID-' + campaign_id
                     )
@@ -3291,5 +3328,324 @@ exports.reports = async (req, res) => {
 
     } catch (error) {
         console.error('Error : ' + error);
+    }
+}
+
+exports.campaignReportTv = async (req, res) => {
+
+    try {
+
+        var dirDateNOW = moment().format('YYYY/MM/DD');
+        var path_file = 'data/tv/' + dirDateNOW + '/'
+
+        //verif si le dossier existe
+        if (fs.existsSync(path_file)) {
+
+            //verfie les items du dossier
+            files = fs.readdirSync(path_file)
+            console.log(files)
+
+         //   const campaignObjectsTv = [];
+
+
+            for (let index = 0; index < files.length; index++) {
+                const element = files[index];
+                console.log(element);
+
+                
+
+                // Le fichier doit être un fichier excel ou csv
+                if (element.match(/xlsx/g)) {
+
+                   
+                    const alpha = Array.from(Array(26)).map((e, i) => i + 65);
+                    const alphabet = alpha.map((x) => String.fromCharCode(x));
+                    // console.log(alphabet);
+
+                    var path_file = 'data/tv/' + dirDateNOW + '/' + element
+                    //  console.log(path_file)
+
+                    //  var fileXLS = 'data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx';
+                    var fileXLS = path_file;
+
+                    var workbook = new ExcelJS.Workbook();
+                    workbook
+                        .xlsx
+                        // .readFile('data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
+                        .readFile(fileXLS)
+                        .then(async function () {
+                            cacheStorageID = path.basename(fileXLS, '.xlsx');
+
+                            const campaignObjects = new Object();
+
+                            // Note: workbook.worksheets.forEach will still work but this is better
+                            workbook.eachSheet(async function (worksheet, sheetId) {
+                                const regexEnsemble = /Ensemble/gi;
+
+                                // Récupére le nom de la feuille
+                                var worksheetName = worksheet.name;
+
+
+
+
+                                if (worksheetName.match(/[a-zA ](-){1}(?!Paramétrage tarifaire\b)/gi)) {
+
+
+                                    const campaignName = worksheet.getCell('C3').value;
+                                    const campaignPeriod = worksheet.getCell('C4').value;
+                                    const campaignUser = worksheet.getCell('C5').value;
+                                    const campaignCurrency = worksheet.getCell('C7').value;
+                                    const campaignBudget = worksheet.getCell('C8').value;
+                                    const campaignWeightedNumber = worksheet.getCell('C9').value;
+                                    const campaignAdvertiser = worksheet.getCell('H3').value;
+                                    const campaignFormat = worksheet.getCell('H6').value;
+                                    const campaignTarget = worksheet.getCell('C11').value;
+
+
+
+                                    //recupère data cible filtrage du mot supprésion des accents et transforme en minuscule
+                                    const strip_tags = campaignTarget.normalize('NFD').replace(/[\u0300-\u036f  _$&+,:;=?@#|'<>.^*()%!-]/g, "")
+                                    const campaignLabel = strip_tags.toLowerCase();
+
+
+                                    campaignObjects[worksheetName] = {
+                                        'campaignLabel': campaignLabel,
+                                        'campaignTarget': campaignTarget,
+                                        'campaignName': campaignName,
+                                        'campaignPeriod': campaignPeriod,
+                                        'campaignUser': campaignUser,
+                                        'campaignCurrency': campaignCurrency,
+                                        'campaignBudget': campaignBudget,
+                                        'campaignWeightedNumber': campaignWeightedNumber,
+                                        'campaignAdvertiser': campaignAdvertiser,
+                                        'campaignFormat': campaignFormat
+                                    }
+
+
+
+                                    // Initialisation des tableaux
+                                    dataLines = new Array();
+                                    dataLinesName = new Object();
+                                    dataItemsLinesSelect = new Array();
+
+                                    // Itérer sur toutes les lignes qui ont des valeurs dans une feuille de calcul.
+                                    // Etape 1 : On récupére les lignes débutant chaque tableau
+                                    worksheet.eachRow(function (row, rowNumber) {
+                                        // Récupére la ligne
+                                        dataRow = row.values;
+                                        // Mets la ligne dans un tableau
+                                        dataLines.push(row.values);
+                                        // Retourne le nombre de colonne
+                                        numberCols = dataRow.length;
+
+                                        // Récupére le numéro de la ligne où se trouve : "Chaine" et le mets dans un tableau
+                                        if (dataRow[1] === "Chaîne") {
+                                            var channelLineBegin = rowNumber;
+                                            dataItemsLinesSelect['channelLineBegin'] = rowNumber;
+                                            // console.log('[x] Chaîne - Begin :' + channelLineBegin);
+                                        }
+
+                                        // Récupére le numéro de la ligne où se trouve : "Montée en charge / Jour" et le mets dans un tableau
+                                        if (dataRow[1] === "Montée en charge / Jour") {
+                                            var increaseInLoadPerDayLineBegin = rowNumber;
+                                            dataItemsLinesSelect['increaseInLoadPerDayLineBegin'] = rowNumber;
+                                        }
+
+                                        // Récupére le numéro de la ligne où se trouve : "Journal tranches horaires" et le mets dans un tableau
+                                        if (dataRow[1] === "Journal tranches horaires") {
+                                            var timeSlotDiaryLineBegin = rowNumber;
+                                            dataItemsLinesSelect['timeSlotDiaryLineBegin'] = rowNumber;
+                                        }
+
+                                        // Récupére le numéro de la ligne où se trouve : "Jour nommé" et le mets dans un tableau
+                                        if (dataRow[1] === "Jour nommé") {
+                                            var nameDayLineBegin = rowNumber;
+                                            dataItemsLinesSelect['nameDayLineBegin'] = rowNumber;
+                                            //  console.log('[x] Jour nommé - Begin : ' + nameDayLineBegin);
+                                        }
+                                    })
+
+                                    // Etape 2 : Parcours le tableau 
+                                    IncreaseILPDAArray = new Array();
+                                    timeSlotDiaryArray = new Array();
+                                    nameDayArray = new Array();
+                                    worksheet.eachRow(function (row, rowNumber) {
+                                        // Récupére la ligne
+                                        dataRow = row.values;
+                                        // Mets la ligne dans un tableau
+                                        dataLines.push(row.values);
+                                        // Retourne le nombre de colonne
+                                        numberCols = dataRow.length;
+
+                                        // Récupére le 1er élément de la ligne
+                                        dataRowOne = dataRow[1];
+
+                                        // Listing des regex
+                                        const regexChannel = /Antenne Réunion/gi;
+                                        // Récupére les formats date                        
+                                        const regexIncreaseInLoadPerDay = /([0-9]{2}\/[0-9]{2}\/[0-9]{2})/gi;
+                                        // Récupére les tranches Horaires
+                                        // const regexTimeSlotDiary = /([0-9]{2}h[0-9]{2} [0-9]{2}h[0-9]{2})/gi;
+                                        const regexTimeSlotDiary = /([0-9]{2}h[0-9]{2}( || - )[0-9]{2}h[0-9]{2})/gi
+                                        // Récupére les Jours de la semaine
+                                        const regexNameDay = /(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)/gi;
+
+                                        const labels = worksheet.getRow((rowNumber - 1)).values;
+
+                                        // Récupération des données de la chaîne
+                                        if ((rowNumber > dataItemsLinesSelect['channelLineBegin']) && dataRowOne.match(regexChannel) && (numberCols > 2)) {
+                                            // Récupére les libellés
+                                            var ChannelArray = new Object();
+                                            for (i = 0; i < (numberCols - 1); i++) {
+                                                var cellKey = alphabet[i].concat(dataItemsLinesSelect['channelLineBegin']);
+                                                var cellValue = alphabet[i].concat(rowNumber);
+
+                                                var label = worksheet.getCell(cellKey).value;
+                                                var value = worksheet.getCell(cellValue).value;
+
+                                                if (label === 'GRP') {
+                                                    var grp = worksheet.getCell(cellValue).value;
+                                                    var value = grp.toFixed(2);
+                                                }
+
+                                                if (label === 'Répétition') {
+                                                    var repetition = worksheet
+                                                        .getCell(cellValue)
+                                                        .value;
+                                                    var value = repetition.toFixed(2);
+                                                }
+
+                                                if (label === 'Ct GRP') {
+                                                    var ct_GRP = worksheet
+                                                        .getCell(cellValue)
+                                                        .value;
+                                                    var value = ct_GRP.toFixed(2);
+                                                }
+
+                                                if (label === 'CPM contacts Net') {
+                                                    var CPM_contacts_Brut = worksheet
+                                                        .getCell(cellValue)
+                                                        .value;
+                                                    var value = CPM_contacts_Brut.toFixed(2);
+                                                }
+
+                                                ChannelArray[label] = value;
+                                            }
+
+                                            // Mets la chaine dans l'object campagne
+                                            campaignObjects[worksheetName].campaignChannel = ChannelArray;
+                                        }
+
+                                        // Récupération des données de la Montée en charge
+                                        if ((rowNumber > dataItemsLinesSelect['increaseInLoadPerDayLineBegin']) && dataRowOne.match(regexIncreaseInLoadPerDay) && (numberCols > 2)) {
+                                            // Récupére les libellés
+                                            var IncreaseInLoadPerDayObject = new Object();
+                                            for (i1 = 0; i1 < (numberCols - 1); i1++) {
+                                                var cellKey = alphabet[i1].concat(dataItemsLinesSelect['increaseInLoadPerDayLineBegin']);
+                                                var cellValue = alphabet[i1].concat(rowNumber);
+
+                                                var label = worksheet.getCell(cellKey).value;
+                                                var value = worksheet.getCell(cellValue).value;
+                                                // console.log('col : ', i1, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                                IncreaseInLoadPerDayObject[label] = value;
+                                            }
+
+                                            IncreaseILPDAArray.push(IncreaseInLoadPerDayObject);
+
+                                            // Mets des données de la Montée en charge l'object campagne
+                                            campaignObjects[worksheetName].campaignIncreaseInLoadPerDay = IncreaseILPDAArray;
+                                        }
+
+                                        // Récupération des données des tranches horaires
+                                        if ((rowNumber > dataItemsLinesSelect['timeSlotDiaryLineBegin']) && dataRowOne.match(regexTimeSlotDiary) && (numberCols > 2)) {
+                                            // Récupére les libellés
+                                            var timeSlotDiaryObject = new Object();
+                                            for (i2 = 0; i2 < (numberCols - 1); i2++) {
+                                                var cellKey = alphabet[i2].concat(dataItemsLinesSelect['timeSlotDiaryLineBegin']);
+                                                var cellValue = alphabet[i2].concat(rowNumber);
+
+                                                var label = worksheet.getCell(cellKey).value;
+                                                var value = worksheet.getCell(cellValue).value;
+                                                //console.log('col : ', i2, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                                timeSlotDiaryObject[label] = value;
+                                            }
+
+                                            //console.log(IncreaseInLoadPerDayArray);
+                                            timeSlotDiaryArray.push(timeSlotDiaryObject);
+
+
+                                            // Mets des données des données des tranches horaires
+                                            campaignObjects[worksheetName].campaigntimeSlotDiary = timeSlotDiaryArray;
+
+                                        }
+
+                                        // Récupération des données des jours de la semaine
+                                        if ((rowNumber > dataItemsLinesSelect['nameDayLineBegin']) && dataRowOne.match(regexNameDay) && (numberCols > 2)) {
+                                            // Récupére les libellés
+                                            var nameDayObject = new Object();
+                                            for (i3 = 0; i3 < (numberCols - 1); i3++) {
+                                                // Récup data
+                                                var cellKey = alphabet[i3].concat(dataItemsLinesSelect['nameDayLineBegin']);
+                                                var cellValue = alphabet[i3].concat(rowNumber);
+
+                                                var label = worksheet.getCell(cellKey).value;
+                                                var value = worksheet.getCell(cellValue).value;
+                                                // console.log('col : ', i3, ' -> ', cellValue, ' = ', worksheet.getCell(cellKey).value, ' => ', worksheet.getCell(cellValue).value);
+                                                nameDayObject[label] = value;
+
+                                                if (label === 'Répétition') {
+                                                    var repetition = worksheet
+                                                        .getCell(cellValue)
+                                                        .value;
+                                                    var value = repetition.toFixed(2);
+                                                }
+
+                                                // Récup Graph
+                                            }
+
+                                            //console.log(IncreaseInLoadPerDayArray);
+                                            nameDayArray.push(nameDayObject);
+
+                                            // Mets es données des données des tranches horaires
+                                            campaignObjects[worksheetName].campaignNameDay = nameDayArray;
+
+
+                                        }
+
+                                    })
+
+                                    //campaignObjectsTv.push(campaignObjects)
+
+                                   localStorageTV.setItem('campaign_tv_ID-' + campaignsTv.campaign_tv_id, JSON.stringify(campaignObjects));
+                                       console.log(campaignObjects);
+                            process.exit(1)           
+
+
+
+                                }
+
+                            });
+
+                            console.log(campaignObjectsTv);
+                            process.exit(1)
+
+                        });
+
+                } else {
+                    return res.json({
+                        type: 'danger',
+                        intro: 'L\'extension du fichier est invalide. ',
+                        message: 'Seul les fichiers Excel sont autorisés'
+                    });
+                }
+
+            }
+
+        }
+
+    } catch (error) {
+        return res.json({
+            message: 'Erreur'
+        });
     }
 }
