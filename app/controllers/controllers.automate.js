@@ -77,6 +77,8 @@ var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('data/reporting/');
 localStorageTasks = new LocalStorage('data/taskID/');
 localStorageAutomate = new LocalStorage('data/automate/');
+localStorageTV = new LocalStorage('data/tv/reporting');
+
 
 exports.agencies = async (req, res) => {
     try {
@@ -3345,11 +3347,9 @@ exports.campaignReportTv = async (req, res) => {
             files = fs.readdirSync(path_file)
             console.log(files)
 
-         //   const campaignObjectsTv = [];
 
 
-            for (let index = 0; index < files.length; index++) {
-                const element = files[index];
+            files.forEach(element => {
                 console.log(element);
 
                 
@@ -3360,18 +3360,14 @@ exports.campaignReportTv = async (req, res) => {
                    
                     const alpha = Array.from(Array(26)).map((e, i) => i + 65);
                     const alphabet = alpha.map((x) => String.fromCharCode(x));
-                    // console.log(alphabet);
 
                     var path_file = 'data/tv/' + dirDateNOW + '/' + element
-                    //  console.log(path_file)
 
-                    //  var fileXLS = 'data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx';
                     var fileXLS = path_file;
 
                     var workbook = new ExcelJS.Workbook();
                     workbook
                         .xlsx
-                        // .readFile('data/tv/Campagne_Leclerc-Plan_Campagne-132748939578174030.xlsx')
                         .readFile(fileXLS)
                         .then(async function () {
                             cacheStorageID = path.basename(fileXLS, '.xlsx');
@@ -3616,9 +3612,8 @@ exports.campaignReportTv = async (req, res) => {
 
                                     //campaignObjectsTv.push(campaignObjects)
 
-                                   localStorageTV.setItem('campaign_tv_ID-' + campaignsTv.campaign_tv_id, JSON.stringify(campaignObjects));
-                                       console.log(campaignObjects);
-                            process.exit(1)           
+                                   localStorageTV.setItem('campaign_tv_ID-' + campaignLabel, JSON.stringify(campaignObjects));
+                                    console.log(campaignObjects);
 
 
 
@@ -3626,8 +3621,7 @@ exports.campaignReportTv = async (req, res) => {
 
                             });
 
-                            console.log(campaignObjectsTv);
-                            process.exit(1)
+                         
 
                         });
 
@@ -3639,7 +3633,7 @@ exports.campaignReportTv = async (req, res) => {
                     });
                 }
 
-            }
+            })
 
         }
 
