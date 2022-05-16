@@ -105,7 +105,8 @@ exports.index = async (req, res) => {
                                 const campaignPeriod = worksheet.getCell('C4').value;
                                 const campaignUser = worksheet.getCell('C5').value;
                                 const campaignCurrency = worksheet.getCell('C7').value;
-                                const campaignBudget = worksheet.getCell('C8').value;
+                             //  const campaignBudget = worksheet.getCell('C8').value;
+                                const campaignBudget =Math.round(worksheet.getCell('H16').value);
                                 const campaignWeightedNumber = worksheet.getCell('C9').value;
                                 const campaignAdvertiser = worksheet.getCell('H3').value;
                                 const campaignFormat = worksheet.getCell('H6').value;
@@ -132,7 +133,7 @@ exports.index = async (req, res) => {
                                 }
 
 
-                                /* console.log('Campagne : ', campaignName);
+                                console.log('Campagne : ', campaignName);
                                  console.log('Label : ', campaignLabel);
                                  console.log('Cible : ', campaignTarget);
                                  console.log('Période : ', campaignPeriod);
@@ -142,7 +143,7 @@ exports.index = async (req, res) => {
                                  console.log('Effectif pondéré : ', campaignWeightedNumber);
                                  console.log('Annonceur : ', campaignAdvertiser);
                                  console.log('Formats : ', campaignFormat);
-                                 console.log('------------------------------------------');*/
+                                 console.log('------------------------------------------');
 
                                 // Initialisation des tableaux
                                 dataLines = new Array();
