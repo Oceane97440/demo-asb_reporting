@@ -133,7 +133,7 @@ exports.index = async (req, res) => {
                                 }
 
 
-                                console.log('Campagne : ', campaignName);
+                               /* console.log('Campagne : ', campaignName);
                                  console.log('Label : ', campaignLabel);
                                  console.log('Cible : ', campaignTarget);
                                  console.log('Période : ', campaignPeriod);
@@ -143,7 +143,7 @@ exports.index = async (req, res) => {
                                  console.log('Effectif pondéré : ', campaignWeightedNumber);
                                  console.log('Annonceur : ', campaignAdvertiser);
                                  console.log('Formats : ', campaignFormat);
-                                 console.log('------------------------------------------');
+                                 console.log('------------------------------------------');*/
 
                                 // Initialisation des tableaux
                                 dataLines = new Array();
@@ -342,7 +342,7 @@ exports.index = async (req, res) => {
 
 
 
-                                console.log(campaignObjects)
+                                //console.log(campaignObjects)
 
 
 
@@ -372,19 +372,31 @@ exports.index = async (req, res) => {
                                 var regexnBudget = /([0-9])/gi
 
                                 var PeriodCampaign = campaignObjects["a-Ensemble"].campaignPeriod.match(regexnPeriod)
-                                var PeriodBudget = campaignObjects["a-Ensemble"].campaignBudget.match(regexnBudget)
+                                //var PeriodBudget = campaignObjects["a-Ensemble"].campaignBudget.match(regexnBudget)
 
                                 var campaign_tv_start_date = moment(PeriodCampaign[0], 'DD-MM-YYYY');
                                 var campaign_tv_end_date = moment(PeriodCampaign[1], 'DD-MM-YYYY');
-                                const Budget = PeriodBudget.join('')
+                                //const Budget = PeriodBudget.join('')
 
+                               /* res.json({
+									"campaign_tv_name": campaignObjects["a-Ensemble"].campaignName,
+                                    "campaign_tv_start_date": moment(campaign_tv_start_date).format('YYYY-MM-DD'),
+                                    "campaign_tv_end_date": moment(campaign_tv_end_date).format('YYYY-MM-DD'),
+                                    "campaign_tv_user": campaignObjects["a-Ensemble"].campaignUser,
+                                    "user_id": req.session.user.user_id,
+                                    "campaign_tv_budget": campaignObjects["a-Ensemble"].campaignBudget,
+                                    "campaign_tv_type": "a-Ensemble",
+                                    "campaign_tv_file": path_file
+									})
+
+                                    process.exit()*/
                                 await ModelCampaignsTv.create({
                                     campaign_tv_name: campaignObjects["a-Ensemble"].campaignName,
                                     campaign_tv_start_date: moment(campaign_tv_start_date).format('YYYY-MM-DD'),
                                     campaign_tv_end_date: moment(campaign_tv_end_date).format('YYYY-MM-DD'),
                                     campaign_tv_user: campaignObjects["a-Ensemble"].campaignUser,
                                     user_id: req.session.user.user_id,
-                                    campaign_tv_budget: campaignObjects["a-Ensemble"].campaignBudget.match(regexnBudget),
+                                    campaign_tv_budget: campaignObjects["a-Ensemble"].campaignBudget,
                                     campaign_tv_type: "a-Ensemble",
                                     campaign_tv_file: path_file
 
@@ -443,8 +455,8 @@ exports.index = async (req, res) => {
                                         }
                                     })
 
-                                    // console.log(founduser)
 
+                                    if (!Utilities.empty(founduser)) {
 
                                     const email = await founduser.user_email
                                     const user_firstname = await founduser.user_firstname
@@ -472,10 +484,9 @@ exports.index = async (req, res) => {
 
                                     })
 
+                                    }
 
 
-
-                                    // return res.redirect(`/t/${campaign_tv_crypt}`);
 
                                 });
                             }
