@@ -32,6 +32,7 @@ router.get("/deliverytypes", automate.deliverytypes);
 router.get("/insertions_status", automate.insertions_status);
 
 router.get("/insertions", automate.insertions);
+router.get("/insertion", automate.insertion);
 
 
 router.get("/insertions_templates", automate.insertions_templates);
