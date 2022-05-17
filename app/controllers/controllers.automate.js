@@ -3240,7 +3240,7 @@ exports.insertion = async (req, res) => {
                    
                             if (req.query.extension) {
                                 //  return res.redirect('../../manager/campaigns/'+campaign_id+'?extension=true');
-                                res.redirect(`manager/campaigns/${insertion.campaign_id}/insertions/${insertion_id}?extension=true`)
+                                res.redirect(`/manager/campaigns/${insertion.campaign_id}/insertions/${insertion_id}?extension=true`)
                             } else {
                                 return res.json({
                                     type: 'error',
