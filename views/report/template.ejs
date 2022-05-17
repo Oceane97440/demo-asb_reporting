@@ -210,6 +210,15 @@
                         <td class="text-center"><%= reporting.interstitiel.ctr %>%</td>
                     </tr>
                     <% } %>
+
+                    <% if(reporting.interstitielvideo) { %>
+                        <tr>
+                            <td class="text-left">INTERSTITIEL VIDEO</td>
+                            <td><%= utilities.numStr(reporting.interstitielvideo.impressions) %></td>
+                            <td><%= utilities.numStr(reporting.interstitielvideo.clicks) %></td>
+                            <td class="text-center"><%= reporting.interstitielvideo.ctr %>%</td>
+                        </tr>
+                        <% } %>
                     <% if(reporting.instream) { %>
                     <tr>
                         <td class="text-left">INSTREAM</td>
@@ -401,6 +410,48 @@
             </table>
         </div>
         <% } %>
+
+        <% if(reporting.interstitielvideo) { %>
+            <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+                <h3 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    <strong>INTERSTITIEL VIDEO/ par site</strong>
+                </h3>
+            </div>
+            <div class="table-responsive-md">
+    
+                <table class="table">
+                    <thead class="text-center thead-dark">
+                        <tr>
+                            <th class="text-left">Sites</th>
+                            <th>Impressions</th>
+                            <th>Clics</th>
+                            <th>Taux de clics</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <% for(i=0; i < Object.keys(reporting.interstitielvideo.siteList).length; i++) { %>
+                        <tr>
+                            <td class="text-left"><%= reporting.interstitielvideo.siteList[i].site %></td>
+                            <td><%= utilities.numStr(reporting.interstitielvideo.siteList[i].impressions) %></td>
+                            <td><%= utilities.numStr(reporting.interstitielvideo.siteList[i].clicks) %></td>
+                            <td><%= reporting.interstitielvideo.siteList[i].ctr %>%</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                    <tfoot class="text-center table-dark">
+                        <tr>
+                            <td class="text-left">
+                                <strong>Total</strong>
+                            </td>
+                            <td><%= utilities.numStr(reporting.interstitielvideo.impressions) %></td>
+                            <td><%= utilities.numStr(reporting.interstitielvideo.clicks) %></td>
+                            <td><%= reporting.interstitielvideo.ctr %>%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <% } %>
 
         <% if(reporting.instream) { %>
         <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
