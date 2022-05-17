@@ -384,7 +384,7 @@ exports.index = async (req, res) => {
                                     campaign_tv_end_date: moment(campaign_tv_end_date).format('YYYY-MM-DD'),
                                     campaign_tv_user: campaignObjects["a-Ensemble"].campaignUser,
                                     user_id: req.session.user.user_id,
-                                    campaign_tv_budget: Budget,
+                                    campaign_tv_budget: campaignObjects["a-Ensemble"].campaignBudget.match(regexnBudget),
                                     campaign_tv_type: "a-Ensemble",
                                     campaign_tv_file: path_file
 
