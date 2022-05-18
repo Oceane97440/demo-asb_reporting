@@ -1589,7 +1589,7 @@ exports.campaignReport = async (req, res) => {
                                         localStorage.setItem('campaignID-' + campaignid, JSON.stringify(formatObjects));
 
                                         if (req.query.extension) {
-                                            res.redirect('/r/' + campaigncrypt + '?extension=true');
+                                            res.redirect('/r/' + campaigncrypt);
                                         } else {
                                             return res.json({
                                                 type: 'success',
