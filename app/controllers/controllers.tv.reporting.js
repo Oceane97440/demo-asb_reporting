@@ -143,7 +143,7 @@ exports.index = async (req, res) => {
                                  console.log('Effectif pondéré : ', campaignWeightedNumber);
                                  console.log('Annonceur : ', campaignAdvertiser);
                                  console.log('Formats : ', campaignFormat);
-                                 console.log('------------------------------------------');*/
+                                 console.log('------------------------------------------')*/
 
                                 // Initialisation des tableaux
                                 dataLines = new Array();
@@ -230,6 +230,7 @@ exports.index = async (req, res) => {
                                             if (label === 'GRP') {
                                                 var grp = worksheet.getCell(cellValue).value;
                                                 var value = grp.toFixed(2);
+
                                             }
 
                                             if (label === 'Répétition') {
@@ -250,10 +251,18 @@ exports.index = async (req, res) => {
                                                 var CPM_contacts_Brut = worksheet
                                                     .getCell(cellValue)
                                                     .value;
-                                                var value = CPM_contacts_Brut.toFixed(2);
+                                                var op =  campaignBudget / grp.toFixed(2)   
+                                               // var value = CPM_contacts_Brut.toFixed(2);
+                                               //on calcule sur le bugget net / par le nombre de grp par cible
+                                               var value = op.toFixed(2);
+
+                                             
+                                      
+
                                             }
 
                                             ChannelArray[label] = value;
+
                                         }
 
                                         // Mets la chaine dans l'object campagne
@@ -342,7 +351,7 @@ exports.index = async (req, res) => {
 
 
 
-                                //console.log(campaignObjects)
+                               // console.log(campaignObjects)
 
 
 
