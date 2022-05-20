@@ -244,17 +244,18 @@ exports.index = async (req, res) => {
                                                 var ct_GRP = worksheet
                                                     .getCell(cellValue)
                                                     .value;
-                                                var value = ct_GRP.toFixed(2);
+                                              //  var value = ct_GRP.toFixed(2);
+
+                                                var op =  campaignBudget / grp.toFixed(2)   
+                                                //on calcule sur le bugget net / par le nombre de grp par cible
+                                                var value = op.toFixed(2);
                                             }
 
                                             if (label === 'CPM contacts Net') {
                                                 var CPM_contacts_Brut = worksheet
                                                     .getCell(cellValue)
                                                     .value;
-                                                var op =  campaignBudget / grp.toFixed(2)   
-                                               // var value = CPM_contacts_Brut.toFixed(2);
-                                               //on calcule sur le bugget net / par le nombre de grp par cible
-                                               var value = op.toFixed(2);
+                                                var value = CPM_contacts_Brut.toFixed(2);
 
                                              
                                       
