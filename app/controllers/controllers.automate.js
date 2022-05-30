@@ -4,6 +4,9 @@ const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
 var crypto = require('crypto');
+const needle = require("needle");
+
+const csv = require('csv-parser')
 const {
     Op
 } = require("sequelize");
@@ -4050,35 +4053,65 @@ exports.campaignReportTv = async (req, res) => {
     }
 }
 
-exports.forecast= async (req, res) => {
+exports.forecast = async (req, res) => {
 
-    const now = new Date();
-    const cacheStorageNow = "forecast-global-"+moment().format('YYYYMMDD');
-    const date_start = moment().format('YYYY-MM-DDT00:00:00');
-    const date_end  = moment(now).add('5', 'd').format('YYYY-MM-DDT23:59:00');
+    var results = new Array();
 
 
-    console.log(date_start + " - " + date_end + " - " + cacheStorageNow)
+  
 
-    let postRequestForecast = await AxiosFunction.RequestForecastGlobal(date_start,date_end);
-
-    if (postRequestForecast.headers.location) {
-
-
+    
+        const now = new Date();
+        const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + ".csv";
+        const date_start = moment().format('YYYY-MM-DDT00:00:00');
+        const date_end = moment(now).add('5', 'd').format('YYYY-MM-DDT23:59:00');
+    
+        var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
+    
+    
+        console.log(date_start + " - " + date_end + " - " + cacheStorageNow)
+        let postRequestForecast = await AxiosFunction.RequestForecastGlobal(date_start, date_end);
+    
+        if (postRequestForecast.headers.location) {
+    
+    
             headerlocation = postRequestForecast.headers.location;
             let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
             if (insertionLink.data.progress == '100') {
                 headerlocation = insertionLink.headers.location;
-
+    
                 let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
-  
+    
+                localStorageForecast.setItem(cacheStorageNow, JSON.stringify(csvLink.data));
+    
+
+                const result = [];
+
+                const url = "https://forecast.smartadserverapis.com/ftproot/2022-05-30-10-13-310846758.csv";
+
+                needle
+                .get(url)
+                .pipe(csv())
+                .on("data", (data) => {
+                    result.push(data);
+                })
+                .on("done", (err) => {
+                    if (err) console.log("An error has occurred");
+                    else console.log(result);
+                });
+
             
+    
+              
+    
             }
+    
+    
+    
+    
+        }
 
-        
 
-
-    }
 
 
 
