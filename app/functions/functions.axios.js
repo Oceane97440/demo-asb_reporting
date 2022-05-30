@@ -482,3 +482,125 @@ exports.getAdManager = async (campaign_id) => {
 
 
 }
+
+
+//fonction qui génère la requete global du forecast , prévision sur les 5prochains jours
+exports.RequestForecastGlobal =  async function requestForecast(startDate , endDate){
+
+  var RequestForecastGlobal = {
+
+      "startDate": startDate,
+      "endDate": endDate,
+      "timeZoneId": "Arabian Standard Time",
+      "filter": [
+          {
+              "CountryID": [
+                  61
+              ]
+          },
+          {
+              "SiteID": [
+                  299244,
+                  299245,
+                  299248,
+                  299249,
+                  299252,
+                  299253,
+                  299254,
+                  299263,
+                  322433,
+                  323124,
+                  337707
+              ]
+          },
+          {
+              "FormatID": [
+                  "79633",
+                  "79637",
+                  "79638",
+                  "79642",
+                  "79643",
+                  "79644",
+                  "79645",
+                  "79956",
+                  "79650",
+                  "79651",
+                  "79652",
+                  "79653",
+                  "79654",
+                  "79634",
+                  "79635",
+                  "79636",
+                  "79639",
+                  "79640",
+                  "79641",
+                  "87301",
+                  "87302",
+                  "87303",
+                  "87304",
+                  "87305",
+                  "87314",
+                  "87307",
+                  "87308",
+                  "87309",
+                  "87310",
+                  "87306",
+                  "87311",
+                  "87312",
+                  "87313",
+                  "43791",
+                  "44149",
+                  "44152",
+                  "79433",
+                  "79409",
+                  "84652",
+                  "84653",
+                  "84654",
+                  "84655",
+                  "84656",
+                  "79421",
+                  "84966",
+                  "84967",
+                  "84968",
+                  "86087",
+                  "86088",
+                  "79425",
+                  "84657",
+                  "84658",
+                  "84659",
+                  "84660",
+                  "84661",
+                  "79431"
+              ]
+          }
+      ],
+      "fields": [
+          "CampaignID",
+          "CampaignName",
+          "InsertionId",
+          "InsertionName",
+          "FormatId",
+          "FormatName",
+          "InsertionBookedVolume",
+          "InsertionForecastedDeliveredVolume",
+          "InsertionForecastedDeliveredPercentage"
+      ]
+  }
+
+  let sendRequest = await axios({
+    method: 'POST',
+    url: 'https://forecast.smartadserverapis.com/2044/forecast',
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "Application/json"
+    },
+    auth: {
+      username: dbApi.SMART_login,
+      password: dbApi.SMART_password
+    },
+    data:RequestForecastGlobal
+  });
+  
+
+  return sendRequest
+}

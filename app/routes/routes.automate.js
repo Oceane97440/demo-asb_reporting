@@ -42,5 +42,7 @@ router.get("/countries", automate.countries);
 router.get("/reports", automate.reports);
 router.get("/packs", automate.packs);
 
+/** AUTOMATE ALERTING */
+router.get("/forecast",automate.forecast)
 
 module.exports = router;

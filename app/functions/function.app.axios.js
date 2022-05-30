@@ -106,3 +106,5 @@ exports.dataFormatingForForecast = async (dataArrayFromReq, StartDate, EndDate, 
     }
     return tableData;
 }
+
+

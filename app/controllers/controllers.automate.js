@@ -78,6 +78,7 @@ localStorage = new LocalStorage('data/reporting/');
 localStorageTasks = new LocalStorage('data/taskID/');
 localStorageAutomate = new LocalStorage('data/automate/');
 localStorageTV = new LocalStorage('data/tv/reporting');
+localStorageForecast = new LocalStorage('data/forecast/');
 
 
 exports.agencies = async (req, res) => {
@@ -4047,4 +4048,39 @@ exports.campaignReportTv = async (req, res) => {
             message: 'Erreur'
         });
     }
+}
+
+exports.forecast= async (req, res) => {
+
+    const now = new Date();
+    const cacheStorageNow = "forecast-global-"+moment().format('YYYYMMDD');
+    const date_start = moment().format('YYYY-MM-DDT00:00:00');
+    const date_end  = moment(now).add('5', 'd').format('YYYY-MM-DDT23:59:00');
+
+
+    console.log(date_start + " - " + date_end + " - " + cacheStorageNow)
+
+    let postRequestForecast = await AxiosFunction.RequestForecastGlobal(date_start,date_end);
+
+    if (postRequestForecast.headers.location) {
+
+
+            headerlocation = postRequestForecast.headers.location;
+            let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
+            if (insertionLink.data.progress == '100') {
+                headerlocation = insertionLink.headers.location;
+
+                let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
+  
+            
+            }
+
+        
+
+
+    }
+
+
+
+
 }
