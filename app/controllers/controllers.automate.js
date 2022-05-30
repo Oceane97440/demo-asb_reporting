@@ -4062,7 +4062,7 @@ exports.forecast = async (req, res) => {
 
     
         const now = new Date();
-        const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + ".csv";
+        const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD');
         const date_start = moment().format('YYYY-MM-DDT00:00:00');
         const date_end = moment(now).add('5', 'd').format('YYYY-MM-DDT23:59:00');
     
@@ -4080,14 +4080,14 @@ exports.forecast = async (req, res) => {
             if (insertionLink.data.progress == '100') {
                 headerlocation = insertionLink.headers.location;
     
-                let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
+                //let csvLink = await AxiosFunction.getForecastData('GET', headerlocation);
     
-                localStorageForecast.setItem(cacheStorageNow, JSON.stringify(csvLink.data));
+              //  localStorageForecast.setItem(cacheStorageNow, JSON.stringify(csvLink.data));
     
 
                 const result = [];
 
-                const url = "https://forecast.smartadserverapis.com/ftproot/2022-05-30-10-13-310846758.csv";
+                const url = headerlocation;
 
                 needle
                 .get(url)
@@ -4100,8 +4100,20 @@ exports.forecast = async (req, res) => {
                     else console.log(result);
                 });
 
-            
-    
+
+               /* fs
+                .createReadStream('data/forecast/forecast-global-20220530')
+                .pipe(csv({
+                    separator: '\;'
+                }, ))
+                .on('data', (data) => results.push(data))
+                .on('end', () => {
+                    console.log('RESULTATS : ', results.length);
+                    for (i = 0; i < results.length; i++) {
+                    console.log(results[i])
+                    }
+                })
+                */
               
     
             }
