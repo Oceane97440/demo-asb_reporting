@@ -579,7 +579,6 @@ exports.RequestForecastGlobal =  async function requestForecast(startDate , endD
           "CampaignName",
           "InsertionId",
           "InsertionName",
-          "FormatId",
           "FormatName",
           "InsertionBookedVolume",
           "InsertionForecastedDeliveredVolume",
