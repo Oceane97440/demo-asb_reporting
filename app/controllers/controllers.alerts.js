@@ -412,41 +412,42 @@ exports.campaigns = async (req, res) => {
 
 exports.alert_delivered_percentage = async (req, res) => {
 
+    const data = new Object();
+
+        // Créer le fil d'ariane
+        const breadcrumbLink = 'forecast';
+        breadcrumb = new Array({
+            'name': 'Alerting',
+            'link': 'forecast'
+        }, {
+            'name': 'Liste des campagnes < 95% du forecast',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
+
     const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + '.json';
-
-
     var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
+
 
     if (data_localStorageForecast) {
 
+        const ObjDeliveredPercentage = new Object()
         var forecastData = JSON.parse(data_localStorageForecast)
 
-       // const ObjDeliveredPercentage = new Object()
 
 
-       const CampaignId = []
-       const CampaignCrypt = []
-       const CampignName = []
-       const CampaignStartDate = []
-       const CampaignEndDate = []
-
-
-
-        for (var index = 1; index <= Object.keys(forecastData).length; index++) {
-
+        var countdata = Object.keys(forecastData).length - 1
+        for (var index = 1; index <= countdata; index++) {
             var campaign_id = forecastData[index].CampaignID;
             var campign_name = forecastData[index].CampaignName;
             var insertion_id = forecastData[index].InsertionId;
             var insertion_name = forecastData[index].InsertionName;
-            // var format = forecastData[index].FormatName
-            //var booked_volume =  parseInt(forecastData[index].InsertionBookedVolume)
-            //var delivered_volume =  parseInt(forecastData[index].InsertionForecastedDeliveredVolume)
             var delivered_percentage = parseInt(forecastData[index].InsertionForecastedDeliveredPercentage);
 
 
 
+            if (forecastData[index].CampaignID != "N/A") {
 
-            if ((campaign_id != "N/A") && (delivered_percentage != "N/A")) {
 
                 const advertiserExclus = [
                     471802,
@@ -499,20 +500,17 @@ exports.alert_delivered_percentage = async (req, res) => {
                     }]
                 }).then(async function (campaign) {
 
-
-
                     if (campaign) {
-
 
                         var campaign_start_date = campaign.campaign_start_date
                         var campaign_end_date = campaign.campaign_end_date
                         var campaign_crypt = campaign.campaign_crypt
 
+                        //La campagne est de - 95% du forecast
+                        if (delivered_percentage < 95) {
 
-                        //La campagne est de - 50% du forecast
-                        if (delivered_percentage <= 50) {
 
-                           /* var objForecast = {
+                            var objForecast = {
                                 campaign_id: campaign_id,
                                 campaign_crypt: campaign_crypt,
                                 campign_name: campign_name,
@@ -522,17 +520,14 @@ exports.alert_delivered_percentage = async (req, res) => {
                                 insertion_name: insertion_name,
                                 delivered_percentage: delivered_percentage
                             }
-    
-                            ObjDeliveredPercentage[index]=objForecast*/
 
+                            ObjDeliveredPercentage[index] = objForecast
 
-                       
-                            //console.log(ObjDeliveredPercentage)
 
                         }
 
 
-                   
+
 
                     }
 
@@ -540,15 +535,19 @@ exports.alert_delivered_percentage = async (req, res) => {
 
 
 
-
-
-
-
-
-
             }
 
         }
+        data.moment = moment;
+        data.campaigns = ObjDeliveredPercentage
+        data.utilities = Utilities
+
+     
+
+   
+
+        res.render('alerts/forecast/list.ejs',data)
+
 
     }
 }
