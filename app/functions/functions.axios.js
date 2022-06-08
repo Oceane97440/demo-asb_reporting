@@ -498,7 +498,7 @@ exports.RequestForecastGlobal = async function requestForecast(startDate, endDat
           61
         ]
       },
-      {
+      /*{
         "SiteID": [
           299244,
           299245,
@@ -512,7 +512,7 @@ exports.RequestForecastGlobal = async function requestForecast(startDate, endDat
           323124,
           337707
         ]
-      },
+      },*/
       {
         "FormatID": [
           "79633",

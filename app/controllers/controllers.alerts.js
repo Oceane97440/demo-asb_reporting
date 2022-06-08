@@ -414,16 +414,16 @@ exports.alert_delivered_percentage = async (req, res) => {
 
     const data = new Object();
 
-        // Créer le fil d'ariane
-        const breadcrumbLink = 'forecast';
-        breadcrumb = new Array({
-            'name': 'Alerting',
-            'link': 'forecast'
-        }, {
-            'name': 'Liste des campagnes < 95% du forecast',
-            'link': ''
-        });
-        data.breadcrumb = breadcrumb;
+    // Créer le fil d'ariane
+    const breadcrumbLink = 'forecast';
+    breadcrumb = new Array({
+        'name': 'Alerting',
+        'link': 'forecast'
+    }, {
+        'name': 'Liste des campagnes < 95% du forecast',
+        'link': ''
+    });
+    data.breadcrumb = breadcrumb;
 
     const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + '.json';
     var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
@@ -431,7 +431,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
     if (data_localStorageForecast) {
 
-        const ObjDeliveredPercentage = new Object()
+        const ObjDeliveredPercentage = new Array()
         var forecastData = JSON.parse(data_localStorageForecast)
 
 
@@ -521,7 +521,8 @@ exports.alert_delivered_percentage = async (req, res) => {
                                 delivered_percentage: delivered_percentage
                             }
 
-                            ObjDeliveredPercentage[index] = objForecast
+                            //ObjDeliveredPercentage[index] = objForecast
+                            ObjDeliveredPercentage.push(objForecast)
 
 
                         }
@@ -542,11 +543,29 @@ exports.alert_delivered_percentage = async (req, res) => {
         data.campaigns = ObjDeliveredPercentage
         data.utilities = Utilities
 
-     
 
-   
 
-        res.render('alerts/forecast/list.ejs',data)
+
+
+        /*function groupBy(tableauObjets, propriete) {
+            return tableauObjets.reduce(function (acc, obj) {
+                var cle = obj[propriete];
+                if (!acc[cle]) {
+                    acc[cle] = [];
+                }
+                acc[cle].push(obj);
+                return acc;
+            }, {});
+        }
+
+        var CampagneNameGroup = groupBy(ObjDeliveredPercentage, "campign_name");
+
+
+        console.log(CampagneNameGroup)*/
+
+        
+
+        res.render('alerts/forecast/list.ejs', data)
 
 
     }
