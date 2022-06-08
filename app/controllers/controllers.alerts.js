@@ -2,7 +2,12 @@
 const https = require('https');
 const http = require('http');
 const dbApi = require("../config/config.api");
-const axios = require('axios');
+const axios = require(`axios`);
+var crypto = require('crypto');
+const needle = require("needle");
+var nodeoutlook = require('nodejs-nodemailer-outlook');
+
+const csv = require('csv-parser')
 const {
     Op
 } = require("sequelize");
@@ -11,17 +16,19 @@ process.on('unhandledRejection', error => {
     // Will print "unhandledRejection err is not defined"
     console.log('unhandledRejection', error.message);
 });
+const path = require('path');
 
+const ExcelJS = require('exceljs');
+const excel = require('node-excel-export');
+var nodeoutlook = require('nodejs-nodemailer-outlook');
 const {
     QueryTypes
 } = require('sequelize');
-
+const moment = require('moment');
 const {
     check,
     query
 } = require('express-validator');
-
-const moment = require('moment');
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -30,26 +37,34 @@ const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
-const ModelAlerts = require("../models/models.alerts");
 const ModelFormats = require("../models/models.formats");
+const ModelFormatsGroupsTypes = require(
+    "../models/models.formats_groups_types"
+);
+const ModelFormatsGroups = require("../models/models.formats_groups");
 const ModelCampaigns = require("../models/models.campaigns");
 const ModelAdvertisers = require("../models/models.advertisers");
 const ModelSites = require("../models/models.sites");
 const ModelTemplates = require("../models/models.templates");
 const ModelPlatforms = require("../models/models.platforms");
 const ModelDeliverytypes = require("../models/models.deliverytypes");
-const ModelCountries = require("../models/models.countries");
+const ModelInsertionsStatus = require("../models/models.insertions_status");
 
-const ModelFormatsGroupsTypes = require(
-    "../models/models.formats_groups_types"
-);
-const ModelFormatsTemplates = require("../models/models.formats_templates")
-const ModelFormatsGroups = require("../models/models.formats_groups");
+const ModelCountries = require("../models/models.countries");
 const ModelInsertions = require("../models/models.insertions");
+const ModelInsertionsPriorities = require(
+    "../models/models.insertions_priorities"
+);
 const ModelInsertionsTemplates = require(
     "../models/models.insertions_templates"
 );
 const ModelCreatives = require("../models/models.creatives");
+
+const ModelEpilotCampaigns = require("../models/models.epilot_campaigns");
+const ModelEpilotInsertions = require("../models/models.epilot_insertions");
+
+const ModelUsers = require("../models/models.users");
+const ModelPacks_Smart = require("../models/models.packs_smart");
 
 const {
     resolve
@@ -57,6 +72,17 @@ const {
 const {
     cpuUsage
 } = require('process');
+const fs = require('fs');
+// Initialise le module
+var LocalStorage = require('node-localstorage').LocalStorage;
+// localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
+// localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
+// localStorageAutomate = new LocalStorage('data/automate/'+moment().format('YYYY/MM/DD'));
+localStorage = new LocalStorage('data/reporting/');
+localStorageTasks = new LocalStorage('data/taskID/');
+localStorageAutomate = new LocalStorage('data/automate/');
+localStorageTV = new LocalStorage('data/tv/reporting');
+localStorageForecast = new LocalStorage('data/forecast/');
 
 exports.index = async (req, res) => {
     try {
@@ -80,11 +106,11 @@ exports.index = async (req, res) => {
             ' NOT REGEXP ?) AND creatives.creative_activated = 1 AND creatives.creatives_a' +
             'rchived = 0 AND campaigns.campaign_archived = 0 AND advertisers.advertiser_id ' +
             ' NOT IN (409707,320778)', {
-                replacements: [
-                    NOW, url, extention
-                ],
-                type: QueryTypes.SELECT
-            }
+            replacements: [
+                NOW, url, extention
+            ],
+            type: QueryTypes.SELECT
+        }
         );
 
         //La campagne est programmée mais pas en ligne
@@ -123,9 +149,9 @@ exports.index = async (req, res) => {
             'ND asb_formats_templates.format_id = asb_insertions.format_id AND asb_formats_' +
             'templates.template_id=  asb_insertions_templates.template_id AND asb_insertions' +
             '.campaign_id=  asb_campaigns.campaign_id', {
-                replacements: [NOW],
-                type: QueryTypes.SELECT
-            }
+            replacements: [NOW],
+            type: QueryTypes.SELECT
+        }
         );
 
         const number_insertionsOnline = insertionsOnline.length;
@@ -322,12 +348,12 @@ exports.campaigns = async (req, res) => {
                 }]
             },
             include: [{
-                    model: ModelInsertions,
-                    group: ['campaign_id']
-                },
-                {
-                    model: ModelAdvertisers
-                }
+                model: ModelInsertions,
+                group: ['campaign_id']
+            },
+            {
+                model: ModelAdvertisers
+            }
             ]
         });
 
@@ -384,4 +410,146 @@ exports.campaigns = async (req, res) => {
 
 }
 
+exports.alert_delivered_percentage = async (req, res) => {
+
+    const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + '.json';
+
+
+    var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
+
+    if (data_localStorageForecast) {
+
+        var forecastData = JSON.parse(data_localStorageForecast)
+
+       // const ObjDeliveredPercentage = new Object()
+
+
+       const CampaignId = []
+       const CampaignCrypt = []
+       const CampignName = []
+       const CampaignStartDate = []
+       const CampaignEndDate = []
+
+
+
+        for (var index = 1; index <= Object.keys(forecastData).length; index++) {
+
+            var campaign_id = forecastData[index].CampaignID;
+            var campign_name = forecastData[index].CampaignName;
+            var insertion_id = forecastData[index].InsertionId;
+            var insertion_name = forecastData[index].InsertionName;
+            // var format = forecastData[index].FormatName
+            //var booked_volume =  parseInt(forecastData[index].InsertionBookedVolume)
+            //var delivered_volume =  parseInt(forecastData[index].InsertionForecastedDeliveredVolume)
+            var delivered_percentage = parseInt(forecastData[index].InsertionForecastedDeliveredPercentage);
+
+
+
+
+            if ((campaign_id != "N/A") && (delivered_percentage != "N/A")) {
+
+                const advertiserExclus = [
+                    471802,
+                    412328,
+                    418935,
+                    427952,
+                    409707,
+                    425912,
+                    425914,
+                    438979,
+                    439470,
+                    439506,
+                    439511,
+                    439512,
+                    439513,
+                    439514,
+                    439515,
+                    440117,
+                    440118,
+                    440121,
+                    440122,
+                    440124,
+                    440126,
+                    445117,
+                    455371,
+                    455384,
+                    320778,
+                    417243,
+                    414097,
+                    411820,
+                    320778,
+                    320778,
+                    421871,
+                    459132,
+                    464862
+                ];
+
+                await ModelCampaigns.findOne({
+                    where: {
+
+                        [Op.and]: [{
+                            campaign_id: campaign_id,
+                            advertiser_id: {
+                                [Op.notIn]: advertiserExclus
+                            }
+                        }]
+                    },
+                    include: [{
+                        model: ModelAdvertisers
+                    }]
+                }).then(async function (campaign) {
+
+
+
+                    if (campaign) {
+
+
+                        var campaign_start_date = campaign.campaign_start_date
+                        var campaign_end_date = campaign.campaign_end_date
+                        var campaign_crypt = campaign.campaign_crypt
+
+
+                        //La campagne est de - 50% du forecast
+                        if (delivered_percentage <= 50) {
+
+                           /* var objForecast = {
+                                campaign_id: campaign_id,
+                                campaign_crypt: campaign_crypt,
+                                campign_name: campign_name,
+                                campaign_start_date: campaign_start_date,
+                                campaign_end_date: campaign_end_date,
+                                insertion_id: insertion_id,
+                                insertion_name: insertion_name,
+                                delivered_percentage: delivered_percentage
+                            }
+    
+                            ObjDeliveredPercentage[index]=objForecast*/
+
+
+                       
+                            //console.log(ObjDeliveredPercentage)
+
+                        }
+
+
+                   
+
+                    }
+
+                })
+
+
+
+
+
+
+
+
+
+            }
+
+        }
+
+    }
+}
 

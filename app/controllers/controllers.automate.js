@@ -4055,81 +4055,61 @@ exports.campaignReportTv = async (req, res) => {
 
 exports.forecast = async (req, res) => {
 
-    var results = new Array();
 
     const now = new Date();
-    const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD');
+    const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + '.json';
     const date_start = moment().format('YYYY-MM-DDT00:00:00');
     const date_end = moment(now).add('5', 'd').format('YYYY-MM-DDT23:59:00');
 
-    var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
 
 
     console.log(date_start + " - " + date_end + " - " + cacheStorageNow)
 
 
+    let postRequestForecast = await AxiosFunction.RequestForecastGlobal(date_start, date_end);
+
+    if (postRequestForecast.headers.location) {
 
 
+        headerlocation = postRequestForecast.headers.location;
+        let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
+        if (insertionLink.data.progress == '100') {
+            headerlocation = insertionLink.headers.location;
 
-    if (data_localStorageForecast) {
-        var forecastData = JSON.parse(data_localStorageForecast)
+            const results = [{ "forecast_create_date": moment().format('YYYY-MM-DD HH:mm:ss') }];
 
+            const url = headerlocation;
 
-
-        for (var index = 1; index <= Object.keys(forecastData).length; index++) {
-            var campaign_id = forecastData[index].CampaignID;
-            var campign_name = forecastData[index].CampaignName;
-            var delivered_percentage = forecastData[index].InsertionForecastedDeliveredPercentage;
-           
-            console.log(campaign_id)
-            console.log(campign_name)
-            console.log(delivered_percentage)
-
-        }
-
-    } else {
-        let postRequestForecast = await AxiosFunction.RequestForecastGlobal(date_start, date_end);
-
-        if (postRequestForecast.headers.location) {
-
-
-            headerlocation = postRequestForecast.headers.location;
-            let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
-            if (insertionLink.data.progress == '100') {
-                headerlocation = insertionLink.headers.location;
-                const results = [];
-
-                const url = headerlocation;
-
-                needle
-                    .get(url)
-                    .pipe(csv({
-                        separator: '\;'
-                    })).on("data", (data) => {
-                        results.push(data);
-                    })
-                    .on("done", (err) => {
-                        if (err) {
-                            console.log("An error has occurred");
-                        } else {
-                            //  console.log(results);
-                            localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
+            needle
+                .get(url)
+                .pipe(csv({
+                    separator: '\;'
+                })).on("data", (data) => {
+                    results.push(data);
+                })
+                .on("done", (err) => {
+                    if (err) {
+                        console.log("An error has occurred");
+                    } else {
+                        //  console.log(results);
+                        localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
+                        res.json({message: 'LocalStorage forecast est généré'})
 
 
-                        }
-                    })
+                    }
+                })
 
-
-
-
-
-            }
 
 
 
 
         }
+
+
+
+
     }
+
 
 
 
