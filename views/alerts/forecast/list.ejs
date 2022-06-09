@@ -37,6 +37,21 @@
                 <%})%>
               </ul>
 
+              <ul class="list-group">
+                <strong><p class="p-3">Liste des campagnes se terminent dans les 5 prochains jours et en sous réservation (< 20% ) :</p></strong>
+
+                <%Object.keys(campaignNameGroupLastDay).forEach(key => {%>
+
+
+                        <li class="list-group-item">
+                        Nom de la campagne :<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroupLastDay[key][0].campaign_id %>"
+                            target="_blank" ><strong><%= campaignNameGroupLastDay[key][0].campaign_name %></strong> </a> 
+                          (Total insertions : <span class="badge bg-warning"><%= Object.keys(campaignNameGroupLastDay[key]).length%></span>)
+                        </li>
+
+                <%})%>
+              </ul>
+
             </div>
 
             

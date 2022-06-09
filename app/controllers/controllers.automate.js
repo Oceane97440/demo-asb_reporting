@@ -4059,7 +4059,7 @@ exports.forecast = async (req, res) => {
     const now = new Date();
     const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + '.json';
     const date_start = moment().format('YYYY-MM-DDT00:00:00');
-    const date_end = moment(now).add('5', 'd').format('YYYY-MM-DDT23:59:00');
+    const date_end = moment(now).add('5', 'd').format('YYYY-MM-DDT00:00:00');
 
 
 

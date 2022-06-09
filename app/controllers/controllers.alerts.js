@@ -428,11 +428,16 @@ exports.alert_delivered_percentage = async (req, res) => {
     const cacheStorageNow = "forecast-global-" + moment().format('YYYYMMDD') + '.json';
     var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
 
+    const now = new Date();
+    const date_end =new Date(moment(now).add('5', 'd').format('YYYY-MM-DD'));
+    const timestamp_lastDay = date_end.getTime()
 
+  
     if (data_localStorageForecast) {
 
         const ObjDeliveredPercentage = new Array()
         const ObjDeliveredPercentageSurreservation = new Array()
+        const ObjDeliveredPercentageLastDay = new Array()
 
         var forecastData = JSON.parse(data_localStorageForecast)
 
@@ -503,6 +508,32 @@ exports.alert_delivered_percentage = async (req, res) => {
                         var campaign_start_date = campaign.campaign_start_date
                         var campaign_end_date = campaign.campaign_end_date
                         var campaign_crypt = campaign.campaign_crypt
+                        const CampaignEndDate =new Date(moment(campaign_end_date).format('YYYY-MM-DD'));
+                        const timestamp_endDate = CampaignEndDate.getTime()
+
+
+                        //liste les campagne qui se termine les 5prochain j
+                        if (timestamp_endDate <= timestamp_lastDay) {
+
+                            if (delivered_percentage <= 20) {
+
+                                var objForecastLastDay = {
+                                    campaign_id: campaign_id,
+                                    campaign_crypt: campaign_crypt,
+                                    campaign_name: campaign_name,
+                                    campaign_start_date: campaign_start_date,
+                                    campaign_end_date: campaign_end_date,
+                                    insertion_id: insertion_id,
+                                    insertion_name: insertion_name,
+                                    delivered_percentage: delivered_percentage
+                                }
+
+                                ObjDeliveredPercentageLastDay.push(objForecastLastDay)
+
+
+                            }
+                          
+                        }
 
                         //La campagne est de - 95% du forecast
                         if (delivered_percentage < 95) {
@@ -546,6 +577,8 @@ exports.alert_delivered_percentage = async (req, res) => {
 
                         }
 
+                     
+                    
 
                     }
 
@@ -563,13 +596,16 @@ exports.alert_delivered_percentage = async (req, res) => {
 
         const campaignNameGroup = Utilities.groupBy(ObjDeliveredPercentage, 'campaign_id');
         const campaignNameGroupSurreservation = Utilities.groupBy(ObjDeliveredPercentageSurreservation, 'campaign_id');
-
+        const campaignNameGroupLastDay = Utilities.groupBy(ObjDeliveredPercentageLastDay, 'campaign_id')
 
 
         data.moment = moment;
         data.utilities = Utilities
         data.campaignNameGroup = campaignNameGroup
         data.campaignNameGroupSurreservation = campaignNameGroupSurreservation
+        data.campaignNameGroupLastDay = campaignNameGroupLastDay
+
+
 
         res.render('alerts/forecast/list.ejs', data)
 
