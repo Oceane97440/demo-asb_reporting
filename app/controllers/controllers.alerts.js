@@ -420,7 +420,7 @@ exports.alert_delivered_percentage = async (req, res) => {
         'name': 'Alerting',
         'link': 'forecast'
     }, {
-        'name': 'Liste des campagnes < 95% du forecast',
+        'name': 'Liste des alertes forecast',
         'link': ''
     });
     data.breadcrumb = breadcrumb;
@@ -432,19 +432,17 @@ exports.alert_delivered_percentage = async (req, res) => {
     if (data_localStorageForecast) {
 
         const ObjDeliveredPercentage = new Array()
+        const ObjDeliveredPercentageSurreservation = new Array()
+
         var forecastData = JSON.parse(data_localStorageForecast)
-
-
 
         var countdata = Object.keys(forecastData).length - 1
         for (var index = 1; index <= countdata; index++) {
             var campaign_id = forecastData[index].CampaignID;
-            var campign_name = forecastData[index].CampaignName;
+            var campaign_name = forecastData[index].CampaignName;
             var insertion_id = forecastData[index].InsertionId;
             var insertion_name = forecastData[index].InsertionName;
             var delivered_percentage = parseInt(forecastData[index].InsertionForecastedDeliveredPercentage);
-
-
 
             if (forecastData[index].CampaignID != "N/A") {
 
@@ -513,7 +511,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                             var objForecast = {
                                 campaign_id: campaign_id,
                                 campaign_crypt: campaign_crypt,
-                                campign_name: campign_name,
+                                campaign_name: campaign_name,
                                 campaign_start_date: campaign_start_date,
                                 campaign_end_date: campaign_end_date,
                                 insertion_id: insertion_id,
@@ -527,7 +525,26 @@ exports.alert_delivered_percentage = async (req, res) => {
 
                         }
 
+                        //La campagne est en surréservation > 100%
+                        if (delivered_percentage > 100) {
 
+
+                            var objForecastSurreservation = {
+                                campaign_id: campaign_id,
+                                campaign_crypt: campaign_crypt,
+                                campaign_name: campaign_name,
+                                campaign_start_date: campaign_start_date,
+                                campaign_end_date: campaign_end_date,
+                                insertion_id: insertion_id,
+                                insertion_name: insertion_name,
+                                delivered_percentage: delivered_percentage
+                            }
+
+                            //ObjDeliveredPercentageSurreservation[index] = objForecast
+                            ObjDeliveredPercentageSurreservation.push(objForecastSurreservation)
+
+
+                        }
 
 
                     }
@@ -539,31 +556,20 @@ exports.alert_delivered_percentage = async (req, res) => {
             }
 
         }
+
+
+
+
+
+        const campaignNameGroup = Utilities.groupBy(ObjDeliveredPercentage, 'campaign_id');
+        const campaignNameGroupSurreservation = Utilities.groupBy(ObjDeliveredPercentageSurreservation, 'campaign_id');
+
+
+
         data.moment = moment;
-        data.campaigns = ObjDeliveredPercentage
         data.utilities = Utilities
-
-
-
-
-
-        /*function groupBy(tableauObjets, propriete) {
-            return tableauObjets.reduce(function (acc, obj) {
-                var cle = obj[propriete];
-                if (!acc[cle]) {
-                    acc[cle] = [];
-                }
-                acc[cle].push(obj);
-                return acc;
-            }, {});
-        }
-
-        var CampagneNameGroup = groupBy(ObjDeliveredPercentage, "campign_name");
-
-
-        console.log(CampagneNameGroup)*/
-
-        
+        data.campaignNameGroup = campaignNameGroup
+        data.campaignNameGroupSurreservation = campaignNameGroupSurreservation
 
         res.render('alerts/forecast/list.ejs', data)
 

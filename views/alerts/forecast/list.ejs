@@ -7,9 +7,39 @@
         </div>
         <div class="pro-scroll">
             <div class="card-body p-0">
-                <%- include("../../manager/inc/table_forecast_alert.ejs") -%> 
+              <ul class="list-group">
+                <strong><p class="p-3">Liste des campagnes en sous réservation (< 95% ) :</p></strong>
+
+                <%Object.keys(campaignNameGroup).forEach(key => {%>
+
+
+                        <li class="list-group-item">
+                        Nom de la campagne :<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroup[key][0].campaign_id %>"
+                            target="_blank" ><strong><%= campaignNameGroup[key][0].campaign_name %></strong> </a> 
+                          (Total insertions: <span class="badge bg-warning"><%= Object.keys(campaignNameGroup[key]).length%></span>)
+                        </li>
+
+                <%})%>
+              </ul>
+
+              <ul class="list-group">
+                <strong><p class="p-3">Liste des campagnes en surréservation (> 100% ) :</p></strong>
+
+                <%Object.keys(campaignNameGroupSurreservation).forEach(key => {%>
+
+
+                        <li class="list-group-item">
+                        Nom de la campagne :<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroupSurreservation[key][0].campaign_id %>"
+                            target="_blank" ><strong><%= campaignNameGroupSurreservation[key][0].campaign_name %></strong> </a> 
+                          (Total insertions : <span class="badge bg-warning"><%= Object.keys(campaignNameGroupSurreservation[key]).length%></span>)
+                        </li>
+
+                <%})%>
+              </ul>
 
             </div>
+
+            
         </div>
     </div>
 </div>
