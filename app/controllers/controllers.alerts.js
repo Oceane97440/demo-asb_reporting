@@ -75,6 +75,7 @@ const {
 const fs = require('fs');
 // Initialise le module
 var LocalStorage = require('node-localstorage').LocalStorage;
+const { creatives } = require('./controllers.automate');
 // localStorage = new LocalStorage('data/reporting/'+moment().format('YYYY/MM/DD'));
 // localStorageTasks = new LocalStorage('data/taskID/'+moment().format('YYYY/MM/DD/H'));
 // localStorageAutomate = new LocalStorage('data/automate/'+moment().format('YYYY/MM/DD'));
@@ -429,10 +430,10 @@ exports.alert_delivered_percentage = async (req, res) => {
     var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
 
     const now = new Date();
-    const date_end =new Date(moment(now).add('5', 'd').format('YYYY-MM-DD'));
+    const date_end = new Date(moment(now).add('5', 'd').format('YYYY-MM-DD'));
     const timestamp_lastDay = date_end.getTime()
 
-  
+
     if (data_localStorageForecast) {
 
         const ObjDeliveredPercentage = new Array()
@@ -508,7 +509,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                         var campaign_start_date = campaign.campaign_start_date
                         var campaign_end_date = campaign.campaign_end_date
                         var campaign_crypt = campaign.campaign_crypt
-                        const CampaignEndDate =new Date(moment(campaign_end_date).format('YYYY-MM-DD'));
+                        const CampaignEndDate = new Date(moment(campaign_end_date).format('YYYY-MM-DD'));
                         const timestamp_endDate = CampaignEndDate.getTime()
 
 
@@ -532,7 +533,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
 
                             }
-                          
+
                         }
 
                         //La campagne est de - 95% du forecast
@@ -577,8 +578,8 @@ exports.alert_delivered_percentage = async (req, res) => {
 
                         }
 
-                     
-                    
+
+
 
                     }
 
@@ -613,3 +614,103 @@ exports.alert_delivered_percentage = async (req, res) => {
     }
 }
 
+exports.alert_manage_creative = async (req, res) => {
+    const data = new Object();
+
+    // Créer le fil d'ariane
+    const breadcrumbLink = 'forecast';
+    breadcrumb = new Array({
+        'name': 'Alerting',
+        'link': 'forecast'
+    }, {
+        'name': 'Liste des alertes forecast',
+        'link': ''
+    });
+    data.breadcrumb = breadcrumb;
+
+    const date_now = moment().format('YYYY-MM-DD');
+
+
+    //date du jour -2mois
+    var now = new Date();
+    var MonthPast = new Date(now.getFullYear(), (now.getMonth()-2), now.getDate());
+    const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00'); 
+
+   
+
+
+
+
+
+    ModelInsertions.findAll({
+      where: {
+            [Op.and]: [{
+                insertion_start_date: {
+                    [Op.between]: [dateMonthPast, date_now]
+                }
+            }]
+        },
+        include: [{
+            model: ModelCampaigns,
+        }]
+    }).then(async function (insertions) {
+
+        const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
+        const regex_urlClic = /^(?:https:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/igm
+
+
+        for (let i = 0; i < Object.keys(insertions).length; i++) {
+
+
+            await ModelCreatives.findAll({
+                where: {
+
+                    insertion_id: insertions[i].insertion_id,
+
+
+                }
+            }).then(async function (creative) {
+
+
+
+                if (!Utilities.empty(creative)) {
+
+
+
+                    for (let c = 0; c < Object.keys(creative).length; c++) {
+
+                        const creative_name = creative[c].creative_name
+                        const creative_url = creative[c].creative_url
+                        const creative_click_url = creative[c].creative_click_url
+
+                        
+
+                        if (!creative_url.match(regex_url)) {
+
+
+                            return res.json({message:"alerte"})
+
+                        }else{
+                           
+                           return  res.json({message:"Aucune alerte: les urls des créatives sont valides"})
+                           
+                        }
+
+                    }
+
+                }
+
+
+
+
+
+            })
+
+        }
+
+
+
+    })
+
+
+}

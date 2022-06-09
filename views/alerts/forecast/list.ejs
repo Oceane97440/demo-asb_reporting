@@ -11,7 +11,7 @@
             <ul class="list-group">
 
               <strong>
-                <p class="p-3">Liste des campagnes en sous réservation (< 95% ) :</p>
+                <p class="p-3">Liste des campagnes en sous livraison (< 95% ) :</p>
               </strong>
 
               <%Object.keys(campaignNameGroup).forEach(key=> {%>
@@ -34,7 +34,7 @@
               <%if(!utilities.empty(campaignNameGroupSurreservation)){%>
                 <ul class="list-group">
                   <strong>
-                    <p class="p-3">Liste des campagnes en surréservation (> 100% ) :</p>
+                    <p class="p-3">Liste des campagnes en surlivraison (> 100% ) :</p>
                   </strong>
 
                   <%Object.keys(campaignNameGroupSurreservation).forEach(key=> {%>
@@ -58,7 +58,7 @@
                     <ul class="list-group">
                       <strong>
                         <p class="p-3">Liste des campagnes se terminent dans les 5 prochains jours et en sous
-                          réservation (< 95% ) :</p>
+                          livraison (< 95% ) :</p>
                       </strong>
 
                       <%Object.keys(campaignNameGroupLastDay).forEach(key=> {%>
