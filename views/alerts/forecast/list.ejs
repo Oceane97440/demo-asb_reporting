@@ -1,62 +1,88 @@
 <%- include("../../layouts/manager/head.ejs") -%>
 
-<div class="col-xl-12 col-md-12">
+  <div class="col-xl-12 col-md-12">
     <div class="card table-card">
-        <div class="card-header">
-            <h1>⚠️ Alerte Forecast: Liste des campagnes</h1>
+      <div class="card-header">
+        <h1>⚠️ Alerte Forecast: Liste des campagnes</h1>
+      </div>
+      <div class="pro-scroll">
+        <div class="card-body p-0">
+          <%if(!utilities.empty(campaignNameGroup)){%>
+            <ul class="list-group">
+
+              <strong>
+                <p class="p-3">Liste des campagnes en sous réservation (< 95% ) :</p>
+              </strong>
+
+              <%Object.keys(campaignNameGroup).forEach(key=> {%>
+
+
+                <li class="list-group-item">
+                  <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroup[key][0].campaign_id %>"
+                    target="_blank"><strong>
+                      <%= campaignNameGroup[key][0].campaign_name %>
+                    </strong> </a>
+                  (Total insertions: <span class="badge bg-warning">
+                    <%= Object.keys(campaignNameGroup[key]).length%>
+                  </span>)
+                </li>
+
+                <%})%>
+            </ul>
+            <%}%>
+
+              <%if(!utilities.empty(campaignNameGroupSurreservation)){%>
+                <ul class="list-group">
+                  <strong>
+                    <p class="p-3">Liste des campagnes en surréservation (> 100% ) :</p>
+                  </strong>
+
+                  <%Object.keys(campaignNameGroupSurreservation).forEach(key=> {%>
+
+
+                    <li class="list-group-item">
+                      <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroupSurreservation[key][0].campaign_id %>"
+                        target="_blank"><strong>
+                          <%= campaignNameGroupSurreservation[key][0].campaign_name %>
+                        </strong> </a>
+                      (Total insertions : <span class="badge bg-warning">
+                        <%= Object.keys(campaignNameGroupSurreservation[key]).length%>
+                      </span>)
+                    </li>
+
+                    <%})%>
+                </ul>
+                <%}%>
+
+                  <%if(!utilities.empty(campaignNameGroupLastDay)){%>
+                    <ul class="list-group">
+                      <strong>
+                        <p class="p-3">Liste des campagnes se terminent dans les 5 prochains jours et en sous
+                          réservation (< 95% ) :</p>
+                      </strong>
+
+                      <%Object.keys(campaignNameGroupLastDay).forEach(key=> {%>
+
+
+                        <li class="list-group-item">
+                          <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroupLastDay[key][0].campaign_id %>"
+                            target="_blank"><strong>
+                              <%= campaignNameGroupLastDay[key][0].campaign_name %>
+                            </strong> </a>
+                          (Total insertions : <span class="badge bg-warning">
+                            <%= Object.keys(campaignNameGroupLastDay[key]).length%>
+                          </span>)
+                        </li>
+
+                        <%})%>
+                    </ul>
+                    <%}%>
+
         </div>
-        <div class="pro-scroll">
-            <div class="card-body p-0">
-              <ul class="list-group">
-                <strong><p class="p-3">Liste des campagnes en sous réservation (< 95% ) :</p></strong>
-
-                <%Object.keys(campaignNameGroup).forEach(key => {%>
 
 
-                        <li class="list-group-item">
-                        Nom de la campagne :<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroup[key][0].campaign_id %>"
-                            target="_blank" ><strong><%= campaignNameGroup[key][0].campaign_name %></strong> </a> 
-                          (Total insertions: <span class="badge bg-warning"><%= Object.keys(campaignNameGroup[key]).length%></span>)
-                        </li>
-
-                <%})%>
-              </ul>
-
-              <ul class="list-group">
-                <strong><p class="p-3">Liste des campagnes en surréservation (> 100% ) :</p></strong>
-
-                <%Object.keys(campaignNameGroupSurreservation).forEach(key => {%>
-
-
-                        <li class="list-group-item">
-                        Nom de la campagne :<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroupSurreservation[key][0].campaign_id %>"
-                            target="_blank" ><strong><%= campaignNameGroupSurreservation[key][0].campaign_name %></strong> </a> 
-                          (Total insertions : <span class="badge bg-warning"><%= Object.keys(campaignNameGroupSurreservation[key]).length%></span>)
-                        </li>
-
-                <%})%>
-              </ul>
-
-              <ul class="list-group">
-                <strong><p class="p-3">Liste des campagnes se terminent dans les 5 prochains jours et en sous réservation (< 20% ) :</p></strong>
-
-                <%Object.keys(campaignNameGroupLastDay).forEach(key => {%>
-
-
-                        <li class="list-group-item">
-                        Nom de la campagne :<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroupLastDay[key][0].campaign_id %>"
-                            target="_blank" ><strong><%= campaignNameGroupLastDay[key][0].campaign_name %></strong> </a> 
-                          (Total insertions : <span class="badge bg-warning"><%= Object.keys(campaignNameGroupLastDay[key]).length%></span>)
-                        </li>
-
-                <%})%>
-              </ul>
-
-            </div>
-
-            
-        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<%- include("../../layouts/manager/footer.ejs") -%>
+  <%- include("../../layouts/manager/footer.ejs") -%>

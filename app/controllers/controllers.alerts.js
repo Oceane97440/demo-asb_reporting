@@ -515,7 +515,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                         //liste les campagne qui se termine les 5prochain j
                         if (timestamp_endDate <= timestamp_lastDay) {
 
-                            if (delivered_percentage <= 20) {
+                            if (delivered_percentage <= 95) {
 
                                 var objForecastLastDay = {
                                     campaign_id: campaign_id,
