@@ -4087,12 +4087,12 @@ exports.forecast = async (req, res) => {
                 })).on("data", (data) => {
                     results.push(data);
                 })
-                .on("done", (err) => {
+                .on("done", async(err) => {
                     if (err) {
                         console.log("An error has occurred");
                     } else {
                         //  console.log(results);
-                        localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
+                        await localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
                         res.json({message: 'LocalStorage forecast est généré'})
 
 
