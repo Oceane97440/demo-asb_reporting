@@ -658,8 +658,10 @@ exports.alert_manage_creative = async (req, res) => {
         const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
         const regex_urlClic = /^(?:https:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/igm
 
+        console.log(insertions)
 
         for (let i = 0; i < Object.keys(insertions).length; i++) {
+
 
 
             await ModelCreatives.findAll({

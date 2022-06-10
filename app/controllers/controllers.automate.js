@@ -4053,6 +4053,7 @@ exports.campaignReportTv = async (req, res) => {
     }
 }
 
+
 exports.forecast = async (req, res) => {
 
 
@@ -4064,6 +4065,7 @@ exports.forecast = async (req, res) => {
 
 
     console.log(date_start + " - " + date_end + " - " + cacheStorageNow)
+
 
 
     let postRequestForecast = await AxiosFunction.RequestForecastGlobal(date_start, date_end);
@@ -4080,6 +4082,8 @@ exports.forecast = async (req, res) => {
 
             const url = headerlocation;
 
+           // console.log(url)
+
             needle
                 .get(url)
                 .pipe(csv({
@@ -4091,7 +4095,7 @@ exports.forecast = async (req, res) => {
                     if (err) {
                         console.log("An error has occurred");
                     } else {
-                        //  console.log(results);
+                         // console.log(results);
                         await localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
                         res.json({message: 'LocalStorage forecast est généré'})
 
