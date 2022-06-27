@@ -608,8 +608,33 @@ exports.alert_delivered_percentage = async (req, res) => {
 
 
 
-        res.render('alerts/forecast/list.ejs', data)
+        if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
+            
+            nodeoutlook.sendEmail({
 
+                auth: {
+                    user: "oceane.sautron@antennereunion.fr",
+                    pass: process.env.EMAIL_PASS
+                },
+                from: "alvine.didier@antennereunion.fr",
+                to: 'oceane.sautron@antennereunion.fr',
+                subject: 'Alerte forecats: Problème de livraison',
+                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> : <a traget="_blank" href="https://reporting.antennesb.fr/alerts/forecast">https://reporting.antennesb.fr/alerts/forecast</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+        
+                ,
+        
+                onError: (e) => res.json({message:"Une erreur est survenue lors de l'envoie du mail"}),
+                onSuccess: (i) => res.render('alerts/forecast/list.ejs', data)
+        
+        
+            })
+    
+        
+        }else{
+            res.json({message:"Pas alerte forecast "+moment().format('YYYY-MM-DD')})
+        }
+
+      
 
     }
 }
@@ -638,10 +663,6 @@ exports.alert_manage_creative = async (req, res) => {
 
    
 
-
-
-
-
     ModelInsertions.findAll({
       where: {
             [Op.and]: [{
@@ -658,7 +679,7 @@ exports.alert_manage_creative = async (req, res) => {
         const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
         const regex_urlClic = /^(?:https:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/igm
 
-        console.log(insertions)
+       // console.log(insertions)
 
         for (let i = 0; i < Object.keys(insertions).length; i++) {
 

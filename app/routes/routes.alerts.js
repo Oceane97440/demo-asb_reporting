@@ -7,7 +7,7 @@ const alert = require("../controllers/controllers.alerts");
 router.get("/", alert.index);
 router.get("/campaigns", alert.campaigns);
 router.get("/forecast", alert.alert_delivered_percentage);
-router.get("/creative", alert.alert_manage_creative);
+router.get("/creatives", alert.alert_manage_creative);
 
 
 
