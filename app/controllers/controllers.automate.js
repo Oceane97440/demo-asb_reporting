@@ -4068,61 +4068,58 @@ exports.forecast = async (req, res) => {
         console.log(date_start + " - " + date_end + " - " + cacheStorageNow)
 
         let postRequestForecast = await AxiosFunction.RequestForecastGlobal(date_start, date_end);
-    
+
         if (postRequestForecast.headers.location) {
-    
-    
+
+
             headerlocation = postRequestForecast.headers.location;
             let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
             if (insertionLink.data.progress == '100') {
                 headerlocation = insertionLink.headers.location;
-    
+
                 const results = [{ "forecast_create_date": moment().format('YYYY-MM-DD HH:mm:ss') }];
-    
+
                 const url = headerlocation;
-    
-               // console.log(url)
-    
+
+                // console.log(url)
+
                 needle
                     .get(url)
                     .pipe(csv({
                         separator: '\;'
-                    })).on("data", (data) => {
-                        results.push(data);
-                    })
-                    .on("done", async(err) => {
-    
-                        
-                        if (err) {
-                            console.log("An error has occurred");
-                            res.json({message: 'An error has occurred'})
-                        } else {
-                             // console.log(results);
-                           await  localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
-                           return res.json({message: 'LocalStorage forecast est généré'})
-    
-    
+                    })).on('data', function (data) {
+                        try {
+                            results.push(data);
+
+                            //perform the operation
                         }
-                    })
-    
-    
-    
-    
-    
+                        catch (err) {
+                            //error handler
+                            console.log(err)
+                        }
+                    }).on('end', function () {
+
+
+                        localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
+                        res.json({ message: 'LocalStorage forecast est généré' })
+                    });
+
+
             }
-    
-    
-    
-    
+
+
+
+
         }
-        
+
     } catch (error) {
+        console.log(error)
         return res.json({
-            message: 'Erreur'
+            err: error
         });
     }
 
- 
+
 
 
 
