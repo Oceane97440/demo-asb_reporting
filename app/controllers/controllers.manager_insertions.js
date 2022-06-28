@@ -421,6 +421,9 @@ exports.create_post = async (req, res) => {
             display_slider_file: req.body.display_slider_file,
             display_slider_url: req.body.display_slider_url,
 
+            display_site_rz_file:req.body.display_site_rz_file,
+            display_site_rz_url:req.body.display_site_rz_url,
+
             video_file: req.body.video_file,
             video_url: req.body.video_url,
         }
@@ -455,6 +458,9 @@ exports.create_post = async (req, res) => {
         const display_mea_url = body.display_mea_url
         const display_slider_file = body.display_slider_file
         const display_slider_url = body.display_slider_url
+
+        const display_site_rz_file= body.display_site_rz_file
+        const display_site_rz_url= body.display_site_rz_url
 
         const video_file = body.video_file;
         const video_url = body.video_url;
@@ -596,10 +602,10 @@ exports.create_post = async (req, res) => {
             formatGroupName = "MEA -"
         }
 
-        //SLIDER
-        if (format_group_id === '5') {
-            formatGroupName = "SLIDER"
-        }
+            //SLIDER
+            if (format_group_id === '5') {
+                formatGroupName = "SLIDER"
+            }
 
 
         //Recupère la campagne modèle + filtre en fonction du name du l'insertion
@@ -607,7 +613,7 @@ exports.create_post = async (req, res) => {
             where: {
                 campaign_id: 1988414, //campagne_id model
                 insertion_name: {
-                    [Op.like]: "%" + formatGroupName + "%"
+                    [Op.like]:  formatGroupName + "%"
                 }
             }
         }).then(async function (insertion_model) {
@@ -903,13 +909,7 @@ exports.create_post = async (req, res) => {
                                 //Creative de type image - format habillage
                                 if ((creatives_typeId === 1) && (format_group_id === '1')) {
 
-                                    if (creatives_name.match(/HABILLAGE - AR/igm)) {
-                                        requestCreatives['url'] = display_ar_file
-                                        requestCreatives['clickUrl'] = display_ar_url
-                                        requestCreatives['name'] = " HABILLAGE - AR"
-
-
-                                    }
+                                  
 
                                     if (creatives_name.match(/HABILLAGE - LINFO/igm)) {
                                         requestCreatives['url'] = display_linfo_file
@@ -919,11 +919,13 @@ exports.create_post = async (req, res) => {
 
                                     }
 
+                                    //Habillage mobile linfo et Antenne
                                     if (creatives_name.match(/HABILLAGE - LINFO MOBILE/igm)) {
                                         requestCreatives['url'] = display_linfo_appli_file
                                         requestCreatives['clickUrl'] = display_linfo_appli_url
-                                        requestCreatives['name'] = " HABILLAGE - LINFO MOBILE"
-
+                                        requestCreatives['name'] = "HABILLAGE - LINFO MOBILE"
+                                        requestCreatives['width'] = 1024
+                                        requestCreatives['height'] = 320
 
                                     }
 
@@ -943,6 +945,17 @@ exports.create_post = async (req, res) => {
                                         requestCreatives['fileName'] = "1024x320"
                                         requestCreatives['width'] = 1024
                                         requestCreatives['height'] = 320
+
+                                    }
+
+                                    //format habillage site RZ
+                                    if (creatives_name.match(/HABILLAGE SITE RZ/igm)) {
+                                        requestCreatives['url'] = display_site_rz_file
+                                        requestCreatives['clickUrl'] = display_site_rz_url
+                                        requestCreatives['name'] = "HABILLAGE SITE RZ"
+                                        requestCreatives['fileName'] = "1280x800"
+                                        requestCreatives['width'] = 1280
+                                        requestCreatives['height'] = 800
 
                                     }
 

@@ -5,15 +5,29 @@
         <div class="mr-auto pc-mob-drp">
             <ul class="list-unstyled">
                 <li class="dropdown pc-h-item">
-                    <a
+                    <% if(locals.user.user_role===1) { %>
+
+
+                        <a
                         class="pc-head-link active dropdown-toggle arrow-none mr-0"
-                        data-toggle="dropdown"
-                        href="#"
-                        role="button"
+                        href="/automate/advertisers"
+                        target="_blank"
                         aria-haspopup="false"
                         aria-expanded="false">
-                        Level
+                        <i class="fas fa-sync" ></i> Mettre à jour les annonceurs
                     </a>
+
+                    <a
+                        class="pc-head-link active dropdown-toggle arrow-none mr-0"
+                        href="/automate/campaigns"
+                        target="_blank"
+                        aria-haspopup="false"
+                        aria-expanded="false">
+                        <i class="fas fa-sync" ></i> Mettre à jour les campagnes
+                    </a>
+
+                    <%}%>    
+                 
                     <div class="dropdown-menu pc-h-dropdown">
                         <a href="#!" class="dropdown-item">
                             <i class="material-icons-two-tone">account_circle</i>
