@@ -610,7 +610,9 @@ exports.alert_delivered_percentage = async (req, res) => {
 
         if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
             
-            nodeoutlook.sendEmail({
+            res.render('alerts/forecast/list.ejs', data)
+
+            /*nodeoutlook.sendEmail({
 
                 auth: {
                     user: "oceane.sautron@antennereunion.fr",
@@ -627,7 +629,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                 onSuccess: (i) => res.render('alerts/forecast/list.ejs', data)
         
         
-            })
+            })*/
     
         
         }else{
