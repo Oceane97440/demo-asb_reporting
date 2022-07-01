@@ -18,6 +18,7 @@
 
 
                 <li class="list-group-item">
+                   <%= moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') %> - <%= moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') %> :
                   <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=<%= campaignNameGroup[key][0].campaign_id %>"
                     target="_blank"><strong>
                       <%= campaignNameGroup[key][0].campaign_name %>

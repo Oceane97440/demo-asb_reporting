@@ -612,7 +612,7 @@ exports.alert_delivered_percentage = async (req, res) => {
             
             res.render('alerts/forecast/list.ejs', data)
 
-            nodeoutlook.sendEmail({
+           nodeoutlook.sendEmail({
 
                 auth: {
                     user: "oceane.sautron@antennereunion.fr",
