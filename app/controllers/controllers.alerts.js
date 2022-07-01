@@ -612,24 +612,24 @@ exports.alert_delivered_percentage = async (req, res) => {
             
             res.render('alerts/forecast/list.ejs', data)
 
-            /*nodeoutlook.sendEmail({
+            nodeoutlook.sendEmail({
 
                 auth: {
                     user: "oceane.sautron@antennereunion.fr",
                     pass: process.env.EMAIL_PASS
                 },
-                from: "alvine.didier@antennereunion.fr",
-                to: 'oceane.sautron@antennereunion.fr',
+                from: "oceane.sautron@antennereunion.fr",
+                to: "alvine.didier@antennereunion.fr",
                 subject: 'Alerte forecats: Problème de livraison',
                 html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> : <a traget="_blank" href="https://reporting.antennesb.fr/alerts/forecast">https://reporting.antennesb.fr/alerts/forecast</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
         
                 ,
         
                 onError: (e) => res.json({message:"Une erreur est survenue lors de l'envoie du mail"}),
-                onSuccess: (i) => res.render('alerts/forecast/list.ejs', data)
+                onSuccess: (i) => console.log("ok")
         
         
-            })*/
+            })
     
         
         }else{

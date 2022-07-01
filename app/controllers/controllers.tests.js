@@ -1631,17 +1631,19 @@ exports.nodemail = async (req, res) => {
 
     var campaign_crypt = "c4ca4238a0b923820dcc509a6f75849b"
     var campaign_tv_name = "Campagne soldes Mairie du Port février 2022"
-    var email = "oceane.sautron@antennereunion.fr"
+    var email = "alvine.didier@antennereunion.fr"
     var user_firstname = "Océane"
 
     nodeoutlook.sendEmail({
 
+       // debug:true,
+        //logs:true,
         auth: {
             user: "oceane.sautron@antennereunion.fr",
-            pass: "...."
+            pass: ""
         },
-        from: email,
-        to: 'oceane.sautron@antennereunion.fr',
+        from: 'oceane.sautron@antennereunion.fr',
+        to: email,
         subject: 'Envoie du permalien de la campagne ' + campaign_tv_name,
         html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour ' +
             user_firstname + '<br><br>  Tu trouveras ci-dessous le permalien pour la campagne <b>"' +
@@ -1652,7 +1654,7 @@ exports.nodemail = async (req, res) => {
         ,
 
         onError: (e) => console.log(e),
-        onSuccess: (i) => res.redirect(`/t/${campaign_crypt}`)
+        onSuccess: (i) => res.json({message:"ok"})
 
 
     })
