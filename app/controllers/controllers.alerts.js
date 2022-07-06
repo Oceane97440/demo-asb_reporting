@@ -116,7 +116,7 @@ exports.index = async (req, res) => {
 
         //La campagne est programmée mais pas en ligne
 
-        const insertions = await ModelInsertions.findAll({
+        /*const insertions = await ModelInsertions.findAll({
             where: {
                 insertion_archived: 0,
                 insertion_status_id: 0,
@@ -130,30 +130,30 @@ exports.index = async (req, res) => {
                     model: ModelAdvertisers
                 }]
             }]
-        });
+        });*/
 
         // Template (erreur ou oubli) : Vérifier que le template corresponde au format
         // sur lequel il est diffusé
 
-        const insertionsOnline = await sequelize.query(
-            'SELECT asb_insertions.insertion_id, insertion_name, insertion_status_id,insert' +
-            'ion_start_date,insertion_end_date,asb_insertions.format_id,asb_formats.format_' +
-            'id,format_name,asb_insertions_templates.insertion_id,asb_insertions_templates.te' +
-            'mplate_id,asb_templates.template_name,asb_templates.template_official,asb_temp' +
-            'lates.template_archived,asb_templates.template_updated_at, asb_templates.templ' +
-            'ate_description, asb_formats_templates.format_id,asb_formats_templates.templat' +
-            'e_id , asb_insertions.campaign_id , asb_campaigns.campaign_name  FROM asb_insertions,asb_insertions_templates, asb_formats, asb_templates, asb_formats_tem' +
-            'plates , asb_campaigns  WHERE insertion_archived = "0" AND insertion_status_' +
-            'id = "1" AND insertion_end_date >= ?  AND asb_insertions.insertion_id = asb_in' +
-            'sertionstemplates.insertion_id   AND asb_templates.template_id = asb_insertion' +
-            'stemplates.template_id  AND asb_insertions.format_id = asb_formats.format_id A' +
-            'ND asb_formats_templates.format_id = asb_insertions.format_id AND asb_formats_' +
-            'templates.template_id=  asb_insertions_templates.template_id AND asb_insertions' +
-            '.campaign_id=  asb_campaigns.campaign_id', {
-            replacements: [NOW],
-            type: QueryTypes.SELECT
-        }
-        );
+        /* const insertionsOnline = await sequelize.query(
+             'SELECT asb_insertions.insertion_id, insertion_name, insertion_status_id,insert' +
+             'ion_start_date,insertion_end_date,asb_insertions.format_id,asb_formats.format_' +
+             'id,format_name,asb_insertions_templates.insertion_id,asb_insertions_templates.te' +
+             'mplate_id,asb_templates.template_name,asb_templates.template_official,asb_temp' +
+             'lates.template_archived,asb_templates.template_updated_at, asb_templates.templ' +
+             'ate_description, asb_formats_templates.format_id,asb_formats_templates.templat' +
+             'e_id , asb_insertions.campaign_id , asb_campaigns.campaign_name  FROM asb_insertions,asb_insertions_templates, asb_formats, asb_templates, asb_formats_tem' +
+             'plates , asb_campaigns  WHERE insertion_archived = "0" AND insertion_status_' +
+             'id = "1" AND insertion_end_date >= ?  AND asb_insertions.insertion_id = asb_in' +
+             'sertionstemplates.insertion_id   AND asb_templates.template_id = asb_insertion' +
+             'stemplates.template_id  AND asb_insertions.format_id = asb_formats.format_id A' +
+             'ND asb_formats_templates.format_id = asb_insertions.format_id AND asb_formats_' +
+             'templates.template_id=  asb_insertions_templates.template_id AND asb_insertions' +
+             '.campaign_id=  asb_campaigns.campaign_id', {
+             replacements: [NOW],
+             type: QueryTypes.SELECT
+         }
+         );*/
 
         const number_insertionsOnline = insertionsOnline.length;
 
@@ -609,10 +609,13 @@ exports.alert_delivered_percentage = async (req, res) => {
 
 
         if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
-            
+
             res.render('alerts/forecast/list.ejs', data)
 
-           nodeoutlook.sendEmail({
+
+
+
+            nodeoutlook.sendEmail({
 
                 auth: {
                     user: "oceane.sautron@antennereunion.fr",
@@ -620,24 +623,24 @@ exports.alert_delivered_percentage = async (req, res) => {
                 },
                 from: "oceane.sautron@antennereunion.fr",
                 to: "alvine.didier@antennereunion.fr",
-                cc:"oceane.sautron@antennereunion.fr",
+                cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
                 html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> : <a traget="_blank" href="https://reporting.antennesb.fr/alerts/forecast">https://reporting.antennesb.fr/alerts/forecast</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
-        
+
                 ,
-        
-                onError: (e) => res.json({message:"Une erreur est survenue lors de l'envoie du mail"}),
+
+                onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
                 onSuccess: (i) => console.log("ok")
-        
-        
+
+
             })
-    
-        
-        }else{
-            res.json({message:"Pas alerte forecast "+moment().format('YYYY-MM-DD')})
+
+
+        } else {
+            res.json({ message: "Pas alerte forecast " + moment().format('YYYY-MM-DD') })
         }
 
-      
+
 
     }
 }
@@ -661,17 +664,20 @@ exports.alert_manage_creative = async (req, res) => {
 
     //date du jour -2mois
     var now = new Date();
-    var MonthPast = new Date(now.getFullYear(), (now.getMonth()-2), now.getDate());
-    const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00'); 
+    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 2), now.getDate());
+    const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00');
 
-   
+    const objCreativeUrl= new Array()
+
 
     ModelInsertions.findAll({
-      where: {
+        where: {
             [Op.and]: [{
                 insertion_start_date: {
                     [Op.between]: [dateMonthPast, date_now]
-                }
+                },
+                insertion_status_id:1
+
             }]
         },
         include: [{
@@ -682,13 +688,15 @@ exports.alert_manage_creative = async (req, res) => {
         const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
         const regex_urlClic = /^(?:https:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/igm
 
-       // console.log(insertions)
+        //console.log(insertions)
 
+
+       
         for (let i = 0; i < Object.keys(insertions).length; i++) {
 
 
 
-            await ModelCreatives.findAll({
+            await ModelCreatives.findOne({
                 where: {
 
                     insertion_id: insertions[i].insertion_id,
@@ -699,30 +707,41 @@ exports.alert_manage_creative = async (req, res) => {
 
 
 
+
                 if (!Utilities.empty(creative)) {
 
+                    if (!Utilities.empty(creative.creative_url)) {
 
 
-                    for (let c = 0; c < Object.keys(creative).length; c++) {
-
-                        const creative_name = creative[c].creative_name
-                        const creative_url = creative[c].creative_url
-                        const creative_click_url = creative[c].creative_click_url
-
-                        
-
-                        if (!creative_url.match(regex_url)) {
+                        const creative_url = creative.creative_url
+                        const creative_id = creative.creative_id
+                        const creative_name = creative.creative_name
+                        const insertion_id = creative.insertion_id
+                        const creative_click_url = creative.creative_click_url
 
 
-                            return res.json({message:"alerte"})
+                        if ((!creative_url.match(regex_url)) || (!creative_click_url.match(regex_urlClic))) {
 
-                        }else{
-                           
-                           return  res.json({message:"Aucune alerte: les urls des créatives sont valides"})
-                           
+
+                  
+
+                            var objCreative = {
+                                creative_id: creative_id,
+                                creative_name: creative_name,
+                                insertion_id: insertion_id,
+                                creative_url: creative_url,
+                                creative_click_url: creative_click_url
+                            }
+
+                            objCreativeUrl.push(objCreative)
+
+
                         }
 
                     }
+
+
+
 
                 }
 
@@ -735,6 +754,50 @@ exports.alert_manage_creative = async (req, res) => {
         }
 
 
+
+       
+
+        var listCreativeString = new Array()
+        
+
+        
+
+        objCreativeUrl.forEach(element => {
+
+
+            var message = '<li><a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid='+element.insertion_id+'"target="_blank"><strong>'+element.creative_name+'</strong> : '+element.creative_url+' , '+element.creative_click_url+'</a></li>'
+
+
+            listCreativeString.push(message)
+            
+
+        });
+
+        if (!Utilities.empty(listCreativeString)) {
+            nodeoutlook.sendEmail({
+
+                auth: {
+                    user: "oceane.sautron@antennereunion.fr",
+                    pass: "s4utr0n_028"
+                },
+                from: "oceane.sautron@antennereunion.fr",
+                to: "oceane.sautron@antennereunion.fr",
+                cc: "oceane.sautron@antennereunion.fr",
+                subject: 'Alerte Créatives: Problème de programmation des url fichier et/ou clic',
+               
+                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>'+listCreativeString.join('')+'</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+    
+                ,
+                onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
+                onSuccess: (i) => res.json({ message:"Email alerte créative"})
+    
+    
+            })
+        }else{
+            res.json({ message:"Aucune alerte créative"})
+        }
+
+       
 
     })
 

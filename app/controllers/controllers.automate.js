@@ -3014,6 +3014,10 @@ exports.insertions_templates = async (req, res) => {
 exports.creatives = async (req, res) => {
     // Délai d'attente
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    //date du jour -2mois
+    var now = new Date();
+    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 2), now.getDate());
+    const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00');
 
     try {
         // Listes toutes les données de insertions_templates
@@ -3034,7 +3038,7 @@ exports.creatives = async (req, res) => {
                 },
                 'insertion_archived': '0',
                 'insertion_created_at': {
-                    [Op.between]: ['2021-01-01', '2021-04-30']
+                    [Op.between]: [dateMonthPast, '2022-12-31']
                 }
             },
             attributes: ['insertion_id']
@@ -3108,6 +3112,8 @@ exports.creatives = async (req, res) => {
                                     .then(function (result) {
                                         result.item; // the model
                                         result.created; // bool, if a new item was created.
+
+
                                     });
 
                             }
@@ -3115,6 +3121,8 @@ exports.creatives = async (req, res) => {
 
                     }
                 });
+
+
             }
 
         }
