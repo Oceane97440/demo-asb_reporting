@@ -778,7 +778,7 @@ exports.alert_manage_creative = async (req, res) => {
 
                 auth: {
                     user: "oceane.sautron@antennereunion.fr",
-                    pass: "s4utr0n_028"
+                    pass: process.env.EMAIL_PASS
                 },
                 from: "oceane.sautron@antennereunion.fr",
                 to: "oceane.sautron@antennereunion.fr",
