@@ -607,13 +607,19 @@ exports.alert_delivered_percentage = async (req, res) => {
         data.campaignNameGroupLastDay = campaignNameGroupLastDay
 
 
+        var listCampaignString = new Array()
+
+        Object.keys(campaignNameGroup).forEach(key => {
+
+
+            var message = '<li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li>'
+
+            listCampaignString.push(message)
+        })
+
+
 
         if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
-
-            res.render('alerts/forecast/list.ejs', data)
-
-
-
 
             nodeoutlook.sendEmail({
 
@@ -625,12 +631,12 @@ exports.alert_delivered_percentage = async (req, res) => {
                 to: "alvine.didier@antennereunion.fr",
                 cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
-                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> : <a traget="_blank" href="https://reporting.antennesb.fr/alerts/forecast">https://reporting.antennesb.fr/alerts/forecast</a> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :<ul> '+listCampaignString.join('')+' </ul>  <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
 
                 onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
-                onSuccess: (i) => console.log("ok")
+                onSuccess: (i) => res.json({ message:"Email alete forecats"})
 
 
             })
@@ -667,7 +673,7 @@ exports.alert_manage_creative = async (req, res) => {
     var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 2), now.getDate());
     const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00');
 
-    const objCreativeUrl= new Array()
+    const objCreativeUrl = new Array()
 
 
     ModelInsertions.findAll({
@@ -676,7 +682,7 @@ exports.alert_manage_creative = async (req, res) => {
                 insertion_start_date: {
                     [Op.between]: [dateMonthPast, date_now]
                 },
-                insertion_status_id:1
+                insertion_status_id: 1
 
             }]
         },
@@ -691,7 +697,7 @@ exports.alert_manage_creative = async (req, res) => {
         //console.log(insertions)
 
 
-       
+
         for (let i = 0; i < Object.keys(insertions).length; i++) {
 
 
@@ -723,7 +729,7 @@ exports.alert_manage_creative = async (req, res) => {
                         if ((!creative_url.match(regex_url)) || (!creative_click_url.match(regex_urlClic))) {
 
 
-                  
+
 
                             var objCreative = {
                                 creative_id: creative_id,
@@ -755,21 +761,21 @@ exports.alert_manage_creative = async (req, res) => {
 
 
 
-       
+
 
         var listCreativeString = new Array()
-        
 
-        
+
+
 
         objCreativeUrl.forEach(element => {
 
 
-            var message = '<li><a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid='+element.insertion_id+'"target="_blank"><strong>'+element.creative_name+'</strong> : '+element.creative_url+' , '+element.creative_click_url+'</a></li>'
+            var message = '<li><a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.creative_name + '</strong> : ' + element.creative_url + ' , ' + element.creative_click_url + '</a></li>'
 
 
             listCreativeString.push(message)
-            
+
 
         });
 
@@ -781,23 +787,23 @@ exports.alert_manage_creative = async (req, res) => {
                     pass: process.env.EMAIL_PASS
                 },
                 from: "oceane.sautron@antennereunion.fr",
-                to: "oceane.sautron@antennereunion.fr",
+                to: "alvine.didier@antennereunion.fr",
                 cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Créatives: Problème de programmation des url fichier et/ou clic',
-               
-                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>'+listCreativeString.join('')+'</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
-    
+
+                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>' + listCreativeString.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+
                 ,
                 onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
-                onSuccess: (i) => res.json({ message:"Email alerte créative"})
-    
-    
+                onSuccess: (i) => res.json({ message: "Email alerte créative" })
+
+
             })
-        }else{
-            res.json({ message:"Aucune alerte créative"})
+        } else {
+            res.json({ message: "Aucune alerte créative" })
         }
 
-       
+
 
     })
 
