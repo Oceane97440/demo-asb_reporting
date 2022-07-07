@@ -1151,10 +1151,10 @@ exports.export_excel = async (req, res) => {
                 var reporting_start_date = moment(reporting.reporting_start_date).format(
                     'DD/MM/YYYY - HH:mm'
                 );
-                var campaign_end_date = moment(reporting.campaign.campaign_start_date).format(
+                var campaign_start_date = moment(reporting.campaign.campaign_start_date).format(
                     'DD/MM/YYYY'
                 );
-                var campaign_start_date = moment(reporting.campaign.campaign_end_date).format(
+                var campaign_end_date = moment(reporting.campaign.campaign_end_date).format(
                     'DD/MM/YYYY'
                 );
                 var campaign_name = reporting.campaign.campaign_name;
