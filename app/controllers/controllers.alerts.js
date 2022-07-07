@@ -607,16 +607,33 @@ exports.alert_delivered_percentage = async (req, res) => {
         data.campaignNameGroupLastDay = campaignNameGroupLastDay
 
 
-        var listCampaignString = new Array()
 
-        Object.keys(campaignNameGroup).forEach(key => {
+        if (!Utilities.empty(campaignNameGroup)) {
 
+            var listCampaignString = new Array()
 
-            var message = '<li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li>'
+            Object.keys(campaignNameGroup).forEach(key => {
+    
+                var message = '<li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li>'
+    
+                listCampaignString.push(message)
+            })
+    
+        }
+     
 
-            listCampaignString.push(message)
-        })
+        if (!Utilities.empty(campaignNameGroupSurreservation)) {
 
+            var listCampaignSurreservationString = new Array()
+
+            Object.keys(campaignNameGroupSurreservation).forEach(key => {
+    
+                var message_surreservation = '<li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li>'
+    
+                listCampaignSurreservationString.push(message_surreservation)
+            })
+            
+        }
 
 
         if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
@@ -631,7 +648,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                 to: "alvine.didier@antennereunion.fr",
                 cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
-                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :<ul> '+listCampaignString.join('')+' </ul>  <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :<ul> '+listCampaignString.join('')+' </ul> <br> <ul>'+listCampaignSurreservationString.join('')+'</ul> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
 
@@ -670,7 +687,7 @@ exports.alert_manage_creative = async (req, res) => {
 
     //date du jour -2mois
     var now = new Date();
-    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 2), now.getDate());
+    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 3), now.getDate());
     const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00');
 
     const objCreativeUrl = new Array()
@@ -682,7 +699,10 @@ exports.alert_manage_creative = async (req, res) => {
                 insertion_start_date: {
                     [Op.between]: [dateMonthPast, date_now]
                 },
-                insertion_status_id: 1
+                insertion_end_date:{
+                    [Op.between]: [date_now,'2023-01-30 00:00:00']
+
+                }
 
             }]
         },
@@ -694,12 +714,7 @@ exports.alert_manage_creative = async (req, res) => {
         const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
         const regex_urlClic = /^(?:https:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/igm
 
-        //console.log(insertions)
-
-
-
         for (let i = 0; i < Object.keys(insertions).length; i++) {
-
 
 
             await ModelCreatives.findOne({
@@ -711,10 +726,8 @@ exports.alert_manage_creative = async (req, res) => {
                 }
             }).then(async function (creative) {
 
-
-
-
                 if (!Utilities.empty(creative)) {
+
 
                     if (!Utilities.empty(creative.creative_url)) {
 
@@ -726,15 +739,34 @@ exports.alert_manage_creative = async (req, res) => {
                         const creative_click_url = creative.creative_click_url
 
 
-                        if ((!creative_url.match(regex_url)) || (!creative_click_url.match(regex_urlClic))) {
+                        if ((!creative_url.match(regex_url))) {
 
 
+                           var data_insertion = await ModelInsertions.findOne({
+                                where: {insertion_id: insertion_id},
+                                include: [{
+                                    model: ModelCampaigns,
+                                }]
+                            })
+
+                           
+
+                            const insertion_name = data_insertion.insertion_name
+                            const campaign_id = data_insertion.campaign.campaign_id
+                            const campaign_name = data_insertion.campaign.campaign_name
+                            const campaign_start_date = data_insertion.campaign.campaign_start_date
+                            const campaign_end_date = data_insertion.campaign.campaign_end_date
 
 
                             var objCreative = {
+                                campaign_id:campaign_id,
+                                campaign_name:campaign_name,
+                                campaign_start_date:campaign_start_date,
+                                campaign_end_date:campaign_end_date,
+                                insertion_id: insertion_id,
+                                insertion_name:insertion_name,
                                 creative_id: creative_id,
                                 creative_name: creative_name,
-                                insertion_id: insertion_id,
                                 creative_url: creative_url,
                                 creative_click_url: creative_click_url
                             }
@@ -759,27 +791,20 @@ exports.alert_manage_creative = async (req, res) => {
 
         }
 
-
-
-
-
         var listCreativeString = new Array()
-
-
-
-
         objCreativeUrl.forEach(element => {
 
-
-            var message = '<li><a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.creative_name + '</strong> : ' + element.creative_url + ' , ' + element.creative_click_url + '</a></li>'
-
+            var message = '<li><strong>'+element.campaign_name+'</strong><small>( '+element.campaign_start_date+' - ' +element.campaign_end_date+' )</small>: <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li>'
 
             listCreativeString.push(message)
 
 
         });
 
+      
+
         if (!Utilities.empty(listCreativeString)) {
+
             nodeoutlook.sendEmail({
 
                 auth: {
