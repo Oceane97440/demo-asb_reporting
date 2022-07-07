@@ -561,6 +561,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                         if (delivered_percentage > 100) {
 
 
+
                             var objForecastSurreservation = {
                                 campaign_id: campaign_id,
                                 campaign_crypt: campaign_crypt,
@@ -606,34 +607,38 @@ exports.alert_delivered_percentage = async (req, res) => {
         data.campaignNameGroupSurreservation = campaignNameGroupSurreservation
         data.campaignNameGroupLastDay = campaignNameGroupLastDay
 
-
+        var listCampaignString = new Array()
 
         if (!Utilities.empty(campaignNameGroup)) {
 
-            var listCampaignString = new Array()
+        
 
             Object.keys(campaignNameGroup).forEach(key => {
     
-                var message = '<li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li>'
+                var message = '<ul><li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li></ul>'
     
                 listCampaignString.push(message)
             })
+
+           
     
         }
      
+        var listCampaignSurreservationString = new Array()
 
         if (!Utilities.empty(campaignNameGroupSurreservation)) {
 
-            var listCampaignSurreservationString = new Array()
-
+           
             Object.keys(campaignNameGroupSurreservation).forEach(key => {
     
-                var message_surreservation = '<li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li>'
+                var message_surreservation = '<br><ul><li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li></ul>'
     
                 listCampaignSurreservationString.push(message_surreservation)
             })
             
         }
+
+        console.log(campaignNameGroupSurreservation)
 
 
         if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
@@ -648,7 +653,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                 to: "alvine.didier@antennereunion.fr",
                 cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
-                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :<ul> '+listCampaignString.join('')+' </ul> <br> <ul>'+listCampaignSurreservationString.join('')+'</ul> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :'+listCampaignString.join('')+'  <br> '+listCampaignSurreservationString.join('')+' <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
 
@@ -794,7 +799,7 @@ exports.alert_manage_creative = async (req, res) => {
         var listCreativeString = new Array()
         objCreativeUrl.forEach(element => {
 
-            var message = '<li><strong>'+element.campaign_name+'</strong><small>( '+element.campaign_start_date+' - ' +element.campaign_end_date+' )</small>: <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li>'
+            var message = '<li><strong>'+element.campaign_name+'</strong><small>( '+element.campaign_start_date+' - ' +element.campaign_end_date+' )</small>: <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li><br>'
 
             listCreativeString.push(message)
 
