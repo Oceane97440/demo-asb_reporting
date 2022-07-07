@@ -839,3 +839,167 @@ exports.alert_manage_creative = async (req, res) => {
 
 
 }
+
+
+exports.alert_campaignOnline = async (req, res) => {
+
+
+    try {
+
+
+        const now = new Date();
+        const dateYesterday = moment(now).add('1', 'd').format('YYYY-MM-DDT00:00:00');
+
+        ModelCampaigns.findAll({
+            where: {
+                campaign_start_date: {
+                    [Op.eq]: moment().format('YYYY-MM-DD')
+
+                }
+            }
+        }).then(async function (campaigns) {
+
+            // console.log(campaigns)
+
+
+            if (!Utilities.empty(campaigns)) {
+
+                nbr_campaign = campaigns.length
+
+
+                const ObjCampagneAlert = new Array()
+           
+                for (let i = 0; i < nbr_campaign; i++) {
+                    var campaignObject = {
+                        "campaign_id": campaigns[i].campaign_id,
+
+                    };
+
+                    var config2 = SmartFunction.config('campaignsInsertions', campaignObject);
+
+
+                    await axios(config2).then(async function (response) {
+
+                        if (!Utilities.empty(response.data)) {
+                            var dataValue = response.data;
+
+                            dataValue.forEach(element => {
+
+                                const insertion_id = element.id
+                                const insertion_name = element.name
+                                const insertion_status_id = element.insertionStatusId
+                                const campaign_id = element.campaignId
+
+                             
+                                    if (insertion_status_id !== 1) {
+
+                                 
+
+
+                                        var ObjCampaignOffLine = {
+    
+                                            insertion_id: insertion_id,
+                                            insertion_name: insertion_name,
+                                            campaign_id: campaign_id,
+                                         
+    
+                                        }
+    
+    
+                                        ObjCampagneAlert.push(ObjCampaignOffLine)
+    
+                                    }
+                                
+                                
+                                  
+                           
+                               
+
+                              
+
+
+
+                            });
+
+                        } else {
+                            return res.json({
+                                type: 'error',
+                                message: 'Error : Aucune donnée disponible'
+                            });
+                        }
+
+
+                    })
+
+
+                }
+        
+             
+
+                var listCampaignOffLineString = new Array()
+
+                if (!Utilities.empty(ObjCampagneAlert)) {
+        
+                
+        
+                    ObjCampagneAlert.forEach(element => {
+            
+                        var message = '<li><a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + element.campaign_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li><br>'
+            
+                        listCampaignOffLineString.push(message)
+            
+            
+                    });
+        
+                   
+            
+                }
+
+
+
+        if (!Utilities.empty(listCampaignOffLineString)) {
+
+            nodeoutlook.sendEmail({
+
+                auth: {
+                    user: "oceane.sautron@antennereunion.fr",
+                    pass: process.env.EMAIL_PASS
+                },
+                from: "oceane.sautron@antennereunion.fr",
+                to: "alvine.didier@antennereunion.fr",
+                cc: "oceane.sautron@antennereunion.fr",
+                subject: 'Alerte Manage: Problème de mise en ligne des campagnes',
+
+                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>' + listCampaignOffLineString.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+
+                ,
+                onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
+                onSuccess: (i) => res.json({ message: "Email alerte manage campagne" })
+
+
+            })
+        } else {
+            res.json({ message: "Aucune alerte créative" })
+        }
+
+            } else {
+                res.json({ message: "Aucune campagne alerte" })
+            }
+
+
+        })
+
+
+
+
+    } catch (error) {
+
+        console.log(error)
+
+    }
+
+
+
+
+
+}
