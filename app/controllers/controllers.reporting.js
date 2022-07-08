@@ -1172,6 +1172,7 @@ exports.export_excel = async (req, res) => {
                 var complete = reporting.campaign.ctrComplete;
 
                 var interstitiel = reporting.interstitiel;
+                var interstitielvideo = reporting.interstitielvideo;
                 var habillage = reporting.habillage;
                 var instream = reporting.instream;
                 var masthead = reporting.masthead;
@@ -1477,6 +1478,17 @@ exports.export_excel = async (req, res) => {
                     }
                 }
 
+
+                if (!Utilities.empty(interstitielvideo)) {
+
+                    dataset_format[12] = {
+                        Formats: 'INTERSTITIEL VIDEO',
+                        Impressions: reporting.interstitielvideo.impressions,
+                        Clics: reporting.interstitielvideo.clicks,
+                        Ctr_clics: reporting.interstitielvideo.ctr.replace('.', ',') + '%'
+                    }
+                }
+
                 const dataset_site = []
 
                 if (!Utilities.empty(habillage)) {
@@ -1519,6 +1531,29 @@ exports.export_excel = async (req, res) => {
 
                     }
                 }
+
+                if (!Utilities.empty(interstitielvideo)) {
+                    for (i = 0; i < Object.keys(reporting.interstitielvideo.siteList).length; i++) {
+                        dataset_site.push({
+                            formats: 'INTERSTITIEL VIDEO',
+                            sites: reporting
+                                .interstitielvideo
+                                .siteList[i]
+                                .site,
+                            impressions: reporting.interstitielvideo.siteList[i].impressions,
+                            clics: reporting.interstitielvideo.siteList[i].clicks,
+                            ctr_clics: reporting
+                                .interstitielvideo
+                                .siteList[i]
+                                .ctr.replace('.', ',') + '%',
+                            vtr: ' - '
+                        })
+
+                    }
+                }
+
+
+
                 if (!Utilities.empty(masthead)) {
                     for (i = 0; i < Object.keys(reporting.masthead.siteList).length; i++) {
                         dataset_site.push({
