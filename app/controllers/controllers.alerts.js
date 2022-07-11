@@ -611,31 +611,31 @@ exports.alert_delivered_percentage = async (req, res) => {
 
         if (!Utilities.empty(campaignNameGroup)) {
 
-        
+
 
             Object.keys(campaignNameGroup).forEach(key => {
-    
+
                 var message = '<ul><li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li></ul>'
-    
+
                 listCampaignString.push(message)
             })
 
-           
-    
+
+
         }
-     
+
         var listCampaignSurreservationString = new Array()
 
         if (!Utilities.empty(campaignNameGroupSurreservation)) {
 
-           
+
             Object.keys(campaignNameGroupSurreservation).forEach(key => {
-    
+
                 var message_surreservation = '<br><ul><li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li></ul>'
-    
+
                 listCampaignSurreservationString.push(message_surreservation)
             })
-            
+
         }
 
         console.log(campaignNameGroupSurreservation)
@@ -653,12 +653,12 @@ exports.alert_delivered_percentage = async (req, res) => {
                 to: "alvine.didier@antennereunion.fr",
                 cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
-                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :'+listCampaignString.join('')+'  <br> '+listCampaignSurreservationString.join('')+' <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :' + listCampaignString.join('') + '  <br> ' + listCampaignSurreservationString.join('') + ' <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
 
                 onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
-                onSuccess: (i) => res.json({ message:"Email alete forecats"})
+                onSuccess: (i) => res.json({ message: "Email alete forecats" })
 
 
             })
@@ -704,8 +704,8 @@ exports.alert_manage_creative = async (req, res) => {
                 insertion_start_date: {
                     [Op.between]: [dateMonthPast, date_now]
                 },
-                insertion_end_date:{
-                    [Op.between]: [date_now,'2023-01-30 00:00:00']
+                insertion_end_date: {
+                    [Op.between]: [date_now, '2023-01-30 00:00:00']
 
                 }
 
@@ -747,14 +747,14 @@ exports.alert_manage_creative = async (req, res) => {
                         if ((!creative_url.match(regex_url))) {
 
 
-                           var data_insertion = await ModelInsertions.findOne({
-                                where: {insertion_id: insertion_id},
+                            var data_insertion = await ModelInsertions.findOne({
+                                where: { insertion_id: insertion_id },
                                 include: [{
                                     model: ModelCampaigns,
                                 }]
                             })
 
-                           
+
 
                             const insertion_name = data_insertion.insertion_name
                             const campaign_id = data_insertion.campaign.campaign_id
@@ -764,12 +764,12 @@ exports.alert_manage_creative = async (req, res) => {
 
 
                             var objCreative = {
-                                campaign_id:campaign_id,
-                                campaign_name:campaign_name,
-                                campaign_start_date:campaign_start_date,
-                                campaign_end_date:campaign_end_date,
+                                campaign_id: campaign_id,
+                                campaign_name: campaign_name,
+                                campaign_start_date: campaign_start_date,
+                                campaign_end_date: campaign_end_date,
                                 insertion_id: insertion_id,
-                                insertion_name:insertion_name,
+                                insertion_name: insertion_name,
                                 creative_id: creative_id,
                                 creative_name: creative_name,
                                 creative_url: creative_url,
@@ -799,14 +799,14 @@ exports.alert_manage_creative = async (req, res) => {
         var listCreativeString = new Array()
         objCreativeUrl.forEach(element => {
 
-            var message = '<li><strong>'+element.campaign_name+'</strong><small>( '+element.campaign_start_date+' - ' +element.campaign_end_date+' )</small>: <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li><br>'
+            var message = '<li><strong>' + element.campaign_name + '</strong><small>( ' + element.campaign_start_date + ' - ' + element.campaign_end_date + ' )</small>: <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li><br>'
 
             listCreativeString.push(message)
 
 
         });
 
-      
+
 
         if (!Utilities.empty(listCreativeString)) {
 
@@ -850,7 +850,7 @@ exports.alert_campaignOnline = async (req, res) => {
         const now = new Date();
         const dateYesterday = moment(now).add('1', 'd').format('YYYY-MM-DDT00:00:00');
 
-        ModelCampaigns.findAll({
+        await ModelCampaigns.findAll({
             where: {
                 campaign_start_date: {
                     [Op.eq]: moment().format('YYYY-MM-DD')
@@ -868,7 +868,7 @@ exports.alert_campaignOnline = async (req, res) => {
 
 
                 const ObjCampagneAlert = new Array()
-           
+
                 for (let i = 0; i < nbr_campaign; i++) {
                     var campaignObject = {
                         "campaign_id": campaigns[i].campaign_id,
@@ -883,39 +883,48 @@ exports.alert_campaignOnline = async (req, res) => {
                         if (!Utilities.empty(response.data)) {
                             var dataValue = response.data;
 
-                            dataValue.forEach(element => {
+                            dataValue.forEach(async function (element) {
 
                                 const insertion_id = element.id
                                 const insertion_name = element.name
                                 const insertion_status_id = element.insertionStatusId
                                 const campaign_id = element.campaignId
 
-                             
-                                    if (insertion_status_id !== 1) {
 
-                                 
+                                if (insertion_status_id !== 1) {
 
 
-                                        var ObjCampaignOffLine = {
-    
-                                            insertion_id: insertion_id,
-                                            insertion_name: insertion_name,
-                                            campaign_id: campaign_id,
-                                         
-    
+                                    var campaign = await ModelCampaigns.findOne({
+                                        where: {
+                                            campaign_id: campaign_id
                                         }
-    
-    
-                                        ObjCampagneAlert.push(ObjCampaignOffLine)
-    
-                                    }
-                                
-                                
-                                  
-                           
-                               
+                                    })
 
-                              
+
+
+                                    var ObjCampaignOffLine = {
+
+                                        insertion_id: insertion_id,
+                                        insertion_name: insertion_name,
+                                        campaign_id: campaign_id,
+                                        campaign_name: campaign.campaign_name,
+                                        campaign_start_date: moment(campaign.campaign_start_date).format('YYYY-MM-DD'),
+                                        campaign_end_date: moment(campaign.campaign_end_date).format('YYYY-MM-DD')
+                                    }
+
+
+
+
+                                    ObjCampagneAlert.push(ObjCampaignOffLine)
+
+                                }
+
+
+
+
+
+
+
 
 
 
@@ -933,54 +942,51 @@ exports.alert_campaignOnline = async (req, res) => {
 
 
                 }
-        
-             
+
+                const campaignStatut = Utilities.groupBy(ObjCampagneAlert, 'campaign_id');
+
 
                 var listCampaignOffLineString = new Array()
 
-                if (!Utilities.empty(ObjCampagneAlert)) {
-        
-                
-        
-                    ObjCampagneAlert.forEach(element => {
-            
-                        var message = '<li><a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + element.campaign_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li><br>'
-            
+
+                if (!Utilities.empty(campaignStatut)) {
+                    Object.keys(campaignStatut).forEach(key => {
+
+                        var message = '<li>' + campaignStatut[key][0].campaign_start_date + ' - ' + campaignStatut[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignStatut[key][0].campaign_id + '"target="_blank"><strong>' + campaignStatut[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignStatut[key]).length + ') </span></li>'
+
                         listCampaignOffLineString.push(message)
-            
-            
-                    });
-        
-                   
-            
+                    })
                 }
 
 
 
-        if (!Utilities.empty(listCampaignOffLineString)) {
-
-            nodeoutlook.sendEmail({
-
-                auth: {
-                    user: "oceane.sautron@antennereunion.fr",
-                    pass: process.env.EMAIL_PASS
-                },
-                from: "oceane.sautron@antennereunion.fr",
-                to: "alvine.didier@antennereunion.fr",
-                cc: "oceane.sautron@antennereunion.fr",
-                subject: 'Alerte Manage: Problème de mise en ligne des campagnes',
-
-                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>' + listCampaignOffLineString.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
-
-                ,
-                onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
-                onSuccess: (i) => res.json({ message: "Email alerte manage campagne" })
+                if (!Utilities.empty(listCampaignOffLineString)) {
 
 
-            })
-        } else {
-            res.json({ message: "Aucune alerte créative" })
-        }
+                    nodeoutlook.sendEmail({
+
+                        auth: {
+                            user: "oceane.sautron@antennereunion.fr",
+                            pass: process.env.EMAIL_PASS
+                        },
+                        from: "oceane.sautron@antennereunion.fr",
+                        to: "alvine.didier@antennereunion.fr",
+                        cc: "oceane.sautron@antennereunion.fr",
+                        subject: 'Alerte Manage: Problème de mise en ligne des campagnes',
+
+                        html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>' + listCampaignOffLineString.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+
+                        ,
+                        onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
+                        onSuccess: (i) => res.json({ message: "Email alerte manage campagne" })
+
+
+                    })
+                } else {
+                    res.json({ message: "Aucune alerte créative" })
+                }
+
+             
 
             } else {
                 res.json({ message: "Aucune campagne alerte" })
