@@ -692,22 +692,25 @@ exports.alert_manage_creative = async (req, res) => {
 
     //date du jour -2mois
     var now = new Date();
-    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 3), now.getDate());
-    const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00');
+    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 1), now.getDate());
+    var MonthLast = new Date(now.getFullYear(), (now.getMonth() + 1), now.getDate());
 
-    const objCreativeUrl = new Array()
+    const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD');
+    const dateMonthLast = moment(MonthLast).format('YYYY-MM-DD');
+
 
 
     ModelInsertions.findAll({
         where: {
             [Op.and]: [{
                 insertion_start_date: {
-                    [Op.between]: [dateMonthPast, date_now]
+                    [Op.between]: [date_now, dateMonthLast]
                 },
-                insertion_end_date: {
+               /* insertion_end_date: {
                     [Op.between]: [date_now, '2023-01-30 00:00:00']
 
-                }
+                }*/
+                insertion_status_id:1
 
             }]
         },
@@ -715,100 +718,151 @@ exports.alert_manage_creative = async (req, res) => {
             model: ModelCampaigns,
         }]
     }).then(async function (insertions) {
+        nbr_insertion = insertions.length
 
         const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
         const regex_urlClic = /^(?:https:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/igm
 
-        for (let i = 0; i < Object.keys(insertions).length; i++) {
+
+        const ObjCreativeUrl = new Array()
+        const ObjCreativeurlClic = new Array()
 
 
-            await ModelCreatives.findOne({
-                where: {
+        for (let i = 0; i < nbr_insertion; i++) {
+            var insertionObject = {
+                "insertion_id": insertions[i].insertion_id,
 
-                    insertion_id: insertions[i].insertion_id,
-
-
-                }
-            }).then(async function (creative) {
-
-                if (!Utilities.empty(creative)) {
+            };
 
 
-                    if (!Utilities.empty(creative.creative_url)) {
+            var config2 = SmartFunction.config('creatives', insertionObject);
+
+            await axios(config2).then(async function (response) {
+
+                if (!Utilities.empty(response)) {
+                    var dataValue = response.data;
 
 
-                        const creative_url = creative.creative_url
-                        const creative_id = creative.creative_id
-                        const creative_name = creative.creative_name
-                        const insertion_id = creative.insertion_id
-                        const creative_click_url = creative.creative_click_url
 
+                    if (!Utilities.empty(dataValue)) {
+                        dataValue.forEach(async function (element) {
+                            const insertion_id = element.insertionId
+                            const creative_id = element.id
+                            const creative_url = element.url
+                            const creative_name = element.name
+                            const creative_width = element.width
+                            const creative_height = element.height
+                            const creative_clickUrl = element.clickUrl
 
-                        if ((!creative_url.match(regex_url))) {
-
-
-                            var data_insertion = await ModelInsertions.findOne({
+                            var insertion = await ModelInsertions.findOne({
                                 where: { insertion_id: insertion_id },
                                 include: [{
                                     model: ModelCampaigns,
                                 }]
                             })
 
+                            const insertion_name = insertion.insertion_name
+                            const campaign_id = insertion.campaign.campaign_id
+                            const campaign_name = insertion.campaign.campaign_name
+                            const campaign_start_date = moment(insertion.campaign.campaign_start_date).format('YYYY-MM-DD')
+                            const campaign_end_date = moment(insertion.campaign.campaign_end_date).format('YYYY-MM-DD')
 
 
-                            const insertion_name = data_insertion.insertion_name
-                            const campaign_id = data_insertion.campaign.campaign_id
-                            const campaign_name = data_insertion.campaign.campaign_name
-                            const campaign_start_date = data_insertion.campaign.campaign_start_date
-                            const campaign_end_date = data_insertion.campaign.campaign_end_date
+                            if (!creative_url.match(regex_url)) {
 
 
-                            var objCreative = {
-                                campaign_id: campaign_id,
-                                campaign_name: campaign_name,
-                                campaign_start_date: campaign_start_date,
-                                campaign_end_date: campaign_end_date,
-                                insertion_id: insertion_id,
-                                insertion_name: insertion_name,
-                                creative_id: creative_id,
-                                creative_name: creative_name,
-                                creative_url: creative_url,
-                                creative_click_url: creative_click_url
+
+
+                                var objCreative = {
+                                    campaign_id: campaign_id,
+                                    campaign_name: campaign_name,
+                                    campaign_start_date: campaign_start_date,
+                                    campaign_end_date: campaign_end_date,
+                                    insertion_id: insertion_id,
+                                    insertion_name: insertion_name,
+                                    creative_id: creative_id,
+                                    creative_name: creative_name,
+                                    creative_url: creative_url,
+                                    creative_click_url: creative_clickUrl
+                                }
+
+                                ObjCreativeUrl.push(objCreative)
+
                             }
 
-                            objCreativeUrl.push(objCreative)
+                            if ((!creative_url.match(regex_urlClic))) {
+     
+     
+                                
+     
+                                 var objCreativeUrlClic = {
+                                     campaign_id: campaign_id,
+                                     campaign_name: campaign_name,
+                                     campaign_start_date: campaign_start_date,
+                                     campaign_end_date: campaign_end_date,
+                                     insertion_id: insertion_id,
+                                     insertion_name: insertion_name,
+                                     creative_id: creative_id,
+                                     creative_name: creative_name,
+                                     creative_url: creative_url,
+                                     creative_click_url: creative_clickUrl
+                                 }
+     
+                                 ObjCreativeurlClic.push(objCreativeUrlClic)
+                                
+                             }
 
-
-                        }
+                        })
 
                     }
 
 
 
-
+                } else {
+                    res.json({
+                        type: 'error',
+                        message: 'Error : Aucune donnée disponible'
+                    });
                 }
-
-
-
-
-
             })
+
 
         }
 
-        var listCreativeString = new Array()
-        objCreativeUrl.forEach(element => {
-
-            var message = '<li><strong>' + element.campaign_name + '</strong><small>( ' + element.campaign_start_date + ' - ' + element.campaign_end_date + ' )</small>: <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + element.insertion_id + '"target="_blank"><strong>' + element.insertion_name + '</strong> </a></li><br>'
-
-            listCreativeString.push(message)
 
 
-        });
+        const creativeUrl = Utilities.groupBy(ObjCreativeUrl, 'campaign_id');
+        const creativeUrlClic = Utilities.groupBy(ObjCreativeurlClic, 'campaign_id');
 
 
 
-        if (!Utilities.empty(listCreativeString)) {
+        var listCreative = new Array()
+        var listCreativeUrlClic = new Array()
+
+
+        if (!Utilities.empty(creativeUrl)) {
+            Object.keys(creativeUrl).forEach(key => {
+
+                var message = '<li>' + creativeUrl[key][0].campaign_start_date + ' - ' + creativeUrl[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrl[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrl[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeUrl[key]).length + ') </span></li>'
+
+                listCreative.push(message)
+            })
+        }
+
+        if (!Utilities.empty(creativeUrlClic)) {
+            Object.keys(creativeUrlClic).forEach(key => {
+
+                var message2 = '<li>' + creativeUrlClic[key][0].campaign_start_date + ' - ' + creativeUrlClic[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrlClic[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrlClic[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeUrlClic[key]).length + ') </span></li>'
+
+                listCreativeUrlClic.push(message2)
+            })
+        }
+
+
+
+
+        if ((!Utilities.empty(listCreative)) || (!Utilities.empty(listCreativeUrlClic))) {
+
 
             nodeoutlook.sendEmail({
 
@@ -819,20 +873,19 @@ exports.alert_manage_creative = async (req, res) => {
                 from: "oceane.sautron@antennereunion.fr",
                 to: "alvine.didier@antennereunion.fr",
                 cc: "oceane.sautron@antennereunion.fr",
-                subject: 'Alerte Créatives: Problème de programmation des url fichier et/ou clic',
+                subject: 'Alerte Manage: Problème de programmation des créatives',
 
-                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>' + listCreativeString.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage des fichiers créatives(url/url clic) <b> </b> : <ul>' + listCreative.join('') + '</ul><ul>' + listCreativeUrlClic.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
                 onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
-                onSuccess: (i) => res.json({ message: "Email alerte créative" })
+                onSuccess: (i) => res.json({ message: "Email alerte manage campagne" })
 
 
             })
         } else {
             res.json({ message: "Aucune alerte créative" })
         }
-
 
 
     })
@@ -883,52 +936,56 @@ exports.alert_campaignOnline = async (req, res) => {
                         if (!Utilities.empty(response.data)) {
                             var dataValue = response.data;
 
-                            dataValue.forEach(async function (element) {
+                            if (!Utilities.empty(dataValue)) {
 
-                                const insertion_id = element.id
-                                const insertion_name = element.name
-                                const insertion_status_id = element.insertionStatusId
-                                const campaign_id = element.campaignId
+                                dataValue.forEach(async function (element) {
+
+                                    const insertion_id = element.id
+                                    const insertion_name = element.name
+                                    const insertion_status_id = element.insertionStatusId
+                                    const campaign_id = element.campaignId
 
 
-                                if (insertion_status_id !== 1) {
+                                    if (insertion_status_id !== 1) {
 
 
-                                    var campaign = await ModelCampaigns.findOne({
-                                        where: {
-                                            campaign_id: campaign_id
+                                        var campaign = await ModelCampaigns.findOne({
+                                            where: {
+                                                campaign_id: campaign_id
+                                            }
+                                        })
+
+
+
+                                        var ObjCampaignOffLine = {
+
+                                            insertion_id: insertion_id,
+                                            insertion_name: insertion_name,
+                                            campaign_id: campaign_id,
+                                            campaign_name: campaign.campaign_name,
+                                            campaign_start_date: moment(campaign.campaign_start_date).format('YYYY-MM-DD'),
+                                            campaign_end_date: moment(campaign.campaign_end_date).format('YYYY-MM-DD')
                                         }
-                                    })
 
 
 
-                                    var ObjCampaignOffLine = {
 
-                                        insertion_id: insertion_id,
-                                        insertion_name: insertion_name,
-                                        campaign_id: campaign_id,
-                                        campaign_name: campaign.campaign_name,
-                                        campaign_start_date: moment(campaign.campaign_start_date).format('YYYY-MM-DD'),
-                                        campaign_end_date: moment(campaign.campaign_end_date).format('YYYY-MM-DD')
+                                        ObjCampagneAlert.push(ObjCampaignOffLine)
+
                                     }
 
 
 
 
-                                    ObjCampagneAlert.push(ObjCampaignOffLine)
-
-                                }
 
 
 
 
 
 
+                                });
 
-
-
-
-                            });
+                            }
 
                         } else {
                             return res.json({
@@ -986,7 +1043,7 @@ exports.alert_campaignOnline = async (req, res) => {
                     res.json({ message: "Aucune alerte créative" })
                 }
 
-             
+
 
             } else {
                 res.json({ message: "Aucune campagne alerte" })
