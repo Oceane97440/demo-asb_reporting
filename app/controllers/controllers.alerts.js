@@ -693,7 +693,7 @@ exports.alert_manage_creative = async (req, res) => {
     //date du jour -2mois
     var now = new Date();
     var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 1), now.getDate());
-    var MonthLast = new Date(now.getFullYear(), (now.getMonth() + 1), now.getDate());
+    var MonthLast = new Date(now.getFullYear(), (now.getMonth() + 5), now.getDate());
 
     const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD');
     const dateMonthLast = moment(MonthLast).format('YYYY-MM-DD');
