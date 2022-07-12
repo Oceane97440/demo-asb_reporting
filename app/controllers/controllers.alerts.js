@@ -650,8 +650,8 @@ exports.alert_delivered_percentage = async (req, res) => {
                     pass: process.env.EMAIL_PASS
                 },
                 from: "oceane.sautron@antennereunion.fr",
-                to: "alvine.didier@antennereunion.fr",
-                cc: "oceane.sautron@antennereunion.fr",
+                to: "asb@antennereunion.fr",
+                cc: "alvine.didier@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
                 html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :' + listCampaignString.join('') + '  <br> ' + listCampaignSurreservationString.join('') + ' <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
@@ -871,8 +871,8 @@ exports.alert_manage_creative = async (req, res) => {
                     pass: process.env.EMAIL_PASS
                 },
                 from: "oceane.sautron@antennereunion.fr",
-                to: "alvine.didier@antennereunion.fr",
-                cc: "oceane.sautron@antennereunion.fr",
+                to: "asb@antennereunion.fr",
+                cc: "alvine.didier@antennereunion.fr",
                 subject: 'Alerte Manage: Problème de programmation des créatives',
 
                 html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage des fichiers créatives(url/url clic) <b> </b> : <ul>' + listCreative.join('') + '</ul><ul>' + listCreativeUrlClic.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
@@ -1027,8 +1027,8 @@ exports.alert_campaignOnline = async (req, res) => {
                             pass: process.env.EMAIL_PASS
                         },
                         from: "oceane.sautron@antennereunion.fr",
-                        to: "alvine.didier@antennereunion.fr",
-                        cc: "oceane.sautron@antennereunion.fr",
+                        to: "asb@antennereunion.fr",
+                        cc: "alvine.didier@antennereunion.fr",
                         subject: 'Alerte Manage: Problème de mise en ligne des campagnes',
 
                         html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>' + listCampaignOffLineString.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
