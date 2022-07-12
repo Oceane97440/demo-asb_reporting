@@ -1040,7 +1040,7 @@ exports.alert_campaignOnline = async (req, res) => {
 
                     })
                 } else {
-                    res.json({ message: "Aucune alerte créative" })
+                    res.json({ message: "Aucune alerte campagne" })
                 }
 
 
