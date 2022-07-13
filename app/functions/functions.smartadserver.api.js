@@ -126,7 +126,7 @@ exports.config = function (method, params = '') {
         };
     }
 
-    console.log(config);
+   // console.log(config);
     return config;
 }
 

@@ -37,7 +37,7 @@ const Utilities = require("../functions/functions.utilities");
 
 // Initialise les models const ModelSite = require("../models/models.sites");
 const ModelAgencies = require("../models/models.agencies");
-const ModelFormats = require("../models/models.formats");
+const ModelFormat = require("../models/models.formats");
 const ModelFormatsGroupsTypes = require(
     "../models/models.formats_groups_types"
 );
@@ -706,11 +706,11 @@ exports.alert_manage_creative = async (req, res) => {
                 insertion_start_date: {
                     [Op.between]: [date_now, dateMonthLast]
                 },
-               /* insertion_end_date: {
-                    [Op.between]: [date_now, '2023-01-30 00:00:00']
-
-                }*/
-                insertion_status_id:1
+                /* insertion_end_date: {
+                     [Op.between]: [date_now, '2023-01-30 00:00:00']
+ 
+                 }*/
+                //insertion_status_id:1
 
             }]
         },
@@ -726,6 +726,10 @@ exports.alert_manage_creative = async (req, res) => {
 
         const ObjCreativeUrl = new Array()
         const ObjCreativeurlClic = new Array()
+        const ObjCreativeAll = new Array()
+
+
+
 
 
         for (let i = 0; i < nbr_insertion; i++) {
@@ -733,6 +737,8 @@ exports.alert_manage_creative = async (req, res) => {
                 "insertion_id": insertions[i].insertion_id,
 
             };
+
+
 
 
             var config2 = SmartFunction.config('creatives', insertionObject);
@@ -761,11 +767,52 @@ exports.alert_manage_creative = async (req, res) => {
                                 }]
                             })
 
+
+                            const formats = await ModelFormat.findOne({
+                                attributes: ['format_group', 'format_id'],
+                                // group: "format_group",
+                                where: {
+                                    format_id: insertion.format_id,
+                                },
+
+                            })
+
+
                             const insertion_name = insertion.insertion_name
                             const campaign_id = insertion.campaign.campaign_id
                             const campaign_name = insertion.campaign.campaign_name
                             const campaign_start_date = moment(insertion.campaign.campaign_start_date).format('YYYY-MM-DD')
                             const campaign_end_date = moment(insertion.campaign.campaign_end_date).format('YYYY-MM-DD')
+                            const format_group = formats.format_group
+
+                            if (insertion.delivery_type_id === 0) {
+                                var delivery_type_id = "WEB"
+                            }
+                            if (insertion.delivery_type_id === 10) {
+                                var delivery_type_id = "MOBILE/TABLETTE"
+                            }
+
+                            if (insertion.delivery_type_id === 21) {
+                                var delivery_type_id = "VIDEO"
+                            }
+
+                            var objAllCreative = {
+                                campaign_id: campaign_id,
+                                campaign_name: campaign_name,
+                                campaign_start_date: campaign_start_date,
+                                campaign_end_date: campaign_end_date,
+                                insertion_id: insertion_id,
+                                insertion_name: insertion_name,
+                                format_group: format_group,
+                                delivery_type_id: delivery_type_id,
+                                creative_id: creative_id,
+                                creative_width: creative_width,
+                                creative_height: creative_height,
+                                creative_name: creative_name,
+                                creative_url: creative_url,
+                                creative_click_url: creative_clickUrl
+                            }
+                            ObjCreativeAll.push(objAllCreative)
 
 
                             if (!creative_url.match(regex_url)) {
@@ -786,31 +833,32 @@ exports.alert_manage_creative = async (req, res) => {
                                     creative_click_url: creative_clickUrl
                                 }
 
+
                                 ObjCreativeUrl.push(objCreative)
 
                             }
 
                             if ((!creative_url.match(regex_urlClic))) {
-     
-     
-                                
-     
-                                 var objCreativeUrlClic = {
-                                     campaign_id: campaign_id,
-                                     campaign_name: campaign_name,
-                                     campaign_start_date: campaign_start_date,
-                                     campaign_end_date: campaign_end_date,
-                                     insertion_id: insertion_id,
-                                     insertion_name: insertion_name,
-                                     creative_id: creative_id,
-                                     creative_name: creative_name,
-                                     creative_url: creative_url,
-                                     creative_click_url: creative_clickUrl
-                                 }
-     
-                                 ObjCreativeurlClic.push(objCreativeUrlClic)
-                                
-                             }
+
+
+
+
+                                var objCreativeUrlClic = {
+                                    campaign_id: campaign_id,
+                                    campaign_name: campaign_name,
+                                    campaign_start_date: campaign_start_date,
+                                    campaign_end_date: campaign_end_date,
+                                    insertion_id: insertion_id,
+                                    insertion_name: insertion_name,
+                                    creative_id: creative_id,
+                                    creative_name: creative_name,
+                                    creative_url: creative_url,
+                                    creative_click_url: creative_clickUrl
+                                }
+
+                                ObjCreativeurlClic.push(objCreativeUrlClic)
+
+                            }
 
                         })
 
@@ -833,9 +881,79 @@ exports.alert_manage_creative = async (req, res) => {
 
         const creativeUrl = Utilities.groupBy(ObjCreativeUrl, 'campaign_id');
         const creativeUrlClic = Utilities.groupBy(ObjCreativeurlClic, 'campaign_id');
+        const creativeAll = Utilities.groupBy(ObjCreativeAll, 'insertion_id');
+
+
+        const listCreativeCompte = new Array()
+        const listCreativeCompteOther = new Array()
+        const listCreativeVideo = new Array()
+        const listCreativeMobile = new Array()
+        const listCreativeMobileHabillage = new Array()
+
+        if (!Utilities.empty(creativeAll)) {
+            Object.keys(creativeAll).forEach(key => {
 
 
 
+                if (creativeAll[key][0].delivery_type_id==="WEB") {
+
+                    if ((creativeAll[key][0].format_group === "MASTHEAD")||(creativeAll[key][0].format_group === "GRAND ANGLE")||(creativeAll[key][0].format_group === "INTERSTITIEL")) {
+
+                        if (Object.keys(creativeAll[key]).length<2) {
+                            var message_format = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                            listCreativeCompte.push(message_format)
+                        }
+                    }
+   
+                    if ((creativeAll[key][0].format_group === "HABILLAGE")){
+                        if (Object.keys(creativeAll[key]).length<1) {
+                            var message_other = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                            listCreativeCompteOther.push(message_other)
+                        }
+                    }
+                }
+
+                if (creativeAll[key][0].delivery_type_id==="VIDEO") {
+
+                    if ((creativeAll[key][0].format_group === "RECTANGLE VIDEO")||(creativeAll[key][0].format_group === "INTERSTITIEL")) {
+
+                        if (Object.keys(creativeAll[key]).length< 1) {
+                            var message_video = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                            listCreativeVideo.push(message_video)
+                        }
+                    }
+   
+                   
+                }
+
+
+                if (creativeAll[key][0].delivery_type_id==="MOBILE/TABLETTE") {
+                    if ((creativeAll[key][0].format_group === "MASTHEAD")||(creativeAll[key][0].format_group === "GRAND ANGLE")||(creativeAll[key][0].format_group === "INTERSTITIEL")) {
+
+                        if (Object.keys(creativeAll[key]).length< 1) {
+                            var message_mobile = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                            listCreativeMobile.push(message_mobile)
+                        }
+                    }
+
+                    if ((creativeAll[key][0].format_group === "HABILLAGE")) {
+
+                        if (Object.keys(creativeAll[key]).length< 2) {
+                            var message_mobileHabillage = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':<a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                            listCreativeMobileHabillage.push(message_mobileHabillage)
+                        }
+                    }
+
+
+                }
+
+            })
+
+
+        }
+
+
+       
         var listCreative = new Array()
         var listCreativeUrlClic = new Array()
 
@@ -861,21 +979,25 @@ exports.alert_manage_creative = async (req, res) => {
 
 
 
-        if ((!Utilities.empty(listCreative)) || (!Utilities.empty(listCreativeUrlClic))) {
+        if ((!Utilities.empty(listCreative)) || 
+        (!Utilities.empty(listCreativeUrlClic))
+        || 
+        (!Utilities.empty(creativeAll))
+        ) {
 
 
             nodeoutlook.sendEmail({
 
                 auth: {
                     user: "oceane.sautron@antennereunion.fr",
-                    pass: process.env.EMAIL_PASS
+                    pass: "s4utr0n_028"
                 },
                 from: "oceane.sautron@antennereunion.fr",
-                to: "asb@antennereunion.fr",
-                cc: "alvine.didier@antennereunion.fr",
+                to: "oceane.sautron@antennereunion.fr",
+                //cc: "alvine.didier@antennereunion.fr",
                 subject: 'Alerte Manage: Problème de programmation des créatives',
 
-                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage des fichiers créatives(url/url clic) <b> </b> : <ul>' + listCreative.join('') + '</ul><ul>' + listCreativeUrlClic.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage des fichiers créatives(url/url clic) <b> </b> : <ul>' + listCreative.join('') + '</ul><ul>' + listCreativeUrlClic.join('') + '</ul><ul>'+listCreativeCompte.join('')+listCreativeCompteOther.join('')+listCreativeMobile.join('')+  listCreativeVideo.join('')+listCreativeMobile.join('')+listCreativeMobileHabillage.join('')+'</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
                 onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
