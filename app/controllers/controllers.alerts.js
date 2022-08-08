@@ -709,8 +709,8 @@ exports.alert_manage_creative = async (req, res) => {
                 /* insertion_end_date: {
                      [Op.between]: [date_now, '2023-01-30 00:00:00']
  
-                 }*/
-                //insertion_status_id:1
+                 },*/
+              //  insertion_status_id:1
 
             }]
         },
@@ -879,9 +879,9 @@ exports.alert_manage_creative = async (req, res) => {
 
 
 
-        const creativeUrl = Utilities.groupBy(ObjCreativeUrl, 'campaign_id');
-        const creativeUrlClic = Utilities.groupBy(ObjCreativeurlClic, 'campaign_id');
-        const creativeAll = Utilities.groupBy(ObjCreativeAll, 'insertion_id');
+        const creativeUrl = await Utilities.groupBy(ObjCreativeUrl, 'campaign_id');
+        const creativeUrlClic = await Utilities.groupBy(ObjCreativeurlClic, 'campaign_id');
+        const creativeAll = await Utilities.groupBy(ObjCreativeAll, 'insertion_id');
 
 
         const listCreativeCompte = new Array()
@@ -991,13 +991,14 @@ exports.alert_manage_creative = async (req, res) => {
                 auth: {
                     user: "oceane.sautron@antennereunion.fr",
                     pass: process.env.EMAIL_PASS
+
                 },
                 from: "oceane.sautron@antennereunion.fr",
                 to: "asb@antennereunion.fr",
                 cc: "alvine.didier@antennereunion.fr",
                 subject: 'Alerte Manage: Problème de programmation des créatives',
 
-                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage des fichiers créatives(url/url clic) <b> </b> : <ul>' + listCreative.join('') + '</ul><ul>' + listCreativeUrlClic.join('') + '</ul><ul>'+listCreativeCompte.join('')+listCreativeCompteOther.join('')+listCreativeMobile.join('')+  listCreativeVideo.join('')+listCreativeMobile.join('')+listCreativeMobileHabillage.join('')+'</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage: des créative sont manquantes dans les insertions et/ou les url sont invalides <b> </b> : <ul>' + listCreative.join('') + '</ul><ul>' + listCreativeUrlClic.join('') + '</ul><ul>'+listCreativeCompte.join('')+listCreativeCompteOther.join('')+listCreativeMobile.join('')+  listCreativeVideo.join('')+listCreativeMobile.join('')+listCreativeMobileHabillage.join('')+'</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
                 onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
