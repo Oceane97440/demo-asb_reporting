@@ -4083,7 +4083,7 @@ exports.forecast = async (req, res) => {
             headerlocation = postRequestForecast.headers.location;
             let insertionLink = await AxiosFunction.getForecastData('GET', headerlocation);
             if (insertionLink.data.progress == '100') {
-                headerlocation = insertionLink.headers.location;
+                const headerlocation = insertionLink.headers.location;
 
                 const results = [{ "forecast_create_date": moment().format('YYYY-MM-DD HH:mm:ss') }];
 
@@ -4105,10 +4105,10 @@ exports.forecast = async (req, res) => {
                             //error handler
                             console.log(err)
                         }
-                    }).on('end', function () {
+                    }).on('end', async function () {
 
 
-                        localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
+                        await localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
                         res.json({ message: 'LocalStorage forecast est généré' })
                     });
 
