@@ -616,7 +616,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
         }
 
-      //  console.log(campaignNameGroupSurreservation)
+        //  console.log(campaignNameGroupSurreservation)
 
 
         if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
@@ -684,10 +684,10 @@ exports.alert_manage_creative = async (req, res) => {
                 insertion_start_date: {
                     [Op.between]: [date_now, dateMonthLast]
                 },
-                 insertion_end_date: {
-                     [Op.between]: [date_now, '2023-01-30 00:00:00']
- 
-                 },
+                insertion_end_date: {
+                    [Op.between]: [date_now, '2023-01-30 00:00:00']
+
+                },
                 //  insertion_status_id:1
 
             }]
@@ -778,30 +778,27 @@ exports.alert_manage_creative = async (req, res) => {
                             }
 
 
-                            //regex filtre insertions format
-                            const regexFormats = /((GRAND ANGLE|MASTHEAD) - (LINFO|ANTENNEREUNION|APPLI LINFO|DOMTOMJOB|LINFO \/ ORANGE REUNION) - POSITION (?:0|5)$)|(MASTHEAD - LINFO - POSITION (?:0|5|8|9|10)$)|((INTERSTITIEL|HABILLAGE|RECTANGLE|PREROLL|MIDROLL|PREROLL \/ MIDROLL){1})/igm
-                            
-                            if (insertion_name.match(regexFormats)) {
 
-                                var objAllCreative = {
-                                    campaign_id: campaign_id,
-                                    campaign_name: campaign_name,
-                                    campaign_start_date: campaign_start_date,
-                                    campaign_end_date: campaign_end_date,
-                                    insertion_id: insertion_id,
-                                    insertion_name: insertion_name,
-                                    format_group: format_group,
-                                    delivery_type_id: delivery_type_id,
-                                    creative_id: creative_id,
-                                    creative_width: creative_width,
-                                    creative_height: creative_height,
-                                    creative_name: creative_name,
-                                    creative_url: creative_url,
-                                    creative_click_url: creative_clickUrl
-                                }
-                                ObjCreativeAll.push(objAllCreative)
 
+                            var objAllCreative = {
+                                campaign_id: campaign_id,
+                                campaign_name: campaign_name,
+                                campaign_start_date: campaign_start_date,
+                                campaign_end_date: campaign_end_date,
+                                insertion_id: insertion_id,
+                                insertion_name: insertion_name,
+                                format_group: format_group,
+                                delivery_type_id: delivery_type_id,
+                                creative_id: creative_id,
+                                creative_width: creative_width,
+                                creative_height: creative_height,
+                                creative_name: creative_name,
+                                creative_url: creative_url,
+                                creative_click_url: creative_clickUrl
                             }
+                            ObjCreativeAll.push(objAllCreative)
+
+
 
 
 
@@ -876,59 +873,67 @@ exports.alert_manage_creative = async (req, res) => {
         const listCreativeMobileHabillage = new Array()
 
         if (!Utilities.empty(creativeAll)) {
-            Object.keys(creativeAll).forEach(key => {
 
 
+            //regex filtre insertions format
+            const regexFormats = /((GRAND ANGLE|MASTHEAD) - (LINFO|ANTENNEREUNION|APPLI LINFO|DOMTOMJOB|LINFO \/ ORANGE REUNION) - POSITION (?:0|5)$)|(MASTHEAD - LINFO - POSITION (?:0|5|8|9|10)$)|((INTERSTITIEL|HABILLAGE|RECTANGLE|PREROLL|MIDROLL|PREROLL \/ MIDROLL){1})/igm
 
-                if (creativeAll[key][0].delivery_type_id === "WEB") {
+            Object.keys(creativeAll).forEach( async key => {
+                const regexMatch = await creativeAll[key][0].insertion_name.match(regexFormats)
 
-                    if ((creativeAll[key][0].format_group === "MASTHEAD") || (creativeAll[key][0].format_group === "GRAND ANGLE") || (creativeAll[key][0].format_group === "INTERSTITIEL")) {
+                if (regexMatch) {
 
-                        if (Object.keys(creativeAll[key]).length < 2) {
-                            var message_format = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':'+creativeAll[key][0].campaign_name+' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
-                            listCreativeCompte.push(message_format)
+                    if (creativeAll[key][0].delivery_type_id === "WEB") {
+
+                        if ((creativeAll[key][0].format_group === "MASTHEAD") || (creativeAll[key][0].format_group === "GRAND ANGLE") || (creativeAll[key][0].format_group === "INTERSTITIEL")) {
+
+                            if (Object.keys(creativeAll[key]).length < 2) {
+                                var message_format = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                listCreativeCompte.push(message_format)
+                            }
+                        }
+
+                        if ((creativeAll[key][0].format_group === "HABILLAGE")) {
+                            if (Object.keys(creativeAll[key]).length < 1) {
+                                var message_other = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                listCreativeCompteOther.push(message_other)
+                            }
                         }
                     }
 
-                    if ((creativeAll[key][0].format_group === "HABILLAGE")) {
-                        if (Object.keys(creativeAll[key]).length < 1) {
-                            var message_other = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':'+creativeAll[key][0].campaign_name+' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
-                            listCreativeCompteOther.push(message_other)
+                    if (creativeAll[key][0].delivery_type_id === "VIDEO") {
+
+                        if ((creativeAll[key][0].format_group === "RECTANGLE VIDEO") || (creativeAll[key][0].format_group === "INTERSTITIEL")) {
+
+                            if (Object.keys(creativeAll[key]).length < 1) {
+                                var message_video = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                listCreativeVideo.push(message_video)
+                            }
                         }
-                    }
-                }
 
-                if (creativeAll[key][0].delivery_type_id === "VIDEO") {
 
-                    if ((creativeAll[key][0].format_group === "RECTANGLE VIDEO") || (creativeAll[key][0].format_group === "INTERSTITIEL")) {
-
-                        if (Object.keys(creativeAll[key]).length < 1) {
-                            var message_video = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':'+creativeAll[key][0].campaign_name+' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
-                            listCreativeVideo.push(message_video)
-                        }
                     }
 
 
-                }
+                    if (creativeAll[key][0].delivery_type_id === "MOBILE/TABLETTE") {
+                        if ((creativeAll[key][0].format_group === "MASTHEAD") || (creativeAll[key][0].format_group === "GRAND ANGLE") || (creativeAll[key][0].format_group === "INTERSTITIEL")) {
 
-
-                if (creativeAll[key][0].delivery_type_id === "MOBILE/TABLETTE") {
-                    if ((creativeAll[key][0].format_group === "MASTHEAD") || (creativeAll[key][0].format_group === "GRAND ANGLE") || (creativeAll[key][0].format_group === "INTERSTITIEL")) {
-
-                        if (Object.keys(creativeAll[key]).length < 1) {
-                            var message_mobile = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':'+creativeAll[key][0].campaign_name+' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
-                            listCreativeMobile.push(message_mobile)
+                            if (Object.keys(creativeAll[key]).length < 1) {
+                                var message_mobile = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                listCreativeMobile.push(message_mobile)
+                            }
                         }
-                    }
 
-                    if ((creativeAll[key][0].format_group === "HABILLAGE")) {
+                        if ((creativeAll[key][0].format_group === "HABILLAGE")) {
 
-                        if (Object.keys(creativeAll[key]).length < 2) {
-                            var message_mobileHabillage = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':'+creativeAll[key][0].campaign_name+' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
-                            listCreativeMobileHabillage.push(message_mobileHabillage)
+                            if (Object.keys(creativeAll[key]).length < 2) {
+                                var message_mobileHabillage = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ':' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                listCreativeMobileHabillage.push(message_mobileHabillage)
+                            }
                         }
-                    }
 
+
+                    }
 
                 }
 
@@ -946,7 +951,7 @@ exports.alert_manage_creative = async (req, res) => {
         if (!Utilities.empty(creativeUrl)) {
             Object.keys(creativeUrl).forEach(key => {
 
-                var message = '<li>' + creativeUrl[key][0].campaign_start_date + ' - ' + creativeUrl[key][0].campaign_end_date + ':'+ creativeUrl[key][0].campaign_name +' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrl[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrl[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeUrl[key]).length + ') </span></li>'
+                var message = '<li>' + creativeUrl[key][0].campaign_start_date + ' - ' + creativeUrl[key][0].campaign_end_date + ':' + creativeUrl[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrl[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrl[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeUrl[key]).length + ') </span></li>'
 
                 listCreative.push(message)
             })
@@ -955,7 +960,7 @@ exports.alert_manage_creative = async (req, res) => {
         if (!Utilities.empty(creativeUrlClic)) {
             Object.keys(creativeUrlClic).forEach(key => {
 
-                var message2 = '<li>' + creativeUrlClic[key][0].campaign_start_date + ' - ' + creativeUrlClic[key][0].campaign_end_date + ':'+creativeUrlClic[key][0].campaign_name+' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrlClic[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrlClic[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeUrlClic[key]).length + ') </span></li>'
+                var message2 = '<li>' + creativeUrlClic[key][0].campaign_start_date + ' - ' + creativeUrlClic[key][0].campaign_end_date + ':' + creativeUrlClic[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrlClic[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrlClic[key][0].insertion_name + '</strong> </a>(Total insertions: <span>' + Object.keys(creativeUrlClic[key]).length + ') </span></li>'
 
                 listCreativeUrlClic.push(message2)
             })
