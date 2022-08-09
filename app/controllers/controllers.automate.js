@@ -4095,9 +4095,10 @@ exports.forecast = async (req, res) => {
                     .get(url)
                     .pipe(csv({
                         separator: '\;'
-                    })).on('data', function (data) {
+                    })).on('data', async function (data) {
                         try {
-                            results.push(data);
+                            const data_csv = await data
+                            results.push(data_csv);
 
                             //perform the operation
                         }
@@ -4105,10 +4106,10 @@ exports.forecast = async (req, res) => {
                             //error handler
                             console.log(err)
                         }
-                    }).on('end', async function () {
+                    }).on('end',function () {
 
 
-                        await localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
+                        localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
                         res.json({ message: 'LocalStorage forecast est généré' })
                     });
 
