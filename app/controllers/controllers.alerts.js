@@ -593,7 +593,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
             Object.keys(campaignNameGroup).forEach(key => {
 
-                var message = '<ul><li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li></ul>'
+                var message = '<li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li>'
 
                 listCampaignString.push(message)
             })
@@ -609,7 +609,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
             Object.keys(campaignNameGroupSurreservation).forEach(key => {
 
-                var message_surreservation = '<br><ul><li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li></ul>'
+                var message_surreservation = '<li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM-YYYY') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM-YYYY') + ':<a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li>'
 
                 listCampaignSurreservationString.push(message_surreservation)
             })
@@ -631,7 +631,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                 to: "asb@antennereunion.fr",
                 cc: "alvine.didier@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
-                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :' + listCampaignString.join('') + '  <br> ' + listCampaignSurreservationString.join('') + ' <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+                html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :<ul>' + listCampaignString.join('') + '</ul> <ul>' + listCampaignSurreservationString.join('') + '</ul> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
                 ,
 
