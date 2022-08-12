@@ -4106,7 +4106,7 @@ exports.forecast = async (req, res) => {
                             //error handler
                             console.log(err)
                         }
-                    }).on('end',function () {
+                    }).on('end', function () {
 
 
                         localStorageForecast.setItem(cacheStorageNow, JSON.stringify(results));
@@ -4120,6 +4120,67 @@ exports.forecast = async (req, res) => {
 
 
         }
+
+    } catch (error) {
+        console.log(error)
+        return res.json({
+            err: error
+        });
+    }
+
+
+
+
+
+
+}
+
+exports.delete_localStorageForecast = async (req, res) => {
+
+
+    const now = new Date();
+    var DayPast = new Date(now.getFullYear(), (now.getMonth()), now.getDate() - 2);
+    const cacheStorageNow = "forecast-global-" + moment(DayPast).format('YYYYMMDD') + '.json';
+
+    try {
+        var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
+
+        if (data_localStorageForecast) {
+
+            localStorageForecast.removeItem(cacheStorageNow);
+            res.json({ message: "Le localStorage est supprimé :" + cacheStorageNow })
+
+        } else {
+            res.json({ message: "Pas de suppression du localStorage" })
+        }
+
+
+    } catch (error) {
+        console.log(error)
+        return res.json({
+            err: error
+        });
+    }
+
+
+
+
+
+
+}
+
+exports.delete_localStorageTask = async (req, res) => {
+
+
+
+    try {
+
+
+        localStorageTasks.clear();
+        res.json({ message: "Le localStorage taskId a été vidé " })
+
+
+
 
     } catch (error) {
         console.log(error)

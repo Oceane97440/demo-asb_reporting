@@ -45,5 +45,10 @@ router.get("/packs", automate.packs);
 /** AUTOMATE ALERTING */
 router.get("/forecast",automate.forecast)
 
+/** AUTOMATE SUPPRESSION DES LOCALSTORAGES */
+router.get("/delete/storage_forecast",automate.delete_localStorageForecast)
+router.get("/delete/storage_task",automate.delete_localStorageTask)
+
+
 
 module.exports = router;
