@@ -593,7 +593,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
             Object.keys(campaignNameGroup).forEach(key => {
 
-                var message = '<li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM') + ' : <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li>'
+                var message = '<li>' + moment(campaignNameGroup[key][0].campaign_start_date).format('DD-MM') + ' - ' + moment(campaignNameGroup[key][0].campaign_end_date).format('DD-MM') + ' :  <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroup[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroup[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignNameGroup[key]).length + ') </span></li>'
 
                 listCampaignString.push(message)
             })
@@ -609,7 +609,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
             Object.keys(campaignNameGroupSurreservation).forEach(key => {
 
-                var message_surreservation = '<li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM') + ': <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li>'
+                var message_surreservation = '<li>' + moment(campaignNameGroupSurreservation[key][0].campaign_start_date).format('DD-MM') + ' - ' + moment(campaignNameGroupSurreservation[key][0].campaign_end_date).format('DD-MM') + ' :  <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignNameGroupSurreservation[key][0].campaign_id + '"target="_blank"><strong>' + campaignNameGroupSurreservation[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignNameGroupSurreservation[key]).length + ') </span></li>'
 
                 listCampaignSurreservationString.push(message_surreservation)
             })
@@ -628,8 +628,8 @@ exports.alert_delivered_percentage = async (req, res) => {
                     pass: process.env.EMAIL_PASS
                 },
                 from: "oceane.sautron@antennereunion.fr",
-                to: "asb@antennereunion.fr",
-                cc: "alvine.didier@antennereunion.fr,oceane.sautron@antennereunion.fr",
+                to: "alvine.didier@antennereunion.fr",
+                cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Forecast: Problème de livraison',
                 html: ' <head><style>font-family: Century Gothic;    font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du forecast <b> </b> :<ul>' + listCampaignString.join('') + '</ul> <ul>' + listCampaignSurreservationString.join('') + '</ul> <br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
 
@@ -898,7 +898,7 @@ exports.alert_manage_creative = async (req, res) => {
                     case "WEB":
                         if ((((creativeAll[key][0].format_group === "MASTHEAD") || (creativeAll[key][0].format_group === "GRAND ANGLE") || (creativeAll[key][0].format_group === "INTERSTITIEL")) && (Object.keys(creativeAll[key]).length < 2))) {
 
-                            var message_format = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ': ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                            var message_format = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ' : ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
                             listCreativeCompte.push(message_format)
 
 
@@ -906,7 +906,7 @@ exports.alert_manage_creative = async (req, res) => {
                         }
 
                         if (((creativeAll[key][0].format_group === "HABILLAGE") && (Object.keys(creativeAll[key]).length < 1))) {
-                            var message_other = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ': ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                            var message_other = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ' : ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
                             listCreativeCompteOther.push(message_other)
 
 
@@ -916,7 +916,7 @@ exports.alert_manage_creative = async (req, res) => {
                     case "MOBILE/TABLETTE":
                         if ((((creativeAll[key][0].format_group === "MASTHEAD") || (creativeAll[key][0].format_group === "GRAND ANGLE") || (creativeAll[key][0].format_group === "INTERSTITIEL"))&&(Object.keys(creativeAll[key]).length < 1))) {
 
-                                var message_mobile = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ': ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                var message_mobile = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ' : ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
                                 listCreativeMobile.push(message_mobile)
 
                             
@@ -925,7 +925,7 @@ exports.alert_manage_creative = async (req, res) => {
 
                         if (((creativeAll[key][0].format_group === "HABILLAGE")&&(Object.keys(creativeAll[key]).length < 2))) {
 
-                                var message_mobileHabillage = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ': ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                var message_mobileHabillage = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ' : ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
                                 listCreativeMobileHabillage.push(message_mobileHabillage)
 
                             
@@ -936,7 +936,7 @@ exports.alert_manage_creative = async (req, res) => {
                     case "VIDEO":
                         if ((((creativeAll[key][0].format_group === "RECTANGLE VIDEO") || (creativeAll[key][0].format_group === "INTERSTITIEL"))&&(Object.keys(creativeAll[key]).length < 1))) {
 
-                                var message_video = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ': ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
+                                var message_video = '<li>' + creativeAll[key][0].campaign_start_date + ' - ' + creativeAll[key][0].campaign_end_date + ' : ' + creativeAll[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeAll[key][0].insertion_id + '"target="_blank"><strong>' + creativeAll[key][0].insertion_name + '</strong> </a>(Total des créatives: <span>' + Object.keys(creativeAll[key]).length + ') </span></li>'
                                 listCreativeVideo.push(message_video)
 
                             
@@ -969,7 +969,7 @@ exports.alert_manage_creative = async (req, res) => {
         if (!Utilities.empty(creativeUrl)) {
             Object.keys(creativeUrl).forEach(key => {
 
-                var message = '<li>' + creativeUrl[key][0].campaign_start_date + ' - ' + creativeUrl[key][0].campaign_end_date + ': ' + creativeUrl[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrl[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrl[key][0].insertion_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(creativeUrl[key]).length + ') </span></li>'
+                var message = '<li>' + creativeUrl[key][0].campaign_start_date + ' - ' + creativeUrl[key][0].campaign_end_date + ' : ' + creativeUrl[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrl[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrl[key][0].insertion_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(creativeUrl[key]).length + ') </span></li>'
 
                 listCreative.push(message)
             })
@@ -978,7 +978,7 @@ exports.alert_manage_creative = async (req, res) => {
         if (!Utilities.empty(creativeUrlClic)) {
             Object.keys(creativeUrlClic).forEach(key => {
 
-                var message2 = '<li>' + creativeUrlClic[key][0].campaign_start_date + ' - ' + creativeUrlClic[key][0].campaign_end_date + ': ' + creativeUrlClic[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrlClic[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrlClic[key][0].insertion_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(creativeUrlClic[key]).length + ') </span></li>'
+                var message2 = '<li>' + creativeUrlClic[key][0].campaign_start_date + ' - ' + creativeUrlClic[key][0].campaign_end_date + ' : ' + creativeUrlClic[key][0].campaign_name + ' - <a href="https://manage.smartadserver.com/Admin/Campagnes/Insertion/MediaCenter.aspx?insertionid=' + creativeUrlClic[key][0].insertion_id + '"target="_blank"><strong>' + creativeUrlClic[key][0].insertion_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(creativeUrlClic[key]).length + ') </span></li>'
 
                 listCreativeUrlClic.push(message2)
             })
@@ -1005,8 +1005,8 @@ exports.alert_manage_creative = async (req, res) => {
 
                 },
                 from: "oceane.sautron@antennereunion.fr",
-                to: "asb@antennereunion.fr",
-                cc: "alvine.didier@antennereunion.fr,oceane.sautron@antennereunion.fr",
+                to: "alvine.didier@antennereunion.fr",
+                cc: "oceane.sautron@antennereunion.fr",
                 subject: 'Alerte Manage: Problème de programmation des créatives',
 
                 html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage: des créative sont manquantes dans les insertions et/ou les url sont invalides <b> </b> : <ul>' + listCreative.join('')  + listCreativeUrlClic.join('')  + listCreativeCompte.join('') + listCreativeCompteOther.join('') + listCreativeMobile.join('') + listCreativeVideo.join('') + listCreativeMobile.join('') + listCreativeMobileHabillage.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
@@ -1143,7 +1143,7 @@ exports.alert_campaignOnline = async (req, res) => {
                 if (!Utilities.empty(campaignStatut)) {
                     Object.keys(campaignStatut).forEach(key => {
 
-                        var message = '<li>' + campaignStatut[key][0].campaign_start_date + ' - ' + campaignStatut[key][0].campaign_end_date + ': <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignStatut[key][0].campaign_id + '"target="_blank"><strong>' + campaignStatut[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignStatut[key]).length + ') </span></li>'
+                        var message = '<li>' + campaignStatut[key][0].campaign_start_date + ' - ' + campaignStatut[key][0].campaign_end_date + ' : <a href="https://manage.smartadserver.com/gestion/smartprog2.asp?CampagneID=' + campaignStatut[key][0].campaign_id + '"target="_blank"><strong>' + campaignStatut[key][0].campaign_name + '</strong> </a>(Total des insertions: <span>' + Object.keys(campaignStatut[key]).length + ') </span></li>'
 
                         listCampaignOffLineString.push(message)
                     })
@@ -1161,8 +1161,8 @@ exports.alert_campaignOnline = async (req, res) => {
                             pass: process.env.EMAIL_PASS
                         },
                         from: "oceane.sautron@antennereunion.fr",
-                        to: "asb@antennereunion.fr",
-                        cc: "alvine.didier@antennereunion.fr,oceane.sautron@antennereunion.fr",
+                        to: "alvine.didier@antennereunion.fr",
+                        cc: "oceane.sautron@antennereunion.fr",
                         subject: 'Alerte Manage: Problème de mise en ligne des campagnes',
 
                         html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage <b> </b> : <ul>' + listCampaignOffLineString.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
