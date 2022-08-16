@@ -83,7 +83,6 @@ localStorageAutomate = new LocalStorage('data/automate/');
 localStorageTV = new LocalStorage('data/tv/reporting');
 localStorageForecast = new LocalStorage('data/forecast/');
 
-
 exports.agencies = async (req, res) => {
     try {
         var config = SmartFunction.config('agencies');
@@ -3016,8 +3015,13 @@ exports.creatives = async (req, res) => {
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     //date du jour -2mois
     var now = new Date();
-    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 2), now.getDate());
+    var MonthPast = new Date(now.getFullYear(), (now.getMonth() - 1), now.getDate());
     const dateMonthPast = moment(MonthPast).format('YYYY-MM-DD 00:00:00');
+    const date_now = moment().format('YYYY-MM-DD');
+
+    var MonthLast = new Date(now.getFullYear(), (now.getMonth() + 2), now.getDate());
+    const dateMonthLast = moment(MonthLast).format('YYYY-MM-DD');
+    var nbr_add = new Array()
 
     try {
         // Listes toutes les données de insertions_templates
@@ -3036,12 +3040,14 @@ exports.creatives = async (req, res) => {
                 'insertion_id': {
                     [Op.notIn]: insertionCreativesDBIds
                 },
-                'insertion_archived': '0',
-                'insertion_created_at': {
-                    [Op.between]: [dateMonthPast, '2022-12-31']
+                //'insertion_archived': '0',
+                'insertion_start_date': {
+                    [Op.between]: [dateMonthPast, date_now]
+                },
+                'insertion_end_date': {
+                    [Op.between]: [date_now, dateMonthLast]
                 }
-            },
-            attributes: ['insertion_id']
+            }
         });
 
         var number_total_count = insertionDB.length;
@@ -3049,6 +3055,7 @@ exports.creatives = async (req, res) => {
         console.log('number_total_count', number_total_count);
         console.log('number_pages', number_pages);
         // await delay(10000); process.exit(1);
+        nbr_add.push(number_total_count);
 
         if (number_total_count > 0) {
             j = 0;
@@ -3126,6 +3133,7 @@ exports.creatives = async (req, res) => {
             }
 
         }
+       return res.json('La liste des créative a été mise à jour (total : ' + nbr_add + ')');
 
     } catch (error) {
         console.error('Error : ', error);
