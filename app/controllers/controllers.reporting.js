@@ -338,7 +338,9 @@ exports.report = async (req, res) => {
                                 "SiteId": {}
                             }, {
                                 "SiteName": {}
-                            }, {
+                            },
+
+                            {
                                 "Impressions": {}
                             }, {
                                 "ClickRate": {}
@@ -351,7 +353,11 @@ exports.report = async (req, res) => {
                                 }
                             }, {
                                 "ViewableImpressions": {}
-                            }],
+                            },
+                            {
+                                "ImageName": {}
+                            },
+                            ],
                             "filter": [{
                                 "CampaignId": [campaign_id]
                             }]
@@ -581,6 +587,7 @@ exports.report = async (req, res) => {
                                     var dataSplitGlobal = objDefault.datafile;
 
 
+                                 //   console.log(dataSplitGlobal)
 
                                     // Permet de faire l'addition
                                     const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -604,6 +611,8 @@ exports.report = async (req, res) => {
                                     const Clicks = [];
                                     const Complete = [];
                                     const ViewableImpressions = [];
+                                    const ImageCreative = [];
+
 
                                     const dataList = new Object();
 
@@ -620,10 +629,13 @@ exports.report = async (req, res) => {
                                                     insertion_type = line[5];
 
                                                     InsertionName.push(line[5]);
-                                                    Impressions.push(parseInt(line[10]));
+                                                    Impressions.push(parseInt(line[11]));
                                                     Clicks.push(parseInt(line[12]));
                                                     Complete.push(parseInt(line[13]));
-                                                    ViewableImpressions.push(parseInt(line[14]));
+                                                    ViewableImpressions.push(parseInt(line[15]));
+                                                    ImageCreative.push(line[10]);
+
+
                                                     var insertions_type = line[5]
 
                                                     dataList[i] = {
@@ -637,21 +649,25 @@ exports.report = async (req, res) => {
                                                         'format_name': line[7],
                                                         'site_id': line[8],
                                                         'site_name': line[9],
+                                                        'image_creative': line[10],
+
                                                         // 'impressions': parseInt(line[10]),
-                                                        'click_rate': parseInt(line[11]),
-                                                        'clicks': parseInt(line[12]),
+                                                        'click_rate': parseInt(line[12]),
+                                                        'clicks': parseInt(line[13]),
                                                         //'complete': parseInt(line[13]),
                                                         // 'viewable_impressions': parseInt(line[14])
                                                     }
 
                                                     if (insertion_type.match(/SLIDER{1}/igm)) {
-                                                        dataList[i]['impressions'] = parseInt(line[14]);
+                                                        dataList[i]['impressions'] = parseInt(line[11]);
                                                     } else {
-                                                        dataList[i]['impressions'] = parseInt(line[10]);
+                                                      //  dataList[i]['impressions'] = parseInt(line[10]);
+                                                        dataList[i]['impressions'] = parseInt(line[11]);
+
                                                     }
 
                                                     if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
-                                                        dataList[i]['complete'] = parseInt(line[13]);
+                                                        dataList[i]['complete'] = parseInt(line[14]);
                                                     } else {
                                                         dataList[i]['complete'] = 0;
                                                     }
@@ -660,6 +676,10 @@ exports.report = async (req, res) => {
                                             }
                                         }
                                     }
+
+                                    //console.log(dataList)
+
+
 
                                     var formatObjects = new Object();
                                     if (dataList && (Object.keys(dataList).length > 0)) {
@@ -700,119 +720,219 @@ exports.report = async (req, res) => {
                                         var siteM6 = new Array();
                                         var siteDAILYMOTION = new Array();
 
+                                        var creaMasthaedDesktop = new Array();
+                                        var creaMasthaedTab = new Array();
+                                        var creaMasthaedMobile = new Array();
+                                        var creaMasthaedMobileApp = new Array();
+
+                                        var creaGrandAngleDesktop = new Array();
+                                        var creaGrandAngleTab = new Array();
+                                        var creaGrandAngleMobile = new Array();
+                                        var creaGrandAngleMobileApp = new Array();
+
+                                        var creaInterstitielDesktop = new Array();
+                                        var creaInterstitielTab = new Array();
+                                        var creaInterstitielMobile = new Array();
+                                        var creaInterstitielMobileApp = new Array();
+
+
+                                        var creaHabillageDesktop = new Array();
+                                        var creaHabillageTab = new Array();
+                                        var creaHabillageMobile = new Array();
+                                        var creaHabillageMobileApp = new Array();
+
                                         for (var index = 1; index <= Object.keys(dataList).length; index++) {
                                             var insertion_name = dataList[index].insertion_name;
                                             var site_id = dataList[index].site_id;
                                             var site_name = dataList[index].site_name;
+                                            var image_crea = dataList[index].image_creative;
 
                                             /*console.log(insertion_name)
                                             console.log(site_name)
+                                          
                                             console.log("---------------")*/
 
 
 
                                             // Créer les tableaux des formats
-                                            if (insertion_name.match(/HABILLAGE{1}/igm)) {
-                                                formatHabillage.push(index);
-                                            }
+                                            switch (true) {
+                                                case (/HABILLAGE{1}/igm).test(insertion_name):
+                                                    formatHabillage.push(index);
 
-                                            if (insertion_name.match(/INTERSTITIEL|INTERSTITIEL VIDEO{1}/igm)) {
-                                                if (insertion_name.match(/INTERSTITIEL VIDEO{1}/igm)) {
-                                                    formatInterstitielVideo.push(index);
-                                                } else {
-                                                    formatInterstitiel.push(index);
+                                                    break;
 
-                                                }
-                                            }
+                                                case (/INTERSTITIEL|INTERSTITIEL VIDEO{1}/igm).test(insertion_name):
+                                                    if (insertion_name.match(/INTERSTITIEL VIDEO{1}/igm)) {
+                                                        formatInterstitielVideo.push(index);
+                                                    } else {
+                                                        formatInterstitiel.push(index);
+
+                                                    }
+
+                                                    break;
+
+                                                case (/MASTHEAD{1}/igm).test(insertion_name):
+                                                    formatMasthead.push(index);
+
+                                                    break;
+
+                                                case (/GRAND ANGLE{1}/igm).test(insertion_name):
+                                                    formatGrandAngle.push(index);
+
+                                                    break;
+
+                                                case (/PREROLL|MIDROLL{1}/igm).test(insertion_name):
+                                                    formatInstream.push(index);
+
+                                                    break;
+
+                                                case (/RECTANGLE|RECTANGLE VIDEO{1}/igm).test(insertion_name):
+                                                    if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
+                                                        formatRectangleVideo.push(index);
+                                                    } else {
+                                                        formatRectangle.push(index);
+
+                                                    }
+                                                    break;
 
 
+                                                case (/LOGO{1}/igm).test(insertion_name):
+                                                    formatLogo.push(index);
 
-                                            if (insertion_name.match(/MASTHEAD{1}/igm)) {
-                                                formatMasthead.push(index);
-                                            }
-                                            if (insertion_name.match(/GRAND ANGLE{1}/igm)) {
-                                                formatGrandAngle.push(index);
-                                            }
-                                            if (insertion_name.match(/PREROLL|MIDROLL{1}/igm)) {
-                                                formatInstream.push(index);
-                                            }
+                                                    break;
 
-                                            if (insertion_name.match(/RECTANGLE|RECTANGLE VIDEO{1}/igm)) {
+                                                case (/NATIVE{1}/igm).test(insertion_name):
+                                                    formatNative.push(index);
 
-                                                if (insertion_name.match(/RECTANGLE VIDEO{1}/igm)) {
-                                                    formatRectangleVideo.push(index);
-                                                } else {
-                                                    formatRectangle.push(index);
+                                                    break;
 
-                                                }
-                                            }
+                                                case (/SLIDER|SLIDER VIDEO{1}/igm).test(insertion_name):
+                                                    if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
+                                                        formatSliderVideo.push(index);
+                                                    } else {
+                                                        formatSlider.push(index);
 
-                                            if (insertion_name.match(/LOGO{1}/igm)) {
-                                                formatLogo.push(index);
-                                            }
-                                            if (insertion_name.match(/NATIVE{1}/igm)) {
-                                                formatNative.push(index);
-                                            }
+                                                    }
 
-                                            if (insertion_name.match(/SLIDER|SLIDER VIDEO{1}/igm)) {
-                                                if (insertion_name.match(/SLIDER VIDEO{1}/igm)) {
-                                                    formatSliderVideo.push(index);
-                                                } else {
-                                                    formatSlider.push(index);
+                                                    break;
+                                                case (/^\MEA{1}/igm).test(insertion_name):
+                                                    formatMea.push(index);
 
-                                                }
+                                                    break;
 
-                                            }
-                                            if (insertion_name.match(/^\MEA{1}/igm)) {
-                                                formatMea.push(index);
-                                            }
-                                            if (insertion_name.match(/CLICK COMMAND{1}|CC/igm)) {
-                                                formatClickCommand.push(index);
+                                                case (/CLICK COMMAND{1}|CC/igm).test(insertion_name):
+                                                    formatClickCommand.push(index);
+
+                                                    break;
+                                                default:
+                                                    break;
                                             }
 
                                             // Créer les tableaux des sites
-                                            if (site_name.match(/^\SM_LINFO.re{1}/igm)) {
-                                                siteLINFO.push(index);
+                                            switch (true) {
+                                                case (/^\SM_LINFO.re{1}/igm).test(site_name):
+                                                    siteLINFO.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_LINFO-ANDROID{1}/igm).test(site_name):
+                                                    siteLINFO_ANDROID.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_LINFO-IOS{1}/igm).test(site_name):
+                                                    siteLINFO_IOS.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_ANTENNEREUNION{1}/igm).test(site_name):
+                                                    siteANTENNEREUNION.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_DOMTOMJOB{1}/igm).test(site_name):
+                                                    siteDOMTOMJOB.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_IMMO974{1}/igm).test(site_name):
+                                                    siteIMMO974.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_RODZAFER_LP{1}/igm).test(site_name):
+                                                    siteRODZAFER_LP.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_RODZAFER_ANDROID{1}/igm).test(site_name):
+                                                    siteRODZAFER_ANDROID.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_RODZAFER_IOS{1}/igm).test(site_name):
+                                                    siteRODZAFER_ANDROID.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_ORANGE_REUNION{1}/igm).test(site_name):
+                                                    siteORANGE_REUNION.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_TF1{1}/igm).test(site_name):
+                                                    siteTF1.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_M6{1}/igm).test(site_name):
+                                                    siteM6.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_DAILYMOTION{1}/igm).test(site_name):
+                                                    siteDAILYMOTION.push(index);
+
+                                                    break;
+
+                                                case (/^\SM_RODALI{1}/igm).test(site_name):
+                                                    siteRODALI.push(index);
+
+                                                    break;
+
+                                                default:
+                                                    break;
                                             }
-                                            if (site_name.match(/^\SM_LINFO-ANDROID{1}/igm)) {
-                                                siteLINFO_ANDROID.push(index);
+
+                                            switch (true) {
+                                                case (/1024x768|2048x153/igm).test(image_crea):
+                                                    creaInterstitielDesktop.push(index);
+
+                                                    break;
+                                                case (/320x480|720x1280/igm).test(image_crea):
+                                                    creaInterstitielMobile.push(index);
+
+                                                    break;
+
+                                                case (/1536x2048/igm).test(image_crea):
+                                                    creaInterstitielTab.push(index);
+
+                                                    break;
+
+                                                case (/300x600/igm).test(image_crea):
+                                                    creaGrandAngleDesktop.push(index);
+
+                                                    break;
+                                                case (/300x250|300x250 APPLI/igm).test(image_crea):
+                                                    creaGrandAngleMobile.push(index);
+
+                                                    break;
+
+
+                                                default:
+                                                    break;
                                             }
-                                            if (site_name.match(/^\SM_LINFO-IOS{1}/igm)) {
-                                                siteLINFO_ANDROID.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_ANTENNEREUNION{1}/igm)) {
-                                                siteANTENNEREUNION.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_DOMTOMJOB{1}/igm)) {
-                                                siteDOMTOMJOB.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_IMMO974{1}/igm)) {
-                                                siteIMMO974.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_RODZAFER_LP{1}/igm)) {
-                                                siteRODZAFER_LP.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_RODZAFER_ANDROID{1}/igm)) {
-                                                siteRODZAFER_ANDROID.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_RODZAFER_IOS{1}/igm)) {
-                                                siteRODZAFER_ANDROID.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_ORANGE_REUNION{1}/igm)) {
-                                                siteORANGE_REUNION.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_TF1{1}/igm)) {
-                                                siteTF1.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_M6{1}/igm)) {
-                                                siteM6.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_DAILYMOTION{1}/igm)) {
-                                                siteDAILYMOTION.push(index);
-                                            }
-                                            if (site_name.match(/^\SM_RODALI{1}/igm)) {
-                                                siteRODALI.push(index);
-                                            }
+
                                         }
 
                                         // console.log(Object.keys(dataList).length)
@@ -1050,8 +1170,8 @@ exports.report = async (req, res) => {
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
                                     res.redirect('/r/' + campaign_crypt);
+                                    console.log(formatObjects.creativeList)
 
-                                    console.log(formatObjects)
                                 }
 
                             }, time);
@@ -1221,9 +1341,9 @@ exports.export_excel = async (req, res) => {
                 //Array of objects representing heading rows (very top)
                 const heading = [
                     [{
-                            value: 'Rapport de la campagne : ' + campaign_name,
-                            style: styles.headerDark
-                        }
+                        value: 'Rapport de la campagne : ' + campaign_name,
+                        style: styles.headerDark
+                    }
 
                     ],
                     ['Annonceur : ' + advertiser_name],

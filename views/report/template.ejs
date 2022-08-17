@@ -916,6 +916,39 @@
         </div>
         <% } %>
 
+
+
+        <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
+            <h3 class="title">
+                <i class="fas fa-chart-line"></i>
+                <strong>GRAND ANGLE / par créatives</strong>
+            </h3>
+        </div>
+        <div class="table-responsive-md">
+            <table class="table">
+                <thead class="text-center thead-dark">
+                    <tr>
+                        <th class="text-left">Créative types</th>
+                        <th>Impressions</th>
+                        <th>Clics</th>
+                        <th>Taux de clics</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <% for(i=0; i < Object.keys(reporting.grandangle.creativeList).length; i++) { %>
+                    <tr>
+                        <td class="text-left"><%= reporting.grandangle.creativeList[i].creative %></td>
+                        <td><%= utilities.numStr(reporting.grandangle.creativeList[i].impressions) %></td>
+                        <td><%= utilities.numStr(reporting.grandangle.creativeList[i].clicks) %></td>
+                        <td><%= reporting.grandangle.creativeList[i].ctr %>%</td>
+                    </tr>
+                    <% } %>
+                </tbody>
+                
+               
+            </table>
+        </div>
+
      <div class="pt-5 pb-5 text-right"> <a href="/r/<%=reporting.campaign.campaign_crypt %>/export" class="btn btn-xs btn-success"> <i class="fas fa-file-excel"> </i> Télécharger le rapport <span class="small">(Format : Excel)</span></a> </div>
     </div>
 
