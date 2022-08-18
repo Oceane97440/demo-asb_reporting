@@ -620,20 +620,25 @@ exports.report = async (req, res) => {
                                     if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
                                         var numberLine = dataSplitGlobal.length;
 
-                                        // dataSplitGlobal);
+
+                                        
+
                                         if (numberLine > 1) {
                                             for (i = 1; i < numberLine; i++) {
+
                                                 // split push les données dans chaque colone
                                                 line = dataSplitGlobal[i].split(';');
+                                               
+
                                                 if (!Utilities.empty(line[0])) {
                                                     insertion_type = line[5];
 
                                                     InsertionName.push(line[5]);
-                                                    Impressions.push(parseInt(line[11]));
+                                                    Impressions.push(parseInt(line[10]));
                                                     Clicks.push(parseInt(line[12]));
                                                     Complete.push(parseInt(line[13]));
-                                                    ViewableImpressions.push(parseInt(line[15]));
-                                                    ImageCreative.push(line[10]);
+                                                    ViewableImpressions.push(parseInt(line[14]));
+                                                    ImageCreative.push(line[15]);
 
 
                                                     var insertions_type = line[5]
@@ -649,25 +654,25 @@ exports.report = async (req, res) => {
                                                         'format_name': line[7],
                                                         'site_id': line[8],
                                                         'site_name': line[9],
-                                                        'image_creative': line[10],
+                                                        'image_creative': line[15],
 
                                                         // 'impressions': parseInt(line[10]),
-                                                        'click_rate': parseInt(line[12]),
-                                                        'clicks': parseInt(line[13]),
+                                                        'click_rate': parseInt(line[11]),
+                                                        'clicks': parseInt(line[12]),
                                                         //'complete': parseInt(line[13]),
                                                         // 'viewable_impressions': parseInt(line[14])
                                                     }
 
                                                     if (insertion_type.match(/SLIDER{1}/igm)) {
-                                                        dataList[i]['impressions'] = parseInt(line[11]);
+                                                        dataList[i]['impressions'] = parseInt(line[10]);
                                                     } else {
                                                       //  dataList[i]['impressions'] = parseInt(line[10]);
-                                                        dataList[i]['impressions'] = parseInt(line[11]);
+                                                        dataList[i]['impressions'] = parseInt(line[10]);
 
                                                     }
 
                                                     if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
-                                                        dataList[i]['complete'] = parseInt(line[14]);
+                                                        dataList[i]['complete'] = parseInt(line[13]);
                                                     } else {
                                                         dataList[i]['complete'] = 0;
                                                     }
@@ -677,7 +682,7 @@ exports.report = async (req, res) => {
                                         }
                                     }
 
-                                    //console.log(dataList)
+                                   // console.log(dataList)
 
 
 

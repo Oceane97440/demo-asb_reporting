@@ -921,7 +921,7 @@
         <div class="row p-3 mt-5 ml-2 mr-2" id="table_uu">
             <h3 class="title">
                 <i class="fas fa-chart-line"></i>
-                <strong>GRAND ANGLE / par créatives</strong>
+                <strong>Par créatives</strong>
             </h3>
         </div>
         <div class="table-responsive-md">
@@ -943,6 +943,15 @@
                         <td><%= reporting.grandangle.creativeList[i].ctr %>%</td>
                     </tr>
                     <% } %>
+
+                    <% for(i=0; i < Object.keys(reporting.interstitiel.creativeList).length; i++) { %>
+                        <tr>
+                            <td class="text-left"><%= reporting.interstitiel.creativeList[i].creative %></td>
+                            <td><%= utilities.numStr(reporting.interstitiel.creativeList[i].impressions) %></td>
+                            <td><%= utilities.numStr(reporting.interstitiel.creativeList[i].clicks) %></td>
+                            <td><%= reporting.interstitiel.creativeList[i].ctr %>%</td>
+                        </tr>
+                        <% } %>
                 </tbody>
                 
                
