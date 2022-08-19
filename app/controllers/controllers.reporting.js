@@ -587,7 +587,7 @@ exports.report = async (req, res) => {
                                     var dataSplitGlobal = objDefault.datafile;
 
 
-                                 //   console.log(dataSplitGlobal)
+                                    //   console.log(dataSplitGlobal)
 
                                     // Permet de faire l'addition
                                     const reducer = (accumulator, currentValue) => accumulator + currentValue;
@@ -615,20 +615,21 @@ exports.report = async (req, res) => {
 
 
                                     const dataList = new Object();
+                                    const dataListCreative = new Array()
 
                                     var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
                                     if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
                                         var numberLine = dataSplitGlobal.length;
 
 
-                                        
+
 
                                         if (numberLine > 1) {
                                             for (i = 1; i < numberLine; i++) {
 
                                                 // split push les données dans chaque colone
                                                 line = dataSplitGlobal[i].split(';');
-                                               
+
 
                                                 if (!Utilities.empty(line[0])) {
                                                     insertion_type = line[5];
@@ -639,9 +640,6 @@ exports.report = async (req, res) => {
                                                     Complete.push(parseInt(line[13]));
                                                     ViewableImpressions.push(parseInt(line[14]));
                                                     ImageCreative.push(line[15]);
-
-
-                                                    var insertions_type = line[5]
 
                                                     dataList[i] = {
                                                         'campaign_start_date': line[0],
@@ -666,26 +664,53 @@ exports.report = async (req, res) => {
                                                     if (insertion_type.match(/SLIDER{1}/igm)) {
                                                         dataList[i]['impressions'] = parseInt(line[10]);
                                                     } else {
-                                                      //  dataList[i]['impressions'] = parseInt(line[10]);
+                                                        //  dataList[i]['impressions'] = parseInt(line[10]);
                                                         dataList[i]['impressions'] = parseInt(line[10]);
+
+                                                    }
+
+
+
+
+                                                    //regex qui regroupe les insertions creatives (PREROLL - DAILYMOTION - CORDONS BLEUS)
+                                                    var regex_string = insertion_type.match(/(.*)-(.*)- (?:.(?!-))+$/igm)
+
+                                                    if (regex_string) {
+
+                                                        const string_crea = (regex_string[0]).split('- ')
+                                                        var lastElement = string_crea.slice(-1);
+
+
+                                                        dataObjCreatives = {
+                                                            'creative': lastElement[0],
+                                                            'insertion_name': line[5],
+                                                            'impressions': parseInt(line[10]),
+                                                            'clicks': parseInt(line[12]),
+                                                        }
+
+                                                        dataListCreative.push(dataObjCreatives)
+
+
 
                                                     }
 
                                                     if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
                                                         dataList[i]['complete'] = parseInt(line[13]);
+                                                        dataObjCreatives['complete'] = parseInt(line[13]);
+
                                                     } else {
                                                         dataList[i]['complete'] = 0;
-                                                    }
+                                                        dataObjCreatives['complete'] = 0;
 
+                                                    }
                                                 }
                                             }
                                         }
                                     }
 
-                                   // console.log(dataList)
 
 
-
+                                   
                                     var formatObjects = new Object();
                                     if (dataList && (Object.keys(dataList).length > 0)) {
                                         // Initialise les formats
@@ -725,10 +750,7 @@ exports.report = async (req, res) => {
                                         var siteM6 = new Array();
                                         var siteDAILYMOTION = new Array();
 
-                                        var creaMasthaedDesktop = new Array();
-                                        var creaMasthaedTab = new Array();
-                                        var creaMasthaedMobile = new Array();
-                                        var creaMasthaedMobileApp = new Array();
+
 
                                         var creaGrandAngleDesktop = new Array();
                                         var creaGrandAngleTab = new Array();
@@ -740,11 +762,6 @@ exports.report = async (req, res) => {
                                         var creaInterstitielMobile = new Array();
                                         var creaInterstitielMobileApp = new Array();
 
-
-                                        var creaHabillageDesktop = new Array();
-                                        var creaHabillageTab = new Array();
-                                        var creaHabillageMobile = new Array();
-                                        var creaHabillageMobileApp = new Array();
 
                                         for (var index = 1; index <= Object.keys(dataList).length; index++) {
                                             var insertion_name = dataList[index].insertion_name;
@@ -909,34 +926,34 @@ exports.report = async (req, res) => {
                                                     break;
                                             }
 
-                                            switch (true) {
-                                                case (/1024x768|2048x153/igm).test(image_crea):
-                                                    creaInterstitielDesktop.push(index);
-
-                                                    break;
-                                                case (/320x480|720x1280/igm).test(image_crea):
-                                                    creaInterstitielMobile.push(index);
-
-                                                    break;
-
-                                                case (/1536x2048/igm).test(image_crea):
-                                                    creaInterstitielTab.push(index);
-
-                                                    break;
-
-                                                case (/300x600/igm).test(image_crea):
-                                                    creaGrandAngleDesktop.push(index);
-
-                                                    break;
-                                                case (/300x250|300x250 APPLI/igm).test(image_crea):
-                                                    creaGrandAngleMobile.push(index);
-
-                                                    break;
-
-
-                                                default:
-                                                    break;
-                                            }
+                                            /* switch (true) {
+                                                 case (/1024x768|2048x153/igm).test(image_crea):
+                                                     creaInterstitielDesktop.push(index);
+ 
+                                                     break;
+                                                 case (/320x480|720x1280/igm).test(image_crea):
+                                                     creaInterstitielMobile.push(index);
+ 
+                                                     break;
+ 
+                                                 case (/1536x2048/igm).test(image_crea):
+                                                     creaInterstitielTab.push(index);
+ 
+                                                     break;
+ 
+                                                 case (/300x600/igm).test(image_crea):
+                                                     creaGrandAngleDesktop.push(index);
+ 
+                                                     break;
+                                                 case (/300x250|300x250 APPLI/igm).test(image_crea):
+                                                     creaGrandAngleMobile.push(index);
+ 
+                                                     break;
+ 
+ 
+                                                 default:
+                                                     break;
+                                             }*/
 
                                         }
 
@@ -1159,6 +1176,56 @@ exports.report = async (req, res) => {
                                     }
 
 
+                                    if (!Utilities.empty(dataListCreative)) {
+                                        const ImpressionCrea = []
+                                        const ClicksCrea = []
+                                        const CompleteCrea = []
+
+                                        //fonction qui regrouge les obj qui porte le même nom de la creative
+                                        //le fonction fait la somme des impressions,clic ect...par créative
+                                        const groupCreatives = Object.values(dataListCreative.reduce((r, o) => (r[o.creative]
+                                            ? (r[o.creative].impressions += o.impressions, r[o.creative].clicks += o.clicks, r[o.creative].ctr = parseFloat((r[o.creative].clicks / r[o.creative].impressions) * 100).toFixed(2),
+                                                r[o.creative].complete += o.complete,
+                                                r[o.creative].ctrComplete = parseFloat((r[o.creative].complete / r[o.creative].impressions) * 100).toFixed(2)
+
+                                            )
+                                            : (r[o.creative] = { ...o }), r), {}));
+
+
+
+                                        for (let i = 0; i < groupCreatives.length; i++) {
+                                            ImpressionCrea.push(groupCreatives[i].impressions)
+                                            ClicksCrea.push(groupCreatives[i].clicks)
+                                            CompleteCrea.push(groupCreatives[i].complete)
+
+
+                                        }
+
+                                        if ((ImpressionCrea.length > 0) || (ClicCrea.length > 0) || (CompleteCrea.length > 0)) {
+                                            var creativeImpressions = ImpressionCrea.reduce(reducer);
+                                            var creativeClicks = ClicksCrea.reduce(reducer);
+                                            var creativeComplete = CompleteCrea.reduce(reducer);
+
+                                            var creativeCtr = parseFloat((creativeClicks / creativeImpressions) * 100).toFixed(
+                                                2
+                                            );
+
+                                            var creativeCtrComplete = parseFloat(
+                                                (creativeComplete / creativeImpressions) * 100
+                                            ).toFixed(2);
+
+                                            formatObjects.creatives = {
+                                                'impressions': creativeImpressions,
+                                                'clicks': creativeClicks,
+                                                'ctr': creativeCtr,
+                                                'ctrComplete': creativeCtrComplete,
+                                            }
+                                        }
+                                        formatObjects.creative = groupCreatives
+
+                                    }
+
+
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
                                         .add(2, 'hours')
@@ -1175,7 +1242,7 @@ exports.report = async (req, res) => {
                                     // Créer le localStorage
                                     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
                                     res.redirect('/r/' + campaign_crypt);
-                                    console.log(formatObjects.creativeList)
+                                    console.log(formatObjects)
 
                                 }
 

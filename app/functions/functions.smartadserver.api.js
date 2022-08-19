@@ -139,7 +139,6 @@ exports.sortDataReport = function (formatSearch, dataObject) {
     var insertions = new Array();
     var impressions = new Array();
     var creatives = new Array();
-    //  viewable_impressions = new Array();
     clicks = new Array();
     complete = new Array();
     var sites = new Array();
@@ -151,15 +150,10 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         insertion_name = dataObject[key].insertion_name;
         creative = dataObject[key].image_creative;
 
-        console.log(creative)
-        console.log("----------")
-
-
         insertions.push(insertion_name);
         impressions.push(parseInt(dataObject[key].impressions));
         clicks.push(parseInt(dataObject[key].clicks));
         complete.push(parseInt(dataObject[key].complete));
-        //  viewable_impressions.push(parseInt(dataObject[key].viewable_impressions));
         sites_rename.push(site_name);
 
         // Récupére le nom des sites et les classes Créer les tableaux des sites
@@ -245,7 +239,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             sites.push('LINFO.RE (site)');
         }
 
-        switch (true) {
+        /*switch (true) {
             case (/1024x768|2048x153/igm).test(creative):
                 creatives.push('Interstitiel (desktop)');
 
@@ -272,13 +266,11 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
             default:
                 break;
-        }
+        }*/
     }
-    //console.log(creatives)
 
     // Gestion des sites
     if (sites && (sites.length > 0)) {
-        //console.log('length sites '+sites.length)
 
         var siteUnique = new Array();
         var siteUniqueKey = new Array();
@@ -293,7 +285,6 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             impressionsSite = parseInt(dataObject[key].impressions);
             clicksSite = parseInt(dataObject[key].clicks);
             completeSite = parseInt(dataObject[key].complete);
-            //  viewableimpressionsSite = parseInt(dataObject[key].viewable_impressions);
 
             var nameSite = sites[kn];
 
@@ -334,17 +325,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                 siteComplete[nameSite][0] = completeSite;
             }
 
-            // Rentre les Viewable Impression
-            /* if (siteViewableImpressions[nameSite]) {
-                 siteViewableImpressions[nameSite].splice(
-                     siteViewableImpressions[nameSite].length,
-                     1,
-                     viewableimpressionsSite
-                 );
-             } else {
-                 siteViewableImpressions[nameSite] = new Array();
-                 siteViewableImpressions[nameSite][0] = viewableimpressionsSite;
-             }*/
+
         }
 
         //console.log(siteUnique)
@@ -358,14 +339,9 @@ exports.sortDataReport = function (formatSearch, dataObject) {
             for (var ln = 0; ln < siteUniqueCount.length; ln++) {
                 sN = siteUniqueCount[ln];
                 siteImpressionsSUM = siteImpressions[sN].reduce(reducer);
-                // console.log(sN)
-
-                //  console.log(siteImpressionsSUM)
+               
 
                 siteClicksSUM = siteClicks[sN].reduce(reducer);
-                // console.log(siteClicksSUM)
-
-
 
                 siteCompleteSUM = siteComplete[sN].reduce(reducer);
                 //siteViewableImpressionsSUM = siteViewableImpressions[sN].reduce(reducer);
@@ -382,7 +358,6 @@ exports.sortDataReport = function (formatSearch, dataObject) {
                     ctr: siteCtrSUM,
                     complete: siteCompleteSUM,
                     ctrComplete: siteCtrComplete,
-                    // viewable_impressions: siteViewableImpressionsSUM
                 };
                 siteList[ln] = itemSite;
                 //console.log(itemSite)
@@ -394,6 +369,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
         }
     }
 
+    /*
     if (creatives && (creatives.length > 0)) {
 
 
@@ -485,8 +461,8 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
 
         }
-    }
-  
+    }*/
+
 
     //  console.log('-----------------')
     // Fais le calcul
@@ -494,26 +470,18 @@ exports.sortDataReport = function (formatSearch, dataObject) {
     clicksSUM = clicks.reduce(reducer);
     ctrSUM = eval((clicksSUM / impressionsSUM) * 100).toFixed(2);
     completeSUM = complete.reduce(reducer);
-    //  viewable_impressionsSUM = viewable_impressions.reduce(reducer);
 
     ctrComplete = eval((completeSUM / impressionsSUM) * 100).toFixed(2);
 
     resultDateReport = {
         formatKey: formatSearch,
-        // insertions : insertions, sites_rename : sites_rename, sites : sites,
-        // siteUniqueCount : siteUniqueCount, siteUnique : siteUnique, siteImpressions :
-        // siteImpressions, siteClicks : siteClicks, siteComplete : siteComplete,
         siteList: siteList,
-        creativeList:creativeList,
-        // impressions : impressions,
+        //  creativeList:creativeList,
         impressions: impressions.reduce(reducer),
-        // clicks : clicks,
         clicks: clicks.reduce(reducer),
         ctr: ctrSUM,
-        // complete : complete,
         complete: completeSUM,
         ctrComplete: ctrComplete,
-        //  viewable_impressions: viewable_impressionsSUM
 
     };
 
