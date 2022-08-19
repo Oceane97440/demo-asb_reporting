@@ -935,7 +935,7 @@
                             <th>Impressions</th>
                             <th>Clics</th>
                             <th>Taux de clics</th>
-                            <% if((reporting.creatives.ctrComplete !=='0')) { %>
+                            <% if((reporting.creatives.ctrComplete !=='0.00')) { %>
                                 <th>VTR</th>
                             <% } %>
                         </tr>
@@ -947,7 +947,7 @@
                             <td><%= utilities.numStr(reporting.creative[i].impressions) %></td>
                             <td><%= utilities.numStr(reporting.creative[i].clicks) %></td>
                             <td><%= reporting.creative[i].ctr %>%</td>
-                            <% if((reporting.creatives.ctrComplete !==0)) { %>
+                            <% if((reporting.creatives.ctrComplete !=='0.00')) { %>
                             <td><%= reporting.creative[i].ctrComplete %>%</td>
                             <% } %>
                         </tr>
@@ -961,7 +961,7 @@
                             <td><%= utilities.numStr(reporting.creatives.impressions) %></td>
                             <td><%= utilities.numStr(reporting.creatives.clicks) %></td>
                             <td><%= reporting.creatives.ctr %>%</td>
-                            <% if((reporting.creatives.ctrComplete !==0)) { %>
+                            <% if((reporting.creatives.ctrComplete !=='0.00')) { %>
                                 <td><%= reporting.creatives.ctrComplete %>%</td>
                             <% } %>
                         </tr>
