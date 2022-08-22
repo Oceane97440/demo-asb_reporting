@@ -668,7 +668,13 @@ exports.report = async (req, res) => {
                                                         dataList[i]['impressions'] = parseInt(line[10]);
 
                                                     }
+                                                    if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
+                                                        dataList[i]['complete'] = parseInt(line[13]);
 
+                                                    } else {
+                                                        dataList[i]['complete'] = 0;
+
+                                                    }
 
 
 
@@ -677,32 +683,35 @@ exports.report = async (req, res) => {
 
                                                     if (regex_string) {
 
+
                                                         const string_crea = (regex_string[0]).split('- ')
                                                         var lastElement = string_crea.slice(-1);
 
 
-                                                        dataObjCreatives = {
-                                                            'creative': lastElement[0],
-                                                            'insertion_name': line[5],
-                                                            'impressions': parseInt(line[10]),
-                                                            'clicks': parseInt(line[12]),
+
+                                                        if (!(lastElement[0]).match(/POSITION{1}/gim)) {
+                                                           
+
+                                                            var dataObjCreatives = {
+                                                                'creative': lastElement[0],
+                                                                'insertion_name': line[5],
+                                                                'impressions': parseInt(line[10]),
+                                                                'clicks': parseInt(line[12]),
+                                                            }
+
+                                                            dataListCreative.push(dataObjCreatives)
+
+                                                            if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
+                                                                dataObjCreatives['complete'] = parseInt(line[13]);
+
+                                                            } else {
+                                                                dataObjCreatives['complete'] = 0;
+
+                                                            }
                                                         }
-
-                                                        dataListCreative.push(dataObjCreatives)
-
-
-
                                                     }
 
-                                                    if (insertion_type.match(/PREROLL|MIDROLL{1}/igm)) {
-                                                        dataList[i]['complete'] = parseInt(line[13]);
-                                                        dataObjCreatives['complete'] = parseInt(line[13]);
 
-                                                    } else {
-                                                        dataList[i]['complete'] = 0;
-                                                        dataObjCreatives['complete'] = 0;
-
-                                                    }
                                                 }
                                             }
                                         }
@@ -710,7 +719,7 @@ exports.report = async (req, res) => {
 
 
 
-                                   
+
                                     var formatObjects = new Object();
                                     if (dataList && (Object.keys(dataList).length > 0)) {
                                         // Initialise les formats
@@ -847,6 +856,7 @@ exports.report = async (req, res) => {
 
                                                     break;
                                                 default:
+                                                    console.log("Aucune data")
                                                     break;
                                             }
 
@@ -923,6 +933,8 @@ exports.report = async (req, res) => {
                                                     break;
 
                                                 default:
+                                                    console.log("Aucune data")
+
                                                     break;
                                             }
 
