@@ -4146,21 +4146,13 @@ exports.forecast = async (req, res) => {
 exports.delete_localStorageForecast = async (req, res) => {
 
 
-    const now = new Date();
-    var DayPast = new Date(now.getFullYear(), (now.getMonth()), now.getDate() - 2);
-    const cacheStorageNow = "forecast-global-" + moment(DayPast).format('YYYYMMDD') + '.json';
-
     try {
-        var data_localStorageForecast = localStorageForecast.getItem(cacheStorageNow);
 
-        if (data_localStorageForecast) {
+        localStorageForecast.clear();
+        
+        res.json({ message: "Le localStorage forecast est supprimé " })
 
-            localStorageForecast.removeItem(cacheStorageNow);
-            res.json({ message: "Le localStorage est supprimé :" + cacheStorageNow })
-
-        } else {
-            res.json({ message: "Pas de suppression du localStorage" })
-        }
+        
 
 
     } catch (error) {
