@@ -485,7 +485,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
                             if (delivered_percentage <= 95) {
 
-                              
+
 
                                 var objForecastLastDay = {
                                     campaign_id: campaign_id,
@@ -658,17 +658,48 @@ exports.alert_manage_creative = async (req, res) => {
 
 
     console.log(date_now + ' - ' + dateMonthPast + ' - ' + dateMonthLast)
-
+    const advertiserExclus = new Array(
+        418935,
+        427952,
+        409707,
+        425912,
+        425914,
+        438979,
+        439470,
+        439506,
+        439511,
+        439512,
+        439513,
+        439514,
+        439515,
+        440117,
+        440118,
+        440121,
+        440122,
+        440124,
+        440126,
+        445117,
+        455371,
+        455384,
+        320778,
+        417243,
+        414097,
+        411820,
+        320778,
+        464149,
+        417716,
+        464862
+    );
 
     await ModelInsertions.findAll({
         where: {
             [Op.and]: [{
                 insertion_start_date: {
-                    [Op.between]: [dateMonthPast, date_now]
+                    [Op.between]: [dateMonthPast,date_now]
 
                 },
                 insertion_end_date: {
-                    [Op.between]: [date_now, dateMonthLastEnd]
+                    [Op.between]: [date_now, dateMonthLast]
 
                 },
 
@@ -676,6 +707,11 @@ exports.alert_manage_creative = async (req, res) => {
         },
         include: [{
             model: ModelCampaigns,
+            where:{
+                advertiser_id: {
+                    [Op.notIn]: advertiserExclus
+                }
+            }
 
 
         }]
@@ -701,10 +737,9 @@ exports.alert_manage_creative = async (req, res) => {
                 where: {
                     insertion_id: insertions[i].insertion_id,
                 }
+              
 
             }).then(async (element) => {
-
-
 
 
                 if (!Utilities.empty(element)) {
@@ -787,9 +822,11 @@ exports.alert_manage_creative = async (req, res) => {
 
 
                         }
-                        if (!Utilities.empty(creative_url)) {
 
-                            if (!creative_url.match(regex_url)) {
+                        if (!Utilities.empty(creative_url)) {
+                            const regexMatchCrea_Url = await creative_url.match(regex_url)
+
+                            if (regexMatchCrea_Url) {
 
                                 var objCreative = {
                                     campaign_id: campaign_id,
@@ -808,8 +845,12 @@ exports.alert_manage_creative = async (req, res) => {
                                 ObjCreativeUrl.push(objCreative)
 
                             }
+                        }
+                        if (!Utilities.empty(creative_clickUrl)) {
 
-                            if ((!creative_clickUrl.match(regex_urlClic))) {
+                            const regexMatchCrea_clicUrl = await creative_clickUrl.match(regex_urlClic)
+
+                            if (regexMatchCrea_clicUrl) {
 
                                 var objCreativeUrlClic = {
                                     campaign_id: campaign_id,
@@ -827,8 +868,8 @@ exports.alert_manage_creative = async (req, res) => {
                                 ObjCreativeurlClic.push(objCreativeUrlClic)
 
                             }
-
                         }
+
 
                     }
 
@@ -954,27 +995,27 @@ exports.alert_manage_creative = async (req, res) => {
             (!Utilities.empty(listCreativeMobileHabillage))) {
 
 
-            nodeoutlook.sendEmail({
+                nodeoutlook.sendEmail({
 
-                auth: {
-                    user: "oceane.sautron@antennereunion.fr",
-                    pass: process.env.EMAIL_PASS
-
-
-                },
-                from: "oceane.sautron@antennereunion.fr",
-                to: "alvine.didier@antennereunion.fr",
-                cc: "oceane.sautron@antennereunion.fr",
-                subject: 'Alerte Manage: Problème de programmation des créatives',
-
-                html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage: des créative sont manquantes dans les insertions et/ou les url sont invalides <b> </b> : <ul>' + listCreative.join('') + listCreativeUrlClic.join('') + listCreativeCompte.join('') + listCreativeCompteOther.join('') + listCreativeMobile.join('') + listCreativeVideo.join('') + listCreativeMobile.join('') + listCreativeMobileHabillage.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
-
-                ,
-                onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
-                onSuccess: (i) => res.json({ message: "Email alerte manage campagne" })
-
-
-            })
+                    auth: {
+                        user: "oceane.sautron@antennereunion.fr",
+                        pass: process.env.EMAIL_PASS
+    
+    
+                    },
+                    from: "oceane.sautron@antennereunion.fr",
+                    to: "alvine.didier@antennereunion.fr",
+                    cc: "oceane.sautron@antennereunion.fr",
+                    subject: 'Alerte Manage: Problème de programmation des créatives',
+    
+                    html: ' <head><style>font-family: Century Gothic;font-size: large; </style></head>Bonjour <br><br>  Tu trouveras ci-dessous le lien pour voir la liste des alertes du manage, problème de paramétrage: des créative sont manquantes dans les insertions et/ou les url sont invalides <b> </b> : <ul>' + listCreative.join('') + listCreativeUrlClic.join('') + listCreativeCompte.join('') + listCreativeCompteOther.join('') + listCreativeMobile.join('') + listCreativeVideo.join('') + listCreativeMobile.join('') + listCreativeMobileHabillage.join('') + '</ul><br><br> À dispo pour échanger <br><br> <div style="font-size: 11pt;font-family: Calibri,sans-serif;"><img src="https://reporting.antennesb.fr/public/admin/photos/logo.png" width="79px" height="48px"><br><br><p><strong>L\'équipe Adtraffic</strong><br><small>Antenne Solutions Business<br><br> 2 rue Emile Hugot - Technopole de La Réunion<br> 97490 Sainte-Clotilde<br> Fixe : 0262 48 47 54<br> Fax : 0262 48 28 01 <br> Mobile : 0692 05 15 90<br> <a href="mailto:adtraffic@antennereunion.fr">adtraffic@antennereunion.fr</a></small></p></div>'
+    
+                    ,
+                    onError: (e) => res.json({ message: "Une erreur est survenue lors de l'envoie du mail" }),
+                    onSuccess: (i) => res.json({ message: "Email alerte manage campagne" })
+    
+    
+                })
         } else {
             res.json({ message: "Aucune alerte créative" })
         }
