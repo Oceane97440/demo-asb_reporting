@@ -688,7 +688,7 @@ exports.report = async (req, res) => {
                                                         var lastElement = string_crea.slice(-1);
 
 
-
+                                                        //si dans le nom de l'insertion il se termine par 'POSITION' on ne crée pas dataObjCreatives 
                                                         if (!(lastElement[0]).match(/POSITION{1}/gim)) {
                                                            
 

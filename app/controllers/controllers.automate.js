@@ -3144,6 +3144,7 @@ exports.insertions = async (req, res) => {
     try {
 
         var config = SmartFunction.config('insertions');
+        var nbr_add = new Array()
         await axios(config).then(function (res) {
             if (!Utilities.empty(res.data)) {
                 var data = res.data;
@@ -3152,7 +3153,7 @@ exports.insertions = async (req, res) => {
                 var number_pages = Math.round((number_total_count / 100) + 1);
                 console.log(number_total_count);
                 console.log('Number Pages :' + number_pages);
-
+                nbr_add.push(number_total_count);
                 const addItem = async () => {
                     for (let page = 0; page <= number_pages; page++) {
                         let offset = page * 100;
@@ -3161,14 +3162,14 @@ exports.insertions = async (req, res) => {
                             "offset": offset
                         };
                         // var config = SmartFunction.config('creatives', '', '', insertionObject);
-                        var config = SmartFunction.config('creatives', paramsObject);
+                       // var config = SmartFunction.config('creatives', paramsObject);
 
                         var config2 = SmartFunction.config('insertions', paramsObject);
                         await axios(config2).then(function (response) {
                             if (!Utilities.empty(response.data)) {
                                 var dataValue = response.data;
                                 var number_line_offset = data.length;
-                                if (number_line_offset >= 0) {
+                                if (number_line_offset > 0) {
                                     for (i = 0; i < number_line_offset; i++) {
 
                                         // console.log(dataValue)
@@ -3291,11 +3292,13 @@ exports.insertions = async (req, res) => {
                                             });
                                     }
                                 }
-                            } else {
-                                console.error('Error : Aucune donnée disponible');
-                            }
+                                return res.json('La liste des insertions a été mise à jour (total : ' + nbr_add + ')');
+
+                            } 
+                            
 
                         });
+
                     }
                 }
 
@@ -3305,6 +3308,7 @@ exports.insertions = async (req, res) => {
                 console.error('Error : Aucune donnée disponible');
             }
         });
+
     } catch (error) {
         console.error('Error : ' + error);
     }
@@ -3314,7 +3318,6 @@ exports.insertion = async (req, res) => {
     try {
         let insertion_id = req.query.insertion_id;
 
-        console.log(insertion_id)
 
         if (insertion_id) {
             insertionObject = {

@@ -400,7 +400,6 @@ exports.alert_delivered_percentage = async (req, res) => {
     const date_end = new Date(moment(now).add('5', 'd').format('YYYY-MM-DD'));
     const timestamp_lastDay = date_end.getTime()
 
-
     if (data_localStorageForecast) {
 
         const ObjDeliveredPercentage = new Array()
@@ -473,6 +472,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
                     if (campaign) {
 
+
                         var campaign_start_date = campaign.campaign_start_date
                         var campaign_end_date = campaign.campaign_end_date
                         var campaign_crypt = campaign.campaign_crypt
@@ -485,6 +485,8 @@ exports.alert_delivered_percentage = async (req, res) => {
 
                             if (delivered_percentage <= 95) {
 
+                              
+
                                 var objForecastLastDay = {
                                     campaign_id: campaign_id,
                                     campaign_crypt: campaign_crypt,
@@ -495,7 +497,6 @@ exports.alert_delivered_percentage = async (req, res) => {
                                     insertion_name: insertion_name,
                                     delivered_percentage: delivered_percentage
                                 }
-
                                 ObjDeliveredPercentageLastDay.push(objForecastLastDay)
 
 
@@ -567,12 +568,6 @@ exports.alert_delivered_percentage = async (req, res) => {
         const campaignNameGroupSurreservation = Utilities.groupBy(ObjDeliveredPercentageSurreservation, 'campaign_id');
         const campaignNameGroupLastDay = Utilities.groupBy(ObjDeliveredPercentageLastDay, 'campaign_id')
 
-
-        data.moment = moment;
-        data.utilities = Utilities
-        data.campaignNameGroup = campaignNameGroup
-        data.campaignNameGroupSurreservation = campaignNameGroupSurreservation
-        data.campaignNameGroupLastDay = campaignNameGroupLastDay
 
         var listCampaignString = new Array()
 
