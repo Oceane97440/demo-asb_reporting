@@ -1,6 +1,10 @@
 const dbApi = require("../config/config.api");
 const ModelInsertions = require("../models/models.insertions");
-
+/**
+ * Fonction pour l'affichage des données pour le front
+ * @param {string} method - string
+ * @returns le resultat de la requête
+ */
 exports.config = function (method, params = '') {
 
     switch (method) {
@@ -368,7 +372,7 @@ exports.sortDataReport = function (formatSearch, dataObject) {
 
         }
     }
-
+    //function qui permet de regrouper les insertions par créative
     /*
     if (creatives && (creatives.length > 0)) {
 

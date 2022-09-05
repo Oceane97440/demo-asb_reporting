@@ -173,7 +173,7 @@ exports.campaigns = async (req, res) => {
 }
 
 /**
- * Alerte forecast push email s'il y a des problèmes de livraison.
+ * Alerte forecast il y a des problèmes de livraison.
  * @constructor
  */
 exports.alert_delivered_percentage = async (req, res) => {
@@ -202,6 +202,7 @@ exports.alert_delivered_percentage = async (req, res) => {
             var insertion_name = forecastData[index].InsertionName;
             var delivered_percentage = parseInt(forecastData[index].InsertionForecastedDeliveredPercentage);
 
+            
             if (forecastData[index].CampaignID != "N/A") {
 
 
@@ -269,6 +270,7 @@ exports.alert_delivered_percentage = async (req, res) => {
                         //liste les campagne qui se termine les 5prochain j
                         if (timestamp_endDate <= timestamp_lastDay) {
 
+                            //Se finit dans 5j ou - mais le forecast a - 95% ou inf. à 95%
                             if (delivered_percentage <= 95) {
 
 
@@ -305,7 +307,6 @@ exports.alert_delivered_percentage = async (req, res) => {
                                 delivered_percentage: delivered_percentage
                             }
 
-                            //ObjDeliveredPercentage[index] = objForecast
                             ObjDeliveredPercentage.push(objForecast)
 
 
@@ -327,7 +328,6 @@ exports.alert_delivered_percentage = async (req, res) => {
                                 delivered_percentage: delivered_percentage
                             }
 
-                            //ObjDeliveredPercentageSurreservation[index] = objForecast
                             ObjDeliveredPercentageSurreservation.push(objForecastSurreservation)
 
 
@@ -349,7 +349,7 @@ exports.alert_delivered_percentage = async (req, res) => {
 
 
 
-
+        //regroupe chaque obj par campagne id
         const campaignNameGroup = Utilities.groupBy(ObjDeliveredPercentage, 'campaign_id');
         const campaignNameGroupSurreservation = Utilities.groupBy(ObjDeliveredPercentageSurreservation, 'campaign_id');
         const campaignNameGroupLastDay = Utilities.groupBy(ObjDeliveredPercentageLastDay, 'campaign_id')
@@ -357,6 +357,8 @@ exports.alert_delivered_percentage = async (req, res) => {
 
         var listCampaignString = new Array()
 
+
+        //création du mail
         if (!Utilities.empty(campaignNameGroup)) {
 
 
@@ -386,7 +388,6 @@ exports.alert_delivered_percentage = async (req, res) => {
 
         }
 
-        //  console.log(campaignNameGroupSurreservation)
 
 
         if ((!Utilities.empty(campaignNameGroup)) || (!Utilities.empty(campaignNameGroupSurreservation)) || (!Utilities.empty(campaignNameGroupLastDay))) {
@@ -420,7 +421,10 @@ exports.alert_delivered_percentage = async (req, res) => {
 
     }
 }
-
+/**
+ * Alerte créatives il y a des problèmes dans la programmation des insertions.
+ * @constructor
+ */
 exports.alert_manage_creative = async (req, res) => {
 
 

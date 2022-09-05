@@ -938,6 +938,7 @@ exports.report = async (req, res) => {
                                                     break;
                                             }
 
+                                            // Créer les tableaux des créative formats
                                             /* switch (true) {
                                                  case (/1024x768|2048x153/igm).test(image_crea):
                                                      creaInterstitielDesktop.push(index);
@@ -1423,6 +1424,7 @@ exports.export_excel = async (req, res) => {
                 //
 
                 //Array of objects representing heading rows (very top)
+                //création du header de la feuille excel
                 const heading = [
                     [{
                         value: 'Rapport de la campagne : ' + campaign_name,
@@ -1441,6 +1443,7 @@ exports.export_excel = async (req, res) => {
                 ];
 
                 //Here you specify the export structure
+                //creation des colonnes (feuil 1)
                 const bilan_global = {
 
                     impressions: { // <- the key should match the actual data key
@@ -1478,6 +1481,8 @@ exports.export_excel = async (req, res) => {
 
                 };
 
+                //creation des colonnes (feuil 2)
+
                 const bilan_formats = {
 
                     Formats: { // <- the key should match the actual data key
@@ -1510,6 +1515,8 @@ exports.export_excel = async (req, res) => {
 
                     }
                 };
+
+                //creation des colonnes (feuil 3)
 
                 const bilan_sites = {
                     formats: { // <- the key should match the actual data key
@@ -1565,6 +1572,9 @@ exports.export_excel = async (req, res) => {
                     repetions: repetition
 
                 }];
+
+                //recupère les données du localstorage et regroupe par formats
+
                 const dataset_format = []
 
 
@@ -1692,6 +1702,8 @@ exports.export_excel = async (req, res) => {
                         Ctr_clics: reporting.interstitielvideo.ctr.replace('.', ',') + '%'
                     }
                 }
+
+                //recupère les données du localstorage et regroupe par formats/sites
 
                 const dataset_site = []
 

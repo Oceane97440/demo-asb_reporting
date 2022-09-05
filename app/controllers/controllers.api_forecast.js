@@ -881,6 +881,7 @@ exports.forecast = async (req, res, next) => {
                  }*/
 
 
+                 //affiche la vue forecast admin
                 if (req.session.user.user_role == 1) {
 
 
@@ -892,6 +893,8 @@ exports.forecast = async (req, res, next) => {
                         infos: infos
                     });
                 }
+
+                 //affiche la vue forecast commerciaux
 
                 if (req.session.user.user_role == 2 || req.session.user.user_role == 3) {
 
