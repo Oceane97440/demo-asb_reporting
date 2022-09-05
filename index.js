@@ -7,6 +7,9 @@ var cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session')
 var fileUpload = require('express-fileupload');
 
+/* INit git */
+
+
 const db = require("./app/config/_config.database");
 
 const epilot_campaigns = require('./app/models/models.epilot_campaigns');
