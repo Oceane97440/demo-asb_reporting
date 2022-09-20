@@ -2978,10 +2978,6 @@ exports.export_excel_campaigns = async (req, res) => {
 
     const date = new Date();
 
-    const label_now = (date.getFullYear() + ('0' + (
-        date.getMonth()
-    )) + ('0' + (date.getDate())));
-
     let cacheStorageIDHour = moment().format('YYYYMMDD');
 
     const dateStart = moment().format('DD/MM/YYYY');
@@ -3127,7 +3123,7 @@ exports.export_excel_campaigns = async (req, res) => {
 
     // You can then return this straight
     res.attachment(
-        'liste_campagnes_online-' + label_now + '.xlsx',
+        'liste_campagnes_online-' + cacheStorageIDHour + '.xlsx',
 
     ); // This is sails.js specific (in general you need to set headers)
 

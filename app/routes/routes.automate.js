@@ -48,6 +48,8 @@ router.get("/forecast",automate.forecast)
 /** AUTOMATE SUPPRESSION DES LOCALSTORAGES */
 router.get("/delete/storage_forecast",automate.delete_localStorageForecast)
 router.get("/delete/storage_task",automate.delete_localStorageTask)
+router.get("/delete/storage_task/campaigns",automate.delete_localStorageTask_campaigns)
+
 
 
 

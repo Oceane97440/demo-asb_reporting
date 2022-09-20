@@ -4198,3 +4198,34 @@ exports.delete_localStorageTask = async (req, res) => {
 
 
 }
+
+exports.delete_localStorageTask_campaigns = async (req, res) => {
+
+    let cacheStorageIDHour = moment().format('YYYYMMDD');
+
+
+    try {
+
+
+        localStorage.removeItem('reporting-' + cacheStorageIDHour)
+        localStorageTasks.removeItem('campaign_all-firstLink');
+        localStorageTasks.removeItem('campaign_all-taskGlobal');
+
+        res.json({ message: "Le localStorage du rapport campagne en ligne a été vidé " })
+
+
+
+
+    } catch (error) {
+        console.log(error)
+        return res.json({
+            err: error
+        });
+    }
+
+
+
+
+
+
+}
