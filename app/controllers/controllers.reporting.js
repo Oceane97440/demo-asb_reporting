@@ -34,17 +34,14 @@ const ModelFormats = require("../models/models.formats");
 const ModelSites = require("../models/models.sites");
 
 var LocalStorage = require('node-localstorage').LocalStorage;
+const { paperFormats } = require('puppeteer-core');
 // localStorage = new LocalStorage('data/reporting/' + moment().format('YYYY/MM/DD'));
 // localStorageTasks = new LocalStorage('data/taskID/' + moment().format('YYYY/MM/DD/H'));
 localStorage = new LocalStorage('data/reporting/');
 localStorageTasks = new LocalStorage('data/taskID/');
 
 
-exports.index = async (req, res) => {
-    if (req.session.user.user_role == 1) {
-        res.render("reporting/dasbord_report.ejs");
-    }
-}
+
 
 exports.generate = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
@@ -690,7 +687,7 @@ exports.report = async (req, res) => {
 
                                                         //si dans le nom de l'insertion il se termine par 'POSITION' on ne crée pas dataObjCreatives 
                                                         if (!(lastElement[0]).match(/POSITION{1}/gim)) {
-                                                           
+
 
                                                             var dataObjCreatives = {
                                                                 'creative': lastElement[0],
@@ -1196,13 +1193,15 @@ exports.report = async (req, res) => {
 
                                         //fonction qui regrouge les obj qui porte le même nom de la creative
                                         //le fonction fait la somme des impressions,clic ect...par créative
-                                        const groupCreatives = Object.values(dataListCreative.reduce((r, o) => (r[o.creative]
-                                            ? (r[o.creative].impressions += o.impressions, r[o.creative].clicks += o.clicks, r[o.creative].ctr = parseFloat((r[o.creative].clicks / r[o.creative].impressions) * 100).toFixed(2),
+                                        const groupCreatives = Object.values(dataListCreative.reduce((r, o) => (r[o.creative] ?
+                                            (r[o.creative].impressions += o.impressions, r[o.creative].clicks += o.clicks, r[o.creative].ctr = parseFloat((r[o.creative].clicks / r[o.creative].impressions) * 100).toFixed(2),
                                                 r[o.creative].complete += o.complete,
                                                 r[o.creative].ctrComplete = parseFloat((r[o.creative].complete / r[o.creative].impressions) * 100).toFixed(2)
 
-                                            )
-                                            : (r[o.creative] = { ...o }), r), {}));
+                                            ) :
+                                            (r[o.creative] = {
+                                                ...o
+                                            }), r), {}));
 
 
 
@@ -2807,3 +2806,201 @@ exports.automate = async (req, res) => {
 
     }
 }
+//génère un rapport avec l'esemble des campagne en ligne
+exports.report_campaign = async (req, res) => {
+
+    const data = new Object();
+
+    // Créer le fil d'ariane
+    breadcrumb = new Array({
+        'name': 'Campagnes',
+    }, {
+        'name': 'Liste des campagnes en ligne',
+    });
+    data.breadcrumb = breadcrumb;
+    data.moment = moment;
+    data.utilities = Utilities;
+
+    const date_start = moment().format('YYYY-MM-DDT00:00:00');
+    var now = new Date();
+    var MonthLast = new Date(now.getFullYear(), (now.getMonth()), now.getDate() + 30);
+    const date_end = moment(MonthLast).format('YYYY-MM-DDT00:00:00');
+
+    console.log(date_start + ' - ' + date_end)
+
+
+    var requestReporting = {
+        "startDate": date_start,
+        "endDate": date_end,
+        "fields": [{
+            "CampaignStartDate": {}
+        }, {
+            "CampaignEndDate": {}
+        }, {
+            "CampaignId": {}
+        }, {
+            "CampaignName": {}
+        }, {
+            "AdvertiserName": {}
+        }, {
+            "Impressions": {}
+        }, {
+            "Clicks": {}
+        }
+
+        ]
+    }
+
+
+
+    let firstLink = await AxiosFunction.getReportingData(
+        'POST',
+        '',
+        requestReporting
+    );
+
+
+    if (firstLink) {
+        if (firstLink.status == 201) {
+
+            localStorageTasks.setItem('campaign_all-firstLink',
+                firstLink.data.taskId
+            );
+            firstLinkTaskId = firstLink.data.taskId;
+        }
+    } else {
+        firstLinkTaskId = null;
+        /*log_reporting.info("Task id global null: "+firstLinkTaskId);*/
+
+    }
+
+
+    if (firstLinkTaskId) {
+        var taskId = firstLinkTaskId;
+        let timerFile = setInterval(async () => {
+            var time = 5000;
+
+            var dataLSTaskGlobal = localStorageTasks.getItem('campaign_all-taskGlobal');
+
+            if (!dataLSTaskGlobal) {
+                time += 10000;
+                let requete_global = `https://reporting.smartadserverapis.com/2044/reports/${taskId}`;
+
+                let threeLink = await AxiosFunction.getReportingData('GET', requete_global, '');
+                if ((threeLink.data.lastTaskInstance.jobProgress == '1.0') && (threeLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                    // 3) Récupère la date de chaque requête
+                    let dataLSTaskGlobal = localStorageTasks.getItem('campaign_all-taskGlobal');
+                    if (!dataLSTaskGlobal) {
+                        dataFile = await AxiosFunction.getReportingData(
+                            'GET',
+                            `https://reporting.smartadserverapis.com/2044/reports/${taskId}/file`,
+                            ''
+                        );
+                        /*log_reporting.info("Data global crée : "+taskId);*/
+
+                        // save la data requête 1 dans le local storage
+                        dataLSTaskGlobal = {
+                            'datafile': dataFile.data
+                        };
+                        localStorageTasks.setItem('campaign_all-taskGlobal', JSON.stringify(dataLSTaskGlobal));
+                    }
+                }
+            } else {
+                clearInterval(timerFile);
+
+                // On récupére le dataLSTaskGlobal
+                const objDefault = JSON.parse(dataLSTaskGlobal);
+                var dataSplitGlobal = objDefault.datafile;
+                // Permet de faire l'addition
+                const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+                const CampaignStartDate = [];
+                const CampaignEndtDate = [];
+                const CampaignId = [];
+                const CampaignName = [];
+                const AdvertiserName = [];
+                const Impressions = [];
+                const Clicks = [];
+
+                const dataList = new Object();
+
+                var dataSplitGlobal = dataSplitGlobal.split(/\r?\n/);
+
+                if (dataSplitGlobal && (dataSplitGlobal.length > 0)) {
+
+                    var numberLine = dataSplitGlobal.length;
+
+
+
+                    if (numberLine > 1) {
+                        for (i = 1; i < numberLine; i++) {
+
+                            // split push les données dans chaque colone
+                            line = dataSplitGlobal[i].split(';');
+
+
+                            if (!Utilities.empty(line[0])) {
+
+                                CampaignStartDate.push(line[0]);
+                                CampaignEndtDate.push(parseInt(line[1]));
+                                CampaignId.push(parseInt(line[2]));
+                                CampaignName.push(parseInt(line[3]));
+                                AdvertiserName.push(parseInt(line[4]));
+                                Impressions.push(parseInt(line[5]));
+                                Clicks.push(parseInt(line[6]));
+
+
+
+
+                                dataList[i] = {
+                                    'campaign_start_date': line[0],
+                                    'campaign_end_date': line[1],
+                                    'campaign_id': line[2],
+                                    'campaign_name': line[3],
+                                    'advertiser_name': line[4],
+                                    'impressions': parseInt(line[5]),
+                                    'clicks': parseInt(line[6]),
+                                }
+
+
+
+                            }
+                        }
+                    }
+                }
+
+                if (dataList && (Object.keys(dataList).length > 0)) {
+
+
+                    data.campaigns = dataList
+
+                    /*
+
+                      '60': {
+                        campaign_start_date: '1663286400000',
+                        campaign_end_date: '1664582340000',
+                        campaign_id: '2146265',
+                        campaign_name: 'CNARM - CCA',
+                        advertiser_name: 'CNARM MOBILITE (LA REUNION)',
+                        impressions: 521,
+                        clicks: 7
+                    },
+                    */
+
+                    res.render('manager/campaigns/list_campaignOnline.ejs', data);
+
+
+                }
+
+
+            }
+        })
+
+
+
+
+    }
+
+}
+
+
