@@ -2821,13 +2821,12 @@ exports.report_campaign = async (req, res) => {
     data.moment = moment;
     data.utilities = Utilities;
 
+    let cacheStorageIDHour = moment().format('YYYYMMDD');
+
     const date_start = moment().format('YYYY-MM-DDT00:00:00');
     var now = new Date();
     var MonthLast = new Date(now.getFullYear(), (now.getMonth()), now.getDate() + 30);
     const date_end = moment(MonthLast).format('YYYY-MM-DDT00:00:00');
-
-    console.log(date_start + ' - ' + date_end)
-
 
     var requestReporting = {
         "startDate": date_start,
@@ -2842,7 +2841,11 @@ exports.report_campaign = async (req, res) => {
             "CampaignName": {}
         }, {
             "AdvertiserName": {}
-        }, {
+        },
+        {
+            "AdvertiserId": {}
+        },
+        {
             "Impressions": {}
         }, {
             "Clicks": {}
@@ -2911,16 +2914,6 @@ exports.report_campaign = async (req, res) => {
                 // On récupére le dataLSTaskGlobal
                 const objDefault = JSON.parse(dataLSTaskGlobal);
                 var dataSplitGlobal = objDefault.datafile;
-                // Permet de faire l'addition
-                const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
-                const CampaignStartDate = [];
-                const CampaignEndtDate = [];
-                const CampaignId = [];
-                const CampaignName = [];
-                const AdvertiserName = [];
-                const Impressions = [];
-                const Clicks = [];
 
                 const dataList = new Object();
 
@@ -2941,28 +2934,16 @@ exports.report_campaign = async (req, res) => {
 
                             if (!Utilities.empty(line[0])) {
 
-                                CampaignStartDate.push(line[0]);
-                                CampaignEndtDate.push(parseInt(line[1]));
-                                CampaignId.push(parseInt(line[2]));
-                                CampaignName.push(parseInt(line[3]));
-                                AdvertiserName.push(parseInt(line[4]));
-                                Impressions.push(parseInt(line[5]));
-                                Clicks.push(parseInt(line[6]));
-
-
-
-
                                 dataList[i] = {
-                                    'campaign_start_date': line[0],
-                                    'campaign_end_date': line[1],
+                                    'campaign_start_date': parseInt(line[0]),
+                                    'campaign_end_date': parseInt(line[1]),
                                     'campaign_id': line[2],
                                     'campaign_name': line[3],
                                     'advertiser_name': line[4],
-                                    'impressions': parseInt(line[5]),
-                                    'clicks': parseInt(line[6]),
+                                    'advertiser_id': line[5],
+                                    'impressions': parseInt(line[6]),
+                                    'clicks': parseInt(line[7]),
                                 }
-
-
 
                             }
                         }
@@ -2973,19 +2954,8 @@ exports.report_campaign = async (req, res) => {
 
 
                     data.campaigns = dataList
+                    localStorage.setItem('reporting-' + cacheStorageIDHour, JSON.stringify(dataList));
 
-                    /*
-
-                      '60': {
-                        campaign_start_date: '1663286400000',
-                        campaign_end_date: '1664582340000',
-                        campaign_id: '2146265',
-                        campaign_name: 'CNARM - CCA',
-                        advertiser_name: 'CNARM MOBILITE (LA REUNION)',
-                        impressions: 521,
-                        clicks: 7
-                    },
-                    */
 
                     res.render('manager/campaigns/list_campaignOnline.ejs', data);
 
@@ -3003,4 +2973,166 @@ exports.report_campaign = async (req, res) => {
 
 }
 
+
+exports.export_excel_campaigns = async (req, res) => {
+
+    const date = new Date();
+
+    const label_now = (date.getFullYear() + ('0' + (
+        date.getMonth()
+    )) + ('0' + (date.getDate())));
+
+    let cacheStorageIDHour = moment().format('YYYYMMDD');
+
+    const dateStart = moment().format('DD/MM/YYYY');
+    var now = new Date();
+    var MonthLast = new Date(now.getFullYear(), (now.getMonth()), now.getDate() + 30);
+    const dateEnd = moment(MonthLast).format('DD/MM/YYYY');
+
+
+    //recherche dans le local storage id qui correspond à la campagne
+
+    var data_localStorage = localStorage.getItem('reporting-' + cacheStorageIDHour);
+    var reporting = JSON.parse(data_localStorage);
+
+    const styles = {
+        headerDark: {
+            fill: {
+                fgColor: {
+                    rgb: 'FF000000'
+                }
+
+            },
+
+            font: {
+                color: {
+                    rgb: 'FFFFFFFF'
+                },
+                sz: 14,
+                bold: false,
+                underline: false
+            }
+        },
+        cellNone: {
+
+            numFmt: "0",
+
+        },
+
+        cellTc: {
+            numFmt: "0",
+
+        }
+    };
+
+    //
+
+    //Array of objects representing heading rows (very top)
+    //création du header de la feuille excel
+    const heading = [
+        [{
+            value: 'Listing des campagnes en lignes ' ,
+            style: styles.headerDark
+        }],
+        ['Date de génération : ' + moment().format('DD/MM/YYYY')],
+        ['Mois courant : Du ' + dateStart + ' au ' + dateEnd],
+        ['                ']
+    ];
+
+
+    //creation des colonnes (feuil 1)
+    const bilan_global = {
+
+        advertisers: { // <- the key should match the actual data key
+            displayName: 'Annonceurs', // <- Here you specify the column header
+            headerStyle: styles.headerDark, // <- Header style
+            width: 400, // <- width in pixels
+            cellStyle: styles.cellNone,
+        },
+        campaigns: {
+            displayName: 'Campagnes',
+            headerStyle: styles.headerDark,
+            width: 220, // <- width in chars (when the number is passed as string)
+            cellStyle: styles.cellNone,
+
+        },
+        date_start: {
+            displayName: 'Date de début',
+            headerStyle: styles.headerDark,
+            width: 220, // <- width in pixels
+            cellStyle: styles.cellNone,
+
+        },
+        date_end: {
+            displayName: 'Date de fin',
+            headerStyle: styles.headerDark,
+            width: 220, // <- width in pixels
+            cellStyle: styles.cellNone,
+
+        },
+        impressions: {
+            displayName: 'Impressions',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        clicks: {
+            displayName: 'Clics',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        }
+
+    };
+
+    const dataset_global = [];
+
+    if (!Utilities.empty(reporting)) {
+
+        Object.keys(reporting).forEach(key=> {
+            dataset_global.push({
+                advertisers: reporting[key].advertiser_name,
+                campaigns:reporting[key].campaign_name,
+                date_start:moment(reporting[key].campaign_start_date).format('DD/MM/YYYY'),
+                date_end: moment(reporting[key].campaign_end_date).format('DD/MM/YYYY'),
+                impressions: reporting[key].impressions,
+                clicks: reporting[key].clicks
+
+            })
+
+        })
+
+       
+    }
+
+    // Define an array of merges. 1-1 = A:1 The merges are independent of the data.
+    // A merge will overwrite all data _not_ in the top-left cell.
+    const merges = [{
+        start: {
+            row: 1,
+            column: 1
+        },
+        end: {
+            row: 1,
+            column: 5
+        }
+    }];
+
+    // Create the excel report. This function will return Buffer
+    const report = excel.buildExport([{ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+        name: 'Listing des campagnes', // <- Specify sheet name (optional)
+        heading: heading, // <- Raw heading array (optional)
+        merges: merges, // <- Merge cell ranges
+        specification: bilan_global, // <- Report specification
+        data: dataset_global // <-- Report data
+    }]);
+
+    // You can then return this straight
+    res.attachment(
+        'liste_campagnes_online-' + label_now + '.xlsx',
+
+    ); // This is sails.js specific (in general you need to set headers)
+
+     return res.send(report);
+
+
+};
 
