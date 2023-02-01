@@ -41,11 +41,140 @@ localStorage = new LocalStorage('data/reporting/');
 localStorageTasks = new LocalStorage('data/taskID/');
 
 
+exports.taskid = async (req, res) => {
+    let campaign_id = req.params.campaignid;
+  
+    var campaign = await ModelCampaigns
+    .findOne({
+        attributes: [
+            'campaign_id',
+            'campaign_name',
+            'campaign_crypt',
+            'advertiser_id',
+            'campaign_start_date',
+            'campaign_end_date'
+        ],
+        where: {
+            campaign_id: campaign_id
+        },
+        include: [{
+            model: ModelAdvertisers
+        }]
+    })
+    .then(async function (campaign) {
+        
+        if (!campaign)
+        return res
+            .status(403).json({
+                'message': 'Cette campagne n\'existe pas'
+            });
+
+        // fonctionnalité de géneration du rapport
+        let campaign_crypt = campaign.campaign_crypt;
+        let advertiser_id = campaign.advertiser_id;
+        let campaign_id = campaign.campaign_id;
+        var campaign_start_date = campaign.campaign_start_date;
+        var campaign_end_date = campaign.campaign_end_date;
+
+        // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
+        // entre la date de fin campagne et date aujourd'hui  var date_now = Date.now();
+        var start_date = new Date(campaign_start_date);
+        var end_date_time = new Date(campaign_end_date);
+        var date_now = Date.now();
+        var diff_start = Utilities.nbr_jours(start_date, date_now);
+        var diff = Utilities.nbr_jours(start_date, end_date_time);
+        if (diff_start.day < diff.day) {
+            var NbDayCampaign = diff_start.day;
+        } else {
+            var NbDayCampaign = diff.day;
+        }
+        console.log('NbDayCampaign : ',NbDayCampaign);
+
+        // Initialise la date
+        let date = new Date();
+        let cacheStorageIDHour = moment().format('YYYYMMDD');
+
+        // Gestion du cache
+        var cacheStorageID = 'campaignID-' + campaign_id;
+    
+        var reportingDataStorage = localStorage.getItem(cacheStorageID);
+        let localStorageGlobal = localStorageTasks.getItem(
+            cacheStorageID + '-firstLink-' + cacheStorageIDHour
+        );      
+        
+        var reportingData = JSON.parse(reportingDataStorage);      
+        // firstLink - Récupére la taskID de la requête reporting
+        let firstLinkTaskId = localStorageTasks.getItem(
+            cacheStorageID + '-firstLink-' + cacheStorageIDHour
+        );
+
+        // twoLink - Récupére la taskID de la requête reporting
+        let twoLinkTaskId = localStorageTasks.getItem(
+            cacheStorageID + '-twoLink-' + cacheStorageIDHour
+        );
+
+        if (firstLinkTaskId || twoLinkTaskId) {
+            console.log('firstLinkTaskId : ', firstLinkTaskId);
+            
+            var percentProgress = 0;
+            var progressInfo = null;
+            var progressInfoVU = null;
+
+            if(firstLinkTaskId) {
+                let requestGlobal = `https://reporting.smartadserverapis.com/2044/reports/${firstLinkTaskId}`;
+            // console.log(requestGlobal);
+                let taskInfo = await AxiosFunction.getReportingData('GET', requestGlobal, '');
+              //  if(taskInfo.data.lastTaskInstance.nbOutputLines > 0) {
+                 var progressInfo = taskInfo.data.lastTaskInstance.jobProgress;
+              //  }
+                console.log('jobProgress firstLinkTaskId : ', taskInfo.data.lastTaskInstance.jobProgress * 100, '%');
+            } 
+            
+            if(twoLinkTaskId && (NbDayCampaign < 30)) {
+                console.log('twoLinkTaskId : ', twoLinkTaskId);
+              
+                 let requestGlobalVU = `https://reporting.smartadserverapis.com/2044/reports/${twoLinkTaskId}`;
+            //  console.log(requestGlobalVU);
+                let taskInfoVU = await AxiosFunction.getReportingData('GET', requestGlobalVU, '');
+                
+               // if( taskInfoVU.data.lastTaskInstance.nbOutputLines > 0) {
+                 var progressInfoVU = taskInfoVU.data.lastTaskInstance.jobProgress;
+               // }
+                console.log('jobProgress twoLinkTaskId : ', progressInfoVU * 100, '%');
+            } 
+
+            if(progressInfoVU) {
+                var percentProgress = ((progressInfo+progressInfoVU)/2)*100;
+            } else {
+                var percentProgress = progressInfo*100;
+            }
+            console.log('percentProgress Sum : ',progressInfo,'+',progressInfoVU);
+            console.log('percentProgress : ',percentProgress);
+
+            return res
+            .json({
+                progress: percentProgress,
+                success: true,
+                campaign_id: campaign_id
+            });
+        } else {
+            return res
+            .json({
+                progress: 0,
+                error: true,
+                campaign_id: campaign_id
+            });    
+        }
+
+    });
+
+   
+}
 
 
 exports.generate = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
-
+ 
     await ModelCampaigns
         .findOne({
             attributes: [
@@ -94,7 +223,6 @@ exports.generate = async (req, res) => {
             console.log(reportingData);
             if (reportingDataStorage && (reportingData.reporting_end_date < date_now)) {
 
-
                 res.render('report/template.ejs', {
                     reporting: reportingData,
                     moment: moment,
@@ -104,6 +232,7 @@ exports.generate = async (req, res) => {
                     moment: moment,
                     nombre_diff_day: nombre_diff_day
                 });
+
             } else {
 
                 localStorageTasks.removeItem(
@@ -125,13 +254,12 @@ exports.generate = async (req, res) => {
                 });
             }
 
-
         });
 }
 
 exports.report = async (req, res) => {
     let campaigncrypt = req.params.campaigncrypt;
-
+  
     try {
         // Réinitialise l'objet Format
         let formatObjects = new Object();
@@ -180,7 +308,7 @@ exports.report = async (req, res) => {
                     var data_localStorage = localStorage.getItem(cacheStorageID);
                     // Si le localStorage existe -> affiche la data du localstorage
                     if (data_localStorage) {
-                        // Si le localStorage exsite -> affiche la data du localstorage Convertie la
+                        // Si le localStorage exsite -> affiche la data du localstorage convertie la
                         // date JSON en objet
                         var reportingData = JSON.parse(data_localStorage);
 
@@ -1233,15 +1361,14 @@ exports.report = async (req, res) => {
                                                 'ctrComplete': creativeCtrComplete,
                                             }
                                         }
-                                        formatObjects.creative = groupCreatives
-
+                                        formatObjects.creative = groupCreatives;
                                     }
-
 
                                     formatObjects.reporting_start_date = moment().format('YYYY-MM-DD HH:m:s');
                                     formatObjects.reporting_end_date = moment()
                                         .add(2, 'hours')
                                         .format('YYYY-MM-DD HH:m:s');
+                                    formatObjects.reporting_progress = 'progress1241';
 
                                     // Supprimer le localStorage précédent
                                     if (localStorage.getItem(cacheStorageID)) {
@@ -2377,6 +2504,8 @@ exports.automate = async (req, res) => {
                                     // console.log('fourLink : ', fourLink.data.lastTaskInstance.jobProgress)
 
                                     if ((fourLink.data.lastTaskInstance.jobProgress == '1.0') && (fourLink.data.lastTaskInstance.instanceStatus == 'SUCCESS')) {
+                                        
+                                        console.log('jobProgress : ',fourLink.data.lastTaskInstance.jobProgress);
 
                                         // 3) Récupère la date de chaque requête
                                         dataLSTaskGlobalVU = localStorageTasks.getItem(
@@ -2776,6 +2905,7 @@ exports.automate = async (req, res) => {
                                 formatObjects.reporting_end_date = moment()
                                     .add(2, 'hours')
                                     .format('YYYY-MM-DD HH:m:s');
+                                formatObjects.reporting_progress = 'progress';
 
                                 var reportingData = JSON.stringify(formatObjects);
                                 // Créer le localStorage
@@ -2806,6 +2936,7 @@ exports.automate = async (req, res) => {
 
     }
 }
+
 //génère un rapport avec l'esemble des campagne en ligne
 exports.report_campaign = async (req, res) => {
 
@@ -2972,7 +3103,6 @@ exports.report_campaign = async (req, res) => {
     }
 
 }
-
 
 exports.export_excel_campaigns = async (req, res) => {
 

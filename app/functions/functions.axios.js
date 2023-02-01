@@ -101,14 +101,9 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
         password: dbApi.SMART_password
       }
     })
-
-
   }
 
-
   return return_data
-
-
 }
 
 /**
@@ -271,24 +266,16 @@ exports.postManage = async (method, data = null) => {
 
 
 exports.copyManage = async (method, data = null, id) => {
-
   try {
-
     var test;
-
-
-
     switch (method) {
-
       case 'insertions':
         var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + id + '/copy/';
         break;
       case 'creatives':
         var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives';
         break;
-
       default:
-
         break;
     }
 
