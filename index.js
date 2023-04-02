@@ -8,7 +8,6 @@ const cookieSession = require('cookie-session')
 var fileUpload = require('express-fileupload');
 var runner = require("child_process");
 
-
 const db = require("./app/config/_config.database");
 
 const epilot_campaigns = require('./app/models/models.epilot_campaigns');

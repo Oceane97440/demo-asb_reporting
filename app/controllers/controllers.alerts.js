@@ -429,7 +429,8 @@ exports.alert_manage_creative = async (req, res) => {
 
 
 
-    const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
+   // const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
+    const regex_url = /https:\/\/(((linfo.re\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
     const regex_urlClic = /^(?:https:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/igm
     const regexFormats = /((GRAND ANGLE|MASTHEAD) - (ANTENNEREUNION|DOMTOMJOB|LINFO \/ ORANGE REUNION) - POSITION (?:0)$)|(MASTHEAD - LINFO - POSITION (?:0|5|8|9|10)$)|(GRAND ANGLE - LINFO - POSITION (?:0|5)$)|(APPLI LINFO)|((INTERSTITIEL|HABILLAGE|RECTANGLE|PREROLL|MIDROLL|PREROLL \/ MIDROLL){1})/igm
 

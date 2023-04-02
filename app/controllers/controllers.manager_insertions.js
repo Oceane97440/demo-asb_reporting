@@ -4,26 +4,20 @@ const http = require('http');
 const dbApi = require("../config/config.api");
 const axios = require(`axios`);
 
-
-
 // const request = require('request'); const bodyParser =
 // require('body-parser');
 
-const {
-    Op
+const { Op
 } = require("sequelize");
 
-process.on('unhandledRejection', error => {
-    // Will print "unhandledRejection err is not defined"
-    console.log('unhandledRejection', error.message);
+process.on('unhandledRejection', error => {    // Will print "unhandledRejection err is not defined"
+    // // // console.log('unhandledRejection', error.message);
 });
 
-const {
-    QueryTypes
+const { QueryTypes
 } = require('sequelize');
 
-const {
-    check,
+const { check,
     query
 } = require('express-validator');
 
@@ -63,25 +57,21 @@ const ModelCreativesTypesFormats = require("../models/models.creatives_types_for
 
 const TEXT_REGEX = /^.{1,51}$/
 
-const {
-    promiseImpl
+const { promiseImpl
 } = require('ejs');
-const {
-    insertions
+const { insertions
 } = require('./controllers.automate');
-const {
-    types
+const { types
 } = require('util');
 
 exports.index = async (req, res) => {
-    try {
-        // Liste toutes les insertions
+    try {        // Liste toutes les insertions
         const data = new Object();
         // Créer le fil d'ariane
         breadcrumb = new Array({
             'name': 'Insertions',
             'link': ''
-        }, );
+        },);
         data.breadcrumb = breadcrumb;
 
         data.insertions = await ModelInsertions.findAll({
@@ -94,7 +84,7 @@ exports.index = async (req, res) => {
 
         res.render('manager/insertions/index.ejs', data);
     } catch (error) {
-        console.log(error);
+        // // // console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
@@ -103,8 +93,7 @@ exports.index = async (req, res) => {
 }
 
 exports.list = async (req, res) => {
-    try {
-        // Liste toutes les insertions
+    try {        // Liste toutes les insertions
         const data = new Object();
 
         // Créer le fil d'ariane
@@ -119,22 +108,22 @@ exports.list = async (req, res) => {
 
         data.insertions = await ModelInsertions.findAll({
             include: [{
-                    model: ModelCampaigns,
-                    attributes: ['campaign_id', 'campaign_name']
-                },
-                // { model: ModelAdvertisers, attributes: ['advertiser_id', 'advertiser_name'] },
-                {
-                    model: ModelFormats,
-                    attributes: ['format_id', 'format_name']
-                },
-                {
-                    model: ModelInsertionsPriorities,
-                    attributes: ['priority_id', 'priority_name']
-                },
-                {
-                    model: ModelInsertionsStatus,
-                    attributes: ['insertion_status_id', 'insertion_status_name']
-                },
+                model: ModelCampaigns,
+                attributes: ['campaign_id', 'campaign_name']
+            },
+            // { model: ModelAdvertisers, attributes: ['advertiser_id', 'advertiser_name'] },
+            {
+                model: ModelFormats,
+                attributes: ['format_id', 'format_name']
+            },
+            {
+                model: ModelInsertionsPriorities,
+                attributes: ['priority_id', 'priority_name']
+            },
+            {
+                model: ModelInsertionsStatus,
+                attributes: ['insertion_status_id', 'insertion_status_name']
+            },
             ]
         }, {
             order: [
@@ -148,7 +137,7 @@ exports.list = async (req, res) => {
         data.moment = moment;
         res.render('manager/insertions/list.ejs', data);
     } catch (error) {
-        console.log(error);
+        // // // console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
@@ -169,22 +158,22 @@ exports.view = async (req, res) => {
                     insertion_id: insertion_id
                 },
                 include: [{
-                        model: ModelCampaigns,
-                        attributes: ['campaign_id', 'campaign_name']
-                    },
-                    // { model: ModelAdvertisers, attributes: ['advertiser_id', 'advertiser_name'] },
-                    {
-                        model: ModelFormats,
-                        attributes: ['format_id', 'format_name']
-                    },
-                    {
-                        model: ModelInsertionsPriorities,
-                        attributes: ['priority_id', 'priority_name']
-                    },
-                    {
-                        model: ModelInsertionsStatus,
-                        attributes: ['insertion_status_id', 'insertion_status_name']
-                    },
+                    model: ModelCampaigns,
+                    attributes: ['campaign_id', 'campaign_name']
+                },
+                // { model: ModelAdvertisers, attributes: ['advertiser_id', 'advertiser_name'] },
+                {
+                    model: ModelFormats,
+                    attributes: ['format_id', 'format_name']
+                },
+                {
+                    model: ModelInsertionsPriorities,
+                    attributes: ['priority_id', 'priority_name']
+                },
+                {
+                    model: ModelInsertionsStatus,
+                    attributes: ['insertion_status_id', 'insertion_status_name']
+                },
                 ]
             })
             .then(async function (insertion) {
@@ -193,7 +182,7 @@ exports.view = async (req, res) => {
                     /*return res
                         .status(404)
                         .render("manager/error.ejs", {
-                            statusCoded: 404
+    statusCoded: 404
                         });*/
                 }
 
@@ -228,7 +217,7 @@ exports.view = async (req, res) => {
                     }
                 }).then(async function (creativesList) {
                     data.creatives = creativesList;
-                    console.log(creativesList)
+                    // // // console.log(creativesList)
                 });
 
                 // Attribue les données de la campagne                   
@@ -241,7 +230,7 @@ exports.view = async (req, res) => {
             });
 
     } catch (error) {
-        console.log(error);
+        // // // console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
@@ -321,8 +310,7 @@ exports.create = async (req, res) => {
 
             },
             include: [{
-                model: ModelCampaigns,
-
+                model: ModelCampaigns
             }],
 
             order: [
@@ -332,8 +320,6 @@ exports.create = async (req, res) => {
                 // ['campaign_name', 'ASC']
             ]
         });
-
-
 
         data.deliverytypes = await ModelDeliverytTypes.findAll({
             where: {
@@ -375,12 +361,11 @@ exports.create = async (req, res) => {
         })
 
         data.packs = await ModelPacks.findAll({
-
         });
 
         res.render('manager/insertions/create.ejs', data);
     } catch (error) {
-        console.log(error);
+        // // // console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
@@ -389,10 +374,18 @@ exports.create = async (req, res) => {
 }
 
 exports.create_post = async (req, res) => {
-
     try {
+        const data = new Object();
 
-
+        // Créer le fil d'ariane
+        breadcrumb = new Array({
+            'name': 'Insertions',
+            'link': 'insertions/list'
+        }, {
+            'name': 'Ajouter une insertion',
+            'link': ''
+        });
+        data.breadcrumb = breadcrumb;
 
         var body = {
             advertiser_id: req.body.advertiser_id,
@@ -421,16 +414,16 @@ exports.create_post = async (req, res) => {
             display_slider_file: req.body.display_slider_file,
             display_slider_url: req.body.display_slider_url,
 
-            display_site_rz_file:req.body.display_site_rz_file,
-            display_site_rz_url:req.body.display_site_rz_url,
+            display_site_rz_file: req.body.display_site_rz_file,
+            display_site_rz_url: req.body.display_site_rz_url,
 
             video_file: req.body.video_file,
             video_url: req.body.video_url,
         }
-       /* var log_body = await Utilities.logs('info')
-        log_body.info(body);*/ 
+        /* var log_body = await Utilities.logs('info')
+         log_body.info(body);*/
 
-        //  console.log(body)
+        //  // // // console.log(body)
 
         const advertiser_id = body.advertiser_id;
         const campaign_id = body.campaign_id;
@@ -459,8 +452,8 @@ exports.create_post = async (req, res) => {
         const display_slider_file = body.display_slider_file
         const display_slider_url = body.display_slider_url
 
-        const display_site_rz_file= body.display_site_rz_file
-        const display_site_rz_url= body.display_site_rz_url
+        const display_site_rz_file = body.display_site_rz_file
+        const display_site_rz_url = body.display_site_rz_url
 
         const video_file = body.video_file;
         const video_url = body.video_url;
@@ -478,22 +471,20 @@ exports.create_post = async (req, res) => {
             display_mea_file
         ]
 
-        const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
-
+        // const regex_url = /https:\/\/(((cdn.antennepublicite.re\/linfo\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm
+        const regex_url = /https:\/\/((www\.)?((linfo.re\/IMG\/pub\/(display|video|rodzafer))|(dash.rodzafer.re\/uploads\/)))([/|.|\w|\s|-])*\.(?:jpg|gif|mp4|jpeg|png|html)/igm;
 
         for (let index = 0; index < ArrayRegex.length; index++) {
             const element = ArrayRegex[index];
 
             if (!Utilities.empty(element)) {
                 if (!element.match(regex_url)) {
-
-                    console.log(element)
+                    // // // console.log(element)
                     req.session.message = {
                         type: 'danger',
                         intro: 'URLS invalides: ',
                         message: 'Les urls fichiers sont invalides'
                     }
-
 
                     return res.redirect('/manager/insertions/create');
                 }
@@ -507,26 +498,18 @@ exports.create_post = async (req, res) => {
                 const slider = display_slider_file[s];
                 if (!Utilities.empty(slider)) {
                     if (!slider.match(regex_url)) {
-
-                        console.log(slider)
+                        // // console.log(slider)
                         req.session.message = {
                             type: 'danger',
                             intro: 'URLS invalides: ',
                             message: 'Les urls fichiers slider sont invalides'
                         }
 
-
                         return res.redirect('/manager/insertions/create');
                     }
                 }
-
-
-
-
             }
         }
-
-
 
         if (Utilities.empty(advertiser_id) ||
             Utilities.empty(campaign_id) ||
@@ -541,14 +524,12 @@ exports.create_post = async (req, res) => {
         }
 
         if ((creative_type_id === '1') && ((Utilities.empty(display_mobile_file) ||
-                    Utilities.empty(display_mobile_url) ||
-                    Utilities.empty(display_tablet_file) ||
-                    Utilities.empty(display_tablet_url) ||
-                    Utilities.empty(display_desktop_file) ||
-                    Utilities.empty(display_desktop_url)) && (format_group_id !== '1') && (format_group_id !== '13')
-
-            )) {
-
+            Utilities.empty(display_mobile_url) ||
+            Utilities.empty(display_tablet_file) ||
+            Utilities.empty(display_tablet_url) ||
+            Utilities.empty(display_desktop_file) ||
+            Utilities.empty(display_desktop_url)) && (format_group_id !== '1') && (format_group_id !== '13')
+        )) {
             req.session.message = {
                 type: 'danger',
                 intro: 'Champ invalides',
@@ -556,10 +537,8 @@ exports.create_post = async (req, res) => {
             }
             return res.redirect('/manager/insertions/create');
         }
-
 
         if ((creative_type_id === '2') && (Utilities.empty(video_file) || Utilities.empty(video_url))) {
-
             req.session.message = {
                 type: 'danger',
                 intro: 'Champ invalides',
@@ -567,7 +546,6 @@ exports.create_post = async (req, res) => {
             }
             return res.redirect('/manager/insertions/create');
         }
-
 
         const formatGroup = await ModelFormatsGroups.findOne({
             where: {
@@ -602,30 +580,25 @@ exports.create_post = async (req, res) => {
             formatGroupName = "MEA -"
         }
 
-            //SLIDER
-            if (format_group_id === '5') {
-                formatGroupName = "SLIDER"
-            }
-
+        //SLIDER
+        if (format_group_id === '5') {
+            formatGroupName = "SLIDER"
+        }
 
         //Recupère la campagne modèle + filtre en fonction du name du l'insertion
         await ModelInsertions.findAll({
             where: {
                 campaign_id: 1988414, //campagne_id model
                 insertion_name: {
-                    [Op.like]:  formatGroupName + "%"
+                    [Op.like]: formatGroupName + "%"
                 }
             }
         }).then(async function (insertion_model) {
-
             for (let i = 0; i < insertion_model.length; i++) {
                 if (!Utilities.empty(insertion_model)) {
-
                     var insertion_id_model = insertion_model[i].insertion_id
                     var insertion_name_model = insertion_model[i].insertion_name
-
-                    // console.log(insertion_name_model)
-
+                    // // // // console.log(insertion_name_model)
 
                     //Si input text n'est pas vide
                     if (!Utilities.empty(insertion_name)) {
@@ -633,69 +606,68 @@ exports.create_post = async (req, res) => {
                     }
 
                     requestInsertionsCopy = {
-
-                        "name": insertion_name_model, //recupération du nom de l'insertion GET
+                        "name": insertion_name_model, // recupération du nom de l'insertion GET
                         "campaignId": campaign_id,
                         "ignorePlacements": "false",
-                        "ignoreCreatives": "false"
-
+                        "ignoreCreatives": "false",
+                        "insertionStatusId": 0,
+                        "startDate": '2023-04-01T00:00:00',
+                        "endDate": '2023-04-01T23:59:00',
+                        "timezoneId": 4
                     }
 
-                    //requête duplication des insertions modèle
+                    //requête duplication des insertions modéle
                     let insertion_copy = await AxiosFunction.copyManage(
                         'insertions',
                         requestInsertionsCopy,
                         insertion_id_model
                     );
 
-
-                    // console.log(requestInsertionsCopy)
-
+                    // // // console.log('requestInsertionsCopy : ', requestInsertionsCopy)
 
                     if (insertion_copy.headers.location) {
+                         console.log('insertion_copy.headers.location : ', insertion_copy.headers.location)
 
+                        var url_headers_location = insertion_copy.headers.location;
+                        const url_location = url_headers_location.replace('http://', 'https://');
 
-
-                        var url_location = insertion_copy.headers.location
                         var insertion_get = await AxiosFunction.getManage(url_location);
-                        const insertion_id = insertion_get.data.id
-                        const insertion_name_copy = insertion_get.data.name
-                        // console.log('insertion_id dupliqués ' + insertion_id)
-                       /* var log_insertion_copy = await Utilities.logs('info')
-                        log_insertion_copy.info("L'insertion a été copiée :" + insertion_id);*/
+                      //  // // // console.log('insertion_get : ', insertion_get)
+
+                        const insertion_id = insertion_get.data.id;
+                        const insertion_name_copy = insertion_get.data.name;
+                        //  console.log('insertion_id dupliqués ' + insertion_id)
+                        /* var log_insertion_copy = await Utilities.logs('info')
+                         log_insertion_copy.info("L'insertion a été copiée :" + insertion_id);*/
 
                         //recupération data des creatives
                         var insertions_creatives_get = await AxiosFunction.getManageCopy('creatives', insertion_id);
                         var dataValue = insertions_creatives_get.data;
                         var number_line_offset = insertions_creatives_get.data.length;
 
+                        console.log('dataValue : ' + dataValue)
 
 
                         for (let d = 0; d < number_line_offset; d++) {
                             if (!Utilities.empty(dataValue)) {
-
-
                                 var creatives_id = dataValue[d].id
                                 var creatives_name = dataValue[d].name
                                 var creatives_fileName = dataValue[d].fileName
                                 var creatives_width = dataValue[d].width
                                 var creatives_height = dataValue[d].height
                                 var creatives_typeId = dataValue[d].creativeTypeId
-
-                                /*var log_creatives = await Utilities.logs('info')
-                                log_creatives.info("Requête récupération data des créatives creatives_id :" + creatives_id + " Total creative :" + number_line_offset);*/
-
-                                console.log({
+                                /*
+                                var log_creatives = await Utilities.logs('info')
+                                log_creatives.info("Requête récupération data des créatives creatives_id :" + creatives_id + " Total creative :" + number_line_offset);
+                                // // // console.log({
                                     'creatives_id': creatives_id,
                                     'creatives_name': creatives_name,
                                     'creatives_fileName': creatives_fileName,
                                     'creatives_width': creatives_width,
                                     'creatives_height': creatives_height,
-                                    'creatives_typeId': creatives_typeId,
-
+                                    'creatives_typeId': creatives_typeId
                                 })
-
-
+                                */
                                 var requestCreatives = {
                                     "fileSize": 0,
                                     "id": creatives_id,
@@ -716,247 +688,216 @@ exports.create_post = async (req, res) => {
 
                                 //Creative de type image
                                 if ((creatives_typeId === 1) && (format_group_id !== '1')) {
+                                    //format grand angle desktop
+                                    if (creatives_width === 300 && creatives_height === 600) {
+                                        requestCreatives['url'] = display_desktop_file;
+                                        requestCreatives['clickUrl'] = display_desktop_url;
+                                    }
 
                                     //format grand angle mobile
-                                    if (creatives_width === 300 && creatives_height===250) {
-                                        requestCreatives['url'] = display_mobile_file
-                                        requestCreatives['clickUrl'] = display_mobile_url
-
+                                    if (creatives_width === 300 && creatives_height === 250) {
+                                        requestCreatives['url'] = display_mobile_file;
+                                        requestCreatives['clickUrl'] = display_mobile_url;
                                     }
+
+                                      //format masthead desktop
+                                      if (creatives_width === 970 && creatives_height === 250) {
+                                        requestCreatives['url'] = display_desktop_file;
+                                        requestCreatives['clickUrl'] = display_desktop_url;
+                                    }
+
                                     //format masthead mobile
                                     if (creatives_width === 320) {
-                                        requestCreatives['url'] = display_mobile_file
-                                        requestCreatives['clickUrl'] = display_mobile_url
-                                        requestCreatives['width'] = 320
-                                        requestCreatives['height'] = 50
+                                        requestCreatives['url'] = display_mobile_file;
+                                        requestCreatives['clickUrl'] = display_mobile_url;
+                                        requestCreatives['width'] = 320;
+                                        requestCreatives['height'] = 50;
 
                                     }
                                     //format masthead tablette
                                     if (creatives_width === 640) {
-                                        requestCreatives['url'] = display_tablet_file
-                                        requestCreatives['clickUrl'] = display_tablet_url
-                                        requestCreatives['width'] = 640
-                                        requestCreatives['height'] = 100
-
+                                        requestCreatives['url'] = display_tablet_file;
+                                        requestCreatives['clickUrl'] = display_tablet_url;
+                                        requestCreatives['width'] = 640;
+                                        requestCreatives['height'] = 100;
                                     }
 
                                     //format interstitiel tablette
                                     if (creatives_width === 1536) {
-                                        requestCreatives['url'] = display_tablet_file
-                                        requestCreatives['clickUrl'] = display_tablet_url
-                                        requestCreatives['width'] = 1536
-                                        requestCreatives['height'] = 2048
-
+                                        requestCreatives['url'] = display_tablet_file;
+                                        requestCreatives['clickUrl'] = display_tablet_url;
+                                        requestCreatives['width'] = 1536;
+                                        requestCreatives['height'] = 2048;
                                     }
 
                                     //format interstitiel mobile
                                     if (creatives_width === 720) {
-                                        requestCreatives['url'] = display_mobile_file
-                                        requestCreatives['clickUrl'] = display_mobile_url
-                                        requestCreatives['width'] = 720
-                                        requestCreatives['height'] = 1280
-
+                                        requestCreatives['url'] = display_mobile_file;
+                                        requestCreatives['clickUrl'] = display_mobile_url;
+                                        requestCreatives['width'] = 720;
+                                        requestCreatives['height'] = 1280;
                                     }
 
                                     //format interstitiel mobile
                                     if (creatives_width === 1024) {
-                                        requestCreatives['url'] = display_mobile_file
-                                        requestCreatives['clickUrl'] = display_mobile_url
-                                        requestCreatives['width'] = 1024
-                                        requestCreatives['height'] = 320
-
+                                        requestCreatives['url'] = display_mobile_file;
+                                        requestCreatives['clickUrl'] = display_mobile_url;
+                                        requestCreatives['width'] = 1024;
+                                        requestCreatives['height'] = 320;
                                     }
 
                                     //format mise en avants (MEA)
                                     if (creatives_width === 354) {
-                                        requestCreatives['url'] = display_mea_file
-                                        requestCreatives['clickUrl'] = display_mea_url
-                                        requestCreatives['width'] = 354
-                                        requestCreatives['height'] = 500
-
+                                        requestCreatives['url'] = display_mea_file;
+                                        requestCreatives['clickUrl'] = display_mea_url;
+                                        requestCreatives['width'] = 354;
+                                        requestCreatives['height'] = 500;
                                     }
 
                                     //format slider (SLIDER tous les positions)
                                     if (creatives_width === 187) {
-
                                         //Pour chaque position slider on ajoute url qui lui correspond, regex sur le nom insertion dupliqué
                                         if (display_slider_file) {
-
-                                            requestCreatives['width'] = 187
-                                            requestCreatives['height'] = 280
+                                            requestCreatives['width'] = 187;
+                                            requestCreatives['height'] = 280;
 
                                             if (insertion_name_copy.match(/SLIDER 01{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[0]
-                                                requestCreatives['clickUrl'] = display_slider_url[0]
+                                                requestCreatives['url'] = display_slider_file[0];
+                                                requestCreatives['clickUrl'] = display_slider_url[0];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 02{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[1]
-                                                requestCreatives['clickUrl'] = display_slider_url[1]
+                                                requestCreatives['url'] = display_slider_file[1];
+                                                requestCreatives['clickUrl'] = display_slider_url[1];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 03{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[2]
-                                                requestCreatives['clickUrl'] = display_slider_url[2]
+                                                requestCreatives['url'] = display_slider_file[2];
+                                                requestCreatives['clickUrl'] = display_slider_url[2];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 04{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[3]
-                                                requestCreatives['clickUrl'] = display_slider_url[3]
+                                                requestCreatives['url'] = display_slider_file[3];
+                                                requestCreatives['clickUrl'] = display_slider_url[3];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 05{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[4]
-                                                requestCreatives['clickUrl'] = display_slider_url[4]
+                                                requestCreatives['url'] = display_slider_file[4];
+                                                requestCreatives['clickUrl'] = display_slider_url[4];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 06{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[5]
-                                                requestCreatives['clickUrl'] = display_slider_url[5]
+                                                requestCreatives['url'] = display_slider_file[5];
+                                                requestCreatives['clickUrl'] = display_slider_url[5];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 07{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[6]
-                                                requestCreatives['clickUrl'] = display_slider_url[6]
+                                                requestCreatives['url'] = display_slider_file[6];
+                                                requestCreatives['clickUrl'] = display_slider_url[6];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 08{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[7]
-                                                requestCreatives['clickUrl'] = display_slider_url[7]
+                                                requestCreatives['url'] = display_slider_file[7];
+                                                requestCreatives['clickUrl'] = display_slider_url[7];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 09{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[8]
-                                                requestCreatives['clickUrl'] = display_slider_url[8]
+                                                requestCreatives['url'] = display_slider_file[8];
+                                                requestCreatives['clickUrl'] = display_slider_url[8];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 10{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[9]
-                                                requestCreatives['clickUrl'] = display_slider_url[9]
+                                                requestCreatives['url'] = display_slider_file[9];
+                                                requestCreatives['clickUrl'] = display_slider_url[9];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 11{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[10]
-                                                requestCreatives['clickUrl'] = display_slider_url[10]
+                                                requestCreatives['url'] = display_slider_file[10];
+                                                requestCreatives['clickUrl'] = display_slider_url[10];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 12{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[11]
-                                                requestCreatives['clickUrl'] = display_slider_url[11]
+                                                requestCreatives['url'] = display_slider_file[11];
+                                                requestCreatives['clickUrl'] = display_slider_url[11];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 13{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[12]
-                                                requestCreatives['clickUrl'] = display_slider_url[12]
+                                                requestCreatives['url'] = display_slider_file[12];
+                                                requestCreatives['clickUrl'] = display_slider_url[12];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 14{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[13]
-                                                requestCreatives['clickUrl'] = display_slider_url[13]
+                                                requestCreatives['url'] = display_slider_file[13];
+                                                requestCreatives['clickUrl'] = display_slider_url[13];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 15{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[14]
-                                                requestCreatives['clickUrl'] = display_slider_url[14]
+                                                requestCreatives['url'] = display_slider_file[14];
+                                                requestCreatives['clickUrl'] = display_slider_url[14];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 16{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[15]
-                                                requestCreatives['clickUrl'] = display_slider_url[15]
+                                                requestCreatives['url'] = display_slider_file[15];
+                                                requestCreatives['clickUrl'] = display_slider_url[15];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 17{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[16]
-                                                requestCreatives['clickUrl'] = display_slider_url[16]
+                                                requestCreatives['url'] = display_slider_file[16];
+                                                requestCreatives['clickUrl'] = display_slider_url[16];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 18{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[17]
-                                                requestCreatives['clickUrl'] = display_slider_url[17]
+                                                requestCreatives['url'] = display_slider_file[17];
+                                                requestCreatives['clickUrl'] = display_slider_url[17];
                                             }
-                                            if (insertion_name_copy.match(/SLIDER 19{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[18]
-                                                requestCreatives['clickUrl'] = display_slider_url[18]
+                                            if (insertion_name_copy.match(/SLIDER 19{1}/igm)) {d
+                                                requestCreatives['url'] = display_slider_file[18];
+                                                requestCreatives['clickUrl'] = display_slider_url[18];
                                             }
                                             if (insertion_name_copy.match(/SLIDER 20{1}/igm)) {
-
-                                                requestCreatives['url'] = display_slider_file[19]
-                                                requestCreatives['clickUrl'] = display_slider_url[19]
+                                                requestCreatives['url'] = display_slider_file[19];
+                                                requestCreatives['clickUrl'] = display_slider_url[19];
                                             }
-
-
-
                                         }
-
-
-
                                     }
 
-                                    // console.log(requestCreatives)
-                                    //  console.log("-----------------------------------")
+                                    // // // // console.log(requestCreatives)
+                                    //  // // // console.log("-----------------------------------")
 
                                     await AxiosFunction.putManage(
                                         'imagecreatives',
                                         requestCreatives
                                     );
-                                   /* log_creative = await Utilities.logs('info')
-                                    log_creative.info("Mise à jour créative display creatives_id: "+creatives_id);*/
+                                    /* log_creative = await Utilities.logs('info')
+                                     log_creative.info("Mise à jour créative display creatives_id: "+creatives_id);*/
 
                                 }
 
                                 //Creative de type image - format habillage
                                 if ((creatives_typeId === 1) && (format_group_id === '1')) {
 
-                                  
-
                                     if (creatives_name.match(/HABILLAGE - LINFO/igm)) {
-                                        requestCreatives['url'] = display_linfo_file
-                                        requestCreatives['clickUrl'] = display_linfo_url
-                                        requestCreatives['name'] = "HABILLAGE - LINFO"
-
-
+                                        requestCreatives['url'] = display_linfo_file;
+                                        requestCreatives['clickUrl'] = display_linfo_url;
+                                        requestCreatives['name'] = "HABILLAGE - LINFO";
                                     }
 
                                     //Habillage mobile linfo et Antenne
                                     if (creatives_name.match(/HABILLAGE - LINFO MOBILE/igm)) {
-                                        requestCreatives['url'] = display_linfo_appli_file
-                                        requestCreatives['clickUrl'] = display_linfo_appli_url
-                                        requestCreatives['name'] = "HABILLAGE - LINFO MOBILE"
-                                        requestCreatives['width'] = 1024
-                                        requestCreatives['height'] = 320
-
+                                        requestCreatives['url'] = display_linfo_appli_file;
+                                        requestCreatives['clickUrl'] = display_linfo_appli_url;
+                                        requestCreatives['name'] = "HABILLAGE - LINFO MOBILE";
+                                        requestCreatives['width'] = 1024;
+                                        requestCreatives['height'] = 320;
                                     }
 
                                     if (creatives_name.match(/HABILLAGE - DOMTOMJOB/igm)) {
-                                        requestCreatives['url'] = display_dtj_file
-                                        requestCreatives['clickUrl'] = display_dtj_url
-                                        requestCreatives['name'] = "HABILLAGE - DOMTOMJOB"
-
-
+                                        requestCreatives['url'] = display_dtj_file;
+                                        requestCreatives['clickUrl'] = display_dtj_url;
+                                        requestCreatives['name'] = "HABILLAGE - DOMTOMJOB";
                                     }
 
                                     //format habillage appli linfo
                                     if (creatives_name.match(/habillage - appli linfo/igm)) {
-                                        requestCreatives['url'] = display_linfo_appli_file
-                                        requestCreatives['clickUrl'] = display_linfo_appli_url
-                                        requestCreatives['name'] = "habillage - appli linfo"
-                                        requestCreatives['fileName'] = "1024x320"
-                                        requestCreatives['width'] = 1024
-                                        requestCreatives['height'] = 320
-
+                                        requestCreatives['url'] = display_linfo_appli_file;
+                                        requestCreatives['clickUrl'] = display_linfo_appli_url;
+                                        requestCreatives['name'] = "habillage - appli linfo";
+                                        requestCreatives['fileName'] = "1024x320";
+                                        requestCreatives['width'] = 1024;
+                                        requestCreatives['height'] = 320;
                                     }
 
                                     //format habillage site RZ
                                     if (creatives_name.match(/HABILLAGE SITE RZ/igm)) {
-                                        requestCreatives['url'] = display_site_rz_file
-                                        requestCreatives['clickUrl'] = display_site_rz_url
-                                        requestCreatives['name'] = "HABILLAGE SITE RZ"
-                                        requestCreatives['fileName'] = "1280x800"
-                                        requestCreatives['width'] = 1280
-                                        requestCreatives['height'] = 800
-
+                                        requestCreatives['url'] = display_site_rz_file;
+                                        requestCreatives['clickUrl'] = display_site_rz_url;
+                                        requestCreatives['name'] = "HABILLAGE SITE RZ";
+                                        requestCreatives['fileName'] = "1280x800";
+                                        requestCreatives['width'] = 1280;
+                                        requestCreatives['height'] = 800;
                                     }
 
                                     await AxiosFunction.putManage(
@@ -971,24 +912,22 @@ exports.create_post = async (req, res) => {
 
                                 //Creative de type video
                                 if (creatives_typeId === 2) {
-                                    requestCreatives['url'] = video_file
-                                    requestCreatives['clickUrl'] = video_url
-                                    requestCreatives['fileName'] = "1280x720"
-                                    requestCreatives['width'] = 1280
-                                    requestCreatives['height'] = 720
-                                    requestCreatives['creativeTypeId'] = 2
-                                    requestCreatives['mimeType'] = "video/mp4"
+                                    requestCreatives['url'] = video_file;
+                                    requestCreatives['clickUrl'] = video_url;
+                                    requestCreatives['fileName'] = "1280x720";
+                                    requestCreatives['width'] = 1280;
+                                    requestCreatives['height'] = 720;
+                                    requestCreatives['creativeTypeId'] = 2;
+                                    requestCreatives['mimeType'] = "video/mp4";
 
                                     if (creatives_width === 300) {
-                                        requestCreatives['fileName'] = "300x250 APPLI"
-                                        requestCreatives['width'] = 300
-                                        requestCreatives['height'] = 250
-
+                                        requestCreatives['fileName'] = "300x250 APPLI";
+                                        requestCreatives['width'] = 300;
+                                        requestCreatives['height'] = 250;
                                     }
 
                                     if (format_group_id === '2' && creative_type_id === '2') {
-                                        requestCreatives['name'] = "interstitiel - video"
-
+                                        requestCreatives['name'] = "interstitiel - video";
                                     }
 
                                     await AxiosFunction.putManage(
@@ -996,8 +935,8 @@ exports.create_post = async (req, res) => {
                                         requestCreatives
                                     );
 
-                                   /* log_creative = await Utilities.logs('info')
-                                    log_creative.info("Mise à jour créative video creatives_id: "+creatives_id);*/
+                                    /* log_creative = await Utilities.logs('info')
+                                     log_creative.info("Mise à jour créative video creatives_id: "+creatives_id);*/
 
                                 }
 
@@ -1007,55 +946,45 @@ exports.create_post = async (req, res) => {
                                     var scriptcreatives_get = await AxiosFunction.getManageCopy('scriptcreatives', creatives_id);
                                     var dataValueCreative = scriptcreatives_get.data;
                                     var script_creative = dataValueCreative.script
-                                    // console.log(script_creative)
+                                    console.log(script_creative)
 
                                     const regex1 = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif)/igm;
                                     const regex2 = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i;
 
                                     replace = script_creative.replace(regex1, display_mobile_file)
                                     const replace_script = replace.replace(regex2, display_mobile_url)
+                                    console.log(replace_script)
+                                  
 
-                                    requestCreatives['script'] = replace_script
-                                    requestCreatives['url'] = ""
-                                    requestCreatives['clickUrl'] = ""
-                                    requestCreatives['fileName'] = "300x250 script"
-                                    requestCreatives['name'] = "300x250 APPLI"
-                                    requestCreatives['width'] = 300
-                                    requestCreatives['height'] = 250
-                                    requestCreatives['creativeTypeId'] = 4
-                                    requestCreatives['mimeType'] = ""
+                                    requestCreatives['script'] = replace_script;
+                                    requestCreatives['isActivated'] = true
+                                   // requestCreatives['url'] = "";
+                                  //  requestCreatives['clickUrl'] = "";
+                                    requestCreatives['fileName'] = "300x250 script";
+                                    requestCreatives['name'] = "300x250 APPLI";
+                                    requestCreatives['width'] = 300;
+                                    requestCreatives['height'] = 250;
+                                    requestCreatives['creativeTypeId'] = 4;
+                                   //  requestCreatives['mimeType'] = ""
+
+                                   // // // console.log(replace_script)
+                                   // // // console.log('-----------------------------')
+
+                                    console.log('requestCreatives :', requestCreatives); 
 
                                     await AxiosFunction.putManage(
                                         'scriptcreatives',
                                         requestCreatives
                                     );
+
                                     /*log_creative = await Utilities.logs('info')
                                     log_creative.info("Mise à jour créative script creatives_id: "+creatives_id);*/
-
                                 }
-
-
-
-
-
-                                //   console.log("--------------------------")
-
-
-
-
-
-
-
                             }
                         }
-
-
-
                     }
                 }
             }
-
-
 
         })
 
@@ -1066,23 +995,19 @@ exports.create_post = async (req, res) => {
         }
         return res.redirect("/manager/insertions/create")
 
-
-
     } catch (error) {
-        console.log(error);
-      /*  var log_error = await Utilities.logs('error')
-        log_error.error(error)*/
+        // // // console.log(error);
+        /*  var log_error = await Utilities.logs('error')
+          log_error.error(error)*/
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
         });
     }
-
 }
 
 
 exports.create_creative = async (req, res) => {
-
     try {
         const data = new Object();
 
@@ -1097,28 +1022,22 @@ exports.create_creative = async (req, res) => {
         data.breadcrumb = breadcrumb;
 
         // Récupére l'ensemble les données
-
-
         data.insertions = await ModelInsertions.findOne({
             where: {
                 insertion_id: req.body.params.id
-            },
-
+            }
         });
 
         data.formats_templates = await ModelFormatsTemplates.findOne({
             where: {
                 format_id: data.insertions.format_id
             },
-
             include: [{
-                    model: ModelFormats
-
-                },
-                {
-                    model: ModelTemplates,
-
-                }
+                model: ModelFormats
+            },
+            {
+                model: ModelTemplates
+            }
             ]
 
         });
@@ -1127,7 +1046,7 @@ exports.create_creative = async (req, res) => {
 
         res.render('manager/insertions/create_creative.ejs', data);
     } catch (error) {
-        console.log(error);
+        // // // console.log(error);
         var statusCoded = error.response;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded
@@ -1143,8 +1062,6 @@ exports.create_creative_post = async (req, res) => {
         const type = req.body.type
         const url = req.body.url
         const url_click = req.body.url_click
-
-
 
         if (!TEXT_REGEX.test(creative)) {
             req.session.message = {
@@ -1165,31 +1082,17 @@ exports.create_creative_post = async (req, res) => {
             return res.redirect(`/manager/creatives/create/${insertion}`)
         }
 
-
-
         var requestCreatives = {
-
             "InsertionId": insertion,
-
             "Name": creative,
-
             "FileName": creative,
-
             "Url": url,
-
             "clickUrl": url_click,
-
             "Width": 350,
-
             "Height": 250,
-
             "CreativeTypeId": type,
-
             "IsActivated": "true"
-
         }
-
-
 
         await ModelCreatives
             .findOne({
@@ -1199,9 +1102,7 @@ exports.create_creative_post = async (req, res) => {
                 }
             }).then(async function (creativeFound) {
 
-
                 if (!creativeFound) {
-
 
                     let creative_create = await AxiosFunction.postManage(
                         'creatives',
@@ -1209,11 +1110,7 @@ exports.create_creative_post = async (req, res) => {
                     );
 
                     if (creative_create.headers.location) {
-
-
-                        var url_location = creative_create.headers.location
-
-
+                        var url_location = creative_create.headers.location;
                         var creative_get = await AxiosFunction.getManage(url_location);
 
                         const creative_id = creative_get.data.id
@@ -1221,7 +1118,6 @@ exports.create_creative_post = async (req, res) => {
                         const creative_mime_type = creative_get.data.mimeType
                         const creative_width = creative_get.data.width
                         const creative_height = creative_get.data.height
-
 
                         await ModelCreatives.create({
                             creative_id: creative_id,
@@ -1259,25 +1155,15 @@ exports.create_creative_post = async (req, res) => {
                         await ModelInsertionsTemplates.create({
                             insertion_id: insertion,
                             parameter_value: templateId.parameter_default_values,
-                            template_id: templateId.template_id,
-
-
+                            template_id: templateId.template_id
                         });
                         req.session.message = {
                             type: 'success',
                             intro: 'Ok',
-                            message: 'La créative a été crée dans SMARTADSERVEUR',
-
+                            message: 'La créative a été crée dans SMARTADSERVEUR'
                         }
                         return res.redirect(`/manager/creatives/create/${insertion}`)
-
-
-
                     }
-
-
-
-
 
                 } else {
                     req.session.message = {
@@ -1296,7 +1182,7 @@ exports.create_creative_post = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error);
+        // // // console.log(error);
         var statusCoded = error.response.status;
         res.render("manager/error.ejs", {
             statusCoded: statusCoded

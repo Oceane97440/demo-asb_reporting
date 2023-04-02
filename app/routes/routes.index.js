@@ -2,7 +2,9 @@ const router = require("express").Router();
 const Sequelize = require('sequelize');
 
 const index = require("../controllers/controllers.index");
+const tests = require("./../controllers/controllers.tests");
 
+router.get("/test", tests.duplication);
 router.get("/login", index.login);
 router.get("/login/microsoft", index.login_microsoft);
 router.get("/login/microsoft/redirect", index.login_microsoft_redirect);

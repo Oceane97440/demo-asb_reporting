@@ -580,9 +580,7 @@
 <script src="/assets/js/pages/dashboard-sale.js"></script>  -->
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js"></script>
-
 <script src="/manager/js/manager.js"></script>
-
 
 <script>
     $(document).ready(function () {
@@ -591,25 +589,18 @@
         let select_format = $("#format_group_id")
         let select_creativeType = $("#creative_type_id")
 
-
-
         $("#creativeImage").hide();
         $("#creativeVideo").hide();
         $("#creativeHabillage").hide();
         $("#creativeMea").hide();
         $("#creativeSlider").hide();
 
-
-        
-
-
-
         select_advertiser.on("change", function () {
             //model($(this).val());
             var advertiser_id = $(this).val()
 
-            console.log(advertiser_id)
-            $.get(`https://reporting.antennesb.fr/app/json/campaign/${advertiser_id}`, function (
+            console.log(advertiser_id); // https://reporting.antennesb.fr
+            $.get(`http://127.0.0.1:3000/app/json/campaign/${advertiser_id}`, function (
                 campagnes) {
 
 
@@ -635,9 +626,8 @@
             //model($(this).val());
             var format_group_id = $(this).val()
 
-            $.get(`https://reporting.antennesb.fr/app/json/creative/${format_group_id}`, function (
+            $.get(`http://127.0.0.1:3000/app/json/creative/${format_group_id}`, function (
                 creativeType) {
-
 
                 switch (format_group_id) {
                     case "1":
@@ -647,7 +637,6 @@
                         $("#creativeImage").hide();
                         $("#creativeVideo").hide();
                         $("#creativeSlider").hide();
-
                         break;
                     case "13":
                         $("#creativeType").hide();
@@ -656,7 +645,6 @@
                         $("#creativeImage").hide();
                         $("#creativeVideo").hide();
                         $("#creativeSlider").hide();
-
                         break;
                     case "5":
                         $("#creativeType").hide();
@@ -666,13 +654,11 @@
                         $("#creativeImage").hide();
                         $("#creativeVideo").hide();
                         break;
-
                     default:
                         $("#creativeType").show();
                         $("#creativeHabillage").hide();
                         $("#creativeMea").hide();
                         $("#creativeSlider").hide();
-
 
                         let list_creative =
                             `<option value="" selected disabled>Sélectionner un type créative</option>`;
@@ -684,12 +670,8 @@
 
                         //on affiche sur la page l'ensemble des données
                         $("#creative_type_id").html(list_creative);
-
                         break;
-
                 }
-
-
 
                 /* if (format_group_id === '1') {
                      $("#creativeType").hide();
@@ -714,35 +696,21 @@
                      $("#creative_type_id").html(list_creative);
 
                  }*/
-
-
-
-
             })
-
-
-
         })
         select_creativeType.on("change", function () {
             var creativeType_id = $(this).val()
-
-
 
             if (creativeType_id === '1') {
                 $('#creativeImage').show();
             } else {
                 $("#creativeImage").hide();
-
             }
-
-
 
             if (creativeType_id === '2') {
                 $('#creativeVideo').show();
-
             } else {
                 $("#creativeVideo").hide();
-
             }
 
 

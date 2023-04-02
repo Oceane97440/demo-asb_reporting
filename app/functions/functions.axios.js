@@ -29,7 +29,7 @@ exports.getForecastData = async (method, urlForecast, data = null) => {
   } else if (method == 'POST') {
     test = await axios({
       method: 'POST',
-      url: 'https://forecast.smartadserverapis.com/2044/forecast',
+      url: 'https://forecast.smartadserverapis.com/forecast',
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-type": "Application/json"
@@ -50,7 +50,7 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
   if (method == 'POST') {
     return_data = await axios({
       method: method,
-      url: 'https://reporting.smartadserverapis.com/2044/reports',
+      url: 'https://reporting.smartadserverapis.com/reports',
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-type": "Application/json"
@@ -64,28 +64,28 @@ exports.getReportingData = async (method, urlReporting, data = null) => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log('------------');
-        //  console.log('data : ', data);
-        console.log('response.data : ', error.response.data);
-        console.log('response.status : ', error.response.status);
-        console.log('response.headers : ', error.response.headers);
+        // // console.log('------------');
+        //  // // console.log('data : ', data);
+        // // console.log('response.data : ', error.response.data);
+        // // console.log('response.status : ', error.response.status);
+        // // console.log('response.headers : ', error.response.headers);
 
         /* log_err =  Utilities.logs('error')
          log_err.error('Requête Reporting erreur : ' + error.response.status + " - " + error.response.statusText);
          log_err.error(error.response.data.Message);*/
 
-        console.log('------------');
+        // // console.log('------------');
         return return_data = null;
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log('request', error.request);
+        // // console.log('request', error.request);
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+        // // console.log('Error', error.message);
       }
-      console.log(error.config);
+      // // console.log(error.config);
     });
   } else if (method == 'GET') {
 
@@ -181,7 +181,7 @@ exports.getManageData = async (method) => {
 
       format_data = await axios({
         method: method,
-        url: 'https://manage.smartadserverapis.com/2044/formats',
+        url: 'https://manage.smartadserverapis.com/formats',
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-type": "Application/json"
@@ -212,25 +212,25 @@ exports.postManage = async (method, data = null) => {
 
   try {
     var test;
-
-    console.log('method' + method)
-    console.log('data' + data)
-
+    /*
+   //  // // console.log('method' + method)
+    // // console.log('data' + data)
+*/
     switch (method) {
       case 'agencies':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/agencies';
+        var configApiUrl = 'https://manage.smartadserverapis.com/Agencies';
         break;
       case 'advertisers':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers';
+        var configApiUrl = 'https://manage.smartadserverapis.com/Advertisers';
         break;
       case 'campaigns':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns';
+        var configApiUrl = 'https://manage.smartadserverapis.com/Campaigns';
         break;
       case 'insertions':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
+        var configApiUrl = 'https://manage.smartadserverapis.com/Insertions';
         break;
       case 'creatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives';
+        var configApiUrl = 'https://manage.smartadserverapis.com/ImageCreatives';
         break;
 
       default:
@@ -260,20 +260,18 @@ exports.postManage = async (method, data = null) => {
     log_err.error(error.response.data.Message);*/
 
   }
-
-
 }
-
 
 exports.copyManage = async (method, data = null, id) => {
   try {
     var test;
     switch (method) {
       case 'insertions':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + id + '/copy/';
+        var configApiUrl = 'https://manage.smartadserverapis.com/Insertions/' + id + '/copy/';
+        // var configApiUrl = 'https://manage.smartadserverapis.com/Insertions/'; //+ id;
         break;
       case 'creatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives';
+        var configApiUrl = 'https://manage.smartadserverapis.com/ImageCreatives';
         break;
       default:
         break;
@@ -304,13 +302,8 @@ exports.copyManage = async (method, data = null, id) => {
 
 }
 
-
 exports.getManage = async (url_location, id) => {
-
-  var test;
-
-  console.log('url_location' + url_location)
-
+  // // // console.log('url_location : ' + url_location)
 
   test = await axios({
     method: 'GET',
@@ -329,22 +322,20 @@ exports.getManage = async (url_location, id) => {
   return test;
 }
 
-
 exports.getManageCopy = async (method, id) => {
 
   try {
     var test;
-
-    console.log('method' + method)
-    console.log('method' + id)
-
+/*
+    // // console.log('method : ' + method)
+    // // console.log('method Id : ' + id)
+*/
     switch (method) {
-
       case 'creatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + id + '/creatives';
+        var configApiUrl = 'https://manage.smartadserverapis.com/Insertions/' + id + '/creatives';
         break;
       case 'scriptcreatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/scriptcreatives/' + id;
+        var configApiUrl = 'https://manage.smartadserverapis.com/ScriptCreatives/' + id;
         break;
 
       default:
@@ -381,24 +372,24 @@ exports.putManage = async (method, data = null) => {
   try {
     var test;
 
-    console.log('method' + method)
-    console.log('data' + data)
+   //  // // console.log('method' + method)
+    // // console.log('data' + data)
 
     switch (method) {
       case 'insertiontargetings':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontargetings';
+        var configApiUrl = 'https://manage.smartadserverapis.com/InsertionTargetings';
         break;
       case 'insertiontemplates':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertiontemplates';
+        var configApiUrl = 'https://manage.smartadserverapis.com/InsertionTemplates';
         break;
       case 'imagecreatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/imagecreatives/';
+        var configApiUrl = 'https://manage.smartadserverapis.com/ImageCreatives/';
         break;
       case 'videocreatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/videocreatives/';
+        var configApiUrl = 'https://manage.smartadserverapis.com/VideoCreatives/';
         break;
       case 'scriptcreatives':
-        var configApiUrl = 'https://manage.smartadserverapis.com/2044/scriptcreatives/';
+        var configApiUrl = 'https://manage.smartadserverapis.com/ScriptCreatives/';
         break;
 
       default:
@@ -423,19 +414,14 @@ exports.putManage = async (method, data = null) => {
 
     return test;
   } catch (error) {
-
     /* log_err = await Utilities.logs('error')
      log_err.error(error.response.status + " - " + error.response.statusText);
      log_err.error(error.response.data.Message);*/
-
-
   }
-
-
 }
 
 exports.getAdManager = async (campaign_id) => {
-  console.log('campaign_id' + campaign_id)
+  // // console.log('campaign_id' + campaign_id)
 
   var test;
 
@@ -468,7 +454,7 @@ exports.getAdManager = async (campaign_id) => {
      }
   
    }).catch(error => {
-       console.log(error.response)
+       // // console.log(error.response)
    });
 
    return test*/
@@ -486,8 +472,7 @@ exports.RequestForecastGlobal = async function requestForecast(startDate, endDat
     "startDate": startDate,
     "endDate": endDate,
     "timeZoneId": "Arabian Standard Time",
-    "filter": [
-      {
+    "filter": [{
         "CountryID": [
           61
         ]
@@ -583,7 +568,7 @@ exports.RequestForecastGlobal = async function requestForecast(startDate, endDat
 
   let sendRequest = await axios({
     method: 'POST',
-    url: 'https://forecast.smartadserverapis.com/2044/forecast',
+    url: 'https://forecast.smartadserverapis.com/forecast',
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "Application/json"

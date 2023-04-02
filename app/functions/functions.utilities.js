@@ -259,3 +259,15 @@ exports.groupBy = (array, key) => {
            
        });*/
 };
+
+
+exports.ensureHttps = async function (url) {
+    const parsedUrl = new URL(url);
+  
+    if (parsedUrl.protocol !== 'https:') {
+      parsedUrl.protocol = 'https:';
+      return parsedUrl.href;
+    }
+  
+    return url;
+  }
