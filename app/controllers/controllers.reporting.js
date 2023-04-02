@@ -124,23 +124,23 @@ exports.taskid = async (req, res) => {
                 let requestGlobal = `https://reporting.smartadserverapis.com/2044/reports/${firstLinkTaskId}`;
             // console.log(requestGlobal);
                 let taskInfo = await AxiosFunction.getReportingData('GET', requestGlobal, '');
-              //  if(taskInfo.data.lastTaskInstance.nbOutputLines > 0) {
+                if(taskInfo.data.lastTaskInstance.nbOutputLines > 0 && (taskInfo.data.lastTaskInstance.instanceStatus === "RUNNING" || taskInfo.data.lastTaskInstance.instanceStatus === "SUCCESS")) {
                  var progressInfo = taskInfo.data.lastTaskInstance.jobProgress;
-              //  }
-                console.log('jobProgress firstLinkTaskId : ', taskInfo.data.lastTaskInstance.jobProgress * 100, '%');
+                 console.log('jobProgress firstLinkTaskId : ', progressInfo * 100, '%');
+                }
+               //console.log('jobProgress firstLinkTaskId : ', taskInfo.data.lastTaskInstance.jobProgress * 100, '%');
             } 
             
             if(twoLinkTaskId && (NbDayCampaign < 30)) {
-                console.log('twoLinkTaskId : ', twoLinkTaskId);
-              
+                console.log('twoLinkTaskId : ', twoLinkTaskId);              
                  let requestGlobalVU = `https://reporting.smartadserverapis.com/2044/reports/${twoLinkTaskId}`;
             //  console.log(requestGlobalVU);
                 let taskInfoVU = await AxiosFunction.getReportingData('GET', requestGlobalVU, '');
-                
-               // if( taskInfoVU.data.lastTaskInstance.nbOutputLines > 0) {
-                 var progressInfoVU = taskInfoVU.data.lastTaskInstance.jobProgress;
-               // }
-                console.log('jobProgress twoLinkTaskId : ', progressInfoVU * 100, '%');
+                if(taskInfoVU.data.lastTaskInstance.nbOutputLines > 0 && (taskInfoVU.data.lastTaskInstance.instanceStatus === "RUNNING" || taskInfoVU.data.lastTaskInstance.instanceStatus === "SUCCESS")) {
+                  var progressInfoVU = taskInfoVU.data.lastTaskInstance.jobProgress;
+                  console.log('jobProgress twoLinkTaskId : ', progressInfoVU * 100, '%');
+                }
+              
             } 
 
             if(progressInfoVU) {
@@ -487,6 +487,8 @@ exports.report = async (req, res) => {
                                 "CampaignId": [campaign_id]
                             }]
                         }
+
+                        console.log(requestReporting);
 
                         // - date du jour = nbr jour Requête visitor unique On calcule le nombre de jour
                         // entre la date de fin campagne et date aujourd'hui  var date_now = Date.now();
