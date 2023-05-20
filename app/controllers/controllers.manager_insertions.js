@@ -596,8 +596,8 @@ exports.create_post = async (req, res) => {
         }).then(async function (insertion_model) {
             for (let i = 0; i < insertion_model.length; i++) {
                 if (!Utilities.empty(insertion_model)) {
-                    var insertion_id_model = insertion_model[i].insertion_id
-                    var insertion_name_model = insertion_model[i].insertion_name
+                    var insertion_id_model = insertion_model[i].insertion_id;
+                    var insertion_name_model = insertion_model[i].insertion_name;
                     // // // // console.log(insertion_name_model)
 
                     //Si input text n'est pas vide
@@ -646,7 +646,6 @@ exports.create_post = async (req, res) => {
                         var number_line_offset = insertions_creatives_get.data.length;
 
                         console.log('dataValue : ' + dataValue)
-
 
                         for (let d = 0; d < number_line_offset; d++) {
                             if (!Utilities.empty(dataValue)) {
@@ -707,7 +706,7 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     //format masthead mobile
-                                    if (creatives_width === 320) {
+                                    if (creatives_width === 320 && creatives_height === 50) {
                                         requestCreatives['url'] = display_mobile_file;
                                         requestCreatives['clickUrl'] = display_mobile_url;
                                         requestCreatives['width'] = 320;
@@ -715,15 +714,23 @@ exports.create_post = async (req, res) => {
 
                                     }
                                     //format masthead tablette
-                                    if (creatives_width === 640) {
+                                    if (creatives_width === 640 && creatives_height === 100) {
                                         requestCreatives['url'] = display_tablet_file;
                                         requestCreatives['clickUrl'] = display_tablet_url;
                                         requestCreatives['width'] = 640;
                                         requestCreatives['height'] = 100;
                                     }
 
+                                     //format interstitiel desktop
+                                     if (creatives_width === 2048 && creatives_height === 1536) {
+                                        requestCreatives['url'] = display_desktop_file;
+                                        requestCreatives['clickUrl'] = display_desktop_url;
+                                        requestCreatives['width'] = 2048;
+                                        requestCreatives['height'] = 1536;
+                                    }
+
                                     //format interstitiel tablette
-                                    if (creatives_width === 1536) {
+                                    if (creatives_width === 1536 && creatives_height === 2048) {
                                         requestCreatives['url'] = display_tablet_file;
                                         requestCreatives['clickUrl'] = display_tablet_url;
                                         requestCreatives['width'] = 1536;
@@ -731,7 +738,7 @@ exports.create_post = async (req, res) => {
                                     }
 
                                     //format interstitiel mobile
-                                    if (creatives_width === 720) {
+                                    if (creatives_width === 720 && creatives_height === 1280) {
                                         requestCreatives['url'] = display_mobile_file;
                                         requestCreatives['clickUrl'] = display_mobile_url;
                                         requestCreatives['width'] = 720;
@@ -1173,13 +1180,7 @@ exports.create_creative_post = async (req, res) => {
                     }
                     return res.redirect(`/manager/creatives/create/${insertion}`)
                 }
-
-
             })
-
-
-
-
 
     } catch (error) {
         // // // console.log(error);

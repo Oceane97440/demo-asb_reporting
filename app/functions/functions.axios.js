@@ -189,11 +189,8 @@ exports.getManageData = async (method) => {
         auth: {
           username: dbApi.SMART_login,
           password: dbApi.SMART_password
-        },
-
+        }
       })
-
-
     }
 
     return format_data
@@ -205,8 +202,6 @@ exports.getManageData = async (method) => {
   }
 
 }
-
-
 
 exports.postManage = async (method, data = null) => {
 
@@ -370,12 +365,12 @@ exports.getManageCopy = async (method, id) => {
 exports.putManage = async (method, data = null) => {
 
   try {
-    var test;
-
-   //  // // console.log('method' + method)
-    // // console.log('data' + data)
+    var values;
 
     switch (method) {
+      case 'insertions':
+        var configApiUrl = 'https://manage.smartadserverapis.com/Insertions';
+        break;
       case 'insertiontargetings':
         var configApiUrl = 'https://manage.smartadserverapis.com/InsertionTargetings';
         break;
@@ -391,13 +386,12 @@ exports.putManage = async (method, data = null) => {
       case 'scriptcreatives':
         var configApiUrl = 'https://manage.smartadserverapis.com/ScriptCreatives/';
         break;
-
       default:
 
-        break;
+      break;
     }
 
-    test = await axios({
+    values = await axios({
       method: 'PUT',
       url: configApiUrl,
       headers: {
@@ -409,10 +403,9 @@ exports.putManage = async (method, data = null) => {
         password: dbApi.SMART_password
       },
       data
-    })
+    });
 
-
-    return test;
+    return values;
   } catch (error) {
     /* log_err = await Utilities.logs('error')
      log_err.error(error.response.status + " - " + error.response.statusText);

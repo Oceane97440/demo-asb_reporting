@@ -34,6 +34,7 @@
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
     "dotenv": "^8.6.0",
     "ejs": "^3.1.6",
     "exceljs": "^4.3.0",

@@ -9,76 +9,76 @@ exports.config = function (method, params = '') {
 
     switch (method) {
         case 'agencies':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Agencies/';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/agencies/';
             break;
         case 'advertisers':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Advertisers/';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/';
             break;
         case 'advertiser':
             advertiser_id = params.advertiser_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/Advertisers/' +
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
                 advertiser_id;
             break;
         case 'advertisersCampaigns':
             advertiser_id = params.advertiser_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/Advertisers/' +
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/advertisers/' +
                 advertiser_id + '/campaigns/';
             break;
         case 'campaigns':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Campaigns/';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/';
             break;
         case 'campaign':
             campaign_id = params.campaign_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/Campaigns/' +
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
                 campaign_id;
             break;
         case 'campaignsInsertions':
             campaign_id = params.campaign_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/Campaigns/' +
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/campaigns/' +
                 campaign_id + '/insertions/';
             break;
         case 'formats':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Formats';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/formats';
             break;
         case 'sites':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Sites';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/sites';
             break;
         case 'packs':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Packs';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/packs';
             break;
         case 'templates':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Templates';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/templates';
             break;
         case 'platforms':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Platforms';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/platforms';
             break;
         case 'deliverytypes':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Deliverytypes';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/deliverytypes';
             break;
         case 'countries':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Countries';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/countries';
             break;
         case 'insertions':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Insertions';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions';
             break;
         case 'insertion':
             insertion_id = params.insertion_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/Insertions/' + insertion_id;
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' + insertion_id;
             break;
         case 'insertions_templates':
             insertion_id = params.insertion_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/Insertions/' +
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
                 insertion_id + '/insertiontemplates';
             break;
         case 'insertions_status':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Insertions_status';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions_status';
             break;
         case 'insertions_priorities':
-            var configApiUrl = 'https://manage.smartadserverapis.com/Insertionpriorities';
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertionpriorities';
             break;
         case 'creatives':
             insertion_id = params.insertion_id;
-            var configApiUrl = 'https://manage.smartadserverapis.com/Insertions/' +
+            var configApiUrl = 'https://manage.smartadserverapis.com/2044/insertions/' +
                 insertion_id + '/creatives';
             break;
         default:

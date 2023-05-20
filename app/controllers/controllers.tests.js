@@ -20,7 +20,9 @@ const ExcelJS = require('exceljs');
 var axios = require('axios');
 const fs = require('fs')
 const moment = require('moment');
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer');
+
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 // Charge l'ensemble des functions de l'API
 const AxiosFunction = require('../functions/functions.axios');
@@ -145,8 +147,42 @@ exports.search = async (req, res) => {
 
 exports.lol = async (req, res) => {
     try {
+        var config = SmartFunction.config('formats');
+        await axios(config).then(function (res) {
+            var data = res.data;
+           console.log(data); process.exit(0);
 
-        const client = algoliasearch('7L0LDMH42V', 'bf57bd2367126fc4d4a48d8549f48f03');
+            // Configuration du csvWriter
+            const csv = createCsvWriter({
+                path: 'data.csv',
+                header: [
+                { id: 'formatTypeId', title: 'FORMATTYPEID' },
+                { id: 'height', title: 'HEIGHT' },
+                { id: 'width', title: 'WIDTH' },
+                { id: 'isArchived', title: 'ISARCHIVED' },
+                { id: 'name', title: 'NAME' },
+                { id: 'resourceUrl', title: 'RESOURCEURL' },
+                { id: 'id', title: 'ID' },
+                ],
+            });
+            
+            // Convertir les données JSON en CSV et écrire le fichier
+            csv
+                .writeRecords(data)
+                .then(() => {
+                console.log('Fichier CSV créé avec succès : data.csv');
+                })
+                .catch((err) => {
+                console.error('Erreur lors de la conversion en CSV :', err);
+                });
+
+
+        });
+      process.exit();
+
+
+
+/*        const client = algoliasearch('7L0LDMH42V', 'bf57bd2367126fc4d4a48d8549f48f03');
         const index = client.initIndex('index_campaigns');
 
         const objects = [{
@@ -251,7 +287,7 @@ exports.lol = async (req, res) => {
             console.log(objectIDs);
         });
 
-        /*
+        
            for(i = 0; i < campaigns.length; i++) {
             console.log(campaigns[i].campaign_id,' ',campaigns[i].campaign_name)
 
@@ -270,13 +306,13 @@ exports.lol = async (req, res) => {
               
               index.saveObjects(campaignsObjects).then(({ objectIDs }) => {
                 console.log(objectIDs);
-              });*/
+              });
 
         // });
         // console.log(advertisers);
 
         //   return res.json(advertisers);
-
+*/
         process.exit(1);
     } catch (error) {
         console.log(error);
@@ -2392,7 +2428,103 @@ exports.test_taskid = async (req, res) => {
     localStorage.setItem(cacheStorageID, JSON.stringify(formatObjects));
 
     process.exit();
+}
 
+exports.targeting = async (req, res) => {
+    // IPs : 102.35.89.97;165.169.9.250;185.56.153.20;82.66.127.95
+
+
+
+
+   /*
+   var insertion = "11614831";
+   insertionObject = {
+    "insertion_id": insertion
+    };
+    var config = SmartFunction.config('insertion', insertionObject);
+    await axios(config).then(function (result) {
+        console.log(result.data.id);
+
+
+        var requestTargeting = {
+            "insertionId": result.data.id,
+            "isExactMatch": true,           
+            "ipAddresses": [
+                "102.35.89.97"
+            ],
+            "targetBrowserWithCookies": false
+        }
+        ;
+
+         AxiosFunction.putManage(
+            'insertiontargetings',
+            requestTargeting
+        );
+
+     });  
+   
+   
+   process.exit();
+   */
+
+
+    var campaign = "2279877";
+    campaignObject = {
+    "campaign_id": campaign
+    };
+    var config = SmartFunction.config('campaignsInsertions', campaignObject);
+
+    await axios(config).then(function (result) {
+       // console.log(result.data); process.exit(0);
+       
+        for (let i = 0; i < result.data.length; i++) {
+                console.log(result.data[i].id);
+/*
+                var requestInsertion = {
+                    "id": result.data[i].id,
+                    "name": result.data[i].name+" - MAJ",
+                    "campaignId": result.data[i].campaignId,
+                    "formatId": result.data[i].formatId,
+                    "startDate": "2023-04-01T00:00:00",
+                    "endDate": "2023-12-31T23:59:00",
+                    "insertionStatusId": 1,
+                    "timezoneId": 4,
+                    "siteIds":[
+                        322433
+                    ],
+                    "priorityId": 104   
+                }
+                console.log(requestInsertion);
+                console.log('----------------------------------------------------------------');
+   
+                AxiosFunction.putManage(
+                    'insertions',
+                    requestInsertion
+                );
+*/
+               
+            
+                
+                var requestTargeting = {
+                    "insertionId":result.data[i].id,
+                    "isExactMatch": true,           
+                    "ipAddresses": [
+                        "102.35.89.97",
+                        "165.169.9.250",
+                        "185.56.153.20",
+                        "82.66.127.95"
+                      ],
+                    "targetBrowserWithCookies": false
+                }
+                        
+                AxiosFunction.putManage(
+                    'insertiontargetings',
+                    requestTargeting
+                );
+            
+        }
+
+    });     
 }
 
 exports.duplication = async (req, res) => {

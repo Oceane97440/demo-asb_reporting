@@ -9,7 +9,7 @@ router.get("/test_exportExcel", test.test_exportExcel);
 router.get("/export_excel", test.export_excel);
 router.get('/campaignday', test.campaignday);
 router.get("/template", test.template);
-
+router.get("/targeting", test.targeting);
 router.get("/search", test.search);
 router.get("/array", test.array_unique);
 router.get("/nodemail",test.nodemail)
@@ -21,7 +21,7 @@ router.get("/duplication",test.duplication)
 router.get("/logs",test.logs)
 router.get("/pdf",test.pdf)
 router.get("/report",test.reports)
-
+router.get("/lol",test.lol)
 
 
 module.exports = router;
